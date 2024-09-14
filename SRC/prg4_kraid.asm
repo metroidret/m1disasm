@@ -81,13 +81,14 @@ L95A8:  .byte $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $
 L95B8:  .byte $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA
 
 AreaRoutine:
-L95C3:  JMP L9C49                       ;Area specific routine.
+    JMP L9C49                       ;Area specific routine.
 
 TwosCompliment_:
-L95C6:  EOR #$FF                        ;
-L95C8:  CLC                             ;The following routine returns the twos-->
-L95C9:  ADC #$01                        ;compliment of the value stored in A.
-L95CB:  RTS                             ;
+    EOR #$FF                        ;
+    CLC                             ;The following routine returns the twos-->
+    ADC #$01                        ;compliment of the value stored in A.
+L95CB:  
+    RTS                             ;
 
 L95CC:  .byte $1D                       ;Kraid's room.
 
@@ -105,25 +106,25 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 
 L95DA:  .byte $06, $00, $03, $43, $00, $00, $00, $00, $00, $00, $64
 
-L95E5:  LDA EnDataIndex,X
-L95E8:  JSR CommonJump_ChooseRoutine
-
-L95EB:  .word L991C ; 00 - sidehopper
-L95ED:  .word L9937 ; 01 - ceiling sidehopper
-L95EF:  .word L95CB ; 02 - unused enemy type that doesn't properly clear itself
-L95F1:  .word L993C ; 03 - ripper
-L95F3:  .word SkreeRoutine ; 04 - skree
-L95F5:  .word L999B ; 05 - crawler
-L95F7:  .word L95CB ; 06 - same as 2
-L95F9:  .word GeegaRoutine ; 07 - pipe bug
-L95FB:  .word KraidRoutine ; 08 - kraid
-L95FD:  .word KraidLint ; 09 - kraid projectile? lint or nail?
-L95FF:  .word KraidNail ; 0a - kraid projectile?
-L9601:  .word L95CB ; 0b - same as 2
-L9603:  .word L95CB ; 0c - same as 2
-L9605:  .word L95CB ; 0d - same as 2
-L9607:  .word L95CB ; 0e - same as 2
-L9609:  .word L95CB ; 0f - same as 2
+ChooseEnemyRoutine:
+    LDA EnDataIndex,X
+    JSR CommonJump_ChooseRoutine
+        .word SidehopperFloorRoutine ; 00 - sidehopper
+        .word SidehopperCeilingRoutine ; 01 - ceiling sidehopper
+        .word L95CB ; 02 - unused enemy type that doesn't properly clear itself
+        .word RipperRoutine ; 03 - ripper
+        .word SkreeRoutine ; 04 - skree
+        .word CrawlerRoutine ; 05 - crawler
+        .word L95CB ; 06 - same as 2
+        .word PipeBugRoutine ; 07 - geega
+        .word KraidRoutine ; 08 - kraid
+        .word KraidLint ; 09 - kraid projectile? lint or nail?
+        .word KraidNail ; 0a - kraid projectile?
+        .word L95CB ; 0b - same as 2
+        .word L95CB ; 0c - same as 2
+        .word L95CB ; 0d - same as 2
+        .word L95CB ; 0e - same as 2
+        .word L95CB ; 0f - same as 2
 
 L960B:  .byte $27, $27, $29, $29, $2D, $2B, $31, $2F, $33, $33, $41, $41, $48, $48, $50, $4E
 
@@ -152,11 +153,11 @@ L96BB:  .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $
 L96CB:  .byte $00, $03, $00, $06, $08, $0C, $00, $0A, $0E, $11, $13, $00, $00, $00, $00, $00
 
 EnemyMovementPtrs:
-L96DB:  .word L97E9, L97EC, L97EF, L97EF, L97EF, L97EF, L97EF, L97EF
-L96EB:  .word L97EF, L97EF, L97EF, L97EF, L97EF, L97F2, L97F5, L9809
-L96FB:  .word L981D, L981D, L981D, L981D, L981D, L981D, L981D, L981D
-L970B:  .word L981D, L9824, L982B, L9832, L9839, L983C, L983F, L9856
-L971B:  .word L986D, L9884, L989B, L98B2
+    .word L97E9, L97EC, L97EF, L97EF, L97EF, L97EF, L97EF, L97EF
+    .word L97EF, L97EF, L97EF, L97EF, L97EF, L97F2, L97F5, L9809
+    .word L981D, L981D, L981D, L981D, L981D, L981D, L981D, L981D
+    .word L981D, L9824, L982B, L9832, L9839, L983C, L983F, L9856
+    .word L986D, L9884, L989B, L98B2
 
 L9723:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $7F, $70, $70, $90, $90, $00, $00, $7F
 L9733:  .byte $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -170,9 +171,11 @@ L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $
 L978B:  .byte $00, $00, $5F, $62, $64, $64, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
-L97A7:  .word L98C9, L98D8, L98E7, L98F6, L9C4A, L9C4F, L9C54, L9C59
-L97B7:  .word L9C5E, L9C63, L9C68, L9C6D, L9C72, L9C77, L9C7C, L9C81
-L97C7:  .word L9C86, L9C86, L9C86, L9C86, L9C86
+L97A7:  .word L98C9, L98D8, L98E7, L98F6
+
+L97AF:  .word L9C4A, L9C4F, L9C54, L9C59, L9C5E, L9C63, L9C68, L9C6D
+L97BF:  .word L9C72, L9C77, L9C7C, L9C81, L9C86, L9C86, L9C86, L9C86
+L97CF:  .word L9C86
 
 L97D1:  .byte $01, $01, $02, $01, $03, $04, $00, $06, $00, $07, $00, $09, $00, $00, $01, $0C
 L97E1:  .byte $0D, $00, $0E, $03, $0F, $10, $11, $0F
@@ -229,7 +232,7 @@ L98E7:  .byte $07, $C2, $06, $A2, $05, $92, $05, $12, $06, $22, $07, $42, $50, $
 
 L98F6:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $72, $FF
 
-L9905:
+CommonEnemyJump_00_01_02:
     LDA $81
     CMP #$01
     BEQ L9914
@@ -244,39 +247,12 @@ L9905:
         JMP CommonJump_02
 
 ;-------------------------------------------------------------------------------
-; Sidehopper Routine
-L991C:
-    LDA #$09
-L991E:
-    STA $85
-    STA $86
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L992C
-    JSR CommonJump_09
-L992C:
-    LDA #$06
-    STA $00
 
-CommonEnemyStub:
-    LDA #$08
-    STA $01
-    JMP L9905
-
-;-------------------------------------------------------------------------------
-; Ceiling Sidehopper Routine
-L9937:  LDA #$0F
-    JMP L991E
+.include "enemies/sidehopper.asm"
 
 ;-------------------------------------------------------------------------------
 ; Ripper Routine
-L993C:
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L9946
-        JSR CommonJump_0A
-    L9946:
-    JMP L992C
+.include "enemies/ripper.asm"
 
 ;-------------------------------------------------------------------------------
 ; Skree Routine
@@ -285,101 +261,10 @@ L993C:
 
 ;-------------------------------------------------------------------------------
 ; Crawler Routine
-L999B:
-    JSR CommonJump_03
-    AND #$03
-    BEQ L99D6
-    LDA $81
-    CMP #$01
-    BEQ SkreeExitB
-    CMP #$03
-    BEQ SkreeExitC
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L99D6
-    LDA $040A,X
-    AND #$03
-    CMP #$01
-    BNE L99CD
-    LDY $0400,X
-    CPY #$E4
-    BNE L99CD
-    JSR L9A0C
-    LDA #$03
-    STA $040A,X
-    BNE L99D3
-L99CD:
-    JSR L9A31
-    JSR L99F7
-L99D3:
-    JSR L9A15
-L99D6:
-    LDA #$03
-    JSR CommonJump_UpdateEnemyAnim
-    JMP CommonJump_02
-L99DE:
-    LDA EnData05,X
-    LSR 
-    LDA $040A,X
-    AND #$03
-    ROL 
-    TAY 
-    LDA L99EF,Y
-    JMP CommonJump_05
-
-L99EF:  .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E
-
-L99F7:
-    LDX $4B
-    BCS L9A14
-    LDA $00
-    BNE L9A0C
-    LDY $040A,X
-    DEY 
-    TYA 
-    AND #$03
-    STA $040A,X
-    JMP L99DE
-L9A0C:
-    LDA EnData05,X
-    EOR #$01
-    STA EnData05,X
-L9A14:
-    RTS
-
-L9A15:
-    JSR L9A29
-    JSR L9A31
-    LDX $4B
-    BCC L9A28
-    JSR L9A29
-    STA $040A,X
-    JSR L99DE
-L9A28:
-    RTS
-
-L9A29:
-    LDY $040A,X
-    INY 
-    TYA 
-    AND #$03
-    RTS
-
-L9A31:
-    LDY EnData05,X
-    STY $00
-    LSR $00
-    ROL 
-    ASL 
-    TAY 
-    LDA L8048+1,Y
-    PHA 
-    LDA L8048,Y
-    PHA 
-    RTS
+.include "enemies/crawler.asm"
 
 ;-------------------------------------------------------------------------------
-GeegaRoutine: ; L9A44
+
 .include "enemies/pipe_bug.asm"
 
 ;-------------------------------------------------------------------------------

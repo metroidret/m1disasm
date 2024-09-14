@@ -62,8 +62,8 @@ PipeBugDelete: ; Set enemy status to 0
     RTS
     
 PipeBugTable:
-.IF BANK = 1 ; Brinstar
+.if BANK = 1 ; Brinstar
     .byte $04, -$04
-.ELSE ; Norfair, Kraid, Ridley
+.else ; Norfair, Kraid, Ridley
     .byte $08, -$08
-.ENDIF
+.endif

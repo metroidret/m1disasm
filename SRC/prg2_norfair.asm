@@ -87,7 +87,8 @@ AreaPointers:
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
 
-L95C3:  JMP L9B9D                       ;Area specific routine.(RTS)
+AreaRoutine:  
+    JMP PolypRTS                       ;Area specific routine.(RTS)
 
 TwosCompliment_:
     EOR #$FF                        ;
@@ -113,23 +114,23 @@ L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 
 ; Enemy AI jump table
 ChooseEnemyRoutine:
-    LDA $6B02,X
+    LDA EnDataIndex,X
     JSR CommonJump_ChooseRoutine
-        .word L98D3 ; 00 - swooper
-        .word L9908 ; 01 - becomes swooper?
-        .word L98C0 ; 02 - ripper
+        .word SwooperRoutine ; 00 - swooper
+        .word SwooperRoutine2 ; 01 - becomes swooper?
+        .word RipperRoutine ; 02 - ripper
         .word InvalidEnemy ; 03 - disappears
         .word InvalidEnemy ; 04 - same as 3
         .word InvalidEnemy ; 05 - same as 3
         .word CrawlerRoutine ; 06 - crawler
-        .word GametRoutine ; 07 - pipe bug
+        .word PipeBugRoutine ; 07 - gamet
         .word InvalidEnemy ; 08 - same as 3
         .word InvalidEnemy ; 09 - same as 3
         .word InvalidEnemy ; 0A - same as 3
-        .word L9A64 ; 0B - lava jumper
-        .word L9AD6 ; 0C - bouncy orb
-        .word L9AE9 ; 0D - seahorse
-        .word L9B64 ; 0E - rock launcher thing
+        .word SqueeptRoutine ; 0B - lava jumper
+        .word MultiviolaRoutine ; 0C - bouncy orb
+        .word SeahorseRoutine ; 0D - seahorse
+        .word PolypRoutine ; 0E - rock launcher thing
         .word InvalidEnemy ; 0F - same as 3
 
 L960B:  .byte $28, $28, $28, $28, $30, $30, $00, $00, $00, $00, $00, $00, $75, $75, $84, $82
@@ -175,9 +176,11 @@ L977B:  .byte $4C, $4C, $01, $00, $00, $00, $00, $40, $00, $64, $44, $44, $40, $
 L978B:  .byte $00, $00, $00, $00, $4D, $4D, $53, $57, $00, $00, $00, $00, $00, $00, $00, $00
 L979B:  .byte $08, $F8, $00, $00, $00, $00, $08, $F8, $00, $00, $00, $F8 
 
-L97A7:  .word L97F7, L9806, L9815, L9824, L9B9E, L9BA3, L9BA8, L9BAD
-L97B7:  .word L9BB2, L9BB7, L9BBC, L9BC1, L9BC6, L9BCB, L9BD0, L9BD5
-L97C7:  .word L9BDA, L9BDA, L9BDA, L9BDA, L9BDA
+L97A7:  .word L97F7, L9806, L9815, L9824
+
+L97AF:  .word L9B9E, L9BA3, L9BA8, L9BAD, L9BB2, L9BB7, L9BBC, L9BC1
+L97BF:  .word L9BC6, L9BCB, L9BD0, L9BD5, L9BDA, L9BDA, L9BDA, L9BDA
+L97CF:  .word L9BDA
 
 L97D1:  .byte $00, $02, $00, $09, $00, $0D, $01, $0E, $0F, $03, $00, $01, $02, $03, $00, $10
 L97E1:  .byte $00, $11, $00, $00, $00, $01
@@ -217,105 +220,19 @@ CommonEnemyJump_00_01_02:
         JMP CommonJump_02
 
 ;-------------------------------------------------------------------------------
-GametRoutine: ; L9850
+
 .include "enemies/pipe_bug.asm"
 
 ;-------------------------------------------------------------------------------
 ; Ripper routine
-L98C0:
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L98CA
-        JSR CommonJump_0A
-    L98CA:
-    LDA #$03
-    STA $00
-    STA $01
-    JMP CommonEnemyJump_00_01_02
+.include "enemies/ripper.asm"
 
 ;-------------------------------------------------------------------------------
-; Swooper routine
-L98D3:
-    LDA #$03
-    STA $00
-    LDA #$08
-    STA $01
-    LDA EnStatus,X
-    CMP #$01
-    BNE L98EE
-    LDA $0405,X
-    AND #$10
-    BEQ L98EE
-    LDA #$01
-    JSR L9954
-L98EE:
-    JSR L98F4
-    JMP CommonEnemyJump_00_01_02
-L98F4:
-    LDA EnStatus,X
-    CMP #$02
-    BNE L9907
-    LDA #$25
-    LDY $0402,X
-    BPL L9904
-        LDA #$22
-    L9904:
-    STA $6AF9,X
-L9907:
-    RTS
+
+.include "enemies/swooper.asm"
 
 ;-------------------------------------------------------------------------------
-; Swooper Routine 2?
-L9908:
-    LDA $81
-    CMP #$01
-    BEQ L991E
-        CMP #$03
-        BEQ L9951
-        LDA EnStatus,X
-        CMP #$01
-        BNE L9923
-        LDA #$00
-        JSR L9954
-    L991E:
-    LDA #$08
-    JMP CommonJump_01
-
-L9923:
-    LDA #$80
-    STA $6AFE,X
-    LDA $0402,X
-    BMI L9949
-    LDA $0405,X
-    AND #$10
-    BEQ L9949
-    LDA $0400,X
-    SEC 
-    SBC $030D
-    BPL L9940
-        JSR $95C6
-    L9940:
-    CMP #$10
-    BCS L9949
-    LDA #$00
-    STA $6AFE,X
-L9949:
-    JSR L98F4
-    LDA #$03
-    JMP CommonJump_00
-
-L9951:
-    JMP CommonJump_02
-
-L9954:
-    STA $6B02,X
-    LDA $040B,X
-    PHA 
-    JSR CommonJump_0E
-    PLA 
-    STA $040B,X
-    RTS
-
+; is this unused?
 L9963:
     JSR CommonJump_09
     LDA #$06
@@ -366,180 +283,22 @@ LoadPositionFromTemp:
     RTS
 
 ;-------------------------------------------------------------------------------
-; Lava Jumper Routine
-L9A64:
-    LDA $81
-    CMP #$01
-    BNE L9A88
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L9ACA
-    CMP #$02
-    BNE L9A88
-    LDY $0408,X
-    LDA L9AD2,Y
-    STA $0402,X
-    LDA #$40
-    STA $6AFE,X
-    LDA #$00
-    STA $0406,X
-L9A88:
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L9ACA
-    LDA $81
-    CMP #$01
-    BEQ L9ACA
-    CMP #$03
-    BEQ L9ACF
-    JSR CommonJump_12
-    LDX $4B
-    LDA #$00
-    STA $05
-    LDA #$1D
-    LDY $00
-    STY $04
-    BMI L9AAC
-        LDA #$20
-    L9AAC:
-    STA $6AF9,X
-    JSR StorePositionToTemp
-    JSR CommonJump_0D
-    LDA #$E8
-    BCC L9ABD
-        CMP $08
-        BCS L9AC7
-    L9ABD:
-    STA $08
-    LDA $0405,X
-    ORA #$20
-    STA $0405,X
-L9AC7:
-    JSR LoadPositionFromTemp
-L9ACA:
-    LDA #$02
-    JMP CommonJump_01
 
-L9ACF:
-    JMP CommonJump_02
-
-L9AD2:
-    INC $F8,X
-    INC $FA,X
+.include "enemies/squeept.asm"
 
 ;-------------------------------------------------------------------------------
 ; Bouncy Orb Routine (Multiviola?)
-L9AD6:
-    LDA EnStatus,X
-    CMP #$02
-    BNE L9AE0
-        JSR CommonJump_0A
-    L9AE0:
-    LDA #$02
-    STA $00
-    STA $01
-    JMP CommonEnemyJump_00_01_02
+.include "enemies/multiviola.asm"
 
 ;-------------------------------------------------------------------------------
-; Lava Seahorse Routine
-L9AE9:  LDA EnStatus,X
-    CMP #$01
-    BNE L9AF5
-        LDA #$E8
-        STA $0400,X
-    L9AF5:
-    CMP #$02
-    BNE L9B4F
-    LDA $0406,X
-    BEQ L9B4F
-    LDA $6B01,X
-    BNE L9B4F
-    LDA $2D
-    AND #$1F
-    BNE L9B3C
-        LDA $2E
-        AND #$03
-        BEQ L9B59
-        LDA #$02
-        STA $87
-        LDA #$00
-        STA $88
-        LDA #$43
-        STA $83
-        LDA #$47
-        STA $84
-        LDA #$03
-        STA $85
-        JSR CommonJump_0B
-        LDA $0680
-        ORA #$04
-        STA $0680
-        LDA $0405,X
-        AND #$01
-        TAY 
-        LDA $0083,Y
-        JSR CommonJump_05
-        BEQ L9B59
-    L9B3C:
-    CMP #$0F
-    BCC L9B59
-    LDA $0405,X
-    AND #$01
-    TAY 
-    LDA L9B62,Y
-    JSR CommonJump_05
-    JMP L9B59
 
-L9B4F:
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L9B59
-    JSR CommonJump_0A
-L9B59:
-    LDA #$01
-    STA $00
-    STA $01
-    JMP CommonEnemyJump_00_01_02
-
-; probably animation frame id table
-L9B62:
-    .byte $45, $49
+.include "enemies/seahorse.asm"
 
 ;-------------------------------------------------------------------------------
-; Polyp Routine (mini volcano)
-L9B64:
-    LDA #$00
-    STA $6AF5,X
-    STA $6AF6,X
-    LDA #$10
-    STA $0405,X
-    TXA 
-    ASL 
-    ASL 
-    STA $00
-    TXA 
-    LSR 
-    LSR 
-    LSR 
-    LSR 
-    ADC $2D
-    ADC $00
-    AND #$47
-    BNE L9B9D
-    LSR $0405,X
-    LDA #$03
-    STA $87
-    LDA $2E
-    LSR 
-    ROL $0405,X
-    AND #$03
-    BEQ L9B9D
-    STA $88
-    LDA #$02
-    STA $85
-    JMP CommonJump_0B
-L9B9D:
-    RTS
+
+.include "enemies/polyp.asm"
+
+;-------------------------------------------------------------------------------
 
 L9B9E:  .byte $22, $FF, $FF, $FF, $FF
 

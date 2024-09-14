@@ -115,24 +115,24 @@ L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
 ; Enemy AI Jump Table
 ChooseEnemyRoutine:
-    LDA $6B02,X
+    LDA EnDataIndex,X
     JSR CommonJump_ChooseRoutine
         .word L97F9 ; 00 - metroid
         .word L97F9 ; 01 - same as 0
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
-        .word L97DC ; 03 - disappears
+        .word InvalidEnemy ; 03 - disappears
         .word L9A2C ; 04 - rinka ?
-        .word L97DC ; 05 - same as 3
-        .word L97DC ; 06 - same as 3
-        .word L97DC ; 07 - same as 3
-        .word L97DC ; 08 - same as 3
-        .word L97DC ; 09 - same as 3
-        .word L97DC ; 0A - same as 3
-        .word L97DC ; 0B - same as 3
-        .word L97DC ; 0C - same as 3
-        .word L97DC ; 0D - same as 3
-        .word L97DC ; 0E - same as 3
-        .word L97DC ; 0F - same as 3
+        .word InvalidEnemy ; 05 - same as 3
+        .word InvalidEnemy ; 06 - same as 3
+        .word InvalidEnemy ; 07 - same as 3
+        .word InvalidEnemy ; 08 - same as 3
+        .word InvalidEnemy ; 09 - same as 3
+        .word InvalidEnemy ; 0A - same as 3
+        .word InvalidEnemy ; 0B - same as 3
+        .word InvalidEnemy ; 0C - same as 3
+        .word InvalidEnemy ; 0D - same as 3
+        .word InvalidEnemy ; 0E - same as 3
+        .word InvalidEnemy ; 0F - same as 3
 
 
 L960B:  .byte $08, $08, $08, $08, $16, $16, $18, $18, $1F, $1F, $00, $00, $00, $00, $00, $00
@@ -180,9 +180,11 @@ L977B:  .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $
 L978B:  .byte $00, $00, $26, $26, $26, $26, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
-L97A7:  .word L97D5, L97D5, L97D8, L97DB, LA32B, LA330, LA337, LA348
-L97B7:  .word LA359, LA36A, LA37B, LA388, LA391, LA3A2, LA3B3, LA3C4
-L97C7:  .word LA3D5, LA3DE, LA3E7, LA3F0, LA3F9
+L97A7:  .word L97D5, L97D5, L97D8, L97DB
+
+L97AF:  .word LA32B, LA330, LA337, LA348, LA359, LA36A, LA37B, LA388
+L97BF:  .word LA391, LA3A2, LA3B3, LA3C4, LA3D5, LA3DE, LA3E7, LA3F0
+L97CF:  .word LA3F9
 
 L97D1:  .byte $00, $00, $00, $01
 
@@ -192,24 +194,24 @@ L97D8:  .byte $50, $30, $FF
 
 L97DB:  .byte $FF
 
-L97DC:
+InvalidEnemy:
     LDA #$00
     STA EnStatus,X
     RTS
 
-L97E2:
+CommonEnemyJump_00_01_02:
     LDA $81
     CMP #$01
     BEQ L97F1
     CMP #$03
     BEQ L97F6
-    LDA $00
-    JMP CommonJump_00
-L97F1:
-    LDA $01
-    JMP CommonJump_01
-L97F6:
-    JMP CommonJump_02
+        LDA $00
+        JMP CommonJump_00
+    L97F1:
+        LDA $01
+        JMP CommonJump_01
+    L97F6:
+        JMP CommonJump_02
 
 ;-------------------------------------------------------------------------------
 ; Metroid Routine
@@ -224,10 +226,10 @@ L9804:  LDA #$0F
     STA $01
     LDA $0405,X
     ASL 
-    BMI L97E2
+    BMI CommonEnemyJump_00_01_02
     LDA EnStatus,X
     CMP #$03
-    BEQ L97E2
+    BEQ CommonEnemyJump_00_01_02
     JSR L99B7
     LDA $77F8,Y
     BEQ L9822
@@ -423,7 +425,7 @@ L999E:
         ORA #$A2
         STA $6B
     L99AB:
-    JMP L97E2
+    JMP CommonEnemyJump_00_01_02
 
 L99AE:
     JSR L99B7

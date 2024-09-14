@@ -36,6 +36,7 @@ AreaRoutine            = $95C3
 ChooseEnemyRoutine     = $95E5
 EnemyHitPointTbl       = $962B
 EnemyInitDelayTbl      = $96BB
+L97AF                  = $97AF
 
 SpecItmsTable          = $9598
 SoundEngine            = $B3B4
@@ -10390,11 +10391,11 @@ DoOneTile:
     beq Lx414          ; exit if tile not active
     jsr ChooseRoutine
         .word ExitSub       ;($C45C) rts
-        .word $FE3D
-        .word $FE54
-        .word $FE59
-        .word $FE54
-        .word $FE83
+        .word LFE3D
+        .word LFE54
+        .word LFE59
+        .word LFE54
+        .word LFE83
 
 LFE3D:
     inc TileRoutine,x
@@ -10473,9 +10474,9 @@ LFE83:
     lda TileAnimFrame,x
     asl
     tay
-    lda $97AF,y
+    lda L97AF,y
     sta $02
-    lda $97B0,y
+    lda L97AF+1,y
     sta $03
 Exit23:
     rts
@@ -10502,32 +10503,32 @@ DrawTileBlast:
     sta $05
     iny
     sty $10
-Lx415:
-    ldx $05
-Lx416:
-    ldy $10
-    lda ($02),y
-    inc $10
-    ldy $11
-    sta ($00),y
-    inc $11
-    dex
-    bne Lx416
-    lda $11
-    clc
-    adc #$20
-    sec
-    sbc $05
-    sta $11
-    dec $04
-    bne Lx415
+    Lx415:
+        ldx $05
+        Lx416:
+            ldy $10
+            lda ($02),y
+            inc $10
+            ldy $11
+            sta ($00),y
+            inc $11
+            dex
+            bne Lx416
+        lda $11
+        clc
+        adc #$20
+        sec
+        sbc $05
+        sta $11
+        dec $04
+        bne Lx415
     lda $01
     and #$04
     beq Lx417
-    lda $01
-    ora #$0C
-    sta $01
-Lx417:
+        lda $01
+        ora #$0C
+        sta $01
+    Lx417:
     lda $01
     and #$2F
     sta $01

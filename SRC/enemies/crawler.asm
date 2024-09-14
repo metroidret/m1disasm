@@ -4,12 +4,12 @@ CrawlerRoutine:
     AND #$03
     BEQ Crawler03
     LDA $81
-    .if BANK = 1
+    .if BANK = 1 || BANK = 4
         CMP #$01
         BEQ SkreeExitB
         CMP #$03
         BEQ SkreeExitC
-    .elseif BANK = 2
+    .elseif BANK = 2 || BANK = 5
         CMP #$01
         BEQ Crawler03c
         CMP #$03
@@ -23,9 +23,9 @@ CrawlerRoutine:
     CMP #$01
     BNE Crawler01
     LDY EnYRoomPos,X
-    .if BANK = 1
+    .if BANK = 1 || BANK = 4
         CPY #$E4
-    .elseif BANK = 2
+    .elseif BANK = 2 || BANK = 5
         CPY #$EB
     .endif
     BNE Crawler01
@@ -44,7 +44,7 @@ Crawler03:
 Crawler03b:
     JMP CommonJump_02
 
-.if BANK = 2
+.if BANK = 2 || BANK = 5
     Crawler03c:
         JMP CommonJump_01
 .endif
@@ -59,10 +59,12 @@ Crawler04:
     LDA Crawler05,Y
     JMP CommonJump_05
 
-.if BANK = 1
+.if BANK = 1 || BANK = 4
     Crawler05:  .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E 
 .elseif BANK = 2
     Crawler05:  .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
+.elseif BANK = 5
+    Crawler05:  .byte $4A, $4A, $53, $4D, $50, $50, $4D, $53
 .endif
 
 Crawler06:
@@ -114,4 +116,3 @@ JumpByRTS:
     LDA L8048,Y
     PHA 
     RTS
-

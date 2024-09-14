@@ -120,9 +120,9 @@ ChooseEnemyRoutine:
         .word WaverRoutine ; 02 - Waver
         .word RipperRoutine ; 03 - Ripper
         .word SkreeRoutine ; 04 - Skree
-        .word CrawlerRoutine ; 05 - Zoomer (wallcrawler)
+        .word CrawlerRoutine ; 05 - Zoomer (crawler)
         .word RioRoutine ; 06 - Rio (swoopers)
-        .word ZebRoutine ; 07 - Pipe bugs
+        .word PipeBugRoutine ; 07 - Zeb
         .word KraidRoutine ; 08 - Kraid (crashes dug to bug)
         .word KraidLint ; 09 - Kraid's lint (crashes)
         .word KraidNail ; 0A - Kraid's nail (crashes)
@@ -196,9 +196,11 @@ L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
 ; Another movement pointer table?
 ; Referenced using EnData0A
-L97A7:  .word L9965, L9974, L9983, L9992, L9D36, L9D3B, L9D40, L9D45
-L97B7:  .word L9D4A, L9D4F, L9D54, L9D59, L9D5D, L9D63, L9D6A, L9D6A
-L97C7:  .word L9D6A, L9D6A, L9D6A, L9D6A, L9D6A
+L97A7:  .word L9965, L9974, L9983, L9992
+; Referenced by LFE83
+L97AF:  .word L9D36, L9D3B, L9D40, L9D45, L9D4A, L9D4F, L9D54, L9D59
+L97BF:  .word L9D5D, L9D63, L9D6A, L9D6A, L9D6A, L9D6A, L9D6A, L9D6A
+L97CF:  .word L9D6A
 
 ; If I'm reading the code correctly, this table is accessed with this formula:
 ;  EnData08 = L97D1[(L97D1[L96CB[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
@@ -318,50 +320,15 @@ CommonEnemyJump_00_01_02:
     L99B5:
         JMP CommonJump_02
 
-; Sidehopper Routine
-SidehopperFloorRoutine:
-    LDA #$09
-L99BA:
-    STA $85
-    STA $86
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L99C8
-        JSR CommonJump_09
-    L99C8:
-    LDA #$06
-    STA $00
-    CommonEnemyStub:
-    LDA #$08
-    STA $01
-    JMP CommonEnemyJump_00_01_02
-
-; Ceiling Sidehopper Routine
-SidehopperCeilingRoutine:  LDA #$0F
-    JMP L99BA
+.include "enemies/sidehopper.asm"
 
 ;-------------------------------------------------------------------------------
-; RipperRoutine
-RipperRoutine:  LDA EnStatus,X
-    CMP #$03
-    BEQ L99E2
-        JSR CommonJump_0A
-    L99E2:
-    JMP L99C8
+
+.include "enemies/ripper.asm"
 
 ;-------------------------------------------------------------------------------
-; Waver Routine
-WaverRoutine:
-    LDA #$21
-    STA $85
-    LDA #$1E
-    STA $86
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L99F7
-        JSR CommonJump_09
-    L99F7:
-    JMP L99C8
+
+.include "enemies/waver.asm"
 
 ;-------------------------------------------------------------------------------
 ; SkreeRoutine
@@ -374,47 +341,10 @@ WaverRoutine:
 
 ;-------------------------------------------------------------------------------
 ; Rio/Swooper Routine
-RioRoutine:
-    LDA $81
-    CMP #$01
-    BEQ RioExitC
-
-    CMP #$03
-    BEQ RioExitB
-
-    LDA #$80
-    STA EnData1A,X
-    LDA EnData02,X ; y speed?
-    BMI RioExitA
-
-    LDA EnData05,X
-    AND #$10
-    BEQ RioExitA
-
-    LDA EnYRoomPos,X
-    SEC 
-    SBC ObjectY ; Compare with Samus' Y position
-    BPL RioBranch
-        JSR TwosCompliment_
-    RioBranch:
-    CMP #$10
-    BCS RioExitA
-    LDA #$00
-    STA EnData1A,X
-
-RioExitA:
-    LDA #$03
-    JMP CommonJump_00
-
-RioExitB:
-    JMP CommonJump_02
-
-RioExitC:
-    LDA #$08
-    JMP CommonJump_01
+.include "enemies/rio.asm"
 
 ;-------------------------------------------------------------------------------
-ZebRoutine: ; L9B32
+
 .include "enemies/pipe_bug.asm"
 
 ;-------------------------------------------------------------------------------
