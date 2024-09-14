@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 BANK .set 1
-.segment "BANK_01_00"
+.segment "BANK_01_MAIN"
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -532,31 +532,31 @@ L9DDE:  .byte $96, $FF
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
 EnemyFramePtrTbl1:
-L9DE0:  .word L9FC2, L9FC7, L9FCC, L9FD1, L9FDA, L9FE3, L9FE3, L9FE3
-L9DF0:  .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
-L9E00:  .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
-L9E10:  .word L9FE3, L9FE3, L9FF1, L9FFF, LA00B, LA019, LA027, LA033
-L9E20:  .word LA03C, LA046, LA050, LA059, LA063, LA06D, LA06D, LA06D
-L9E30:  .word LA07B, LA082, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B
-L9E40:  .word LA08B, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B
-L9E50:  .word LA09F, LA0B3, LA0BE, LA0C9, LA0D2, LA0DB, LA0E6, LA0E6
-L9E60:  .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
-L9E70:  .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
-L9E80:  .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
-L9E90:  .word LA0E6, LA0EE, LA0F6, LA0FE, LA106, LA10E, LA116, LA11E
-L9EA0:  .word LA126, LA12E, LA13C, LA156, LA162, LA16F, LA177, LA17F
-L9EB0:  .word LA187, LA18F, LA197, LA19F, LA1A7, LA1AF, LA1B7, LA1BF
-L9EC0:  .word LA1C7, LA1CF, LA1D7, LA1DF, LA1E7, LA1EF, LA1F7, LA1F7
-L9ED0:  .word LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7
+    .word L9FC2, L9FC7, L9FCC, L9FD1, L9FDA, L9FE3, L9FE3, L9FE3
+    .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
+    .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
+    .word L9FE3, L9FE3, L9FF1, L9FFF, LA00B, LA019, LA027, LA033
+    .word LA03C, LA046, LA050, LA059, LA063, LA06D, LA06D, LA06D
+    .word LA07B, LA082, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B
+    .word LA08B, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B, LA08B
+    .word LA09F, LA0B3, LA0BE, LA0C9, LA0D2, LA0DB, LA0E6, LA0E6
+    .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
+    .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
+    .word LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6, LA0E6
+    .word LA0E6, LA0EE, LA0F6, LA0FE, LA106, LA10E, LA116, LA11E
+    .word LA126, LA12E, LA13C, LA156, LA162, LA16F, LA177, LA17F
+    .word LA187, LA18F, LA197, LA19F, LA1A7, LA1AF, LA1B7, LA1BF
+    .word LA1C7, LA1CF, LA1D7, LA1DF, LA1E7, LA1EF, LA1F7, LA1F7
+    .word LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7
 
 EnemyFramePtrTbl2:
-L9EE0:  .word LA1F7, LA1FF, LA204, LA204, LA204, LA204, LA204, LA204
-L9EF0:  .word LA204, LA204, LA209, LA209, LA209, LA209, LA209, LA209
-L9F00:  .word LA213, LA21D, LA22D, LA23D, LA24D, LA25D, LA267
+    .word LA1F7, LA1FF, LA204, LA204, LA204, LA204, LA204, LA204
+    .word LA204, LA204, LA209, LA209, LA209, LA209, LA209, LA209
+    .word LA213, LA21D, LA22D, LA23D, LA24D, LA25D, LA267
 
 EnemyPlacePtrTbl:
-L9F0E:  .word L9F2E, L9F30, L9F48, L9F60, L9F60, L9F60, L9F70, L9F7C
-L9F1E:  .word L9F84, L9F90, L9F90, L9FB0, L9FBE, L9FBE, L9FBE, L9FBE
+    .word L9F2E, L9F30, L9F48, L9F60, L9F60, L9F60, L9F70, L9F7C
+    .word L9F84, L9F90, L9F90, L9FB0, L9FBE, L9FBE, L9FBE, L9FBE
 
 ;------------------------------[ Enemy sprite placement data tables ]--------------------------------
 
@@ -763,20 +763,20 @@ MacroDefs:
 .include "songs/brinstar.asm"
 
 ; Errant Mother Brain BG tiles (unused)
-LB135:  .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
-LB145:  .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
-LB155:  .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
-LB165:  .byte $F0, $F8, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $07, $07, $07
-LB175:  .byte $03, $03, $01, $00, $00, $00, $00, $00, $00, $00, $80, $FF, $C7, $83, $03, $C7
-LB185:  .byte $CF, $FE, $EC, $00, $30, $78, $F8, $30, $00, $01, $12, $F5, $EA, $FB, $FD, $F9
-LB195:  .byte $1E, $0E, $44, $07, $03, $03, $01, $01, $E0, $10, $48, $2B, $3B, $1B, $5A, $D0
-LB1A5:  .byte $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0, $2C, $23, $20, $20, $30
-LB1B5:  .byte $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30, $1F, $80, $C0, $C0, $60
-LB1C5:  .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
-LB1D5:  .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
-LB1E5:  .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
+    .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
+    .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
+    .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
+    .byte $F0, $F8, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $07, $07, $07
+    .byte $03, $03, $01, $00, $00, $00, $00, $00, $00, $00, $80, $FF, $C7, $83, $03, $C7
+    .byte $CF, $FE, $EC, $00, $30, $78, $F8, $30, $00, $01, $12, $F5, $EA, $FB, $FD, $F9
+    .byte $1E, $0E, $44, $07, $03, $03, $01, $01, $E0, $10, $48, $2B, $3B, $1B, $5A, $D0
+    .byte $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0, $2C, $23, $20, $20, $30
+    .byte $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30, $1F, $80, $C0, $C0, $60
+    .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
+    .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
+    .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
 ; ???
-LB1F5:  .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
@@ -789,8 +789,6 @@ LB1F5:  .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
 .segment "BANK_01_VEC"
-LBFFA:  .word NMI                       ;($C0D9)NMI vector.
-LBFFC:  .word RESET                     ;($FFB0)Reset vector.
-LBFFE:  .word RESET                     ;($FFB0)IRQ vector.
-
-BRINSTAR = 0
+    .word NMI                       ;($C0D9)NMI vector.
+    .word RESET                     ;($FFB0)Reset vector.
+    .word RESET                     ;($FFB0)IRQ vector.

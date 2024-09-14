@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 BANK .set 2
-.segment "BANK_02_00"
+.segment "BANK_02_MAIN"
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 

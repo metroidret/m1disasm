@@ -21,7 +21,7 @@
 .include "macros.asm"
 
 BANK .set 7
-.segment "BANK_07_00"
+.segment "BANK_07_MAIN"
 
 ;-------------------------------------[ Forward declarations ]--------------------------------------
 

@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 BANK .set 0
-.segment "BANK_00_00"
+.segment "BANK_00_MAIN"
 
 ;--------------------------------------------[ Export ]---------------------------------------------
 
@@ -3723,9 +3723,9 @@ EndGamePal00:
     .byte $3F                       ;PPU address high byte.
     .byte $00                       ;PPU address low byte.
     .byte $20                       ;PPU string length.
-;The following values are written to the background palette:
+    ;The following values are written to the background palette:
     .byte $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08
-;The following values are written to the sprite palette:
+    ;The following values are written to the sprite palette:
     .byte $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16 
 
     .byte $00                       ;End EndGamePal00 data.
@@ -3734,7 +3734,7 @@ EndGamePal01:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $10, $20, $30, $0F, $0F, $0F, $0F
 
     .byte $00                       ;End EndGamePal01 data.
@@ -3743,7 +3743,7 @@ EndGamePal02:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $12, $22, $32, $0F, $0B, $1B, $2B
 
     .byte $00                       ;End EndGamePal02 data.
@@ -3752,7 +3752,7 @@ EndGamePal03:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $14, $24, $34, $0F, $09, $19, $29 
 
     .byte $00                       ;End EndGamePal03 data.
@@ -3761,7 +3761,7 @@ EndGamePal04:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $16, $26, $36, $0F, $07, $17, $27
 
     .byte $00                       ;End EndGamePal04 data.
@@ -3770,7 +3770,7 @@ EndGamePal05:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $18, $28, $38, $0F, $05, $15, $25 
 
     .byte $00                       ;End EndGamePal05 data.
@@ -3779,7 +3779,7 @@ EndGamePal06:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $1A, $2A, $3A, $0F, $03, $13, $13
 
     .byte $00                       ;End EndGamePal06 data.
@@ -3788,7 +3788,7 @@ EndGamePal07:
     .byte $3F                       ;PPU address high byte.
     .byte $18                       ;PPU address low byte.
     .byte $08                       ;PPU string length.
-;The following values are written to the sprite palette starting at $3F18:
+    ;The following values are written to the sprite palette starting at $3F18:
     .byte $0F, $1C, $2C, $3C, $0F, $01, $11, $21 
 
     .byte $00                       ;End EndGamePal07 data.
@@ -3797,13 +3797,13 @@ EndGamePal08:
     .byte $3F                       ;PPU address high byte.
     .byte $0C                       ;PPU address low byte.
     .byte $04                       ;PPU string length.
-;The following values are written to the background palette starting at $3F0C:
+    ;The following values are written to the background palette starting at $3F0C:
     .byte $0F, $18, $08, $07
 
     .byte $3F                       ;PPU address high byte.
     .byte $10                       ;PPU address low byte.
     .byte $10                       ;PPU string length.
-;The following values are written to the sprite palette:
+    ;The following values are written to the sprite palette:
     .byte $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
 
     .byte $00                       ;End EndGamePal08 data.
@@ -3812,24 +3812,24 @@ EndGamePal09:
     .byte $3F                       ;PPU address high byte.
     .byte $0C                       ;PPU address low byte.
     .byte $04                       ;PPU string length.
-;The following values are written to the background palette starting at $3F0C:
+    ;The following values are written to the background palette starting at $3F0C:
     .byte $0F, $08, $07, $0F
 
     .byte $3F                       ;PPU address high byte.
     .byte $10                       ;PPU address low byte.
     .byte $10                       ;PPU string length.
-;The following values are written to the sprite palette:
+    ;The following values are written to the sprite palette:
     .byte $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
 
     .byte $00                       ;End EndGamePal09 data.
 
 EndGamePal0A:
-PPUStringRepeat $3F0C, $0F, $04
-PPUStringRepeat $3F10, $0F, $10
+    PPUStringRepeat $3F0C, $0F, $04
+    PPUStringRepeat $3F10, $0F, $10
 
     .byte $00                       ;End EndGamePal0A data.
 
-;The following data writes the end game backgroud graphics.
+;The following data writes the end game background graphics.
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
 LA052:
@@ -3839,7 +3839,7 @@ LA052:
     .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
     .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
-;Writes ground graphics on name table 0 in row $2320 (26th row from top).
+    ;Writes ground graphics on name table 0 in row $2320 (26th row from top).
     .byte $23                       ;PPU address high byte.
     .byte $20                       ;PPU address low byte.
     .byte $20                       ;PPU string length.
@@ -4250,8 +4250,7 @@ LA4F0:
     .byte $20                       ;PPU address high byte.
     .byte $26                       ;PPU address low byte.
     .byte $14                       ;PPU string length.
-    .byte $FF, $FF, $FF, $FF, $FF, $24, $25, $26, $27, $FF, $FF, $2C, $2D, $2E, $2F, $FF
-    .byte $FF, $FF, $FF, $FF
+    .byte "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
 
     .byte $00                       ;End PPU string write.
 
@@ -4260,7 +4259,7 @@ LA508:
     .byte $20                       ;PPU address high byte.
     .byte $4B                       ;PPU address low byte.
     .byte $0A                       ;PPU string length.
-    .byte $28, $29, $2A, $2B, $FF, $FF, $02, $03, $04, $05
+    .byte $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
 LA515:
     ;Writes credits on name table 0 in row $2060 (4th row from top).
@@ -4336,9 +4335,9 @@ CopyMap:
     STA $00
     LDA #.hibyte(WorldMap)
     STA $01
-    LDA #$00
+    LDA #.lobyte(WorldMapRAM)
     STA $02
-    LDA #$70
+    LDA #.hibyte(WorldMapRAM)
     STA $03
     LDX #$04
     LA950:

@@ -19,30 +19,29 @@
 ;Common Reset Routine
 
 RESET: ;($BFB0)
-    SEI                             ;Disables interrupt.
-    CLD                             ;Sets processor to binary mode.
-    LDX #$00                        ;
-    STX PPUCTRL                     ;Clear PPU control registers.
-    STX PPUMASK                     ;
-@:  LDA PPUSTATUS                   ;
-    BPL @-                          ;Wait for VBlank.
-@:  LDA PPUSTATUS                   ;
-    BPL @-                          ;
-    ORA #$FF                        ;
-    STA MMC1Reg0                    ;Reset MMC1 chip.-->
-    STA MMC1Reg1                    ;(MSB is set).
-    STA MMC1Reg2                    ;
-    STA MMC1Reg3                    ;
-    JMP Startup                     ;($C01A)Does preliminary housekeeping.
+    sei                             ;Disables interrupt.
+    cld                             ;Sets processor to binary mode.
+    ldx #$00                        ;
+    stx PPUCTRL                     ;Clear PPU control registers.
+    stx PPUMASK                     ;
+@:  lda PPUSTATUS                   ;
+    bpl @-                          ;Wait for VBlank.
+@:  lda PPUSTATUS                   ;
+    bpl @-                          ;
+    ora #$FF                        ;
+    sta MMC1Reg0                    ;Reset MMC1 chip.-->
+    sta MMC1Reg1                    ;(MSB is set).
+    sta MMC1Reg2                    ;
+    sta MMC1Reg3                    ;
+    jmp Startup                     ;($C01A)Does preliminary housekeeping.
 
-.IF BANK = 7
-    ;Not used.
-    LFFD5:  .byte $FF, $FF, $FF, $4C, $E4, $B3, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    LFFE5:  .byte $FF, $FF, $FF, $FF, $4D, $45, $54, $52, $4F, $49, $44, $E4, $8D, $00, $00, $38
-    LFFF5:  .byte $04, $01, $06, $01, $BC
-.ELSE
-    ;Not used.
-    LBFD5:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
-    LBFE5:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    LBFF5:  .byte $00, $00, $00, $00, $00
-.ENDIF
+;Not used.
+.if BANK = 7
+    .byte $FF, $FF, $FF, $4C, $E4, $B3, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $4D, $45, $54, $52, $4F, $49, $44, $E4, $8D, $00, $00, $38
+    .byte $04, $01, $06, $01, $BC
+.else
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00
+.endif
