@@ -30,6 +30,7 @@ FramePtrTable          = $860B
 PlacePtrTable          = $86DF
 
 SamusEnterDoor         = $8B13
+PalPntrTbl             = $9560
 AreaPointers           = $9598
 AreaRoutine            = $95C3
 ChooseEnemyRoutine     = $95E5
@@ -535,8 +536,8 @@ LC1FF:
     tya                             ;
     asl                             ;* 2, each pal data ptr is 2 bytes (16-bit).
     tay                             ;
-    ldx $9560,y                     ;X = low byte of PPU data pointer.
-    lda $9561,y                     ;
+    ldx PalPntrTbl,y                     ;X = low byte of PPU data pointer.
+    lda PalPntrTbl+1,y                     ;
     tay                             ;Y = high byte of PPU data pointer.
     lda #$00                        ;Clear A.
     sta PalDataPending              ;Reset palette data pending byte.
@@ -3727,33 +3728,33 @@ WaveBulletTrajectoryPointers:
 ; This repeats until table ends
 
 WaveBulletTrajectoryHorizontal:
-    .byte $01, ($8|$7)<<4 + ($0|$3)
-    .byte $01, ($8|$5)<<4 + ($0|$3)
-    .byte $01, ($8|$1)<<4 + ($0|$3)
-    .byte $01, ($0|$1)<<4 + ($0|$3)
-    .byte $01, ($0|$5)<<4 + ($0|$3)
-    .byte $01, ($0|$7)<<4 + ($0|$3)
-    .byte $01, ($0|$7)<<4 + ($0|$3)
-    .byte $01, ($0|$5)<<4 + ($0|$3)
-    .byte $01, ($0|$1)<<4 + ($0|$3)
-    .byte $01, ($8|$1)<<4 + ($0|$3)
-    .byte $01, ($8|$5)<<4 + ($0|$3)
-    .byte $01, ($8|$7)<<4 + ($0|$3)
+    SignMagSpeed $01,  3, -7
+    SignMagSpeed $01,  3, -5
+    SignMagSpeed $01,  3, -1
+    SignMagSpeed $01,  3,  1
+    SignMagSpeed $01,  3,  5
+    SignMagSpeed $01,  3,  7
+    SignMagSpeed $01,  3,  7
+    SignMagSpeed $01,  3,  5
+    SignMagSpeed $01,  3,  1
+    SignMagSpeed $01,  3, -1
+    SignMagSpeed $01,  3, -5
+    SignMagSpeed $01,  3, -7
     .byte $FF
 
 WaveBulletTrajectoryVertical:
-    .byte $01, ($8|$3)<<4 + ($0|$7)
-    .byte $01, ($8|$3)<<4 + ($0|$5)
-    .byte $01, ($8|$3)<<4 + ($0|$1)
-    .byte $01, ($8|$3)<<4 + ($8|$1)
-    .byte $01, ($8|$3)<<4 + ($8|$5)
-    .byte $01, ($8|$3)<<4 + ($8|$7)
-    .byte $01, ($8|$3)<<4 + ($8|$7)
-    .byte $01, ($8|$3)<<4 + ($8|$5)
-    .byte $01, ($8|$3)<<4 + ($8|$1)
-    .byte $01, ($8|$3)<<4 + ($0|$1)
-    .byte $01, ($8|$3)<<4 + ($0|$5)
-    .byte $01, ($8|$3)<<4 + ($0|$7)
+    SignMagSpeed $01,  7, -3
+    SignMagSpeed $01,  5, -3
+    SignMagSpeed $01,  1, -3
+    SignMagSpeed $01, -1, -3
+    SignMagSpeed $01, -5, -3
+    SignMagSpeed $01, -7, -3
+    SignMagSpeed $01, -7, -3
+    SignMagSpeed $01, -5, -3
+    SignMagSpeed $01, -1, -3
+    SignMagSpeed $01,  1, -3
+    SignMagSpeed $01,  5, -3
+    SignMagSpeed $01,  7, -3
     .byte $FF
 
 ; UpdateIceBullet

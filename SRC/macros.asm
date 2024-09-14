@@ -1,4 +1,28 @@
 
+.macro SignMagSpeed duration, xSpd, ySpd
+    .assert duration < $FF, error, "duration must be smaller than $FF"
+    .assert xSpd > -8 && xSpd < 8, error, "xSpd must be from -7 to 7 inclusive"
+    .assert ySpd > -8 && ySpd < 8, error, "ySpd must be from -7 to 7 inclusive"
+
+    absXSpd .set xSpd
+    absYSpd .set ySpd
+    signXSpd .set 0
+    signYSpd .set 0
+
+    .if xSpd < 0
+        signXSpd .set 1
+        absXSpd .set -xSpd
+    .endif
+    .if ySpd < 0
+        signYSpd .set 1
+        absYSpd .set -ySpd
+    .endif
+
+    .byte duration
+    ;.out .sprintf("spdByte = $%02X", ((($8*signYSpd)|absYSpd)<<4) + (($8*signXSpd)|absXSpd))
+    .byte ((($8*signYSpd)|absYSpd)<<4) + (($8*signXSpd)|absXSpd)
+.endmacro
+
 .macro PPUString ppuAddress, ppuString
     .byte .hibyte(ppuAddress), .lobyte(ppuAddress)
     ; maybe this could be recursive to support multiple ppuString parameters for byte values

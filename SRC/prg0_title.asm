@@ -161,29 +161,29 @@ InitializeAfterReset:
     sty $00                         ;
     ldx #$60                        ;Set $0000 to point to address $6000.
 
-L809E:
-    stx $01                         ;
-    txa                             ;
-    and #$03                        ;
-    asl                             ;
-    tay                             ;The following loop Loads the -->
-    sty $02                         ;RAM with the following values: -->
-    lda RamValueTbl, y              ;$6000 thru $62FF = #$00.
-    ldy #$00                        ;$6300 thru $633F = #$C0.
-L80AC:
-    sta ($00), y                    ;$6340 thru $63FF = #$C4.
-    iny                             ;$6400 thru $66FF = #$00.
-    beq L80BE                       ;$6700 thru $673F = #$C0.
-    cpy #$40                        ;$6740 thru $67FF = #$C4.
-    bne L80AC                       ;
-    ldy $02                         ;
-    lda RamValueTbl+1, y            ;
-    ldy #$40                        ;
-    bpl L80AC                       ;
-L80BE:
-    inx                             ;
-    cpx #$68                        ;
-    bne L809E                       ;
+    L809E:
+        stx $01                         ;
+        txa                             ;
+        and #$03                        ;
+        asl                             ;
+        tay                             ;The following loop Loads the -->
+        sty $02                         ;RAM with the following values: -->
+        lda RamValueTbl, y              ;$6000 thru $62FF = #$00.
+        ldy #$00                        ;$6300 thru $633F = #$C0.
+        L80AC:
+            sta ($00), y                    ;$6340 thru $63FF = #$C4.
+            iny                             ;$6400 thru $66FF = #$00.
+            beq L80BE                       ;$6700 thru $673F = #$C0.
+            cpy #$40                        ;$6740 thru $67FF = #$C4.
+            bne L80AC                       ;
+            ldy $02                         ;
+            lda RamValueTbl+1, y            ;
+            ldy #$40                        ;
+            bpl L80AC                       ;
+        L80BE:
+        inx                             ;
+        cpx #$68                        ;
+        bne L809E                       ;
 
     inc TitleRoutine                ;Draw intro background next.                    
     jmp LoadStarSprites             ;($98AE)Loads stars on intro screen.            
@@ -199,8 +199,8 @@ DrawIntroBackground:
     STA MultiSFXFlag                ;Initiates intro music.
     JSR ScreenOff                   ;($C439)Turn screen off.
     JSR ClearNameTables             ;($C158)Erase name table data.
-    LDX #$F4                        ;Lower address of PPU information.
-    LDY #$82                        ;Upper address of PPU information.
+    LDX #.lobyte(L82F4)                        ;Lower address of PPU information.
+    LDY #.hibyte(L82F4)                        ;Upper address of PPU information.
     JSR PreparePPUProcess_          ;($C20E) Writes background of intro screen to name tables.
     LDA #$01                        ;
     STA PalDataPending              ;Prepare to load palette data.
@@ -519,7 +519,7 @@ TitleRoutineReturn:
     RTS                             ;Last title routine function. Should not be reached.
 
 ;The following data fills name table 0 with the intro screen background graphics.
-
+L82F4:
     ;Information to be stored in attribute table 0.
     .byte $23                       ;PPU address high byte.
     .byte $C0                       ;PPU address low byte.
@@ -638,10 +638,7 @@ TitleRoutineReturn:
     PPUString $2227, " PUSH START BUTTON   "
 
     ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
-    .byte $22                       ;PPU memory high byte.
-    .byte $69                       ;PPU memory low byte.
-    .byte $12                       ;PPU string length.
-    .byte $8F, " 1986 NINTENDO   "
+    PPUString $2269, "< 1986 NINTENDO   "
 
 ;The following data fills name table 1 with the intro screen background graphics.
 
@@ -732,10 +729,10 @@ TitleRoutineReturn:
     .byte $00                       ;End PPU string write.
 
 ;The following data does not appear to be used.
-L871E:  .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-L872E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00
-L873E:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-L874E:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 
+    .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 
 
 ;The following error message is diplayed if the player enters an incorrect password.
 L8759:  .byte "ERROR TRY AGAIN"
@@ -745,10 +742,10 @@ L8759:  .byte "ERROR TRY AGAIN"
 L8768:  .byte "               "
 
 ;Not used.
-L8777:  .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
-L8787:  .byte $00, $03, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
-L8797:  .byte $00, $03, $A1, $87, $A2, $87, $A5, $87, $A8, $87, $00, $18, $CC, $00, $18, $CD
-L87A7:  .byte $00, $18, $CE, $00 
+    .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
+    .byte $00, $03, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
+    .byte $00, $03, $A1, $87, $A2, $87, $A5, $87, $A8, $87, $00, $18, $CC, $00, $18, $CD
+    .byte $00, $18, $CE, $00 
 
 LoadSparkleData:
     LDX #$0A                        ;
@@ -904,76 +901,76 @@ LoadInitialSpriteData:
 ;The following tables are loaded into RAM as initial sprite control values for the crosshair sprites.
 
 Sprite0and4InitTbl:
-L88BE:  .byte $20                       ;Initial starting y screen position.
-L88BF:  .byte $C5                       ;Sprite pattern table index.
-L88C0:  .byte $80                       ;Sprite control byte.
-L88C1:  .byte $00                       ;Initial starting x screen position.
-L88C2:  .byte $FF                       ;Not used.
-L88C3:  .byte $FF                       ;Not used.
-L88C4:  .byte $74                       ;Intro sprite x total movement distance.
-L88C5:  .byte $58                       ;Intro sprite y total movement distance.
-L88C6:  .byte $FF                       ;Not used.
-L88C7:  .byte $FF                       ;Not used.
-L88C8:  .byte $00                       ;Sprite task complete idicator.
-L88C9:  .byte $FF                       ;Not used.
-L88CA:  .byte $1D                       ;x displacement of sprite movement(run).
-L88CB:  .byte $0E                       ;y displacement of sprite movement(rise).
-L88CC:  .byte $01                       ;Change sprite x coord in positive direction.
-L88CD:  .byte $01                       ;Change sprite y coord in positive direction.
+    .byte $20                       ;Initial starting y screen position.
+    .byte $C5                       ;Sprite pattern table index.
+    .byte $80                       ;Sprite control byte.
+    .byte $00                       ;Initial starting x screen position.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $74                       ;Intro sprite x total movement distance.
+    .byte $58                       ;Intro sprite y total movement distance.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $00                       ;Sprite task complete idicator.
+    .byte $FF                       ;Not used.
+    .byte $1D                       ;x displacement of sprite movement(run).
+    .byte $0E                       ;y displacement of sprite movement(rise).
+    .byte $01                       ;Change sprite x coord in positive direction.
+    .byte $01                       ;Change sprite y coord in positive direction.
 
 Sprite1and5InitTbl:
-L88CE:  .byte $20                       ;Initial starting y screen position.
-L88CF:  .byte $C5                       ;Sprite pattern table index.
-L88D0:  .byte $C0                       ;Sprite control byte.
-L88D1:  .byte $F8                       ;Initial starting x screen position.
-L88D2:  .byte $FF                       ;Not used.
-L88D3:  .byte $FF                       ;Not used.
-L88D4:  .byte $7C                       ;Intro sprite x total movement distance.
-L88D5:  .byte $58                       ;Intro sprite y total movement distance.
-L88D6:  .byte $FF                       ;Not used.
-L88D7:  .byte $FF                       ;Not used.
-L88D8:  .byte $00                       ;Sprite task complete idicator.
-L88D9:  .byte $FF                       ;Not used.
-L88DA:  .byte $1F                       ;x displacement of sprite movement(run).
-L88DB:  .byte $0E                       ;y displacement of sprite movement(rise).
-L88DC:  .byte $80                       ;Change sprite x coord in negative direction.
-L88DD:  .byte $01                       ;Change sprite y coord in positive direction.
+    .byte $20                       ;Initial starting y screen position.
+    .byte $C5                       ;Sprite pattern table index.
+    .byte $C0                       ;Sprite control byte.
+    .byte $F8                       ;Initial starting x screen position.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $7C                       ;Intro sprite x total movement distance.
+    .byte $58                       ;Intro sprite y total movement distance.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $00                       ;Sprite task complete idicator.
+    .byte $FF                       ;Not used.
+    .byte $1F                       ;x displacement of sprite movement(run).
+    .byte $0E                       ;y displacement of sprite movement(rise).
+    .byte $80                       ;Change sprite x coord in negative direction.
+    .byte $01                       ;Change sprite y coord in positive direction.
 
 Sprite2and6InitTbl:
-L88DE:  .byte $C8                       ;Initial starting y screen position.
-L88DF:  .byte $C5                       ;Sprite pattern table index.
-L88E0:  .byte $00                       ;Sprite control byte.
-L88E1:  .byte $00                       ;Initial starting x screen position.
-L88E2:  .byte $FF                       ;Not used.
-L88E3:  .byte $FF                       ;Not used.
-L88E4:  .byte $74                       ;Intro sprite x total movement distance.
-L88E5:  .byte $60                       ;Intro sprite y total movement distance.
-L88E6:  .byte $FF                       ;Not used.
-L88E7:  .byte $FF                       ;Not used.
-L88E8:  .byte $00                       ;Sprite task complete idicator.
-L88E9:  .byte $FF                       ;Not used.
-L88EA:  .byte $1D                       ;x displacement of sprite movement(run).
-L88EB:  .byte $1A                       ;y displacement of sprite movement(rise).
-L88EC:  .byte $01                       ;Change sprite x coord in positive direction.
-L88ED:  .byte $80                       ;Change sprite y coord in negative direction.
+    .byte $C8                       ;Initial starting y screen position.
+    .byte $C5                       ;Sprite pattern table index.
+    .byte $00                       ;Sprite control byte.
+    .byte $00                       ;Initial starting x screen position.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $74                       ;Intro sprite x total movement distance.
+    .byte $60                       ;Intro sprite y total movement distance.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $00                       ;Sprite task complete idicator.
+    .byte $FF                       ;Not used.
+    .byte $1D                       ;x displacement of sprite movement(run).
+    .byte $1A                       ;y displacement of sprite movement(rise).
+    .byte $01                       ;Change sprite x coord in positive direction.
+    .byte $80                       ;Change sprite y coord in negative direction.
 
 Sprite3and7InitTbl:
-L88EE:  .byte $C8                       ;Initial starting y screen position.
-L88EF:  .byte $C5                       ;Sprite pattern table index.
-L88F0:  .byte $40                       ;Sprite control byte.
-L88F1:  .byte $F8                       ;Initial starting x screen position.
-L88F2:  .byte $FF                       ;Not used.
-L88F3:  .byte $FF                       ;Not used.
-L88F4:  .byte $7C                       ;Intro sprite x total movement distance.
-L88F5:  .byte $60                       ;Intro sprite y total movement distance.
-L88F6:  .byte $FF                       ;Not used.
-L88F7:  .byte $FF                       ;Not used.
-L88F8:  .byte $00                       ;Sprite task complete idicator.
-L88F9:  .byte $FF                       ;Not used.
-L88FA:  .byte $1F                       ;x displacement of sprite movement(run).
-L88FB:  .byte $1A                       ;y displacement of sprite movement(rise).
-L88FC:  .byte $80                       ;Change sprite x coord in negative direction.
-L88FD:  .byte $80                       ;Change sprite y coord in negative direction.
+    .byte $C8                       ;Initial starting y screen position.
+    .byte $C5                       ;Sprite pattern table index.
+    .byte $40                       ;Sprite control byte.
+    .byte $F8                       ;Initial starting x screen position.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $7C                       ;Intro sprite x total movement distance.
+    .byte $60                       ;Intro sprite y total movement distance.
+    .byte $FF                       ;Not used.
+    .byte $FF                       ;Not used.
+    .byte $00                       ;Sprite task complete idicator.
+    .byte $FF                       ;Not used.
+    .byte $1F                       ;x displacement of sprite movement(run).
+    .byte $1A                       ;y displacement of sprite movement(rise).
+    .byte $80                       ;Change sprite x coord in negative direction.
+    .byte $80                       ;Change sprite y coord in negative direction.
 
 DrawCrosshairsSprites:
     LDA First4SlowCntr              ;
@@ -1075,8 +1072,8 @@ L89AA: .byte $05, $19, $41, $19, $05
 ;The following table is used to find the data for the sparkle routine in the table below:
 
 SparkleAddressTbl:
-L89AF:  .word TopSparkleDataTbl         ;($89B3)Table for top sparkle data.
-L89B1:  .word BottomSparkleDataTbl      ;($89E9)Table for bottom sparkle data.
+    .word TopSparkleDataTbl         ;($89B3)Table for top sparkle data.
+    .word BottomSparkleDataTbl      ;($89E9)Table for bottom sparkle data.
 
 ;The following two tables are the data tables for controlling the movement of the sparkle sprites
 ;in the title routine.  Here's how thw data in the tables work: The first byte is a counter byte.
@@ -1095,84 +1092,84 @@ L89B1:  .word BottomSparkleDataTbl      ;($89E9)Table for bottom sparkle data.
 ;the other seven bytes.
 
 TopSparkleDataTbl:
-L89B3:  .byte $01, $00
-L89B5:  .byte $01, $00
-L89B7:  .byte $01, $01
-L89B9:  .byte $06, $00
-L89BB:  .byte $07, $01
-L89BD:  .byte $10, $01
-L89BF:  .byte $03, $01
-L89C1:  .byte $01, $00
-L89C3:  .byte $01, $01
-L89C5:  .byte $01, $00
-L89C7:  .byte $01, $01
-L89C9:  .byte $01, $00
-L89CB:  .byte $09, $01
-L89CD:  .byte $04, $00
-L89CF:  .byte $27, $01
-L89D1:  .byte $01, $00
-L89D3:  .byte $01, $00
-L89D5:  .byte $06, $01
-L89D7:  .byte $01, $00
-L89D9:  .byte $15, $01
-L89DB:  .byte $06, $00
-L89DD:  .byte $01, $01
-L89DF:  .byte $08, $01
-L89E1:  .byte $0E, $02
-L89E3:  .byte $02, $03
-L89E5:  .byte $06, $04
-L89E7:  .byte $00, $00
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  1,  0
+    SignMagSpeed $06,  0,  0
+    SignMagSpeed $07,  1,  0
+    SignMagSpeed $10,  1,  0
+    SignMagSpeed $03,  1,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  1,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  1,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $09,  1,  0
+    SignMagSpeed $04,  0,  0
+    SignMagSpeed $27,  1,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $06,  1,  0
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $15,  1,  0
+    SignMagSpeed $06,  0,  0
+    SignMagSpeed $01,  1,  0
+    SignMagSpeed $08,  1,  0
+    SignMagSpeed $0E,  2,  0
+    SignMagSpeed $02,  3,  0
+    SignMagSpeed $06,  4,  0
+    SignMagSpeed $00,  0,  0
 
 BottomSparkleDataTbl:
-L89E9:  .byte $01, $00
-L89EB:  .byte $08, $09
-L89ED:  .byte $01, $99
-L89EF:  .byte $01, $09
-L89F1:  .byte $01, $99
-L89F3:  .byte $01, $09
-L89F5:  .byte $01, $99
-L89F7:  .byte $01, $09
-L89F9:  .byte $01, $99
-L89FB:  .byte $01, $09
-L89FD:  .byte $01, $99
-L89FF:  .byte $01, $09
-L8A01:  .byte $01, $99
-L8A03:  .byte $01, $09
-L8A05:  .byte $01, $99
-L8A07:  .byte $01, $09
-L8A09:  .byte $01, $99
-L8A0B:  .byte $01, $09
-L8A0D:  .byte $01, $99
-L8A0F:  .byte $01, $09
-L8A11:  .byte $01, $99
-L8A13:  .byte $01, $19
-L8A15:  .byte $01, $11
-L8A17:  .byte $01, $10
-L8A19:  .byte $01, $11
-L8A1B:  .byte $01, $10
-L8A1D:  .byte $01, $11
-L8A1F:  .byte $01, $10
-L8A21:  .byte $01, $11
-L8A23:  .byte $01, $10
-L8A25:  .byte $01, $11
-L8A27:  .byte $01, $10
-L8A29:  .byte $01, $11
-L8A2B:  .byte $01, $10
-L8A2D:  .byte $01, $11
-L8A2F:  .byte $01, $10
-L8A31:  .byte $02, $11
-L8A33:  .byte $01, $10
-L8A35:  .byte $01, $11 
-L8A37:  .byte $10, $09
-L8A39:  .byte $FF, $EF                  ;MSB of first byte set. move sprite x pos -17 pixles.
-L8A3B:  .byte $11, $09
-L8A3D:  .byte $FF, $F3                  ;MSB of first byte set. move sprite x pos -13 pixles.
-L8A3F:  .byte $1F, $09
-L8A41:  .byte $FF, $EC                  ;MSB of first byte set. move sprite x pos -20 pixles.
-L8A43:  .byte $0F, $09
-L8A45:  .byte $FF, $ED                  ;MSB of first byte set. move sprite x pos -19 pixles. 
-L8A47:  .byte $16, $09
-L8A49:  .byte $00, $00
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $08, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $02,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $10, -1,  0
+    .byte $FF, -17 ;MSB of first byte set. move sprite x pos -17 pixels.
+    SignMagSpeed $11, -1,  0
+    .byte $FF, -13 ;MSB of first byte set. move sprite x pos -13 pixels.
+    SignMagSpeed $1F, -1,  0
+    .byte $FF, -20 ;MSB of first byte set. move sprite x pos -20 pixels.
+    SignMagSpeed $0F, -1,  0
+    .byte $FF, -19 ;MSB of first byte set. move sprite x pos -19 pixels. 
+    SignMagSpeed $16, -1,  0
+    SignMagSpeed $00,  0,  0
 
 ;The following table is used by the DrawCrossSprites routine to draw the sprites on the screen that
 ;make up the cross that appears during the Crosshairs routine.  The single byte is the index into
@@ -1279,21 +1276,21 @@ L8AD3:
 ;is changed every 16 frames by the above routine.
 
 IntroStarPntr:
-L8AFF:  .word L8B0F, L8B19, L8B23, L8B2D, L8B37, L8B41, L8B4B, L8B55
+    .word IntroStarPal0, IntroStarPal1, IntroStarPal2, IntroStarPal3
+    .word IntroStarPal4, IntroStarPal5, IntroStarPal6, IntroStarPal7
 
 ;The following table contains the platette data that is changed in the intro
 ;scene to give the stars a twinkling effect. All entries in the table are
 ;non-repeating. 
 
-IntroStarPal:
-L8B0F:  .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
-L8B19:  .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
-L8B23:  .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
-L8B2D:  .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
-L8B37:  .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
-L8B41:  .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
-L8B4B:  .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
-L8B55:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
+IntroStarPal0:  .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
+IntroStarPal1:  .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
+IntroStarPal2:  .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
+IntroStarPal3:  .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
+IntroStarPal4:  .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
+IntroStarPal5:  .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
+IntroStarPal6:  .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
+IntroStarPal7:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -1372,7 +1369,7 @@ UniqueItemFound:
     ORA PasswordBitmaskTbl,Y        ;
     STA PasswordByte00,X            ;Masks each unique item in the proper item address-->
     RTS                             ;(addresses $6988 thru $698E).
- 
+
 LoadUniqueItems:
     LDA #$00                        ;
     STA NumberOfUniqueItems         ;
@@ -1391,14 +1388,14 @@ LoadUniqueItems:
     LDX #$01                        ;
     STX $02                         ;
     CLC                             ;
-L8BF5:
-    ROR                             ;
-    STA $08                         ;This code does not appear to ever be executed.
-    LDX $02                         ;
-    CPX $06                         ;
-    BEQ ProcessNewItemByte          ;
-    INC $02                         ;
-    JMP L8BF5                       ;
+    L8BF5:
+        ROR                             ;
+        STA $08                         ;This code does not appear to ever be executed.
+        LDX $02                         ;
+        CPX $06                         ;
+        BEQ ProcessNewItemByte          ;
+        INC $02                         ;
+        JMP L8BF5                       ;
 
 ProcessNextItem:
     LDY $05                         ;Locates next password byte to process-->
@@ -1410,8 +1407,8 @@ ProcessNewItemByte:
     ROR                             ;Rotates next bit to be processed to the carry flag.
     STA $08                         ;
     BCC L8C14                       ;
-    JSR SamusHasItem                ;($8C39)Store item in unique item history.
-L8C14:
+        JSR SamusHasItem                ;($8C39)Store item in unique item history.
+    L8C14:
     LDY $06                         ;If last bit of item byte has been--> 
     CPY #$07                        ;checked, move to next byte.
     BCS L8C27                       ;
@@ -1421,6 +1418,7 @@ L8C14:
     CPX $07                         ;searched through, exit.
     BCS L8C38                       ;
     JMP ProcessNewItemByte          ;($8C0A)Repeat routine for next item byte.
+
 L8C27:
     LDY #$00                        ;
     STY $06                         ;
@@ -1430,6 +1428,7 @@ L8C27:
     CPX $07                         ;searched through, exit.
     BCS L8C38                       ;
     JMP ProcessNextItem             ;($8C03)Process next item.
+
 L8C38:
     RTS                             ;
  
@@ -1872,562 +1871,594 @@ L9021:  .byte $01, $02, $04, $08, $10, $20, $40, $80
 ;4th Zeebetite = 010010
 ;5th Zeebetite = 010011
 
-ItemData:
-L9029:  .word $104E                     ;Maru Mari at coord 02,0E                    (Item 0)
-L902B:  .word $264B                     ;Missiles at coord 12,0B                     (Item 1)
-L902D:  .word $28E5                     ;Red door to long beam at coord 07,05        (Item 2)
-L902F:  .word $2882                     ;Red door to Tourian elevator at coord 05,02 (Item 3)
-L9031:  .word $2327                     ;Energy tank at coord 19,07                  (Item 4)
-L9033:  .word $2B25                     ;Red door to bombs at coord 1A,05            (Item 5)
-L9035:  .word $0325                     ;Bombs at coord 19,05                        (Item 6)
-L9037:  .word $2A69                     ;Red door to ice beam at coord 13,09         (Item 7)
-L9039:  .word $2703                     ;Missiles at coord 18,03                     (Item 8)
-L903B:  .word $2363                     ;Energy tank at coord 1B,03                  (Item 9)
-L903D:  .word $29E2                     ;Red door to varia suit at coord 0F,02       (Item 10)
-L903F:  .word $15E2                     ;Varia suit at coord 0F,02                   (Item 11)
-L9041:  .word $212E                     ;Energy tank at coord 09,0E                  (Item 12)
-L9043:  .word $264E                     ;Missiles at coord 12,0E                     (Item 13)
-L9045:  .word $262F                     ;Missiles at coord 11,0F                     (Item 14)
-L9047:  .word $2B4C                     ;Red door to ice beam at coord 1B,0C         (Item 15)
-L9049:  .word $276A                     ;Missiles at coord 1B,0A                     (Item 16)
-L904B:  .word $278A                     ;Missiles at coord 1C,0A                     (Item 17)
-L904D:  .word $278B                     ;Missiles at coord 1C,0B                     (Item 18)
-L904F:  .word $276B                     ;Missiles at coord 1B,0B                     (Item 19)
-L9051:  .word $274B                     ;Missiles at coord 1A,0B                     (Item 20)
-L9053:  .word $268F                     ;Missiles at coord 14,0F                     (Item 21)
-L9055:  .word $266F                     ;Missiles at coord 13,0F                     (Item 22)
-L9057:  .word $2B71                     ;Red door to high jump at coord 1C,11        (Item 23)
-L9059:  .word $0771                     ;High jump at coord 1B,11                    (Item 24)
-L905B:  .word $29F0                     ;Red door to screw attack at coord 0E,10     (Item 25)
-L905D:  .word $0DF0                     ;Screw attack at coord 0D,1D                 (Item 26)
-L905F:  .word $2676                     ;Missiles at coord 13,16                     (Item 27)
-L9061:  .word $2696                     ;Misslies at coord 14,16                     (Item 28)
-L9063:  .word $2A55                     ;Red door to wave beam at coord 1C,15        (Item 29)
-L9065:  .word $2353                     ;Energy tank at coord 1A,13                  (Item 30)
-L9067:  .word $2794                     ;Missiles at coord 1C,14                     (Item 31)
-L9069:  .word $28F5                     ;Red door at coord 07,15                     (Item 32)
-L906B:  .word $2535                     ;Missiles at coord 09,15                     (Item 33)
-L906D:  .word $2495                     ;Missiles at coord 04,15                     (Item 34)
-L906F:  .word $28F6                     ;Red door at coord 07,16                     (Item 35)
-L9071:  .word $2156                     ;Energy tank at coord 0A,16                  (Item 36)
-L9073:  .word $28F8                     ;Red door at coord 07,18                     (Item 37)
-L9075:  .word $287B                     ;Red door at coord 03,1B                     (Item 38)
-L9077:  .word $24BB                     ;Missiles at coord 05,1B                     (Item 39)
-L9079:  .word $2559                     ;Missiles at coord 0A,19                     (Item 40)
-L907B:  .word $291D                     ;Red door to Kraid at coord 08,1D            (Item 41)
-L907D:  .word $211D                     ;Energy tank at coord 08,1D(Kraid's room)    (Item 42)
-L907F:  .word $2658                     ;Missiles at coord 12,18                     (Item 43)
-L9081:  .word $2A39                     ;Red door at coord 11,19                     (Item 44)
-L9083:  .word $2239                     ;Energy tank at coord 11,19                  (Item 45)
-L9085:  .word $269E                     ;Missiles at coord 14,1E                     (Item 46)
-L9087:  .word $2A1D                     ;purple door at coord 10,1D(Ridley's room)   (Item 47)
-L9089:  .word $21FD                     ;Energy tank at coord 0F,1D                  (Item 48)
-L908B:  .word $271B                     ;Missile at coord 18,1B                      (Item 49)
-L908D:  .word $2867                     ;Orange door at coord 03,07                  (Item 50)
-L908F:  .word $2927                     ;Red door at coord 09,07                     (Item 51)
-L9091:  .word $292B                     ;Red door at coord 0A,0B                     (Item 52)
-L9093:  .word $3C00                     ;1st Zeebetite in mother brain room          (Item 53)
-L9095:  .word $4000                     ;2nd Zeebetite in mother brain room          (Item 54)
-L9097:  .word $4400                     ;3rd Zeebetite in mother brain room          (Item 55)
-L9099:  .word $4800                     ;4th Zeebetite in mother brain room          (Item 56)
-L909B:  .word $4C00                     ;5th Zeebetite in mother brain room          (Item 57)
-L909D:  .word $3800                     ;Mother brain                                (Item 58)
+ItemData: ; $9029
+    .word $104E                     ;Maru Mari at coord 02,0E                    (Item 0)
+    .word $264B                     ;Missiles at coord 12,0B                     (Item 1)
+    .word $28E5                     ;Red door to long beam at coord 07,05        (Item 2)
+    .word $2882                     ;Red door to Tourian elevator at coord 05,02 (Item 3)
+    .word $2327                     ;Energy tank at coord 19,07                  (Item 4)
+    .word $2B25                     ;Red door to bombs at coord 1A,05            (Item 5)
+    .word $0325                     ;Bombs at coord 19,05                        (Item 6)
+    .word $2A69                     ;Red door to ice beam at coord 13,09         (Item 7)
+    .word $2703                     ;Missiles at coord 18,03                     (Item 8)
+    .word $2363                     ;Energy tank at coord 1B,03                  (Item 9)
+    .word $29E2                     ;Red door to varia suit at coord 0F,02       (Item 10)
+    .word $15E2                     ;Varia suit at coord 0F,02                   (Item 11)
+    .word $212E                     ;Energy tank at coord 09,0E                  (Item 12)
+    .word $264E                     ;Missiles at coord 12,0E                     (Item 13)
+    .word $262F                     ;Missiles at coord 11,0F                     (Item 14)
+    .word $2B4C                     ;Red door to ice beam at coord 1B,0C         (Item 15)
+    .word $276A                     ;Missiles at coord 1B,0A                     (Item 16)
+    .word $278A                     ;Missiles at coord 1C,0A                     (Item 17)
+    .word $278B                     ;Missiles at coord 1C,0B                     (Item 18)
+    .word $276B                     ;Missiles at coord 1B,0B                     (Item 19)
+    .word $274B                     ;Missiles at coord 1A,0B                     (Item 20)
+    .word $268F                     ;Missiles at coord 14,0F                     (Item 21)
+    .word $266F                     ;Missiles at coord 13,0F                     (Item 22)
+    .word $2B71                     ;Red door to high jump at coord 1C,11        (Item 23)
+    .word $0771                     ;High jump at coord 1B,11                    (Item 24)
+    .word $29F0                     ;Red door to screw attack at coord 0E,10     (Item 25)
+    .word $0DF0                     ;Screw attack at coord 0D,1D                 (Item 26)
+    .word $2676                     ;Missiles at coord 13,16                     (Item 27)
+    .word $2696                     ;Misslies at coord 14,16                     (Item 28)
+    .word $2A55                     ;Red door to wave beam at coord 1C,15        (Item 29)
+    .word $2353                     ;Energy tank at coord 1A,13                  (Item 30)
+    .word $2794                     ;Missiles at coord 1C,14                     (Item 31)
+    .word $28F5                     ;Red door at coord 07,15                     (Item 32)
+    .word $2535                     ;Missiles at coord 09,15                     (Item 33)
+    .word $2495                     ;Missiles at coord 04,15                     (Item 34)
+    .word $28F6                     ;Red door at coord 07,16                     (Item 35)
+    .word $2156                     ;Energy tank at coord 0A,16                  (Item 36)
+    .word $28F8                     ;Red door at coord 07,18                     (Item 37)
+    .word $287B                     ;Red door at coord 03,1B                     (Item 38)
+    .word $24BB                     ;Missiles at coord 05,1B                     (Item 39)
+    .word $2559                     ;Missiles at coord 0A,19                     (Item 40)
+    .word $291D                     ;Red door to Kraid at coord 08,1D            (Item 41)
+    .word $211D                     ;Energy tank at coord 08,1D(Kraid's room)    (Item 42)
+    .word $2658                     ;Missiles at coord 12,18                     (Item 43)
+    .word $2A39                     ;Red door at coord 11,19                     (Item 44)
+    .word $2239                     ;Energy tank at coord 11,19                  (Item 45)
+    .word $269E                     ;Missiles at coord 14,1E                     (Item 46)
+    .word $2A1D                     ;purple door at coord 10,1D(Ridley's room)   (Item 47)
+    .word $21FD                     ;Energy tank at coord 0F,1D                  (Item 48)
+    .word $271B                     ;Missile at coord 18,1B                      (Item 49)
+    .word $2867                     ;Orange door at coord 03,07                  (Item 50)
+    .word $2927                     ;Red door at coord 09,07                     (Item 51)
+    .word $292B                     ;Red door at coord 0A,0B                     (Item 52)
+    .word $3C00                     ;1st Zeebetite in mother brain room          (Item 53)
+    .word $4000                     ;2nd Zeebetite in mother brain room          (Item 54)
+    .word $4400                     ;3rd Zeebetite in mother brain room          (Item 55)
+    .word $4800                     ;4th Zeebetite in mother brain room          (Item 56)
+    .word $4C00                     ;5th Zeebetite in mother brain room          (Item 57)
+    .word $3800                     ;Mother brain                                (Item 58)
 
 ClearAll:
-L909F:  jsr ScreenOff                   ;($C439)Turn screen off.
-L90A2:  jsr ClearNameTables             ;Turn off screen, clear sprites and name tables.
-L90A5:  jsr EraseAllSprites             ;
-L90A8:  lda PPUCTRL_ZP                   ;Set Name table address to $2000.
-L90AA:  and #$FC                        ;
-L90AC:  sta PPUCTRL_ZP                   ;
-L90AE:  lda #$00                        ;
-L90B0:  sta ScrollY                     ;Reset scroll offsets.
-L90B2:  sta ScrollX                     ;
-L90B4:  jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
-L90B7:  jmp VBOffAndHorzWrite           ;($C47D)Set PPU for horizontal write and turn off VBlank.
+    jsr ScreenOff                   ;($C439)Turn screen off.
+    jsr ClearNameTables             ;Turn off screen, clear sprites and name tables.
+    jsr EraseAllSprites             ;
+    lda PPUCTRL_ZP                   ;Set Name table address to $2000.
+    and #$FC                        ;
+    sta PPUCTRL_ZP                   ;
+    lda #$00                        ;
+    sta ScrollY                     ;Reset scroll offsets.
+    sta ScrollX                     ;
+    jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
+    jmp VBOffAndHorzWrite           ;($C47D)Set PPU for horizontal write and turn off VBlank.
 
 StartContinueScreen:
-L90BA:  jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-L90BD:  ldx #$84                        ;Low address for PPU write.
-L90BF:  ldy #$99                        ;High address for PPU write.
-L90C1:  jsr PreparePPUProcess           ;($9449)Clears screen and writes "START CONTINUE".
-L90C4:  LDY #$00                        ;
-L90C6:  STY StartContinue               ;Set selection sprite at START.
-L90C9:  LDA #$0D                        ;
-L90CB:  STA PalDataPending              ;Change palette and title routine.
-L90CD:  LDA #$16                        ;Next routine is ChooseStartContinue.
-L90CF:  STA TitleRoutine                ;
+    jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
+    ldx #.lobyte(L9984)                        ;Low address for PPU write.
+    ldy #.hibyte(L9984)                        ;High address for PPU write.
+    jsr PreparePPUProcess           ;($9449)Clears screen and writes "START CONTINUE".
+    LDY #$00                        ;
+    STY StartContinue               ;Set selection sprite at START.
+    LDA #$0D                        ;
+    STA PalDataPending              ;Change palette and title routine.
+    LDA #$16                        ;Next routine is ChooseStartContinue.
+    STA TitleRoutine                ;
 
 TurnOnDisplay:
-L90D1:  JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
-L90D4:  JMP ScreenOn                    ;($C447)Turn screen on.
+    JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
+    JMP ScreenOn                    ;($C447)Turn screen on.
 
 ChooseStartContinue:
-L90D7:  LDA Joy1Change                  ;
-L90D9:  AND #$30                        ;Checks both select and start buttons.
-L90DB:  CMP #$10                        ;Check if START has been pressed.
-L90DD:  BNE L90EB                       ;Branch if START not pressed.
-L90DF:  LDY StartContinue               ;
-L90E2:  BNE L90E7                       ;if CONTINUE selected, branch.
-L90E4:  JMP InitializeStats             ;($932B)Zero out all stats.
-L90E7:  LDY #$17                        ;Next routine is LoadPasswordScreen.
-L90E9:  STY TitleRoutine                ;
-L90EB:  CMP #$20                        ;check if SELECT has been pressed.
-L90ED:  BNE L90FF                       ;Branch if SELECT not pressed.
-L90EF:  LDA StartContinue               ;
-L90F2:  EOR #$01                        ;Chooses between START and CONTINUE-->
-L90F4:  STA StartContinue               ;on game select screen.
-L90F7:  LDA TriangleSFXFlag             ;
-L90FA:  ORA #$08                        ;Set SFX flag for select being pressed.-->
-L90FC:  STA TriangleSFXFlag             ;Uses triangle channel.
-L90FF:  LDY StartContinue               ;
-L9102:  LDA StartContTbl,Y              ;Get y pos of selection sprite.
-L9105:  STA Sprite00RAM                 ;
-L9108:  LDA #$6E                        ;Load sprite info for square selection sprite.
-L910A:  STA Sprite00RAM+1               ;
-L910D:  LDA #$03                        ;
-L910F:  STA Sprite00RAM+2               ;
-L9112:  LDA #$50                        ;Set data for selection sprite.
-L9114:  STA Sprite00RAM+3               ;
-L9117:  RTS                             ;
+    LDA Joy1Change                  ;
+    AND #$30                        ;Checks both select and start buttons.
+    CMP #$10                        ;Check if START has been pressed.
+    BNE L90EB                       ;Branch if START not pressed.
+    LDY StartContinue               ;
+    BNE L90E7                       ;if CONTINUE selected, branch.
+    JMP InitializeStats             ;($932B)Zero out all stats.
+L90E7:
+    LDY #$17                        ;Next routine is LoadPasswordScreen.
+    STY TitleRoutine                ;
+L90EB:
+    CMP #$20                        ;check if SELECT has been pressed.
+    BNE L90FF                       ;Branch if SELECT not pressed.
+    LDA StartContinue               ;
+    EOR #$01                        ;Chooses between START and CONTINUE-->
+    STA StartContinue               ;on game select screen.
+    LDA TriangleSFXFlag             ;
+    ORA #$08                        ;Set SFX flag for select being pressed.-->
+    STA TriangleSFXFlag             ;Uses triangle channel.
+L90FF:
+    LDY StartContinue               ;
+    LDA StartContTbl,Y              ;Get y pos of selection sprite.
+    STA Sprite00RAM                 ;
+    LDA #$6E                        ;Load sprite info for square selection sprite.
+    STA Sprite00RAM+1               ;
+    LDA #$03                        ;
+    STA Sprite00RAM+2               ;
+    LDA #$50                        ;Set data for selection sprite.
+    STA Sprite00RAM+3               ;
+    RTS                             ;
 
 StartContTbl:
-L9118:  .byte $60                       ;Y sprite position for START.
-L9119:  .byte $78                       ;Y sprite position for CONTINUE.
+    .byte $60                       ;Y sprite position for START.
+    .byte $78                       ;Y sprite position for CONTINUE.
 
 LoadPasswordScreen:
-L911A:  JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-L911D:  LDX #$E3                        ;Loads PPU with info to display-->
-L911F:  LDY #$99                        ;PASS WORD PLEASE.
-L9121:  JSR PreparePPUProcess           ;($9449)Load "PASSWORD PLEASE" on screen.
-L9124:  JSR InitGFX7                    ;($C6D6)Loads the font for the password.
-L9127:  JSR DisplayInputCharacters      ;($940B)Write password character to screen.
-L912A:  LDA #$13                        ;
-L912C:  STA PalDataPending              ;Change palette.
-L912E:  LDA #$00                        ;
-L9130:  STA InputRow                    ;Sets character select cursor to-->
-L9133:  STA InputColumn                 ;upper left character (0).
-L9136:  STA Timer3                      ;
-L9138:  LDA #$00                        ;
-L913A:  STA PasswordCursor              ;Sets password cursor to password character 0.
-L913D:  LDY #$00                        ;
-L913F:  STY PasswordStat00              ;Appears to have no function.
-L9142:  INC TitleRoutine                ;
-L9144:  JMP TurnOnDisplay               ;($90D1)Turn on screen and NMI.
+    JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
+    LDX #.lobyte(L99E3)                        ;Loads PPU with info to display-->
+    LDY #.hibyte(L99E3)                        ;PASS WORD PLEASE.
+    JSR PreparePPUProcess           ;($9449)Load "PASSWORD PLEASE" on screen.
+    JSR InitGFX7                    ;($C6D6)Loads the font for the password.
+    JSR DisplayInputCharacters      ;($940B)Write password character to screen.
+    LDA #$13                        ;
+    STA PalDataPending              ;Change palette.
+    LDA #$00                        ;
+    STA InputRow                    ;Sets character select cursor to-->
+    STA InputColumn                 ;upper left character (0).
+    STA Timer3                      ;
+    LDA #$00                        ;
+    STA PasswordCursor              ;Sets password cursor to password character 0.
+    LDY #$00                        ;
+    STY PasswordStat00              ;Appears to have no function.
+    INC TitleRoutine                ;
+    JMP TurnOnDisplay               ;($90D1)Turn on screen and NMI.
 
 EnterPassword:
-L9147:  JSR EraseAllSprites             ;($C1A3)Remove sprites from screen.
-L914A:  LDA Joy1Change                  ;
-L914C:  AND #$10                        ;Check to see if START has been pressed.
-L914E:  BEQ L9153                       ;If not, branch.
-L9150:  JMP CheckPassword               ;($8C5E)Check if password is correct.
-L9153:  LDX #$01                        ;
-L9155:  STX PPUDataPending              ;Prepare to write the password screen data to PPU.
-L9157:  LDX PPUStrIndex                 ;
-L915A:  LDA #$21                        ;Upper byte of PPU string.
-L915C:  JSR WritePPUByte                ;($C36B)Write byte to PPU.
-L915F:  LDA #$A8                        ;Lower byte of PPU string.
-L9161:  JSR WritePPUByte                ;($C36B)Write byte to PPU.
-L9164:  LDA #$0F                        ;PPU string length.
-L9166:  JSR WritePPUByte                ;($C36B)Write byte to PPU.
-L9169:  LDA Timer3                      ;
-L916B:  BEQ L9178                       ;
-L916D:  LDA #$59                        ;
-L916F:  STA $02                         ;Writes 'ERROR TRY AGAIN' on the screen-->
-L9171:  LDA #$87                        ;if Timer3 is anything but #$00.
-L9173:  STA $03                         ;
-L9175:  JMP L9180                       ;
-L9178:  LDA #$68                        ;
-L917A:  STA $02                         ;
-L917C:  LDA #$87                        ;
-L917E:  STA $03                         ;Writes the blank lines that cover-->
-L9180:  LDY #$00                        ;the message 'ERROR TRY AGAIN'.
-L9182:  LDA ($02),Y                     ;
-L9184:  JSR WritePPUByte                ;
-L9187:  INY                             ;
-L9188:  CPY #$0F                        ;
-L918A:  BNE L9182                       ;
-L918C:  LDA Joy1Change                  ;If button A pressed, branch.
-L918E:  BMI L9193                       ;
-L9190:  JMP CheckBackspace              ;($91FB)Check if backspace pressed.
-L9193:  LDA TriangleSFXFlag             ;Initiate BombLaunch SFX if a character-->
-L9196:  ORA #$01                        ;has been written to the screen.
-L9198:  STA TriangleSFXFlag             ;
-L919B:  LDA PasswordCursor              ;
-L919E:  CMP #$12                        ;Check to see if password cursor is on-->
-L91A0:  BCC L91A8                       ;character 19 thru 24.  If not, branch.
-L91A2:  CLC                             ;
-L91A3:  ADC #$3E                        ;Will equal #$50 thru #$55.
-L91A5:  JMP LoadRowAndColumn            ;($91BF)
-L91A8:  CMP #$0C                        ;Check to see if password cursor is on-->
-L91AA:  BCC L91B2                       ;character 13 thru 18.  If not, branch.
-L91AC:  CLC                             ;
-L91AD:  ADC #$3D                        ;Will equal #$49 thru #$4E.
-L91AF:  JMP LoadRowAndColumn            ;($91BF)
-L91B2:  CMP #$06                        ;Check to see if password cursor is on-->
-L91B4:  BCC L91BC                       ;character 7 thru 12.  If not, branch.
-L91B6:  CLC                             ;
-L91B7:  ADC #$0A                        ;Will equal #$10 thru #$15.
-L91B9:  JMP LoadRowAndColumn            ;($91BF)
-L91BC:  CLC                             ;
-L91BD:  ADC #$09                        ;Will equal #$09 thru #$0E.
+    JSR EraseAllSprites             ;($C1A3)Remove sprites from screen.
+    LDA Joy1Change                  ;
+    AND #$10                        ;Check to see if START has been pressed.
+    BEQ L9153                       ;If not, branch.
+        JMP CheckPassword               ;($8C5E)Check if password is correct.
+        
+    L9153:
+    LDX #$01                        ;
+    STX PPUDataPending              ;Prepare to write the password screen data to PPU.
+    LDX PPUStrIndex                 ;
+    LDA #$21                        ;Upper byte of PPU string.
+    JSR WritePPUByte                ;($C36B)Write byte to PPU.
+    LDA #$A8                        ;Lower byte of PPU string.
+    JSR WritePPUByte                ;($C36B)Write byte to PPU.
+    LDA #$0F                        ;PPU string length.
+    JSR WritePPUByte                ;($C36B)Write byte to PPU.
+    LDA Timer3                      ;
+    BEQ L9178                       ;
+        LDA #.lobyte(L8759)                        ;
+        STA $02                         ;Writes 'ERROR TRY AGAIN' on the screen-->
+        LDA #.hibyte(L8759)                        ;if Timer3 is anything but #$00.
+        STA $03                         ;
+        JMP L9180                       ;
+    L9178:
+        LDA #.lobyte(L8768)                        ;
+        STA $02                         ;
+        LDA #.hibyte(L8768)                        ;
+        STA $03                         ;Writes the blank lines that cover-->
+    L9180:
+    LDY #$00                        ;the message 'ERROR TRY AGAIN'.
+    L9182:
+        LDA ($02),Y                     ;
+        JSR WritePPUByte                ;
+        INY                             ;
+        CPY #$0F                        ;
+        BNE L9182                       ;
+    LDA Joy1Change                  ;If button A pressed, branch.
+    BMI L9193                       ;
+    JMP CheckBackspace              ;($91FB)Check if backspace pressed.
+
+L9193:
+    LDA TriangleSFXFlag             ;Initiate BombLaunch SFX if a character-->
+    ORA #$01                        ;has been written to the screen.
+    STA TriangleSFXFlag             ;
+    LDA PasswordCursor              ;
+    CMP #$12                        ;Check to see if password cursor is on-->
+    BCC L91A8                       ;character 19 thru 24.  If not, branch.
+    CLC                             ;
+    ADC #$3E                        ;Will equal #$50 thru #$55.
+    JMP LoadRowAndColumn            ;($91BF)
+
+L91A8:
+    CMP #$0C                        ;Check to see if password cursor is on-->
+    BCC L91B2                       ;character 13 thru 18.  If not, branch.
+    CLC                             ;
+    ADC #$3D                        ;Will equal #$49 thru #$4E.
+    JMP LoadRowAndColumn            ;($91BF)
+
+L91B2:
+    CMP #$06                        ;Check to see if password cursor is on-->
+    BCC L91BC                       ;character 7 thru 12.  If not, branch.
+    CLC                             ;
+    ADC #$0A                        ;Will equal #$10 thru #$15.
+    JMP LoadRowAndColumn            ;($91BF)
+
+L91BC:
+    CLC                             ;
+    ADC #$09                        ;Will equal #$09 thru #$0E.
 
 LoadRowAndColumn:
-L91BF:  STA $06                         ;
-L91C1:  LDA InputRow                    ;
-L91C4:  ASL                             ;*2. address pointer is two bytes.
-L91C5:  TAY                             ;
-L91C6:  LDA PasswordRowTbl,Y            ;Store lower byte of row pointer.
-L91C9:  STA $00                         ;
-L91CB:  LDA PasswordRowTbl+1,Y          ;Store upper byte of row pointer.
-L91CE:  STA $01                         ;
-L91D0:  LDY InputColumn                 ;Uses InputColumn value to find proper index-->         
-L91D3:  LDA ($00),Y                     ;of current character selected.
-L91D5:  PHA                             ;Temp storage of A.
-L91D6:  STA TileInfo0                   ;Store value of current character slected.
-L91D9:  LDA #$11                        ;
-L91DB:  STA TileSize                    ;
-L91DE:  LDX $06                         ;Replace password character tile with-->
-L91E0:  LDY #$21                        ;the one selected by the player.
-L91E2:  JSR PrepareEraseTiles           ;($9450)
-L91E5:  LDX PasswordCursor              ;
-L91E8:  PLA                             ;Store the currently selected password character-->
-L91E9:  STA PasswordChar00,X            ;in the proper PasswordChar RAM location.
-L91EC:  LDA PasswordCursor              ;
-L91EF:  CLC                             ;
-L91F0:  ADC #$01                        ;
-L91F2:  CMP #$18                        ;
-L91F4:  BCC L91F8                       ;Increment PasswordCursor.  If at last character,-->
-L91F6:  LDA #$00                        ;loop back to the first character.
-L91F8:  STA PasswordCursor              ;
+    STA $06                         ;
+    LDA InputRow                    ;
+    ASL                             ;*2. address pointer is two bytes.
+    TAY                             ;
+    LDA PasswordRowTbl,Y            ;Store lower byte of row pointer.
+    STA $00                         ;
+    LDA PasswordRowTbl+1,Y          ;Store upper byte of row pointer.
+    STA $01                         ;
+    LDY InputColumn                 ;Uses InputColumn value to find proper index-->         
+    LDA ($00),Y                     ;of current character selected.
+    PHA                             ;Temp storage of A.
+    STA TileInfo0                   ;Store value of current character slected.
+    LDA #$11                        ;
+    STA TileSize                    ;
+    LDX $06                         ;Replace password character tile with-->
+    LDY #$21                        ;the one selected by the player.
+    JSR PrepareEraseTiles           ;($9450)
+    LDX PasswordCursor              ;
+    PLA                             ;Store the currently selected password character-->
+    STA PasswordChar00,X            ;in the proper PasswordChar RAM location.
+    LDA PasswordCursor              ;
+    CLC                             ;
+    ADC #$01                        ;
+    CMP #$18                        ;
+    BCC L91F8                       ;Increment PasswordCursor.  If at last character,-->
+    LDA #$00                        ;loop back to the first character.
+L91F8:
+    STA PasswordCursor              ;
 
 CheckBackspace:
-L91FB:  LDA Joy1Change                  ;
-L91FD:  AND #$40                        ;If button B (backspace) has not-->
-L91FF:  BEQ L920E                       ;been pressed, branch.
-L9201:  LDA PasswordCursor              ;
-L9204:  SEC                             ;Subtract 1 from PasswordCursor.  If-->
-L9205:  SBC #$01                        ;PasswordCursor is negative, load-->
-L9207:  BCS L920B                       ;PasswordCursor with #$17 (last character).
-L9209:  LDA #$17                        ;
-L920B:  STA PasswordCursor              ;
-L920E:  LDY PasswordStat00              ;Appears to have no function.
-L9211:  LDA FrameCount                  ;
-L9213:  AND #$08                        ;If FrameCount bit 3 not set, branch.
-L9215:  BEQ L923F                       ;
-L9217:  LDA #$3F                        ;
-L9219:  LDX PasswordCursor              ;Load A with #$3F if PasswordCursor is on-->
-L921C:  CPX #$0C                        ;character 0 thru 11, else load it with #$4F.
-L921E:  BCC L9222                       ;
-L9220:  LDA #$4F                        ;
-L9222:  STA Sprite01RAM                 ;Set Y-coord of password cursor sprite.
-L9225:  LDA #$6E                        ;
-L9227:  STA Sprite01RAM+1               ;Set pattern for password cursor sprite.
-L922A:  LDA #$20                        ;
-L922C:  STA Sprite01RAM+2               ;Set attributes for password cursor sprite.
-L922F:  LDA PasswordCursor              ;If the password cursor is at the 12th-->
-L9232:  CMP #$0C                        ;character or less, branch.
-L9234:  BCC L9238                       ;
-L9236:  SBC #$0C                        ;Calculate how many characters the password cursor-->
-L9238:  TAX                             ;is from the left if on the second row of password.
-L9239:  LDA CursorPosTbl,X              ;Load X position of PasswordCursor.
-L923C:  STA Sprite01RAM+3               ;
-L923F:  LDX InputRow                    ;Load X and Y with row and column-->
-L9242:  LDY InputColumn                 ;of current character selected.
-L9245:  LDA Joy1Retrig                  ;
-L9247:  AND #$0F                        ;If no directional buttons are in-->
-L9249:  BEQ L9297                       ;retrigger mode, branch.
-L924B:  PHA                             ;Temp storage of A.
-L924C:  LDA TriangleSFXFlag             ;Initiate BeepSFX when the player pushes-->
-L924F:  ORA #$08                        ;a button on the directional pad.
-L9251:  STA TriangleSFXFlag             ;
-L9254:  PLA                             ;Restore A.
-L9255:  LSR                             ;Put status of right directional button in carry bit.
-L9256:  BCC L926C                       ;Branch if right button has not been pressed.
-L9258:  INY                             ;
-L9259:  CPY #$0D                        ;Increment Y(column).  If Y is greater than #$0C,-->
-L925B:  BNE L9269                       ;increment X(Row).  If X is greater than #$04,-->
-L925D:  INX                             ;set X to #$00(start back at top row) and store-->
-L925E:  CPX #$05                        ;new row in InputRow.
-L9260:  BNE L9264                       ;
-L9262:  LDX #$00                        ;
-L9264:  STX InputRow                    ;
-L9267:  LDY #$00                        ;Store new column in InputColumn.
-L9269:  STY InputColumn                 ;
-L926C:  LSR                             ;Put status of left directional button in carry bit.
-L926D:  BCC L927F                       ;Branch if left button has not been pressed.
-L926F:  DEY                             ;
-L9270:  BPL L927C                       ;Decrement Y(column).  If Y is less than #$00,-->
-L9272:  DEX                             ;Decrement X(row).  If X is less than #$00,-->
-L9273:  BPL L9277                       ;set X to #$04(last row) and store new row-->
-L9275:  LDX #$04                        ;in InputRow.
-L9277:  STX InputRow                    ;
-L927A:  LDY #$0C                        ;Store new column in InputColumn.
-L927C:  STY InputColumn                 ;
-L927F:  LSR                             ;Put status of down directional button in carry bit.
-L9280:  BCC L928C                       ;Branch if down button has not been pressed.
-L9282:  INX                             ;
-L9283:  CPX #$05                        ;Increment X(row).  if X is greater than #$04,-->
-L9285:  BNE L9289                       ;set X to #$00(first row) and store new-->
-L9287:  LDX #$00                        ;row in InputRow.
-L9289:  STX InputRow                    ;
-L928C:  LSR                             ;Put status of up directional button in carry bit.
-L928D:  BCC L9297                       ;Branch if up button has not been pressed.
-L928F:  DEX                             ;
-L9290:  BPL L9294                       ;Decrement X(row).  if X is less than #$00,-->
-L9292:  LDX #$04                        ;set X to #$04(last row) and store new-->
-L9294:  STX InputRow                    ;row in InputRow.
-L9297:  LDA FrameCount                  ;
-L9299:  AND #$08                        ;If FrameCount bit 3 not set, branch.
-L929B:  BEQ L92B3                       ;
-L929D:  LDA CharSelectYTbl,X            ;Set Y-coord of character selection sprite.
-L92A0:  STA Sprite02RAM                 ;
-L92A3:  LDA #$6E                        ;Set pattern for character selection sprite.
-L92A5:  STA Sprite02RAM+1               ;
-L92A8:  LDA #$20                        ;Set attributes for character selection sprite.
-L92AA:  STA Sprite02RAM+2               ;
-L92AD:  LDA CharSelectXTbl,Y            ;Set x-Coord of character selection sprite.
-L92B0:  STA Sprite02RAM+3               ;
-L92B3:  RTS                             ;
+    LDA Joy1Change                  ;
+    AND #$40                        ;If button B (backspace) has not-->
+    BEQ L920E                       ;been pressed, branch.
+        LDA PasswordCursor              ;
+        SEC                             ;Subtract 1 from PasswordCursor.  If-->
+        SBC #$01                        ;PasswordCursor is negative, load-->
+        BCS L920B                       ;PasswordCursor with #$17 (last character).
+            LDA #$17                        ;
+        L920B:
+        STA PasswordCursor              ;
+    L920E:
+    LDY PasswordStat00              ;Appears to have no function.
+    LDA FrameCount                  ;
+    AND #$08                        ;If FrameCount bit 3 not set, branch.
+    BEQ L923F                       ;
+        LDA #$3F                        ;
+        LDX PasswordCursor              ;Load A with #$3F if PasswordCursor is on-->
+        CPX #$0C                        ;character 0 thru 11, else load it with #$4F.
+        BCC L9222                       ;
+            LDA #$4F                        ;
+        L9222:
+        STA Sprite01RAM                 ;Set Y-coord of password cursor sprite.
+        LDA #$6E                        ;
+        STA Sprite01RAM+1               ;Set pattern for password cursor sprite.
+        LDA #$20                        ;
+        STA Sprite01RAM+2               ;Set attributes for password cursor sprite.
+        LDA PasswordCursor              ;If the password cursor is at the 12th-->
+        CMP #$0C                        ;character or less, branch.
+        BCC L9238                       ;
+            SBC #$0C                        ;Calculate how many characters the password cursor-->
+        L9238:
+        TAX                             ;is from the left if on the second row of password.
+        LDA CursorPosTbl,X              ;Load X position of PasswordCursor.
+        STA Sprite01RAM+3               ;
+    L923F:
+    LDX InputRow                    ;Load X and Y with row and column-->
+    LDY InputColumn                 ;of current character selected.
+    LDA Joy1Retrig                  ;
+    AND #$0F                        ;If no directional buttons are in-->
+    BEQ L9297                       ;retrigger mode, branch.
+    PHA                             ;Temp storage of A.
+    LDA TriangleSFXFlag             ;Initiate BeepSFX when the player pushes-->
+    ORA #$08                        ;a button on the directional pad.
+    STA TriangleSFXFlag             ;
+    PLA                             ;Restore A.
+    LSR                             ;Put status of right directional button in carry bit.
+    BCC L926C                       ;Branch if right button has not been pressed.
+        INY                             ;
+        CPY #$0D                        ;Increment Y(column).  If Y is greater than #$0C,-->
+        BNE L9269                       ;increment X(Row).  If X is greater than #$04,-->
+            INX                             ;set X to #$00(start back at top row) and store-->
+            CPX #$05                        ;new row in InputRow.
+            BNE L9264                       ;
+                LDX #$00                        ;
+            L9264:
+            STX InputRow                    ;
+            LDY #$00                        ;Store new column in InputColumn.
+        L9269:
+        STY InputColumn                 ;
+    L926C:
+    LSR                             ;Put status of left directional button in carry bit.
+    BCC L927F                       ;Branch if left button has not been pressed.
+        DEY                             ;
+        BPL L927C                       ;Decrement Y(column).  If Y is less than #$00,-->
+            DEX                             ;Decrement X(row).  If X is less than #$00,-->
+            BPL L9277                       ;set X to #$04(last row) and store new row-->
+                LDX #$04                        ;in InputRow.
+            L9277:
+            STX InputRow                    ;
+            LDY #$0C                        ;Store new column in InputColumn.
+        L927C:
+        STY InputColumn                 ;
+    L927F:
+    LSR                             ;Put status of down directional button in carry bit.
+    BCC L928C                       ;Branch if down button has not been pressed.
+        INX                             ;
+        CPX #$05                        ;Increment X(row).  if X is greater than #$04,-->
+        BNE L9289                       ;set X to #$00(first row) and store new-->
+            LDX #$00                        ;row in InputRow.
+        L9289:
+        STX InputRow                    ;
+    L928C:
+    LSR                             ;Put status of up directional button in carry bit.
+    BCC L9297                       ;Branch if up button has not been pressed.
+        DEX                             ;
+        BPL L9294                       ;Decrement X(row).  if X is less than #$00,-->
+            LDX #$04                        ;set X to #$04(last row) and store new-->
+        L9294:
+        STX InputRow                    ;row in InputRow.
+    L9297:
+    LDA FrameCount                  ;
+    AND #$08                        ;If FrameCount bit 3 not set, branch.
+    BEQ L92B3                       ;
+        LDA CharSelectYTbl,X            ;Set Y-coord of character selection sprite.
+        STA Sprite02RAM                 ;
+        LDA #$6E                        ;Set pattern for character selection sprite.
+        STA Sprite02RAM+1               ;
+        LDA #$20                        ;Set attributes for character selection sprite.
+        STA Sprite02RAM+2               ;
+        LDA CharSelectXTbl,Y            ;Set x-Coord of character selection sprite.
+        STA Sprite02RAM+3               ;
+    L92B3:
+    RTS                             ;
 
 ;The following data does not appear to be used in the program.
-L92B4:  .byte $21, $20
+    .byte $21, $20
 
 ;The following table is used to determine the proper Y position of the character
 ;selection sprite on password entry screen.
 
 CharSelectYTbl: 
-L92B6:  .byte $77, $87, $97, $A7, $B7
+    .byte $77, $87, $97, $A7, $B7
 
 ;The following table is used to determine the proper X position of the character
 ;selection sprite on password entry screen.
 
 CharSelectXTbl:
-L92BB:  .byte $20, $30, $40, $50, $60, $70, $80, $90, $A0, $B0, $C0, $D0, $E0
+    .byte $20, $30, $40, $50, $60, $70, $80, $90, $A0, $B0, $C0, $D0, $E0
 
 ;When the PasswordCursor is on the second row of the password, the following table is used
 ;to determine the proper x position of the password cursor sprite(password characters 12-23).
 
 CursorPosTbl:
-L92C8:  .byte $48, $50, $58, $60, $68, $70, $80, $88, $90, $98, $A0, $A8
+    .byte $48, $50, $58, $60, $68, $70, $80, $88, $90, $98, $A0, $A8
 
 InitializeGame:
-L92D4:  JSR ClearRAM_33_DF              ;($C1D4)Clear RAM.
-L92D7:  JSR ClearSamusStats             ;($C578)Reset Samus stats for a new game.
-L92DA:  JSR LoadPasswordData            ;($8D12)Load data from password.
-L92DD:  LDY #$00                        ;
-L92DF:  STY SpritePagePos               ;
-L92E1:  STY PageIndex                   ;Clear object data.
-L92E3:  STY ObjectCntrl                 ;
-L92E5:  STY ObjectHi                    ;
-L92E8:  JSR SilenceMusic                ;($CB8E)Turn off music.
-L92EB:  LDA #$5A                        ;
-L92ED:  STA AnimFrame                   ;Set animframe index. changed by initializing routines. 
-L92F0:  LDX #$01                        ;x is the index into the position tables below.
-L92F2:  LDA InArea                      ;Load starting area.
-L92F4:  AND #$0F                        ;
-L92F6:  BNE L92F9                       ;If in area other than Brinstar, get second item in tables.
-L92F8:  DEX                             ;Starting in Brinstar. Get forst item in each table.
-L92F9:  LDA RestartYPosTbl,X            ;
-L92FC:  STA ObjectY                     ;Set Samus restart y position on screen.
-L92FF:  LDA RestartXPosTbl,X            ;
-L9302:  STA ObjectX                     ;Set Samus restart x position on screen.
-L9305:  INC SamusStat02                 ;The combination of SamusStat02 and 03 keep track of how-->
-L9308:  BNE L930D                       ;many times Samus has died and beaten the game as they are-->
-L930A:  INC SamusStat03                 ;incremented every time this routine is run, but they are-->
-L930D:  LDA #$01                        ;not accessed anywhere else.
-L930F:  STA MainRoutine                 ;Initialize starting area.
-L9311:  JSR ScreenNmiOff                ;($C45D)Turn off screen.
-L9314:  JSR LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
-L9317:  JSR NMIOn                       ;($C487)Turn on the non-maskable interrupt.
-L931A:  LDA InArea                      ;Load area Samus is to start in.
-L931C:  AND #$0F                        ;
-L931E:  TAY                             ;
-L931F:  LDA BankTable,Y                 ;Change to proper memory page.
-L9322:  STA SwitchPending               ;
-L9324:  RTS 
+    JSR ClearRAM_33_DF              ;($C1D4)Clear RAM.
+    JSR ClearSamusStats             ;($C578)Reset Samus stats for a new game.
+    JSR LoadPasswordData            ;($8D12)Load data from password.
+    LDY #$00                        ;
+    STY SpritePagePos               ;
+    STY PageIndex                   ;Clear object data.
+    STY ObjectCntrl                 ;
+    STY ObjectHi                    ;
+    JSR SilenceMusic                ;($CB8E)Turn off music.
+    LDA #$5A                        ;
+    STA AnimFrame                   ;Set animframe index. changed by initializing routines. 
+    LDX #$01                        ;x is the index into the position tables below.
+    LDA InArea                      ;Load starting area.
+    AND #$0F                        ;
+    BNE L92F9                       ;If in area other than Brinstar, get second item in tables.
+        DEX                             ;Starting in Brinstar. Get forst item in each table.
+    L92F9:
+    LDA RestartYPosTbl,X            ;
+    STA ObjectY                     ;Set Samus restart y position on screen.
+    LDA RestartXPosTbl,X            ;
+    STA ObjectX                     ;Set Samus restart x position on screen.
+    INC SamusStat02                 ;The combination of SamusStat02 and 03 keep track of how-->
+    BNE L930D                       ;many times Samus has died and beaten the game as they are-->
+        INC SamusStat03                 ;incremented every time this routine is run, but they are-->
+    L930D:
+    LDA #$01                        ;not accessed anywhere else.
+    STA MainRoutine                 ;Initialize starting area.
+    JSR ScreenNmiOff                ;($C45D)Turn off screen.
+    JSR LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
+    JSR NMIOn                       ;($C487)Turn on the non-maskable interrupt.
+    LDA InArea                      ;Load area Samus is to start in.
+    AND #$0F                        ;
+    TAY                             ;
+    LDA BankTable,Y                 ;Change to proper memory page.
+    STA SwitchPending               ;
+L9324:
+    RTS 
 
 ;The following two tables are used to find Samus y and x positions on the screen after the game
 ;restarts.  The third entry in each table are not used.
 
 RestartYPosTbl:
-L9325:  .byte $64                       ;Brinstar
-L9326:  .byte $8C                       ;All other areas.
-L9327:  .byte $5C                       ;Not used.
+    .byte $64                       ;Brinstar
+    .byte $8C                       ;All other areas.
+    .byte $5C                       ;Not used.
 
 RestartXPosTbl:
-L9328:  .byte $78                       ;Brinstar
-L9329:  .byte $78                       ;All other areas.
-L932A:  .byte $5C                       ;Not used.
+    .byte $78                       ;Brinstar
+    .byte $78                       ;All other areas.
+    .byte $5C                       ;Not used.
 
 InitializeStats:
-L932B:  LDA #$00                        ;
-L932D:  STA SamusStat00                 ;
-L9330:  STA TankCount                   ;
-L9333:  STA SamusGear                   ;
-L9336:  STA MissileCount                ;
-L9339:  STA MaxMissiles                 ;
-L933C:  STA KraidStatueStatus           ;Set all of Samus' stats to 0 when starting new game.
-L933F:  STA RidleyStatueStatus          ;
-L9342:  STA SamusAge                    ;
-L9345:  STA SamusAge+1                  ;
-L9348:  STA SamusAge+2                  ;
-L934B:  STA SamusStat01                 ;
-L934E:  STA AtEnding                    ;
-L9351:  STA JustInBailey                ;
-L9354:  LDA #$02                        ;
-L9356:  STA SwitchPending               ;Prepare to switch to Brinstar memory page.
-L9358:  RTS                             ;
+    LDA #$00                        ;
+    STA SamusStat00                 ;
+    STA TankCount                   ;
+    STA SamusGear                   ;
+    STA MissileCount                ;
+    STA MaxMissiles                 ;
+    STA KraidStatueStatus           ;Set all of Samus' stats to 0 when starting new game.
+    STA RidleyStatueStatus          ;
+    STA SamusAge                    ;
+    STA SamusAge+1                  ;
+    STA SamusAge+2                  ;
+    STA SamusStat01                 ;
+    STA AtEnding                    ;
+    STA JustInBailey                ;
+    LDA #$02                        ;
+    STA SwitchPending               ;Prepare to switch to Brinstar memory page.
+    RTS                             ;
 
 DisplayPassword:
-L9359:  LDA Timer3                      ;Wait for "GAME OVER" to be displayed-->
-L935B:  BNE L9324                       ;for 160 frames (2.6 seconds).
-L935D:  JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-L9360:  LDX #$7F                        ;Low byte of start of PPU data.
-L9362:  LDY #$93                        ;High byte of start of PPU data.
-L9364:  JSR PreparePPUProcess           ;($9449)Clears screen and writes "PASS WORD".
-L9367:  JSR InitGFX7                    ;($C6D6)Loads the font for the password.
-L936A:  JSR CalculatePassword           ;($8C7A)Calculates the password.
-L936D:  JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
-L9370:  JSR PasswordToScreen            ;($93C6)Displays password on screen.
-L9373:  JSR WaitNMIPass                 ;($C42C)Wait for NMI to end.
-L9376:  LDA #$13                        ;
-L9378:  STA PalDataPending              ;Change palette.
-L937A:  INC TitleRoutine                ;
-L937C:  JMP ScreenOn                    ;($C447)Turn screen on.
+    LDA Timer3                      ;Wait for "GAME OVER" to be displayed-->
+    BNE L9324                       ;for 160 frames (2.6 seconds).
+    JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
+    LDX #.lobyte(L937F)                        ;Low byte of start of PPU data.
+    LDY #.hibyte(L937F)                        ;High byte of start of PPU data.
+    JSR PreparePPUProcess           ;($9449)Clears screen and writes "PASS WORD".
+    JSR InitGFX7                    ;($C6D6)Loads the font for the password.
+    JSR CalculatePassword           ;($8C7A)Calculates the password.
+    JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
+    JSR PasswordToScreen            ;($93C6)Displays password on screen.
+    JSR WaitNMIPass                 ;($C42C)Wait for NMI to end.
+    LDA #$13                        ;
+    STA PalDataPending              ;Change palette.
+    INC TitleRoutine                ;
+    JMP ScreenOn                    ;($C447)Turn screen on.
 
-;Information below is for above routine to display "PASS WORD" on the screen.
-L937F:  .byte $21                       ;PPU memory high byte.
-L9380:  .byte $4B                       ;PPU memory low byte.
-L9381:  .byte $09                       ;PPU string length.
-L9382:  .byte "PASS WORD"
+L937F:
+    ;Information below is for above routine to display "PASS WORD" on the screen.
+    PPUString $214B, "PASS WORD"
 
-;Information to be stored in attribute table 0.
-L938B:  .byte $23                       ;PPU memory high byte.
-L938C:  .byte $D0                       ;PPU memory low byte.
-L938D:  .byte $48                       ;RLE bit set, repeat entry 8 times.
-L938E:  .byte $00                       ;Clears line below "PASS WORD".
+    ;Information to be stored in attribute table 0.
+    PPUStringRepeat $23D0, $00, $08
 
-L938F:  .byte $23                       ;PPU memory high byte.
-L9390:  .byte $D8                       ;PPU memory low byte.
-L9391:  .byte $60                       ;RLE bit set, repeat entry 32 times. 
-L9392:  .byte $55                       ;Turn color on to display password characters.
+    ;Turn color on to display password characters.  
+    PPUStringRepeat $23D8, $55, $20
 
-L9393:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
 WaitForSTART:
-L9394:  LDA Joy1Change                  ;Waits for START to be ressed proceed-->
-L9396:  AND #$10                        ;past the GAME OVER screen.
-L9398:  BEQ L939D                       ;If start not pressed, branch.
-L939A:  JMP CheckPassword               ;($8C5E)Check if password is correct.
-L939D:  RTS                             ;
+    LDA Joy1Change                  ;Waits for START to be ressed proceed-->
+    AND #$10                        ;past the GAME OVER screen.
+    BEQ L939D                       ;If start not pressed, branch.
+        JMP CheckPassword               ;($8C5E)Check if password is correct.
+
+    L939D:
+    RTS                             ;
 
 GameOver:
-L939E:  JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-L93A1:  LDX #$B9                        ;Low byte of start of PPU data.
-L93A3:  LDY #$93                        ;High byte of start of PPU data.
-L93A5:  JSR PreparePPUProcess           ;($9449)Clears screen and writes "GAME OVER".
-L93A8:  JSR InitGFX7                    ;($C6D6)Loads the font for the password.
-L93AB:  JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
-L93AE:  LDA #$10                        ;Load Timer3 with a delay of 160 frames-->
-L93B0:  STA Timer3                      ;(2.6 seconds) for displaying "GAME OVER".
-L93B2:  LDA #$19                        ;Loads TitleRoutine with -->
-L93B4:  STA TitleRoutine                ;DisplayPassword.
-L93B6:  JMP ScreenOn                    ;($C447)Turn screen on.
+    JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
+    LDX #.lobyte(L93B9)                        ;Low byte of start of PPU data.
+    LDY #.hibyte(L93B9)                        ;High byte of start of PPU data.
+    JSR PreparePPUProcess           ;($9449)Clears screen and writes "GAME OVER".
+    JSR InitGFX7                    ;($C6D6)Loads the font for the password.
+    JSR NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
+    LDA #$10                        ;Load Timer3 with a delay of 160 frames-->
+    STA Timer3                      ;(2.6 seconds) for displaying "GAME OVER".
+    LDA #$19                        ;Loads TitleRoutine with -->
+    STA TitleRoutine                ;DisplayPassword.
+    JMP ScreenOn                    ;($C447)Turn screen on.
 
-;Information below is for above routine to display "GAME OVER" on the screen.
-L93B9:  .byte $21                       ;PPU memory high byte.
-L93BA:  .byte $8C                       ;PPU memory low byte.
-L93BB:  .byte $09                       ;PPU string length.
-L93BC:  .byte "GAME OVER"
+L93B9:
+    ;Information below is for above routine to display "GAME OVER" on the screen.
+    PPUString $218C,  "GAME OVER"
 
-L93C4:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
 PasswordToScreen:
-L93C6:  JSR WaitNMIPass                 ;($C42C)Wait for NMI to end.
-L93C9:  LDY #$05                        ;Index to find password characters(base=$699A).
-L93CB:  JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
-L93CE:  LDX #$A9                        ;PPU low address byte.
-L93D0:  LDY #$21                        ;PPU high address byte.
-L93D2:  JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
-L93D5:  LDY #$0B                        ;Index to find password characters(base=$699A).
-L93D7:  JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
-L93DA:  LDX #$B0                        ;PPU low address byte.
-L93DC:  LDY #$21                        ;PPU high address byte.
-L93DE:  JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
-L93E1:  LDY #$11                        ;Index to find password characters(base=$699A).
-L93E3:  JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
-L93E6:  LDX #$E9                        ;PPU low address byte.
-L93E8:  LDY #$21                        ;PPU high address byte.
-L93EA:  JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
-L93ED:  LDY #$17                        ;Index to find password characters(base=$699A).
-L93EF:  JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
-L93F2:  LDX #$F0                        ;PPU low address byte.
-L93F4:  LDY #$21                        ;PPU high address byte.
-L93F6:  JMP PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    JSR WaitNMIPass                 ;($C42C)Wait for NMI to end.
+    LDY #$05                        ;Index to find password characters(base=$699A).
+    JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    LDX #$A9                        ;PPU low address byte.
+    LDY #$21                        ;PPU high address byte.
+    JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    LDY #$0B                        ;Index to find password characters(base=$699A).
+    JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    LDX #$B0                        ;PPU low address byte.
+    LDY #$21                        ;PPU high address byte.
+    JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    LDY #$11                        ;Index to find password characters(base=$699A).
+    JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    LDX #$E9                        ;PPU low address byte.
+    LDY #$21                        ;PPU high address byte.
+    JSR PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    LDY #$17                        ;Index to find password characters(base=$699A).
+    JSR LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    LDX #$F0                        ;PPU low address byte.
+    LDY #$21                        ;PPU high address byte.
+    JMP PrepareEraseTiles           ;($9450)Erase tiles on screen.
 
 LoadPasswordTiles:
-L93F9:  LDA #$16                        ;Tiles to replace are one block-->
-L93FB:  STA TileSize                    ;high and 6 blocks long.
-L93FE:  LDX #$05                        ;
-L9400:  LDA PasswordChar00,Y            ;
-L9403:  STA TileInfo0,X                 ;
-L9406:  DEY                             ;Transfer password characters to-->
-L9407:  DEX                             ;TileInfo addresses.
-L9408:  BPL L9400                       ;
-L940A:  RTS                             ;
+    LDA #$16                        ;Tiles to replace are one block-->
+    STA TileSize                    ;high and 6 blocks long.
+    LDX #$05                        ;
+    L9400:
+        LDA PasswordChar00,Y            ;
+        STA TileInfo0,X                 ;
+        DEY                             ;Transfer password characters to-->
+        DEX                             ;TileInfo addresses.
+        BPL L9400                       ;
+    RTS                             ;
 
 DisplayInputCharacters:
-L940B:  LDA PPUSTATUS                   ;Clear address latches.
-L940E:  LDY #$00                        ;
-L9410:  TYA                             ;Initially sets $00 an $01.
-L9411:  STA $00                         ;to #$00.
-L9413:  STA $01                         ;Also, initialy sets x and y to #$00.
-L9415:  ASL                             ;
-L9416:  TAX                             ;
-L9417:  LDA PasswordRowsTbl,X           ;
-L941A:  STA PPUADDR                  ;
-L941D:  LDA PasswordRowsTbl+1,X         ;Displays the list of characters -->
-L9420:  sTA PPUADDR                  ;to choose from on the password--> 
-L9423:  LDX #$00                        ;entry screen.
-L9425:  LDA PasswordRow0,Y              ;Base is $99A2.
-L9428:  STA PPUDATA                    ;
-L942B:  LDA #$FF                        ;Blank tile.
-L942D:  STA PPUDATA                    ;
-L9430:  INY                             ;
-L9431:  INX                             ;
-L9432:  CPX #$0D                        ;13 characters in current row?
-L9434:  BNE L9425                       ;if not, add another character.
-L9436:  INC $01                         ;
-L9438:  LDA $01                         ;
-L943A:  CMP #$05                        ;5 rows?
-L943C:  BNE L9415                       ;If not, go to next row.
-L943E:  RTS                             ;
+    LDA PPUSTATUS                   ;Clear address latches.
+    LDY #$00                        ;
+    TYA                             ;Initially sets $00 an $01.
+    STA $00                         ;to #$00.
+    STA $01                         ;Also, initially sets x and y to #$00.
+    L9415:
+        ASL                             ;
+        TAX                             ;
+        LDA PasswordRowsTbl,X           ;
+        STA PPUADDR                  ;
+        LDA PasswordRowsTbl+1,X         ;Displays the list of characters -->
+        STA PPUADDR                  ;to choose from on the password--> 
+        LDX #$00                        ;entry screen.
+        L9425:
+            LDA PasswordRow0,Y              ;Base is $99A2.
+            STA PPUDATA                    ;
+            LDA #$FF                        ;Blank tile.
+            STA PPUDATA                    ;
+            INY                             ;
+            INX                             ;
+            CPX #$0D                        ;13 characters in current row?
+            BNE L9425                       ;if not, add another character.
+        INC $01                         ;
+        LDA $01                         ;
+        CMP #$05                        ;5 rows?
+        BNE L9415                       ;If not, go to next row.
+    RTS                             ;
 
 ;The table below is used by the code above to determine the positions
 ;of the five character rows on the password entry screen.
 
 PasswordRowsTbl:
-L943F:  .byte $21, $E4                  ;
-L9441:  .byte $22, $24                  ;The two entries in each row are the upper and lower address-->
-L9443:  .byte $22, $64                  ;bytes to start writing to the name table, respectively.
-L9445:  .byte $22, $A4                  ;
-L9447:  .byte $22, $E4                  ;
+    .byte $21, $E4                  ;
+    .byte $22, $24                  ;The two entries in each row are the upper and lower address-->
+    .byte $22, $64                  ;bytes to start writing to the name table, respectively.
+    .byte $22, $A4                  ;
+    .byte $22, $E4                  ;
 
 
 PreparePPUProcess:
-L9449:  stx $00                         ;Lower byte of pointer to PPU string
-L944B:  sty $01                         ;Upper byte of pointer to PPU string
-L944D:  jmp ProcessPPUString            ;($C30C)
+    stx $00                         ;Lower byte of pointer to PPU string
+    sty $01                         ;Upper byte of pointer to PPU string
+    jmp ProcessPPUString            ;($C30C)
 
 PrepareEraseTiles:
-L9450:  STX $00                         ;PPU low address byte
-L9452:  STY $01                         ;PPU high address byte
-L9454:  LDX #$80                        ;
-L9456:  LDY #$07                        ;
-L9458:  STX $02                         ;Address of byte where tile size-->  
-L945A:  STY $03                         ;of tile to be erased is stored.
-L945C:  JMP EraseTile                   ;($C328)Erase the selected tiles.
+    STX $00                         ;PPU low address byte
+    STY $01                         ;PPU high address byte
+    LDX #$80                        ;
+    LDY #$07                        ;
+    STX $02                         ;Address of byte where tile size-->  
+    STY $03                         ;of tile to be erased is stored.
+    JMP EraseTile                   ;($C328)Erase the selected tiles.
 
 ;---------------------------------------[ Unused intro routines ]------------------------------------
 
@@ -2438,512 +2469,514 @@ L945C:  JMP EraseTile                   ;($C328)Erase the selected tiles.
 ;never read.
 
 UnusedIntroRoutine4:
-L945F:  STX PPUStrIndex                 ;
-L9462:  LDA #$00                        ;
-L9464:  STA PPUDataString,X             ;The following unused routine writes something to the-->
-L9467:  LDA #$01                        ;PPU string and prepares for a PPU write.
-L9469:  STA PPUDataPending              ;
-L946B:  RTS                             ;
+    STX PPUStrIndex                 ;
+    LDA #$00                        ;
+    STA PPUDataString,X             ;The following unused routine writes something to the-->
+    LDA #$01                        ;PPU string and prepares for a PPU write.
+    STA PPUDataPending              ;
+    RTS                             ;
 
 UnusedIntroRoutine5:
-L946C:  STA $05                         ;
-L946E:  AND #$F0                        ;
-L9470:  LSR                             ;
-L9471:  LSR                             ;
-L9472:  LSR                             ;
-L9473:  LSR                             ;
-L9474:  JSR L947B                       ;
-L9477:  LDA $05                         ;Unused intro routine. It looks like originally the-->
-L9479:  AND #$0F                        ;title routines were going to write data to the name-->
-L947B:  STA PPUDataString,X             ;tables in the middle of the title sequences.
-L947E:  INX                             ;
-L947F:  TXA                             ;
-L9480:  CMP #$55                        ;
-L9482:  BCC L948E                       ;
-L9484:  LDX PPUStrIndex                 ;
-L9487:  LDA #$00                        ;
-L9489:  STA PPUDataString,X             ;
-L948C:  BEQ L9487                       ;
-L948E:  RTS                             ;
+    STA $05                         ;
+    AND #$F0                        ;
+    LSR                             ;
+    LSR                             ;
+    LSR                             ;
+    LSR                             ;
+    JSR L947B                       ;
+        LDA $05                         ;Unused intro routine. It looks like originally the-->
+        AND #$0F                        ;title routines were going to write data to the name-->
+    L947B:
+    STA PPUDataString,X             ;tables in the middle of the title sequences.
+    INX                             ;
+    TXA                             ;
+    CMP #$55                        ;
+    BCC L948E                       ;
+    LDX PPUStrIndex                 ;
+    L9487:
+        LDA #$00                        ;
+        STA PPUDataString,X             ;
+        BEQ L9487                       ;
+L948E:
+    RTS                             ;
 
 UnusedIntroRoutine6:
-L948F:  TYA                             ;
-L9490:  PHA                             ;
-L9491:  JSR Amul16                      ;($C2C5)Multiply by 16.
-L9494:  TAY                             ;
-L9495:  LDA $684B,Y                     ;
-L9498:  STA $0B                         ;
-L949A:  LDA $684A,Y                     ;
-L949D:  STA $0A                         ;
-L949F:  JSR UnusedIntroRoutine8         ;($94DA)
-L94A2:  LDA $06                         ;
-L94A4:  STA $683D,X                     ;Another unused intro routine.
-L94A7:  LDA $07                         ;
-L94A9:  STA $683C,X                     ;
-L94AC:  PLA                             ;
-L94AD:  TAY                             ;
-L94AE:  RTS                             ;
+    TYA                             ;
+    PHA                             ;
+    JSR Amul16                      ;($C2C5)Multiply by 16.
+    TAY                             ;
+    LDA $684B,Y                     ;
+    STA $0B                         ;
+    LDA $684A,Y                     ;
+    STA $0A                         ;
+    JSR UnusedIntroRoutine8         ;($94DA)
+    LDA $06                         ;
+    STA $683D,X                     ;Another unused intro routine.
+    LDA $07                         ;
+    STA $683C,X                     ;
+    PLA                             ;
+    TAY                             ;
+    RTS                             ;
 
 UnusedIntroRoutine7:
-L94AF:  TYA                             ;
-L94B0:  PHA                             ;
-L94B1:  JSR Amul16                      ;($C2C5)Multiply by 16.
-L94B4:  TAY                             ;
-L94B5:  LDA $684D,Y                     ;
-L94B8:  STA $0B                         ;
-L94BA:  LDA $684C,Y                     ;
-L94BD:  STA $0A                         ;
-L94BF:  JSR UnusedIntroRoutine8         ;($94DA)
-L94C2:  LDA $06                         ;
-L94C4:  STA $6834,X                     ;
-L94C7:  LDA $07                         ;
-L94C9:  STA $6833,X                     ;
-L94CC:  LDA $6842,Y                     ;Another unused intro routine.
-L94CF:  PHA                             ;
-L94D0:  TXA                             ;
-L94D1:  LSR                             ;
-L94D2:  TAY                             ;
-L94D3:  PLA                             ;
-L94D4:  STA $6839,Y                     ;
-L94D7:  PLA                             ;
-L94D8:  TAY                             ;
-L94D9:  RTS                             ;
+    TYA                             ;
+    PHA                             ;
+    JSR Amul16                      ;($C2C5)Multiply by 16.
+    TAY                             ;
+    LDA $684D,Y                     ;
+    STA $0B                         ;
+    LDA $684C,Y                     ;
+    STA $0A                         ;
+    JSR UnusedIntroRoutine8         ;($94DA)
+    LDA $06                         ;
+    STA $6834,X                     ;
+    LDA $07                         ;
+    STA $6833,X                     ;
+    LDA $6842,Y                     ;Another unused intro routine.
+    PHA                             ;
+    TXA                             ;
+    LSR                             ;
+    TAY                             ;
+    PLA                             ;
+    STA $6839,Y                     ;
+    PLA                             ;
+    TAY                             ;
+    RTS                             ;
 
 UnusedIntroRoutine8:
-L94DA:  LDA #$FF                        ;
-L94DC:  STA $01                         ;
-L94DE:  STA $02                         ;
-L94E0:  STA $03                         ;
-L94E2:  SEC                             ;
-L94E3:  LDA $0A                         ;
-L94E5:  SBC #$E8                        ;
-L94E7:  STA $0A                         ;
-L94E9:  LDA $0B                         ;
-L94EB:  SBC #$03                        ;
-L94ED:  STA $0B                         ;
-L94EF:  INC $03                         ;
-L94F1:  BCS L94E3                       ;
-L94F3:  LDA $0A                         ;
-L94F5:  ADC #$E8                        ;
-L94F7:  STA $0A                         ;
-L94F9:  LDA $0B                         ;
-L94FB:  ADC #$03                        ;
-L94FD:  STA $0B                         ;
-L94FF:  LDA $0A                         ;
-L9501:  SEC                             ;Unused intro routine. Looks like the intro routines may-->
-L9502:  SBC #$64                        ;have had more complicated sprite control routines-->
-L9504:  INC $02                         ;that it does now.
-L9506:  BCS L9502                       ;
-L9508:  DEC $0B                         ;
-L950A:  BPL L9501                       ;
-L950C:  ADC #$64                        ;
-L950E:  SEC                             ;
-L950F:  SBC #$0A                        ;
-L9511:  INC $01                         ;
-L9513:  BCS L950F                       ;
-L9515:  ADC #$0A                        ;
-L9517:  STA $06                         ;
-L9519:  LDA $01                         ;
-L951B:  JSR Amul16                      ;($C2C5)Multiply by 16.
-L951E:  ORA $06                         ;
-L9520:  STA $06                         ;
-L9522:  LDA $03                         ;
-L9524:  JSR Amul16                      ;($C2C5)Multiply by 16.
-L9527:  ORA $02                         ;
-L9529:  STA $07                         ;
-L952B:  RTS                             ;
+    LDA #$FF                        ;
+    STA $01                         ;
+    STA $02                         ;
+    STA $03                         ;
+    SEC                             ;
+    L94E3:
+        LDA $0A                         ;
+        SBC #$E8                        ;
+        STA $0A                         ;
+        LDA $0B                         ;
+        SBC #$03                        ;
+        STA $0B                         ;
+        INC $03                         ;
+        BCS L94E3                       ;
+    LDA $0A                         ;
+    ADC #$E8                        ;
+    STA $0A                         ;
+    LDA $0B                         ;
+    ADC #$03                        ;
+    STA $0B                         ;
+    LDA $0A                         ;
+    L9501:
+        SEC                             ;Unused intro routine. Looks like the intro routines may-->
+        L9502:
+            SBC #$64                        ;have had more complicated sprite control routines-->
+            INC $02                         ;that it does now.
+            BCS L9502                       ;
+        DEC $0B                         ;
+        BPL L9501                       ;
+    ADC #$64                        ;
+    SEC                             ;
+    L950F:
+        SBC #$0A                        ;
+        INC $01                         ;
+        BCS L950F                       ;
+    ADC #$0A                        ;
+    STA $06                         ;
+    LDA $01                         ;
+    JSR Amul16                      ;($C2C5)Multiply by 16.
+    ORA $06                         ;
+    STA $06                         ;
+    LDA $03                         ;
+    JSR Amul16                      ;($C2C5)Multiply by 16.
+    ORA $02                         ;
+    STA $07                         ;
+    RTS                             ;
 
 ;Not used.
-L952C:  .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
-L953C:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
-L954C:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-L955C:  .byte $00, $00, $00, $00
+    .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00
 
 ;--------------------------------------[ Palette data ]---------------------------------------------
 
 ;The following table points to the palette data
 ;used in the intro and ending portions of the game.
 
-PaletteColorsPointerTable:
-L9560:  .word Palette00                 ;($9586)
-L9562:  .word Palette01                 ;($95AA)
-L9564:  .word Palette02                 ;($95CE)
-L9566:  .word Palette03                 ;($95F2)
-L9568:  .word Palette04                 ;($9616)
-L956A:  .word Palette05                 ;($963A)
-L956C:  .word Palette06                 ;($965E)
-L956E:  .word Palette07                 ;($9682)
-L9570:  .word Palette08                 ;($96A6)
-L9572:  .word Palette09                 ;($96CA)
-L9574:  .word Palette0A                 ;($96EE)
-L9576:  .word Palette0B                 ;($9712)
-L9578:  .word Palette0C                 ;($9736)
-L957A:  .word Palette0D                 ;($975A)
-L957C:  .word Palette0E                 ;($977E)
-L957E:  .word Palette0F                 ;($97A2)
-L9580:  .word Palette10                 ;($97C6)
-L9582:  .word Palette11                 ;($97EA)
-L9584:  .word Palette12                 ;($97F2)
+PalPntrTbl:
+    .word Palette00                 ;($9586)
+    .word Palette01                 ;($95AA)
+    .word Palette02                 ;($95CE)
+    .word Palette03                 ;($95F2)
+    .word Palette04                 ;($9616)
+    .word Palette05                 ;($963A)
+    .word Palette06                 ;($965E)
+    .word Palette07                 ;($9682)
+    .word Palette08                 ;($96A6)
+    .word Palette09                 ;($96CA)
+    .word Palette0A                 ;($96EE)
+    .word Palette0B                 ;($9712)
+    .word Palette0C                 ;($9736)
+    .word Palette0D                 ;($975A)
+    .word Palette0E                 ;($977E)
+    .word Palette0F                 ;($97A2)
+    .word Palette10                 ;($97C6)
+    .word Palette11                 ;($97EA)
+    .word Palette12                 ;($97F2)
 
 Palette00:
-L9586:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9587:  .byte $00                       ;Lower byte of PPU palette adress.
-L9588:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9589:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F
-;The following values are written to the sprite palette:
-L9599:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L95A9:  .byte $00                       ;End Palette01 info.
+    .byte $00                       ;End Palette01 info.
 
 Palette01:
-L95AA:  .byte $3F                       ;Upper byte of PPU palette adress.
-L95AB:  .byte $00                       ;Lower byte of PPU palette adress.
-L96AC:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L95AD:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04
-;The following values are written to the sprite palette:
-L95BD:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L95CD:  .byte $00                       ;End Palette02 info.
+    .byte $00                       ;End Palette02 info.
 
 Palette02:
-L95CE:  .byte $3F                       ;Upper byte of PPU palette adress.
-L95CF:  .byte $00                       ;Lower byte of PPU palette adress.
-L95D0:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L95D1:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09
-;The following values are written to the sprite palette:
-L95E1:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L95F1:  .byte $00                       ;End Palette03 info.
+    .byte $00                       ;End Palette03 info.
 
 Palette03:
-L95F2:  .byte $3F                       ;Upper byte of PPU palette adress.
-L95F3:  .byte $00                       ;Lower byte of PPU palette adress.
-L95F4:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L95F5:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06
-;The following values are written to the sprite palette:
-L9605:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L9615:  .byte $00                       ;End Palette04 info.
+    .byte $00                       ;End Palette04 info.
 
 Palette04:
-L9616:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9617:  .byte $00                       ;Lower byte of PPU palette adress.
-L9618:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9619:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12
-;The following values are written to the sprite palette:
-L9629:  .byte $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L9639:  .byte $00                       ;End Palette05 info.
+    .byte $00                       ;End Palette05 info.
 
 Palette05:
-L963A:  .byte $3F                       ;Upper byte of PPU palette adress.
-L963B:  .byte $00                       ;Lower byte of PPU palette adress.
-L963C:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L963D:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
-;The following values are written to the sprite palette:
-L964D:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L965D:  .byte $00                       ;End Palette06 info.
+    .byte $00                       ;End Palette06 info.
 
 Palette06:
-L965E:  .byte $3F                       ;Upper byte of PPU palette adress.
-L965F:  .byte $00                       ;Lower byte of PPU palette adress.
-L9660:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9661:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F
-;The following values are written to the sprite palette:
-L9671:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L9681:  .byte $00                       ;End Palette07 info.
+    .byte $00                       ;End Palette07 info.
 
 Palette07:
-L9682:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9683:  .byte $00                       ;Lower byte of PPU palette adress.
-L9684:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9685:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01
-;The following values are written to the sprite palette:
-L9695:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L96A5:  .byte $00                       ;End Palette08 info.
+    .byte $00                       ;End Palette08 info.
 
 Palette08:
-L96A6:  .byte $3F                       ;Upper byte of PPU palette adress.
-L96A7:  .byte $00                       ;Lower byte of PPU palette adress.
-L96A8:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L96A9:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01
-;The following values are written to the sprite palette:
-L96B9:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L96C9:  .byte $00                       ;End Palette09 info.
+    .byte $00                       ;End Palette09 info.
 
 Palette09:
-L96CA:  .byte $3F                       ;Upper byte of PPU palette adress.
-L96CB:  .byte $00                       ;Lower byte of PPU palette adress.
-L96CC:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L96CD:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02
-;The following values are written to the sprite palette:
-L96DD:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L96ED:  .byte $00                       ;End Palette0A info.
+    .byte $00                       ;End Palette0A info.
 
 Palette0A:
-L96EE:  .byte $3F                       ;Upper byte of PPU palette adress.
-L96EF:  .byte $00                       ;Lower byte of PPU palette adress.
-L96F0:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L96F1:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02
-;The following values are written to the sprite palette:
-L9701:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L9711:  .byte $00                       ;End Palette0B info.
+    .byte $00                       ;End Palette0B info.
 
 Palette0B:
-L9712:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9713:  .byte $00                       ;Lower byte of PPU palette adress.
-L9714:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9715:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01
-;The following values are written to the sprite palette:
-L9716:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L9735:  .byte $00                       ;End Palette0C info.
+    .byte $00                       ;End Palette0C info.
 
 Palette0C:
-L9736:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9737:  .byte $00                       ;Lower byte of PPU palette adress.
-L9738:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9739:  .byte $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01
-;The following values are written to the sprite palette:
-L9749:  .byte $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
 
-L9759:  .byte $00                       ;End Palette0D info.
+    .byte $00                       ;End Palette0D info.
 
 Palette0D:
-L975A:  .byte $3F                       ;Upper byte of PPU palette adress.
-L975B:  .byte $00                       ;Lower byte of PPU palette adress.
-L975C:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L975D:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01
-;The following values are written to the sprite palette:
-L975E:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L977D:  .byte $00                       ;End Palette0E info.
+    .byte $00                       ;End Palette0E info.
 
 Palette0E:
-L977E:  .byte $3F                       ;Upper byte of PPU palette adress.
-L977F:  .byte $00                       ;Lower byte of PPU palette adress.
-L9780:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L9781:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F
-;The following values are written to the sprite palette:
-L9791:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L97A1:  .byte $00                       ;End Palette0F info.
+    .byte $00                       ;End Palette0F info.
 
 Palette0F:
-L97A2:  .byte $3F                       ;Upper byte of PPU palette adress.
-L97A3:  .byte $00                       ;Lower byte of PPU palette adress.
-L97A4:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L97A5:  .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
-;The following values are written to the sprite palette:
-L97B5:  .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
+    ;The following values are written to the sprite palette:
+    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
-L97C5:  .byte $00                       ;End Palette10 info.
+    .byte $00                       ;End Palette10 info.
 
 Palette10:
-L97C6:  .byte $3F                       ;Upper byte of PPU palette adress.
-L97C7:  .byte $00                       ;Lower byte of PPU palette adress.
-L97C8:  .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-L97C9:  .byte $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30
-;The following values are written to the sprite palette:
-L97D9:  .byte $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $20                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30
+    ;The following values are written to the sprite palette:
+    .byte $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
 
-L97E9:  .byte $00                       ;End Palette11 info.
+    .byte $00                       ;End Palette11 info.
 
 Palette11:
-L97EA:  .byte $3F                       ;Upper byte of PPU palette adress.
-L97EB:  .byte $00                       ;Lower byte of PPU palette adress.
-L97EC:  .byte $04                       ;Palette data length.
-;The following values are written to the background palette:
-L97ED:  .byte $0F, $30, $30, $21
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $04                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $30, $30, $21
 
-L98F1:  .byte $00                       ;End Palette12 info.
+    .byte $00                       ;End Palette12 info.
 
 Palette12:
-L97F2:  .byte $3F                       ;Upper byte of PPU palette adress.
-L97F3:  .byte $00                       ;Lower byte of PPU palette adress.
-L97F4:  .byte $10                       ;Palette data length.
-;The following values are written to the background palette:
-L97F5:  .byte $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $10                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
 
-L9805:  .byte $00                       ;End Palette13 data.
+    .byte $00                       ;End Palette13 data.
 
 EndGamePal0B:
-L9806:  .byte $3F                       ;Upper byte of PPU palette adress.
-L9807:  .byte $00                       ;Lower byte of PPU palette adress.
-L9808:  .byte $10                       ;Palette data length.
-;The following values are written to the background palette:
-L9809:  .byte $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
+    .byte $3F                       ;Upper byte of PPU palette adress.
+    .byte $00                       ;Lower byte of PPU palette adress.
+    .byte $10                       ;Palette data length.
+    ;The following values are written to the background palette:
+    .byte $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
 
 EndGamePal0C:
-L9819:  .byte $3F                       ;Upper byte of PPU palette adress.
-L981A:  .byte $10                       ;Lower byte of PPU palette adress.
-L981B:  .byte $50                       ;Palette data length.
-L981C:  .byte $0F                       ;Repeat bit set. Fill sprite palette with #$0F.
+    PPUStringRepeat $3F10, $0F, $10
 
-L981D:  .byte $00                       ;End EndGamePal0C data.
+    .byte $00                       ;End EndGamePal0C data.
 
 UpdateSpriteCoords:
-L981E:  LDA IntroSpr0XRun,X             ;Load sprite run(sprite x component).
-L9821:  JSR CalcDisplacement            ;($9871)Calculate sprite displacement in x direction.
-L9824:  LDY IntroSpr0XDir,X             ;Get byte describing if sprite increasing or decreasing pos.
-L9827:  BPL L982E                       ;
-
-L9829:  EOR #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-L982B:  CLC                             ;value in A (result from CalcDisplacement) to twos compliment.
-L982C:  ADC #$01                        ;
-
-L982E:  CLC                             ;
-L982F:  ADC IntroSpr0XCoord,X           ;Add change to sprite x coord. 
-L9832:  STA IntroSpr0XCoord,X           ;
-L9835:  SEC                             ;
-L9836:  SBC IntroSpr0XChange,X          ;Subtract total sprite movemnt value from current sprite x pos.
-L9839:  PHP                             ;Transfer processor status to A.
-L983A:  PLA                             ;
-L983B:  EOR IntroSpr0XDir,X             ;Eor carry bit with direction byte to see if sprite has-->       
-L983E:  LSR                             ;reached its end point.
-L983F:  BCC L9864                       ;Branch if sprite has reached the end of x movement.
-
-L9841:  LDA IntroSpr0YRise,X            ;Load sprite rise(sprite y component).
-L9844:  JSR CalcDisplacement            ;($9871)Calculate sprite displacement in y direction.
-L9847:  LDY IntroSpr0YDir,X             ;Get byte describing if sprite increasing or decreasing pos.
-L984A:  BPL L9851                       ;
-
-L984C:  EOR #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-L984E:  CLC                             ;value in A (result from CalcDisplacement) to twos compliment.
-L984F:  ADC #$01                        ;
-
-L9851:  CLC                             ;
-L9852:  ADC IntroSpr0YCoord,X           ;Add change to sprite y coord. 
-L9855:  STA IntroSpr0YCoord,X           ;
-L9858:  SEC                             ;
-L9859:  SBC IntroSpr0YChange,X          ;Subtract total sprite movemnt value from current sprite y pos.
-L985C:  PHP                             ;Transfer processor status to A.
-L985D:  PLA                             ;
-L985E:  EOR IntroSpr0YDir,X             ;Eor carry bit with direction byte to see if sprite has-->
-L9861:  LSR                             ;reached its end point.
-L9862:  BCS L9870                       ;Branch if sprite has not reached the end of y movement.
-
-L9864:  LDA IntroSpr0YChange,X          ;After sprite has reached its final position, this code-->
-L9867:  STA IntroSpr0YCoord,X           ;explicitly writes final the x and y coords to to sprite-->
-L986A:  LDA IntroSpr0XChange,X          ;position addresses to make sure the sprites don't-->
-L986D:  STA IntroSpr0XCoord,X           ;overshoot their mark.
-L9870:  RTS                             ;
+    LDA IntroSpr0XRun,X             ;Load sprite run(sprite x component).
+    JSR CalcDisplacement            ;($9871)Calculate sprite displacement in x direction.
+    LDY IntroSpr0XDir,X             ;Get byte describing if sprite increasing or decreasing pos.
+    BPL L982E                       ;
+        EOR #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
+        CLC                             ;value in A (result from CalcDisplacement) to twos compliment.
+        ADC #$01                        ;
+    L982E:
+    CLC                             ;
+    ADC IntroSpr0XCoord,X           ;Add change to sprite x coord. 
+    STA IntroSpr0XCoord,X           ;
+    SEC                             ;
+    SBC IntroSpr0XChange,X          ;Subtract total sprite movemnt value from current sprite x pos.
+    PHP                             ;Transfer processor status to A.
+    PLA                             ;
+    EOR IntroSpr0XDir,X             ;Eor carry bit with direction byte to see if sprite has-->       
+    LSR                             ;reached its end point.
+    BCC L9864                       ;Branch if sprite has reached the end of x movement.
+        LDA IntroSpr0YRise,X            ;Load sprite rise(sprite y component).
+        JSR CalcDisplacement            ;($9871)Calculate sprite displacement in y direction.
+        LDY IntroSpr0YDir,X             ;Get byte describing if sprite increasing or decreasing pos.
+        BPL L9851                       ;
+            EOR #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
+            CLC                             ;value in A (result from CalcDisplacement) to twos compliment.
+            ADC #$01                        ;
+        L9851:
+        CLC                             ;
+        ADC IntroSpr0YCoord,X           ;Add change to sprite y coord. 
+        STA IntroSpr0YCoord,X           ;
+        SEC                             ;
+        SBC IntroSpr0YChange,X          ;Subtract total sprite movemnt value from current sprite y pos.
+        PHP                             ;Transfer processor status to A.
+        PLA                             ;
+        EOR IntroSpr0YDir,X             ;Eor carry bit with direction byte to see if sprite has-->
+        LSR                             ;reached its end point.
+        BCS L9870                       ;Branch if sprite has not reached the end of y movement.
+    L9864:
+        LDA IntroSpr0YChange,X          ;After sprite has reached its final position, this code-->
+        STA IntroSpr0YCoord,X           ;explicitly writes final the x and y coords to to sprite-->
+        LDA IntroSpr0XChange,X          ;position addresses to make sure the sprites don't-->
+        STA IntroSpr0XCoord,X           ;overshoot their mark.
+    L9870:
+    RTS                             ;
 
 CalcDisplacement:
-L9871:  STA $04                         ;
-L9873:  LDA #$08                        ;Time division. The higher the number, the slower the sprite.
-L9875:  STA $00                         ;
-L9877:  LSR $04                         ;
-L9879:  BCC L9883                       ;
-L987B:  LDA FrameCount                  ;
-L987D:  AND $00                         ;Calculate the change in the sprite position by taking the-->
-L987F:  BNE L9883                       ;value in a and dividing it by the time division. The time-->
-L9881:  INC $04                         ;time division in this case is #$08.
-L9883:  LSR $00                         ;
-L9885:  BNE L9877                       ;
-L9887:  LDA $04                         ;
-L9889:  RTS                             ;Return A/time.
+    STA $04                         ;
+    LDA #$08                        ;Time division. The higher the number, the slower the sprite.
+    STA $00                         ;
+    L9877:
+        LSR $04                         ;
+        BCC L9883                       ;
+        LDA FrameCount                  ;
+        AND $00                         ;Calculate the change in the sprite position by taking the-->
+        BNE L9883                       ;value in a and dividing it by the time division. The time-->
+        INC $04                         ;time division in this case is #$08.
+    L9883:
+        LSR $00                         ;
+        BNE L9877                       ;
+    LDA $04                         ;
+    RTS                             ;Return A/time.
 
 ;This function decrements the y coordinate of the 40 intro star sprites.
 
 DecSpriteYCoord:
-L988A:  LDA TitleRoutine                ;
-L988C:  CMP #$1D                        ;
-L988E:  BCS L98AD                       ;If the end game is playing, branch to exit.
-L9890:  LDA SpriteLoadPending           ;               
-L9892:  BEQ L98AD                       ;If no sprite load is pending, branch to exit.
-L9894:  LDA FrameCount                  ;
-L9896:  LSR                             ;
-L9897:  BCS L98AD                       ;If not on an odd numbered frame, branch to exit.
-L9899:  LDX #$9F                        ;
-L989B:  DEC IntroStarSprite00,X         ;Decrement y coord of the intro star sprites.
-L989E:  DEC Sprite18RAM,X               ;Decrement y coord of 40 sprites.
-L98A1:  DEX                             ;
-L98A2:  DEX                             ;
-L98A3:  DEX                             ;Move to next sprite.
-L98A4:  DEX                             ;
-L98A5:  CPX #$FF                        ;
-L98A7:  BNE L989B                       ;Loop 40 times.
-L98A9:  LDA #$00                        ;
-L98AB:  STA SpriteLoadPending           ;Sprite RAM load complete.
-L98AD:  RTS                             ;
+    LDA TitleRoutine                ;
+    CMP #$1D                        ;
+    BCS L98AD                       ;If the end game is playing, branch to exit.
+    LDA SpriteLoadPending           ;               
+    BEQ L98AD                       ;If no sprite load is pending, branch to exit.
+    LDA FrameCount                  ;
+    LSR                             ;
+    BCS L98AD                       ;If not on an odd numbered frame, branch to exit.
+    LDX #$9F                        ;
+    L989B:
+        DEC IntroStarSprite00,X         ;Decrement y coord of the intro star sprites.
+        DEC Sprite18RAM,X               ;Decrement y coord of 40 sprites.
+        DEX                             ;
+        DEX                             ;
+        DEX                             ;Move to next sprite.
+        DEX                             ;
+        CPX #$FF                        ;
+        BNE L989B                       ;Loop 40 times.
+    LDA #$00                        ;
+    STA SpriteLoadPending           ;Sprite RAM load complete.
+L98AD:
+    RTS                             ;
 
 LoadStarSprites:
-L98AE:  LDY #$9F                        ;
-L98B0:  LDA IntroStarSprite00,Y         ;
-L98B3:  STA Sprite18RAM,Y               ;Store RAM contents of $6E00 thru $6E9F -->
-L98B6:  DEY                             ;in sprite RAM at locations $0260 thru $02FF. 
-L98B7:  CPY #$FF                        ;
-L98B9:  BNE L98B0                       ;
-L98BB:  LDA #$00                        ;                               
-L98BD:  STA SpriteLoadPending           ;Set $C8 to #$00.
-L98BF:  RTS                             ;
+    LDY #$9F                        ;
+L98B0:
+    LDA IntroStarSprite00,Y         ;
+    STA Sprite18RAM,Y               ;Store RAM contents of $6E00 thru $6E9F -->
+    DEY                             ;in sprite RAM at locations $0260 thru $02FF. 
+    CPY #$FF                        ;
+    BNE L98B0                       ;
+    LDA #$00                        ;                               
+    STA SpriteLoadPending           ;Set $C8 to #$00.
+    RTS                             ;
 
 ;The following values are loaded into RAM $6E00 thru $6E9F in InitBank0
 ;routine.  These values are then loaded into sprite RAM at $0260 thru $02FF
 ;in above routine.  They are the stars in the title screen.
 
 IntroStarsData:
-L98C0:  .byte $73, $CC, $22, $F2, $48, $CD, $63, $EE, $2A, $CE, $A2, $DC, $36, $CF, $E2, $C6
-L98D0:  .byte $11, $CC, $23, $B7, $53, $CD, $63, $A0, $BB, $CE, $A2, $9A, $0F, $CF, $E2, $8B
-L98E0:  .byte $85, $CC, $E2, $70, $9D, $CD, $A3, $6B, $A0, $CE, $63, $58, $63, $CF, $23, $4F
-L98F0:  .byte $0A, $CC, $22, $39, $1F, $CD, $23, $2A, $7F, $CE, $A3, $1F, $56, $CF, $A2, $03
-L9900:  .byte $4D, $CC, $E3, $AF, $3E, $CD, $63, $2B, $61, $CE, $E2, $4F, $29, $CF, $62, $6F
-L9910:  .byte $8A, $CC, $23, $82, $98, $CD, $A3, $07, $AE, $CE, $E2, $CA, $B6, $CF, $63, $E3
-L9920:  .byte $0F, $CC, $62, $18, $1F, $CD, $22, $38, $22, $CE, $A3, $5F, $53, $CF, $E2, $78
-L9930:  .byte $48, $CC, $E3, $94, $37, $CD, $A3, $B3, $6F, $CE, $A3, $DC, $78, $CF, $22, $FE 
-L9940:  .byte $83, $CC, $62, $0B, $9F, $CD, $23, $26, $A0, $CE, $62, $39, $BD, $CF, $A2, $1C
-L9950:  .byte $07, $CC, $E3, $A4, $87, $CD, $63, $5D, $5A, $CE, $62, $4F, $38, $CF, $23, $85
+    .byte $73, $CC, $22, $F2, $48, $CD, $63, $EE, $2A, $CE, $A2, $DC, $36, $CF, $E2, $C6
+    .byte $11, $CC, $23, $B7, $53, $CD, $63, $A0, $BB, $CE, $A2, $9A, $0F, $CF, $E2, $8B
+    .byte $85, $CC, $E2, $70, $9D, $CD, $A3, $6B, $A0, $CE, $63, $58, $63, $CF, $23, $4F
+    .byte $0A, $CC, $22, $39, $1F, $CD, $23, $2A, $7F, $CE, $A3, $1F, $56, $CF, $A2, $03
+    .byte $4D, $CC, $E3, $AF, $3E, $CD, $63, $2B, $61, $CE, $E2, $4F, $29, $CF, $62, $6F
+    .byte $8A, $CC, $23, $82, $98, $CD, $A3, $07, $AE, $CE, $E2, $CA, $B6, $CF, $63, $E3
+    .byte $0F, $CC, $62, $18, $1F, $CD, $22, $38, $22, $CE, $A3, $5F, $53, $CF, $E2, $78
+    .byte $48, $CC, $E3, $94, $37, $CD, $A3, $B3, $6F, $CE, $A3, $DC, $78, $CF, $22, $FE 
+    .byte $83, $CC, $62, $0B, $9F, $CD, $23, $26, $A0, $CE, $62, $39, $BD, $CF, $A2, $1C
+    .byte $07, $CC, $E3, $A4, $87, $CD, $63, $5D, $5A, $CE, $62, $4F, $38, $CF, $23, $85
 
 ;Not used.
-L9960:  .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
-L9970:  .byte $26, $31, $17, $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02
-L9980:  .byte $01, $20, $21, $00
+    .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
+    .byte $26, $31, $17, $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02
+    .byte $01, $20, $21, $00
 
-L9984:  .byte $21                       ;PPU address high byte.
-L9985:  .byte $8C                       ;PPU address low byte.
-L9986:  .byte $05                       ;PPU string length.
-L9987:  .byte "START"
+L9984:
+    PPUString $218C, "START"
 
-L998C:  .byte $21                       ;PPU address high byte.
-L998D:  .byte $EC                       ;PPU address low byte.
-L998E:  .byte $08                       ;PPU string length.
-L998F:  .byte "CONTINUE"
+    PPUString $21EC, "CONTINUE"
 
-L9997:  .byte $00               ;End PPU string write 
+    .byte $00               ;End PPU string write 
 
 ;The following pointer table is used to find the start
 ;of each row on the password screen in the data below.
 
 PasswordRowTbl:
-L9998:  .word PasswordRow0              ;($99A2)
-L999A:  .word PasswordRow1              ;($99AF)
-L999C:  .word PasswordRow2              ;($99BC)
-L999E:  .word PasswordRow3              ;($99C9)
-L99A0:  .word PasswordRow4              ;($99D6)
+    .word PasswordRow0              ;($99A2)
+    .word PasswordRow1              ;($99AF)
+    .word PasswordRow2              ;($99BC)
+    .word PasswordRow3              ;($99C9)
+    .word PasswordRow4              ;($99D6)
 
 ;The following data is used to load the name table With the password characters:
 PasswordRow0: .byte "0123456789ABC"
@@ -2953,334 +2986,349 @@ PasswordRow3: .byte "defghijklmnop"
 PasswordRow4: .byte "qrstuvwxyz?- "
 
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
-L99E3:  .byte $20                       ;PPU address high byte.
-L99E4:  .byte $88                       ;PPU address low byte.
-L99E5:  .byte $10                       ;PPU string length.
-L99E6:  .byte "PASS WORD PLEASE"
+L99E3:
+    PPUString $2088, "PASS WORD PLEASE"
 
-;Clears attribute table 0 starting at address $23C0.
-L99F6:  .byte $23                       ;PPU address high byte.
-L99F7:  .byte $C0                       ;PPU address low byte.
-L99F8:  .byte $50                       ;PPU string length.
-L99F9:  .byte $00                       ;Repeat bit set. Repeats entry 16 times.
+    ;Clears attribute table 0 starting at address $23C0.
+    PPUStringRepeat $23C0, $00, $10
 
-;Writes to attribute table 0 starting at address $23D0.
-L99FA:  .byte $23                       ;PPU address high byte.
-L99FB:  .byte $D0                       ;PPU address low byte.
-L99FC:  .byte $48                       ;PPU string length.
-L99FD:  .byte $55                       ;Repeat bit set. Repeats entry 8 times.
+    ;Writes to attribute table 0 starting at address $23D0.
+    PPUStringRepeat $23D0, $55, $08
 
-;Writes to attribute table 0 starting at address $23D8.
-L99FE:  .byte $23                       ;PPU address high byte.
-L99FF:  .byte $D8                       ;PPU address low byte.
-L9A00:  .byte $60                       ;PPU string length.
-L9A01:  .byte $FF                       ;Repeat bit set. Repeats entry 32 times.
+    ;Writes to attribute table 0 starting at address $23D8.
+    PPUStringRepeat $23D8, $FF, $20
 
-;Writes to attribute table 0 starting at address $23DA.
-L9A02:  .byte $23                       ;PPU address high byte.
-L9A03:  .byte $DA                       ;PPU address low byte.
-L9A04:  .byte $44                       ;PPU string length.
-L9A05:  .byte $F0                       ;Repeat bit set. Repeats entry 4 times.
+    ;Writes to attribute table 0 starting at address $23DA.
+    PPUStringRepeat $23DA, $F0, $04
 
-L9A06:  .byte $00                       ;End PPU string write. 
+    .byte $00                       ;End PPU string write. 
 
 ;----------------------------------------[ Ending routines ]-----------------------------------------
 
 ;The following routine is accessed via the NMI routine every frame.
 NMIScreenWrite:
-L9A07:  LDA TitleRoutine                ;
-L9A09:  CMP #$1D                        ;If titleRoutine not at end game, exit.
-L9A0B:  BCC Exit100                     ;
-L9A0D:  JSR LoadCredits                 ;($9C45)Display end credits on screen.
-L9A10:  LDA EndMsgWrite                 ;
-L9A12:  BEQ L9A24                       ;If not time to write end message, branch
-L9A14:  CMP #$05                        ;
-L9A16:  BCS L9A24                       ;If end message is finished being written, branch
-L9A18:  ASL                             ;
-L9A19:  TAY                             ;
-L9A1A:  LDX EndMessageStringTbl0-2,Y    ;Writes the end message on name table 0
-L9A1D:  LDA EndMessageStringTbl0-1,Y    ;
-L9A20:  TAY                             ;
-L9A21:  JSR PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-L9A24:  LDA HideShowEndMsg              ;
-L9A26:  BEQ Exit100                     ;If not time to erase end message, branch
-L9A28:  CMP #$05                        ;
-L9A2A:  BCS Exit100                     ;If end message is finished being erased, branch
-L9A2C:  ASL                             ;
-L9A2D:  TAY                             ;
-L9A2E:  LDX EndMessageStringTbl1-2,Y    ;Erases the end message on name table 0
-L9A31:  LDA EndMessageStringTbl1-1,Y    ;
-L9A34:  TAY                             ;
-L9A35:  JMP PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
+    LDA TitleRoutine                ;
+    CMP #$1D                        ;If titleRoutine not at end game, exit.
+    BCC Exit100                     ;
+    JSR LoadCredits                 ;($9C45)Display end credits on screen.
+    LDA EndMsgWrite                 ;
+    BEQ L9A24                       ;If not time to write end message, branch
+    CMP #$05                        ;
+    BCS L9A24                       ;If end message is finished being written, branch
+    ASL                             ;
+    TAY                             ;
+    LDX EndMessageStringTbl0-2,Y    ;Writes the end message on name table 0
+    LDA EndMessageStringTbl0-1,Y    ;
+    TAY                             ;
+    JSR PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
+L9A24:
+    LDA HideShowEndMsg              ;
+    BEQ Exit100                     ;If not time to erase end message, branch
+    CMP #$05                        ;
+    BCS Exit100                     ;If end message is finished being erased, branch
+    ASL                             ;
+    TAY                             ;
+    LDX EndMessageStringTbl1-2,Y    ;Erases the end message on name table 0
+    LDA EndMessageStringTbl1-1,Y    ;
+    TAY                             ;
+    JMP PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
 
 Exit100:
-L9A38:  RTS                             ;Exit from above and below routines.
+    RTS                             ;Exit from above and below routines.
  
 Restart:
-L9A39:  LDA Joy1Status                  ;
-L9A3B:  AND #$10                        ;If start has not been pressed, branch to exit.
-L9A3D:  BEQ Exit100                     ;
-L9A3F:  LDY #$11                        ;
-L9A41:  LDA #$00                        ;
-L9A43:  STA PasswordByte00,Y            ;Erase PasswordByte00 thru PasswordByte11.
-L9A46:  DEY                             ;
-L9A47:  BPL L9A43                       ;
-L9A49:  INY                             ;Y = #$00.
-L9A4A:  STA UniqueItemHistory,Y         ;
-L9A4D:  INY                             ;Erase Unique item history.
-L9A4E:  BNE L9A4A                       ;
-L9A50:  LDA SamusGear                   ;
-L9A53:  AND #$10                        ;
-L9A55:  BEQ L9A5C                       ;If Samus does not have Maru Mari, branch.-->
-L9A57:  LDA #$01                        ;Else load Maru Mari data into PasswordByte00.
-L9A59:  STA PasswordByte00              ;
-L9A5C:  LDA SamusGear                   ;
-L9A5F:  AND #$01                        ;
-L9A61:  BEQ L9A6B                       ;If Samus does not have bombs, branch.-->
-L9A63:  LDA PasswordByte00              ;Else load bomb data into PasswordByte00.
-L9A66:  ORA #$40                        ;
-L9A68:  STA PasswordByte00              ;
-L9A6B:  LDA SamusGear                   ;
-L9A6E:  AND #$20                        ;
-L9A70:  BEQ L9A77                       ;If Samus does not have varia suit, branch.-->
-L9A72:  LDA #$08                        ;Else load varia suit data into PasswordByte01.
-L9A74:  STA PasswordByte01              ;
-L9A77:  LDA SamusGear                   ;
-L9A7A:  AND #$02                        ;
-L9A7C:  BEQ L9A83                       ;If Samus does not have high jump, branch.-->
-L9A7E:  LDA #$01                        ;Else load high jump data into PasswordByte03.
-L9A80:  STA PasswordByte03              ;
-L9A83:  LDA SamusGear                   ;
-L9A86:  AND #$10                        ;If Samus does not have Maru Mari, branch.-->
-L9A88:  BEQ L9A92                       ;Else load screw attack data into PasswordByte03.-->
-L9A8A:  LDA PasswordByte03              ;A programmer error?  Should check for screw-->
-L9A8D:  ORA #$04                        ;attack data.
-L9A8F:  STA PasswordByte03              ;
-L9A92:  LDA SamusGear                   ;
-L9A95:  STA PasswordByte09              ;Store Samus gear data in PasswordByte09.
-L9A98:  LDA #$00                        ;
-L9A9A:  LDY JustInBailey                ;
-L9A9D:  BEQ L9AA1                       ;If Samus is wearing suit, branch.  Else-->
-L9A9F:  LDA #$80                        ;load suitless Samus data into PasswordByte08.
-L9AA1:  STA PasswordByte08              ;
-L9AA4:  JMP InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
+    LDA Joy1Status                  ;
+    AND #$10                        ;If start has not been pressed, branch to exit.
+    BEQ Exit100                     ;
+    LDY #$11                        ;
+    LDA #$00                        ;
+L9A43:
+    STA PasswordByte00,Y            ;Erase PasswordByte00 thru PasswordByte11.
+    DEY                             ;
+    BPL L9A43                       ;
+    INY                             ;Y = #$00.
+L9A4A:
+    STA UniqueItemHistory,Y         ;
+    INY                             ;Erase Unique item history.
+    BNE L9A4A                       ;
+    LDA SamusGear                   ;
+    AND #$10                        ;
+    BEQ L9A5C                       ;If Samus does not have Maru Mari, branch.-->
+    LDA #$01                        ;Else load Maru Mari data into PasswordByte00.
+    STA PasswordByte00              ;
+L9A5C:
+    LDA SamusGear                   ;
+    AND #$01                        ;
+    BEQ L9A6B                       ;If Samus does not have bombs, branch.-->
+    LDA PasswordByte00              ;Else load bomb data into PasswordByte00.
+    ORA #$40                        ;
+    STA PasswordByte00              ;
+L9A6B:
+    LDA SamusGear                   ;
+    AND #$20                        ;
+    BEQ L9A77                       ;If Samus does not have varia suit, branch.-->
+    LDA #$08                        ;Else load varia suit data into PasswordByte01.
+    STA PasswordByte01              ;
+L9A77:
+    LDA SamusGear                   ;
+    AND #$02                        ;
+    BEQ L9A83                       ;If Samus does not have high jump, branch.-->
+    LDA #$01                        ;Else load high jump data into PasswordByte03.
+    STA PasswordByte03              ;
+L9A83:
+    LDA SamusGear                   ;
+    AND #$10                        ;If Samus does not have Maru Mari, branch.-->
+    BEQ L9A92                       ;Else load screw attack data into PasswordByte03.-->
+    LDA PasswordByte03              ;A programmer error?  Should check for screw-->
+    ORA #$04                        ;attack data.
+    STA PasswordByte03              ;
+L9A92:
+    LDA SamusGear                   ;
+    STA PasswordByte09              ;Store Samus gear data in PasswordByte09.
+    LDA #$00                        ;
+    LDY JustInBailey                ;
+    BEQ L9AA1                       ;If Samus is wearing suit, branch.  Else-->
+    LDA #$80                        ;load suitless Samus data into PasswordByte08.
+L9AA1:
+    STA PasswordByte08              ;
+    JMP InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
 
 EndGame:
-L9AA7:  JSR LoadEndStarSprites          ;($9EAA)Load stars in end scene onto screen.
-L9AAA:  LDA IsCredits                   ;Skips palette change when rolling credits.
-L9AAC:  BNE L9AC0                       ;
-L9AAE:  LDA FrameCount                  ;
-L9AB0:  AND #$0F                        ;Changes star palettes every 16th frame.
-L9AB2:  BNE L9AC0                       ;
-L9AB4:  INC PalDataPending              ;
-L9AB6:  LDA PalDataPending              ;Reset palette data to #$01 after it-->
-L9AB8:  CMP #$09                        ;reaches #$09.
-L9ABA:  BNE L9AC0                       ;
-L9ABC:  LDA #$01                        ;
-L9ABE:  STA PalDataPending              ;
-L9AC0:  LDA RoomPtr                     ;RoomPtr used in end of game to determine-->
-L9AC2:  JSR ChooseRoutine               ;($C27C)which subroutine to run below.
-
-L9AC5:  .word LoadEndGFX                ;($9AD5)Load end GFX to pattern tables.
-L9AC7:  .word ShowEndSamus              ;($9B1C)Show Samus and end message.
-L9AC9:  .word EndSamusFlash             ;($9B34)Samus flashes and changes.
-L9ACB:  .word SamusWave                 ;($9B93)Samus waving in ending if suitless.
-L9ACD:  .word EndFadeOut                ;($9BCD)Fade out Samus in ending.
-L9ACF:  .word RollCredits               ;($9BFC)Rolls ending credits.
-L9AD1:  .word Restart                   ;($9A39)Starts at beginning after game completed.
-L9AD3:  .word ExitSub                   ;($C45C)Rts.
+    JSR LoadEndStarSprites          ;($9EAA)Load stars in end scene onto screen.
+    LDA IsCredits                   ;Skips palette change when rolling credits.
+    BNE L9AC0                       ;
+    LDA FrameCount                  ;
+    AND #$0F                        ;Changes star palettes every 16th frame.
+    BNE L9AC0                       ;
+    INC PalDataPending              ;
+    LDA PalDataPending              ;Reset palette data to #$01 after it-->
+    CMP #$09                        ;reaches #$09.
+    BNE L9AC0                       ;
+    LDA #$01                        ;
+    STA PalDataPending              ;
+L9AC0:
+    LDA RoomPtr                     ;RoomPtr used in end of game to determine-->
+    JSR ChooseRoutine               ;($C27C)which subroutine to run below.
+        .word LoadEndGFX                ;($9AD5)Load end GFX to pattern tables.
+        .word ShowEndSamus              ;($9B1C)Show Samus and end message.
+        .word EndSamusFlash             ;($9B34)Samus flashes and changes.
+        .word SamusWave                 ;($9B93)Samus waving in ending if suitless.
+        .word EndFadeOut                ;($9BCD)Fade out Samus in ending.
+        .word RollCredits               ;($9BFC)Rolls ending credits.
+        .word Restart                   ;($9A39)Starts at beginning after game completed.
+        .word ExitSub                   ;($C45C)Rts.
 
 LoadEndGFX:
-L9AD5:  JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-L9AD8:  JSR InitEndGFX                  ;($C5D0)Prepare to load end GFX.
-L9ADB:  LDA #$04                        ;
-L9ADD:  LDY JustInBailey                ;Checks if game was played as suitless-->
-L9AE0:  BNE L9AE4                       ;Samus.  If so, branch.
-L9AE2:  LDA #$00                        ;Loads SpritePointerIndex with #$00(suit on).
-L9AE4:  STA EndingType                  ;
-L9AE7:  ASL                             ;Loads SpritePointerIndex with #$08(suitless).
-L9AE8:  STA SpritePointerIndex          ;
-L9AEA:  LDX #$52                        ;Loads the screen where Samus stands on-->
-L9AEC:  LDY #$A0                        ;the surface of the planet in end of game.
-L9AEE:  JSR PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-L9AF1:  JSR NMIOn                       ;($C487)Turn on non-maskable interrupt.
-L9AF4:  LDA #$20                        ;Initiate end game music.
-L9AF6:  STA MultiSFXFlag                ;
-L9AF9:  LDA #$60                        ;Loads Timer3 with a delay of 960 frames-->
-L9AFB:  STA Timer3                      ;(16 seconds).
-L9AFD:  LDA #$36                        ;#$36/#$03 = #$12.  Number of sprites-->
-L9AFF:  STA SpriteByteCounter           ;used to draw end graphic of Samus.
-L9B01:  LDA #$00                        ;
-L9B03:  STA SpriteAttribByte            ;
-L9B05:  STA ColorCntIndex               ;
-L9B07:  STA IsCredits                   ;The following values are-->
-L9B09:  STA EndMsgWrite                 ;initialized to #$00.
-L9B0B:  STA HideShowEndMsg              ;
-L9B0D:  STA CreditPageNumber            ;
-L9B0F:  LDA #$01                        ;
-L9B11:  STA PalDataPending              ;Change palette.
-L9B13:  LDA #$08                        ;
-L9B15:  STA ClrChangeCounter            ;Initialize ClrChangeCounter with #$08.
-L9B17:  INC RoomPtr                     ;
-L9B19:  JMP ScreenOn                    ;($C447)Turn screen on.
+    JSR ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
+    JSR InitEndGFX                  ;($C5D0)Prepare to load end GFX.
+    LDA #$04                        ;
+    LDY JustInBailey                ;Checks if game was played as suitless-->
+    BNE L9AE4                       ;Samus.  If so, branch.
+    LDA #$00                        ;Loads SpritePointerIndex with #$00(suit on).
+L9AE4:
+    STA EndingType                  ;
+    ASL                             ;Loads SpritePointerIndex with #$08(suitless).
+    STA SpritePointerIndex          ;
+    LDX #.lobyte(LA052)                        ;Loads the screen where Samus stands on-->
+    LDY #.hibyte(LA052)                        ;the surface of the planet in end of game.
+    JSR PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
+    JSR NMIOn                       ;($C487)Turn on non-maskable interrupt.
+    LDA #$20                        ;Initiate end game music.
+    STA MultiSFXFlag                ;
+    LDA #$60                        ;Loads Timer3 with a delay of 960 frames-->
+    STA Timer3                      ;(16 seconds).
+    LDA #$36                        ;#$36/#$03 = #$12.  Number of sprites-->
+    STA SpriteByteCounter           ;used to draw end graphic of Samus.
+    LDA #$00                        ;
+    STA SpriteAttribByte            ;
+    STA ColorCntIndex               ;
+    STA IsCredits                   ;The following values are-->
+    STA EndMsgWrite                 ;initialized to #$00.
+    STA HideShowEndMsg              ;
+    STA CreditPageNumber            ;
+    LDA #$01                        ;
+    STA PalDataPending              ;Change palette.
+    LDA #$08                        ;
+    STA ClrChangeCounter            ;Initialize ClrChangeCounter with #$08.
+    INC RoomPtr                     ;
+    JMP ScreenOn                    ;($C447)Turn screen on.
 
 ShowEndSamus:
-L9B1C:  JSR LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
-L9B1F:  LDA Timer3                      ;Once 960 frames (16 seconds) have expired,-->
-L9B21:  BNE L9B26                       ;Move to EndSamusFlash routine.
-L9B23:  INC RoomPtr                     ;
-L9B25:  RTS                             ;
+    JSR LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
+    LDA Timer3                      ;Once 960 frames (16 seconds) have expired,-->
+    BNE L9B26                       ;Move to EndSamusFlash routine.
+        INC RoomPtr                     ;
+        RTS                             ;
 
-L9B26:  CMP #$50                        ;After 160 frames have past-->
-L9B28:  BNE L9B2D                       ;(2.6 seconds), write end message.
-L9B2A:  INC EndMsgWrite                 ;
-L9B2C:  RTS                             ;
-L9B2D:  CMP #$01                        ;After 950 frames have past-->
-L9B2F:  BNE L9B33                       ;(15.8 seconds), erase end message.
-L9B31:  INC HideShowEndMsg              ;
-L9B33:  RTS                             ;
+    L9B26:
+    CMP #$50                        ;After 160 frames have past-->
+    BNE L9B2D                       ;(2.6 seconds), write end message.
+        INC EndMsgWrite                 ;
+        RTS                             ;
+
+    L9B2D:
+    CMP #$01                        ;After 950 frames have past-->
+    BNE L9B33                       ;(15.8 seconds), erase end message.
+        INC HideShowEndMsg              ;
+    L9B33:
+    RTS                             ;
 
 EndSamusFlash:
-L9B34:  LDA FrameCount                  ;If FrameCount not divisible by 32, branch.
-L9B36:  AND #$1F                        ;
-L9B38:  BNE L9B69                       ;
-L9B3A:  INC ColorCntIndex               ;Every 32 frame, increment the ColorCntInex-->
-L9B3C:  LDA ColorCntIndex               ;value.  Flashing Samus lasts for 512-->
-L9B3E:  CMP #$08                        ;frames (8.5 seconds).
-L9B40:  BNE L9B52                       ;
-L9B42:  JSR ChooseEnding                ;($CAF5)Choose which Samus ending to show.
-L9B45:  JSR CalculatePassword           ;($8C7A)Calculate game password.
-L9B48:  LDA EndingType                  ;
-L9B4B:  ASL                             ;When EndSamusFlash routine is half way-->
-L9B4C:  STA SpritePointerIndex          ;done, this code will calculate the-->
-L9B4E:  LDA #$36                        ;password and choose the proper ending.
-L9B50:  STA SpriteByteCounter           ;
-L9B52:  CMP #$10                        ;
-L9B54:  BNE L9B69                       ;Once flashing Samus is compete, set Timer3-->
-L9B56:  STA Timer3                      ;for a 160 frame(2.6 seconds) delay.
-L9B58:  LDY #$00                        ;
-L9B5A:  LDA EndingType                  ;
-L9B5D:  CMP #$04                        ;If one of the suitless Samus endings,-->
-L9B5F:  BCC L9B62                       ;increment sprite color for proper-->
-L9B61:  INY                             ;color to be displayed and increment-->
-L9B62:  STY SpriteAttribByte            ;RoomPtr and erase the sprites.
-L9B64:  INC RoomPtr                     ;
-L9B66:  JMP EraseAllSprites             ;($C1A3)Clear all sprites off the screen.
-L9B69:  DEC ClrChangeCounter            ;Decrement ClrChangeCounter.
-L9B6B:  BNE L9B80                       ;
-L9B6D:  LDY ColorCntIndex               ;
-L9B6F:  LDA PalChangeTable,Y            ;When ClrChangeCounter=#$00, fetch new-->
-L9B72:  STA ClrChangeCounter            ;ClrChangeCounter value. and increment-->
-L9B74:  INC SpriteAttribByte            ;sprite color.  
-L9B76:  LDA SpriteAttribByte            ;
-L9B78:  CMP #$03                        ;
-L9B7A:  BNE L9B80                       ;       
-L9B7C:  LDA #$00                        ;If sprite color=#$03, set sprite-->
-L9B7E:  STA SpriteAttribByte            ;color to #$00.
-L9B80:  JMP LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
+    LDA FrameCount                  ;If FrameCount not divisible by 32, branch.
+    AND #$1F                        ;
+    BNE L9B69                       ;
+        INC ColorCntIndex               ;Every 32 frame, increment the ColorCntInex-->
+        LDA ColorCntIndex               ;value.  Flashing Samus lasts for 512-->
+        CMP #$08                        ;frames (8.5 seconds).
+        BNE L9B52                       ;
+            JSR ChooseEnding                ;($CAF5)Choose which Samus ending to show.
+            JSR CalculatePassword           ;($8C7A)Calculate game password.
+            LDA EndingType                  ;
+            ASL                             ;When EndSamusFlash routine is half way-->
+            STA SpritePointerIndex          ;done, this code will calculate the-->
+            LDA #$36                        ;password and choose the proper ending.
+            STA SpriteByteCounter           ;
+        L9B52:
+        CMP #$10                        ;
+        BNE L9B69                       ;Once flashing Samus is compete, set Timer3-->
+        STA Timer3                      ;for a 160 frame(2.6 seconds) delay.
+        LDY #$00                        ;
+        LDA EndingType                  ;
+        CMP #$04                        ;If one of the suitless Samus endings,-->
+        BCC L9B62                       ;increment sprite color for proper-->
+            INY                             ;color to be displayed and increment-->
+        L9B62:
+        STY SpriteAttribByte            ;RoomPtr and erase the sprites.
+        INC RoomPtr                     ;
+        JMP EraseAllSprites             ;($C1A3)Clear all sprites off the screen.
+    L9B69:
+    DEC ClrChangeCounter            ;Decrement ClrChangeCounter.
+    BNE L9B80                       ;
+    LDY ColorCntIndex               ;
+    LDA PalChangeTable,Y            ;When ClrChangeCounter=#$00, fetch new-->
+    STA ClrChangeCounter            ;ClrChangeCounter value. and increment-->
+    INC SpriteAttribByte            ;sprite color.  
+    LDA SpriteAttribByte            ;
+    CMP #$03                        ;
+    BNE L9B80                       ;       
+    LDA #$00                        ;If sprite color=#$03, set sprite-->
+    STA SpriteAttribByte            ;color to #$00.
+L9B80:
+    JMP LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
 
 ;The following table is used by the above routine to load ClrChangeCounter.  ClrChangeCounter
 ;decrements every frame, When ClrChangeCounter reaches zero, the sprite colors for Samus
 ;changes.  This has the effect of making Samus flash.  The flashing starts slow, speeds up,
 ;then slows down again.
 PalChangeTable:
-L9B83:  .byte $08, $07, $06, $05, $04, $03, $02, $01, $01, $02, $03, $04, $05, $06, $07, $08
+    .byte $08, $07, $06, $05, $04, $03, $02, $01, $01, $02, $03, $04, $05, $06, $07, $08
  
 SamusWave:
-L9B93:  LDA Timer3                      ;If 160 frame timer from previous routine-->
-L9B95:  BNE L9BA2                       ;has not expired, branch(waves for 2.6 seconds).
-L9B97:  LDA #$10                        ;
-L9B99:  STA Timer3                      ;Load Timer3 with 160 frame delay-->
-L9B9B:  LDA #$08                        ;(2.6 seconds).
-L9B9D:  STA PalDataPending              ;Change palette
-L9B9F:  INC RoomPtr                     ;Increment RoomPtr
-L9BA1:  RTS                             ;
+    LDA Timer3                      ;If 160 frame timer from previous routine-->
+    BNE L9BA2                       ;has not expired, branch(waves for 2.6 seconds).
+    LDA #$10                        ;
+    STA Timer3                      ;Load Timer3 with 160 frame delay-->
+    LDA #$08                        ;(2.6 seconds).
+    STA PalDataPending              ;Change palette
+    INC RoomPtr                     ;Increment RoomPtr
+    RTS                             ;
 
-L9BA2:  LDA EndingType                  ;If suitless Samus-->
-L9BA5:  CMP #$04                        ;ending, branch.
-L9BA7:  BCS L9BAC                       ;
-L9BA9:  JMP LoadEndSamusSprites         ;($9C9A)
-L9BAC:  SBC #$04                        ;If jumpsuit Samus ending,-->
-L9BAE:  ASL                             ;WaveSpritePointer=#$00, if bikini-->
-L9BAF:  ASL                             ;Samus ending, WaveSpritePointer=#$04.
-L9BB0:  STA WaveSpritePointer           ;
-L9BB2:  LDA FrameCount                  ;
-L9BB4:  AND #$08                        ;Every eigth frame count, change wave sprite data.
-L9BB6:  BNE L9BBE                       ;
-L9BB8:  LDY #$10                        ;Load WaveSpriteCounter with #$10(16 bytes of-->
-L9BBA:  STY WaveSpriteCounter           ;sprite data to be loaded).
-L9BBC:  BNE L9BC6                       ;Branch always.
-L9BBE:  INC WaveSpritePointer           ;
-L9BC0:  INC WaveSpritePointer           ;When bit 3 of FrameCount is not set,-->
-L9BC2:  LDY #$10                        ;Samus' waving hand is down.
-L9BC4:  STY WaveSpriteCounter           ;
-L9BC6:  LDA #$2D                        ;Load SpriteByteCounter in preparation for-->
-L9BC8:  STA SpriteByteCounter           ;refreshing Samus sprite bytes.
-L9BCA:  JMP LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
+L9BA2:
+    LDA EndingType                  ;If suitless Samus-->
+    CMP #$04                        ;ending, branch.
+    BCS L9BAC                       ;
+    JMP LoadEndSamusSprites         ;($9C9A)
+L9BAC:
+    SBC #$04                        ;If jumpsuit Samus ending,-->
+    ASL                             ;WaveSpritePointer=#$00, if bikini-->
+    ASL                             ;Samus ending, WaveSpritePointer=#$04.
+    STA WaveSpritePointer           ;
+    LDA FrameCount                  ;
+    AND #$08                        ;Every eigth frame count, change wave sprite data.
+    BNE L9BBE                       ;
+        LDY #$10                        ;Load WaveSpriteCounter with #$10(16 bytes of-->
+        STY WaveSpriteCounter           ;sprite data to be loaded).
+        BNE L9BC6                       ;Branch always.
+    L9BBE:
+        INC WaveSpritePointer           ;
+        INC WaveSpritePointer           ;When bit 3 of FrameCount is not set,-->
+        LDY #$10                        ;Samus' waving hand is down.
+        STY WaveSpriteCounter           ;
+    L9BC6:
+    LDA #$2D                        ;Load SpriteByteCounter in preparation for-->
+    STA SpriteByteCounter           ;refreshing Samus sprite bytes.
+    JMP LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
 
 EndFadeOut:
-L9BCD:  LDA Timer3                      ;If 160 frame delay from last routine has not-->
-L9BCF:  BNE L9BEF                       ;yet expired, branch.
-L9BD1:  LDA IsCredits                   ;
-L9BD3:  BNE L9BDB                       ;Branch always.
+    LDA Timer3                      ;If 160 frame delay from last routine has not-->
+    BNE L9BEF                       ;yet expired, branch.
+    LDA IsCredits                   ;
+    BNE L9BDB                       ;Branch always.
 
-L9BD5:  LDA #$08                        ;*This code does not appear to be used.
-L9BD7:  STA PalDataPending              ;*Change palette.
-L9BD9:  INC IsCredits                   ;*Increment IsCredits.
+        LDA #$08                        ;*This code does not appear to be used.
+        STA PalDataPending              ;*Change palette.
+        INC IsCredits                   ;*Increment IsCredits.
 
-L9BDB:  LDA FrameCount                  ;
-L9BDD:  AND #$07                        ;Every seventh frame, increment the palette info-->
-L9BDF:  BNE L9BEF                       ;If PalDataPending is not equal to #$0C, keep--> 
-L9BE1:  INC PalDataPending              ;incrementing every seventh frame until it does.-->
-L9BE3:  LDA PalDataPending              ;This creates the fade out effect.
-L9BE5:  CMP #$0C                        ;
-L9BE7:  BNE L9BEF                       ;
-L9BE9:  LDA #$10                        ;After fadeout complete, load Timer3 with 160 frame-->
-L9BEB:  STA Timer3                      ;delay(2.6 seconds) and increment RoomPtr.
-L9BED:  INC RoomPtr                     ;
-L9BEF:  LDA EndingType                  ;
-L9BF2:  CMP #$04                        ;If suitless Samus ending, load hand wave sprites,-->
-L9BF4:  BCS L9BF9                       ;else just load regular Samus sprites
-L9BF6:  JMP LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
-L9BF9:  JMP LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
+    L9BDB:
+    LDA FrameCount                  ;
+    AND #$07                        ;Every seventh frame, increment the palette info-->
+    BNE L9BEF                       ;If PalDataPending is not equal to #$0C, keep--> 
+    INC PalDataPending              ;incrementing every seventh frame until it does.-->
+    LDA PalDataPending              ;This creates the fade out effect.
+    CMP #$0C                        ;
+    BNE L9BEF                       ;
+        LDA #$10                        ;After fadeout complete, load Timer3 with 160 frame-->
+        STA Timer3                      ;delay(2.6 seconds) and increment RoomPtr.
+        INC RoomPtr                     ;
+    L9BEF:
+    LDA EndingType                  ;
+    CMP #$04                        ;If suitless Samus ending, load hand wave sprites,-->
+    BCS L9BF9                       ;else just load regular Samus sprites
+        JMP LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
+    L9BF9:
+        JMP LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
 
 RollCredits:
-L9BFC:  LDA Timer3                      ;If 160 frame timer delay from previous-->
-L9BFE:  BEQ L9C17                       ;routine has expired, branch.
-L9C00:  CMP #$02                        ;If not 20 frames left in Timer3, branch to exit.
-L9C02:  BNE L9C44                       ;
-L9C04:  JSR ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
-L9C07:  JSR ClearNameTable0             ;($C16D)clear name table 0 and sprites.-->
-L9C0A:  JSR EraseAllSprites             ;($C1A3)prepares screen for credits.
-L9C0D:  LDA #$0D                        ;
-L9C0F:  STA PalDataPending              ;Change to proper palette for credits.
-L9C11:  JSR ScreenOn                    ;($C447)Turn screen on.
-L9C14:  JMP WaitNMIPass_                ;($C43F)Wait for NMI to end.
-L9C17:  LDA CreditPageNumber            ;If first page of credits has not started to-->
-L9C19:  BNE L9C1D                       ;roll, start it now, else branch.
-L9C1B:  INC CreditPageNumber            ;
-L9C1D:  CMP #$06                        ;If not at last page of credits, branch.
-L9C1F:  BNE L9C2A                       ;
-L9C21:  LDA ScrollY                     ;
-L9C23:  CMP #$88                        ;If last page of credits is not finished-->
-L9C25:  BCC L9C2A                       ;scrolling, branch.  Else increment to next-->
-L9C27:  INC RoomPtr                     ;routine.
-L9C29:  RTS                             ;
+    LDA Timer3                      ;If 160 frame timer delay from previous-->
+    BEQ L9C17                       ;routine has expired, branch.
+    CMP #$02                        ;If not 20 frames left in Timer3, branch to exit.
+    BNE L9C44                       ;
+    JSR ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
+    JSR ClearNameTable0             ;($C16D)clear name table 0 and sprites.-->
+    JSR EraseAllSprites             ;($C1A3)prepares screen for credits.
+    LDA #$0D                        ;
+    STA PalDataPending              ;Change to proper palette for credits.
+    JSR ScreenOn                    ;($C447)Turn screen on.
+    JMP WaitNMIPass_                ;($C43F)Wait for NMI to end.
+L9C17:
+    LDA CreditPageNumber            ;If first page of credits has not started to-->
+    BNE L9C1D                       ;roll, start it now, else branch.
+    INC CreditPageNumber            ;
+L9C1D:
+    CMP #$06                        ;If not at last page of credits, branch.
+    BNE L9C2A                       ;
+    LDA ScrollY                     ;
+    CMP #$88                        ;If last page of credits is not finished-->
+    BCC L9C2A                       ;scrolling, branch.  Else increment to next-->
+    INC RoomPtr                     ;routine.
+    RTS                             ;
 
-L9C2A:  LDA FrameCount                  ;credits scroll up one position every 3 frames.
-L9C2C:  AND #$03                        ;
-L9C2E:  BNE L9C44                       ;Ready to scroll? If not, branch.
-L9C30:  INC ScrollY                     ;
-L9C32:  LDA ScrollY                     ;Load ScrollY and check it to see if its-->
-L9C34:  CMP #$F0                        ;position is at the very bottom on name table.-->
-L9C36:  BNE L9C44                       ;if not, branch.
-L9C38:  INC CreditPageNumber            ;
-L9C3A:  LDA #$00                        ;
-L9C3C:  STA ScrollY                     ;When Scrolly is at bottom of the name table,-->
-L9C3E:  LDA PPUCTRL_ZP                   ;Swap to next name table(0 or 2) and increment-->
-L9C40:  EOR #$02                        ;CreditPageNumber.
-L9C42:  STA PPUCTRL_ZP                   ;
-L9C44:  RTS
+L9C2A:
+    LDA FrameCount                  ;credits scroll up one position every 3 frames.
+    AND #$03                        ;
+    BNE L9C44                       ;Ready to scroll? If not, branch.
+    INC ScrollY                     ;
+    LDA ScrollY                     ;Load ScrollY and check it to see if its-->
+    CMP #$F0                        ;position is at the very bottom on name table.-->
+    BNE L9C44                       ;if not, branch.
+    INC CreditPageNumber            ;
+    LDA #$00                        ;
+    STA ScrollY                     ;When Scrolly is at bottom of the name table,-->
+    LDA PPUCTRL_ZP                   ;Swap to next name table(0 or 2) and increment-->
+    EOR #$02                        ;CreditPageNumber.
+    STA PPUCTRL_ZP                   ;
+L9C44:
+    RTS
 
 ;The following routine is checked every frame and is accessed via the NMIScreenWrite routine.
 ;The LoadCredits routine works like this: The Y scroll position is checked every frame.  When
@@ -3292,152 +3340,162 @@ L9C44:  RTS
 ;pages and name table 2 contains even numbered pages.
 
 LoadCredits:
-L9C45:  LDY CreditPageNumber            ;
-L9C47:  BEQ L9C7E                       ;If credits are not being displayed, exit.
-L9C49:  CPY #$07                        ;
-L9C4B:  BCS L9C7E                       ;If CreditPageNumber is higher than #$06, exit.
-L9C4D:  LDX #$00                        ;
-L9C4F:  LDA ScrollY                     ;If ScrollY is less than #$80 (128), branch.
-L9C51:  BPL L9C57                       ;
-L9C53:  INX                             ;Load X with sign bit (#$01) and remove-->
-L9C54:  SEC                             ;sign bit from A.
-L9C55:  SBC #$80                        ;
-L9C57:  CMP #$04                        ;
-L9C59:  BCS L9C7E                       ;If ScrollY is not #$04, branch to exit.
-L9C5B:  STA $01                         ;Store #$00, #$01, #$02 or #$03 in address $01.
-L9C5D:  DEY                             ;Y now contains CreditPageNumber - 1.
-L9C5E:  TXA                             ;
-L9C5F:  BNE L9C6C                       ;If ScrollY is #$80 (128) or greater, branch.
-L9C61:  DEY                             ;Y now contains CreditPageNumber - 2.
-L9C62:  BMI L9C7E                       ;If on Credit page less than two , branch to exit.
-L9C64:  TYA                             ;
-L9C65:  ASL                             ;Start with CreditPageNumber - 2-->
-L9C66:  ASL                             ;* 8 + 4 + $01 * 2.
-L9C67:  ASL                             ;This formula is used when ScrollY = 0, 1, 2 and 3.
-L9C68:  ADC #$04                        ;Result is index to find proper credits to load.
-L9C6A:  BNE L9C70                       ;Branch always.
-L9C6C:  TYA                             ;
-L9C6D:  ASL                             ;Start with CreditPageNumber - 1-->
-L9C6E:  ASL                             ;* 8 + $01 * 2.
-L9C6F:  ASL                             ;This formula is used when ScrollY = 128,-->
-L9C70:  ADC $01                         ;129, 130 and 131.
-L9C72:  ASL                             ;Result is index to find proper credits to load.
-L9C73:  TAY                             ;
-L9C74:  LDX CreditsPointerTbl,Y         ;Base is $A291. Lower byte of pointer to PPU string.
-L9C77:  LDA CreditsPointerTbl+1,Y       ;Upper byte of pointer to PPU string.
-L9C7A:  TAY                             ;
-L9C7B:  JMP PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-L9C7E:  RTS                             ;
+    LDY CreditPageNumber            ;
+    BEQ L9C7E                       ;If credits are not being displayed, exit.
+    CPY #$07                        ;
+    BCS L9C7E                       ;If CreditPageNumber is higher than #$06, exit.
+    LDX #$00                        ;
+    LDA ScrollY                     ;If ScrollY is less than #$80 (128), branch.
+    BPL L9C57                       ;
+    INX                             ;Load X with sign bit (#$01) and remove-->
+    SEC                             ;sign bit from A.
+    SBC #$80                        ;
+L9C57:
+    CMP #$04                        ;
+    BCS L9C7E                       ;If ScrollY is not #$04, branch to exit.
+    STA $01                         ;Store #$00, #$01, #$02 or #$03 in address $01.
+    DEY                             ;Y now contains CreditPageNumber - 1.
+    TXA                             ;
+    BNE L9C6C                       ;If ScrollY is #$80 (128) or greater, branch.
+    DEY                             ;Y now contains CreditPageNumber - 2.
+    BMI L9C7E                       ;If on Credit page less than two , branch to exit.
+    TYA                             ;
+    ASL                             ;Start with CreditPageNumber - 2-->
+    ASL                             ;* 8 + 4 + $01 * 2.
+    ASL                             ;This formula is used when ScrollY = 0, 1, 2 and 3.
+    ADC #$04                        ;Result is index to find proper credits to load.
+    BNE L9C70                       ;Branch always.
+L9C6C:
+    TYA                             ;
+    ASL                             ;Start with CreditPageNumber - 1-->
+    ASL                             ;* 8 + $01 * 2.
+    ASL                             ;This formula is used when ScrollY = 128,-->
+L9C70:
+    ADC $01                         ;129, 130 and 131.
+    ASL                             ;Result is index to find proper credits to load.
+    TAY                             ;
+    LDX CreditsPointerTbl,Y         ;Base is $A291. Lower byte of pointer to PPU string.
+    LDA CreditsPointerTbl+1,Y       ;Upper byte of pointer to PPU string.
+    TAY                             ;
+    JMP PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
+L9C7E:
+    RTS                             ;
  
 LoadWaveSprites:
-L9C7F:  LDX WaveSpritePointer           ;
-L9C81:  LDA WavePointerTable,X          ;
-L9C84:  STA $00                         ;Load pointer to wave sprite data-->
-L9C86:  LDA WavePointerTable+1,X        ;into addresses $00 and $01.
-L9C89:  STA $01                         ;
-L9C8B:  LDX #$20                        ;Offset for sprite RAM load.
-L9C8D:  LDY #$00                        ;
-L9C8F:  LDA ($00),Y                     ;
-L9C91:  STA Sprite00RAM,X               ;Load wave sprites into sprite RAM starting at-->
-L9C94:  INX                             ;location $220 (Sprite08RAM).
-L9C95:  INY                             ;
-L9C96:  CPY WaveSpriteCounter           ;Check to see if sprite RAM load complete.-->
-L9C98:  BNE L9C8F                       ;If not, branch and load another byte.
+    LDX WaveSpritePointer           ;
+    LDA WavePointerTable,X          ;
+    STA $00                         ;Load pointer to wave sprite data-->
+    LDA WavePointerTable+1,X        ;into addresses $00 and $01.
+    STA $01                         ;
+    LDX #$20                        ;Offset for sprite RAM load.
+    LDY #$00                        ;
+    L9C8F:
+        LDA ($00),Y                     ;
+        STA Sprite00RAM,X               ;Load wave sprites into sprite RAM starting at-->
+        INX                             ;location $220 (Sprite08RAM).
+        INY                             ;
+        CPY WaveSpriteCounter           ;Check to see if sprite RAM load complete.-->
+        BNE L9C8F                       ;If not, branch and load another byte.
 
 LoadEndSamusSprites:
-L9C9A:  LDX #$30                        ;Index for loading Samus sprite data into sprite RAM.
-L9C9C:  LDY SpritePointerIndex          ;
-L9C9E:  LDA EndSamusAddrTbl,Y           ;Base is $9D5A.
-L9CA1:  STA $00                         ;Load $00 and $01 with pointer to the sprite-->
-L9CA3:  LDA EndSamusAddrTbl+1,Y         ;data that shows Samus at the end of the game.
-L9CA6:  STA $01                         ;
-L9CA8:  LDY #$00                        ;
-L9CAA:  LDA ($00),Y                     ;Load sprite data starting at Sprite0CRAM.
-L9CAC:  STA Sprite00RAM,X               ;Load sprite Y-coord.
-L9CAF:  INX                             ;
-L9CB0:  INY                             ;Increment X and Y.
-L9CB1:  LDA ($00),Y                     ;
-L9CB3:  BPL L9CC0                       ;If sprite pattern byte MSB cleared, branch.
-L9CB5:  AND #$7F                        ;
-L9CB7:  STA Sprite00RAM,X               ;Remove MSB and write sprite pattern data-->
-L9CBA:  LDA SpriteAttribByte            ;to sprite RAM.
-L9CBC:  EOR #$40                        ;
-L9CBE:  BNE L9CC5                       ;
-L9CC0:  STA Sprite00RAM,X               ;Writes sprite pattern byte to--> 
-L9CC3:  LDA SpriteAttribByte            ;sprite RAM if its MSB is not set.
-L9CC5:  INX                             ;
-L9CC6:  STA Sprite00RAM,X               ;Writes sprite attribute byte to sprite RAM.
-L9CC9:  INY                             ;
-L9CCA:  INX                             ;Increment X and Y.
-L9CCB:  LDA ($00),Y                     ;
-L9CCD:  STA Sprite00RAM,X               ;Load sprite X-coord.
-L9CD0:  INY                             ;
-L9CD1:  INX                             ;Increment X and Y.
-L9CD2:  CPY SpriteByteCounter           ;
-L9CD4:  BNE L9CAA                       ;Repeat until sprite load is complete.
-L9CD6:  LDA RoomPtr                     ;
-L9CD8:  CMP #$02                        ;If not running the EndSamusFlash routine, branch.
-L9CDA:  BCC L9CF9                       ;
-L9CDC:  LDA ColorCntIndex               ;
-L9CDE:  CMP #$08                        ;If EndSamusFlash routine is more than half-->
-L9CE0:  BCC L9CF9                       ;way done, Check ending type for the Samus helmet-->
-L9CE2:  LDA EndingType                  ;off ending.  If not helmet off ending, branch.
-L9CE5:  CMP #$03                        ;
-L9CE7:  BNE L9CF9                       ;
-L9CE9:  LDY #$00                        ;
-L9CEB:  LDX #$00                        ;
-L9CED:  LDA SamusHeadSpriteTble,Y       ;The following code loads the sprite graphics-->
-L9CF0:  STA Sprite00RAM,X               ;when the helmet off ending is playing.  The-->
-L9CF3:  INY                             ;sprites below keep Samus head from flashing-->
-L9CF4:  INX                             ;while the rest of her body does.
-L9CF5:  CPY #$18                        ;
-L9CF7:  BNE L9CED                       ;
-L9CF9:  RTS                             ;
+    LDX #$30                        ;Index for loading Samus sprite data into sprite RAM.
+    LDY SpritePointerIndex          ;
+    LDA EndSamusAddrTbl,Y           ;Base is $9D5A.
+    STA $00                         ;Load $00 and $01 with pointer to the sprite-->
+    LDA EndSamusAddrTbl+1,Y         ;data that shows Samus at the end of the game.
+    STA $01                         ;
+    LDY #$00                        ;
+    L9CAA:
+        LDA ($00),Y                     ;Load sprite data starting at Sprite0CRAM.
+        STA Sprite00RAM,X               ;Load sprite Y-coord.
+        INX                             ;
+        INY                             ;Increment X and Y.
+        LDA ($00),Y                     ;
+        BPL L9CC0                       ;If sprite pattern byte MSB cleared, branch.
+            AND #$7F                        ;
+            STA Sprite00RAM,X               ;Remove MSB and write sprite pattern data-->
+            LDA SpriteAttribByte            ;to sprite RAM.
+            EOR #$40                        ;
+            BNE L9CC5                       ;
+        L9CC0:
+            STA Sprite00RAM,X               ;Writes sprite pattern byte to--> 
+            LDA SpriteAttribByte            ;sprite RAM if its MSB is not set.
+        L9CC5:
+        INX                             ;
+        STA Sprite00RAM,X               ;Writes sprite attribute byte to sprite RAM.
+        INY                             ;
+        INX                             ;Increment X and Y.
+        LDA ($00),Y                     ;
+        STA Sprite00RAM,X               ;Load sprite X-coord.
+        INY                             ;
+        INX                             ;Increment X and Y.
+        CPY SpriteByteCounter           ;
+        BNE L9CAA                       ;Repeat until sprite load is complete.
+    LDA RoomPtr                     ;
+    CMP #$02                        ;If not running the EndSamusFlash routine, branch.
+    BCC L9CF9                       ;
+    LDA ColorCntIndex               ;
+    CMP #$08                        ;If EndSamusFlash routine is more than half-->
+    BCC L9CF9                       ;way done, Check ending type for the Samus helmet-->
+    LDA EndingType                  ;off ending.  If not helmet off ending, branch.
+    CMP #$03                        ;
+    BNE L9CF9                       ;
+    LDY #$00                        ;
+    LDX #$00                        ;
+    L9CED:
+        LDA SamusHeadSpriteTble,Y       ;The following code loads the sprite graphics-->
+        STA Sprite00RAM,X               ;when the helmet off ending is playing.  The-->
+        INY                             ;sprites below keep Samus head from flashing-->
+        INX                             ;while the rest of her body does.
+        CPY #$18                        ;
+        BNE L9CED                       ;
+L9CF9:
+    RTS                             ;
  
 ;The following table is used by the routine above to keep Samus'
 ;head from flashing during the helmet off ending.
 
 SamusHeadSpriteTble:
-L9CFA:  .byte $93, $36, $01, $70        ;Sprite00RAM
-L9CFE:  .byte $93, $37, $01, $78        ;Sprite01RAM
-L9D02:  .byte $93, $38, $01, $80        ;Sprite02RAM
-L9D06:  .byte $9B, $46, $01, $70        ;Sprite03RAM
-L9D0A:  .byte $9B, $47, $01, $78        ;Sprite04RAM
-L9D0E:  .byte $9B, $48, $01, $80        ;Sprite05RAM
+    .byte $93, $36, $01, $70        ;Sprite00RAM
+    .byte $93, $37, $01, $78        ;Sprite01RAM
+    .byte $93, $38, $01, $80        ;Sprite02RAM
+    .byte $9B, $46, $01, $70        ;Sprite03RAM
+    .byte $9B, $47, $01, $78        ;Sprite04RAM
+    .byte $9B, $48, $01, $80        ;Sprite05RAM
 
 ;The following table is a pointer table to the sprites that makes Samus wave in the end
 ;of the game when she is suitless.  The top two pointers are for when she is in the jumpsuit
 ;and the bottom two pointers are for when she is in the bikini.
 
 WavePointerTable:
-L9D12:  .word L9D1A                     ;Jumpsuit Samus hand up.
-L9D14:  .word L9D2A                     ;Jumpsuit Samus hand down.
-L9D16:  .word L9D3A                     ;Bikini Samus hand up.
-L9D18:  .word L9D4A                     ;Bikini Samus hand down.
+    .word JsHandUpTable                     ;Jumpsuit Samus hand up.
+    .word JsHandDownTable                     ;Jumpsuit Samus hand down.
+    .word BkHandUpTable                     ;Bikini Samus hand up.
+    .word BkHandDownTable                     ;Bikini Samus hand down.
 
 ;Sprite data table used when Samus is in jumpsuit and her waving hand is up.
 JsHandUpTable:
-L9D1A:  .byte $9B, $1F, $01, $80, $A3, $2F, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
+    .byte $9B, $1F, $01, $80, $A3, $2F, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
 
 ;Sprite data table used when Samus is in jumpsuit and her waving hand is down.
 JsHandDownTable:
-L9D2A:  .byte $9B, $2A, $01, $80, $9B, $2B, $01, $88, $A3, $3A, $01, $80, $AB, $3F, $01, $80
+    .byte $9B, $2A, $01, $80, $9B, $2B, $01, $88, $A3, $3A, $01, $80, $AB, $3F, $01, $80
 
 ;Sprite data table used when Samus is in bikini and her waving hand is up.
 BkHandUpTable:
-L9D3A:  .byte $9B, $0C, $01, $80, $A3, $1C, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
+    .byte $9B, $0C, $01, $80, $A3, $1C, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
 
 ;Sprite data table used when Samus is in bikini and her waving hand is down.
 BkHandDownTable:
-L9D4A:  .byte $9B, $4A, $01, $80, $9B, $4B, $01, $88, $A3, $4D, $01, $80, $AB, $3F, $01, $80
+    .byte $9B, $4A, $01, $80, $9B, $4B, $01, $88, $A3, $4D, $01, $80, $AB, $3F, $01, $80
 
 EndSamusAddrTbl:
-L9D5A:  .word NormalSamus               ;($9D66)Pointer to end graphic of Samus wearing suit.
-L9D5C:  .word BackTurnedSamus           ;($9D9C)Pointer to end graphic of back turned Samus.
-L9D5E:  .word FistRaisedSamus           ;($9DD2)Pointer to end graphic of fist raised Samus.
-L9D60:  .word HelmetOffSamus            ;($9E08)Pointer to end graphic of helmet off Samus.
-L9D62:  .word JumpsuitSamus             ;($9E3E)Pointer to end graphic of jumpsuit Samus.
-L9D64:  .word BikiniSamus               ;($9E74)Pointer to end graphic of bikini Samus.
+    .word NormalSamus               ;($9D66)Pointer to end graphic of Samus wearing suit.
+    .word BackTurnedSamus           ;($9D9C)Pointer to end graphic of back turned Samus.
+    .word FistRaisedSamus           ;($9DD2)Pointer to end graphic of fist raised Samus.
+    .word HelmetOffSamus            ;($9E08)Pointer to end graphic of helmet off Samus.
+    .word JumpsuitSamus             ;($9E3E)Pointer to end graphic of jumpsuit Samus.
+    .word BikiniSamus               ;($9E74)Pointer to end graphic of bikini Samus.
 
 ;The following three bytes are loaded into sprite RAM.  The third byte (attribute byte) is
 ;not included.  Instead, if the MSB of the second byte (pattern byte) is set, the pattern
@@ -3446,124 +3504,124 @@ L9D64:  .word BikiniSamus               ;($9E74)Pointer to end graphic of bikini
 ;the end of the game.
 
 NormalSamus:
-L9D66:  .byte $93, $00, $70
-L9D69:  .byte $93, $01, $78
-L9D6C:  .byte $93, $80, $80             ;Mirrored pattern at pattern table location $00.
-L9D6F:  .byte $9B, $10, $70
-L9D72:  .byte $9B, $11, $78
-L9D75:  .byte $9B, $90, $80             ;Mirrored pattern at pattern table location $10.
-L9D78:  .byte $A3, $20, $70
-L9D7B:  .byte $A3, $21, $78
-L9D7E:  .byte $A3, $22, $80
-L9D81:  .byte $AB, $30, $70
-L9D84:  .byte $AB, $31, $78
-L9D87:  .byte $AB, $32, $80
-L9D8A:  .byte $B3, $40, $70
-L9D8D:  .byte $B3, $41, $78
-L9D90:  .byte $B3, $C0, $80
-L9D93:  .byte $BB, $50, $70
-L9D96:  .byte $BB, $49, $78
-L9D99:  .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
+    .byte $93, $00, $70
+    .byte $93, $01, $78
+    .byte $93, $80, $80             ;Mirrored pattern at pattern table location $00.
+    .byte $9B, $10, $70
+    .byte $9B, $11, $78
+    .byte $9B, $90, $80             ;Mirrored pattern at pattern table location $10.
+    .byte $A3, $20, $70
+    .byte $A3, $21, $78
+    .byte $A3, $22, $80
+    .byte $AB, $30, $70
+    .byte $AB, $31, $78
+    .byte $AB, $32, $80
+    .byte $B3, $40, $70
+    .byte $B3, $41, $78
+    .byte $B3, $C0, $80
+    .byte $BB, $50, $70
+    .byte $BB, $49, $78
+    .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
 
 BackTurnedSamus:
-L9D9C:  .byte $93, $02, $70
-L9D9F:  .byte $93, $03, $78
-L9DA2:  .byte $93, $04, $80
-L9DA5:  .byte $9B, $12, $70
-L9DA8:  .byte $9B, $13, $78
-L9DAB:  .byte $9B, $14, $80
-L9DAE:  .byte $A3, $05, $70
-L9DB1:  .byte $A3, $06, $78
-L9DB4:  .byte $A3, $07, $80
-L9DB7:  .byte $AB, $15, $70
-L9DBA:  .byte $AB, $16, $78
-L9DBD:  .byte $AB, $17, $80
-L9DC0:  .byte $B3, $08, $70
-L9DC3:  .byte $B3, $09, $78
-L9DC6:  .byte $B3, $88, $80             ;Mirrored pattern at pattern table location $08.
-L9DC9:  .byte $BB, $18, $70
-L9DCC:  .byte $BB, $19, $78
-L9DDF:  .byte $BB, $98, $80             ;Mirrored pattern at pattern table location $18.
+    .byte $93, $02, $70
+    .byte $93, $03, $78
+    .byte $93, $04, $80
+    .byte $9B, $12, $70
+    .byte $9B, $13, $78
+    .byte $9B, $14, $80
+    .byte $A3, $05, $70
+    .byte $A3, $06, $78
+    .byte $A3, $07, $80
+    .byte $AB, $15, $70
+    .byte $AB, $16, $78
+    .byte $AB, $17, $80
+    .byte $B3, $08, $70
+    .byte $B3, $09, $78
+    .byte $B3, $88, $80             ;Mirrored pattern at pattern table location $08.
+    .byte $BB, $18, $70
+    .byte $BB, $19, $78
+    .byte $BB, $98, $80             ;Mirrored pattern at pattern table location $18.
 
 FistRaisedSamus:
-L9DD2:  .byte $93, $00, $70
-L9DD5:  .byte $93, $01, $78
-L9DD8:  .byte $93, $34, $80
-L9DDB:  .byte $9B, $10, $70
-L9DDE:  .byte $9B, $11, $78
-L9DE1:  .byte $9B, $44, $80
-L9DE4:  .byte $A3, $20, $70
-L9DE7:  .byte $A3, $21, $78
-L9DEA:  .byte $A3, $33, $80
-L9DED:  .byte $AB, $30, $70
-L9DF0:  .byte $AB, $31, $78
-L9DF3:  .byte $AB, $43, $80
-L9DF6:  .byte $B3, $40, $70
-L9DF9:  .byte $B3, $41, $78
-L9DFC:  .byte $B3, $C0, $80             ;Mirrored pattern at pattern table location $40.
-L9DFF:  .byte $BB, $50, $70
-L9E02:  .byte $BB, $49, $78
-L9E05:  .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
+    .byte $93, $00, $70
+    .byte $93, $01, $78
+    .byte $93, $34, $80
+    .byte $9B, $10, $70
+    .byte $9B, $11, $78
+    .byte $9B, $44, $80
+    .byte $A3, $20, $70
+    .byte $A3, $21, $78
+    .byte $A3, $33, $80
+    .byte $AB, $30, $70
+    .byte $AB, $31, $78
+    .byte $AB, $43, $80
+    .byte $B3, $40, $70
+    .byte $B3, $41, $78
+    .byte $B3, $C0, $80             ;Mirrored pattern at pattern table location $40.
+    .byte $BB, $50, $70
+    .byte $BB, $49, $78
+    .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
 
 HelmetOffSamus:
-L9E08:  .byte $93, $0D, $70
-L9E0B:  .byte $93, $0E, $78
-L9E0E:  .byte $93, $0F, $80
-L9E11:  .byte $9B, $35, $70
-L9E14:  .byte $9B, $27, $78
-L9E17:  .byte $9B, $28, $80
-L9E1A:  .byte $A3, $20, $70
-L9E1D:  .byte $A3, $21, $78
-L9E20:  .byte $A3, $22, $80
-L9E23:  .byte $AB, $30, $70
-L9E26:  .byte $AB, $31, $78
-L9E29:  .byte $AB, $32, $80
-L9E2C:  .byte $B3, $40, $70
-L9E2F:  .byte $B3, $41, $78
-L9E32:  .byte $B3, $C0, $80             ;Mirrored pattern at pattern table location $40.
-L9E35:  .byte $BB, $50, $70
-L9E38:  .byte $BB, $49, $78
-L9E3B:  .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
+    .byte $93, $0D, $70
+    .byte $93, $0E, $78
+    .byte $93, $0F, $80
+    .byte $9B, $35, $70
+    .byte $9B, $27, $78
+    .byte $9B, $28, $80
+    .byte $A3, $20, $70
+    .byte $A3, $21, $78
+    .byte $A3, $22, $80
+    .byte $AB, $30, $70
+    .byte $AB, $31, $78
+    .byte $AB, $32, $80
+    .byte $B3, $40, $70
+    .byte $B3, $41, $78
+    .byte $B3, $C0, $80             ;Mirrored pattern at pattern table location $40.
+    .byte $BB, $50, $70
+    .byte $BB, $49, $78
+    .byte $BB, $D0, $80             ;Mirrored pattern at pattern table location $50.
 
 JumpsuitSamus:
-L9E3E:  .byte $93, $0D, $70
-L9E41:  .byte $93, $0E, $78
-L9E44:  .byte $93, $0F, $80
-L9E47:  .byte $9B, $1D, $70
-L9E4A:  .byte $9B, $1E, $78
-L9E4D:  .byte $A3, $2D, $70
-L9E50:  .byte $A3, $2E, $78
-L9E53:  .byte $AB, $3D, $70
-L9E56:  .byte $AB, $3E, $78
-L9E59:  .byte $B3, $08, $70
-L9E5C:  .byte $B3, $4E, $78
-L9E5F:  .byte $B3, $4F, $80
-L9E62:  .byte $BB, $45, $70
-L9E65:  .byte $BB, $3B, $78
-L9E68:  .byte $BB, $51, $80
-L9E6B:  .byte $9B, $29, $80
-L9E6E:  .byte $A3, $39, $80
-L9E71:  .byte $AB, $4C, $80 
+    .byte $93, $0D, $70
+    .byte $93, $0E, $78
+    .byte $93, $0F, $80
+    .byte $9B, $1D, $70
+    .byte $9B, $1E, $78
+    .byte $A3, $2D, $70
+    .byte $A3, $2E, $78
+    .byte $AB, $3D, $70
+    .byte $AB, $3E, $78
+    .byte $B3, $08, $70
+    .byte $B3, $4E, $78
+    .byte $B3, $4F, $80
+    .byte $BB, $45, $70
+    .byte $BB, $3B, $78
+    .byte $BB, $51, $80
+    .byte $9B, $29, $80
+    .byte $A3, $39, $80
+    .byte $AB, $4C, $80 
 
 BikiniSamus:
-L9E74:  .byte $93, $0D, $70
-L9E77:  .byte $93, $0E, $78
-L9E7A:  .byte $93, $0F, $80
-L9E7D:  .byte $9B, $0A, $70
-L9E80:  .byte $9B, $0B, $78
-L9E83:  .byte $A3, $1A, $70
-L9E86:  .byte $A3, $1B, $78
-L9E89:  .byte $AB, $3D, $70
-L9E8C:  .byte $AB, $3E, $78
-L9E8F:  .byte $B3, $08, $70
-L9E92:  .byte $B3, $4E, $78
-L9E95:  .byte $B3, $4F, $80
-L9E98:  .byte $BB, $45, $70
-L9E9B:  .byte $BB, $3B, $78
-L9E9E:  .byte $BB, $51, $80
-L9EA1:  .byte $9B, $2C, $80
-L9EA4:  .byte $A3, $3C, $80
-L9EA7:  .byte $AB, $4C, $80 
+    .byte $93, $0D, $70
+    .byte $93, $0E, $78
+    .byte $93, $0F, $80
+    .byte $9B, $0A, $70
+    .byte $9B, $0B, $78
+    .byte $A3, $1A, $70
+    .byte $A3, $1B, $78
+    .byte $AB, $3D, $70
+    .byte $AB, $3E, $78
+    .byte $B3, $08, $70
+    .byte $B3, $4E, $78
+    .byte $B3, $4F, $80
+    .byte $BB, $45, $70
+    .byte $BB, $3B, $78
+    .byte $BB, $51, $80
+    .byte $9B, $2C, $80
+    .byte $A3, $3C, $80
+    .byte $AB, $4C, $80 
 
 LoadEndStarSprites:
     LDY #$00
@@ -3578,45 +3636,45 @@ LoadEndStarSprites:
 ;Loaded into sprite RAM by routine above. Displays stars at the end of the game.
 
 EndStarDataTable:
-L9EB8:  .byte $08, $23, $22, $10
-L9EBC:  .byte $68, $23, $23, $60
-L9EC0:  .byte $00, $23, $22, $60
-L9EC4:  .byte $7F, $23, $23, $6A
-L9EC8:  .byte $7F, $23, $22, $D4
-L9ECC:  .byte $33, $23, $23, $B2
-L9ED0:  .byte $93, $23, $22, $47
-L9ED4:  .byte $B3, $23, $23, $95
-L9ED8:  .byte $0B, $23, $22, $E2
-L9EDC:  .byte $1C, $23, $23, $34
-L9EE0:  .byte $84, $23, $22, $18
-L9EE4:  .byte $B2, $23, $23, $EE
-L9EE8:  .byte $40, $23, $22, $22
-L9EEC:  .byte $5A, $23, $23, $68
-L9EF0:  .byte $1A, $23, $22, $90
-L9EF4:  .byte $AA, $23, $23, $22
-L9EF8:  .byte $81, $24, $22, $88
-L9EFC:  .byte $6A, $24, $23, $D0
-L9F00:  .byte $A8, $24, $22, $A0
-L9F04:  .byte $10, $24, $23, $70
-L9F08:  .byte $15, $25, $22, $42
-L9F0C:  .byte $4A, $25, $23, $7D
-L9F10:  .byte $30, $25, $22, $50
-L9F14:  .byte $5A, $25, $23, $49
-L9F18:  .byte $50, $25, $22, $B9
-L9F1C:  .byte $91, $25, $23, $B0
-L9F20:  .byte $19, $25, $22, $C0
-L9F24:  .byte $53, $25, $23, $BA
-L9F28:  .byte $A4, $25, $22, $D6
-L9F2C:  .byte $98, $25, $23, $1A
-L9F30:  .byte $68, $25, $22, $0C
-L9F34:  .byte $97, $25, $23, $EA
-L9F38:  .byte $33, $25, $22, $92
-L9F3C:  .byte $43, $25, $23, $65
-L9F40:  .byte $AC, $25, $22, $4A
-L9F44:  .byte $2A, $25, $23, $71
-L9F48:  .byte $7C, $26, $22, $B2
-L9F4C:  .byte $73, $26, $23, $E7
-L9F50:  .byte $0C, $26, $22, $AA
+    .byte $08, $23, $22, $10
+    .byte $68, $23, $23, $60
+    .byte $00, $23, $22, $60
+    .byte $7F, $23, $23, $6A
+    .byte $7F, $23, $22, $D4
+    .byte $33, $23, $23, $B2
+    .byte $93, $23, $22, $47
+    .byte $B3, $23, $23, $95
+    .byte $0B, $23, $22, $E2
+    .byte $1C, $23, $23, $34
+    .byte $84, $23, $22, $18
+    .byte $B2, $23, $23, $EE
+    .byte $40, $23, $22, $22
+    .byte $5A, $23, $23, $68
+    .byte $1A, $23, $22, $90
+    .byte $AA, $23, $23, $22
+    .byte $81, $24, $22, $88
+    .byte $6A, $24, $23, $D0
+    .byte $A8, $24, $22, $A0
+    .byte $10, $24, $23, $70
+    .byte $15, $25, $22, $42
+    .byte $4A, $25, $23, $7D
+    .byte $30, $25, $22, $50
+    .byte $5A, $25, $23, $49
+    .byte $50, $25, $22, $B9
+    .byte $91, $25, $23, $B0
+    .byte $19, $25, $22, $C0
+    .byte $53, $25, $23, $BA
+    .byte $A4, $25, $22, $D6
+    .byte $98, $25, $23, $1A
+    .byte $68, $25, $22, $0C
+    .byte $97, $25, $23, $EA
+    .byte $33, $25, $22, $92
+    .byte $43, $25, $23, $65
+    .byte $AC, $25, $22, $4A
+    .byte $2A, $25, $23, $71
+    .byte $7C, $26, $22, $B2
+    .byte $73, $26, $23, $E7
+    .byte $0C, $26, $22, $AA
 
 EndGamePalWrite:
     LDA PalDataPending              ;If no palette data pending, branch to exit.
@@ -3647,19 +3705,19 @@ L9F80:
 ;find the proper palette data during the EndGame routine.
 
 EndGamePalPntrTbl:
-L9F81:  .word EndGamePal00              ;($9F9B)
-L9F83:  .word EndGamePal01              ;($9FBF)
-L9F85:  .word EndGamePal02              ;($9FCB)
-L9F87:  .word EndGamePal03              ;($9FD7)
-L9F89:  .word EndGamePal04              ;($9FE3)
-L9F8B:  .word EndGamePal05              ;($9FEF)
-L9F8D:  .word EndGamePal06              ;($9FFB)
-L9F8F:  .word EndGamePal07              ;($A007)
-L9F91:  .word EndGamePal08              ;($A013)
-L9F93:  .word EndGamePal09              ;($A02E)
-L9F95:  .word EndGamePal0A              ;($A049)
-L9F97:  .word EndGamePal0A              ;($A049)
-L9F99:  .word EndGamePal0B              ;($9806)
+    .word EndGamePal00              ;($9F9B)
+    .word EndGamePal01              ;($9FBF)
+    .word EndGamePal02              ;($9FCB)
+    .word EndGamePal03              ;($9FD7)
+    .word EndGamePal04              ;($9FE3)
+    .word EndGamePal05              ;($9FEF)
+    .word EndGamePal06              ;($9FFB)
+    .word EndGamePal07              ;($A007)
+    .word EndGamePal08              ;($A013)
+    .word EndGamePal09              ;($A02E)
+    .word EndGamePal0A              ;($A049)
+    .word EndGamePal0A              ;($A049)
+    .word EndGamePal0B              ;($9806)
 
 EndGamePal00:
     .byte $3F                       ;PPU address high byte.
@@ -3938,10 +3996,10 @@ LA288:
 ;The following table is used by the LoadCredits routine to load the end credits on the screen.
 
 CreditsPointerTbl:
-LA291:  .word LA2E9, LA2FB, LA31A, LA31B, LA32D, LA339, LA34F, LA362, LA375, LA384, LA39F, LA3AA
-LA2A9:  .word LA3C8, LA3D8, LA3F1, LA412, LA417, LA426, LA442, LA46B, LA470, LA493, LA49C, LA4AD
-LA2C1:  .word LA4BD, LA4CD, LA4D2, LA4D7, LA4DC, LA4E1, LA4E6, LA4EB, LA4EF, LA4F0, LA508, LA51A
-LA2D9:  .word LA51F, LA524, LA51F, LA524, LA538, LA53D, LA538, LA53D
+    .word LA2E9, LA2FB, LA31A, LA31B, LA32D, LA339, LA34F, LA362, LA375, LA384, LA39F, LA3AA
+    .word LA3C8, LA3D8, LA3F1, LA412, LA417, LA426, LA442, LA46B, LA470, LA493, LA49C, LA4AD
+    .word LA4BD, LA4CD, LA4D2, LA4D7, LA4DC, LA4E1, LA4E6, LA4EB, LA4EF, LA4F0, LA508, LA51A
+    .word LA51F, LA524, LA51F, LA524, LA538, LA53D, LA538, LA53D
 
 LA2E9:
     ;Writes credits on name table 0 in row $2020 (2nd row from top).
@@ -4238,77 +4296,45 @@ LA53D:
 ;-------------------------------------------[ World map ]--------------------------------------------
 
 WorldMap:
-LA53E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-LA54E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-LA55E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF, $08, $FF, $FF
-LA56E:  .byte $FF, $FF, $FF, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-LA57E:  .byte $FF, $FF, $FF, $2C, $2B, $27, $15, $15, $16, $14, $13, $04, $FF, $06, $08, $0A
-LA58E:  .byte $1A, $29, $29, $28, $2E, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
-LA59E:  .byte $FF, $0E, $FF, $01, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $03, $1F, $23
-LA5AE:  .byte $25, $24, $26, $20, $1E, $1F, $21, $21, $07, $22, $1D, $1B, $21, $20, $04, $FF
-LA5BE:  .byte $FF, $10, $FF, $0E, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF
-LA5CE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $02, $FF
-LA5DE:  .byte $FF, $10, $FF, $0B, $FF, $FF, $08, $0A, $1A, $29, $28, $04, $FF, $06, $FF, $FF
-LA5EE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $0A, $1A, $29, $29, $28, $04, $FF
-LA5FE:  .byte $FF, $10, $FF, $0B, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF
-LA60E:  .byte $FF, $FF, $08, $FF, $FF, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF
-LA61E:  .byte $FF, $10, $FF, $0F, $11, $13, $14, $14, $13, $12, $0D, $03, $00, $05, $0C, $0E
-LA62E:  .byte $0E, $0D, $10, $0C, $0F, $0D, $10, $0C, $0E, $1B, $0F, $0E, $0F, $0D, $04, $FF
-LA63E:  .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF
-LA64E:  .byte $FF, $FF, $11, $FF, $FF, $FF, $06, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
-LA65E:  .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF
-LA66E:  .byte $FF, $FF, $11, $0A, $1A, $28, $04, $FF, $06, $FF, $FF, $FF, $FF, $FF, $06, $FF
-LA67E:  .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF
-LA68E:  .byte $FF, $FF, $08, $FF, $FF, $FF, $08, $FF, $08, $1B, $06, $19, $19, $2A, $0B, $FF
-LA69E:  .byte $FF, $0F, $04, $03, $02, $05, $06, $07, $08, $09, $0A, $06, $FF, $03, $12, $14
-LA6AE:  .byte $15, $14, $07, $16, $15, $13, $0B, $FF, $0C, $07, $19, $19, $19, $2A, $0E, $FF
-LA6BE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $08, $FF, $FF
-LA6CE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $01, $FF, $0A, $1B, $04, $0F, $06, $2A, $0E, $FF
-LA6DE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF
-LA6EE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $02, $FF, $06, $FF, $FF, $FF, $FF, $FF, $09, $FF
-LA6FE:  .byte $FF, $08, $17, $09, $14, $13, $18, $12, $14, $19, $13, $04, $FF, $08, $1D, $1F
-LA70E:  .byte $06, $1F, $19, $1E, $1E, $1C, $03, $28, $29, $29, $29, $2B, $29, $2A, $0E, $FF
-LA71E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $FF, $FF, $FF, $08, $FF, $08, $1D, $1F
-LA72E:  .byte $1E, $19, $07, $19, $19, $2C, $06, $06, $2B, $2B, $1A, $1A, $1A, $2A, $0B, $FF
-LA73E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $0B, $FF, $FF, $0B, $FF, $06, $07, $04
-LA74E:  .byte $0F, $10, $0B, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $09, $FF
-LA75E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $07, $17, $18, $0C, $FF, $08, $21, $25
-LA76E:  .byte $25, $22, $03, $21, $25, $20, $00, $27, $2C, $2C, $06, $04, $0F, $10, $0E, $FF
-LA77E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $03, $1C, $07, $17, $18, $0C, $FF, $0A, $21, $23
-LA78E:  .byte $25, $22, $03, $21, $24, $24, $24, $23, $23, $06, $24, $25, $22, $11, $2D, $FF
-LA79E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $08, $01, $07, $17, $18, $0C, $FF, $09, $FF, $FF
-LA7AE:  .byte $FF, $06, $06, $FF, $FF, $FF, $FF, $FF, $FF, $07, $26, $25, $22, $0B, $2D, $FF
-LA7BE:  .byte $FF, $0B, $FF, $FF, $FF, $FF, $FF, $02, $0B, $FF, $FF, $08, $FF, $0A, $12, $14
-LA7CE:  .byte $13, $03, $12, $15, $13, $0D, $12, $14, $06, $14, $18, $15, $19, $07, $09, $FF
-LA7DE:  .byte $FF, $09, $17, $1C, $10, $19, $18, $03, $13, $10, $18, $0C, $FF, $06, $FF, $FF
-LA7EE:  .byte $FF, $09, $04, $0F, $10, $0B, $FF, $FF, $08, $12, $16, $16, $16, $13, $0E, $FF
-LA7FE:  .byte $FF, $0A, $17, $1C, $1C, $1C, $18, $03, $13, $19, $12, $0B, $FF, $00, $FF, $FF
-LA80E:  .byte $0B, $08, $12, $19, $19, $07, $FF, $FF, $08, $05, $FF, $FF, $FF, $FF, $06, $FF
-LA81E:  .byte $FF, $05, $FF, $FF, $0B, $FF, $FF, $08, $FF, $FF, $FF, $FF, $0B, $FF, $FF, $FF
-LA82E:  .byte $FF, $06, $FF, $FF, $FF, $FF, $FF, $05, $06, $01, $FF, $FF, $FF, $FF, $0B, $FF
-LA83E:  .byte $FF, $05, $FF, $FF, $07, $17, $18, $04, $13, $14, $14, $16, $0C, $FF, $05, $FF
-LA84E:  .byte $FF, $05, $0F, $18, $17, $18, $19, $29, $05, $02, $FF, $FF, $FF, $FF, $05, $FF
-LA85E:  .byte $FF, $05, $FF, $FF, $08, $FF, $FF, $05, $FF, $0B, $10, $18, $0D, $FF, $0A, $20
-LA86E:  .byte $22, $0D, $25, $26, $26, $26, $1D, $0E, $0E, $03, $23, $24, $24, $15, $07, $FF
-LA87E:  .byte $FF, $05, $FF, $FF, $23, $17, $18, $06, $22, $0C, $FF, $0B, $0E, $FF, $0B, $FF
-LA88E:  .byte $FF, $04, $FF, $FF, $FF, $FF, $05, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
-LA89E:  .byte $FF, $23, $22, $1A, $13, $10, $14, $1C, $16, $06, $21, $0C, $0E, $FF, $0A, $1C
-LA8AE:  .byte $1D, $03, $20, $21, $21, $22, $06, $23, $0F, $28, $27, $27, $27, $19, $07, $FF
-LA8BE:  .byte $FF, $0B, $FF, $1E, $1F, $20, $20, $20, $0F, $15, $21, $24, $0E, $FF, $04, $FF
-LA8CE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $04, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
-LA8DE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1D, $1B, $17, $18, $0C, $FF, $04, $11
-LA8EE:  .byte $10, $12, $13, $14, $14, $15, $03, $1C, $1E, $1E, $1F, $1F, $1F, $1D, $07, $FF
-LA8FE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16
-LA90E:  .byte $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
-LA91E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-LA91F:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $2C, $2B, $27, $15, $15, $16, $14, $13, $04, $FF, $06, $08, $0A, $1A, $29, $29, $28, $2E, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
+    .byte $FF, $0E, $FF, $01, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $03, $1F, $23, $25, $24, $26, $20, $1E, $1F, $21, $21, $07, $22, $1D, $1B, $21, $20, $04, $FF
+    .byte $FF, $10, $FF, $0E, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $02, $FF
+    .byte $FF, $10, $FF, $0B, $FF, $FF, $08, $0A, $1A, $29, $28, $04, $FF, $06, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $0A, $1A, $29, $29, $28, $04, $FF
+    .byte $FF, $10, $FF, $0B, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $08, $FF, $FF, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF
+    .byte $FF, $10, $FF, $0F, $11, $13, $14, $14, $13, $12, $0D, $03, $00, $05, $0C, $0E, $0E, $0D, $10, $0C, $0F, $0D, $10, $0C, $0E, $1B, $0F, $0E, $0F, $0D, $04, $FF
+    .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF, $FF, $FF, $11, $FF, $FF, $FF, $06, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
+    .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF, $FF, $FF, $11, $0A, $1A, $28, $04, $FF, $06, $FF, $FF, $FF, $FF, $FF, $06, $FF
+    .byte $FF, $10, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0C, $06, $FF, $06, $FF, $FF, $FF, $FF, $08, $FF, $FF, $FF, $08, $FF, $08, $1B, $06, $19, $19, $2A, $0B, $FF
+    .byte $FF, $0F, $04, $03, $02, $05, $06, $07, $08, $09, $0A, $06, $FF, $03, $12, $14, $15, $14, $07, $16, $15, $13, $0B, $FF, $0C, $07, $19, $19, $19, $2A, $0E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $01, $FF, $0A, $1B, $04, $0F, $06, $2A, $0E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $02, $FF, $06, $FF, $FF, $FF, $FF, $FF, $09, $FF
+    .byte $FF, $08, $17, $09, $14, $13, $18, $12, $14, $19, $13, $04, $FF, $08, $1D, $1F, $06, $1F, $19, $1E, $1E, $1C, $03, $28, $29, $29, $29, $2B, $29, $2A, $0E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $FF, $FF, $FF, $08, $FF, $08, $1D, $1F, $1E, $19, $07, $19, $19, $2C, $06, $06, $2B, $2B, $1A, $1A, $1A, $2A, $0B, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $0B, $FF, $FF, $0B, $FF, $06, $07, $04, $0F, $10, $0B, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $09, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $06, $FF, $07, $17, $18, $0C, $FF, $08, $21, $25, $25, $22, $03, $21, $25, $20, $00, $27, $2C, $2C, $06, $04, $0F, $10, $0E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $03, $1C, $07, $17, $18, $0C, $FF, $0A, $21, $23, $25, $22, $03, $21, $24, $24, $24, $23, $23, $06, $24, $25, $22, $11, $2D, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $08, $01, $07, $17, $18, $0C, $FF, $09, $FF, $FF, $FF, $06, $06, $FF, $FF, $FF, $FF, $FF, $FF, $07, $26, $25, $22, $0B, $2D, $FF
+    .byte $FF, $0B, $FF, $FF, $FF, $FF, $FF, $02, $0B, $FF, $FF, $08, $FF, $0A, $12, $14, $13, $03, $12, $15, $13, $0D, $12, $14, $06, $14, $18, $15, $19, $07, $09, $FF
+    .byte $FF, $09, $17, $1C, $10, $19, $18, $03, $13, $10, $18, $0C, $FF, $06, $FF, $FF, $FF, $09, $04, $0F, $10, $0B, $FF, $FF, $08, $12, $16, $16, $16, $13, $0E, $FF
+    .byte $FF, $0A, $17, $1C, $1C, $1C, $18, $03, $13, $19, $12, $0B, $FF, $00, $FF, $FF, $0B, $08, $12, $19, $19, $07, $FF, $FF, $08, $05, $FF, $FF, $FF, $FF, $06, $FF
+    .byte $FF, $05, $FF, $FF, $0B, $FF, $FF, $08, $FF, $FF, $FF, $FF, $0B, $FF, $FF, $FF, $FF, $06, $FF, $FF, $FF, $FF, $FF, $05, $06, $01, $FF, $FF, $FF, $FF, $0B, $FF
+    .byte $FF, $05, $FF, $FF, $07, $17, $18, $04, $13, $14, $14, $16, $0C, $FF, $05, $FF, $FF, $05, $0F, $18, $17, $18, $19, $29, $05, $02, $FF, $FF, $FF, $FF, $05, $FF
+    .byte $FF, $05, $FF, $FF, $08, $FF, $FF, $05, $FF, $0B, $10, $18, $0D, $FF, $0A, $20, $22, $0D, $25, $26, $26, $26, $1D, $0E, $0E, $03, $23, $24, $24, $15, $07, $FF
+    .byte $FF, $05, $FF, $FF, $23, $17, $18, $06, $22, $0C, $FF, $0B, $0E, $FF, $0B, $FF, $FF, $04, $FF, $FF, $FF, $FF, $05, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
+    .byte $FF, $23, $22, $1A, $13, $10, $14, $1C, $16, $06, $21, $0C, $0E, $FF, $0A, $1C, $1D, $03, $20, $21, $21, $22, $06, $23, $0F, $28, $27, $27, $27, $19, $07, $FF
+    .byte $FF, $0B, $FF, $1E, $1F, $20, $20, $20, $0F, $15, $21, $24, $0E, $FF, $04, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $04, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1D, $1B, $17, $18, $0C, $FF, $04, $11, $10, $12, $13, $14, $14, $15, $03, $1C, $1E, $1E, $1F, $1F, $1F, $1D, $07, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16, $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
 ;Loads contents of world map into -->
 ;RAM at addresses $7000 thru $73FF.
 CopyMap:
-    LDA #$3E
+    LDA #.lobyte(WorldMap)
     STA $00
-    LDA #$A5
+    LDA #.hibyte(WorldMap)
     STA $01
     LDA #$00
     STA $02
@@ -4329,98 +4355,87 @@ CopyMap:
     RTS
  
 ;Unused tile patterns.
-LA961:  .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
-LA962:  .byte $22, $56, $03, $2B, $74, $37, $0D, $3F, $5F, $7D, $7F, $7F, $5F, $3F, $0F, $68
-LA981:  .byte $F6, $BC, $5E, $3C, $DE, $7C, $F0, $FC, $DE, $FE, $FE, $FE, $FE, $FC, $F0, $00
-LA991:  .byte $00, $7F, $80, $80, $FF, $7F, $00, $00, $7F, $80, $7F, $FF, $FF, $7F, $00, $00
-LA9A1:  .byte $00, $FC, $01, $03, $FF, $FE, $00, $00, $FE, $03, $FF, $FF, $FF, $FE, $00, $00
-LA9B1:  .byte $10, $20, $20, $00, $20, $00, $00, $3C, $42, $81, $81, $81, $81, $42, $3C, $7F
-LA9C1:  .byte $7F, $3F, $1F, $80, $0F, $08, $88, $12, $80, $C0, $E0, $E0, $EF, $E8, $E8, $FC
-LA9D1:  .byte $FC, $FC, $F8, $1C, $DC, $58, $5C, $48, $04, $0C, $18, $1C, $DC, $18, $1C, $0F
-LA9E1:  .byte $00, $9F, $3F, $7F, $DB, $00, $00, $E0, $E0, $FF, $FF, $FF, $DB, $00, $00, $DC
-LA9F1:  .byte $18, $EC, $F4, $F8, $6C, $00, $00, $1C, $18, $FC, $FC, $FC, $6C, $00, $00, $FF
-LAA01:  .byte $FF, $C0, $C0, $CF, $CB, $CC, $CC, $00, $00, $1F, $3F, $3F, $38, $3B, $3B, $FC
-LAA11:  .byte $FC, $0C, $0C, $CC, $4C, $CC, $CC, $00, $04, $EC, $FC, $FC, $3C, $BC, $BC, $CB
-LAA21:  .byte $CF, $C0, $C0, $FF, $FF, $00, $00, $3B, $30, $3F, $1F, $7F, $FF, $00, $00, $4C
-LAA31:  .byte $CC, $0C, $0C, $FC, $FC, $00, $00, $3C, $3C, $FC, $EC, $FC, $FC, $00, $00, $FE
-LAA41:  .byte $82, $82, $82, $82, $FE, $00, $00, $00, $7E, $56, $56, $7E, $FE, $00, $00, $20
-LAA51:  .byte $00, $00, $18, $20, $00, $00, $18, $1C, $F7, $3C, $18, $1C, $F7, $3C, $18, $E2
-LAA61:  .byte $80, $10, $20, $00, $00, $80, $00, $E2, $98, $2C, $5E, $7E, $3C, $98, $00, $7E
-LAA71:  .byte $00, $7E, $00, $7E, $00, $7E, $00, $6E, $00, $6E, $00, $6E, $00, $6E, $00, $10
-LAA81:  .byte $F4, $08, $04, $C5, $24, $23, $05, $E8, $F8, $0E, $E6, $F7, $37, $2E, $FD, $00
-LAA91:  .byte $5F, $20, $48, $D7, $88, $18, $80, $3F, $3F, $E0, $C7, $CF, $B8, $98, $7F, $F8
-LAAA1:  .byte $10, $10, $10, $D7, $08, $00, $EF, $F8, $10, $30, $B7, $F7, $30, $DF, $EF, $FF
-LAAB1:  .byte $00, $08, $08, $EF, $08, $10, $EF, $FF, $00, $18, $DB, $FF, $38, $F7, $EF, $FF
-LAAC1:  .byte $7F, $3F, $5F, $4F, $07, $03, $01, $00, $B0, $C0, $E0, $F0, $F8, $FC, $FE, $FE
-LAAD1:  .byte $FE, $FE, $FA, $FA, $FE, $FE, $FE, $00, $1A, $06, $0A, $1A, $3E, $7E, $FE, $01
-LAAE1:  .byte $03, $07, $4F, $5F, $27, $7F, $00, $FF, $FF, $FF, $FF, $FF, $E7, $FF, $00, $7E
-LAAF1:  .byte $BE, $DA, $EA, $F6, $CA, $FC, $00, $FE, $FE, $FA, $FA, $FE, $CE, $FE, $00, $CF
-LAB01:  .byte $BF, $70, $60, $C4, $C8, $C0, $C0, $47, $BF, $70, $27, $4B, $57, $5F, $DF, $CC
-LAB11:  .byte $F4, $38, $18, $0C, $0C, $0C, $0C, $CC, $F4, $38, $98, $CC, $EC, $EC, $EC, $C0
-LAB21:  .byte $C0, $60, $70, $BF, $CF, $00, $00, $DF, $CF, $67, $70, $BF, $4F, $00, $00, $0C
-LAB31:  .byte $0C, $18, $38, $F4, $CC, $00, $00, $EC, $CC, $98, $38, $F4, $CC, $00, $00, $FF
-LAB41:  .byte $FF, $C0, $DF, $D0, $D0, $DF, $C0, $00, $00, $3F, $3F, $35, $35, $20, $3F, $FC
-LAB51:  .byte $FC, $0C, $EC, $2C, $2C, $EC, $0C, $00, $04, $FC, $FC, $5C, $5C, $1C, $FC, $FF
-LAB61:  .byte $00, $00, $E4, $00, $CF, $00, $00, $7F, $00, $00, $E3, $00, $BF, $00, $00, $FC
-LAB71:  .byte $00, $00, $F9, $00, $87, $00, $00, $FC, $00, $00, $F7, $00, $67, $00, $00, $FE
-LAB81:  .byte $02, $02, $02, $FE, $00, $00, $7F, $00, $FE, $0E, $FE, $FE, $00, $00, $00, $7F
-LAB91:  .byte $40, $40, $40, $7F, $00, $00, $FE, $00, $3F, $30, $3F, $7F, $00, $00, $00, $40
-LABA1:  .byte $40, $40, $7F, $00, $00, $00, $FF, $3F, $30, $3F, $7F, $00, $00, $FF, $FF, $02
-LABB1:  .byte $02, $02, $FE, $00, $00, $00, $FF, $FE, $0E, $FE, $FE, $00, $00, $FF, $FF, $FF
-LABC1:  .byte $FF, $C0, $D0, $C0, $C0, $C0, $C0, $00, $00, $3F, $27, $3F, $3F, $3F, $3F, $FC
-LABD1:  .byte $FC, $0C, $4C, $0C, $0C, $0C, $0C, $00, $04, $FC, $9C, $FC, $FC, $FC, $FC, $C0
-LABE1:  .byte $C0, $D0, $C0, $FF, $FF, $00, $00, $3F, $3F, $27, $3F, $3F, $7F, $00, $00, $0C
-LABF1:  .byte $0C, $4C, $0C, $FC, $FC, $00, $00, $FC, $FC, $9C, $FC, $FC, $FC, $00, $00
+    .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
+    .byte $22, $56, $03, $2B, $74, $37, $0D, $3F, $5F, $7D, $7F, $7F, $5F, $3F, $0F, $68
+    .byte $F6, $BC, $5E, $3C, $DE, $7C, $F0, $FC, $DE, $FE, $FE, $FE, $FE, $FC, $F0, $00
+    .byte $00, $7F, $80, $80, $FF, $7F, $00, $00, $7F, $80, $7F, $FF, $FF, $7F, $00, $00
+    .byte $00, $FC, $01, $03, $FF, $FE, $00, $00, $FE, $03, $FF, $FF, $FF, $FE, $00, $00
+    .byte $10, $20, $20, $00, $20, $00, $00, $3C, $42, $81, $81, $81, $81, $42, $3C, $7F
+    .byte $7F, $3F, $1F, $80, $0F, $08, $88, $12, $80, $C0, $E0, $E0, $EF, $E8, $E8, $FC
+    .byte $FC, $FC, $F8, $1C, $DC, $58, $5C, $48, $04, $0C, $18, $1C, $DC, $18, $1C, $0F
+    .byte $00, $9F, $3F, $7F, $DB, $00, $00, $E0, $E0, $FF, $FF, $FF, $DB, $00, $00, $DC
+    .byte $18, $EC, $F4, $F8, $6C, $00, $00, $1C, $18, $FC, $FC, $FC, $6C, $00, $00, $FF
+    .byte $FF, $C0, $C0, $CF, $CB, $CC, $CC, $00, $00, $1F, $3F, $3F, $38, $3B, $3B, $FC
+    .byte $FC, $0C, $0C, $CC, $4C, $CC, $CC, $00, $04, $EC, $FC, $FC, $3C, $BC, $BC, $CB
+    .byte $CF, $C0, $C0, $FF, $FF, $00, $00, $3B, $30, $3F, $1F, $7F, $FF, $00, $00, $4C
+    .byte $CC, $0C, $0C, $FC, $FC, $00, $00, $3C, $3C, $FC, $EC, $FC, $FC, $00, $00, $FE
+    .byte $82, $82, $82, $82, $FE, $00, $00, $00, $7E, $56, $56, $7E, $FE, $00, $00, $20
+    .byte $00, $00, $18, $20, $00, $00, $18, $1C, $F7, $3C, $18, $1C, $F7, $3C, $18, $E2
+    .byte $80, $10, $20, $00, $00, $80, $00, $E2, $98, $2C, $5E, $7E, $3C, $98, $00, $7E
+    .byte $00, $7E, $00, $7E, $00, $7E, $00, $6E, $00, $6E, $00, $6E, $00, $6E, $00, $10
+    .byte $F4, $08, $04, $C5, $24, $23, $05, $E8, $F8, $0E, $E6, $F7, $37, $2E, $FD, $00
+    .byte $5F, $20, $48, $D7, $88, $18, $80, $3F, $3F, $E0, $C7, $CF, $B8, $98, $7F, $F8
+    .byte $10, $10, $10, $D7, $08, $00, $EF, $F8, $10, $30, $B7, $F7, $30, $DF, $EF, $FF
+    .byte $00, $08, $08, $EF, $08, $10, $EF, $FF, $00, $18, $DB, $FF, $38, $F7, $EF, $FF
+    .byte $7F, $3F, $5F, $4F, $07, $03, $01, $00, $B0, $C0, $E0, $F0, $F8, $FC, $FE, $FE
+    .byte $FE, $FE, $FA, $FA, $FE, $FE, $FE, $00, $1A, $06, $0A, $1A, $3E, $7E, $FE, $01
+    .byte $03, $07, $4F, $5F, $27, $7F, $00, $FF, $FF, $FF, $FF, $FF, $E7, $FF, $00, $7E
+    .byte $BE, $DA, $EA, $F6, $CA, $FC, $00, $FE, $FE, $FA, $FA, $FE, $CE, $FE, $00, $CF
+    .byte $BF, $70, $60, $C4, $C8, $C0, $C0, $47, $BF, $70, $27, $4B, $57, $5F, $DF, $CC
+    .byte $F4, $38, $18, $0C, $0C, $0C, $0C, $CC, $F4, $38, $98, $CC, $EC, $EC, $EC, $C0
+    .byte $C0, $60, $70, $BF, $CF, $00, $00, $DF, $CF, $67, $70, $BF, $4F, $00, $00, $0C
+    .byte $0C, $18, $38, $F4, $CC, $00, $00, $EC, $CC, $98, $38, $F4, $CC, $00, $00, $FF
+    .byte $FF, $C0, $DF, $D0, $D0, $DF, $C0, $00, $00, $3F, $3F, $35, $35, $20, $3F, $FC
+    .byte $FC, $0C, $EC, $2C, $2C, $EC, $0C, $00, $04, $FC, $FC, $5C, $5C, $1C, $FC, $FF
+    .byte $00, $00, $E4, $00, $CF, $00, $00, $7F, $00, $00, $E3, $00, $BF, $00, $00, $FC
+    .byte $00, $00, $F9, $00, $87, $00, $00, $FC, $00, $00, $F7, $00, $67, $00, $00, $FE
+    .byte $02, $02, $02, $FE, $00, $00, $7F, $00, $FE, $0E, $FE, $FE, $00, $00, $00, $7F
+    .byte $40, $40, $40, $7F, $00, $00, $FE, $00, $3F, $30, $3F, $7F, $00, $00, $00, $40
+    .byte $40, $40, $7F, $00, $00, $00, $FF, $3F, $30, $3F, $7F, $00, $00, $FF, $FF, $02
+    .byte $02, $02, $FE, $00, $00, $00, $FF, $FE, $0E, $FE, $FE, $00, $00, $FF, $FF, $FF
+    .byte $FF, $C0, $D0, $C0, $C0, $C0, $C0, $00, $00, $3F, $27, $3F, $3F, $3F, $3F, $FC
+    .byte $FC, $0C, $4C, $0C, $0C, $0C, $0C, $00, $04, $FC, $9C, $FC, $FC, $FC, $FC, $C0
+    .byte $C0, $D0, $C0, $FF, $FF, $00, $00, $3F, $3F, $27, $3F, $3F, $7F, $00, $00, $0C
+    .byte $0C, $4C, $0C, $FC, $FC, $00, $00, $FC, $FC, $9C, $FC, $FC, $FC, $00, $00
 
 ;------------------------------------------[ Area music data ]---------------------------------------
-
-;There are 3 control bytes associated with the music data and the rest are musical note indexes.
-;If the byte has the binary format 1011xxxx ($Bx), then the byte is an index into the corresponding
-;musical notes table and is used to set the note length until it is set by another note length
-;byte. The lower 4 bits are the index into the note length table. Another control byte is the loop
-;and counter btye. The loop and counter byte has the format 11xxxxxx. Bits 0 thru 6 contain the
-;number of times to loop.  The third control byte is #$FF. This control byte marks the end of a loop
-;and decrements the loop counter. If #$00 is found in the music data, the music has reached the end.
-;A #$00 in any of the different music channel data segments will mark the end of the music. The
-;remaining bytes are indexes into the MusicNotesTbl and should only be even numbers as there are 2
-;bytes of data per musical note.
 
 .include "songs/end.asm"
 
 ;Unused tile patterns.
-LAF03:  .byte $80, $40, $20, $10, $88, $00, $00, $00, $00, $00, $00, $00, $80, $04, $00, $02
-LAF13:  .byte $02, $00, $00, $00, $00, $07, $03, $03, $03, $01, $00, $00, $00, $84, $C4, $42
-LAF23:  .byte $62, $21, $31, $11, $11, $80, $C0, $C0, $E0, $E0, $F0, $F0, $F0, $00, $00, $00
-LAF33:  .byte $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $03, $03, $11, $11, $31
-LAF43:  .byte $21, $63, $62, $C4, $84, $F0, $F0, $F0, $E0, $E0, $E0, $C0, $80, $01, $13, $16
-LAF53:  .byte $2C, $78, $B3, $EC, $F0, $07, $1F, $1E, $3C, $78, $F0, $E0, $00, $08, $10, $20
-LAF63:  .byte $40, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $82, $CC, $4E
-LAF73:  .byte $4C, $40, $4C, $4C, $4C, $82, $CC, $CE, $CC, $C0, $CC, $CC, $CC, $00, $00, $00
-LAF83:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-LAF93:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-LAFA3:  .byte $01, $03, $06, $0C, $18, $00, $00, $00, $00, $00, $01, $03, $07, $0F, $3C, $E0
-LAFB3:  .byte $84, $08, $30, $60, $E0, $00, $02, $1F, $7A, $F4, $C8, $98, $10, $19, $31, $33
-LABC3:  .byte $63, $63, $67, $E7, $E7, $06, $0E, $0C, $1C, $1C, $18, $18, $18, $C0, $C0, $80
-LAFD3:  .byte $80, $80, $00, $00, $00, $30, $30, $60, $60, $60, $E0, $E0, $E0, $C7, $C7, $C7
-LAFE3:  .byte $C7, $C7, $C7, $C7, $C7, $38, $38, $38, $38, $38, $38, $38, $38, $20, $20, $20
-LAFF3:  .byte $20, $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0 
+    .byte $80, $40, $20, $10, $88, $00, $00, $00, $00, $00, $00, $00, $80, $04, $00, $02
+    .byte $02, $00, $00, $00, $00, $07, $03, $03, $03, $01, $00, $00, $00, $84, $C4, $42
+    .byte $62, $21, $31, $11, $11, $80, $C0, $C0, $E0, $E0, $F0, $F0, $F0, $00, $00, $00
+    .byte $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $03, $03, $11, $11, $31
+    .byte $21, $63, $62, $C4, $84, $F0, $F0, $F0, $E0, $E0, $E0, $C0, $80, $01, $13, $16
+    .byte $2C, $78, $B3, $EC, $F0, $07, $1F, $1E, $3C, $78, $F0, $E0, $00, $08, $10, $20
+    .byte $40, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $82, $CC, $4E
+    .byte $4C, $40, $4C, $4C, $4C, $82, $CC, $CE, $CC, $C0, $CC, $CC, $CC, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $01, $03, $06, $0C, $18, $00, $00, $00, $00, $00, $01, $03, $07, $0F, $3C, $E0
+    .byte $84, $08, $30, $60, $E0, $00, $02, $1F, $7A, $F4, $C8, $98, $10, $19, $31, $33
+    .byte $63, $63, $67, $E7, $E7, $06, $0E, $0C, $1C, $1C, $18, $18, $18, $C0, $C0, $80
+    .byte $80, $80, $00, $00, $00, $30, $30, $60, $60, $60, $E0, $E0, $E0, $C7, $C7, $C7
+    .byte $C7, $C7, $C7, $C7, $C7, $38, $38, $38, $38, $38, $38, $38, $38, $20, $20, $20
+    .byte $20, $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0 
 
 .include "songs/intro.asm"
 
 ;Unused tile patterns.
-LB135:  .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
-LB145:  .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
-LB155:  .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
-LB165:  .byte $F0, $F8, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $07, $07, $07
-LB175:  .byte $03, $03, $01, $00, $00, $00, $00, $00, $00, $00, $80, $FF, $C7, $83, $03, $C7
-LB185:  .byte $CF, $FE, $EC, $00, $30, $78, $F8, $30, $00, $01, $12, $F5, $EA, $FB, $FD, $F9
-LB195:  .byte $1E, $0E, $44, $07, $03, $03, $01, $01, $E0, $10, $48, $2B, $3B, $1B, $5A, $D0
-LB1A5:  .byte $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0, $2C, $23, $20, $20, $30
-LB1B5:  .byte $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30, $1F, $80, $C0, $C0, $60
-LB1C5:  .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
-LB1D5:  .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
-LB1E5:  .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
-LB1F5:  .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+    .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
+    .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
+    .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
+    .byte $F0, $F8, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $07, $07, $07
+    .byte $03, $03, $01, $00, $00, $00, $00, $00, $00, $00, $80, $FF, $C7, $83, $03, $C7
+    .byte $CF, $FE, $EC, $00, $30, $78, $F8, $30, $00, $01, $12, $F5, $EA, $FB, $FD, $F9
+    .byte $1E, $0E, $44, $07, $03, $03, $01, $01, $E0, $10, $48, $2B, $3B, $1B, $5A, $D0
+    .byte $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0, $2C, $23, $20, $20, $30
+    .byte $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30, $1F, $80, $C0, $C0, $60
+    .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
+    .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
+    .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
+    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 

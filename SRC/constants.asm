@@ -90,6 +90,7 @@
 .charmap ',', $00
 .charmap '.', $07
 .charmap '!', $3F
+.charmap '<', $8F ; i am using < instead of ©, because the latter doesn't work as a char constant
 .charmap ' ', $FF
 
 

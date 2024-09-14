@@ -163,7 +163,7 @@ L96AB:  .byte $00, $00, $06, $00, $83, $00, $88, $00, $00, $00, $00, $00, $00, $
 EnemyInitDelayTbl:
 L96BB:  .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $00, $00, $00
 
-; Index to a table starting a L97D1
+; Index to a table starting at L97D1
 L96CB:  .byte $00, $03, $06, $08, $0A, $10, $0C, $0E, $14, $17, $19, $10, $12, $00, $00, $00
 
 ; EnData08*2 + one of the low bits of EnData05 is used as an index to this pointer table

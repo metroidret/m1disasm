@@ -12,6 +12,10 @@ def run_or_exit(args, err):
 if not os.path.exists('out/'):
     os.mkdir('out/')
 
+is_windows = os.path.join("a", "b") == "a\\b"
+cc65_bin_path = "cc65\\bin\\" if is_windows else "cc65-master/bin"
+ext = ".exe" if is_windows else ""
+
 banks_asm = [
     "header.asm",
     "prg0_title.asm",
@@ -38,12 +42,12 @@ banks_o = [
     
 print('Assembling .asm files')
 for i in range(len(banks_o)):
-    run_or_exit("cc65-master/bin/ca65 SRC/" + banks_asm[i] + " -o out/" + banks_o[i], "Assembler Error.")
+    run_or_exit(cc65_bin_path + "ca65" + ext + " SRC/" + banks_asm[i] + " -o out/" + banks_o[i], "Assembler Error.")
     print(banks_o[i] + ' assembled')
 print('Success\n')
 
 print('Linking .o files')
-run_or_exit("cc65-master/bin/ld65 " + " ".join(["out/" + bank_o for bank_o in banks_o]) + " -o out/M1.nes -C SRC/main.cfg", "Linker Error.")
+run_or_exit(cc65_bin_path + "ld65" + ext + " " + " ".join(["out/" + bank_o for bank_o in banks_o]) + " -o out/M1.nes -C SRC/main.cfg", "Linker Error.")
 print('Success\n')
 
 """print('Fixing header')
@@ -54,4 +58,3 @@ with open("out/M1.nes", "rb") as f:
     md5_hash = hashlib.md5(f.read())
 print('MD5 hash: ' + md5_hash.hexdigest())
 print('Vanilla : d7da4a907be0012abca6625471ef2c9c')
-
