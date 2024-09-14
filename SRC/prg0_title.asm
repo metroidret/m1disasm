@@ -520,268 +520,216 @@ TitleRoutineReturn:
 
 ;The following data fills name table 0 with the intro screen background graphics.
 
-;Information to be stored in attribute table 0.
-L82F4:  .byte $23                       ;PPU address high byte.
-L82F5:  .byte $C0                       ;PPU address low byte.
-L82F6:  .byte $20                       ;PPU string length.
-L82F7:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF 
-L8307:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    ;Information to be stored in attribute table 0.
+    .byte $23                       ;PPU address high byte.
+    .byte $C0                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF 
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-L8317:  .byte $23                       ;PPU address high byte.
-L8318:  .byte $E0                       ;PPU address low byte.
-L8319:  .byte $20                       ;PPU string length.
-L831A:  .byte $FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
-L832A:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $23                       ;PPU address high byte.
+    .byte $E0                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-;Writes row $22E0 (24th row from top).
-L833A:  .byte $22                       ;PPU address high byte.
-L833B:  .byte $E0                       ;PPU address low byte.
-L833C:  .byte $20                       ;PPU string length.
-L833D:  .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
-L834D:  .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    ;Writes row $22E0 (24th row from top).
+    .byte $22                       ;PPU address high byte.
+    .byte $E0                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
-;Writes row $2300 (25th row from top).
-L835D:  .byte $23                       ;PPU address high byte.
-L835E:  .byte $00                       ;PPU address low byte.
-L835F:  .byte $20                       ;PPU string length.
-L8360:  .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
-L8370:  .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    ;Writes row $2300 (25th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $00                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
-;Writes row $2320 (26th row from top).
-L8380:  .byte $23                       ;PPU address high byte.
-L8381:  .byte $20                       ;PPU address low byte.
-L8382:  .byte $20                       ;PPU string length.
-L8383:  .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
-L8393:  .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    ;Writes row $2320 (26th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $20                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
-;Writes row $2340 (27th row from top).
-L83A3:  .byte $23                       ;PPU address high byte.
-L83A4:  .byte $40                       ;PPU address low byte.
-L83A5:  .byte $20                       ;PPU string length.
-L83A6:  .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
-L83B6:  .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    ;Writes row $2340 (27th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $40                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
-;Writes row $2360 (28th row from top).
-L83C6:  .byte $23                       ;PPU address high byte.
-L83C7:  .byte $60                       ;PPU address low byte.
-L83C8:  .byte $20                       ;PPU string length.
-L83C9:  .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
-L83D9:  .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    ;Writes row $2360 (28th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $60                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
-;Writes row $2380 (29th row from top).
-L83E9:  .byte $23                       ;PPU address high byte.
-L83EA:  .byte $80                       ;PPU address low byte.
-L83EB:  .byte $20                       ;PPU string length.
-L83EC:  .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
-L83FC:  .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    ;Writes row $2380 (29th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $80                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
-;Writes row $23A0 (Bottom row).
-L840C:  .byte $23                       ;PPU address high byte.
-L840D:  .byte $A0                       ;PPU address low byte.
-L840E:  .byte $20                       ;PPU string length.
-L840F:  .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
-L841F:  .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    ;Writes row $23A0 (Bottom row).
+    .byte $23                       ;PPU address high byte.
+    .byte $A0                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
-;Writes some blank spaces in row $20A0 (6th row from top).
-L842F:  .byte $20                       ;PPU address high byte.
-L8430:  .byte $A8                       ;PPU address low byte.
-L8431:  .byte $4F                       ;PPU string length.
-L8432:  .byte $FF                       ;Since RLE bit set, repeat 16 blanks starting at $20A8.
+    ;Writes some blank spaces in row $20A0 (6th row from top).
+    PPUStringRepeat $20A8, ' ', $0F
 
-;Writes METROID graphics in row $2100 (9th row from top).
-L8433:  .byte $21                       ;PPU address high byte.
-L8434:  .byte $03                       ;PPU address low byte.
-L8435:  .byte $1C                       ;PPU string length.
-L8436:  .byte $40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63
-L8446:  .byte $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16
+    ;Writes METROID graphics in row $2100 (9th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $03                       ;PPU address low byte.
+    .byte $1C                       ;PPU string length.
+    .byte $40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63
+    .byte $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16
 
-;Writes METROID graphics in row $2120 (10th row from top).
-L8452:  .byte $21                       ;PPU address high byte.
-L8453:  .byte $23                       ;PPU address low byte.
-L8454:  .byte $1A                       ;PPU string length.
-L8455:  .byte $44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47
-L8465:  .byte $44, $57, $69, $47, $44, $47, $44, $68, $69, $47
+    ;Writes METROID graphics in row $2120 (10th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $23                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47
+    .byte $44, $57, $69, $47, $44, $47, $44, $68, $69, $47
 
-;Writes METROID graphics in row $2140 (11th row from top).
-L846F:  .byte $21                       ;PPU address high byte.
-L8470:  .byte $43                       ;PPU address low byte.
-L8471:  .byte $1A                       ;PPU string length.
-L8472:  .byte $44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70
-L8482:  .byte $44, $73, $72, $47, $44, $47, $44, $73, $72, $47
+    ;Writes METROID graphics in row $2140 (11th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $43                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70
+    .byte $44, $73, $72, $47, $44, $47, $44, $73, $72, $47
 
-;Writes METROID graphics in row $2160 (12th row from top).
-L848C:  .byte $21                       ;PPU address high byte.
-L848D:  .byte $63                       ;PPU address low byte.
-L848E:  .byte $1A                       ;PPU string length.
-L848F:  .byte $44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71
-L849F:  .byte $44, $45, $46, $47, $44, $47, $44, $45, $46, $47
+    ;Writes METROID graphics in row $2160 (12th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $63                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71
+    .byte $44, $45, $46, $47, $44, $47, $44, $45, $46, $47
 
-;Writes METROID graphics in row $2180 (13th row from top).
-L84A9:  .byte $21                       ;PPU address high byte.
-L84AA:  .byte $83                       ;PPU address low byte.
-L84AB:  .byte $1A                       ;PPU string length.
-L84AC:  .byte $44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47
-L84BC:  .byte $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47
+    ;Writes METROID graphics in row $2180 (13th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $83                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47
+    .byte $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47
 
-;Writes METROID graphics in row $21A0 (14th row from top).
-L84C6:  .byte $21                       ;PPU address high byte.
-L84C7:  .byte $A3                       ;PPU address low byte.
-L84C8:  .byte $1A                       ;PPU string length.
-L84C9:  .byte $4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F
-L84D9:  .byte $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64
+    ;Writes METROID graphics in row $21A0 (14th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $A3                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F
+    .byte $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64
 
-;Writes METROID graphics in row $21C0 (15th row from top).
-L84E3:  .byte $21                       ;PPU address high byte.
-L84E4:  .byte $C3                       ;PPU address low byte.
-L84E5:  .byte $1A                       ;PPU string length.
-L84E6:  .byte $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52
-L84F6:  .byte $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
+    ;Writes METROID graphics in row $21C0 (15th row from top).
+    .byte $21                       ;PPU address high byte.
+    .byte $C3                       ;PPU address low byte.
+    .byte $1A                       ;PPU string length.
+    .byte $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52
+    .byte $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
 
-;Writes PUSH START BUTTON in row $2220 (18th row from top).
-L8500:  .byte $22                       ;PPU address high byte.
-L8501:  .byte $27                       ;PPU address low byte.
-L8502:  .byte $15                       ;PPU string length.
-;             '_    P    U    S    H    _    S    T    A    R    T    _    B    U    T    T
-L8503:  .byte $FF, $19, $1E, $1C, $11, $FF, $1C, $1D, $0A, $1B, $1D, $FF, $0B, $1E, $1D, $1D
-;              O    N    _    _    _'
-L8513:  .byte $18, $17, $FF, $FF, $FF
+    ;Writes PUSH START BUTTON in row $2220 (18th row from top).
+    PPUString $2227, " PUSH START BUTTON   "
 
-;Writes C 1986 NINTENDO in row $2260 (20th row from top).
-L8518:  .byte $22                       ;PPU memory high byte.
-L8519:  .byte $69                       ;PPU memory low byte.
-L851A:  .byte $12                       ;PPU string length.
-;             'C    _    1    9    8    6    _    N    I    N    T    E    N    D    O    _
-L851B:  .byte $8F, $FF, $01, $09, $08, $06, $FF, $17, $12, $17, $1D, $0E, $17, $0D, $18, $FF
-;              _    _'
-L852B:  .byte $FF, $FF
+    ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
+    .byte $22                       ;PPU memory high byte.
+    .byte $69                       ;PPU memory low byte.
+    .byte $12                       ;PPU string length.
+    .byte $8F, " 1986 NINTENDO   "
 
 ;The following data fills name table 1 with the intro screen background graphics.
 
-;Information to be stored in attribute table 1.
-L852D:  .byte $27                       ;PPU memory high byte.
-L852E:  .byte $C0                       ;PPU memory low byte.
-L852F:  .byte $20                       ;PPU string length.
-L8530:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-L8540:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    ;Information to be stored in attribute table 1.
+    .byte $27                       ;PPU memory high byte.
+    .byte $C0                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-;Writes row $27E0 (24th row from top).
-L8550:  .byte $27                       ;PPU memory high byte.
-L8551:  .byte $E0                       ;PPU memory low byte.
-L8552:  .byte $20                       ;PPU string length.
-L8553:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
-L8563:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    ;Writes row $27E0 (24th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $E0                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-;Writes row $26E0 (24th row from top).
-L8573:  .byte $26                       ;PPU memory high byte.
-L8574:  .byte $E0                       ;PPU memory low byte.
-L8575:  .byte $20                       ;PPU string length.
-L8576:  .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
-L8586:  .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    ;Writes row $26E0 (24th row from top).
+    .byte $26                       ;PPU memory high byte.
+    .byte $E0                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
-;Writes row $2700 (25th row from top).
-L8595:  .byte $27                       ;PPU memory high byte.
-L8597:  .byte $00                       ;PPU memory low byte.
-L8598:  .byte $20                       ;PPU string length.
-L8599:  .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
-L85A9:  .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    ;Writes row $2700 (25th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $00                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
-;Writes row $2720 (26th row from top).
-L85B9:  .byte $27                       ;PPU memory high byte.
-L85BA:  .byte $20                       ;PPU memory low byte.
-L85BB:  .byte $20                       ;PPU string length.
-L85BC:  .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
-L85CC:  .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    ;Writes row $2720 (26th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $20                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
-;Writes row $2740 (27th row from top).
-L85DC:  .byte $27                       ;PPU memory high byte.
-L85DD:  .byte $40                       ;PPU memory low byte.
-L85DE:  .byte $20                       ;PPU string length.
-L85DF:  .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
-L85EF:  .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    ;Writes row $2740 (27th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $40                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
-;Writes row $2760 (28th row from top).
-L85FF:  .byte $27                       ;PPU memory high byte.
-L8600:  .byte $60                       ;PPU memory low byte.
-L8601:  .byte $20                       ;PPU string length.
-L8602:  .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
-L8612:  .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    ;Writes row $2760 (28th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $60                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
-;Writes row $2780 (29th row from top).
-L8622:  .byte $27                       ;PPU memory high byte.
-L8623:  .byte $80                       ;PPU memory low byte.
-L8624:  .byte $20                       ;PPU string length.
-L8625:  .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
-L8635:  .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    ;Writes row $2780 (29th row from top).
+    .byte $27                       ;PPU memory high byte.
+    .byte $80                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
-;Writes row $27A0 (bottom row).
-L8645:  .byte $27                       ;PPU memory high byte.
-L8646:  .byte $A0                       ;PPU memory low byte.
-L8647:  .byte $20                       ;PPU string length.
-L8648:  .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
-L8658:  .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    ;Writes row $27A0 (bottom row).
+    .byte $27                       ;PPU memory high byte.
+    .byte $A0                       ;PPU memory low byte.
+    .byte $20                       ;PPU string length.
+    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
-;Writes row $2480 (5th row from top).
-L8668:  .byte $24                       ;PPU memory high byte.
-L8669:  .byte $88                       ;PPU memory low byte.
-L866A:  .byte $0F                       ;PPU string length.
-;             'E    M    E    R    G    E    N    C    Y    _    O    R    D    E    R'
-L866B:  .byte $0E, $16, $0E, $1B, $10, $0E, $17, $0C, $22, $FF, $18, $1B, $0D, $0E, $1B
+    ;Writes row $2480 (5th row from top).
+    PPUString $2488, "EMERGENCY ORDER"
 
-;Writes row $2500 (9th row from top).
-L867A:  .byte $25                       ;PPU memory high byte.
-L867B:  .byte $04                       ;PPU memory low byte.
-L867C:  .byte $1C                       ;PPU string length.
-;             'D    E    F    E    A    T    _    T    H    E    _    M    E    T    R    0
-L867D:  .byte $0D, $0E, $0F, $0E, $0A, $1D, $FF, $1D, $11, $0E, $FF, $16, $0E, $1D, $1B, $18
-;              I    D    _    O    F    _    _    _    _    _    _    _'
-L868D:  .byte $12, $0D, $FF, $18, $0F, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    ;Writes row $2500 (9th row from top).
+    PPUString $2504, "DEFEAT THE METROID OF       "
 
-;Writes row $2540 (11th row from top).
-L8699:  .byte $25                       ;PPU memory high byte.
-L869A:  .byte $44                       ;PPU memory low byte.
-L869B:  .byte $1A                       ;PPU string length.
-;             'T    H    E    _    P    L    A    N    E    T    _    Z    E    B    E    T
-L869C:  .byte $1D, $11, $0E, $FF, $19, $15, $0A, $17, $0E, $1D, $FF, $23, $0E, $0B, $0E, $1D
-;              H    _    A    N    D    _    _    _    _    _'
-L86AC:  .byte $11, $FF, $0A, $17, $0D, $FF, $FF, $FF, $FF, $FF
+    ;Writes row $2540 (11th row from top).
+    PPUString $2544, "THE PLANET ZEBETH AND     "
 
-;Writes row $2580 (13th row from top).
-L86B6:  .byte $25                       ;PPU memory high byte.
-L86B7:  .byte $84                       ;PPU memory low byte.
-L86B8:  .byte $1A                       ;PPU string length.
-;             'D    E    S    T    R    O    Y    _    T    H    E    _    M    O    T    H
-L86B9:  .byte $0D, $0E, $1C, $1D, $1B, $18, $22, $FF, $1D, $11, $0E, $FF, $16, $18, $1D, $11
-;              E    R    _    B    R    A    I    N    _    _'
-L86C9:  .byte $0E, $1B, $FF, $0B, $1B, $0A, $12, $17, $FF, $FF
+    ;Writes row $2580 (13th row from top).
+    PPUString $2584, "DESTROY THE MOTHER BRAIN  "
 
-;Writes row $25C0 (15th row from top).
-L86D3:  .byte $25                       ;PPU memory high byte.
-L86D4:  .byte $C4                       ;PPU memory low byte.
-L86D5:  .byte $1A                       ;PPU string length.
-;             'T    H    E    _    M    E    C    H    A    N    I    C    A    L    _    L
-L86D6:  .byte $1D, $11, $0E, $FF, $16, $0E, $0C, $11, $0A, $17, $12, $0C, $0A, $15, $FF, $15
-;              I    F    E    _    V    E    I    N    _    _'
-L86E9:  .byte $12, $0F, $0E, $FF, $1F, $0E, $12, $17, $FF, $FF
+    ;Writes row $25C0 (15th row from top).
+    PPUString $25C4, "THE MECHANICAL LIFE VEIN  "
 
-;Writes row $2620 (18th row from top).
-L86F0:  .byte $26                       ;PPU memory high byte.
-L86F1:  .byte $27                       ;PPU memory low byte.
-L86F2:  .byte $15                       ;PPU string length.
-;             'G    A    L    A    X    Y    _    F    E    D    E    R    A    L    _    P
-L86F3:  .byte $10, $0A, $15, $0A, $21, $22, $FF, $0F, $0E, $0D, $0E, $1B, $0A, $15, $FF, $19
-;              O    L    I    C    E'
-L8703:  .byte $18, $15, $12, $0C, $0E
+    ;Writes row $2620 (18th row from top).
+    PPUString $2627, "GALAXY FEDERAL POLICE"
 
-;Writes row $2660 (20th row from top).
-L8708:  .byte $26                       ;PPU memory high byte.
-L8709:  .byte $69                       ;PPU memory low byte.
-L870A:  .byte $12                       ;PPU string length.
-;             '_    _    _    _    _    _    _    _    _    _    _    _    _    _    M    5
-L870B:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $16, $05
-;              1    0'
-L871B:  .byte $01, $00
+    ;Writes row $2660 (20th row from top).
+    PPUString $2669, "              M510"
 
-L871D:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
 ;The following data does not appear to be used.
 L871E:  .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -790,13 +738,11 @@ L873E:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $
 L874E:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 
 
 ;The following error message is diplayed if the player enters an incorrect password.
-;             'E    R    R    O    R    _    T    R    Y    _    A    G    A    I    N'
-L8759:  .byte $0E, $1B, $1B, $18, $1B, $FF, $1D, $1B, $22, $FF, $0A, $10, $0A, $12, $17
+L8759:  .byte "ERROR TRY AGAIN"
 
 ;If the error message above is not being displayed on the password 
 ;screen, the following fifteen blanks spaces are used to cover it up.
-;             '_    _    _    _    _    _    _    _    _    _    _    _    _    _    _'
-L8768:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+L8768:  .byte "               "
 
 ;Not used.
 L8777:  .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
@@ -806,12 +752,12 @@ L87A7:  .byte $00, $18, $CE, $00
 
 LoadSparkleData:
     LDX #$0A                        ;
-L87AD:
-    LDA InitSparkleDataTbl,X        ;
-    STA IntroSpr0YCoord,X           ;Loads $6EA0 thru $6EAA with the table below.
-    STA IntroSpr1YCoord,X           ;Loads $6EB0 thru $6EBA with the table below.
-    DEX                             ;
-    BPL L87AD                       ;Loop until all values from table below are loaded.
+    L87AD:
+        LDA InitSparkleDataTbl,X        ;
+        STA IntroSpr0YCoord,X           ;Loads $6EA0 thru $6EAA with the table below.
+        STA IntroSpr1YCoord,X           ;Loads $6EB0 thru $6EBA with the table below.
+        DEX                             ;
+        BPL L87AD                       ;Loop until all values from table below are loaded.
     LDA #$6B                        ;
     STA IntroSpr1YCoord             ;$6EA0 thru $6EAA = #$3C, #$C6, #$01, #$18, #$00,-->
     LDA #$DC                        ;#$00, #$00, #$00, #$20, #$00, #$00, initial.
@@ -835,8 +781,8 @@ DoOneSparkleUpdate:
 SparkleUpdate:
     LDA IntroSpr0NextCntr,X         ;If $6EA5 has not reached #$00, skip next routine.
     BNE L87E1                       ;
-    JSR DoSparkleSpriteCoord        ;($881A)Update sparkle sprite screen position.
-L87E1:
+        JSR DoSparkleSpriteCoord        ;($881A)Update sparkle sprite screen position.
+    L87E1:
     LDA IntroSpr0Complete,X         ;
     BNE L8819                       ;If sprite is already done, skip routine.
     DEC IntroSpr0NextCntr,X         ;
@@ -853,15 +799,15 @@ L87E1:
 
     DEC IntroSpr0ChngCntr,X         ;Decrement IntroSpr0ChngCntr. If 0, time to change-->
     BNE L8816                       ;sprite graphic.
-    LDA IntroSpr0PattTbl,X          ;
-    EOR #$03                        ;If IntroSpr0ChngCntr=$00, the sparkle sprite graphic is-->
-    STA IntroSpr0PattTbl,X          ;changed back and forth between pattern table-->
-    LDA #$20                        ;graphic $C6 and $C7.  IntroSpr0ChngCntr is reset to #$20.
-    STA IntroSpr0ChngCntr,X         ;
-    ASL                             ;
-    EOR IntroSpr0Cntrl,X            ;Flips pattern at $C5 in pattern table--> 
-    STA IntroSpr0Cntrl,X            ;horizontally when displayed.
-L8816:
+        LDA IntroSpr0PattTbl,X          ;
+        EOR #$03                        ;If IntroSpr0ChngCntr=$00, the sparkle sprite graphic is-->
+        STA IntroSpr0PattTbl,X          ;changed back and forth between pattern table-->
+        LDA #$20                        ;graphic $C6 and $C7.  IntroSpr0ChngCntr is reset to #$20.
+        STA IntroSpr0ChngCntr,X         ;
+        ASL                             ;
+        EOR IntroSpr0Cntrl,X            ;Flips pattern at $C5 in pattern table--> 
+        STA IntroSpr0Cntrl,X            ;horizontally when displayed.
+    L8816:
     JMP WriteIntroSprite            ;($887B)Transfer sprite info into sprite RAM.
 L8819:
     RTS                             ;
@@ -877,35 +823,35 @@ DoSparkleSpriteCoord:
     LDY IntroSpr0Index,X            ;Loads index for finding sparkle data (x=$00 or $10).
     LDA ($00),Y                     ;
     BPL L8835                       ;If data byte MSB is set, set $6EA9 to #$01 and move to-->
-    LDA #$01                        ;next index for sparkle sprite data.
-    STA IntroSpr0ByteType,X         ;
-L8835:
+        LDA #$01                        ;next index for sparkle sprite data.
+        STA IntroSpr0ByteType,X         ;
+    L8835:
     BNE L883C                       ;
-    LDA #$01                        ;If value is equal to zero, sparkle sprite-->
-    STA IntroSpr0Complete,X         ;processing is complete.
-L883C:
+        LDA #$01                        ;If value is equal to zero, sparkle sprite-->
+        STA IntroSpr0Complete,X         ;processing is complete.
+    L883C:
     STA IntroSpr0NextCntr,X         ;
     INY                             ;
     LDA ($00),y                     ;Get x/y position byte.
     DEC IntroSpr0ByteType,X         ;If MSB of second byte is set, branch.
     BMI L8850                       ;
-    LDA #$00                        ;This code is run when the MSB of the first byte-->
-    STA SparkleSpr0YChange,X        ;is set.  This allows the sprite to change X coord-->
-    LDA ($00),Y                     ;by more than 7.  Ensures Y coord does not change.
-    BMI L8867                       ;
-L8850:
-    PHA                             ;Store value twice so X and Y-->
-    PHA                             ;coordinates can be extracted.
-    LDA #$00                        ;
-    STA IntroSpr0ByteType,X         ;Set IntroSpr0ByteType to #$00 after processing.
-    PLA                             ;
-    JSR Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
-    JSR NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
-    STA SparkleSpr0YChange,X        ;Twos compliment stored if Y coord decreasing.
-    PLA                             ;
-    AND #$0F                        ;Discard upper 4 bits.
-    JSR NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
-L8867:
+        LDA #$00                        ;This code is run when the MSB of the first byte-->
+        STA SparkleSpr0YChange,X        ;is set.  This allows the sprite to change X coord-->
+        LDA ($00),Y                     ;by more than 7.  Ensures Y coord does not change.
+        BMI L8867                       ;
+    L8850:
+        PHA                             ;Store value twice so X and Y-->
+        PHA                             ;coordinates can be extracted.
+        LDA #$00                        ;
+        STA IntroSpr0ByteType,X         ;Set IntroSpr0ByteType to #$00 after processing.
+        PLA                             ;
+        JSR Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
+        JSR NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
+        STA SparkleSpr0YChange,X        ;Twos compliment stored if Y coord decreasing.
+        PLA                             ;
+        AND #$0F                        ;Discard upper 4 bits.
+        JSR NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
+    L8867:
     STA SparkleSpr0XChange,X        ;Store amount to move spite in x direction.
     INC IntroSpr0Index,X            ;
     INC IntroSpr0Index,X            ;Add two to find index for next data byte.
@@ -937,15 +883,15 @@ LoadInitialSpriteData:
     STA Second4Delay                ;Set delay for second 4 sprites to 32 frames.
     LDX #$3F                        ;Prepare to loop 64 times.
 
-L889D:
-    LDA Sprite0and4InitTbl,X        ;Load data from tables below.
-    CMP $FF                         ;If #$FF, skip loading that byte and move to next item.
-    BEQ L88AA                       ;
-    STA IntroSpr0YCoord,X           ;Store initial values for sprites 0 thru 3.
-    STA IntroSpr4YCoord,X           ;Store initial values for sprites 4 thru 7.
-L88AA:
-    DEX                             ;
-    BPL L889D                       ;Loop until all data is loaded.
+    L889D:
+        LDA Sprite0and4InitTbl,X        ;Load data from tables below.
+        CMP $FF                         ;If #$FF, skip loading that byte and move to next item.
+        BEQ L88AA                       ;
+            STA IntroSpr0YCoord,X           ;Store initial values for sprites 0 thru 3.
+            STA IntroSpr4YCoord,X           ;Store initial values for sprites 4 thru 7.
+        L88AA:
+        DEX                             ;
+        BPL L889D                       ;Loop until all data is loaded.
 
     LDA #$B8                        ;Special case for sprite 6 and 7.
     STA IntroSpr6YCoord             ;
@@ -1511,8 +1457,8 @@ CheckPassword:
     JSR ConsolidatePassword         ;($8F60)Convert password characters to password bytes.
     JSR ValidatePassword            ;($8DDE)Verify password is correct.
     BCS L8C69                       ;Branch if incorrect password.
-    JMP InitializeGame              ;($92D4)Preliminary housekeeping before game starts.
-L8C69:
+        JMP InitializeGame              ;($92D4)Preliminary housekeeping before game starts.
+    L8C69:
     LDA MultiSFXFlag                ;
     ORA #$01                        ;Set IncorrectPassword SFX flag.
     STA MultiSFXFlag                ;
@@ -1525,27 +1471,27 @@ L8C69:
 CalculatePassword:
     LDA #$00                        ;
     LDY #$0F                        ;Clears values at addresses -->
-L8C7E:
-    STA PasswordByte00,Y            ;$6988 thru $6997 and -->
-    STA PasswordChar00,Y            ;$699A thru $69A9.
-    DEY                             ;
-    BPL L8C7E                       ;
+    L8C7E:
+        STA PasswordByte00,Y            ;$6988 thru $6997 and -->
+        STA PasswordChar00,Y            ;$699A thru $69A9.
+        DEY                             ;
+        BPL L8C7E                       ;
     JSR ProcessUniqueItems          ;($8B79)Determine what items Samus has collected.
     LDA PasswordByte07              ;
     AND #$04                        ;Check to see if mother brain has been defeated,-->
     BEQ L8C9E                       ;If so, restore mother brain, zeebetites and-->
-    LDA #$00                        ;all missile doors in Tourian as punishment for-->
-    STA PasswordByte07              ;dying after mother brain defeated. Only reset in the-->
-    LDA PasswordByte06              ;password.  Continuing without resetting will not-->
-    AND #$03                        ;restore those items.
-    STA PasswordByte06              ;
-L8C9E:
+        LDA #$00                        ;all missile doors in Tourian as punishment for-->
+        STA PasswordByte07              ;dying after mother brain defeated. Only reset in the-->
+        LDA PasswordByte06              ;password.  Continuing without resetting will not-->
+        AND #$03                        ;restore those items.
+        STA PasswordByte06              ;
+    L8C9E:
     LDA InArea                      ;Store InArea in bits 0 thru 5 in-->
     AND #$3F                        ;address $6990.
     LDY JustInBailey                ;
     BEQ L8CA9                       ;
-    ORA #$80                        ;Sets MSB of $6990 is Samus is suitless.
-L8CA9:
+        ORA #$80                        ;Sets MSB of $6990 is Samus is suitless.
+    L8CA9:
     STA PasswordByte08              ;
     LDA SamusGear                   ;
     STA PasswordByte09              ;SamusGear stored in $6991.
@@ -1556,44 +1502,44 @@ L8CA9:
     LDA KraidStatueStatus           ;
     AND #$80                        ;
     BEQ L8CC9                       ;If statue not up, branch.
-    LDA $00                         ;
-    ORA #$80                        ;Set bit 7 of $00--> 
-    STA $00                         ;if Kraid statue up.
-L8CC9:
+        LDA $00                         ;
+        ORA #$80                        ;Set bit 7 of $00--> 
+        STA $00                         ;if Kraid statue up.
+    L8CC9:
     LDA KraidStatueStatus           ;
     AND #$01                        ;
     BEQ L8CD6                       ;Branch if Kraid not yet defeated.
-    LDA $00                         ;
-    ORA #$40                        ;Set bit 6 of $00-->
-    STA $00                         ;If Kraid defeated.
-L8CD6:
+        LDA $00                         ;
+        ORA #$40                        ;Set bit 6 of $00-->
+        STA $00                         ;If Kraid defeated.
+    L8CD6:
     LDA RidleyStatueStatus          ;
     AND #$80                        ;
     BEQ L8CE3                       ;Branch if Ridley statue not up.
-    LDA $00                         ;
-    ORA #$20                        ;Set bit 5 of $00-->
-    STA $00                         ;if Ridley statue up.
-L8CE3:
+        LDA $00                         ;
+        ORA #$20                        ;Set bit 5 of $00-->
+        STA $00                         ;if Ridley statue up.
+    L8CE3:
     LDA RidleyStatueStatus          ;
     AND #$02                        ;
     BEQ L8CF0                       ;Branch if Ridley not yet defeated.
-    LDA $00                         ;
-    ORA #$10                        ;Set bit 4 of $00-->
-    STA $00                         ;if Ridley defeated.
-L8CF0:
+        LDA $00                         ;
+        ORA #$10                        ;Set bit 4 of $00-->
+        STA $00                         ;if Ridley defeated.
+    L8CF0:
     LDA $00                         ;
     STA PasswordByte0F              ;Stores statue statuses in 4 MSB at $6997.
     LDY #$03                        ;
-L8CF7:
-    LDA SamusAge,Y                  ;Store SamusAge in $6993,-->
-    STA PasswordByte0B,Y            ;SamusAge+1 in $6994 and-->
-    DEY                             ;SamusAe+2 in $6995.
-    BPL L8CF7                       ;
-L8D00:
-    JSR $C000                       ;
-    LDA RandomNumber1               ;
-    AND #$0F                        ;Store the value of $2E at $6998-->
-    BEQ L8D00                       ;When any of the 4 LSB are set. (Does not-->
+    L8CF7:
+        LDA SamusAge,Y                  ;Store SamusAge in $6993,-->
+        STA PasswordByte0B,Y            ;SamusAge+1 in $6994 and-->
+        DEY                             ;SamusAe+2 in $6995.
+        BPL L8CF7                       ;
+    L8D00:
+        JSR $C000                       ;
+        LDA RandomNumber1               ;
+        AND #$0F                        ;Store the value of $2E at $6998-->
+        BEQ L8D00                       ;When any of the 4 LSB are set. (Does not-->
     STA PasswordByte10              ;allow RandomNumber1 to be a multiple of 16).
     JSR PasswordChecksumAndScramble ;($8E17)Calculate checksum and scramble password.
     JMP LoadPasswordChar            ;($8E6C)Calculate password characters.
@@ -1607,18 +1553,18 @@ LoadPasswordData:
     LDA PasswordByte08              ;If MSB in PasswordByte08 is set,-->
     AND #$80                        ;Samus is not wearing her suit.
     BEQ L8D27                       ;                       
-    INY                             ;
-L8D27:
+        INY                             ;
+    L8D27:
     STY JustInBailey                ;
     LDA PasswordByte08              ;Extract first 5 bits from PasswordByte08-->
     AND #$3F                        ;and use it to determine starting area.
     STA InArea                      ;
     LDY #$03                        ;
-L8D33:
-    LDA PasswordByte0B,Y            ;Load Samus' age.
-    STA SamusAge,Y                  ;
-    DEY                             ;
-    BPL L8D33                       ;Loop to load all 3 age bytes.
+    L8D33:
+        LDA PasswordByte0B,Y            ;Load Samus' age.
+        STA SamusAge,Y                  ;
+        DEY                             ;
+        BPL L8D33                       ;Loop to load all 3 age bytes.
 L8D3C:
     RTS                             ;
  
@@ -1633,33 +1579,33 @@ LoadTanksAndMissiles:
     LDA PasswordByte0F              ;
     AND #$80                        ;If MSB is set, Kraid statue is up.
     BEQ L8D5C                       ;
-    LDA $00                         ;
-    ORA #$80                        ;If Kraid statue is up, set MSB in $00.
-    STA $00                         ;
-L8D5C:
+        LDA $00                         ;
+        ORA #$80                        ;If Kraid statue is up, set MSB in $00.
+        STA $00                         ;
+    L8D5C:
     LDA PasswordByte0F              ;
     AND #$40                        ;If bit 6 is set, Kraid is defeated.
     BEQ L8D69                       ;
-    LDA $00                         ;
-    ORA #$01                        ;If Kraid is defeated, set LSB in $00.
-    STA $00                         ;
-L8D69:
+        LDA $00                         ;
+        ORA #$01                        ;If Kraid is defeated, set LSB in $00.
+        STA $00                         ;
+    L8D69:
     LDA $00                         ;
     STA KraidStatueStatus           ;Store Kraid status.
     LDA PasswordByte0F              ;
     AND #$20                        ;If bit 5 is set, Ridley statue is up.
     BEQ L8D7B                       ;
-    LDA $02                         ;
-    ORA #$80                        ;If Ridley statue is up, set MSB in $02.
-    STA $02                         ;
-L8D7B:
+        LDA $02                         ;
+        ORA #$80                        ;If Ridley statue is up, set MSB in $02.
+        STA $02                         ;
+    L8D7B:
     LDA PasswordByte0F              ;
     AND #$10                        ;If bit 4 is set, Ridley is defeated.
     BEQ L8D88                       ;
-    LDA $02                         ;
-    ORA #$02                        ;If Ridley is defeated, set bit 1 of $02.
-    STA $02                         ;
-L8D88:
+        LDA $02                         ;
+        ORA #$02                        ;If Ridley is defeated, set bit 1 of $02.
+        STA $02                         ;
+    L8D88:
     LDA $02                         ;
     STA RidleyStatueStatus          ;Store Ridley status.
     LDA #$00                        ;
@@ -1679,54 +1625,64 @@ L8DA3:
     INC $02                         ;Increment number of missiles found.
 
 IncrementToNextItem:
-L8DA9:  INY                             ;
-L8DAA:  INY                             ;Increment twice. Each item is 2 bytes.
-L8DAB:  CPY #$84                        ;7 extra item slots in unique item history.
-L8DAD:  BCC L8D95                       ;Loop until all unique item history checked.
-L8DAF:  LDA $00                         ;
-L8DB1:  CMP #$06                        ;Ensure the Tank Count does not exceed 6-->
-L8DB3:  BCC L8DB7                       ;tanks. Then stores the number of-->
-L8DB5:  LDA #$06                        ;energy tanks found in TankCount.
-L8DB7:  STA TankCount                   ;
-L8DBA:  LDA #$00                        ;
-L8DBC:  LDY $02                         ;
-L8DBE:  BEQ L8DC6                       ;Branch if no missiles found.
-L8DC0:  CLC                             ;
-L8DC1:  ADC #$05                        ;
-L8DC3:  DEY                             ;For every missile item found, this-->
-L8DC4:  BNE L8DC1                       ;loop adds 5 missiles to MaxMissiles.
-L8DC6:  LDY KraidStatueStatus           ;
-L8DC9:  BEQ L8DCF                       ;
-L8DCB:  ADC #$4B                        ;75 missiles are added to MaxMissiles-->
-L8DCD:  BCS L8DD8                       ;if Kraid has been defeated and another-->
-L8DCF:  LDY RidleyStatueStatus          ;75 missiles are added if the ridley--> 
-L8DD2:  BEQ L8DDA                       ;has been defeated.
-L8DD4:  ADC #$4B                        ;
-L8DD6:  BCC L8DDA                       ;
-L8DD8:  LDA #$FF                        ;If number of missiles exceeds 255, it stays at 255.
-L8DDA:  STA MaxMissiles                 ;
-L8DDD:  RTS                             ;
+    INY                             ;
+    INY                             ;Increment twice. Each item is 2 bytes.
+    CPY #$84                        ;7 extra item slots in unique item history.
+    BCC L8D95                       ;Loop until all unique item history checked.
+    LDA $00                         ;
+    CMP #$06                        ;Ensure the Tank Count does not exceed 6-->
+    BCC L8DB7                       ;tanks. Then stores the number of-->
+    LDA #$06                        ;energy tanks found in TankCount.
+L8DB7:
+    STA TankCount                   ;
+    LDA #$00                        ;
+    LDY $02                         ;
+    BEQ L8DC6                       ;Branch if no missiles found.
+    CLC                             ;
+L8DC1:
+    ADC #$05                        ;
+    DEY                             ;For every missile item found, this-->
+    BNE L8DC1                       ;loop adds 5 missiles to MaxMissiles.
+L8DC6:
+    LDY KraidStatueStatus           ;
+    BEQ L8DCF                       ;
+    ADC #$4B                        ;75 missiles are added to MaxMissiles-->
+    BCS L8DD8                       ;if Kraid has been defeated and another-->
+L8DCF:
+    LDY RidleyStatueStatus          ;75 missiles are added if the ridley--> 
+    BEQ L8DDA                       ;has been defeated.
+    ADC #$4B                        ;
+    BCC L8DDA                       ;
+L8DD8:
+    LDA #$FF                        ;If number of missiles exceeds 255, it stays at 255.
+L8DDA:
+    STA MaxMissiles                 ;
+    RTS                             ;
 
 ValidatePassword:
-L8DDE:  LDA NARPASSWORD                 ;
-L8DE1:  BNE L8DF7                       ;If invincible Samus already active, branch.
-L8DE3:  LDY #$0F                        ;
-L8DE5:  LDA PasswordChar00,Y            ;
-L8DE8:  CMP NARPASSWORDTbl,Y            ;If NARPASSWORD was entered at the-->
-L8DEB:  BNE L8DF7                       ;password screen, activate invincible-->
-L8DED:  DEY                             ;Samus, else continue to process password.
-L8DEE:  BPL L8DE5                       ;
-L8DF0:  LDA #$01                        ;
-L8DF2:  STA NARPASSWORD                 ;
-L8DF5:  BNE L8E05                       ;
-L8DF7:  JSR UnscramblePassword          ;($8E4E)Unscramble password.
-L8DFA:  JSR PasswordChecksum            ;($8E21)Calculate password checksum.
-L8DFD:  CMP PasswordByte11              ;Verify proper checksum.
-L8E00:  BEQ L8E05                       ;
-L8E02:  SEC                             ;If password is invalid, sets carry flag.
-L8E03:  BCS L8E06                       ;
-L8E05:  CLC                             ;If password is valid, clears carry flag.
-L8E06:  RTS                             ;
+    LDA NARPASSWORD                 ;
+    BNE L8DF7                       ;If invincible Samus already active, branch.
+    LDY #$0F                        ;
+L8DE5:
+    LDA PasswordChar00,Y            ;
+    CMP NARPASSWORDTbl,Y            ;If NARPASSWORD was entered at the-->
+    BNE L8DF7                       ;password screen, activate invincible-->
+    DEY                             ;Samus, else continue to process password.
+    BPL L8DE5                       ;
+    LDA #$01                        ;
+    STA NARPASSWORD                 ;
+    BNE L8E05                       ;
+L8DF7:
+    JSR UnscramblePassword          ;($8E4E)Unscramble password.
+    JSR PasswordChecksum            ;($8E21)Calculate password checksum.
+    CMP PasswordByte11              ;Verify proper checksum.
+    BEQ L8E05                       ;
+    SEC                             ;If password is invalid, sets carry flag.
+    BCS L8E06                       ;
+L8E05:
+    CLC                             ;If password is valid, clears carry flag.
+L8E06:
+    RTS                             ;
 
 ;The table below is used by the code above. It checks to see if NARPASSWORD has been entered.
 ;NOTE: any characters after the 16th character will be ignored if the first 16 characters
@@ -1736,257 +1692,161 @@ NARPASSWORDTbl:
     .byte "NARPASSWORD00000"
 
 PasswordChecksumAndScramble:
-L8E17:  JSR PasswordChecksum            ;($8E21)Store the combined added value of-->
-L8E1A:  STA PasswordByte11              ;addresses $6988 thu $6998 in $6999.
-L8E1D:  JSR PasswordScramble            ;($8E2D)Scramble password.
-L8E20:  RTS                             ;
+    JSR PasswordChecksum            ;($8E21)Store the combined added value of-->
+    STA PasswordByte11              ;addresses $6988 thu $6998 in $6999.
+    JSR PasswordScramble            ;($8E2D)Scramble password.
+    RTS                             ;
  
 PasswordChecksum:
-L8E21:  LDY #$10                        ;
-L8E23:  LDA #$00                        ;
-L8E25:  CLC                             ;Add the values at addresses-->
-L8E26:  ADC PasswordByte00,Y            ;$6988 thru $6998 together.
-L8E29:  DEY                             ;
-L8E2A:  BPL L8E25                       ;
-L8E2C:  RTS                             ;
+    LDY #$10                        ;
+    LDA #$00                        ;
+    L8E25:
+        CLC                             ;Add the values at addresses-->
+        ADC PasswordByte00,Y            ;$6988 thru $6998 together.
+        DEY                             ;
+        BPL L8E25                       ;
+    RTS                             ;
  
 PasswordScramble:
-L8E2D:  LDA PasswordByte10              ;
-L8E30:  STA $02                         ;
-L8E32:  LDA PasswordByte00              ;Store contents of $6988 in $00 for-->
-L8E35:  STA $00                         ;further processing after rotation.
-L8E37:  LDX #$00                        ;
-L8E39:  LDY #$0F                        ;
-L8E3B:  ROR PasswordByte00,X            ;Rotate right, including carry, all values in-->
-L8E3E:  INX                             ;addresses $6988 thru $6997.
-L8E3F:  DEY                             ;
-L8E40:  BPL L8E3B                       ;
-L8E42:  ROR $00                         ;Rotate right $6988 to ensure the LSB-->
-L8E44:  LDA $00                         ;from address $6997 is rotated to the-->
-L8E46:  STA PasswordByte00              ;MSB of $6988.
-L8E49:  DEC $02                         ;
-L8E4B:  BNE L8E32                       ;Continue rotating until $02 = 0.
-L8E4D:  RTS                             ;
+    LDA PasswordByte10              ;
+    STA $02                         ;
+L8E32:
+    LDA PasswordByte00              ;Store contents of $6988 in $00 for-->
+    STA $00                         ;further processing after rotation.
+    LDX #$00                        ;
+    LDY #$0F                        ;
+L8E3B:
+    ROR PasswordByte00,X            ;Rotate right, including carry, all values in-->
+    INX                             ;addresses $6988 thru $6997.
+    DEY                             ;
+    BPL L8E3B                       ;
+    ROR $00                         ;Rotate right $6988 to ensure the LSB-->
+    LDA $00                         ;from address $6997 is rotated to the-->
+    STA PasswordByte00              ;MSB of $6988.
+    DEC $02                         ;
+    BNE L8E32                       ;Continue rotating until $02 = 0.
+    RTS                             ;
 
 UnscramblePassword:
-L8E4E:  LDA PasswordByte10              ;Stores random number used to scramble the password.
-L8E51:  STA $02                         ;
-L8E53:  LDA PasswordByte0F              ;Preserve MSB that may have been rolled from $6988.
-L8E56:  STA $00                         ;
-L8E58:  LDX #$0F                        ;
-L8E5A:  ROL PasswordByte00,X            ;The following loop rolls left the first 16 bytes-->
-L8E5D:  DEX                             ;of the password one time.
-L8E5E:  BPL L8E5A                       ;
-L8E60:  ROL $00                         ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
-L8E62:  LDA $00                         ;
-L8E64:  STA PasswordByte0F              ;
-L8E67:  DEC $02                         ;
-L8E69:  BNE L8E53                       ;Loop repeats the number of times decided by the random-->
-L8E6B:  RTS                             ;number in $6998 to properly unscramble the password.
+    LDA PasswordByte10              ;Stores random number used to scramble the password.
+    STA $02                         ;
+L8E53:
+    LDA PasswordByte0F              ;Preserve MSB that may have been rolled from $6988.
+    STA $00                         ;
+    LDX #$0F                        ;
+L8E5A:
+    ROL PasswordByte00,X            ;The following loop rolls left the first 16 bytes-->
+    DEX                             ;of the password one time.
+    BPL L8E5A                       ;
+    ROL $00                         ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
+    LDA $00                         ;
+    STA PasswordByte0F              ;
+    DEC $02                         ;
+    BNE L8E53                       ;Loop repeats the number of times decided by the random-->
+    RTS                             ;number in $6998 to properly unscramble the password.
 
 ;The following code takes the 18 password bytes and converts them into 24 characters
 ;to be displayed to the player as the password.  NOTE: the two MSBs will always be 0.
 
 LoadPasswordChar:
-L8E6C:  LDY #$00                        ;Password byte #$00.
-L8E6E:  JSR SixUpperBits                ;($8F2D)
-L8E71:  STA PasswordChar00              ;Store results.
-L8E74:  LDY #$00                        ;Password bytes #$00 and #$01.
-L8E76:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8E79:  STA PasswordChar01              ;Store results.
-L8E7C:  LDY #$01                        ;Password bytes #$01 and #$02.
-L8E7E:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8E81:  STA PasswordChar02              ;Store results.
-L8E84:  LDY #$02                        ;Password byte #$02.
-L8E86:  JSR SixLowerBits                ;($8F5A)
-L8E89:  STA PasswordChar03              ;Store results.
-L8E8C:  LDY #$03                        ;Password byte #$03.
-L8E8E:  JSR SixUpperBits                ;($8F2D)
-L8E91:  STA PasswordChar04              ;Store results.
-L8E94:  LDY #$03                        ;Password bytes #$03 and #$04.
-L8E96:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8E99:  STA PasswordChar05              ;Store results.
-L8E9C:  LDY #$04                        ;Password bytes #$04 and #$05.
-L8E9E:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8EA1:  STA PasswordChar06              ;Store results.
-L8EA4:  LDY #$05                        ;Password byte #$05.
-L8EA6:  JSR SixLowerBits                ;($8F5A)
-L8EA9:  STA PasswordChar07              ;Store results.
-L8EAC:  LDY #$06                        ;Password byte #$06.
-L8EAE:  JSR SixUpperBits                ;($8F2D)
-L8EB1:  STA PasswordChar08              ;Store results.
-L8EB4:  LDY #$06                        ;Password bytes #$06 and #$07.
-L8EB6:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8EB9:  STA PasswordChar09              ;Store results.
-L8EBC:  LDY #$07                        ;Password bytes #$07 and #$08.
-L8EBE:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8EC1:  STA PasswordChar0A              ;Store results.
-L8EC4:  LDY #$08                        ;Password byte #$08.
-L8EC6:  JSR SixLowerBits                ;($8F5A)
-L8EC9:  STA PasswordChar0B              ;Store results.
-L8ECC:  LDY #$09                        ;Password byte #$09.
-L8ECE:  JSR SixUpperBits                ;($8F2D)
-L8ED1:  STA PasswordChar0C              ;Store results.
-L8ED4:  LDY #$09                        ;Password bytes #$09 and #$0A.
-L8ED6:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8ED9:  STA PasswordChar0D              ;Store results.
-L8EDC:  LDY #$0A                        ;Password bytes #$0A and #$0B.
-L8EDE:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8EE1:  STA PasswordChar0E              ;Store results.
-L8EE4:  LDY #$0B                        ;Password byte #$0B.
-L8EE6:  JSR SixLowerBits                ;($8F5A)
-L8EE9:  STA PasswordChar0F              ;Store results.
-L8EEC:  LDY #$0C                        ;Password byte #$0C.
-L8EEE:  JSR SixUpperBits                ;($8F2D)
-L8EF1:  STA PasswordChar10              ;Store results.
-L8EF4:  LDY #$0C                        ;Password bytes #$0C and #$0D.
-L8EF6:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8EF9:  STA PasswordChar11              ;Store results.
-L8EFC:  LDY #$0D                        ;Password bytes #$0D and #$0E.
-L8EFE:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8F01:  STA PasswordChar12              ;Store results.
-L8F04:  LDY #$0E                        ;Password byte #$0E.
-L8F06:  JSR SixLowerBits                ;($8F5A)
-L8F09:  STA PasswordChar13              ;Store results.
-L8F0C:  LDY #$0F                        ;Password byte #$0F.
-L8F0E:  JSR SixUpperBits                ;($8F2D)
-L8F11:  STA PasswordChar14              ;Store results.
-L8F14:  LDY #$0F                        ;Password bytes #$0F and #$10.
-L8F16:  JSR TwoLowerAndFourUpper        ;($8F33)
-L8F19:  STA PasswordChar15              ;Store results.
-L8F1C:  LDY #$10                        ;Password bytes #$10 and #$11.
-L8F1E:  JSR FourLowerAndTwoUpper        ;($8F46)
-L8F21:  STA PasswordChar16              ;Store results.
-L8F24:  LDY #$11                        ;Password byte #$11.
-L8F26:  JSR SixLowerBits                ;($8F5A)
-L8F29:  STA PasswordChar17              ;Store results.
-L8F2C:  RTS                             ;
+    .repeat 6, I
+        LDY #(I*3+0)                        ;Password byte #$00.
+        JSR SixUpperBits                ;($8F2D)
+        STA PasswordChars+I*4+0              ;Store results.
+        LDY #(I*3+0)                        ;Password bytes #$00 and #$01.
+        JSR TwoLowerAndFourUpper        ;($8F33)
+        STA PasswordChars+I*4+1              ;Store results.
+        LDY #(I*3+1)                        ;Password bytes #$01 and #$02.
+        JSR FourLowerAndTwoUpper        ;($8F46)
+        STA PasswordChars+I*4+2              ;Store results.
+        LDY #(I*3+2)                        ;Password byte #$02.
+        JSR SixLowerBits                ;($8F5A)
+        STA PasswordChars+I*4+3              ;Store results.
+    .endrep
+    RTS                             ;
 
 SixUpperBits:
-L8F2D:  LDA PasswordByte00,Y            ;Uses six upper bits to create a new byte.-->
-L8F30:  LSR                             ;Bits are right shifted twice and two lower-->
-L8F31:  LSR                             ;bits are discarded.
-L8F32:  RTS                             ;
+    LDA PasswordByte00,Y            ;Uses six upper bits to create a new byte.-->
+    LSR                             ;Bits are right shifted twice and two lower-->
+    LSR                             ;bits are discarded.
+    RTS                             ;
  
 TwoLowerAndFourUpper:
-L8F33:  LDA PasswordByte00,Y            ;
-L8F36:  AND #$03                        ;Saves two lower bits and stores them-->
-L8F38:  JSR Amul16                      ;($C2C5)in bits 4 and 5.
-L8F3B:  STA $00                         ;
-L8F3D:  LDA PasswordByte01,Y            ;Saves upper 4 bits and stores them-->
-L8F40:  JSR Adiv16                      ;($C2BF)bits 0, 1, 2 and 3.
-L8F43:  ORA $00                         ;Add two sets of bits together to make a byte-->
-L8F45:  RTS                             ;where bits 6 and 7 = 0.
+    LDA PasswordByte00,Y            ;
+    AND #$03                        ;Saves two lower bits and stores them-->
+    JSR Amul16                      ;($C2C5)in bits 4 and 5.
+    STA $00                         ;
+    LDA PasswordByte01,Y            ;Saves upper 4 bits and stores them-->
+    JSR Adiv16                      ;($C2BF)bits 0, 1, 2 and 3.
+    ORA $00                         ;Add two sets of bits together to make a byte-->
+    RTS                             ;where bits 6 and 7 = 0.
  
 FourLowerAndTwoUpper:
-L8F46:  LDA PasswordByte00,Y            ;
-L8F49:  AND #$0F                        ;Keep lower 4 bits.
-L8F4B:  ASL                             ;Move lower 4 bits to bits 5, 4, 3 and 2.
-L8F4C:  ASL                             ;
-L8F4D:  STA $00                         ;
-L8F4F:  LDA PasswordByte01,Y            ;Move upper two bits-->
-L8F52:  ROL                             ;to bits 1 and 0.
-L8F53:  ROL                             ;
-L8F54:  ROL                             ;
-L8F55:  AND #$03                        ;Add two sets of bits together to make a byte-->        
-L8F57:  ORA $00                         ;where bits 6 and 7 = 0.
-L8F59:  RTS                             ;
+    LDA PasswordByte00,Y            ;
+    AND #$0F                        ;Keep lower 4 bits.
+    ASL                             ;Move lower 4 bits to bits 5, 4, 3 and 2.
+    ASL                             ;
+    STA $00                         ;
+    LDA PasswordByte01,Y            ;Move upper two bits-->
+    ROL                             ;to bits 1 and 0.
+    ROL                             ;
+    ROL                             ;
+    AND #$03                        ;Add two sets of bits together to make a byte-->        
+    ORA $00                         ;where bits 6 and 7 = 0.
+    RTS                             ;
 
 SixLowerBits:
-L8F5A:  LDA PasswordByte00,Y            ;Discard bits 6 and 7.
-L8F5D:  AND #$3F                        ;
-L8F5F:  RTS 
+    LDA PasswordByte00,Y            ;Discard bits 6 and 7.
+    AND #$3F                        ;
+    RTS 
 
 ;The following routine converts the 24 user entered password characters into the 18 password
 ;bytes used by the program to store Samus' stats and unique item history.
 
 ConsolidatePassword:
-L8F60:  LDY #$00                        ;Password characters #$00 and #$01.
-L8F62:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8F65:  STA PasswordByte00              ;Store results.
-L8F68:  LDY #$01                        ;Password characters #$01 and #$02.
-L8F6A:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8F6D:  STA PasswordByte01              ;Store results.
-L8F70:  LDY #$02                        ;Password characters #$02 and #$03.
-L8F72:  JSR TwoLowerAndSixLower         ;($9011)
-L8F75:  STA PasswordByte02              ;Store results.
-L8F78:  LDY #$04                        ;Password characters #$04 and #$05.
-L8F7A:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8F7D:  STA PasswordByte03              ;Store results.
-L8F80:  LDY #$05                        ;Password characters #$05 and #$05.
-L8F82:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8F85:  STA PasswordByte04              ;Store results.
-L8F88:  LDY #$06                        ;Password characters #$06 and #$07.
-L8F8A:  JSR TwoLowerAndSixLower         ;($9011)
-L8F8D:  STA PasswordByte05              ;Store results.
-L8F90:  LDY #$08                        ;Password characters #$08 and #$09.
-L8F92:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8F95:  STA PasswordByte06              ;Store results.
-L8F98:  LDY #$09                        ;Password characters #$09 and #$0A.
-L8F9A:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8F9D:  STA PasswordByte07              ;Store results.
-L8FA0:  LDY #$0A                        ;Password characters #$0A and #$0B.
-L8FA2:  JSR TwoLowerAndSixLower         ;($9011)
-L8FA5:  STA PasswordByte08              ;Store results.
-L8FA8:  LDY #$0C                        ;Password characters #$0C and #$0D.
-L8FAA:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8FAD:  STA PasswordByte09              ;Store results.
-L8FB0:  LDY #$0D                        ;Password characters #$0D and #$0E.
-L8FB2:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8FB5:  STA PasswordByte0A              ;Store results.
-L8FB8:  LDY #$0E                        ;Password characters #$0E and #$0F.
-L8FBA:  JSR TwoLowerAndSixLower         ;($9011)
-L8FBD:  STA PasswordByte0B              ;Store results.
-L8FC0:  LDY #$10                        ;Password characters #$10 and #$11.
-L8FC2:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8FC5:  STA PasswordByte0C              ;Store results.
-L8FC8:  LDY #$11                        ;Password characters #$11 and #$12.
-L8FCA:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8FCD:  STA PasswordByte0D              ;Store results.
-L8FD0:  LDY #$12                        ;Password characters #$12 and #$13.
-L8FD2:  JSR TwoLowerAndSixLower         ;($9011)
-L8FD5:  STA PasswordByte0E              ;Store results.
-L8FD8:  LDY #$14                        ;Password characters #$15 and #$15.
-L8FDA:  JSR SixLowerAndTwoUpper         ;($8FF1)
-L8FDD:  STA PasswordByte0F              ;Store results.
-L8FE0:  LDY #$15                        ;Password characters #$15 and #$16.
-L8FE2:  JSR FourLowerAndFiveThruTwo     ;($9001)
-L8FE5:  STA PasswordByte10              ;Store results.
-L8FE8:  LDY #$16                        ;Password characters #$16 and #$17.
-L8FEA:  JSR TwoLowerAndSixLower         ;($9011)
-L8FED:  STA PasswordByte11              ;Store results.
-L8FF0:  RTS                             ;
+    .repeat 6, I
+        LDY #(I*4+0)                        ;Password characters #$00 and #$01.
+        JSR SixLowerAndTwoUpper         ;($8FF1)
+        STA PasswordBytes+I*3+0              ;Store results.
+        LDY #(I*4+1)                        ;Password characters #$01 and #$02.
+        JSR FourLowerAndFiveThruTwo     ;($9001)
+        STA PasswordBytes+I*3+1              ;Store results.
+        LDY #(I*4+2)                        ;Password characters #$02 and #$03.
+        JSR TwoLowerAndSixLower         ;($9011)
+        STA PasswordBytes+I*3+2              ;Store results.
+    .endrep
+    RTS
 
 SixLowerAndTwoUpper:
-L8FF1:  LDA PasswordChar00,Y            ;Remove upper two bits and transfer-->
-L8FF4:  ASL                             ;lower six bits to upper six bits.
-L8FF5:  ASL                             ;
-L8FF6:  STA $00                         ;
-L8FF8:  LDA PasswordChar01,Y            ;Move bits 4and 5 to lower two-->
-L8FFB:  JSR Adiv16                      ;($C2BF)bits and discard the rest.
-L8FFE:  ORA $00                         ;Combine the two bytes together.
-L9000:  RTS                             ;
+    LDA PasswordChar00,Y            ;Remove upper two bits and transfer-->
+    ASL                             ;lower six bits to upper six bits.
+    ASL                             ;
+    STA $00                         ;
+    LDA PasswordChar01,Y            ;Move bits 4and 5 to lower two-->
+    JSR Adiv16                      ;($C2BF)bits and discard the rest.
+    ORA $00                         ;Combine the two bytes together.
+    RTS                             ;
 
 FourLowerAndFiveThruTwo:
-L9001:  LDA PasswordChar00,Y            ;Take four lower bits and transfer-->
-L9004:  JSR Amul16                      ;($C2C5)them to upper four bits. Discard the rest.
-L9007:  STA $00                         ;
-L9009:  LDA PasswordChar01,Y            ;Remove two lower bits and transfer-->
-L900C:  LSR                             ;bits 5 thru 2 to lower four bits. 
-L900D:  LSR                             ;
-L900E:  ORA $00                         ;Combine the two bytes together.
-L9010:  RTS                             ;
+    LDA PasswordChar00,Y            ;Take four lower bits and transfer-->
+    JSR Amul16                      ;($C2C5)them to upper four bits. Discard the rest.
+    STA $00                         ;
+    LDA PasswordChar01,Y            ;Remove two lower bits and transfer-->
+    LSR                             ;bits 5 thru 2 to lower four bits. 
+    LSR                             ;
+    ORA $00                         ;Combine the two bytes together.
+    RTS                             ;
  
 TwoLowerAndSixLower:
-L9011:  LDA PasswordChar00,Y            ;Shifts two lower bits to two higest bits-->
-L9014:  ROR                             ;and discards the rest
-L9015:  ROR                             ;
-L9016:  ROR                             ;
-L9017:  AND #$C0                        ;
-L9019:  STA $00                         ;
-L901B:  LDA PasswordChar01,Y            ;Add six lower bits to previous results.
-L901E:  ORA $00                         ;
-L9020:  RTS                             ;
+    LDA PasswordChar00,Y            ;Shifts two lower bits to two higest bits-->
+    ROR                             ;and discards the rest
+    ROR                             ;
+    ROR                             ;
+    AND #$C0                        ;
+    STA $00                         ;
+    LDA PasswordChar01,Y            ;Add six lower bits to previous results.
+    ORA $00                         ;
+    RTS                             ;
 
 PasswordBitmaskTbl:
 L9021:  .byte $01, $02, $04, $08, $10, $20, $40, $80
@@ -3550,10 +3410,10 @@ L9D0E:  .byte $9B, $48, $01, $80        ;Sprite05RAM
 ;and the bottom two pointers are for when she is in the bikini.
 
 WavePointerTable:
-L9D12:  .word $9D1A                     ;Jumpsuit Samus hand up.
-L9D14:  .word $9D2A                     ;Jumpsuit Samus hand down.
-L9D16:  .word $9D3A                     ;Bikini Samus hand up.
-L9D18:  .word $9D4A                     ;Bikini Samus hand down.
+L9D12:  .word L9D1A                     ;Jumpsuit Samus hand up.
+L9D14:  .word L9D2A                     ;Jumpsuit Samus hand down.
+L9D16:  .word L9D3A                     ;Bikini Samus hand up.
+L9D18:  .word L9D4A                     ;Bikini Samus hand down.
 
 ;Sprite data table used when Samus is in jumpsuit and her waving hand is up.
 JsHandUpTable:
@@ -3759,27 +3619,29 @@ L9F4C:  .byte $73, $26, $23, $E7
 L9F50:  .byte $0C, $26, $22, $AA
 
 EndGamePalWrite:
-L9F54:  LDA PalDataPending              ;If no palette data pending, branch to exit.
-L9F56:  BEQ L9F80                       ;
-L9F58:  CMP #$0C                        ;If PalDataPending has loaded last palette,-->
-L9F5A:  BEQ L9F80                       ;branch to exit.
-L9F5C:  CMP #$0D                        ;Once end palettes have been cycled through,-->
-L9F5E:  BNE L9F64                       ;start over.
-L9F60:  LDY #$00                        ;
-L9F62:  STY PalDataPending              ;
-L9F64:  ASL                             ;* 2, pointer is two bytes.
-L9F65:  TAY                             ;
-L9F66:  LDA EndGamePalPntrTbl-1,Y       ;High byte of PPU data pointer.
-L9F69:  LDX EndGamePalPntrTbl-2,Y       ;Low byte of PPU data pointer.
-L9F6C:  TAY                             ;
-L9F6D:  JSR PreparePPUProcess_          ;($C20E)Prepare to write data string to PPU.
-L9F70:  LDA #$3F                        ;
-L9F72:  STA PPUADDR                  ;
-L9F75:  LDA #$00                        ;
-L9F77:  STA PPUADDR                  ;Set PPU address to $3F00.
-L9F7A:  STA PPUADDR                  ;
-L9F7D:  STA PPUADDR                  ;Set PPU address to $0000.
-L9F80:  RTS                             ;
+    LDA PalDataPending              ;If no palette data pending, branch to exit.
+    BEQ L9F80                       ;
+    CMP #$0C                        ;If PalDataPending has loaded last palette,-->
+    BEQ L9F80                       ;branch to exit.
+    CMP #$0D                        ;Once end palettes have been cycled through,-->
+    BNE L9F64                       ;start over.
+        LDY #$00                        ;
+        STY PalDataPending              ;
+    L9F64:
+    ASL                             ;* 2, pointer is two bytes.
+    TAY                             ;
+    LDA EndGamePalPntrTbl-1,Y       ;High byte of PPU data pointer.
+    LDX EndGamePalPntrTbl-2,Y       ;Low byte of PPU data pointer.
+    TAY                             ;
+    JSR PreparePPUProcess_          ;($C20E)Prepare to write data string to PPU.
+    LDA #$3F                        ;
+    STA PPUADDR                  ;
+    LDA #$00                        ;
+    STA PPUADDR                  ;Set PPU address to $3F00.
+    STA PPUADDR                  ;
+    STA PPUADDR                  ;Set PPU address to $0000.
+L9F80:
+    RTS                             ;
 
 ;The following pointer table is used by the routine above to
 ;find the proper palette data during the EndGame routine.
@@ -3800,191 +3662,192 @@ L9F97:  .word EndGamePal0A              ;($A049)
 L9F99:  .word EndGamePal0B              ;($9806)
 
 EndGamePal00:
-L9F9B:  .byte $3F                       ;PPU address high byte.
-L9F9C:  .byte $00                       ;PPU address low byte.
-L9F9D:  .byte $20                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $00                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
 ;The following values are written to the background palette:
-L9F9E:  .byte $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08
+    .byte $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08
 ;The following values are written to the sprite palette:
-L9FAE:  .byte $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16 
+    .byte $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16 
 
-L9FBE:  .byte $00                       ;End EndGamePal00 data.
+    .byte $00                       ;End EndGamePal00 data.
 
 EndGamePal01:
-L9FBF:  .byte $3F                       ;PPU address high byte.
-L9FC0:  .byte $18                       ;PPU address low byte.
-L9FC1:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FC2:  .byte $0F, $10, $20, $30, $0F, $0F, $0F, $0F
+    .byte $0F, $10, $20, $30, $0F, $0F, $0F, $0F
 
-L9FCA:  .byte $00                       ;End EndGamePal01 data.
+    .byte $00                       ;End EndGamePal01 data.
 
 EndGamePal02:
-L9FCB:  .byte $3F                       ;PPU address high byte.
-L9FCC:  .byte $18                       ;PPU address low byte.
-L9FCD:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FCE:  .byte $0F, $12, $22, $32, $0F, $0B, $1B, $2B
+    .byte $0F, $12, $22, $32, $0F, $0B, $1B, $2B
 
-L9FD6:  .byte $00                       ;End EndGamePal02 data.
+    .byte $00                       ;End EndGamePal02 data.
 
 EndGamePal03:
-L9FD7:  .byte $3F                       ;PPU address high byte.
-L9FD8:  .byte $18                       ;PPU address low byte.
-L9FD9:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FDA:  .byte $0F, $14, $24, $34, $0F, $09, $19, $29 
+    .byte $0F, $14, $24, $34, $0F, $09, $19, $29 
 
-L9FE2:  .byte $00                       ;End EndGamePal03 data.
+    .byte $00                       ;End EndGamePal03 data.
 
 EndGamePal04:
-L9FE3:  .byte $3F                       ;PPU address high byte.
-L9FE4:  .byte $18                       ;PPU address low byte.
-L9FE5:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FE6:  .byte $0F, $16, $26, $36, $0F, $07, $17, $27
+    .byte $0F, $16, $26, $36, $0F, $07, $17, $27
 
-L9FEE:  .byte $00                       ;End EndGamePal04 data.
+    .byte $00                       ;End EndGamePal04 data.
 
 EndGamePal05:
-L9FEF:  .byte $3F                       ;PPU address high byte.
-L9FF0:  .byte $18                       ;PPU address low byte.
-L9FF1:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FF2:  .byte $0F, $18, $28, $38, $0F, $05, $15, $25 
+    .byte $0F, $18, $28, $38, $0F, $05, $15, $25 
 
-L9FFA:  .byte $00                       ;End EndGamePal05 data.
+    .byte $00                       ;End EndGamePal05 data.
 
 EndGamePal06:
-L9FFB:  .byte $3F                       ;PPU address high byte.
-L9FFC:  .byte $18                       ;PPU address low byte.
-L9FFD:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-L9FFE:  .byte $0F, $1A, $2A, $3A, $0F, $03, $13, $13
+    .byte $0F, $1A, $2A, $3A, $0F, $03, $13, $13
 
-LA006:  .byte $00                       ;End EndGamePal06 data.
+    .byte $00                       ;End EndGamePal06 data.
 
 EndGamePal07:
-LA007:  .byte $3F                       ;PPU address high byte.
-LA008:  .byte $18                       ;PPU address low byte.
-LA009:  .byte $08                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $18                       ;PPU address low byte.
+    .byte $08                       ;PPU string length.
 ;The following values are written to the sprite palette starting at $3F18:
-LA00A:  .byte $0F, $1C, $2C, $3C, $0F, $01, $11, $21 
+    .byte $0F, $1C, $2C, $3C, $0F, $01, $11, $21 
 
-LA012:  .byte $00                       ;End EndGamePal07 data.
+    .byte $00                       ;End EndGamePal07 data.
 
 EndGamePal08:
-LA013:  .byte $3F                       ;PPU address high byte.
-LA014:  .byte $0C                       ;PPU address low byte.
-LA015:  .byte $04                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $0C                       ;PPU address low byte.
+    .byte $04                       ;PPU string length.
 ;The following values are written to the background palette starting at $3F0C:
-LA016:  .byte $0F, $18, $08, $07
+    .byte $0F, $18, $08, $07
 
-LA01A:  .byte $3F                       ;PPU address high byte.
-LA01B:  .byte $10                       ;PPU address low byte.
-LA01C:  .byte $10                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $10                       ;PPU address low byte.
+    .byte $10                       ;PPU string length.
 ;The following values are written to the sprite palette:
-LA01D:  .byte $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
+    .byte $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
 
-LA02D:  .byte $00                       ;End EndGamePal08 data.
+    .byte $00                       ;End EndGamePal08 data.
 
 EndGamePal09:
-LA02E:  .byte $3F                       ;PPU address high byte.
-LA02F:  .byte $0C                       ;PPU address low byte.
-LA030:  .byte $04                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $0C                       ;PPU address low byte.
+    .byte $04                       ;PPU string length.
 ;The following values are written to the background palette starting at $3F0C:
-LA031:  .byte $0F, $08, $07, $0F
+    .byte $0F, $08, $07, $0F
 
-LA035:  .byte $3F                       ;PPU address high byte.
-LA036:  .byte $10                       ;PPU address low byte.
-LA037:  .byte $10                       ;PPU string length.
+    .byte $3F                       ;PPU address high byte.
+    .byte $10                       ;PPU address low byte.
+    .byte $10                       ;PPU string length.
 ;The following values are written to the sprite palette:
-LA038:  .byte $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
+    .byte $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
 
-LA048:  .byte $00                       ;End EndGamePal09 data.
+    .byte $00                       ;End EndGamePal09 data.
 
 EndGamePal0A:
 PPUStringRepeat $3F0C, $0F, $04
 PPUStringRepeat $3F10, $0F, $10
 
-LA051:  .byte $00                       ;End EndGamePal0A data.
+    .byte $00                       ;End EndGamePal0A data.
 
 ;The following data writes the end game backgroud graphics.
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
-LA052:  .byte $23                       ;PPU address high byte.
-LA053:  .byte $00                       ;PPU address low byte.
-LA054:  .byte $20                       ;PPU string length.
-LA055:  .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
-LA065:  .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
+LA052:
+    .byte $23                       ;PPU address high byte.
+    .byte $00                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
+    .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
 ;Writes ground graphics on name table 0 in row $2320 (26th row from top).
-LA075:  .byte $23                       ;PPU address high byte.
-LA076:  .byte $20                       ;PPU address low byte.
-LA077:  .byte $20                       ;PPU string length.
-LA078:  .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
-LA088:  .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
+    .byte $23                       ;PPU address high byte.
+    .byte $20                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
+    .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
 
-;Writes ground graphics on name table 0 in row $2340 (27th row from top).
-LA098:  .byte $23                       ;PPU address high byte.
-LA099:  .byte $40                       ;PPU address low byte.
-LA09A:  .byte $20                       ;PPU string length.
-LA09B:  .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
-LA0AB:  .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
+    ;Writes ground graphics on name table 0 in row $2340 (27th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $40                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
+    .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
 
-;Writes ground graphics on name table 0 in row $2360 (28th row from top).
-LA0BB:  .byte $23                       ;PPU address high byte.
-LA0BC:  .byte $60                       ;PPU address low byte.
-LA0BD:  .byte $20                       ;PPU string length.
-LA0BE:  .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
-LA0CE:  .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
+    ;Writes ground graphics on name table 0 in row $2360 (28th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $60                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
+    .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
 
-;Writes ground graphics on name table 0 in row $2380 (29th row from top).
-LA0DE:  .byte $23                       ;PPU address high byte.
-LA0DF:  .byte $80                       ;PPU address low byte.
-LA0E0:  .byte $20                       ;PPU string length.
-LA0E1:  .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
-LA0F1:  .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
+    ;Writes ground graphics on name table 0 in row $2380 (29th row from top).
+    .byte $23                       ;PPU address high byte.
+    .byte $80                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
+    .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
 
-;Writes ground graphics on name table 0 in row $23A0 (bottom row).
-LA101:  .byte $23                       ;PPU address high byte.
-LA102:  .byte $A0                       ;PPU address low byte.
-LA103:  .byte $20                       ;PPU string length.
-LA104:  .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
-LA114:  .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
+    ;Writes ground graphics on name table 0 in row $23A0 (bottom row).
+    .byte $23                       ;PPU address high byte.
+    .byte $A0                       ;PPU address low byte.
+    .byte $20                       ;PPU string length.
+    .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
+    .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
 
-;Sets all color bits in attribute table 0 starting at $23F0.
-PPUStringRepeat $23F0, $FF, $10
+    ;Sets all color bits in attribute table 0 starting at $23F0.
+    PPUStringRepeat $23F0, $FF, $10
 
-;Writes credits on name table 2 in row $2820 (2nd row from top).
-PPUString $282E, "STAFF"
+    ;Writes credits on name table 2 in row $2820 (2nd row from top).
+    PPUString $282E, "STAFF"
 
-;Writes credits on name table 2 in row $28A0 (6th row from top).
-PPUString $28A8, "SCENARIO WRITTEN BY"
+    ;Writes credits on name table 2 in row $28A0 (6th row from top).
+    PPUString $28A8, "SCENARIO WRITTEN BY"
 
-;Writes credits on name table 2 in row $28E0 (8th row from top).
-PPUString $28EE, "KANOH"
+    ;Writes credits on name table 2 in row $28E0 (8th row from top).
+    PPUString $28EE, "KANOH"
 
-;Writes credits on name table 2 in row $2960 (12th row from top).
-PPUString $2966, "CHARACTER DESIGNED BY"
+    ;Writes credits on name table 2 in row $2960 (12th row from top).
+    PPUString $2966, "CHARACTER DESIGNED BY"
 
-;Writes credits on name table 2 in row $29A0 (14th row from top).
-PPUString $29AC, "KIYOTAKE"
+    ;Writes credits on name table 2 in row $29A0 (14th row from top).
+    PPUString $29AC, "KIYOTAKE"
 
-;Writes credits on name table 2 in row $2A20 (18th row from top).
-PPUString $2A2B, "NEW MATSUOKA"
+    ;Writes credits on name table 2 in row $2A20 (18th row from top).
+    PPUString $2A2B, "NEW MATSUOKA"
 
-;Writes credits on name table 2 in row $2A60 (20th row from top).
-PPUString $2A6C, "SHIKAMOTO"
+    ;Writes credits on name table 2 in row $2A60 (20th row from top).
+    PPUString $2A6C, "SHIKAMOTO"
 
-;Writes credits on name table 2 in row $2AE0 (24th row from top).
-PPUString $2AEC, "MUSIC BY"
+    ;Writes credits on name table 2 in row $2AE0 (24th row from top).
+    PPUString $2AEC, "MUSIC BY"
 
-;Writes credits on name table 2 in row $2B20 (26th row from top)
-PPUString $2B2B, "HIP TANAKA"
+    ;Writes credits on name table 2 in row $2B20 (26th row from top)
+    PPUString $2B2B, "HIP TANAKA"
 
-;Writes credits on name table 2 in row $2BA0 (bottom row).
-PPUString $2BA7, " MAIN PROGRAMMERS "
+    ;Writes credits on name table 2 in row $2BA0 (bottom row).
+    PPUString $2BA7, " MAIN PROGRAMMERS "
 
     .byte $00                       ;End PPU string write.
 
@@ -4268,7 +4131,7 @@ LA4AD:
     PPUString $238E, "1986"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    PPUStringRepeat $23A8, ' ', $0f
+    PPUStringRepeat $23A8, ' ', $0F
 
     .byte $00                       ;End PPU string write.
 
@@ -4276,127 +4139,101 @@ LA4BD:
     ;Writes credits on name table 2 in row $2800 (top row)
     PPUString $280C, "NINTENDO"
 
-;Writes credits on name table 2 in row $2860 (4th row from top).
-LA4C8:  .byte $28                       ;PPU address high byte.
-LA4C9:  .byte $66                       ;PPU address low byte.
-LA4CA:  .byte $51                       ;PPU string length.
-LA4CB:  .byte $FF                       ;Repeat bit set. Repeats entry 17 times.
+    ;Writes credits on name table 2 in row $2860 (4th row from top).
+    PPUStringRepeat $2866, ' ', $11
 
-LA4CC:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $28A0 (6th row from top).
-LA4CD:  .byte $28                       ;PPU address high byte.
-LA4CE:  .byte $AA                       ;PPU address low byte.
-LA4CF:  .byte $4C                       ;PPU string length.
-LA4D0:  .byte $FF                       ;Repeat bit set. Repeats entry 12 times.
+LA4CD:
+    ;Writes credits on name table 2 in row $28A0 (6th row from top).
+    PPUStringRepeat $28AA, ' ', $0C
 
-LA4D1:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $2920 (10th row from top).
-LA4D2:  .byte $29                       ;PPU address high byte.
-LA4D3:  .byte $26                       ;PPU address low byte.
-LA4D4:  .byte $5B                       ;PPU string length.
-LA4D5:  .byte $FF                       ;Repeat bit set. Repeats entry 27 times.
+LA4D2:
+    ;Writes credits on name table 2 in row $2920 (10th row from top).
+    PPUStringRepeat $2926, ' ', $1B
 
-LA4D6:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $2960 (12th row from top).
-LA4D7:  .byte $29                       ;PPU address high byte.
-LA4D8:  .byte $67                       ;PPU address low byte.
-LA4D9:  .byte $52                       ;PPU string length.
-LA4DA:  .byte $FF                       ;Repeat bit set. Repeats entry 18 times.
+LA4D7:
+    ;Writes credits on name table 2 in row $2960 (12th row from top).
+    PPUStringRepeat $2967, ' ', $12
 
-LA4DB:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $29E0 (16th row from top).
-LA4DC:  .byte $29                       ;PPU address high byte.
-LA4DD:  .byte $E6                       ;PPU address low byte.
-LA4DE:  .byte $54                       ;PPU string length.
-LA4DF:  .byte $FF                       ;Repeat bit set. Repeats entry 20 times.
+LA4DC:
+    ;Writes credits on name table 2 in row $29E0 (16th row from top).
+    PPUStringRepeat $29E6, ' ', $14
 
-LA4E0:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $2A20 (18th row from top).
-LA4E1:  .byte $2A                       ;PPU address high byte.
-LA4E2:  .byte $28                       ;PPU address low byte.
-LA4E3:  .byte $55                       ;PPU string length.
-LA4E4:  .byte $FF                       ;Repeat bit set. Repeats entry 21 times.
+LA4E1:
+    ;Writes credits on name table 2 in row $2A20 (18th row from top).
+    PPUStringRepeat $2A28, ' ', $15
 
-LA4E5:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $2AE0 (24th row from top).
-LA4E6:  .byte $2A                       ;PPU address high byte.
-LA4E7:  .byte $E6                       ;PPU address low byte.
-LA4E8:  .byte $50                       ;PPU string length.
-LA4E9:  .byte $FF                       ;Repeat bit set. Repeats entry 16 times.
+LA4E6:
+    ;Writes credits on name table 2 in row $2AE0 (24th row from top).
+    PPUStringRepeat $2AE6, ' ', $10
 
-LA4EA:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 2 in row $2B20 (26th row from top).
-LA4EB:  .byte $2B                       ;PPU address high byte.
-LA4EC:  .byte $29                       ;PPU address low byte.
-LA4ED:  .byte $4E                       ;PPU string length.
-LA4EE:  .byte $FF                       ;Repeat bit set. Repeats entry 14 times.
+LA4EB:
+    ;Writes credits on name table 2 in row $2B20 (26th row from top).
+    PPUStringRepeat $2B29, ' ', $0E
 
-LA4EF:  .byte $00                       ;End PPU string write.
+LA4EF:
+    .byte $00                       ;End PPU string write.
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
-LA4F0:  .byte $20                       ;PPU address high byte.
-LA4F1:  .byte $26                       ;PPU address low byte.
-LA4F2:  .byte $14                       ;PPU string length.
-LA4F3:  .byte $FF, $FF, $FF, $FF, $FF, $24, $25, $26, $27, $FF, $FF, $2C, $2D, $2E, $2F, $FF
-LA503:  .byte $FF, $FF, $FF, $FF
+LA4F0:
+    .byte $20                       ;PPU address high byte.
+    .byte $26                       ;PPU address low byte.
+    .byte $14                       ;PPU string length.
+    .byte $FF, $FF, $FF, $FF, $FF, $24, $25, $26, $27, $FF, $FF, $2C, $2D, $2E, $2F, $FF
+    .byte $FF, $FF, $FF, $FF
 
-LA507:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
-LA508:  .byte $20                       ;PPU address high byte.
-LA509:  .byte $4B                       ;PPU address low byte.
-LA50A:  .byte $0A                       ;PPU string length.
-LA50B:  .byte $28, $29, $2A, $2B, $FF, $FF, $02, $03, $04, $05
+LA508:
+    .byte $20                       ;PPU address high byte.
+    .byte $4B                       ;PPU address low byte.
+    .byte $0A                       ;PPU string length.
+    .byte $28, $29, $2A, $2B, $FF, $FF, $02, $03, $04, $05
 
-;Writes credits on name table 0 in row $2060 (4th row from top).
-LA515:  .byte $20                       ;PPU address high byte.
-LA516:  .byte $6A                       ;PPU address low byte.
-LA517:  .byte $4C                       ;PPU string length.
-LA518:  .byte $FF                       ;Repeat bit set. Repeats entry 12 times.
+LA515:
+    ;Writes credits on name table 0 in row $2060 (4th row from top).
+    PPUStringRepeat $206A, ' ', $0C
 
-LA519:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 0 in row $2120 (10th row from top).
-LA51A:  .byte $21                       ;PPU address high byte.
-LA51B:  .byte $26                       ;PPU address low byte.
-LA51C:  .byte $53                       ;PPU string length.
-LA51D:  .byte $FF                       ;Repeat bit set. Repeats entry 19 times.
+LA51A:
+    ;Writes credits on name table 0 in row $2120 (10th row from top).
+    PPUStringRepeat $2126, ' ', $13
 
-LA51E:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 0 in row $2160 (12th row from top).
-LA51F:  .byte $21                       ;PPU address high byte.
-LA520:  .byte $6A                       ;PPU address low byte.
-LA521:  .byte $4C                       ;PPU string length.
-LA522:  .byte $FF                       ;Repeat bit set. Repeats entry 12 times.
+LA51F:
+    ;Writes credits on name table 0 in row $2160 (12th row from top).
+    PPUStringRepeat $216A, ' ', $0C
 
-LA523:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-;Writes credits on name table 0 in row $2180 (13th row from top).
-LA524:  .byte $21                       ;PPU address high byte.
-LA525:  .byte $88                       ;PPU address low byte.
-LA526:  .byte $11                       ;PPU string length.
-;             '_    _    _    _    _    _    _    _    _    _    _    _    _    _    _    _'
-LA527:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-;             '_'
-LA537:  .byte $FF
+LA524:
+    ;Writes credits on name table 0 in row $2180 (13th row from top).
+    PPUString $2188, "                 "
 
-;Writes credits on name table 0 in row $2220 (18th row from top).
-LA538:  .byte $22                       ;PPU address high byte.
-LA539:  .byte $26                       ;PPU address low byte.
-LA53A:  .byte $4B                       ;PPU string length.
-LA53B:  .byte $FF                       ;Repeat bit set. Repeats entry 11 times.
+LA538:
+    ;Writes credits on name table 0 in row $2220 (18th row from top).
+    PPUStringRepeat $2226, ' ', $0B
 
-LA53C:  .byte $00                       ;End PPU string write.
+    .byte $00                       ;End PPU string write.
 
-LA53D:  .byte $00                       ;End PPU block write.
+LA53D:
+    .byte $00                       ;End PPU block write.
 
 ;-------------------------------------------[ World map ]--------------------------------------------
 
@@ -4465,27 +4302,31 @@ LA8FE:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $
 LA90E:  .byte $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
 LA91E:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 LA91F:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
- 
+
+;Loads contents of world map into -->
+;RAM at addresses $7000 thru $73FF.
 CopyMap:
-LA93E:  LDA #$3E                        ;
-LA940:  STA $00                         ;
-LA942:  LDA #$A5                        ;
-LA944:  STA $01                         ;
-LA946:  LDA #$00                        ;
-LA948:  STA $02                         ;
-LA94A:  LDA #$70                        ;Loads contents of world map into -->
-LA94C:  STA $03                         ;RAM at addresses $7000 thru $73FF.
-LA94E:  LDX #$04                        ;
-LA950:  LDY #$00                        ;
-LA952:  LDA ($00),Y                     ;
-LA954:  STA ($02),Y                     ;
-LA956:  INY                             ;
-LA957:  BNE LA952                       ;
-LA959:  INC $01                         ;
-LA95B:  INC $03                         ;
-LA95D:  DEX                             ;
-LA95E:  BNE LA950                       ;
-LA960:  RTS                             ;
+    LDA #$3E
+    STA $00
+    LDA #$A5
+    STA $01
+    LDA #$00
+    STA $02
+    LDA #$70
+    STA $03
+    LDX #$04
+    LA950:
+        LDY #$00
+        LA952:
+            LDA ($00),Y
+            STA ($02),Y
+            INY
+            BNE LA952
+        INC $01
+        INC $03
+        DEX
+        BNE LA950
+    RTS
  
 ;Unused tile patterns.
 LA961:  .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
@@ -4592,6 +4433,6 @@ LB1F5:  .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
 .segment "BANK_00_VEC"
-LBFFA:  .word NMI                       ;($C0D9)NMI vector.
-LBFFC:  .word RESET                     ;($FFB0)Reset vector.
-LBFFE:  .word RESET                     ;($FFB0)IRQ vector.
+    .word NMI                       ;($C0D9)NMI vector.
+    .word RESET                     ;($FFB0)Reset vector.
+    .word RESET                     ;($FFB0)IRQ vector.

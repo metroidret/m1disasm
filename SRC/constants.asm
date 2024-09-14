@@ -705,6 +705,7 @@ EndItemHistory         = $68FC   ;Two bytes per item.
 
 KraidRidleyPresent     = $6987   ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
 
+PasswordBytes          = $6988
 PasswordByte00         = $6988   ;Stores status of items 0 thru 7.
 PasswordByte01         = $6989   ;Stores status of items 8 thru 15.
 PasswordByte02         = $698A   ;Stores status of items 16 thru 23.
@@ -725,6 +726,7 @@ PasswordByte10         = $6998   ;Stores value RandomNumber1.
 PasswordByte11         = $6999   ;Stores sum of $6988 thru $6998(Checksum).
 
 ;Upper two bits of PasswordChar bytes will always be 00.
+PasswordChars          = $699A
 PasswordChar00         = $699A   ;
 PasswordChar01         = $699B   ;
 PasswordChar02         = $699C   ;
