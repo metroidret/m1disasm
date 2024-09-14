@@ -1,0 +1,207 @@
+# Metroid NES ROM Documentation
+# Area ROM Banks
+
+Adapted from: https://github.com/ZaneDubya/MetroidMMC3/blob/master/Documentation/area_banks.txt
+
+## 1. Introduction
+The events of Metroid NES occur on the planet Zebes, which is divided into five
+distinct Areas: Brinstar, Norfair, Tourian, Kraid's Hideout, and Ridley's
+Hideout. The data for each of these Areas is located in a separate 16kb ROM bank
+which is loaded at runtime into $8000-$BFFF of the NES address space.
+
+While the main Game Engine ROM bank is relatively well documented, much of the
+World ROM banks have not yet been labeled and commented.
+
+Interestingly, about 47% of every Area ROM bank is identical to every other
+Area ROM bank, containing common routines and data. Thus, an Area ROM bank may
+be separated into the portion that is common to every Area bank ($8000-$8D5F and
+$B200-$BFFF) and the portion that is different for each Area bank ($8D60-$B1FF).
+
+    Table 1.1: Area ROM bank portions.
+    ROM Addr.       Size in bytes   Name            Documented in...
+    $8000-$8D5F     $0D60 (3424)    Common          Section 2
+    $8F60-$B1FF     $24A0 (9376)    Area Specific   Section 3
+    $B000-$BFFF     $0E00 (3584)    Sound Engine    Section 4
+
+## 2. Common
+This portion of the Area ROM bank is common to each Area bank. It begins at
+$8000 and runs for $0D60 (3424) bytes. Much of the data in this section has been
+documented in the disassembly, but the routines in this section remain
+undocumented.
+
+    Table 2.1: Common I Routines & Data
+    ROM Addr.   Name/Purpose                Documented in...
+    $8000       Jump Table                  2.1
+    $8048       Zoomer Jump Table           2.2
+    $8058       Enemy Movement Routines     2.3
+    $8572       Object Anim Data Tables     Disassembly
+    $860B       Sprite Draw Ptr Tables      Disassembly
+    $86FD       Sprite Placement Dat Tables Disassembly
+    $87CB       Sprite Frame Data Tables    Disassembly
+    $8B13       Door Routines/Data          2.4
+
+### 2.1 Jump Table
+The Jump Table consists of 24 "JMP $XXXX" instructions. These jumps all point to
+addresses in the always-present Game Engine bank ($C000-$FFFF) or addresses in
+this first Common I section ($8000-$8D5F).
+
+It would be interesting to note where these instructions point to (only a few of
+the addresses are currently named/documented), and where these instructions are
+called from. What is their purpose?
+
+### 2.2 Zoomer Jump Table
+
+These are 8 16-bit pointers that point to 4 different functions that zoomers
+(the crawling enemies) use to move forward. They point the the address of the
+function in question minus one, because they are called via the "RTS trick". For
+information of this trick, please reference the NESdev wiki:
+
+http://wiki.nesdev.com/w/index.php/RTS_Trick
+
+The list of the jump table, in order, is as follows:
+
+    84FE - Move right one pixel
+    84A7 - Move left one pixel
+    844B - Move down one pixel
+    844B - Move down one pixel
+    84A7 - Move left one pixel
+    84FE - Move right one pixel
+    83F5 - Move up one pixel
+    83F5 - Move up one pixel
+
+TODO: Verify that that's what those routines actually do
+    
+### 2.3 Enemy movement routines
+There are a number of routines in this section. They all appear to be related to
+enemy AI and movement. Names and descriptions of these functions are provisional
+given that most enemy variables are still poorly understood.
+
+    8058 - Common Enemy AI handler (called at $F413 in bank 7)
+    80B0 - Loads from table at $977B
+    
+    80B8 - Up movement related function
+    80FB - Down movement related
+    8134 - Right movement related
+    816E - Left movement related
+    
+    81B1 - SetBit5OfEnData05_AndClearEnData1A
+    81B8 - SetBit5OfEnData05
+    81C0 - SetBit5OfEnData05_AndClearEnData1B
+    
+    81C7 - Horizontal acceleration related
+    81DA - alternate entry point for the previous function
+    81F6 - LoadBit5ofTableAt968B
+    81FC - Vertical acceleration related
+    820F - alternate entry point for the previous function
+    
+    822B - Loads pointer to an enemy movement string
+    8244 - Vertical Movement Function (handles enemy movement strings)
+    8318 - Horizontal Movement Function (also reads enemy movement strings)
+    
+    833F - Vertical movement related
+    8395 - Horizontal movement related
+    
+    83F5 - Move up one pixel
+    844B - Move down one pixel
+    84A7 - Move left one pixel
+    84FE - Move right one pixel
+    
+    855A - Switch enemy nametable
+    8563 - Get other nametable index for enemy
+    856B - XOR EnData05
+
+Note that bank 7 has several more routines that help handle enemies and such.
+
+A good project to eventually do would be to be refactor the enemy movement code
+so that it uses acceleration and subpixels, rather than the weird table and
+counter approach that it currently uses.
+    
+### 2.4 Door Routines
+These are various routines pertaining to doors.
+
+    8B13 - SamusEnterDoor
+    - Some subroutines
+    8B79 - DisplayDoors
+    - Various subroutines
+
+## 3. Area Specific
+This is the largest of the three sections of an Area Specific ROM Bank. It
+contains graphics data and routines that area only called in this Area, and a
+small amount of common data.
+
+The following parts must be located at these exact addresses, due to code in the
+game engine that expects them to be at this location:
+
+    8D60 - CHR data (2kB, does not have to pertain to the area in question)
+    
+    9560 - Palette Ptr Table
+    9598 - Area Pointer Table (8 pointers to things at non-fixed addresses)
+    
+    95A8 - Tourian Jump Table (RTSes in all other areas)
+    95C3 - Area specific routine (jumps to an RTS in all non-Tourian areas)
+    
+    95C6 - Two's compliment rountine
+    
+    95CC - Special room value
+    95CD - Music init value
+    95CE - Base damage value (1 word, little-endian)
+    95D0 - Item music room indices (7 byte)
+    95D7 - Samus starting position (map X, map Y, screen Y) (no screen X)
+    
+    95DA - Unknown (palette switching related)
+    95DB - Unused byte?
+    95DC - Unknown (animation related?)
+    95DD - Unknown (animation related?)
+    95DE - Unused byte?
+    95DF - Unused byte?
+    95E0 - Unknown table (animation related?)
+    
+    95E5 - ChooseEnemyRoutine
+    95EB - Enemy AI Jump Table (used by the above routine) (16 entries)
+    
+    960B - Unknown enemy related table (32 bytes)
+    962B - Enemy hitpoint table (16 bytes)
+    963B - ResetAnimIndex table (32 bytes)
+    965B - another ResetAnimIndex table ?? (32 bytes)
+    967B - unknown table (16 bytes)
+    968B - unknown table (determines enemy hit sound?) (16 bytes)
+    969B - EnData05 table ? (16 bytes)
+    96AB - unknown enemy-related table (16 bytes)
+    96BB - EnemyInitDelayTbl ? (16 bytes)
+    96CB - table of indices to a table at 97D1 ? (16 bytes)
+    
+    96DB - enemy movement pointers (40 words?)
+    
+    972B - EnData1A table (20 bytes?)
+    973F - EnData1B table (20 bytes?)
+    9753 - EnData02 (y speed?) table (20 bytes?)
+    9767 - EnData03 (x speed?) table (20 bytes?)
+    977B - enemy movement behavior table (16 bytes)
+    978B - unknown table
+    
+    97A7 - another table of enemy movement pointers (20 words)
+    97D1 - unknown table (length varies between banks)
+    
+After this point, area-specific data can be located anywhere. This includes:
+    - Enemy movement strings
+    - Enemy AI routines
+    - Area specific routines
+    - Enemy animation data tables
+    - Enemy sprite drawing pointer tables
+    - Enemy sprite placement data tables
+    - Palette data
+    - Room pointer tables
+    - Structure pointer tables
+    - Special item tables
+    - Room data
+    - Metatile data
+
+## 4. Music and Sound Engine
+
+Area specific music typically starts at B000, but doesn't have to.
+
+The music engine starts at B200, and also includes all the general purpose music.
+
+Between the area specific music and the music engine are some random Mother Brain
+tiles. These appear to be unused, and are likely a remnant of the original build
+process.
