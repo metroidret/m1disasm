@@ -68,53 +68,53 @@
 
 ; These first three all jump to different points within the same procedure
 CommonJump_00: ;$8000
-    JMP LF410
+    jmp LF410
 CommonJump_01: ;$8003
-    JMP LF438
+    jmp LF438
 CommonJump_02: ;$8006
-    JMP LF416
+    jmp LF416
 CommonJump_03: ;$8009
-    JMP LF852
+    jmp LF852
 CommonJump_UpdateEnemyAnim: ;$800C
-    JMP UpdateEnemyAnim             ;($E094)
+    jmp UpdateEnemyAnim             ;($E094)
 CommonJump_05: ;$800F
-    JMP LF68D
+    jmp LF68D
 CommonJump_06: ;$8012
-    JMP LF83E
+    jmp LF83E
 CommonJump_07: ;$8015
-    JMP LF85A
+    jmp LF85A
 CommonJump_08: ;$8018
-    JMP LFBB9
+    jmp LFBB9
 CommonJump_09: ;$801B
-    JMP LFB88
+    jmp LFB88
 CommonJump_0A: ;$801E
-    JMP LFBCA
+    jmp LFBCA
 CommonJump_0B: ;$8021
-    JMP LF870
+    jmp LF870
 CommonJump_ChooseRoutine: ;$8024
-    JMP ChooseRoutine               ;($C27C)
+    jmp ChooseRoutine               ;($C27C)
 CommonJump_0D: ;$8027
-    JMP LFD8F
+    jmp LFD8F
 CommonJump_0E: ;$802A
-    JMP LEB6E
+    jmp LEB6E
 CommonJump_VertMoveProc: ;$802D
-    JMP VertMoveProc
+    jmp VertMoveProc
 CommonJump_HoriMoveProc: ;$8030
-    JMP HoriMoveProc
+    jmp HoriMoveProc
 CommonJump_11: ;$8033
-    JMP LFA1E
+    jmp LFA1E
 CommonJump_12: ;$8036
-    JMP L833F
+    jmp L833F
 CommonJump_13: ;$8039
-    JMP L8395
+    jmp L8395
 CommonJump_14: ;$803C
-    JMP LDD8B
+    jmp LDD8B
 CommonJump_15: ;$803F
-    JMP LFEDC
+    jmp LFEDC
 CommonJump_SubtractHealth: ;$8042
-    JMP SubtractHealth              ;($CE92)
+    jmp SubtractHealth              ;($CE92)
 CommonJump_Base10Subtract: ;$8045
-    JMP Base10Subtract              ;($C3FB)
+    jmp Base10Subtract              ;($C3FB)
 
 ; Zoomer jump table
 L8048:  .word L84FE-1, L84A7-1, L844B-1, L844B-1, L84A7-1, L84FE-1, L83F5-1, L83F5-1
@@ -124,902 +124,902 @@ L8048:  .word L84FE-1, L84A7-1, L844B-1, L844B-1, L84A7-1, L84FE-1, L83F5-1, L83
 ; called by F410 in the engine, via CommonJump_00
 CommonEnemyAI:
 ; Set x to point to enemy
-    LDX PageIndex
+    ldx PageIndex
 ; Exit if bit 6 of EnData05 is set
-    LDA EnData05,X
-    ASL 
-    BMI CommonEnemyAI_Exit
+    lda EnData05,X
+    asl 
+    bmi CommonEnemyAI_Exit
 ; Exit if enemy is not active
-    LDA EnStatus,X
-    CMP #$02
-    BNE CommonEnemyAI_Exit
+    lda EnStatus,X
+    cmp #$02
+    bne CommonEnemyAI_Exit
 
-    JSR VertMoveProc
-    LDA $00
-    BPL CommonEnemyAI_BranchA
-    JSR TwosCompliment              ;($C3D4)
-    STA $66
+    jsr VertMoveProc
+    lda $00
+    bpl CommonEnemyAI_BranchA
+    jsr TwosCompliment              ;($C3D4)
+    sta $66
 
 ; Up Movement
 CommonEnemyAI_LoopA:
-    JSR L83F5 ; Move one pixel
-    JSR L80B8 ; Determine something about the next pixel moved (?0)
-    DEC $66
-    BNE CommonEnemyAI_LoopA
+    jsr L83F5 ; Move one pixel
+    jsr L80B8 ; Determine something about the next pixel moved (?0)
+    dec $66
+    bne CommonEnemyAI_LoopA
 
 CommonEnemyAI_BranchA:
-    BEQ CommonEnemyAI_BranchB
-    STA $66
+    beq CommonEnemyAI_BranchB
+    sta $66
 
 ; Down Movement
 CommonEnemyAI_LoopB:
-    JSR L844B
-    JSR L80FB
-    DEC $66
-    BNE CommonEnemyAI_LoopB
+    jsr L844B
+    jsr L80FB
+    dec $66
+    bne CommonEnemyAI_LoopB
 
 CommonEnemyAI_BranchB:
-    JSR HoriMoveProc
-    LDA $00
-    BPL CommonEnemyAI_BranchC
-    JSR TwosCompliment              ;($C3D4)
-    STA $66
+    jsr HoriMoveProc
+    lda $00
+    bpl CommonEnemyAI_BranchC
+    jsr TwosCompliment              ;($C3D4)
+    sta $66
 
 ; Left Movement
 CommonEnemyAI_LoopC:
-    JSR L84A7
-    JSR L816E
-    DEC $66
-    BNE CommonEnemyAI_LoopC
+    jsr L84A7
+    jsr L816E
+    dec $66
+    bne CommonEnemyAI_LoopC
 
 CommonEnemyAI_BranchC:
-    BEQ CommonEnemyAI_Exit
-    STA $66
+    beq CommonEnemyAI_Exit
+    sta $66
 
 ; Right Movement
 CommonEnemyAI_LoopD:
-    JSR L84FE
-    JSR L8134
-    DEC $66
-    BNE CommonEnemyAI_LoopD
+    jsr L84FE
+    jsr L8134
+    dec $66
+    bne CommonEnemyAI_LoopD
 
 CommonEnemyAI_Exit:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; A = TableAtL977B[EnemyType]*2
 LoadTableAt977B: ; L80B0
-    LDY EnDataIndex,X
-    LDA L977B,Y
-    ASL                             ;*2 
-    RTS
+    ldy EnDataIndex,X
+    lda L977B,Y
+    asl                             ;*2 
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Up movement related ?
 L80B8:
-    LDX PageIndex
-    BCS L80FA ; If MoveUpOnePixel returned the carry flag, exit
+    ldx PageIndex
+    bcs L80FA ; If MoveUpOnePixel returned the carry flag, exit
 ; Otherwise, do stuff, and make sure it doesn't move anymore pixels the rest of this frame
-    LDA EnData05,X
-    BPL L80C7
+    lda EnData05,X
+    bpl L80C7
 
 L80C1:
-    JSR L81FC
-    JMP L80F6
+    jsr L81FC
+    jmp L80F6
 
 L80C7:
-    JSR LoadTableAt977B
-    BPL L80EA
-    LDA EnData1F,X
-    BEQ L80C1
+    jsr LoadTableAt977B
+    bpl L80EA
+    lda EnData1F,X
+    beq L80C1
 
-    BPL L80D8
-    JSR SetBit5OfEnData05_AndClearEnData1A
-    BEQ L80E2
+    bpl L80D8
+    jsr SetBit5OfEnData05_AndClearEnData1A
+    beq L80E2
 
 L80D8:
-    SEC 
-    ROR EnData02,X
-    ROR EnCounter,X
-    JMP L80F6
+    sec 
+    ror EnData02,X
+    ror EnCounter,X
+    jmp L80F6
 
 L80E2:
-    STA EnData02,X
-    STA EnCounter,X
-    BEQ L80F6
+    sta EnData02,X
+    sta EnCounter,X
+    beq L80F6
 
 L80EA:
-    LDA L977B,Y
-    LSR 
-    LSR 
-    BCC L80F6
-    LDA #$04
-    JSR XorEnData05
+    lda L977B,Y
+    lsr 
+    lsr 
+    bcc L80F6
+    lda #$04
+    jsr XorEnData05
 
 L80F6:
-    LDA #$01
-    STA $66
+    lda #$01
+    sta $66
 
 L80FA:
-    RTS
+    rts
 ;-------------------------------------------------------------------------------
 ; Down movement related?
 L80FB:
-    LDX PageIndex
-    BCS L8133
-    LDA EnData05,X
-    BPL L810A
+    ldx PageIndex
+    bcs L8133
+    lda EnData05,X
+    bpl L810A
 L8104:
-    JSR L81FC
-    JMP L812F
+    jsr L81FC
+    jmp L812F
 L810A:
-    JSR LoadTableAt977B
-    BPL L8123
-    LDA EnData1F,X
-    BEQ L8104
-    BPL L8120
-    CLC 
-    ROR EnData02,X
-    ROR EnCounter,X
-    JMP L812F
+    jsr LoadTableAt977B
+    bpl L8123
+    lda EnData1F,X
+    beq L8104
+    bpl L8120
+    clc 
+    ror EnData02,X
+    ror EnCounter,X
+    jmp L812F
 
 L8120:
-    JSR SetBit5OfEnData05_AndClearEnData1A
+    jsr SetBit5OfEnData05_AndClearEnData1A
 L8123:
-    LDA L977B,Y
-    LSR 
-    LSR 
-    BCC L812F
-    LDA #$04
-    JSR XorEnData05
+    lda L977B,Y
+    lsr 
+    lsr 
+    bcc L812F
+    lda #$04
+    jsr XorEnData05
 
 L812F:
-    LDA #$01
-    STA $66
+    lda #$01
+    sta $66
 L8133:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related ?
 L8134:
-    LDX PageIndex
-    BCS L816D
+    ldx PageIndex
+    bcs L816D
 
-    JSR LoadTableAt977B
-    BPL L815E
-    LDA EnData05,X
-    BMI L8148
+    jsr LoadTableAt977B
+    bpl L815E
+    lda EnData05,X
+    bmi L8148
 L8142:
-    JSR L81C7
-    JMP L8169
+    jsr L81C7
+    jmp L8169
 L8148:
-    LDA EnData1F,X
-    BEQ L8142
-    BPL L8159
-    CLC 
-    ROR EnData03,X
-    ROR EnData07,X
-    JMP L8169
+    lda EnData1F,X
+    beq L8142
+    bpl L8159
+    clc 
+    ror EnData03,X
+    ror EnData07,X
+    jmp L8169
 
 L8159:
-    JSR SetBit5OfEnData05_AndClearEnData1B
-    BEQ L8169
+    jsr SetBit5OfEnData05_AndClearEnData1B
+    beq L8169
 L815E:
-    LDA $977B,Y
-    LSR 
-    BCC L8169
-    LDA #$01
-    JSR XorEnData05
+    lda $977B,Y
+    lsr 
+    bcc L8169
+    lda #$01
+    jsr XorEnData05
 
 L8169:
-    LDA #$01
-    STA $66
+    lda #$01
+    sta $66
 
 L816D:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Left Movement related?
 L816E:
-    LDX PageIndex
-    BCS L81B0
-    JSR LoadTableAt977B
-    BPL L81A0
-    LDA EnData05,X
-    BMI L8182
+    ldx PageIndex
+    bcs L81B0
+    jsr LoadTableAt977B
+    bpl L81A0
+    lda EnData05,X
+    bmi L8182
 L817C:
-    JSR L81C7
-    JMP L81AC
+    jsr L81C7
+    jmp L81AC
 L8182:
-    LDA EnData1F,X
-    BEQ L817C
-    BPL L818E
-        JSR SetBit5OfEnData05_AndClearEnData1B
-        BEQ L8198
+    lda EnData1F,X
+    beq L817C
+    bpl L818E
+        jsr SetBit5OfEnData05_AndClearEnData1B
+        beq L8198
     L818E:
-    SEC 
-    ROR EnData03,X
-    ROR EnData07,X
-    JMP L81AC
+    sec 
+    ror EnData03,X
+    ror EnData07,X
+    jmp L81AC
 
 L8198:
-    STA EnData03,X
-    STA EnData07,X
-    BEQ L81AC
+    sta EnData03,X
+    sta EnData07,X
+    beq L81AC
 L81A0:
-    JSR LoadTableAt977B
-    LSR 
-    LSR 
-    BCC L81AC
-    LDA #$01
-    JSR XorEnData05
+    jsr LoadTableAt977B
+    lsr 
+    lsr 
+    bcc L81AC
+    lda #$01
+    jsr XorEnData05
 
 L81AC:
-    LDA #$01
-    STA $66
+    lda #$01
+    sta $66
 L81B0:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 SetBit5OfEnData05_AndClearEnData1A:
-    JSR SetBit5OfEnData05
-    STA EnData1A,X
-    RTS
+    jsr SetBit5OfEnData05
+    sta EnData1A,X
+    rts
 
 ;-------------------------------------------------------------------------------
 SetBit5OfEnData05:
-    LDA #$20
-    JSR OrEnData05
-    LDA #$00
-    RTS
+    lda #$20
+    jsr OrEnData05
+    lda #$00
+    rts
 
 ;-------------------------------------------------------------------------------
 SetBit5OfEnData05_AndClearEnData1B:
-    JSR SetBit5OfEnData05
-    STA EnData1B,X
-    RTS
+    jsr SetBit5OfEnData05
+    sta EnData1B,X
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related
 L81C7:
-    JSR LoadBit5ofTableAt968B
-    BNE L81F5
-    LDA #$01
-    JSR XorEnData05
-    LDA EnData1B,X
-    JSR TwosCompliment
-    STA EnData1B,X
+    jsr LoadBit5ofTableAt968B
+    bne L81F5
+    lda #$01
+    jsr XorEnData05
+    lda EnData1B,X
+    jsr TwosCompliment
+    sta EnData1B,X
 
-    JSR LoadBit5ofTableAt968B
-    BNE L81F5
-    JSR LoadTableAt977B
-    SEC 
-    BPL L81ED
+    jsr LoadBit5ofTableAt968B
+    bne L81F5
+    jsr LoadTableAt977B
+    sec 
+    bpl L81ED
 ; Decrement EnCounterX
-    LDA #$00
-    SBC EnData07,X
-    STA EnData07,X
+    lda #$00
+    sbc EnData07,X
+    sta EnData07,X
 ; Decrement EnSpeedX (if carry is set)
 L81ED:
-    LDA #$00
-    SBC EnData03,X
-    STA EnData03,X
+    lda #$00
+    sbc EnData03,X
+    sta EnData03,X
 
 L81F5:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LoadBit5ofTableAt968B:
-    JSR ReadTableAt968B
-    AND #$20
-    RTS
+    jsr ReadTableAt968B
+    and #$20
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Vertical Movement Related
 L81FC:
-    JSR LoadBit5ofTableAt968B
-    BNE L81F5 ; Exit if bit 5 is set
-    LDA #$04
-    JSR XorEnData05
-    LDA EnData1A,X
-    JSR TwosCompliment
-    STA EnData1A,X
+    jsr LoadBit5ofTableAt968B
+    bne L81F5 ; Exit if bit 5 is set
+    lda #$04
+    jsr XorEnData05
+    lda EnData1A,X
+    jsr TwosCompliment
+    sta EnData1A,X
 
-    JSR LoadBit5ofTableAt968B
-    BNE L822A ; Exit if bit 5 is set
-    JSR LoadTableAt977B
-    SEC 
-    BPL L8222
+    jsr LoadBit5ofTableAt968B
+    bne L822A ; Exit if bit 5 is set
+    jsr LoadTableAt977B
+    sec 
+    bpl L8222
 ; Decrement EnCounter
-    LDA #$00
-    SBC EnCounter,X
-    STA EnCounter,X
+    lda #$00
+    sbc EnCounter,X
+    sta EnCounter,X
 ; Decrement EnSpeedY (if EnCounter rolls over)
 L8222:
-    LDA #$00
-    SBC EnData02,X
-    STA EnData02,X
+    lda #$00
+    sbc EnData02,X
+    sta EnData02,X
 L822A:
-    RTS 
+    rts 
 
 ;-------------------------------------------------------------------------------
 ; Loads a pointer from this table to $81 and $82
 LoadEnemyMovementPtr:
-    LDA EnData05,X
-    BPL L8232
-        LSR 
-        LSR 
+    lda EnData05,X
+    bpl L8232
+        lsr 
+        lsr 
     L8232:
-    LSR 
-    LDA EnData08,X
-    ROL 
-    ASL 
-    TAY 
-    LDA EnemyMovementPtrs,Y
-    STA $81
-    LDA EnemyMovementPtrs+1,Y
-    STA $82
-    RTS
+    lsr 
+    lda EnData08,X
+    rol 
+    asl 
+    tay 
+    lda EnemyMovementPtrs,Y
+    sta $81
+    lda EnemyMovementPtrs+1,Y
+    sta $82
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Vertical Movement Related ?
 ; Determines y-delta for a given frame
 VertMoveProc:
-    JSR LoadTableAt977B
-    BPL L824C
-        JMP L833F
+    jsr LoadTableAt977B
+    bpl L824C
+        jmp L833F
 
     L824C:
-    LDA EnData05,X
-    AND #$20
-    EOR #$20
-    BEQ L82A2
+    lda EnData05,X
+    and #$20
+    eor #$20
+    beq L82A2
 
-    JSR LoadEnemyMovementPtr ; Puts a pointer at $81
+    jsr LoadEnemyMovementPtr ; Puts a pointer at $81
 L8258:
-    LDY EnCounter,X
+    ldy EnCounter,X
 VertMoveProc_ReadByte:
-    LDA ($81),Y
+    lda ($81),Y
 
 ;CommonCase
 ; Branch if the value is <$F0
-    CMP #$F0
-    BCC VertMoveProc_CommonCase
+    cmp #$F0
+    bcc VertMoveProc_CommonCase
 
 ;CaseFA
-    CMP #$FA
-    BEQ VertMoveProc_JumpToCaseFA
+    cmp #$FA
+    beq VertMoveProc_JumpToCaseFA
 
 ;CaseFB
-    CMP #$FB
-    BEQ VertMoveProc_CaseFB
+    cmp #$FB
+    beq VertMoveProc_CaseFB
 
 ;CaseFC
-    CMP #$FC
-    BEQ VertMoveProc_CaseFC
+    cmp #$FC
+    beq VertMoveProc_CaseFC
 
 ;CaseFD
-    CMP #$FD
-    BEQ VertMoveProc_CaseFD
+    cmp #$FD
+    beq VertMoveProc_CaseFD
 
 ;CaseFE
-    CMP #$FE
-    BEQ VertMoveProc_CaseFE
+    cmp #$FE
+    beq VertMoveProc_CaseFE
 
 ;Default case
 ; Reset enemy counter
-    LDA #$00
-    STA EnCounter,X
-    BEQ L8258
+    lda #$00
+    sta EnCounter,X
+    beq L8258
 
 ;---------------------------------------
 VertMoveProc_JumpToCaseFA: ; L827C
-    JMP VertMoveProc_CaseFA
+    jmp VertMoveProc_CaseFA
 
 ;---------------------------------------
 VertMoveProc_CommonCase:
 ; Take the value from memory
 ; Branch ahead if velocityString[EnCounter] - EnDelay != 0
-    SEC 
-    SBC EnDelay,X
-    BNE L8290
+    sec 
+    sbc EnDelay,X
+    bne L8290
 
-    STA EnDelay,X
+    sta EnDelay,X
 ; EnCounter += 2
-    INY 
-    INY 
-    TYA 
-    STA EnCounter,X
-    BNE VertMoveProc_ReadByte ; Handle another byte
+    iny 
+    iny 
+    tya 
+    sta EnCounter,X
+    bne VertMoveProc_ReadByte ; Handle another byte
 
 ; Increment EnDelay
 L8290:
-    INC EnDelay,X
+    inc EnDelay,X
 
 ; Read the sign/magnitude of the speed from the next byte
-    INY 
-    LDA ($81),Y
+    iny 
+    lda ($81),Y
 ; Save the sign bit to the carry flag
-    ASL 
-    PHP 
+    asl 
+    php 
 ; Get the magnitude
-    JSR Adiv32                      ;($C2BE)Divide by 32.
+    jsr Adiv32                      ;($C2BE)Divide by 32.
 ; Negate the magnitude if necessary
-    PLP 
-    BCC L82A2
-    EOR #$FF
-    ADC #$00 ; Since carry is set in this branch, this increments A
+    plp 
+    bcc L82A2
+    eor #$FF
+    adc #$00 ; Since carry is set in this branch, this increments A
 ; Store this frame's delta-y in temp
 L82A2:
-    STA $00
-    RTS
+    sta $00
+    rts
 
 ;---------------------------------------
 ; Clear EnData1D, move on to next byte in the stream
 VertMoveProc_CaseFD:
-    INC EnCounter,X
-    INY 
-    LDA #$00
-    STA EnData1D,X
-    BEQ VertMoveProc_ReadByte ; Branch always
+    inc EnCounter,X
+    iny 
+    lda #$00
+    sta EnData1D,X
+    beq VertMoveProc_ReadByte ; Branch always
 
 ;---------------------------------------
 ; Don't move, and don't advance the movement counter
 ; HALT, perhaps?
 VertMoveProc_CaseFB:
 ; Double RTS !?
-    PLA 
-    PLA 
-    RTS
+    pla 
+    pla 
+    rts
 ; Retruns back to F416 in the engine bank
 
 ;---------------------------------------
 ; Repeat Previous Movement Until [Condition?]
 VertMoveProc_CaseFC:
 ; If bit 7 of EnData1F is set, then check if you can move up and then jump ahead
-    LDA EnData1F,X
-    BPL L82BE
-    JSR EnemyCheckMoveUp
-    JMP L82C3
+    lda EnData1F,X
+    bpl L82BE
+    jsr EnemyCheckMoveUp
+    jmp L82C3
 ; If EnData1F is non-zero, check if you can move down and then jump ahead
 L82BE:
-    BEQ L82D2
-    JSR EnemyCheckMoveDown
+    beq L82D2
+    jsr EnemyCheckMoveDown
 
 ; If the movement check [succeeded? failed?] move on to the next byte
 L82C3:
-    LDX PageIndex
-    BCS L82D2
-    LDY EnCounter,X
-    INY 
-    LDA #$00
-    STA EnData1F,X
-    BEQ L82D7 ; Branch always
+    ldx PageIndex
+    bcs L82D2
+    ldy EnCounter,X
+    iny 
+    lda #$00
+    sta EnData1F,X
+    beq L82D7 ; Branch always
 
 ; Else, repeat the previous two bytes
 L82D2:
-    LDY EnCounter,X
-    DEY 
-    DEY 
+    ldy EnCounter,X
+    dey 
+    dey 
 
 ; Save EnCounter
 L82D7:
-    TYA 
-    STA EnCounter,X
+    tya 
+    sta EnCounter,X
 ; Read the next bytes
-    JMP VertMoveProc_ReadByte
+    jmp VertMoveProc_ReadByte
 
 ;---------------------------------------
 ; Repeat previous until ???
 VertMoveProc_CaseFE:
 ; Move EnCounter back to the previous movement
-    DEY 
-    DEY 
-    TYA 
-    STA EnCounter,X
+    dey 
+    dey 
+    tya 
+    sta EnCounter,X
 ; Then do some other stuff
-    LDA EnData1F,X
-    BPL L82EF
-    JSR EnemyCheckMoveUp
-    JMP L82F4
+    lda EnData1F,X
+    bpl L82EF
+    jsr EnemyCheckMoveUp
+    jmp L82F4
 
 L82EF:
-    BEQ L82FB
-    JSR EnemyCheckMoveDown
+    beq L82FB
+    jsr EnemyCheckMoveDown
 
 L82F4:
-    LDX PageIndex
-    BCC L82FB
-    JMP L8258
+    ldx PageIndex
+    bcc L82FB
+    jmp L8258
 
 L82FB:
-    LDY EnDataIndex,X
-    LDA L968B,Y
-    AND #$20
-    BEQ VertMoveProc_CaseFA
-    LDA EnData05,X
-    EOR #$05
-    ORA L968B,Y
-    AND #$1F
-    STA EnData05,X
+    ldy EnDataIndex,X
+    lda L968B,Y
+    and #$20
+    beq VertMoveProc_CaseFA
+    lda EnData05,X
+    eor #$05
+    ora L968B,Y
+    and #$1F
+    sta EnData05,X
 
 ;---------------------------------------
 ;SetBit5OfEnData05_AndClearEnData1A
 ; Move horizontally indefinitely (???)
 ; Is this even used?
 VertMoveProc_CaseFA:
-    JSR SetBit5OfEnData05_AndClearEnData1A
-    JMP L82A2 ; Set delta-y to zero and exit
+    jsr SetBit5OfEnData05_AndClearEnData1A
+    jmp L82A2 ; Set delta-y to zero and exit
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related?
 HoriMoveProc:
-    JSR LoadTableAt977B
-    BPL L8320
-    JMP L8395
+    jsr LoadTableAt977B
+    bpl L8320
+    jmp L8395
 
 ; If bit 5 of EnData05 is clear, don't move horizontally
 L8320:
-    LDA EnData05,X
-    AND #$20
-    EOR #$20
-    BEQ L833C
+    lda EnData05,X
+    and #$20
+    eor #$20
+    beq L833C
 
 ; Read the same velocity byte as in VertMoveProc
-    LDY EnCounter,X
-    INY 
-    LDA ($81),Y ; $81/$82 were loaded during VertMoveProc earlier
-    TAX 
+    ldy EnCounter,X
+    iny 
+    lda ($81),Y ; $81/$82 were loaded during VertMoveProc earlier
+    tax 
 ; Save the sign bit to the processor flags
-    AND #$08
-    PHP 
-    TXA 
+    and #$08
+    php 
+    txa 
 ; Get the lower three bits
-    AND #$07
-    PLP 
+    and #$07
+    plp 
 ; Negate, according to the sign bit
-    BEQ L833C
-    JSR TwosCompliment
+    beq L833C
+    jsr TwosCompliment
 
 L833C:
-    STA $00
-    RTS
+    sta $00
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Nonsense with counters and velocity to substitute for a lack of subpixels?
 ; Vertical case?
 L833F:
-    LDY #$0E
-    LDA EnData1A,X
-    BMI L835E
-    CLC 
-    ADC EnCounter,X
-    STA EnCounter,X
-    LDA EnData02,X
-    ADC #$00
-    STA EnData02,X
-    BPL L8376
+    ldy #$0E
+    lda EnData1A,X
+    bmi L835E
+    clc 
+    adc EnCounter,X
+    sta EnCounter,X
+    lda EnData02,X
+    adc #$00
+    sta EnData02,X
+    bpl L8376
     L8357:
-        JSR TwosCompliment
-        LDY #$F2
-        BNE L8376
+        jsr TwosCompliment
+        ldy #$F2
+        bne L8376
     L835E:
-        JSR TwosCompliment
-        SEC 
-        STA $00
-        LDA EnCounter,X
-        SBC $00
-        STA EnCounter,X
-        LDA EnData02,X
-        SBC #$00
-        STA EnData02,X
-        BMI L8357
+        jsr TwosCompliment
+        sec 
+        sta $00
+        lda EnCounter,X
+        sbc $00
+        sta EnCounter,X
+        lda EnData02,X
+        sbc #$00
+        sta EnData02,X
+        bmi L8357
 L8376:
-    CMP #$0E
-    BCC L8383
-        LDA #$00
-        STA EnCounter,X
-        TYA 
-        STA EnData02,X
+    cmp #$0E
+    bcc L8383
+        lda #$00
+        sta EnCounter,X
+        tya 
+        sta EnData02,X
     L8383:
-    LDA EnData18,X
-    CLC 
-    ADC EnCounter,X
-    STA EnData18,X
-    LDA #$00
-    ADC EnData02,X
-    STA $00
-    RTS
+    lda EnData18,X
+    clc 
+    adc EnCounter,X
+    sta EnData18,X
+    lda #$00
+    adc EnData02,X
+    sta $00
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Nonsense with counters and velocity to substitute for a lack of subpixels?
 ; Horizontal case?
 L8395:
-    LDA #$00
-    STA $00
-    STA $02
-    LDA #$0E
-    STA $01
-    STA $03
-    LDA EnData07,X
-    CLC 
-    ADC EnData1B,X
-    STA EnData07,X
-    STA $04
-    LDA #$00
-    LDY EnData1B,X
-    BPL L83B6
-        LDA #$FF
+    lda #$00
+    sta $00
+    sta $02
+    lda #$0E
+    sta $01
+    sta $03
+    lda EnData07,X
+    clc 
+    adc EnData1B,X
+    sta EnData07,X
+    sta $04
+    lda #$00
+    ldy EnData1B,X
+    bpl L83B6
+        lda #$FF
     L83B6:
-    ADC EnData03,X
-    STA EnData03,X
-    TAY 
-    BPL L83D0
-        LDA #$00
-        SEC 
-        SBC EnData07,X
-        STA $04
-        LDA #$00
-        SBC EnData03,X
-        TAY 
-        JSR LE449
+    adc EnData03,X
+    sta EnData03,X
+    tay 
+    bpl L83D0
+        lda #$00
+        sec 
+        sbc EnData07,X
+        sta $04
+        lda #$00
+        sbc EnData03,X
+        tay 
+        jsr LE449
     L83D0:
-    LDA $04
-    CMP $02
-    TYA 
-    SBC $03
-    BCC L83E3
-        LDA $00
-        STA EnData07,X
-        LDA $01
-        STA EnData03,X
+    lda $04
+    cmp $02
+    tya 
+    sbc $03
+    bcc L83E3
+        lda $00
+        sta EnData07,X
+        lda $01
+        sta EnData03,X
     L83E3:
-    LDA EnData19,X
-    CLC 
-    ADC EnData07,X
-    STA EnData19,X
-    LDA #$00
-    ADC EnData03,X
-    STA $00
-    RTS
+    lda EnData19,X
+    clc 
+    adc EnData07,X
+    sta EnData19,X
+    lda #$00
+    adc EnData03,X
+    sta $00
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Up movement related
 ; Move one pixel?
 L83F5:
-    LDX PageIndex
-    LDA EnYRoomPos,X
-    SEC 
-    SBC EnRadY,X
-    AND #$07
-    SEC 
-    BNE L8406
-        JSR EnemyCheckMoveUp
+    ldx PageIndex
+    lda EnYRoomPos,X
+    sec 
+    sbc EnRadY,X
+    and #$07
+    sec 
+    bne L8406
+        jsr EnemyCheckMoveUp
     L8406:
-    LDY #$00
-    STY $00
-    LDX PageIndex
-    BCC L844A
-    INC $00
-    LDY EnYRoomPos,X
-    BNE L8429
-    LDY #$F0
-    LDA $49
-    CMP #$02
-    BCS L8429
-    LDA $FC
-    BEQ L844A
-    JSR GetOtherNameTableIndex
-    BEQ L844A
-    JSR SwitchEnemyNameTable
+    ldy #$00
+    sty $00
+    ldx PageIndex
+    bcc L844A
+    inc $00
+    ldy EnYRoomPos,X
+    bne L8429
+    ldy #$F0
+    lda $49
+    cmp #$02
+    bcs L8429
+    lda $FC
+    beq L844A
+    jsr GetOtherNameTableIndex
+    beq L844A
+    jsr SwitchEnemyNameTable
 L8429:
-    DEY 
-    TYA 
-    STA EnYRoomPos,X
-    CMP EnRadY,X
-    BNE L8441
+    dey 
+    tya 
+    sta EnYRoomPos,X
+    cmp EnRadY,X
+    bne L8441
 
-    LDA $FC
-    BEQ L843C
-        JSR GetOtherNameTableIndex
-        BNE L8441
+    lda $FC
+    beq L843C
+        jsr GetOtherNameTableIndex
+        bne L8441
     L843C:
-    INC EnYRoomPos,X
-    CLC 
-    RTS
+    inc EnYRoomPos,X
+    clc 
+    rts
 L8441:
-    LDA EnData05,X
-    BMI L8449
-        INC EnData1D,X
+    lda EnData05,X
+    bmi L8449
+        inc EnData1D,X
     L8449:
-    SEC
+    sec
 L844A:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Down movement related ?
 L844B:
-    LDX PageIndex
-    LDA EnYRoomPos,X
-    CLC 
-    ADC EnRadY,X
-    AND #$07
-    SEC 
-    BNE L845C
-        JSR EnemyCheckMoveDown
+    ldx PageIndex
+    lda EnYRoomPos,X
+    clc 
+    adc EnRadY,X
+    and #$07
+    sec 
+    bne L845C
+        jsr EnemyCheckMoveDown
     L845C:
-    LDY #$00
-    STY $00
-    LDX PageIndex
-    BCC L84A6
-    INC $00
-    LDY EnYRoomPos,X
-    CPY #$EF
-    BNE L8481
-    LDY #$FF
-    LDA $49
-    CMP #$02
-    BCS L8481
-    LDA $FC
-    BEQ L84A6
-    JSR GetOtherNameTableIndex
-    BNE L84A6
-    JSR SwitchEnemyNameTable
+    ldy #$00
+    sty $00
+    ldx PageIndex
+    bcc L84A6
+    inc $00
+    ldy EnYRoomPos,X
+    cpy #$EF
+    bne L8481
+    ldy #$FF
+    lda $49
+    cmp #$02
+    bcs L8481
+    lda $FC
+    beq L84A6
+    jsr GetOtherNameTableIndex
+    bne L84A6
+    jsr SwitchEnemyNameTable
 L8481:
-    INY 
-    TYA 
-    STA EnYRoomPos,X
-    CLC 
-    ADC EnRadY,X
-    CMP #$EF
-    BNE L849D
-    LDA $FC
-    BEQ L8497
-        JSR GetOtherNameTableIndex
-        BEQ L849D
+    iny 
+    tya 
+    sta EnYRoomPos,X
+    clc 
+    adc EnRadY,X
+    cmp #$EF
+    bne L849D
+    lda $FC
+    beq L8497
+        jsr GetOtherNameTableIndex
+        beq L849D
     L8497:
-    DEC EnYRoomPos,X
-    CLC 
-    BCC L84A6
+    dec EnYRoomPos,X
+    clc 
+    bcc L84A6
 L849D:
-    LDA EnData05,X
-    BMI L84A5
-        DEC EnData1D,X
+    lda EnData05,X
+    bmi L84A5
+        dec EnData1D,X
     L84A5:
-    SEC 
+    sec 
 L84A6:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Left movement related
 L84A7:
-    LDX PageIndex
-    LDA EnXRoomPos,X
-    SEC 
-    SBC EnRadX,X
-    AND #$07
-    SEC 
-    BNE L84B8
-        JSR EnemyCheckMoveLeft
+    ldx PageIndex
+    lda EnXRoomPos,X
+    sec 
+    sbc EnRadX,X
+    and #$07
+    sec 
+    bne L84B8
+        jsr EnemyCheckMoveLeft
     L84B8:
-    LDY #$00
-    STY $00
-    LDX PageIndex
-    BCC L84FD
-    INC $00
-    LDY EnXRoomPos,X
-    BNE L84DA
-    LDA $49
-    CMP #$02
-    BCC L84DA
-    LDA $FD
-    BEQ L84D4
-        JSR GetOtherNameTableIndex
+    ldy #$00
+    sty $00
+    ldx PageIndex
+    bcc L84FD
+    inc $00
+    ldy EnXRoomPos,X
+    bne L84DA
+    lda $49
+    cmp #$02
+    bcc L84DA
+    lda $FD
+    beq L84D4
+        jsr GetOtherNameTableIndex
     L84D4:
-    CLC 
-    BEQ L84FD
-    JSR SwitchEnemyNameTable
+    clc 
+    beq L84FD
+    jsr SwitchEnemyNameTable
 L84DA:
-    DEC EnXRoomPos,X
-    LDA EnXRoomPos,X
-    CMP EnRadX,X
-    BNE L84F4
-    LDA $FD
-    BEQ L84EE
-        JSR GetOtherNameTableIndex
-        BNE L84F4
+    dec EnXRoomPos,X
+    lda EnXRoomPos,X
+    cmp EnRadX,X
+    bne L84F4
+    lda $FD
+    beq L84EE
+        jsr GetOtherNameTableIndex
+        bne L84F4
     L84EE:
-    INC EnXRoomPos,X
-    CLC 
-    BCC L84FD
+    inc EnXRoomPos,X
+    clc 
+    bcc L84FD
 L84F4:
-    LDA EnData05,X
-    BPL L84FC
-        INC EnData1D,X
+    lda EnData05,X
+    bpl L84FC
+        inc EnData1D,X
     L84FC:
-    SEC 
+    sec 
 L84FD:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related
 L84FE:
-    LDX PageIndex
+    ldx PageIndex
 ; if ((xpos + xrad) % 8) == 0, then EnemyCheckMoveRight()
-    LDA EnXRoomPos,X
-    CLC 
-    ADC EnRadX,X
-    AND #$07
-    SEC 
-    BNE L850F
-        JSR EnemyCheckMoveRight
+    lda EnXRoomPos,X
+    clc 
+    adc EnRadX,X
+    and #$07
+    sec 
+    bne L850F
+        jsr EnemyCheckMoveRight
     L850F:
-    LDY #$00
-    STY $00
-    LDX PageIndex
-    BCC L8559
-    INC $00
-    INC EnXRoomPos,X
-    BNE L8536
-    LDA $49
-    CMP #$02
-    BCC L8536
-    LDA $FD
-    BEQ L852D
-        JSR GetOtherNameTableIndex
-        BEQ L8533
+    ldy #$00
+    sty $00
+    ldx PageIndex
+    bcc L8559
+    inc $00
+    inc EnXRoomPos,X
+    bne L8536
+    lda $49
+    cmp #$02
+    bcc L8536
+    lda $FD
+    beq L852D
+        jsr GetOtherNameTableIndex
+        beq L8533
     L852D:
-        DEC EnXRoomPos,X
-        CLC
-        BCC L8559
+        dec EnXRoomPos,X
+        clc
+        bcc L8559
     L8533:
-    JSR SwitchEnemyNameTable
+    jsr SwitchEnemyNameTable
 
 L8536:
-    LDA EnXRoomPos,X
-    CLC 
-    ADC EnRadX,X
-    CMP #$FF
-    BNE L8550
-    LDA $FD
-    BEQ L854A
-        JSR GetOtherNameTableIndex
-        BEQ L8550
+    lda EnXRoomPos,X
+    clc 
+    adc EnRadX,X
+    cmp #$FF
+    bne L8550
+    lda $FD
+    beq L854A
+        jsr GetOtherNameTableIndex
+        beq L8550
     L854A:
-    DEC EnXRoomPos,X
-    CLC 
-    BCC L8559
+    dec EnXRoomPos,X
+    clc 
+    bcc L8559
 
 L8550:
-    LDA EnData05,X
-    BPL L8558
-        DEC EnData1D,X
+    lda EnData05,X
+    bpl L8558
+        dec EnData1D,X
     L8558:
-    SEC 
+    sec 
 L8559:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 SwitchEnemyNameTable: ; L855A
-    LDA EnNameTable,X
-    EOR #$01
-    STA EnNameTable,X
-    RTS
+    lda EnNameTable,X
+    eor #$01
+    sta EnNameTable,X
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Returns the index to the other nametable in A
 GetOtherNameTableIndex: ; L8562
-    LDA EnNameTable,X
-    EOR $FF
-    AND #$01
-    RTS
+    lda EnNameTable,X
+    eor $FF
+    and #$01
+    rts
 
 ;-------------------------------------------------------------------------------
 ; XORs the contents of EnData05 with the bitmask in A
 XorEnData05: ; L856B
-    EOR EnData05,X
-    STA EnData05,X
-    RTS 
+    eor EnData05,X
+    sta EnData05,X
+    rts 
 
 ;---------------------------------[ Object animation data tables ]----------------------------------
 ;----------------------------[ Sprite drawing pointer tables ]--------------------------------------
@@ -1032,85 +1032,85 @@ XorEnData05: ; L856B
 ;This function is called once when Samus first enters a door.
 
 SamusEnterDoor:
-    LDA DoorStatus                  ;The code determines if Samus has entered a door if the-->
-    BNE L8B6C                       ;door status is 0, but door data information has been-->
-    LDY SamusDoorData               ;written. If both conditions are met, Samus has just-->
-    BEQ L8B6C                       ;entered a door.
-    STA CurrentMissilePickups       ;
-    STA CurrentEnergyPickups        ;Reset current missile and energy power-up counters.
-    LDA RandomNumber1               ;
-    AND #$0F                        ;Randomly recalculate max missile pickups(16 max, 0 min).
-    STA MaxMissilePickup            ;
-    ASL                             ;
-    ORA #$40                        ;*2 for energy pickups and set bit 6(128 max, 64 min).
-    STA MaxEnergyPickup             ;
-    LDA PPUCTRL_ZP                   ;
-    EOR #$01                        ;
-    AND #$01                        ;Erase name table door data for new room.
-    TAY                             ;
-    LSR                             ;
-    STA DoorOnNameTable3,Y                     ;
-    LDA ScrollDir                   ;
-    AND #$02                        ;Is Samus scrolling horizontally?-->
-    BNE L8B4B                       ;If so, branch.
-        LDX #$04                        ;Samus currently scrolling vertically.
-        LDA ScrollY                     ;Is room centered on screen?-->
-        BEQ L8B6D                       ;If so, branch.
-        LDA $FF                         ;
-        EOR ObjectHi                    ;Get inverse of Samus' current nametable.
-        LSR                             ;
-        BCC SetDoorEntryInfo                       ;If Samus is on nametable 3, branch.
-        BCS L8B52                       ;If Samus is on nametable 0, branch to decrement x.
+    lda DoorStatus                  ;The code determines if Samus has entered a door if the-->
+    bne L8B6C                       ;door status is 0, but door data information has been-->
+    ldy SamusDoorData               ;written. If both conditions are met, Samus has just-->
+    beq L8B6C                       ;entered a door.
+    sta CurrentMissilePickups       ;
+    sta CurrentEnergyPickups        ;Reset current missile and energy power-up counters.
+    lda RandomNumber1               ;
+    and #$0F                        ;Randomly recalculate max missile pickups(16 max, 0 min).
+    sta MaxMissilePickup            ;
+    asl                             ;
+    ora #$40                        ;*2 for energy pickups and set bit 6(128 max, 64 min).
+    sta MaxEnergyPickup             ;
+    lda PPUCTRL_ZP                   ;
+    eor #$01                        ;
+    and #$01                        ;Erase name table door data for new room.
+    tay                             ;
+    lsr                             ;
+    sta DoorOnNameTable3,Y                     ;
+    lda ScrollDir                   ;
+    and #$02                        ;Is Samus scrolling horizontally?-->
+    bne L8B4B                       ;If so, branch.
+        ldx #$04                        ;Samus currently scrolling vertically.
+        lda ScrollY                     ;Is room centered on screen?-->
+        beq L8B6D                       ;If so, branch.
+        lda $FF                         ;
+        eor ObjectHi                    ;Get inverse of Samus' current nametable.
+        lsr                             ;
+        bcc SetDoorEntryInfo                       ;If Samus is on nametable 3, branch.
+        bcs L8B52                       ;If Samus is on nametable 0, branch to decrement x.
 
     L8B4B:
-        LDX #$02                        ;Samus is currently scrolling horizontally.
-        LDA ObjectX                     ;Is Samus entering a left hand door?-->
-        BPL SetDoorEntryInfo                       ;If so, branch.
+        ldx #$02                        ;Samus is currently scrolling horizontally.
+        lda ObjectX                     ;Is Samus entering a left hand door?-->
+        bpl SetDoorEntryInfo                       ;If so, branch.
     L8B52:
-    DEX                             ;
+    dex                             ;
 
 SetDoorEntryInfo:
-    TXA                             ;X contains door scroll status and is transferred to A.
-    STA DoorScrollStatus            ;Save door scroll status.
-    JSR SamusInDoor                 ;($8B74)Indicate Samus just entered a door.
-    LDA #$12                        ;
-    STA DoorDelay                   ;Set DoorDelay to 18 frames(going into door).
-    LDA SamusDoorData               ;
-    JSR Amul16                      ;($C2C5)*16. Move scroll toggle data to upper 4 bits.
-    ORA ObjAction                   ;Keep Samus action so she will appear the same comming-->
-    STA SamusDoorData               ;out of the door as she did going in.
-    LDA #$05                        ;
-    STA ObjAction                   ;Indicate Samus is in a door.
+    txa                             ;X contains door scroll status and is transferred to A.
+    sta DoorScrollStatus            ;Save door scroll status.
+    jsr SamusInDoor                 ;($8B74)Indicate Samus just entered a door.
+    lda #$12                        ;
+    sta DoorDelay                   ;Set DoorDelay to 18 frames(going into door).
+    lda SamusDoorData               ;
+    jsr Amul16                      ;($C2C5)*16. Move scroll toggle data to upper 4 bits.
+    ora ObjAction                   ;Keep Samus action so she will appear the same comming-->
+    sta SamusDoorData               ;out of the door as she did going in.
+    lda #$05                        ;
+    sta ObjAction                   ;Indicate Samus is in a door.
 L8B6C:
-    RTS                             ;
+    rts                             ;
 
 L8B6D:
-    JSR SetDoorEntryInfo            ;($8B53)Save Samus action and set door entry timer.
-    JSR VerticalRoomCentered        ;($E21B)Room is centered. Toggle scroll.
+    jsr SetDoorEntryInfo            ;($8B53)Save Samus action and set door entry timer.
+    jsr VerticalRoomCentered        ;($E21B)Room is centered. Toggle scroll.
 
-    TXA                             ;X=#$01 or #$02(depending on which door Samus is in).
+    txa                             ;X=#$01 or #$02(depending on which door Samus is in).
 
 SamusInDoor:
-    ORA #$80                        ;Set MSB of DoorStatus to indicate Samus has just-->
-    STA DoorStatus                  ;entered a door.
-    RTS                             ;
+    ora #$80                        ;Set MSB of DoorStatus to indicate Samus has just-->
+    sta DoorStatus                  ;entered a door.
+    rts                             ;
 
 ;----------------------------------------------------------------------------------------------------
 DisplayDoors:
-    LDX #$B0
+    ldx #$B0
     L8B7B:
-        JSR DoorRoutine
-        LDA PageIndex
-        SEC 
-        SBC #$10
-        TAX 
-        BMI L8B7B
-    RTS
+        jsr DoorRoutine
+        lda PageIndex
+        sec 
+        sbc #$10
+        tax 
+        bmi L8B7B
+    rts
 
 DoorRoutine:
-    STX PageIndex
-    LDA ObjAction,X
-    JSR ChooseRoutine               ;($C27C)
+    stx PageIndex
+    lda ObjAction,X
+    jsr ChooseRoutine               ;($C27C)
         .word ExitSub
         .word DoorAction0
         .word DoorAction1
@@ -1120,226 +1120,226 @@ DoorRoutine:
         .word DoorAction5
 
 DoorAction0:
-    INC ObjAction,X
-    LDA #$30
-    JSR SetProjectileAnim           ;($D2FA)
-    JSR ObjActionSubRoutine8CFB
-    LDY $0307,X ; Unsure if $0307 is semantically comparable to SamusOnElevator
-    LDA ObjActionAnimTable,Y
-    STA $030F,X
+    inc ObjAction,X
+    lda #$30
+    jsr SetProjectileAnim           ;($D2FA)
+    jsr ObjActionSubRoutine8CFB
+    ldy $0307,X ; Unsure if $0307 is semantically comparable to SamusOnElevator
+    lda ObjActionAnimTable,Y
+    sta $030F,X
 ObjActionSubRoutine8BB1:
-    LDA $0307,X
-    CMP #$03
-    BNE L8BBA
-        LDA #$01
+    lda $0307,X
+    cmp #$03
+    bne L8BBA
+        lda #$01
     L8BBA:
-    ORA #$A0
-    STA ObjectCntrl
-    LDA #$00
-    STA $030A,X ; SamusHit (DoorHit?)
-    TXA 
-    AND #$10
-    EOR #$10
-    ORA ObjectCntrl
-    STA ObjectCntrl
-    LDA #$06
-    JMP AnimDrawObject
+    ora #$A0
+    sta ObjectCntrl
+    lda #$00
+    sta $030A,X ; SamusHit (DoorHit?)
+    txa 
+    and #$10
+    eor #$10
+    ora ObjectCntrl
+    sta ObjectCntrl
+    lda #$06
+    jmp AnimDrawObject
 
 ObjActionAnimTable:
     .byte $05, $01, $0A, $01
 
 DoorAction1:
-    LDA $030A,X
-    AND #$04
-    BEQ ObjActionSubRoutine8BB1
-    DEC $030F,X
-    BNE ObjActionSubRoutine8BB1
-    LDA #$03
-    CMP $0307,X
-    BNE L8BEE
-        LDY $010B
-        INY 
-        BNE ObjActionSubRoutine8BB1
+    lda $030A,X
+    and #$04
+    beq ObjActionSubRoutine8BB1
+    dec $030F,X
+    bne ObjActionSubRoutine8BB1
+    lda #$03
+    cmp $0307,X
+    bne L8BEE
+        ldy $010B
+        iny 
+        bne ObjActionSubRoutine8BB1
     L8BEE:
-    STA ObjAction,X
-    LDA #$50
-    STA $030F,X
-    LDA #$2C
-    STA $0305,X
-    SEC 
-    SBC #$03
-    JMP ObjActionSubRoutine8C7E
+    sta ObjAction,X
+    lda #$50
+    sta $030F,X
+    lda #$2C
+    sta $0305,X
+    sec 
+    sbc #$03
+    jmp ObjActionSubRoutine8C7E
 
 DoorAction2:
-    LDA DoorStatus
-    BEQ L8C1D
-    LDA $030C ; ObjNametable
-    EOR $030C,X
-    LSR 
-    BCS L8C1D
-    LDA $030E
-    EOR $030E,X
-    BMI L8C1D
-    LDA #$04
-    STA ObjAction,X
-    BNE L8C73
+    lda DoorStatus
+    beq L8C1D
+    lda $030C ; ObjNametable
+    eor $030C,X
+    lsr 
+    bcs L8C1D
+    lda $030E
+    eor $030E,X
+    bmi L8C1D
+    lda #$04
+    sta ObjAction,X
+    bne L8C73
 L8C1D:
-    LDA $0306,X
-    CMP $0305,X
-    BCC L8C73
-    LDA $030F,X
-    CMP #$50
-    BNE L8C57
-    JSR ObjActionSubRoutine8CF7
-    LDA $0307,X
-    CMP #$01
-    BEQ L8C57
-    CMP #$03
-    BEQ L8C57
-    LDA #$0A
-    STA $09
-    LDA $030C,X
-    STA $08
-    LDY $50
-    TXA 
-    JSR Amul16
-    BCC L8C4C
-        DEY 
+    lda $0306,X
+    cmp $0305,X
+    bcc L8C73
+    lda $030F,X
+    cmp #$50
+    bne L8C57
+    jsr ObjActionSubRoutine8CF7
+    lda $0307,X
+    cmp #$01
+    beq L8C57
+    cmp #$03
+    beq L8C57
+    lda #$0A
+    sta $09
+    lda $030C,X
+    sta $08
+    ldy $50
+    txa 
+    jsr Amul16
+    bcc L8C4C
+        dey 
     L8C4C:
-    TYA 
-    JSR MapScrollRoutine
-    LDA #$00
-    STA ObjAction,X
-    BEQ L8C73
+    tya 
+    jsr MapScrollRoutine
+    lda #$00
+    sta ObjAction,X
+    beq L8C73
 L8C57:
-    LDA $2D
-    LSR 
-    BCS L8C73
-    DEC $030F,X
-    BNE L8C73
+    lda $2D
+    lsr 
+    bcs L8C73
+    dec $030F,X
+    bne L8C73
 ObjActionSubRoutine8C61:
-    LDA #$01
-    STA $030F,X
-    JSR ObjActionSubRoutine8CFB
-    LDA #$02
-    STA ObjAction,X
-    JSR ObjActionSubRoutine8C76
+    lda #$01
+    sta $030F,X
+    jsr ObjActionSubRoutine8CFB
+    lda #$02
+    sta ObjAction,X
+    jsr ObjActionSubRoutine8C76
 ObjActionSubRoutine8C71:
-    LDX PageIndex
+    ldx PageIndex
 L8C73:
-    JMP ObjActionSubRoutine8BB1
+    jmp ObjActionSubRoutine8BB1
 
 ObjActionSubRoutine8C76:
-    LDA #$30
-    STA $0305,X
-    SEC 
-    SBC #$02
+    lda #$30
+    sta $0305,X
+    sec 
+    sbc #$02
 ObjActionSubRoutine8C7E:
-    JSR SetProjectileAnim2
-    JMP SFX_Door
+    jsr SetProjectileAnim2
+    jmp SFX_Door
 
 DoorAction3:
-    LDA DoorStatus
-    CMP #$05
-    BCS L8CC3
-    JSR ObjActionSubRoutine8CFB
-    JSR ObjActionSubRoutine8C76
-    LDX PageIndex
-    LDA $91
-    BEQ L8CA7
-    TXA 
-    JSR Adiv16
-    EOR $91
-    LSR 
-    BCC L8CA7
-    LDA $76
-    EOR #$07
-    STA $76
-    STA $1C
+    lda DoorStatus
+    cmp #$05
+    bcs L8CC3
+    jsr ObjActionSubRoutine8CFB
+    jsr ObjActionSubRoutine8C76
+    ldx PageIndex
+    lda $91
+    beq L8CA7
+    txa 
+    jsr Adiv16
+    eor $91
+    lsr 
+    bcc L8CA7
+    lda $76
+    eor #$07
+    sta $76
+    sta $1C
 L8CA7:
-    INC ObjAction,X
-    LDA #$00
-    STA $91
-    LDA $0307,X
-    CMP #$03
-    BNE L8CC3
-    TXA 
-    JSR Amul16
-    BCS L8CC0
-        JSR TourianMusic
-        BNE L8CC3
+    inc ObjAction,X
+    lda #$00
+    sta $91
+    lda $0307,X
+    cmp #$03
+    bne L8CC3
+    txa 
+    jsr Amul16
+    bcs L8CC0
+        jsr TourianMusic
+        bne L8CC3
     L8CC0:
-    JSR MotherBrainMusic
+    jsr MotherBrainMusic
 L8CC3:
-    JMP ObjActionSubRoutine8C71
+    jmp ObjActionSubRoutine8C71
 
 DoorAction4:
-    LDA DoorStatus
-    CMP #$05
-    BNE L8CED
-    TXA 
-    EOR #$10
-    TAX 
-    LDA #$06
-    STA ObjAction,X
-    LDA #$2C
-    STA $0305,X
-    SEC 
-    SBC #$03
-    JSR SetProjectileAnim2
-    JSR SFX_Door
-    JSR SelectSamusPal
-    LDX PageIndex
-    LDA #$02
-    STA ObjAction,X
+    lda DoorStatus
+    cmp #$05
+    bne L8CED
+    txa 
+    eor #$10
+    tax 
+    lda #$06
+    sta ObjAction,X
+    lda #$2C
+    sta $0305,X
+    sec 
+    sbc #$03
+    jsr SetProjectileAnim2
+    jsr SFX_Door
+    jsr SelectSamusPal
+    ldx PageIndex
+    lda #$02
+    sta ObjAction,X
 L8CED:
-    JMP ObjActionSubRoutine8BB1
+    jmp ObjActionSubRoutine8BB1
 
 DoorAction5:
-    LDA DoorStatus
-    BNE L8CED
-    JMP ObjActionSubRoutine8C61
+    lda DoorStatus
+    bne L8CED
+    jmp ObjActionSubRoutine8C61
 
 ObjActionSubRoutine8CF7:
-    LDA #$FF
-    BNE L8CFD
+    lda #$FF
+    bne L8CFD
 ObjActionSubRoutine8CFB:
-    LDA #$4E
+    lda #$4E
 L8CFD:
-    PHA 
-    LDA #$50
-    STA $02
-    TXA 
-    JSR Adiv16
-    AND #$01
-    TAY 
-    LDA DoorDataTable,Y
-    STA $03
-    LDA $030C,X
-    STA $0B
-    JSR MakeCartRAMPtr
-    LDY #$00
-    PLA 
+    pha 
+    lda #$50
+    sta $02
+    txa 
+    jsr Adiv16
+    and #$01
+    tay 
+    lda DoorDataTable,Y
+    sta $03
+    lda $030C,X
+    sta $0B
+    jsr MakeCartRAMPtr
+    ldy #$00
+    pla 
     L8D19:
-        STA ($04),Y
-        TAX 
-        TYA 
-        CLC 
-        ADC #$20
-        TAY 
-        TXA 
-        CPY #$C0
-        BNE L8D19
-    LDX PageIndex
-    TXA 
-    JSR Adiv8
-    AND #$06
-    TAY 
-    LDA $04
-    STA $005C,Y
-    LDA $05
-    STA $005D,Y
-    RTS
+        sta ($04),Y
+        tax 
+        tya 
+        clc 
+        adc #$20
+        tay 
+        txa 
+        cpy #$C0
+        bne L8D19
+    ldx PageIndex
+    txa 
+    jsr Adiv8
+    and #$06
+    tay 
+    lda $04
+    sta $005C,Y
+    lda $05
+    sta $005D,Y
+    rts
 
 DoorDataTable:
     .byte $E8, $10, $60, $AD, $91, $69, $8D, $78, $68, $AD, $92, $69, $8D, $79, $68, $A9 
