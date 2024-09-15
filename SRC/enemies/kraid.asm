@@ -2,201 +2,201 @@
 
 ; Kraid Routine
 KraidRoutine:
-    LDA EnStatus,X
-    CMP #$03
-    BCC KraidBranchB
-    BEQ KraidBranchA
-    CMP #$05
-    BNE KraidBranchC
+    lda EnStatus,X
+    cmp #$03
+    bcc KraidBranchB
+    beq KraidBranchA
+    cmp #$05
+    bne KraidBranchC
 
 KraidBranchA:
-    LDA #$00
-    STA EnStatus+$10 ;$6B04
-    STA EnStatus+$20 ;$6B14
-    STA EnStatus+$30 ;$6B24
-    STA EnStatus+$40 ;$6B34
-    STA EnStatus+$50 ;$6B44 ??
-    BEQ KraidBranchC
+    lda #$00
+    sta EnStatus+$10 ;$6B04
+    sta EnStatus+$20 ;$6B14
+    sta EnStatus+$30 ;$6B24
+    sta EnStatus+$40 ;$6B34
+    sta EnStatus+$50 ;$6B44 ??
+    beq KraidBranchC
 
 KraidBranchB:
-    JSR KraidSubA
-    JSR KraidSubB
-    JSR KraidSubC
+    jsr KraidSubA
+    jsr KraidSubB
+    jsr KraidSubC
 
 KraidBranchC:
-    LDA #$0A
-    STA $00
-    JMP CommonEnemyStub
+    lda #$0A
+    sta $00
+    jmp CommonEnemyStub
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
 KraidLint:
-    LDA EnData05,X
-    AND #$02
-    BEQ KraidLintBranchA
-    LDA EnStatus,X
-    CMP #$03
-    BNE KraidLintBranchB
+    lda EnData05,X
+    and #$02
+    beq KraidLintBranchA
+    lda EnStatus,X
+    cmp #$03
+    bne KraidLintBranchB
 
 KraidLintBranchA:
-    LDA #$00
-    STA EnStatus,X
-    BEQ KraidLintBranchC
+    lda #$00
+    sta EnStatus,X
+    beq KraidLintBranchC
 
 KraidLintBranchB:
-    LDA EnData05,X
-    ASL 
-    BMI KraidLintBranchC
-    
-    LDA EnStatus,X
-    CMP #$02
-    BNE KraidLintBranchC
-    
-    JSR CommonJump_VertMoveProc
-    LDX PageIndex
-    LDA $00
-    STA EnData02,X
-    
-    JSR CommonJump_HoriMoveProc
-    LDX PageIndex
-    LDA $00
-    STA EnData03,X
-    JSR CommonJump_11
-    BCS KraidLintBranchC
-    
-    LDA #$03
-    STA EnStatus,X
+    lda EnData05,X
+    asl
+    bmi KraidLintBranchC
+
+    lda EnStatus,X
+    cmp #$02
+    bne KraidLintBranchC
+
+    jsr CommonJump_VertMoveProc
+    ldx PageIndex
+    lda $00
+    sta EnData02,X
+
+    jsr CommonJump_HoriMoveProc
+    ldx PageIndex
+    lda $00
+    sta EnData03,X
+    jsr CommonJump_11
+    bcs KraidLintBranchC
+
+    lda #$03
+    sta EnStatus,X
 
 KraidLintBranchC:
-    LDA #$01
-    JSR CommonJump_UpdateEnemyAnim
-    JMP CommonJump_02
+    lda #$01
+    jsr CommonJump_UpdateEnemyAnim
+    jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile 2
 KraidNail: ; L9B2C
-    JMP KraidLint
+    jmp KraidLint
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1
 KraidSubA: ; L9B2F
-    LDX #$50 ; For each enemy slot (except Kraid's)
+    ldx #$50 ; For each enemy slot (except Kraid's)
 @loop:
-    JSR KraidSubASub
-    TXA               ;\
-    SEC               ;|-- X := X-$10
-    SBC #$10          ;|
-    TAX               ;/
-    BNE @loop
-    RTS
+    jsr KraidSubASub
+    txa               ;\
+    sec               ;|-- X := X-$10
+    sbc #$10          ;|
+    tax               ;/
+    bne @loop
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1.1
 KraidSubASub:
-    LDY EnStatus,X
-    BEQ KraidSubASub_BranchB
-    LDA EnDataIndex,X
-    CMP #$0A
-    BEQ KraidSubASub_BranchA
-    CMP #$09
-    BNE KraidSubASub_Exit
+    ldy EnStatus,X
+    beq KraidSubASub_BranchB
+    lda EnDataIndex,X
+    cmp #$0A
+    beq KraidSubASub_BranchA
+    cmp #$09
+    bne KraidSubASub_Exit
 
 KraidSubASub_BranchA:
-    LDA EnData05,X
-    AND #$02
-    BEQ KraidSubASub_BranchB
-    DEY 
-    BEQ KraidSubASub_BranchC
-    CPY #$02
-    BEQ KraidSubASub_BranchB
-    CPY #$03
-    BNE KraidSubASub_Exit
-    LDA EnData0C,X
-    CMP #$01
-    BNE KraidSubASub_Exit
-    BEQ KraidSubASub_BranchC
+    lda EnData05,X
+    and #$02
+    beq KraidSubASub_BranchB
+    dey
+    beq KraidSubASub_BranchC
+    cpy #$02
+    beq KraidSubASub_BranchB
+    cpy #$03
+    bne KraidSubASub_Exit
+    lda EnData0C,X
+    cmp #$01
+    bne KraidSubASub_Exit
+    beq KraidSubASub_BranchC
 
 KraidSubASub_BranchB:
-    LDA #$00
-    STA EnStatus,X
-    STA EnSpecialAttribs,X
-    JSR CommonJump_0E
+    lda #$00
+    sta EnStatus,X
+    sta EnSpecialAttribs,X
+    jsr CommonJump_0E
 
 KraidSubASub_BranchC:
-    LDA EnData05
-    STA EnData05,X
-    LSR 
-    PHP ;
-    TXA  ;\
-    LSR  ;|- Y := X/16
-    LSR  ;|
-    LSR  ;|
-    LSR  ;|
-    TAY  ;/
-    LDA KraidBulletY-1,Y
-    STA $04
-    LDA KraidBulletType-1,Y
-    STA EnDataIndex,X
+    lda EnData05
+    sta EnData05,X
+    lsr
+    php ;
+    txa  ;\
+    lsr  ;|- Y := X/16
+    lsr  ;|
+    lsr  ;|
+    lsr  ;|
+    tay  ;/
+    lda KraidBulletY-1,Y
+    sta $04
+    lda KraidBulletType-1,Y
+    sta EnDataIndex,X
 
 KraidSubASub_BranchD:
-    TYA 
-    PLP ;
-    ROL 
-    TAY ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
-    LDA KraidBulletX-2,Y
-    STA $05
+    tya
+    plp ;
+    rol
+    tay ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
+    lda KraidBulletX-2,Y
+    sta $05
 
 KraidSubASub_BranchE:
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
 ;  a crash when attempting to spawn him
 .IF BANK <> 1
-    TXA 
-    PHA ;
+    txa
+    pha ;
 .ENDIF
 
-    LDX #$00
-    JSR StorePositionToTemp
+    ldx #$00
+    jsr StorePositionToTemp
 
 .IF BANK <> 1
-    PLA ;
-    TAX 
+    pla ;
+    tax
 .ENDIF
 
-    JSR CommonJump_0D
-    
+    jsr CommonJump_0D
+
 .IF BANK = 1
-    LDX PageIndex
+    ldx PageIndex
 .ENDIF
 
-    BCC KraidSubASub_Exit
-    LDA EnStatus,X
-    BNE LoadPositionFromTemp
-    INC EnStatus,X
+    bcc KraidSubASub_Exit
+    lda EnStatus,X
+    bne LoadPositionFromTemp
+    inc EnStatus,X
 
 LoadPositionFromTemp:
-    LDA $08
-    STA EnYRoomPos,X
-    LDA $09
-    STA EnXRoomPos,X
-    LDA $0B
-    AND #$01
-    STA EnNameTable,X
+    lda $08
+    sta EnYRoomPos,X
+    lda $09
+    sta EnXRoomPos,X
+    lda $0B
+    and #$01
+    sta EnNameTable,X
 
 KraidSubASub_Exit:
-    RTS
+    rts
 
 StorePositionToTemp:
-    LDA EnYRoomPos,X
-    STA $08
-    LDA EnXRoomPos,X
-    STA $09
-    LDA EnNameTable,X
-    STA $0B
-    RTS
+    lda EnYRoomPos,X
+    sta $08
+    lda EnXRoomPos,X
+    sta $09
+    lda EnNameTable,X
+    sta $0B
+    rts
 
 KraidBulletY:
-    .byte -11, -3, 5, -10, -2 
+    .byte -11, -3, 5, -10, -2
 KraidBulletX: ;9BD1
 ; First column is for facing right, second for facing left
     .byte  10, -10
@@ -211,76 +211,74 @@ KraidBulletType: ; L9BDB
 ; Kraid Subroutine 2
 ;  Something to do with the lint
 KraidSubB:
-    LDY $7E
-    BNE KraidSubB_BranchA
-    LDY #$80
+    ldy $7E
+    bne KraidSubB_BranchA
+    ldy #$80
 
 KraidSubB_BranchA:
-    LDA FrameCount
-    AND #$02
-    BNE KraidSubB_Exit
-    DEY 
-    STY $7E
-    TYA 
-    ASL 
-    BMI KraidSubB_Exit
-    AND #$0F
-    CMP #$0A
-    BNE KraidSubB_Exit
-    LDA #$01
-    LDX #$10
-    CMP EnStatus,X
-    BEQ KraidSubB_BranchB
-    LDX #$20
-    CMP EnStatus,X
-    BEQ KraidSubB_BranchB
-    LDX #$30
-    CMP EnStatus,X
-    BEQ KraidSubB_BranchB
-    INC $7E
-    RTS
+    lda FrameCount
+    and #$02
+    bne KraidSubB_Exit
+    dey
+    sty $7E
+    tya
+    asl
+    bmi KraidSubB_Exit
+    and #$0F
+    cmp #$0A
+    bne KraidSubB_Exit
+    lda #$01
+    ldx #$10
+    cmp EnStatus,X
+    beq KraidSubB_BranchB
+    ldx #$20
+    cmp EnStatus,X
+    beq KraidSubB_BranchB
+    ldx #$30
+    cmp EnStatus,X
+    beq KraidSubB_BranchB
+    inc $7E
+    rts
 
 KraidSubB_BranchB:
-    LDA #$08
-    STA EnDelay,X
+    lda #$08
+    sta EnDelay,X
 
 KraidSubB_Exit:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 3
 ;  Something to do with the nails
 KraidSubC:
-    LDY $7F
-    BNE KraidSubC_BranchA
-    LDY #$60
+    ldy $7F
+    bne KraidSubC_BranchA
+    ldy #$60
 
 KraidSubC_BranchA:
-    LDA FrameCount
-    AND #$02
-    BNE KraidSubC_Exit
-    DEY 
-    STY $7F
-    TYA 
-    ASL 
-    BMI KraidSubC_Exit
-    AND #$0F
-    BNE KraidSubC_Exit
-    LDA #$01
-    LDX #$40
-    CMP EnStatus,X
-    BEQ KraidSubC_BranchB
-    LDX #$50
-    CMP EnStatus,X
-    BEQ KraidSubC_BranchB
-    INC $7F
-    RTS
+    lda FrameCount
+    and #$02
+    bne KraidSubC_Exit
+    dey
+    sty $7F
+    tya
+    asl
+    bmi KraidSubC_Exit
+    and #$0F
+    bne KraidSubC_Exit
+    lda #$01
+    ldx #$40
+    cmp EnStatus,X
+    beq KraidSubC_BranchB
+    ldx #$50
+    cmp EnStatus,X
+    beq KraidSubC_BranchB
+    inc $7F
+    rts
 
 KraidSubC_BranchB:
-    LDA #$08
-    STA EnDelay,X
+    lda #$08
+    sta EnDelay,X
 
 KraidSubC_Exit:
-    RTS 
-
-; EoF
+    rts

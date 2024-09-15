@@ -358,4 +358,3 @@ SongEscapeNoise:
         .byte .lobyte(DrumBeat00SFXData)
         .byte .lobyte(DrumBeat01SFXData)
     SongRepeat
-

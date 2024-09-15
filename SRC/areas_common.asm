@@ -8,7 +8,7 @@
 ;    N.SHIOTANI
 ;     M.HOUDAI
 ; (C) 1986 NINTENDO
-; 
+;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
 ;Disassembled using TRaCER.
 ;Can be reassembled using asm6f
@@ -127,7 +127,7 @@ CommonEnemyAI:
     ldx PageIndex
 ; Exit if bit 6 of EnData05 is set
     lda EnData05,X
-    asl 
+    asl
     bmi CommonEnemyAI_Exit
 ; Exit if enemy is not active
     lda EnStatus,X
@@ -191,7 +191,7 @@ CommonEnemyAI_Exit:
 LoadTableAt977B: ; L80B0
     ldy EnDataIndex,X
     lda L977B,Y
-    asl                             ;*2 
+    asl                             ;*2
     rts
 
 ;-------------------------------------------------------------------------------
@@ -218,7 +218,7 @@ L80C7:
     beq L80E2
 
 L80D8:
-    sec 
+    sec
     ror EnData02,X
     ror EnCounter,X
     jmp L80F6
@@ -230,8 +230,8 @@ L80E2:
 
 L80EA:
     lda L977B,Y
-    lsr 
-    lsr 
+    lsr
+    lsr
     bcc L80F6
     lda #$04
     jsr XorEnData05
@@ -258,7 +258,7 @@ L810A:
     lda EnData1F,X
     beq L8104
     bpl L8120
-    clc 
+    clc
     ror EnData02,X
     ror EnCounter,X
     jmp L812F
@@ -267,8 +267,8 @@ L8120:
     jsr SetBit5OfEnData05_AndClearEnData1A
 L8123:
     lda L977B,Y
-    lsr 
-    lsr 
+    lsr
+    lsr
     bcc L812F
     lda #$04
     jsr XorEnData05
@@ -296,7 +296,7 @@ L8148:
     lda EnData1F,X
     beq L8142
     bpl L8159
-    clc 
+    clc
     ror EnData03,X
     ror EnData07,X
     jmp L8169
@@ -306,7 +306,7 @@ L8159:
     beq L8169
 L815E:
     lda $977B,Y
-    lsr 
+    lsr
     bcc L8169
     lda #$01
     jsr XorEnData05
@@ -337,7 +337,7 @@ L8182:
         jsr SetBit5OfEnData05_AndClearEnData1B
         beq L8198
     L818E:
-    sec 
+    sec
     ror EnData03,X
     ror EnData07,X
     jmp L81AC
@@ -348,8 +348,8 @@ L8198:
     beq L81AC
 L81A0:
     jsr LoadTableAt977B
-    lsr 
-    lsr 
+    lsr
+    lsr
     bcc L81AC
     lda #$01
     jsr XorEnData05
@@ -393,7 +393,7 @@ L81C7:
     jsr LoadBit5ofTableAt968B
     bne L81F5
     jsr LoadTableAt977B
-    sec 
+    sec
     bpl L81ED
 ; Decrement EnCounterX
     lda #$00
@@ -428,7 +428,7 @@ L81FC:
     jsr LoadBit5ofTableAt968B
     bne L822A ; Exit if bit 5 is set
     jsr LoadTableAt977B
-    sec 
+    sec
     bpl L8222
 ; Decrement EnCounter
     lda #$00
@@ -440,21 +440,21 @@ L8222:
     sbc EnData02,X
     sta EnData02,X
 L822A:
-    rts 
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Loads a pointer from this table to $81 and $82
 LoadEnemyMovementPtr:
     lda EnData05,X
     bpl L8232
-        lsr 
-        lsr 
+        lsr
+        lsr
     L8232:
-    lsr 
+    lsr
     lda EnData08,X
-    rol 
-    asl 
-    tay 
+    rol
+    asl
+    tay
     lda EnemyMovementPtrs,Y
     sta $81
     lda EnemyMovementPtrs+1,Y
@@ -520,15 +520,15 @@ VertMoveProc_JumpToCaseFA: ; L827C
 VertMoveProc_CommonCase:
 ; Take the value from memory
 ; Branch ahead if velocityString[EnCounter] - EnDelay != 0
-    sec 
+    sec
     sbc EnDelay,X
     bne L8290
 
     sta EnDelay,X
 ; EnCounter += 2
-    iny 
-    iny 
-    tya 
+    iny
+    iny
+    tya
     sta EnCounter,X
     bne VertMoveProc_ReadByte ; Handle another byte
 
@@ -537,15 +537,15 @@ L8290:
     inc EnDelay,X
 
 ; Read the sign/magnitude of the speed from the next byte
-    iny 
+    iny
     lda ($81),Y
 ; Save the sign bit to the carry flag
-    asl 
-    php 
+    asl
+    php
 ; Get the magnitude
     jsr Adiv32                      ;($C2BE)Divide by 32.
 ; Negate the magnitude if necessary
-    plp 
+    plp
     bcc L82A2
     eor #$FF
     adc #$00 ; Since carry is set in this branch, this increments A
@@ -558,7 +558,7 @@ L82A2:
 ; Clear EnData1D, move on to next byte in the stream
 VertMoveProc_CaseFD:
     inc EnCounter,X
-    iny 
+    iny
     lda #$00
     sta EnData1D,X
     beq VertMoveProc_ReadByte ; Branch always
@@ -568,8 +568,8 @@ VertMoveProc_CaseFD:
 ; HALT, perhaps?
 VertMoveProc_CaseFB:
 ; Double RTS !?
-    pla 
-    pla 
+    pla
+    pla
     rts
 ; Retruns back to F416 in the engine bank
 
@@ -591,7 +591,7 @@ L82C3:
     ldx PageIndex
     bcs L82D2
     ldy EnCounter,X
-    iny 
+    iny
     lda #$00
     sta EnData1F,X
     beq L82D7 ; Branch always
@@ -599,12 +599,12 @@ L82C3:
 ; Else, repeat the previous two bytes
 L82D2:
     ldy EnCounter,X
-    dey 
-    dey 
+    dey
+    dey
 
 ; Save EnCounter
 L82D7:
-    tya 
+    tya
     sta EnCounter,X
 ; Read the next bytes
     jmp VertMoveProc_ReadByte
@@ -613,9 +613,9 @@ L82D7:
 ; Repeat previous until ???
 VertMoveProc_CaseFE:
 ; Move EnCounter back to the previous movement
-    dey 
-    dey 
-    tya 
+    dey
+    dey
+    tya
     sta EnCounter,X
 ; Then do some other stuff
     lda EnData1F,X
@@ -667,16 +667,16 @@ L8320:
 
 ; Read the same velocity byte as in VertMoveProc
     ldy EnCounter,X
-    iny 
+    iny
     lda ($81),Y ; $81/$82 were loaded during VertMoveProc earlier
-    tax 
+    tax
 ; Save the sign bit to the processor flags
     and #$08
-    php 
-    txa 
+    php
+    txa
 ; Get the lower three bits
     and #$07
-    plp 
+    plp
 ; Negate, according to the sign bit
     beq L833C
     jsr TwosCompliment
@@ -692,7 +692,7 @@ L833F:
     ldy #$0E
     lda EnData1A,X
     bmi L835E
-    clc 
+    clc
     adc EnCounter,X
     sta EnCounter,X
     lda EnData02,X
@@ -705,7 +705,7 @@ L833F:
         bne L8376
     L835E:
         jsr TwosCompliment
-        sec 
+        sec
         sta $00
         lda EnCounter,X
         sbc $00
@@ -719,11 +719,11 @@ L8376:
     bcc L8383
         lda #$00
         sta EnCounter,X
-        tya 
+        tya
         sta EnData02,X
     L8383:
     lda EnData18,X
-    clc 
+    clc
     adc EnCounter,X
     sta EnData18,X
     lda #$00
@@ -742,7 +742,7 @@ L8395:
     sta $01
     sta $03
     lda EnData07,X
-    clc 
+    clc
     adc EnData1B,X
     sta EnData07,X
     sta $04
@@ -753,20 +753,20 @@ L8395:
     L83B6:
     adc EnData03,X
     sta EnData03,X
-    tay 
+    tay
     bpl L83D0
         lda #$00
-        sec 
+        sec
         sbc EnData07,X
         sta $04
         lda #$00
         sbc EnData03,X
-        tay 
+        tay
         jsr LE449
     L83D0:
     lda $04
     cmp $02
-    tya 
+    tya
     sbc $03
     bcc L83E3
         lda $00
@@ -775,7 +775,7 @@ L8395:
         sta EnData03,X
     L83E3:
     lda EnData19,X
-    clc 
+    clc
     adc EnData07,X
     sta EnData19,X
     lda #$00
@@ -789,10 +789,10 @@ L8395:
 L83F5:
     ldx PageIndex
     lda EnYRoomPos,X
-    sec 
+    sec
     sbc EnRadY,X
     and #$07
-    sec 
+    sec
     bne L8406
         jsr EnemyCheckMoveUp
     L8406:
@@ -813,8 +813,8 @@ L83F5:
     beq L844A
     jsr SwitchEnemyNameTable
 L8429:
-    dey 
-    tya 
+    dey
+    tya
     sta EnYRoomPos,X
     cmp EnRadY,X
     bne L8441
@@ -825,7 +825,7 @@ L8429:
         bne L8441
     L843C:
     inc EnYRoomPos,X
-    clc 
+    clc
     rts
 L8441:
     lda EnData05,X
@@ -841,10 +841,10 @@ L844A:
 L844B:
     ldx PageIndex
     lda EnYRoomPos,X
-    clc 
+    clc
     adc EnRadY,X
     and #$07
-    sec 
+    sec
     bne L845C
         jsr EnemyCheckMoveDown
     L845C:
@@ -866,10 +866,10 @@ L844B:
     bne L84A6
     jsr SwitchEnemyNameTable
 L8481:
-    iny 
-    tya 
+    iny
+    tya
     sta EnYRoomPos,X
-    clc 
+    clc
     adc EnRadY,X
     cmp #$EF
     bne L849D
@@ -879,14 +879,14 @@ L8481:
         beq L849D
     L8497:
     dec EnYRoomPos,X
-    clc 
+    clc
     bcc L84A6
 L849D:
     lda EnData05,X
     bmi L84A5
         dec EnData1D,X
     L84A5:
-    sec 
+    sec
 L84A6:
     rts
 
@@ -895,10 +895,10 @@ L84A6:
 L84A7:
     ldx PageIndex
     lda EnXRoomPos,X
-    sec 
+    sec
     sbc EnRadX,X
     and #$07
-    sec 
+    sec
     bne L84B8
         jsr EnemyCheckMoveLeft
     L84B8:
@@ -916,7 +916,7 @@ L84A7:
     beq L84D4
         jsr GetOtherNameTableIndex
     L84D4:
-    clc 
+    clc
     beq L84FD
     jsr SwitchEnemyNameTable
 L84DA:
@@ -930,14 +930,14 @@ L84DA:
         bne L84F4
     L84EE:
     inc EnXRoomPos,X
-    clc 
+    clc
     bcc L84FD
 L84F4:
     lda EnData05,X
     bpl L84FC
         inc EnData1D,X
     L84FC:
-    sec 
+    sec
 L84FD:
     rts
 
@@ -947,10 +947,10 @@ L84FE:
     ldx PageIndex
 ; if ((xpos + xrad) % 8) == 0, then EnemyCheckMoveRight()
     lda EnXRoomPos,X
-    clc 
+    clc
     adc EnRadX,X
     and #$07
-    sec 
+    sec
     bne L850F
         jsr EnemyCheckMoveRight
     L850F:
@@ -977,7 +977,7 @@ L84FE:
 
 L8536:
     lda EnXRoomPos,X
-    clc 
+    clc
     adc EnRadX,X
     cmp #$FF
     bne L8550
@@ -987,7 +987,7 @@ L8536:
         beq L8550
     L854A:
     dec EnXRoomPos,X
-    clc 
+    clc
     bcc L8559
 
 L8550:
@@ -995,7 +995,7 @@ L8550:
     bpl L8558
         dec EnData1D,X
     L8558:
-    sec 
+    sec
 L8559:
     rts
 
@@ -1019,7 +1019,7 @@ GetOtherNameTableIndex: ; L8562
 XorEnData05: ; L856B
     eor EnData05,X
     sta EnData05,X
-    rts 
+    rts
 
 ;---------------------------------[ Object animation data tables ]----------------------------------
 ;----------------------------[ Sprite drawing pointer tables ]--------------------------------------
@@ -1101,9 +1101,9 @@ DisplayDoors:
     L8B7B:
         jsr DoorRoutine
         lda PageIndex
-        sec 
+        sec
         sbc #$10
-        tax 
+        tax
         bmi L8B7B
     rts
 
@@ -1137,7 +1137,7 @@ ObjActionSubRoutine8BB1:
     sta ObjectCntrl
     lda #$00
     sta $030A,X ; SamusHit (DoorHit?)
-    txa 
+    txa
     and #$10
     eor #$10
     ora ObjectCntrl
@@ -1158,7 +1158,7 @@ DoorAction1:
     cmp $0307,X
     bne L8BEE
         ldy $010B
-        iny 
+        iny
         bne ObjActionSubRoutine8BB1
     L8BEE:
     sta ObjAction,X
@@ -1166,7 +1166,7 @@ DoorAction1:
     sta $030F,X
     lda #$2C
     sta $0305,X
-    sec 
+    sec
     sbc #$03
     jmp ObjActionSubRoutine8C7E
 
@@ -1175,7 +1175,7 @@ DoorAction2:
     beq L8C1D
     lda $030C ; ObjNametable
     eor $030C,X
-    lsr 
+    lsr
     bcs L8C1D
     lda $030E
     eor $030E,X
@@ -1201,19 +1201,19 @@ L8C1D:
     lda $030C,X
     sta $08
     ldy $50
-    txa 
+    txa
     jsr Amul16
     bcc L8C4C
-        dey 
+        dey
     L8C4C:
-    tya 
+    tya
     jsr MapScrollRoutine
     lda #$00
     sta ObjAction,X
     beq L8C73
 L8C57:
     lda $2D
-    lsr 
+    lsr
     bcs L8C73
     dec $030F,X
     bne L8C73
@@ -1232,7 +1232,7 @@ L8C73:
 ObjActionSubRoutine8C76:
     lda #$30
     sta $0305,X
-    sec 
+    sec
     sbc #$02
 ObjActionSubRoutine8C7E:
     jsr SetProjectileAnim2
@@ -1247,10 +1247,10 @@ DoorAction3:
     ldx PageIndex
     lda $91
     beq L8CA7
-    txa 
+    txa
     jsr Adiv16
     eor $91
-    lsr 
+    lsr
     bcc L8CA7
     lda $76
     eor #$07
@@ -1263,7 +1263,7 @@ L8CA7:
     lda $0307,X
     cmp #$03
     bne L8CC3
-    txa 
+    txa
     jsr Amul16
     bcs L8CC0
         jsr TourianMusic
@@ -1277,14 +1277,14 @@ DoorAction4:
     lda DoorStatus
     cmp #$05
     bne L8CED
-    txa 
+    txa
     eor #$10
-    tax 
+    tax
     lda #$06
     sta ObjAction,X
     lda #$2C
     sta $0305,X
-    sec 
+    sec
     sbc #$03
     jsr SetProjectileAnim2
     jsr SFX_Door
@@ -1306,35 +1306,35 @@ ObjActionSubRoutine8CF7:
 ObjActionSubRoutine8CFB:
     lda #$4E
 L8CFD:
-    pha 
+    pha
     lda #$50
     sta $02
-    txa 
+    txa
     jsr Adiv16
     and #$01
-    tay 
+    tay
     lda DoorDataTable,Y
     sta $03
     lda $030C,X
     sta $0B
     jsr MakeCartRAMPtr
     ldy #$00
-    pla 
+    pla
     L8D19:
         sta ($04),Y
-        tax 
-        tya 
-        clc 
+        tax
+        tya
+        clc
         adc #$20
-        tay 
-        txa 
+        tay
+        txa
         cpy #$C0
         bne L8D19
     ldx PageIndex
-    txa 
+    txa
     jsr Adiv8
     and #$06
-    tay 
+    tay
     lda $04
     sta $005C,Y
     lda $05
@@ -1342,7 +1342,7 @@ L8CFD:
     rts
 
 DoorDataTable:
-    .byte $E8, $10, $60, $AD, $91, $69, $8D, $78, $68, $AD, $92, $69, $8D, $79, $68, $A9 
+    .byte $E8, $10, $60, $AD, $91, $69, $8D, $78, $68, $AD, $92, $69, $8D, $79, $68, $A9
     .byte $00, $85, $00, $85, $02, $AD, $97, $69, $29, $80, $F0, $06, $A5, $00, $09, $80
     .byte $85, $00, $AD, $97, $69, $29
 

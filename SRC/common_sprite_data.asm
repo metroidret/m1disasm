@@ -51,7 +51,7 @@ L8592:  .byte $12, $FF
 L8594:  .byte $0C, $0D, $0E, $FF
 
 ;Samus point up and shoot animation.
-L8598:  .byte $30 
+L8598:  .byte $30
 
 ;Samus point up animation.
 L8599:  .byte $2B, $FF
@@ -218,7 +218,7 @@ L8711:  .byte $08, $F8, $08, $00, $08, $08, $F8, $F4, $F8, $F6, $EC, $F4, $EE, $
 ;          |       4|       5|
 ;          +--------+--------+
 ;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L871F:  .byte $F3, $F8, $F3, $00, $FB, $F8, $FB, $00, $03, $F8, $03, $00 
+L871F:  .byte $F3, $F8, $F3, $00, $FB, $F8, $FB, $00, $03, $F8, $03, $00
 
 ;Samus somersault frame.
 ;          +--------+--------+--------+
@@ -303,7 +303,7 @@ L8749:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
 ;          |       5|
 ;          +--------+
 ;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L8751:  .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00 
+L8751:  .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00
 
 ;Samus explode. Special case. The bytes that are #$8X indicate displacement data will be loaded
 ;from a table for the y direction and from a counter for the x direction.  The initial displacement
@@ -481,7 +481,7 @@ L87C1:  .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00
 ;#$FE causes the next placement position to be skipped.  Any further bytes are pattern table index
 ;bytes until the next control byte is reached.
 ;
-;#$FF ends the frame drawing data segment. 
+;#$FF ends the frame drawing data segment.
 ;
 ;The first 3 bytes are unique.  The first byte contains two parts: AAAABBBB. The upper 4 bits
 ;are sprite control data which control mirroring and color bits.  The lower 4 bits are multiplied

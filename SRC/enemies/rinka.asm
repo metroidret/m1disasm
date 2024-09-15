@@ -1,138 +1,138 @@
 RinkaRoutine:
-    LDY EnStatus,X
-    CPY #$02
-    BNE L9AB0
-    DEY 
-    CPY $81
-    BNE L9AB0
-    LDA #$00
-    JSR L99D1
-    STA $6AFC,X
-    STA $6AFD,X
-    LDA ObjectX
-    SEC 
-    SBC EnXRoomPos,X
-    STA $01
-    LDA $0405,X
-    PHA 
-    LSR 
-    PHA 
-    BCC L9A5A
-        LDA #$00
-        SBC $01
-        STA $01
+    ldy EnStatus,X
+    cpy #$02
+    bne L9AB0
+    dey
+    cpy $81
+    bne L9AB0
+    lda #$00
+    jsr L99D1
+    sta $6AFC,X
+    sta $6AFD,X
+    lda ObjectX
+    sec
+    sbc EnXRoomPos,X
+    sta $01
+    lda $0405,X
+    pha
+    lsr
+    pha
+    bcc L9A5A
+        lda #$00
+        sbc $01
+        sta $01
     L9A5A:
-    LDA ObjectY
-    SEC 
-    SBC EnYRoomPos,X
-    STA $00
-    PLA 
-    LSR 
-    LSR 
-    BCC L9A6E
-        LDA #$00
-        SBC $00
-        STA $00
+    lda ObjectY
+    sec
+    sbc EnYRoomPos,X
+    sta $00
+    pla
+    lsr
+    lsr
+    bcc L9A6E
+        lda #$00
+        sbc $00
+        sta $00
     L9A6E:
-    LDA $00
-    ORA $01
-    LDY #$03
+    lda $00
+    ora $01
+    ldy #$03
     L9A74:
-        ASL 
-        BCS L9A7A
-        DEY 
-        BNE L9A74
+        asl
+        bcs L9A7A
+        dey
+        bne L9A74
 L9A7A:
-    DEY 
-    BMI L9A83
-        LSR $00
-        LSR $01
-        BPL L9A7A
+    dey
+    bmi L9A83
+        lsr $00
+        lsr $01
+        bpl L9A7A
     L9A83:
-    JSR L9AF9
-    PLA 
-    LSR 
-    PHA 
-    BCC L9A9B
-        LDA #$00
-        SBC $0407,X
-        STA $0407,X
-        LDA #$00
-        SBC EnData03,X
-        STA EnData03,X
+    jsr L9AF9
+    pla
+    lsr
+    pha
+    bcc L9A9B
+        lda #$00
+        sbc $0407,X
+        sta $0407,X
+        lda #$00
+        sbc EnData03,X
+        sta EnData03,X
     L9A9B:
-    PLA 
-    LSR 
-    LSR 
-    BCC L9AB0
-    LDA #$00
-    SBC $0406,X
-    STA $0406,X
-    LDA #$00
-    SBC EnData02,X
-    STA EnData02,X
+    pla
+    lsr
+    lsr
+    bcc L9AB0
+    lda #$00
+    sbc $0406,X
+    sta $0406,X
+    lda #$00
+    sbc EnData02,X
+    sta EnData02,X
 L9AB0:
-    LDA $0405,X
-    ASL 
-    BMI L9AF4
-        LDA $0406,X
-        CLC 
-        ADC $6AFC,X
-        STA $6AFC,X
-        LDA EnData02,X
-        ADC #$00
-        STA $04
-        LDA $0407,X
-        CLC 
-        ADC $6AFD,X
-        STA $6AFD,X
-        LDA EnData03,X
-        ADC #$00
-        STA $05
-        LDA EnYRoomPos,X
-        STA $08
-        LDA EnXRoomPos,X
-        STA $09
-        LDA EnNameTable,X
-        STA $0B
-        JSR CommonJump_0D
-        BCS L9AF1
-            LDA #$00
-            STA EnStatus,X
+    lda $0405,X
+    asl
+    bmi L9AF4
+        lda $0406,X
+        clc
+        adc $6AFC,X
+        sta $6AFC,X
+        lda EnData02,X
+        adc #$00
+        sta $04
+        lda $0407,X
+        clc
+        adc $6AFD,X
+        sta $6AFD,X
+        lda EnData03,X
+        adc #$00
+        sta $05
+        lda EnYRoomPos,X
+        sta $08
+        lda EnXRoomPos,X
+        sta $09
+        lda EnNameTable,X
+        sta $0B
+        jsr CommonJump_0D
+        bcs L9AF1
+            lda #$00
+            sta EnStatus,X
         L9AF1:
-        JSR L99F4
+        jsr L99F4
     L9AF4:
-    LDA #$08
-    JMP CommonJump_01
+    lda #$08
+    jmp CommonJump_01
 
 L9AF9:
-    LDA $00
-    PHA 
-    JSR Adiv16_
-    STA EnData02,X
-    PLA 
-    JSR Amul16_
-    STA $0406,X
-    LDA $01
-    PHA 
-    JSR Adiv16_
-    STA EnData03,X
-    PLA 
-    JSR Amul16_
-    STA $0407,X
-    RTS
+    lda $00
+    pha
+    jsr Adiv16_
+    sta EnData02,X
+    pla
+    jsr Amul16_
+    sta $0406,X
+    lda $01
+    pha
+    jsr Adiv16_
+    sta EnData03,X
+    pla
+    jsr Amul16_
+    sta $0407,X
+    rts
 
-    LSR 
+    lsr
 Adiv16_:
-    LSR 
-    LSR 
-    LSR 
-    LSR 
-    RTS
+    lsr
+    lsr
+    lsr
+    lsr
+    rts
 
 Amul16_:
-    ASL 
-    ASL 
-    ASL 
-    ASL 
-    RTS
+    asl
+    asl
+    asl
+    asl
+    rts

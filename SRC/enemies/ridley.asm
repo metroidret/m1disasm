@@ -1,122 +1,122 @@
 ; Ridley Routine
 RidleyRoutine:
-    LDA EnStatus,X
-    CMP #$03
-    BCC L9A33
-    BEQ L9A20
-    CMP #$05
-    BNE L9A41
+    lda EnStatus,X
+    cmp #$03
+    bcc L9A33
+    beq L9A20
+    cmp #$05
+    bne L9A41
 
 L9A20:
-    LDA #$00
-    STA EnStatus+$10
-    STA EnStatus+$20
-    STA EnStatus+$30
-    STA EnStatus+$40
-    STA EnStatus+$50
-    BEQ L9A41
+    lda #$00
+    sta EnStatus+$10
+    sta EnStatus+$20
+    sta EnStatus+$30
+    sta EnStatus+$40
+    sta EnStatus+$50
+    beq L9A41
 
 L9A33:
-    LDA #$0B
-    STA $85
-    LDA #$0E
-    STA $86
-    JSR CommonJump_09
-    JSR L9A79
+    lda #$0B
+    sta $85
+    lda #$0E
+    sta $86
+    jsr CommonJump_09
+    jsr L9A79
 
 L9A41:
-    LDA #$03
-    STA $00
-    STA $01
-    JMP CommonEnemyJump_00_01_02
+    lda #$03
+    sta $00
+    sta $01
+    jmp CommonEnemyJump_00_01_02
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
 RidleyFireballRoutine:
-    LDA $0405,X
-    PHA 
-    LDA #$02
-    STA $00
-    STA $01
-    JSR CommonEnemyJump_00_01_02
-    PLA 
-    LDX $4B
-    EOR $0405,X
-    LSR 
-    BCS L9A73
-    LDA $0405,X
-    LSR 
-    BCS L9A78
-    LDA $0401,X
-    SEC 
-    SBC $030E
-    BCC L9A78
-    CMP #$20
-    BCC L9A78
+    lda $0405,X
+    pha
+    lda #$02
+    sta $00
+    sta $01
+    jsr CommonEnemyJump_00_01_02
+    pla
+    ldx $4B
+    eor $0405,X
+    lsr
+    bcs L9A73
+    lda $0405,X
+    lsr
+    bcs L9A78
+    lda $0401,X
+    sec
+    sbc $030E
+    bcc L9A78
+    cmp #$20
+    bcc L9A78
 L9A73:
-    LDA #$00
-    STA EnStatus,X
+    lda #$00
+    sta EnStatus,X
 L9A78:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Ridley Subroutine
 L9A79:
-    LDY $80
-    BNE L9A7F
-        LDY #$60
+    ldy $80
+    bne L9A7F
+        ldy #$60
     L9A7F:
-    LDA $2D
-    AND #$02
-    BNE L9AA9
-    DEY 
-    STY $80
-    TYA 
-    ASL 
-    BMI L9AA9
-    AND #$0F
-    CMP #$0A
-    BNE L9AA9
-    LDX #$50
+    lda $2D
+    and #$02
+    bne L9AA9
+    dey
+    sty $80
+    tya
+    asl
+    bmi L9AA9
+    and #$0F
+    cmp #$0A
+    bne L9AA9
+    ldx #$50
     L9A94:
-        LDA EnStatus,X
-        BEQ L9AAA
-        LDA $0405,X
-        AND #$02
-        BEQ L9AAA
-        TXA 
-        SEC 
-        SBC #$10
-        TAX 
-        BNE L9A94
-    INC $7E
+        lda EnStatus,X
+        beq L9AAA
+        lda $0405,X
+        and #$02
+        beq L9AAA
+        txa
+        sec
+        sbc #$10
+        tax
+        bne L9A94
+    inc $7E
 L9AA9:
-    RTS
+    rts
 
 L9AAA:
-    TXA 
-    TAY 
-    LDX #$00
-    JSR StorePositionToTemp
-    TYA 
-    TAX 
-    LDA $0405
-    STA $0405,X
-    AND #$01
-    TAY 
-    LDA L9ADF,Y
-    STA $05
-    LDA #$F8
-    STA $04
-    JSR CommonJump_0D
-    BCC L9AA9
-    LDA #$00
-    STA $040F,X
-    LDA #$0A
-    STA EnDataIndex,X
-    LDA #$01
-    STA EnStatus,X
-    JSR LoadPositionFromTemp
-    JMP CommonJump_0E
+    txa
+    tay
+    ldx #$00
+    jsr StorePositionToTemp
+    tya
+    tax
+    lda $0405
+    sta $0405,X
+    and #$01
+    tay
+    lda L9ADF,Y
+    sta $05
+    lda #$F8
+    sta $04
+    jsr CommonJump_0D
+    bcc L9AA9
+    lda #$00
+    sta $040F,X
+    lda #$0A
+    sta EnDataIndex,X
+    lda #$01
+    sta EnStatus,X
+    jsr LoadPositionFromTemp
+    jmp CommonJump_0E
 L9ADF:
     .byte $08, -$08

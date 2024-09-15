@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -50,7 +50,7 @@ LAD0C:  .byte $02, $08, $09, $FF
 LAD10:  .byte $04, $0B, $0B, $0B, $0B, $FF
 
 ;Structure #$07
-LAD16:  .byte $02, $0B, $0F, $02, $0C, $0B, $02, $0F, $0C, $02, $0B, $0B, $02, $0C, $0F, $FF 
+LAD16:  .byte $02, $0B, $0F, $02, $0C, $0B, $02, $0F, $0C, $02, $0B, $0B, $02, $0C, $0F, $FF
 
 ;Structure #$08
 LAD26:  .byte $01, $0D, $01, $0E, $FF

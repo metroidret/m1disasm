@@ -69,7 +69,7 @@
     noteNameLen .set .strlen(noteName)
     note .set -1
     octave .set -1
-    
+
     .repeat noteNameLen, i
         .if i = 0
             ; notes
@@ -118,23 +118,23 @@
             .endif
         .endif
     .endrepeat
-    
+
     noteID .set (note + (octave-2)*12) * 2
     ;.out .sprintf("noteID = $%02X", noteID)
-    
+
     ; MusicNotesTbl weirdness
     .if noteID = $7E || noteID = $80
         .error "the note D#7 was replaced by F7 in the MusicNotesTbl, so D#7 and E7 don't exist"
     .elseif noteID = $82
         noteID .set $7E
     .endif
-    
+
     .if noteID = $06
         .error "the note D#2 was skipped in the MusicNotesTbl, so it doesn't exist"
     .elseif noteID = $04 || noteID = $02
         noteID .set noteID+2
     .endif
-    
+
     .assert noteID >= $04 && noteID < $80, error, "noteID not in range"
     .byte noteID
 .endmacro

@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -18,6 +18,7 @@
 
 ;Tourian Room Pointers
 
-LA7D1:  .word $A8AF, $A8BD, $A8C5, $A8FA, $A929, $A95E, $A975, $A990
-LA7E1:  .word $A9AB, $A9CF, $A9F2, $AA33, $AA75, $AAAE, $AAE3, $AB12
-LA7F1:  .word $AB4A, $AB7C, $ABA5, $ABCE, $ABEF
+RmPtrTbl:
+    .word LA8AF, LA8BD, LA8C5, LA8FA, LA929, LA95E, LA975, LA990
+    .word LA9AB, LA9CF, LA9F2, LAA33, LAA75, LAAAE, LAAE3, LAB12
+    .word LAB4A, LAB7C, LABA5, LABCE, LABEF

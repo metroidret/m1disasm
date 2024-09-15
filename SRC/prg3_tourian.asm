@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 
 ;Tourian (memory page 3)
 
@@ -86,33 +86,33 @@ AreaPointers:
 
 ; Special Tourian Routines
 GotoLA320:
-    JMP LA320
+    jmp LA320
 GotoMetroid_LA315:
-    JMP Metroid_LA315
+    jmp Metroid_LA315
 GotoL9C6F:
-    JMP L9C6F
+    jmp L9C6F
 GotoCannonRoutine:
-    JMP CannonRoutine
+    jmp CannonRoutine
 GotoMotherBrainRoutine:
-    JMP MotherBrainRoutine
+    jmp MotherBrainRoutine
 GotoZebetiteRoutine:
-    JMP ZebetiteRoutine
+    jmp ZebetiteRoutine
 GotoRinkaSpawnerRoutine:
-    JMP RinkaSpawnerRoutine
+    jmp RinkaSpawnerRoutine
 GotoLA0C6:
-    JMP LA0C6
+    jmp LA0C6
 GotoLA142:
-    JMP LA142
+    jmp LA142
 
 AreaRoutine:
-    JMP L9B25                       ;Area specific routine.
+    jmp L9B25                       ;Area specific routine.
 
 TwosCompliment_:
-    EOR #$FF                        ;
-    CLC                             ;The following routine returns the twos-->
-    ADC #$01                        ;compliment of the value stored in A.
+    eor #$FF                        ;
+    clc                             ;The following routine returns the twos-->
+    adc #$01                        ;compliment of the value stored in A.
 Exit__:
-    RTS                             ;
+    rts                             ;
 
 L95CC:  .byte $FF                       ;Not used.
 
@@ -132,8 +132,8 @@ L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
 ; Enemy AI Jump Table
 ChooseEnemyRoutine:
-    LDA EnDataIndex,X
-    JSR CommonJump_ChooseRoutine
+    lda EnDataIndex,X
+    jsr CommonJump_ChooseRoutine
         .word MetroidRoutine ; 00 - metroid
         .word MetroidRoutine ; 01 - same as 0
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
@@ -212,23 +212,23 @@ L97D8:  .byte $50, $30, $FF
 L97DB:  .byte $FF
 
 InvalidEnemy:
-    LDA #$00
-    STA EnStatus,X
-    RTS
+    lda #$00
+    sta EnStatus,X
+    rts
 
 CommonEnemyJump_00_01_02:
-    LDA $81
-    CMP #$01
-    BEQ L97F1
-    CMP #$03
-    BEQ L97F6
-        LDA $00
-        JMP CommonJump_00
+    lda $81
+    cmp #$01
+    beq L97F1
+    cmp #$03
+    beq L97F6
+        lda $00
+        jmp CommonJump_00
     L97F1:
-        LDA $01
-        JMP CommonJump_01
+        lda $01
+        jmp CommonJump_01
     L97F6:
-        JMP CommonJump_02
+        jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------
 ; Metroid Routine
@@ -237,8 +237,8 @@ CommonEnemyJump_00_01_02:
 ;-------------------------------------------------------------------------------
 ; ???
 L9A27:
-    LDA #$01
-    JMP CommonJump_01
+    lda #$01
+    jmp CommonJump_01
 
 ;-------------------------------------------------------------------------------
 ; Rinka Routine??
@@ -247,363 +247,363 @@ L9A27:
 ;-------------------------------------------------------------------------------
 ; Tourian specific routine -- called every active frame
 L9B25:
-    JSR L9B37
-    JSR MotherBrainStatusHandler
-    JSR LA1E7
-    JSR LA238
-    JSR LA28B
-    JMP LA15E
+    jsr L9B37
+    jsr MotherBrainStatusHandler
+    jsr LA1E7
+    jsr LA238
+    jsr LA28B
+    jmp LA15E
 
 ;-------------------------------------------------------------------------------
 L9B37:
-    LDX #$78
+    ldx #$78
     L9B39:
-        JSR L9B44
-        LDA $97
-        SEC 
-        SBC #$08
-        TAX 
-        BNE L9B39
+        jsr L9B44
+        lda $97
+        sec
+        sbc #$08
+        tax
+        bne L9B39
 
 L9B44:
-    STX $97
-    LDY $6BF4,X
-    BNE L9B4C
+    stx $97
+    ldy $6BF4,X
+    bne L9B4C
 L9B4B:
-    RTS
+    rts
 
 L9B4C:
-    JSR L9C4D
-    TYA 
-    BNE L9B4B
-    LDY $010B
-    INY 
-    BNE L9B65
-    LDA $6BF8,X
-    CMP #$05
-    BEQ L9B4B
-    JSR L9B70
-    JMP L9C2B
+    jsr L9C4D
+    tya
+    bne L9B4B
+    ldy $010B
+    iny
+    bne L9B65
+    lda $6BF8,X
+    cmp #$05
+    beq L9B4B
+    jsr L9B70
+    jmp L9C2B
 
 L9B65:
-    LDA $2D
-    AND #$02
-    BNE L9B4B
-    LDA #$19
-    JMP L9C31
+    lda $2D
+    and #$02
+    bne L9B4B
+    lda #$19
+    jmp L9C31
 
 L9B70:
-    LDY $6BF8,X
-    LDA $6BFA,X
-    BNE L9B81
-        LDA L9D8F,Y
-        STA $6BFA,X
-        INC $6BFB,X
+    ldy $6BF8,X
+    lda $6BFA,X
+    bne L9B81
+        lda L9D8F,Y
+        sta $6BFA,X
+        inc $6BFB,X
     L9B81:
-    DEC $6BFA,X
+    dec $6BFA,X
 L9B84:
-    LDA L9D94,Y
-    CLC 
-    ADC $6BFB,X
-    TAY 
-    LDA L9D99,Y
-    BPL L9BAB
-        CMP #$FF
-        BNE L9B9F
-            LDY $6BF8,X
-            LDA #$00
-            STA $6BFB,X
-            BEQ L9B84
+    lda L9D94,Y
+    clc
+    adc $6BFB,X
+    tay
+    lda L9D99,Y
+    bpl L9BAB
+        cmp #$FF
+        bne L9B9F
+            ldy $6BF8,X
+            lda #$00
+            sta $6BFB,X
+            beq L9B84
         L9B9F:
-        INC $6BFB,X
-        JSR L9BAF
-        LDY $6BF8,X
-        JMP L9B84
+        inc $6BFB,X
+        jsr L9BAF
+        ldy $6BF8,X
+        jmp L9B84
 
     L9BAB:
-        STA $6BF9,X
-        RTS
+        sta $6BF9,X
+        rts
 
 L9BAF:
-    PHA 
-    LDA MotherBrainStatus
-    CMP #$04
-    BCS L9BC6
-    LDY #$60
+    pha
+    lda MotherBrainStatus
+    cmp #$04
+    bcs L9BC6
+    ldy #$60
     L9BB8:
-        LDA EnStatus,Y
-        BEQ L9BC8
-        TYA 
-        CLC 
-        ADC #$10
-        TAY 
-        CMP #$A0
-        BNE L9BB8
+        lda EnStatus,Y
+        beq L9BC8
+        tya
+        clc
+        adc #$10
+        tay
+        cmp #$A0
+        bne L9BB8
 L9BC6:
-    PLA 
-    RTS
+    pla
+    rts
 
 L9BC8:
-    STY $4B
-    LDA $6BF5,X
-    STA EnYRoomPos,Y
-    LDA $6BF6,X
-    STA EnXRoomPos,Y
-    LDA $6BF7,X
-    STA EnNameTable,Y
-    LDA #$02
-    STA EnStatus,Y
-    LDA #$00
-    STA $0409,Y
-    STA EnAnimDelay,Y
-    STA $0408,Y
-    PLA 
-    JSR TwosCompliment_
-    TAX 
-    STA $040A,Y
-    ORA #$02
-    STA $0405,Y
-    LDA L9C28-2,X
-    STA EnResetAnimIndex,Y
-    STA EnAnimIndex,Y
-    LDA L9DCC,X
-    STA $05
-    LDA L9DCF,X
-    STA $04
-    LDX $97
-    LDA $6BF5,X
-    STA $08
-    LDA $6BF6,X
-    STA $09
-    LDA $6BF7,X
-    STA $0B
-    TYA 
-    TAX 
-    JSR CommonJump_0D
-    JSR L99F4
-    LDX $97
-    RTS
+    sty $4B
+    lda $6BF5,X
+    sta EnYRoomPos,Y
+    lda $6BF6,X
+    sta EnXRoomPos,Y
+    lda $6BF7,X
+    sta EnNameTable,Y
+    lda #$02
+    sta EnStatus,Y
+    lda #$00
+    sta $0409,Y
+    sta EnAnimDelay,Y
+    sta $0408,Y
+    pla
+    jsr TwosCompliment_
+    tax
+    sta $040A,Y
+    ora #$02
+    sta $0405,Y
+    lda L9C28-2,X
+    sta EnResetAnimIndex,Y
+    sta EnAnimIndex,Y
+    lda L9DCC,X
+    sta $05
+    lda L9DCF,X
+    sta $04
+    ldx $97
+    lda $6BF5,X
+    sta $08
+    lda $6BF6,X
+    sta $09
+    lda $6BF7,X
+    sta $0B
+    tya
+    tax
+    jsr CommonJump_0D
+    jsr L99F4
+    ldx $97
+    rts
 
 L9C28:  .byte $0C, $0A, $0E
 
 L9C2B:
-    LDY $6BF9,X
-    LDA L9DC6,Y
+    ldy $6BF9,X
+    lda L9DC6,Y
 L9C31:
-    STA $6BD7
-    LDA $6BF5,X
-    STA $04E0
-    LDA $6BF6,X
-    STA $04E1
-    LDA $6BF7,X
-    STA $6BDB
-    LDA #$E0
-    STA $4B
-    JMP CommonJump_14
+    sta $6BD7
+    lda $6BF5,X
+    sta $04E0
+    lda $6BF6,X
+    sta $04E1
+    lda $6BF7,X
+    sta $6BDB
+    lda #$E0
+    sta $4B
+    jmp CommonJump_14
 
 L9C4D:
-    LDY #$00
-    LDA $6BF6,X
-    CMP $FD
-    LDA $49
-    AND #$02
-    BNE L9C5F
-        LDA $6BF5,X
-        CMP $FC
+    ldy #$00
+    lda $6BF6,X
+    cmp $FD
+    lda $49
+    and #$02
+    bne L9C5F
+        lda $6BF5,X
+        cmp $FC
     L9C5F:
-    LDA $6BF7,X
-    EOR $FF
-    AND #$01
-    BEQ L9C6B
-        BCS L9C6D
-        SEC 
+    lda $6BF7,X
+    eor $FF
+    and #$01
+    beq L9C6B
+        bcs L9C6D
+        sec
     L9C6B:
-    BCS L9C6E
+    bcs L9C6E
 L9C6D:
-    INY 
+    iny
 L9C6E:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 L9C6F:
-    STY $02
-    LDY #$00
+    sty $02
+    ldy #$00
     L9C73:
-        LDA $6BF7,Y
-        EOR $02
-        LSR 
-        BCS L9C80
-            LDA #$00
-            STA $6BF4,Y
+        lda $6BF7,Y
+        eor $02
+        lsr
+        bcs L9C80
+            lda #$00
+            sta $6BF4,Y
         L9C80:
-        TYA 
-        CLC 
-        ADC #$08
-        TAY 
-        BPL L9C73
-    LDX #$00
+        tya
+        clc
+        adc #$08
+        tay
+        bpl L9C73
+    ldx #$00
     L9C89:
-        LDA $0758,X
-        BEQ L9C99
-        JSR L9D64
-        EOR $075A,X
-        BNE L9C99
-        STA $0758,X
+        lda $0758,X
+        beq L9C99
+        jsr L9D64
+        eor $075A,X
+        bne L9C99
+        sta $0758,X
     L9C99:
-        TXA 
-        CLC 
-        ADC #$08
-        TAX 
-        CMP #$28
-        BNE L9C89
-    LDX #$00
-    JSR L9CD6
-    LDX #$03
-    JSR L9CD6
-    LDA MotherBrainStatus
-    BEQ L9CC3
-    CMP #$07
-    BEQ L9CC3
-    CMP #$0A
-    BEQ L9CC3
-    LDA $9D
-    EOR $02
-    LSR 
-    BCS L9CC3
-    LDA #$00
-    STA MotherBrainStatus
+        txa
+        clc
+        adc #$08
+        tax
+        cmp #$28
+        bne L9C89
+    ldx #$00
+    jsr L9CD6
+    ldx #$03
+    jsr L9CD6
+    lda MotherBrainStatus
+    beq L9CC3
+    cmp #$07
+    beq L9CC3
+    cmp #$0A
+    beq L9CC3
+    lda $9D
+    eor $02
+    lsr
+    bcs L9CC3
+    lda #$00
+    sta MotherBrainStatus
 L9CC3:
-    LDA $010D
-    BEQ L9CD5
-    LDA $010C
-    EOR $02
-    LSR 
-    BCS L9CD5
-    LDA #$00
-    STA $010D
+    lda $010D
+    beq L9CD5
+    lda $010C
+    eor $02
+    lsr
+    bcs L9CD5
+    lda #$00
+    sta $010D
 L9CD5:
-    RTS
+    rts
 
 L9CD6:
-    LDA $8B,X
-    BMI L9CE5
-    LDA $8C,X
-    EOR $02
-    LSR 
-    BCS L9CE5
-    LDA #$FF
-    STA $8B,X
+    lda $8B,X
+    bmi L9CE5
+    lda $8C,X
+    eor $02
+    lsr
+    bcs L9CE5
+    lda #$FF
+    sta $8B,X
 L9CE5:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Tourian Cannon Handler
 CannonRoutine:
-    LDX #$00
+    ldx #$00
     L9CE8:
-        LDA $6BF4,X
-        BEQ L9CF6
-        TXA 
-        CLC 
-        ADC #$08
-        TAX 
-        BPL L9CE8
-    BMI L9D20
+        lda $6BF4,X
+        beq L9CF6
+        txa
+        clc
+        adc #$08
+        tax
+        bpl L9CE8
+    bmi L9D20
 L9CF6:
-    LDA ($00),Y
-    JSR Adiv16_
-    STA $6BF8,X
-    LDA #$01
-    STA $6BF4,X
-    STA $6BFB,X
-    INY 
-    LDA ($00),Y
-    PHA 
-    AND #$F0
-    ORA #$07
-    STA $6BF5,X
-    PLA 
-    JSR Amul16_
-    ORA #$07
-    STA $6BF6,X
-    JSR L9D88
-    STA $6BF7,X
+    lda ($00),Y
+    jsr Adiv16_
+    sta $6BF8,X
+    lda #$01
+    sta $6BF4,X
+    sta $6BFB,X
+    iny
+    lda ($00),Y
+    pha
+    and #$F0
+    ora #$07
+    sta $6BF5,X
+    pla
+    jsr Amul16_
+    ora #$07
+    sta $6BF6,X
+    jsr L9D88
+    sta $6BF7,X
 L9D20:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Mother Brain Handler
 MotherBrainRoutine:
-    LDA #$01
-    STA MotherBrainStatus
-    JSR L9D88
-    STA $9D
-    EOR #$01
-    TAX 
-    LDA L9D3C
-    ORA $6C,X
-    STA $6C,X
-    LDA #$20
-    STA $9A
-    STA $9B
-    RTS 
+    lda #$01
+    sta MotherBrainStatus
+    jsr L9D88
+    sta $9D
+    eor #$01
+    tax
+    lda L9D3C
+    ora $6C,X
+    sta $6C,X
+    lda #$20
+    sta $9A
+    sta $9B
+    rts
 
 L9D3B:  .byte $02
-L9D3C:  .byte $01 
+L9D3C:  .byte $01
 
 ;-------------------------------------------------------------------------------
 ; Zebetite Handler
 ZebetiteRoutine:
-    LDA ($00),Y
-    AND #$F0
-    LSR
-    TAX 
-    ASL 
-    AND #$10
-    EOR #$10
-    ORA #$84
-    STA $0759,X
-    JSR L9D64
-    STA $075A,X
-    LDA #$01
-    STA $0758,X
-    LDA #$00
-    STA $075B,X
-    STA $075C,X
-    STA $075D,X
-    RTS
+    lda ($00),Y
+    and #$F0
+    lsr
+    tax
+    asl
+    and #$10
+    eor #$10
+    ora #$84
+    sta $0759,X
+    jsr L9D64
+    sta $075A,X
+    lda #$01
+    sta $0758,X
+    lda #$00
+    sta $075B,X
+    sta $075C,X
+    sta $075D,X
+    rts
 
 L9D64:
-    JSR L9D88
-    ASL 
-    ASL 
-    ORA #$61
-    RTS
+    jsr L9D88
+    asl
+    asl
+    ora #$61
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Rinka Handler
 RinkaSpawnerRoutine:
-    LDX #$03
-    JSR L9D75
-        BMI L9D87
-        LDX #$00
+    ldx #$03
+    jsr L9D75
+        bmi L9D87
+        ldx #$00
     L9D75:
-    LDA $8B,X
-    BPL L9D87
-    LDA ($00),Y
-    JSR Adiv16_
-    STA $8B,X
-    JSR L9D88
-    STA $8C,X
-    LDA #$FF
+    lda $8B,X
+    bpl L9D87
+    lda ($00),Y
+    jsr Adiv16_
+    sta $8B,X
+    jsr L9D88
+    sta $8C,X
+    lda #$FF
 L9D87:
-    RTS
+    rts
 
 L9D88:
-    LDA $FF
-    EOR $49
-    AND #$01
-    RTS
+    lda $FF
+    eor $49
+    and #$01
+    rts
 
 L9D8F:  .byte $28, $28, $28, $28, $28
 L9D94:  .byte $00, $0B, $16, $21, $27
@@ -619,425 +619,425 @@ L9DCF:  .byte $F7, $00, $09, $09, $0B
 ;-------------------------------------------------------------------------------
 ; This is code:
 MotherBrainStatusHandler:
-    LDA MotherBrainStatus
-    BEQ L9DF1
-    JSR CommonJump_ChooseRoutine
-        .word Exit__    ;#$00=Mother brain not in room, 
+    lda MotherBrainStatus
+    beq L9DF1
+    jsr CommonJump_ChooseRoutine
+        .word Exit__    ;#$00=Mother brain not in room,
         .word L9E22     ;#$01=Mother brain in room
         .word L9E36     ;#$02=Mother brain hit
         .word L9E52     ;#$03=Mother brain dying
         .word L9E86     ;#$04=Mother brain dissapearing
         .word L9F02     ;#$05=Mother brain gone
-        .word L9F49     ;#$06=Time bomb set, 
+        .word L9F49     ;#$06=Time bomb set,
         .word L9FC0     ;#$07=Time bomb exploded
         .word L9F02     ;#$08=Initialize mother brain
         .word L9FDA     ;#$09
         .word Exit__    ;#$0A=Mother brain already dead.
 L9DF1:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 L9DF2:
-    LDA $030C
-    EOR $9D
-    BNE L9DF1
-    LDA ObjectX
-    SEC 
-    SBC #$48
-    CMP #$2F
-    BCS L9DF1
-    LDA ObjectY
-    SEC 
-    SBC #$80
-    BPL L9E0E
-        JSR TwosCompliment_
+    lda $030C
+    eor $9D
+    bne L9DF1
+    lda ObjectX
+    sec
+    sbc #$48
+    cmp #$2F
+    bcs L9DF1
+    lda ObjectY
+    sec
+    sbc #$80
+    bpl L9E0E
+        jsr TwosCompliment_
     L9E0E:
-    CMP #$20
-    BCS L9DF1
-    LDA #$00
-    STA $6E
-    LDA #$02
-    STA $6F
-    LDA #$38
-    STA $030A
-    JMP CommonJump_SubtractHealth
+    cmp #$20
+    bcs L9DF1
+    lda #$00
+    sta $6E
+    lda #$02
+    sta $6F
+    lda #$38
+    sta $030A
+    jmp CommonJump_SubtractHealth
 
 ;-------------------------------------------------------------------------------
 L9E22:
-    JSR L9DF2
-    JSR L9FED
-    JSR LA01B
-    JSR LA02E
+    jsr L9DF2
+    jsr L9FED
+    jsr LA01B
+    jsr LA02E
 L9E2E:
-    JSR LA041
+    jsr LA041
 L9E31:
-    LDA #$00
-    STA $9E
-    RTS
+    lda #$00
+    sta $9E
+    rts
 
 ;-------------------------------------------------------------------------------
 L9E36:
-    JSR L9E43
-    LDA L9E41,Y
-    STA $1C
-    JMP L9E31
+    jsr L9E43
+    lda L9E41,Y
+    sta $1C
+    jmp L9E31
 
 L9E41:  .byte $08, $07
 
 L9E43:
-    DEC $9F
-    BNE L9E4B
-        LDA #$01
-        STA MotherBrainStatus
+    dec $9F
+    bne L9E4B
+        lda #$01
+        sta MotherBrainStatus
     L9E4B:
-    LDA $9F
-    AND #$02
-    LSR 
-    TAY 
-    RTS
+    lda $9F
+    and #$02
+    lsr
+    tay
+    rts
 
 ;-------------------------------------------------------------------------------
 L9E52:  JSR L9E43
-    LDA L9E41,Y
-    STA $1C
-    TYA 
-    ASL 
-    ASL 
-    STA $FC
-    LDY MotherBrainStatus
-    DEY 
-    BNE L9E83
-    STY MotherBrainHits
-    TYA 
-    TAX 
+    lda L9E41,Y
+    sta $1C
+    tya
+    asl
+    asl
+    sta $FC
+    ldy MotherBrainStatus
+    dey
+    bne L9E83
+    sty MotherBrainHits
+    tya
+    tax
     L9E68:
-        TYA 
-        STA EnStatus,X
-        JSR L9EF9
-        CPX #$C0
-        BNE L9E68
-    LDA #$04
-    STA MotherBrainStatus
-    LDA #$28
-    STA $9F
-    LDA $0680
-    ORA #$01
-    STA $0680
+        tya
+        sta EnStatus,X
+        jsr L9EF9
+        cpx #$C0
+        bne L9E68
+    lda #$04
+    sta MotherBrainStatus
+    lda #$28
+    sta $9F
+    lda $0680
+    ora #$01
+    sta $0680
 L9E83:
-    JMP L9E2E
+    jmp L9E2E
 
 ;-------------------------------------------------------------------------------
 L9E86:
-    LDA #$10
-    ORA $0680
-    STA $0680
-    JSR LA072
-    INC $9A
-    JSR L9E43
-    LDX #$00
+    lda #$10
+    ora $0680
+    sta $0680
+    jsr LA072
+    inc $9A
+    jsr L9E43
+    ldx #$00
     L9E98:
-        LDA EnStatus,X
-        CMP #$05
-        BNE L9EA4
-            LDA #$00
-            STA EnStatus,X
+        lda EnStatus,X
+        cmp #$05
+        bne L9EA4
+            lda #$00
+            sta EnStatus,X
         L9EA4:
-        JSR L9EF9
-        CMP #$40
-        BNE L9E98
-    LDA $07A0
-    BNE L9EB5
-        LDA L9F00,Y
-        STA $1C
+        jsr L9EF9
+        cmp #$40
+        bne L9E98
+    lda $07A0
+    bne L9EB5
+        lda L9F00,Y
+        sta $1C
     L9EB5:
-    LDY MotherBrainStatus
-    DEY 
-    BNE L9ED5
-    STY $9A
-    LDA #$04
-    STA MotherBrainStatus
-    LDA #$1C
-    STA $9F
-    LDY MotherBrainHits
-    INC MotherBrainHits
-    CPY #$04
-    BEQ L9ED3
-        LDX #$00
-        BCC L9ED5
-        JMP L9ED6
-        
+    ldy MotherBrainStatus
+    dey
+    bne L9ED5
+    sty $9A
+    lda #$04
+    sta MotherBrainStatus
+    lda #$1C
+    sta $9F
+    ldy MotherBrainHits
+    inc MotherBrainHits
+    cpy #$04
+    beq L9ED3
+        ldx #$00
+        bcc L9ED5
+        jmp L9ED6
+
     L9ED3:
-    LSR $9F
+    lsr $9F
 L9ED5:
-    RTS
+    rts
 
 L9ED6:
-    LDA $0685
-    ORA #$04
-    STA $0685
-    LDA #$05
-    STA MotherBrainStatus
-    LDA #$80
-    STA MotherBrainHits
-    RTS
+    lda $0685
+    ora #$04
+    sta $0685
+    lda #$05
+    sta MotherBrainStatus
+    lda #$80
+    sta MotherBrainHits
+    rts
 
 L9EE7:
-    PHA 
-    AND #$F0
-    ORA #$07
-    STA EnYRoomPos,X
-    PLA 
-    JSR Amul16_
-    ORA #$07
-    STA EnXRoomPos,X
-    RTS
+    pha
+    and #$F0
+    ora #$07
+    sta EnYRoomPos,X
+    pla
+    jsr Amul16_
+    ora #$07
+    sta EnXRoomPos,X
+    rts
 
 L9EF9:
-    TXA 
-    CLC 
-    ADC #$10
-    TAX 
-    RTS
+    txa
+    clc
+    adc #$10
+    tax
+    rts
 
 L9EFF: .byte $60
 L9F00: ORA #$0A
 
 ;-------------------------------------------------------------------------------
 L9F02:
-    LDA MotherBrainHits
-    BMI L9F33
-        CMP #$08
-        BEQ L9F36
-        TAY 
-        LDA L9F41,Y
-        STA $0503
-        LDA L9F39,Y
-        CLC 
-        ADC #$42
-        STA $0508
-        PHP 
-        LDA $9D
-        ASL 
-        ASL 
-        PLP 
-        ADC #$61
-        STA $0509
-        LDA #$00
-        STA $4B
-        LDA $07A0
-        BNE L9F38
-        JSR CommonJump_15
-        BCS L9F38
+    lda MotherBrainHits
+    bmi L9F33
+        cmp #$08
+        beq L9F36
+        tay
+        lda L9F41,Y
+        sta $0503
+        lda L9F39,Y
+        clc
+        adc #$42
+        sta $0508
+        php
+        lda $9D
+        asl
+        asl
+        plp
+        adc #$61
+        sta $0509
+        lda #$00
+        sta $4B
+        lda $07A0
+        bne L9F38
+        jsr CommonJump_15
+        bcs L9F38
     L9F33:
-    INC MotherBrainHits
-    RTS
+    inc MotherBrainHits
+    rts
 
 L9F36:
-    INC MotherBrainStatus
+    inc MotherBrainStatus
 L9F38:
-    RTS
+    rts
 
 L9F39:  .byte $00, $40, $08, $48, $80, $C0, $88, $C8
 L9F41:  .byte $08, $02, $09, $03, $0A, $04, $0B, $05
 
 L9F49:
-    JSR L9F69
-    BCS L9F64
-    LDA #$00
-    STA MotherBrainStatus
-    LDA #$99
-    STA $010A
-    STA $010B
-    LDA #$01
-    STA $010D
-    LDA $9D
-    STA $010C
+    jsr L9F69
+    bcs L9F64
+    lda #$00
+    sta MotherBrainStatus
+    lda #$99
+    sta $010A
+    sta $010B
+    lda #$01
+    sta $010D
+    lda $9D
+    sta $010C
 L9F64:
-    RTS
+    rts
 
 L9F65:  .byte $80, $B0, $A0, $90
 
 L9F69:
-    LDA $50 
-    CLC
-    ADC $4F
-    SEC 
-    ROL 
-    AND #$03
-    TAY 
-    LDX L9F65,Y
-    LDA #$01
-    STA $030F,X
-    LDA #$01
-    STA $0307,X
-    LDA #$03
-    STA $0300,X
-    LDA $9D
-    STA $030C,X
-    LDA #$10
-    STA ObjectX,X
-    LDA #$68
-    STA ObjectY,X
-    LDA #$55
-    STA $0305,X
-    STA $0306,X
-    LDA #$00
-    STA $0304,X
-    LDA #$F7
-    STA $0303,X
-    LDA #$10
-    STA $0503
-    LDA #$40
-    STA $0508
-    LDA $9D
-    ASL 
-    ASL 
-    ORA #$61
-    STA $0509
-    LDA #$00
-    STA $4B
-    JMP CommonJump_15
+    lda $50
+    clc
+    adc $4F
+    sec
+    rol
+    and #$03
+    tay
+    ldx L9F65,Y
+    lda #$01
+    sta $030F,X
+    lda #$01
+    sta $0307,X
+    lda #$03
+    sta $0300,X
+    lda $9D
+    sta $030C,X
+    lda #$10
+    sta ObjectX,X
+    lda #$68
+    sta ObjectY,X
+    lda #$55
+    sta $0305,X
+    sta $0306,X
+    lda #$00
+    sta $0304,X
+    lda #$F7
+    sta $0303,X
+    lda #$10
+    sta $0503
+    lda #$40
+    sta $0508
+    lda $9D
+    asl
+    asl
+    ora #$61
+    sta $0509
+    lda #$00
+    sta $4B
+    jmp CommonJump_15
 
 ;-------------------------------------------------------------------------------
 L9FC0:
-    LDA #$10
-    ORA $0680
-    STA $0680
-    LDA $2C
-    BNE L9FD9
-    LDA #$08
-    STA $0300
-    LDA #$0A
-    STA MotherBrainStatus
-    LDA #$01
-    STA $1C
+    lda #$10
+    ora $0680
+    sta $0680
+    lda $2C
+    bne L9FD9
+    lda #$08
+    sta $0300
+    lda #$0A
+    sta MotherBrainStatus
+    lda #$01
+    sta $1C
 L9FD9:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 L9FDA:
-    JSR L9F69
-    BCS L9FEC
-    LDA $9D
-    STA $010C
-    LDY #$01
-    STY $010D
-    DEY 
-    STY MotherBrainStatus
+    jsr L9F69
+    bcs L9FEC
+    lda $9D
+    sta $010C
+    ldy #$01
+    sty $010D
+    dey
+    sty MotherBrainStatus
 L9FEC:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 L9FED:
-    LDA $9E
-    BEQ LA01A
-    LDA $0684
-    ORA #$02
-    STA $0684
-    INC MotherBrainHits
-    LDA MotherBrainHits
-    CMP #$20
-    LDY #$02
-    LDA #$10
-    BCC LA016
-    LDX #$00
+    lda $9E
+    beq LA01A
+    lda $0684
+    ora #$02
+    sta $0684
+    inc MotherBrainHits
+    lda MotherBrainHits
+    cmp #$20
+    ldy #$02
+    lda #$10
+    bcc LA016
+    ldx #$00
     LA007:
-        LDA #$00
-        STA $0500,X
-        JSR L9EF9
-        CMP #$D0
-        BNE LA007
-    INY 
-    LDA #$80
+        lda #$00
+        sta $0500,X
+        jsr L9EF9
+        cmp #$D0
+        bne LA007
+    iny
+    lda #$80
 LA016:
-    STY MotherBrainStatus
-    STA $9F
+    sty MotherBrainStatus
+    sta $9F
 LA01A:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA01B:
-    DEC $9A
-    BNE LA02D
-    LDA $2E
-    AND #$03
-    STA $9C
-    LDA #$20
-    SEC 
-    SBC MotherBrainHits
-    LSR 
-    STA $9A
+    dec $9A
+    bne LA02D
+    lda $2E
+    and #$03
+    sta $9C
+    lda #$20
+    sec
+    sbc MotherBrainHits
+    lsr
+    sta $9A
 LA02D:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA02E:
-    DEC $9B
-    LDA $9B
-    ASL 
-    BNE LA040
-    LDA #$20
-    SEC 
-    SBC MotherBrainHits
-    ORA #$80
-    EOR $9B
-    STA $9B
+    dec $9B
+    lda $9B
+    asl
+    bne LA040
+    lda #$20
+    sec
+    sbc MotherBrainHits
+    ora #$80
+    eor $9B
+    sta $9B
 LA040:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA041:
-    LDA #$E0
-    STA $4B
-    LDA $9D
-    STA $6BDB
-    LDA #$70
-    STA $04E0
-    LDA #$48
-    STA $04E1
-    LDY $9C
-    LDA LA06D,Y
-    STA $6BD7
-    JSR CommonJump_14
-    LDA $9B
-    BMI LA06C
-    LDA LA06D+4
-    STA $6BD7
-    JSR CommonJump_14
+    lda #$E0
+    sta $4B
+    lda $9D
+    sta $6BDB
+    lda #$70
+    sta $04E0
+    lda #$48
+    sta $04E1
+    ldy $9C
+    lda LA06D,Y
+    sta $6BD7
+    jsr CommonJump_14
+    lda $9B
+    bmi LA06C
+    lda LA06D+4
+    sta $6BD7
+    jsr CommonJump_14
 LA06C:
-    RTS
+    rts
 
 LA06D:  .byte $13, $14, $15, $16, $17
 
 LA072:
-    LDY MotherBrainHits
-    BEQ LA086
-    LDA LA0C0,Y
-    CLC 
-    ADC $9A
-    TAY 
-    LDA LA0A3,Y
-    CMP #$FF
-    BNE LA087
-    DEC $9A
+    ldy MotherBrainHits
+    beq LA086
+    lda LA0C0,Y
+    clc
+    adc $9A
+    tay
+    lda LA0A3,Y
+    cmp #$FF
+    bne LA087
+    dec $9A
 LA086:
-    RTS
+    rts
 
 LA087:
-    ADC #$44
-    STA $0508
-    PHP 
-    LDA $9D
-    ASL 
-    ASL 
-    ORA #$61
-    PLP 
-    ADC #$00
-    STA $0509
-    LDA #$00
-    STA $0503
-    STA $4B
-    JMP CommonJump_15
+    adc #$44
+    sta $0508
+    php
+    lda $9D
+    asl
+    asl
+    ora #$61
+    plp
+    adc #$00
+    sta $0509
+    lda #$00
+    sta $0503
+    sta $4B
+    jmp CommonJump_15
 
 LA0A3:  .byte $00, $02, $04, $06, $08, $40, $80, $C0, $48, $88, $C8, $FF, $42, $81, $C1, $27
 LA0B3:  .byte $FF, $82, $43, $25, $47, $FF, $C2, $C4, $C6, $FF, $84, $45, $86
@@ -1046,344 +1046,344 @@ LA0C3:  .byte $11, $16, $1A
 
 ;-------------------------------------------------------------------------------
 LA0C6:
-    LDA $71
-    BEQ LA13E
-    LDX $4B
-    LDA $0300,X
-    CMP #$0B
-    BNE LA13E
-    CPY #$98
-    BNE LA103
-        LDX #$00
+    lda $71
+    beq LA13E
+    ldx $4B
+    lda $0300,X
+    cmp #$0B
+    bne LA13E
+    cpy #$98
+    bne LA103
+        ldx #$00
     LA0D9:
-        LDA $0500,X
-        BEQ LA0E7
-            JSR L9EF9
-            CMP #$D0
-            BNE LA0D9
-            BEQ LA13E
+        lda $0500,X
+        beq LA0E7
+            jsr L9EF9
+            cmp #$D0
+            bne LA0D9
+            beq LA13E
         LA0E7:
-        LDA #$8C
-        STA $0508,X
-        LDA $05
-        STA $0509,X
-        LDA #$01
-        STA $0503,X
-        LDA $4B
-        PHA 
-        STX $4B
-        JSR CommonJump_15
-        PLA 
-        STA $4B
-        BNE LA13E
+        lda #$8C
+        sta $0508,X
+        lda $05
+        sta $0509,X
+        lda #$01
+        sta $0503,X
+        lda $4B
+        pha
+        stx $4B
+        jsr CommonJump_15
+        pla
+        sta $4B
+        bne LA13E
     LA103:
-    LDA $04
-    LSR 
-    BCC LA10A
-        DEC $04
+    lda $04
+    lsr
+    bcc LA10A
+        dec $04
     LA10A:
-    LDY #$00
-    LDA ($04),Y
-    LSR 
-    BCS LA13E
-    CMP #$48
-    BCC LA13E
-    CMP #$4C
-    BCS LA13E
+    ldy #$00
+    lda ($04),Y
+    lsr
+    bcs LA13E
+    cmp #$48
+    bcc LA13E
+    cmp #$4C
+    bcs LA13E
     LA119:
-        LDA $0758,Y
-        BEQ LA12E
-        LDA $04
-        AND #$9E
-        CMP $0759,Y
-        BNE LA12E
-        LDA $05
-        CMP $075A,Y
-        BEQ LA139
+        lda $0758,Y
+        beq LA12E
+        lda $04
+        and #$9E
+        cmp $0759,Y
+        bne LA12E
+        lda $05
+        cmp $075A,Y
+        beq LA139
     LA12E:
-        TYA 
-        CLC 
-        ADC #$08
-        TAY 
-        CMP #$28
-        BNE LA119
-    BEQ LA13E
+        tya
+        clc
+        adc #$08
+        tay
+        cmp #$28
+        bne LA119
+    beq LA13E
 LA139:
-    LDA #$01
-    STA $075D,Y
+    lda #$01
+    sta $075D,Y
 LA13E:
-    PLA 
-    PLA 
-    CLC 
-    RTS
+    pla
+    pla
+    clc
+    rts
 
 ;-------------------------------------------------------------------------------
 LA142:
-    TAY 
-    LDA $71
-    BEQ LA15C
-    LDX $4B
-    LDA $0300,X
-    CMP #$0B
-    BNE LA15C
-    CPY #$5E
-    BCC LA15C
-    CPY #$72
-    BCS LA15C
-    LDA #$01
-    STA $9E
+    tay
+    lda $71
+    beq LA15C
+    ldx $4B
+    lda $0300,X
+    cmp #$0B
+    bne LA15C
+    cpy #$5E
+    bcc LA15C
+    cpy #$72
+    bcs LA15C
+    lda #$01
+    sta $9E
 LA15C:
-    TYA 
+    tya
 LA15D:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA15E:
-    LDY $010B
-    INY 
-    BNE LA1DA
-    LDY #$03
-    JSR LA16B
-        LDY #$00
+    ldy $010B
+    iny
+    bne LA1DA
+    ldy #$03
+    jsr LA16B
+        ldy #$00
     LA16B:
-    STY $4B
-    LDA $008B,Y
-    BMI LA15D
-    LDA $008C,Y
-    EOR $2D
-    LSR 
-    BCC LA15D
-    LDA MotherBrainStatus
-    CMP #$04
-    BCS LA15D
-    LDA $2D
-    AND #$06
-    BNE LA15D
-    LDX #$20
+    sty $4B
+    lda $008B,Y
+    bmi LA15D
+    lda $008C,Y
+    eor $2D
+    lsr
+    bcc LA15D
+    lda MotherBrainStatus
+    cmp #$04
+    bcs LA15D
+    lda $2D
+    and #$06
+    bne LA15D
+    ldx #$20
     LA188:
-        LDA EnStatus,X
-        BEQ LA19C
-        LDA $0405,X
-        AND #$02
-        BEQ LA19C
-        TXA 
-        SEC 
-        SBC #$10
-        TAX 
-        BPL LA188
-    RTS
+        lda EnStatus,X
+        beq LA19C
+        lda $0405,X
+        and #$02
+        beq LA19C
+        txa
+        sec
+        sbc #$10
+        tax
+        bpl LA188
+    rts
 
 LA19C:
-    LDA #$01
-    STA EnStatus,X
-    LDA #$04
-    STA $6B02,X
-    LDA #$00
-    STA $040F,X
-    STA $0404,X
-    JSR CommonJump_0E
-    LDA #$F7
-    STA $6AF7,X
-    LDY $4B
-    LDA $008C,Y
-    STA EnNameTable,X
-    LDA $008D,Y
-    ASL 
-    ORA $008B,Y
-    TAY 
-    LDA LA1DB,Y
-    JSR L9EE7
-    LDX $4B
-    INC $8D,X
-    LDA $8D,X
-    CMP #$06
-    BNE LA1DA
-    LDA #$00
+    lda #$01
+    sta EnStatus,X
+    lda #$04
+    sta $6B02,X
+    lda #$00
+    sta $040F,X
+    sta $0404,X
+    jsr CommonJump_0E
+    lda #$F7
+    sta $6AF7,X
+    ldy $4B
+    lda $008C,Y
+    sta EnNameTable,X
+    lda $008D,Y
+    asl
+    ora $008B,Y
+    tay
+    lda LA1DB,Y
+    jsr L9EE7
+    ldx $4B
+    inc $8D,X
+    lda $8D,X
+    cmp #$06
+    bne LA1DA
+    lda #$00
 LA1D8:
-    STA $8D,X
+    sta $8D,X
 LA1DA:
-    RTS
+    rts
 
 LA1DB:  .byte $22, $2A, $2A, $BA, $B2, $2A, $C4, $2A, $C8, $BA, $BA, $BA
 
 ;-------------------------------------------------------------------------------
 LA1E7:
-    LDY $010B
-    INY 
-    BEQ LA237
-    LDA $010A
-    STA $03
-    LDA #$01
-    SEC 
-    JSR CommonJump_Base10Subtract
-    STA $010A
-    LDA $010B
-    STA $03
-    LDA #$00
-    JSR CommonJump_Base10Subtract
-    STA $010B
-    LDA $2D
-    AND #$1F
-    BNE LA216
-        LDA $0681
-        ORA #$08
-        STA $0681
+    ldy $010B
+    iny
+    beq LA237
+    lda $010A
+    sta $03
+    lda #$01
+    sec
+    jsr CommonJump_Base10Subtract
+    sta $010A
+    lda $010B
+    sta $03
+    lda #$00
+    jsr CommonJump_Base10Subtract
+    sta $010B
+    lda $2D
+    and #$1F
+    bne LA216
+        lda $0681
+        ora #$08
+        sta $0681
     LA216:
-    LDA $010A
-    ORA $010B
-    BNE LA237
-    DEC $010B
-    STA MotherBrainHits
-    LDA #$07
-    STA MotherBrainStatus
-    LDA $0680
-    ORA #$01
-    STA $0680
-    LDA #$0C
-    STA $2C
-    LDA #$0B
-    STA $1C
+    lda $010A
+    ora $010B
+    bne LA237
+    dec $010B
+    sta MotherBrainHits
+    lda #$07
+    sta MotherBrainStatus
+    lda $0680
+    ora #$01
+    sta $0680
+    lda #$0C
+    sta $2C
+    lda #$0B
+    sta $1C
 LA237:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA238:
-    LDA $010D
-    BEQ LA28A
-    LDA $010C
-    STA $6BDB
-    LDA #$84
-    STA $04E0
-    LDA #$64
-    STA $04E1
-    LDA #$1A
-    STA $6BD7
-    LDA #$E0
-    STA $4B
-    LDA $5B
-    PHA 
-    JSR CommonJump_14
-    PLA 
-    CMP $5B
-    BEQ LA28A
-    TAX 
-    LDA $010B
-    LSR 
-    LSR 
-    LSR 
-    SEC 
-    ROR 
-    AND #$0F
-    ORA #$A0
-    STA $0201,X
-    LDA $010B
-    AND #$0F
-    ORA #$A0
-    STA $0205,X
-    LDA $010A
-    LSR 
-    LSR 
-    LSR 
-    SEC 
-    ROR 
-    AND #$0F
-    ORA #$A0
-    STA $0209,X
+    lda $010D
+    beq LA28A
+    lda $010C
+    sta $6BDB
+    lda #$84
+    sta $04E0
+    lda #$64
+    sta $04E1
+    lda #$1A
+    sta $6BD7
+    lda #$E0
+    sta $4B
+    lda $5B
+    pha
+    jsr CommonJump_14
+    pla
+    cmp $5B
+    beq LA28A
+    tax
+    lda $010B
+    lsr
+    lsr
+    lsr
+    sec
+    ror
+    and #$0F
+    ora #$A0
+    sta $0201,X
+    lda $010B
+    and #$0F
+    ora #$A0
+    sta $0205,X
+    lda $010A
+    lsr
+    lsr
+    lsr
+    sec
+    ror
+    and #$0F
+    ora #$A0
+    sta $0209,X
 LA28A:
-    RTS
+    rts
 
 ;-------------------------------------------------------------------------------
 LA28B:
-    LDA #$10
-    STA $4B
-    LDX #$20
+    lda #$10
+    sta $4B
+    ldx #$20
     LA291:
-        JSR LA29B
-        TXA 
-        SEC 
-        SBC #$08
-        TAX 
-        BNE LA291
+        jsr LA29B
+        txa
+        sec
+        sbc #$08
+        tax
+        bne LA291
 LA29B:
-    LDA $0758,X
-    AND #$0F
-    CMP #$01
-    BNE LA28A
-    LDA $075D,X
-    BEQ LA2F2
-    INC $075B,X
-    LDA $075B,X
-    LSR 
-    BCS LA2F2
-    TAY 
-    SBC #$03
-    BNE LA2BA
-    INC $0758,X
+    lda $0758,X
+    and #$0F
+    cmp #$01
+    bne LA28A
+    lda $075D,X
+    beq LA2F2
+    inc $075B,X
+    lda $075B,X
+    lsr
+    bcs LA2F2
+    tay
+    sbc #$03
+    bne LA2BA
+    inc $0758,X
 LA2BA:
-    LDA LA310,Y
-    STA $0513
-    LDA $0759,X
-    STA $0518
-    LDA $075A,X
-    STA $0519
-    LDA $07A0
-    BNE LA2DA
-        TXA 
-        PHA 
-        JSR CommonJump_15
-        PLA 
-        TAX 
-        BCC LA2EB
+    lda LA310,Y
+    sta $0513
+    lda $0759,X
+    sta $0518
+    lda $075A,X
+    sta $0519
+    lda $07A0
+    bne LA2DA
+        txa
+        pha
+        jsr CommonJump_15
+        pla
+        tax
+        bcc LA2EB
     LA2DA:
-    LDA $0758,X
-    AND #$80
-    ORA #$01
-    STA $0758,X
-    STA $075D,X
-    DEC $075B,X
-    RTS
+    lda $0758,X
+    and #$80
+    ora #$01
+    sta $0758,X
+    sta $075D,X
+    dec $075B,X
+    rts
 
 LA2EB:
-    LDA #$40
-    STA $075C,X
-    BNE LA30A
+    lda #$40
+    sta $075C,X
+    bne LA30A
 LA2F2:
-    LDY $075B,X
-    BEQ LA30A
-    DEC $075C,X
-    BNE LA30A
-    LDA #$40
-    STA $075C,X
-    DEY 
-    TYA 
-    STA $075B,X
-    LSR 
-    TAY 
-    BCC LA2BA
+    ldy $075B,X
+    beq LA30A
+    dec $075C,X
+    bne LA30A
+    lda #$40
+    sta $075C,X
+    dey
+    tya
+    sta $075B,X
+    lsr
+    tay
+    bcc LA2BA
 LA30A:
-    LDA #$00
-    STA $075D,X
-    RTS
+    lda #$00
+    sta $075D,X
+    rts
 
 LA310:  .byte $0C, $0D, $0E, $0F, $07
 
 ; maybe smtg to do with removing the connection between metroid and samus
 Metroid_LA315:
-    LDY #$05
+    ldy #$05
     LA317:
-        JSR MetroidRoutine_L99B1
-        DEY 
-        BPL LA317
-    STA $92
-    RTS
+        jsr MetroidRoutine_L99B1
+        dey
+        bpl LA317
+    sta $92
+    rts
 ;-----------------
 LA320:
-    TXA 
-    JSR Adiv16_
-    TAY 
-    JSR MetroidRoutine_L99B1
-    STA $92
-    RTS
+    txa
+    jsr Adiv16_
+    tay
+    jsr MetroidRoutine_L99B1
+    sta $92
+    rts
 
 LA32B:  .byte $22, $FF, $FF, $FF, $FF
 
@@ -1391,7 +1391,7 @@ LA330:  .byte $32, $FF, $FF, $FF, $FF, $FF, $FF
 
 LA337:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $E0, $DE, $ED, $FF, $E8
-    .byte $EE 
+    .byte $EE
 
 LA348:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $ED, $FF, $DF, $DA, $EC, $ED, $F4
@@ -1598,10 +1598,8 @@ LA713:  .byte $00, $04, $04, $8A, $FF
 
 ;----------------------------[ Room and structure pointer tables ]-----------------------------------
 
-RmPtrTbl:
 .include "tourian/room_ptrs.asm"
 
-StrctPtrTbl:
 .include "tourian/structure_ptrs.asm"
 
 ;------------------------------------[ Special items table ]-----------------------------------------
@@ -1618,21 +1616,9 @@ StrctPtrTbl:
 
 ;----------------------------------------[ Macro definitions ]---------------------------------------
 
-MacroDefs:
 .include "tourian/metatiles.asm"
 
 ;------------------------------------------[ Area music data ]---------------------------------------
-
-;There are 3 control bytes associated with the music data and the rest are musical note indexes.
-;If the byte has the binary format 1011xxxx ($Bx), then the byte is an index into the corresponding
-;musical notes table and is used to set the note length until it is set by another note length
-;byte. The lower 4 bits are the index into the note length table. Another control byte is the loop
-;and counter btye. The loop and counter byte has the format 11xxxxxx. Bits 0 thru 6 contain the
-;number of times to loop.  The third control byte is #$FF. This control byte marks the end of a loop
-;and decrements the loop counter. If #$00 is found in the music data, the music has reached the end.
-;A #$00 in any of the different music channel data segments will mark the end of the music. The
-;remaining bytes are indexes into the MusicNotesTbl and should only be even numbers as there are 2
-;bytes of data per musical note.
 
 .include "songs/escape.asm"
 
@@ -1641,10 +1627,10 @@ MacroDefs:
 ;Unused tile patterns.
     .byte $2B, $3B, $1B, $5A, $D0, $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0
     .byte $2C, $23, $20, $20, $30, $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30
-    .byte $1F, $80, $C0, $C0, $60, $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00 
+    .byte $1F, $80, $C0, $C0, $60, $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $01, $00, $00, $00, $00, $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80
     .byte $C4, $A5, $45, $0B, $1B, $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04
-    .byte $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00 
+    .byte $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;-----------------------------------------[ Sound engine ]-------------------------------------------
 

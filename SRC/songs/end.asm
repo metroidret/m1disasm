@@ -776,4 +776,3 @@ SongEndNoise:
     SongNoteLength $2 ;7/32 seconds
     .byte .lobyte(DrumBeat02SFXData)
     SongEnd ;End of end music.
-

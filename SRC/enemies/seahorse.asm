@@ -1,63 +1,63 @@
 ; Lava Seahorse Routine
 SeahorseRoutine:
-    LDA EnStatus,X
-    CMP #$01
-    BNE L9AF5
-        LDA #$E8
-        STA $0400,X
+    lda EnStatus,X
+    cmp #$01
+    bne L9AF5
+        lda #$E8
+        sta $0400,X
     L9AF5:
-    CMP #$02
-    BNE L9B4F
-    LDA $0406,X
-    BEQ L9B4F
-    LDA $6B01,X
-    BNE L9B4F
-    LDA $2D
-    AND #$1F
-    BNE L9B3C
-        LDA $2E
-        AND #$03
-        BEQ L9B59
-        LDA #$02
-        STA $87
-        LDA #$00
-        STA $88
-        LDA #$43
-        STA $83
-        LDA #$47
-        STA $84
-        LDA #$03
-        STA $85
-        JSR CommonJump_0B
-        LDA $0680
-        ORA #$04
-        STA $0680
-        LDA $0405,X
-        AND #$01
-        TAY 
-        LDA $0083,Y
-        JSR CommonJump_05
-        BEQ L9B59
+    cmp #$02
+    bne L9B4F
+    lda $0406,X
+    beq L9B4F
+    lda $6B01,X
+    bne L9B4F
+    lda $2D
+    and #$1F
+    bne L9B3C
+        lda $2E
+        and #$03
+        beq L9B59
+        lda #$02
+        sta $87
+        lda #$00
+        sta $88
+        lda #$43
+        sta $83
+        lda #$47
+        sta $84
+        lda #$03
+        sta $85
+        jsr CommonJump_0B
+        lda $0680
+        ora #$04
+        sta $0680
+        lda $0405,X
+        and #$01
+        tay
+        lda $0083,Y
+        jsr CommonJump_05
+        beq L9B59
     L9B3C:
-    CMP #$0F
-    BCC L9B59
-    LDA $0405,X
-    AND #$01
-    TAY 
-    LDA SeahorseTable,Y
-    JSR CommonJump_05
-    JMP L9B59
+    cmp #$0F
+    bcc L9B59
+    lda $0405,X
+    and #$01
+    tay
+    lda SeahorseTable,Y
+    jsr CommonJump_05
+    jmp L9B59
 
 L9B4F:
-    LDA EnStatus,X
-    CMP #$03
-    BEQ L9B59
-    JSR CommonJump_0A
+    lda EnStatus,X
+    cmp #$03
+    beq L9B59
+    jsr CommonJump_0A
 L9B59:
-    LDA #$01
-    STA $00
-    STA $01
-    JMP CommonEnemyJump_00_01_02
+    lda #$01
+    sta $00
+    sta $01
+    jmp CommonEnemyJump_00_01_02
 
 ; probably animation frame id table
 SeahorseTable:

@@ -21,7 +21,7 @@
 ;The way the bytes work int the special items table is as follows:
 ;Long entry(one with a data word in it):
 ;Byte 0=Y coordinate of room on the world map.
-;Word 0=Address of next entry in the table that has a different Y coordinate.--> 
+;Word 0=Address of next entry in the table that has a different Y coordinate.-->
 ;       $FFFF=No more items with different Y coordinates.
 ;Byte 1=X coordinate of room in the world map.
 ;Byte 2=byte offset-1 of next special item in the table that has the same-->

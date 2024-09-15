@@ -131,7 +131,7 @@ Timer3                 = $2C     ;Decremented every 10 frames after set.
 
 FrameCount             = $2D     ;Increments every frame(overflows every 256 frames).
 
-RandomNumber1          = $2E     ;Random numbers used-->         
+RandomNumber1          = $2E     ;Random numbers used-->
 RandomNumber2          = $2F     ;throughout the game.
 
 SpareMem30             = $30     ;Written to, but never accessed.
@@ -142,7 +142,7 @@ RoomPtr                = $33     ;Low byte of room pointer address.
 
 StructPtr              = $35     ;Low bute of structure pointer address.
 ;      StructPtr+1            = $36     ;High byte of structure pointer address.
-                                
+
 CartRAMWorkPtr         = $37     ;Low byte of pointer to current position in room RAM.
 ;      CartRAMWorkPtr+1       = $38     ;High byte of pointer to current position in room RAM.
                                         ;The CartRAMWorkPtr points to the current memory address-->
@@ -155,7 +155,7 @@ CartRAMPtr             = $39     ;Low byte of pointer to room RAM (#$00).
                                         ;areas and they are the exact same size as the two name-->
                                         ;tables and attribute tables in the PPU. Once the room-->
                                         ;RAM conatins a completed room in it, the entire contents-->
-                                        ;of the room RAM is loaded into the PPU. 
+                                        ;of the room RAM is loaded into the PPU.
 
 RoomPtrTable           = $3B     ;Low byte of start of room pointer table.
 ;      RoomPtrTable+1         = $3C     ;High byte of start of room pointer table.
@@ -186,7 +186,7 @@ PageIndex              = $4B     ;Index to object data.
                                         ;#$D0, #$E0, #$F0 = projectile indices(including bombs).
                                         ;
 ItemIndex              = $4C     ;#$00 or #$08. Added to PowerUpType addresses to determine if-->
-                                        ;the first or second item slot is being checked. 
+                                        ;the first or second item slot is being checked.
 
 SamusDir               = $4D     ;0 = Right, 1 = Left.
 SamusDoorDir           = $4E     ;Direction Samus passed through door.
@@ -240,16 +240,16 @@ HealthHiChange         = $6F     ;Amount to add/subtract from HealthHi.
 
 SamusBlink             = $70
 UpdatingProjectile     = $71     ;#$01=Projectile update in process. #$00=not in process.
-DamagePushDirection    = $72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push. 
+DamagePushDirection    = $72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
 InArea                 = $74     ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12=Kraid hideout,-->
                                         ;#$13=Tourian, #$14=Ridley hideout.
 
 SpareMem75             = $75     ;Initialized to #$FF in AreaInit. Not used.
 PalToggle              = $76
 
-ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing. 
+ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing.
                                         ;#$01=Play item room music.
-                                        ;#$80=Stop item room music once door scroll complete. 
+                                        ;#$80=Stop item room music once door scroll complete.
                                         ;#$81=Item room music already playing. Don't restart.
 
 OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
@@ -329,7 +329,7 @@ MirrorCntrl            = $FA     ;If bit 3 is set, PPU set to horizontal mirrori
                                         ;else if bit 3 is clear, PPU is set to vertical-->
                                         ;mirroring. No other bits seem to matter.
 
-ScrollY                = $FC     ;Y value loaded into scroll register. 
+ScrollY                = $FC     ;Y value loaded into scroll register.
 ScrollX                = $FD     ;X value loaded into scroll register.
 PPUMASK_ZP              = $FE     ;Data byte to be loaded into PPU control register 1.
 PPUCTRL_ZP              = $FF     ;Data byte to be loaded into PPU control register 0.
@@ -420,7 +420,7 @@ ObjRadY                = $0301   ;Distance in pixels from object center to top o
 ObjRadX                = $0302   ;Distance in pixels from object center to left or right side.
 AnimFrame              = $0303   ;*2 = Index into FramePtrTable for current animation.
 AnimDelay              = $0304   ;Number of frames to delay between animation frames.
-AnimResetIndex         = $0305   ;Restart index-1 when AnimIndex finished with last frame. 
+AnimResetIndex         = $0305   ;Restart index-1 when AnimIndex finished with last frame.
 AnimIndex              = $0306   ;Current index into ObjectAnimIndexTbl.
 SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
 ObjVertSpeed           = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
@@ -460,7 +460,7 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 
 EnYRoomPos             = $0400   ;Enemy y position in room.(not actual screen position).
 EnXRoomPos             = $0401   ;Enemy x position in room.(not actual screen position).
-EnData02               = $0402   ; unknown - y speed? 
+EnData02               = $0402   ; unknown - y speed?
 EnData03               = $0403   ; unknown - x speed?
 EnData04               = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ; L/R facing in LSB ?
@@ -469,7 +469,7 @@ EnData07               = $0407   ; unknown - x counter
 EnData08               = $0408   ; unknown
 EnDelay                = $0409   ;Delay counter between enemy actions.
 EnData0A               = $040A   ; unknown -- For crawlers, orientation
-                                 ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up 
+                                 ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
 EnHitPoints            = $040B   ;Current hit points of enemy.
 EnData0C               = $040C   ; unknown
 EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
@@ -505,7 +505,7 @@ MusicSQ2PeriodHigh     = $0605   ;Loaded into SQ2Cntrl3 when playing music
 WriteMultiChannelData  = $0607   ;1=data needs to be written, 0=no data to write
 
 MusicTriPeriodLow      = $0608   ;Loaded into TriangleCntrl2 when playing music
-MisicTriPeriodHigh     = $0609   ;Loaded into TriangleCntrl3 when playing music 
+MisicTriPeriodHigh     = $0609   ;Loaded into TriangleCntrl3 when playing music
 
 TrianglePeriodLow      = $0610   ;Stores triangle SFX period low for processing
 TrianglePeriodHigh     = $0611   ;Stroes triangle SFX period high for processing
@@ -513,13 +513,13 @@ TriangleChangeLow      = $0612   ;Stores triangle SFX change in period low
 TriangleChangeHigh     = $0613   ;Stores triangle SFX change in period high
 
 TriangleLowPercentage  = $0614   ;Stores percent to change period low by each frame
-TriangleHighPercentage = $0615   ;Stores percent to change period high by each frame 
+TriangleHighPercentage = $0615   ;Stores percent to change period high by each frame
 PercentDifference      = $0616   ;if=5, percent=1/5(20%), if=0A, percent=1/10(10%), etc
 DivideData             = $0617   ;Used in DivideTrianglePeriods
 
 HasBeamSFX             = $061F   ;Bit 7 set=has long beam, bit 0 set=has ice beam
 
-;The following addresses are loaded into $0640 thru $0643 when those 
+;The following addresses are loaded into $0640 thru $0643 when those
 ;addresses decrement to zero.  These addresses do not decrement.
 
 SQ1FrameCountInit      = $0620   ;Holds number of frames to play sq1 channel data
@@ -624,7 +624,7 @@ SQ2ContSFX             = $068A   ;Continuation flags for SQ2 SFX (never used)
 TriangleContSFX        = $068B   ;Continuation flags for Triangle SFX
 MultiContSFX           = $068C   ;Continuation flags for Multi SFX
 
-CurrentMusic           = $068D   ;Stores the flag of the current music being played 
+CurrentMusic           = $068D   ;Stores the flag of the current music being played
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -695,7 +695,7 @@ DataSlot               = $6885   ;#$00 thru #$02. Stored Samus data to load. App
                                         ;game system was going to be used instead of a password routine.-->
                                         ;The code that uses this memory address is never accessed in-->
                                         ;the actual game. It looks like three player slots were going-->
-                                        ;to be used to store game data(like Zelda).  
+                                        ;to be used to store game data(like Zelda).
 
 NumberOfUniqueItems    = $6886   ;Counts number of power-ups and red doors-->
                                         ;opened.  Does not count different beams-->

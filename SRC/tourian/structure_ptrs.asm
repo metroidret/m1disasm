@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -18,7 +18,8 @@
 
 ;Tourian Structure Pointers
 
-LA7FB:  .word $AC16, $AC29, $AC50, $AC69, $AC70, $AC77, $AC7A, $AC8B
-LA80B:  .word $ACA4, $ACB5, $ACC6, $ACD0, $ACF9, $AD26, $AD2D, $AD3C
-LA81B:  .word $AD3F, $AD48, $AD61, $AD66, $AD6B, $AD99, $ADAC, $ADC8
-LA82B:  .word $ADDD, $ADFE, $AE0F, $AE1A, $AE1E, $AE21, $AE2C, $AE36
+StrctPtrTbl:
+    .word LAC16, LAC29, LAC50, LAC69, LAC70, LAC77, LAC7A, LAC8B
+    .word LACA4, LACB5, LACC6, LACD0, LACF9, LAD26, LAD2D, LAD3C
+    .word LAD3F, LAD48, LAD61, LAD66, LAD6B, LAD99, LADAC, LADC8
+    .word LADDD, LADFE, LAE0F, LAE1A, LAE1E, LAE21, LAE2C, LAE36

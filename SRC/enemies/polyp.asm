@@ -1,41 +1,41 @@
 ; Polyp Routine (mini volcano)
 PolypRoutine:
-    LDA #$00
-    STA EnRadY,X
-    STA EnRadX,X
-    LDA #$10
-    STA $0405,X
+    lda #$00
+    sta EnRadY,X
+    sta EnRadX,X
+    lda #$10
+    sta $0405,X
     .if BANK = 2
-        TXA 
-        ASL 
-        ASL 
-        STA $00
+        txa
+        asl
+        asl
+        sta $00
     .endif
-    TXA 
-    LSR 
-    LSR 
-    LSR 
-    LSR 
-    ADC $2D
+    txa
+    lsr
+    lsr
+    lsr
+    lsr
+    adc $2D
     .if BANK = 2
-        ADC $00
-        AND #$47
+        adc $00
+        and #$47
     .elseif BANK = 5
-        AND #$07
+        and #$07
     .endif
-    BNE PolypRTS
-    LSR $0405,X
-    LDA #$03
-    STA $87
-    LDA $2E
-    LSR 
-    ROL $0405,X
-    AND #$03
-    BEQ PolypRTS
-    STA $88
-    LDA #$02
-    STA $85
-    JMP CommonJump_0B
+    bne PolypRTS
+    lsr $0405,X
+    lda #$03
+    sta $87
+    lda $2E
+    lsr
+    rol $0405,X
+    and #$03
+    beq PolypRTS
+    sta $88
+    lda #$02
+    sta $85
+    jmp CommonJump_0B
 
 PolypRTS:
-    RTS
+    rts

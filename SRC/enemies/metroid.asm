@@ -1,282 +1,282 @@
 MetroidRoutine:
-    LDY $010B
-    INY 
-    BEQ L9804
-        LDA #$00
-        STA EnStatus,X
+    ldy $010B
+    iny
+    beq L9804
+        lda #$00
+        sta EnStatus,X
     L9804:
-    LDA #$0F
-    STA $00
-    STA $01
-    LDA $0405,X
-    ASL 
-    BMI CommonEnemyJump_00_01_02
-    LDA EnStatus,X
-    CMP #$03
-    BEQ CommonEnemyJump_00_01_02
-    JSR L99B7
-    LDA $77F8,Y
-    BEQ L9822
-        JMP L9899
+    lda #$0F
+    sta $00
+    sta $01
+    lda $0405,X
+    asl
+    bmi CommonEnemyJump_00_01_02
+    lda EnStatus,X
+    cmp #$03
+    beq CommonEnemyJump_00_01_02
+    jsr L99B7
+    lda $77F8,Y
+    beq L9822
+        jmp L9899
 
     L9822:
-    LDY $0408,X
-    LDA $77F6,Y
-    PHA 
-    LDA EnData02,X
-    BPL L983B
-        PLA 
-        JSR TwosCompliment_
-        PHA 
-        LDA #$00
-        CMP $0406,X
-        SBC EnData02,X
+    ldy $0408,X
+    lda $77F6,Y
+    pha
+    lda EnData02,X
+    bpl L983B
+        pla
+        jsr TwosCompliment_
+        pha
+        lda #$00
+        cmp $0406,X
+        sbc EnData02,X
     L983B:
-    CMP $77F6,Y
-    PLA 
-    BCC L9849
-        STA EnData02,X
-        LDA #$00
-        STA $0406,X
+    cmp $77F6,Y
+    pla
+    bcc L9849
+        sta EnData02,X
+        lda #$00
+        sta $0406,X
     L9849:
-    LDA $77F6,Y
-    PHA 
-    LDA EnData03,X
-    BPL L985F
-        PLA 
-        JSR TwosCompliment_
-        PHA 
-        LDA #$00
-        CMP $0407,X
-        SBC EnData03,X
+    lda $77F6,Y
+    pha
+    lda EnData03,X
+    bpl L985F
+        pla
+        jsr TwosCompliment_
+        pha
+        lda #$00
+        cmp $0407,X
+        sbc EnData03,X
     L985F:
-    CMP $77F6,Y
-    PLA 
-    BCC L986D
-        STA EnData03,X
-        LDA #$00
-        STA $0407,X
+    cmp $77F6,Y
+    pla
+    bcc L986D
+        sta EnData03,X
+        lda #$00
+        sta $0407,X
     L986D:
-    LDA $0405,X
-    PHA 
-    JSR L9A06
-    STA $6AFF,X
-    PLA 
-    LSR 
-    LSR 
-    JSR L9A06
-    STA $6AFE,X
-    LDA EnStatus,X
-    CMP #$04
-    BNE L9894
-        LDY $040B,X
-        INY 
-        BNE L9899
-        LDA #$05
-        STA $040B,X
-        BNE L9899
+    lda $0405,X
+    pha
+    jsr L9A06
+    sta $6AFF,X
+    pla
+    lsr
+    lsr
+    jsr L9A06
+    sta $6AFE,X
+    lda EnStatus,X
+    cmp #$04
+    bne L9894
+        ldy $040B,X
+        iny
+        bne L9899
+        lda #$05
+        sta $040B,X
+        bne L9899
     L9894:
-    LDA #$FF
-    STA $040B,X
+    lda #$FF
+    sta $040B,X
 L9899:
-    LDA $81
-    CMP #$06
-    BNE L98A9
-    CMP EnStatus,X
-    BEQ L98A9
-    LDA #$04
-    STA EnStatus,X
+    lda $81
+    cmp #$06
+    bne L98A9
+    cmp EnStatus,X
+    beq L98A9
+    lda #$04
+    sta EnStatus,X
 L98A9:
-    LDA $0404,X
-    AND #$20
-    BEQ L990F
-        JSR L99B7
-        LDA $77F8,Y
-        BEQ L98EF
-            LDA $040E,X
-            CMP #$07
-            BEQ L98C3
-                CMP #$0A
-                BNE L9932
+    lda $0404,X
+    and #$20
+    beq L990F
+        jsr L99B7
+        lda $77F8,Y
+        beq L98EF
+            lda $040E,X
+            cmp #$07
+            beq L98C3
+                cmp #$0A
+                bne L9932
             L98C3:
-            LDA $2D
-            AND #$02
-            BNE L9932
-            LDA $77F8,Y
-            CLC 
-            ADC #$10
-            STA $77F8,Y
-            AND #$70
-            CMP #$50
-            BNE L9932
-            LDA #$02
-            ORA $040F,X
-            STA $040C,X
-            LDA #$06
-            STA EnStatus,X
-            LDA #$20
-            STA $040F,X
-            LDA #$01
-            STA $040D,X
+            lda $2D
+            and #$02
+            bne L9932
+            lda $77F8,Y
+            clc
+            adc #$10
+            sta $77F8,Y
+            and #$70
+            cmp #$50
+            bne L9932
+            lda #$02
+            ora $040F,X
+            sta $040C,X
+            lda #$06
+            sta EnStatus,X
+            lda #$20
+            sta $040F,X
+            lda #$01
+            sta $040D,X
         L98EF:
-        LDA #$00
-        STA $0404,X
-        STA $77F8,Y
-        STA $0406,X
-        STA $0407,X
-        LDA $6AFE,X
-        JSR L9A10
-        STA EnData02,X
-        LDA $6AFF,X
-        JSR L9A10
-        STA EnData03,X
+        lda #$00
+        sta $0404,X
+        sta $77F8,Y
+        sta $0406,X
+        sta $0407,X
+        lda $6AFE,X
+        jsr L9A10
+        sta EnData02,X
+        lda $6AFF,X
+        jsr L9A10
+        sta EnData03,X
     L990F:
-    JSR L99B7
-    LDA $77F8,Y
-    BNE L9932
-    LDA $0404,X
-    AND #$04
-    BEQ L9964
-    LDA EnData03,X
-    AND #$80
-    ORA #$01
-    TAY 
-    JSR L99C3
-    JSR L99BD
-    TYA 
-    STA $77F8,X
-    TXA 
-    TAY 
+    jsr L99B7
+    lda $77F8,Y
+    bne L9932
+    lda $0404,X
+    and #$04
+    beq L9964
+    lda EnData03,X
+    and #$80
+    ora #$01
+    tay
+    jsr L99C3
+    jsr L99BD
+    tya
+    sta $77F8,X
+    txa
+    tay
 L9932:
-    TYA 
-    TAX 
-    LDA $77F8,X
-    PHP 
-    AND #$0F
-    CMP #$0C
-    BEQ L9941
-        INC $77F8,X
+    tya
+    tax
+    lda $77F8,X
+    php
+    and #$0F
+    cmp #$0C
+    beq L9941
+        inc $77F8,X
     L9941:
-    TAY 
-    LDA L99D7,Y
-    STA $04
-    STY $05
-    LDA #$0C
-    SEC 
-    SBC $05
-    LDX $4B
-    PLP 
-    BMI L9956
-        JSR TwosCompliment_
+    tay
+    lda L99D7,Y
+    sta $04
+    sty $05
+    lda #$0C
+    sec
+    sbc $05
+    ldx $4B
+    plp
+    bmi L9956
+        jsr TwosCompliment_
     L9956:
-    STA $05
-    JSR L99E4
-    JSR CommonJump_0D
-    JSR L99F4
-    JMP L9967
+    sta $05
+    jsr L99E4
+    jsr CommonJump_0D
+    jsr L99F4
+    jmp L9967
 
 L9964:
-    JSR L99AE
+    jsr L99AE
 L9967:
-    LDA EnStatus,X
-    CMP #$03
-    BNE L9971
-        JSR L99AE
+    lda EnStatus,X
+    cmp #$03
+    bne L9971
+        jsr L99AE
     L9971:
-    LDY #$00
-    LDA $77F8
-    ORA $77F9
-    ORA $77FA
-    ORA $77FB
-    ORA $77FC
-    ORA $77FD
-    AND #$0C
-    CMP #$0C
-    BNE L999E
-    LDA $0106
-    ORA $0107
-    BEQ L999E
-    STY $6F
-    LDY #$04
-    STY $6E
-    JSR CommonJump_SubtractHealth
-    LDY #$01
+    ldy #$00
+    lda $77F8
+    ora $77F9
+    ora $77FA
+    ora $77FB
+    ora $77FC
+    ora $77FD
+    and #$0C
+    cmp #$0C
+    bne L999E
+    lda $0106
+    ora $0107
+    beq L999E
+    sty $6F
+    ldy #$04
+    sty $6E
+    jsr CommonJump_SubtractHealth
+    ldy #$01
 L999E:
-    STY $92
-    LDA $6B
-    BMI L99AB
-        LDA $6B02,X
-        ORA #$A2
-        STA $6B
+    sty $92
+    lda $6B
+    bmi L99AB
+        lda $6B02,X
+        ora #$A2
+        sta $6B
     L99AB:
-    JMP CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02
 
 L99AE:
-    JSR L99B7
+    jsr L99B7
 MetroidRoutine_L99B1:
-    LDA #$00
-    STA $77F8,Y
-    RTS
+    lda #$00
+    sta $77F8,Y
+    rts
 
 L99B7:
-    TXA 
-    JSR Adiv16_
-    TAY 
-    RTS
+    txa
+    jsr Adiv16_
+    tay
+    rts
 
 L99BD:
-    TXA 
-    JSR Adiv16_
-    TAX 
-    RTS
+    txa
+    jsr Adiv16_
+    tax
+    rts
 
 L99C3:
-    LDA #$00
-    STA EnData02,X
-    STA EnData03,X
-    STA $0407,X
-    STA $0406,X
+    lda #$00
+    sta EnData02,X
+    sta EnData03,X
+    sta $0407,X
+    sta $0406,X
 L99D1:
-    STA $6AFF,X
-    STA $6AFE,X
+    sta $6AFF,X
+    sta $6AFE,X
 L99D7:
-    RTS
+    rts
 
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
- 
+
 L99E4:
-    LDA ObjectX
-    STA $09
-    LDA ObjectY
-    STA $08
-    LDA $030C
-    STA $0B
-    RTS
+    lda ObjectX
+    sta $09
+    lda ObjectY
+    sta $08
+    lda $030C
+    sta $0B
+    rts
 
 L99F4:
-    LDA $09
-    STA EnXRoomPos,X
-    LDA $08
-    STA EnYRoomPos,X
-    LDA $0B
-    AND #$01
-    STA EnNameTable,X
-    RTS
+    lda $09
+    sta EnXRoomPos,X
+    lda $08
+    sta EnYRoomPos,X
+    lda $0B
+    and #$01
+    sta EnNameTable,X
+    rts
 
 L9A06:
-    LSR 
-    LDA $0408,X
-    ROL 
-    TAY 
-    LDA $77F2,Y
-    RTS
+    lsr
+    lda $0408,X
+    rol
+    tay
+    lda $77F2,Y
+    rts
 
 L9A10:
-    ASL 
-    ROL 
-    AND #$01
-    TAY 
-    LDA $77F0,Y
-    RTS
+    asl
+    rol
+    and #$01
+    tay
+    lda $77F0,Y
+    rts
 
     .byte $F8, $08, $30, $D0, $60, $A0, $02, $04, $00, $00, $00, $00, $00, $00

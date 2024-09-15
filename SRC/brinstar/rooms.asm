@@ -33,7 +33,8 @@
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
 ;Room #$00
-LA441:  .byte $02                               ;Attribute table data.
+LA441:
+    .byte $02                               ;Attribute table data.
 ;Room object data:
 LAA42:  .byte $40, $01, $02, $48, $01, $02, $50, $03, $02, $5F, $03, $02, $FD
 ;Room enemy/door data:
@@ -49,7 +50,7 @@ LA45C:  .byte $03                               ;Attribute table data.
 ;Room object data:
 LA45D:  .byte $00, $0B, $03, $0E, $0B, $03, $50, $0B, $03, $5E, $0B, $03, $A0, $0B, $03, $AE
 LA46D:  .byte $0B, $03, $FD
-;Room enemy/door data: 
+;Room enemy/door data:
 LA470:  .byte $01, $03, $42, $11, $83, $8A, $21, $03, $B5, $31, $02, $59, $41, $02, $A3, $FF
 
 ;Room #$03
@@ -57,7 +58,7 @@ LA480:  .byte $02                               ;Attribute table data.
 ;Room object data:
 LA481:  .byte $00, $0B, $03, $02, $09, $03, $0E, $0B, $03, $50, $0B, $03, $56, $0A, $03, $5F
 LA491:  .byte $03, $02, $8B, $0A, $03, $8E, $0B, $03, $92, $0A, $03, $A0, $0B, $03, $C7, $09
-LA4A1:  .byte $03, $DE, $0B, $03, $FD 
+LA4A1:  .byte $03, $DE, $0B, $03, $FD
 ;Room enemy/door data:
 LA4A6:  .byte $02, $A1, $01, $85, $47, $11, $05, $BA, $21, $03, $08, $31, $83, $53, $41, $83
 LA4B6:  .byte $97, $51, $03, $C5, $FF
@@ -69,7 +70,7 @@ LA4BC:  .byte $00, $0B, $03, $04, $0A, $03, $0E, $0B, $03, $47, $09, $03, $50, $
 LA4CC:  .byte $0B, $03, $80, $0B, $03, $82, $0A, $03, $9C, $0A, $03, $AE, $0B, $03, $B6, $0A
 LA4DC:  .byte $03, $C0, $0B, $03, $FD
 ;Room enemy/door data:
-LA4E1:  .byte $02, $B1, $41, $03, $45, $51, $03, $BB, $31, $05, $39, $FF 
+LA4E1:  .byte $02, $B1, $41, $03, $45, $51, $03, $BB, $31, $05, $39, $FF
 
 ;Room #$05
 LA4ED:  .byte $03                               ;Attribute table data.
@@ -85,7 +86,7 @@ LA524:  .byte $03                               ;Attribute table data.
 ;Room object data:
 LA525:  .byte $00, $0B, $03, $0E, $0B, $03, $12, $0A, $03, $37, $0A, $03, $50, $0B, $03, $5E
 LA535:  .byte $0B, $03, $73, $0A, $03, $8A, $0A, $03, $A0, $0B, $03, $AE, $0B, $03, $B6, $09
-LA545:  .byte $03, $FD 
+LA545:  .byte $03, $FD
 ;Room enemy/door data:
 LA547:  .byte $01, $03, $B3, $11, $03, $3C, $21, $05, $A8, $31, $05, $64, $51, $85, $7B, $41
 LA557:  .byte $05, $28, $FF
@@ -112,7 +113,7 @@ LA5B9:  .byte $03                               ;Attribute table data.
 ;Room object data:
 LA5BA:  .byte $00, $11, $01, $08, $11, $01, $35, $1D, $03, $3B, $1D, $03, $55, $0B, $03, $5A
 LA5CA:  .byte $0B, $03, $C5, $16, $00, $D0, $10, $03, $D8, $10, $03, $FD
-;Room enemy/door data: 
+;Room enemy/door data:
 LA5D6:  .byte $51, $05, $25, $41, $05, $2B, $FF
 
 ;Room #$0A
@@ -122,7 +123,7 @@ LA5DE:  .byte $00, $14, $00, $08, $14, $00, $0F, $15, $00, $10, $15, $00, $14, $
 LA5EE:  .byte $08, $03, $50, $14, $00, $58, $0C, $00, $5F, $04, $02, $60, $14, $00, $70, $13
 LA5FE:  .byte $00, $80, $14, $00, $88, $14, $00, $90, $16, $00, $99, $16, $00, $B3, $15, $00
 LA60E:  .byte $BC, $15, $00, $FD
-;Room enemy/door data: 
+;Room enemy/door data:
 LA612:  .byte $02, $A0, $FF
 
 ;Room #$0B
@@ -157,7 +158,7 @@ LA68D:  .byte $02                               ;Attribute table data.
 LA68E:  .byte $00, $1B, $02, $08, $1B, $02, $AC, $19, $02, $B4, $19, $02, $B8, $1A, $02, $D0
 LA69E:  .byte $00, $02, $D8, $00, $02, $FD
 ;Room enemy/door data:
-LA6A4:  .byte $01, $82, $28, $11, $05, $A5, $21, $02, $8B, $31, $02, $BD, $FF 
+LA6A4:  .byte $01, $82, $28, $11, $05, $A5, $21, $02, $8B, $31, $02, $BD, $FF
 
 ;Room #$0F
 LA6B1:  .byte $03                               ;Attribute table data.
@@ -282,7 +283,7 @@ LA90D:  .byte $02, $B1, $FF
 LA910:  .byte $01                               ;Attribute table data.
 ;Room object data:
 LA911:  .byte $00, $0E, $01, $08, $0E, $01, $44, $0E, $01, $84, $0F, $01, $94, $0E, $01, $B0
-LA921:  .byte $0E, $01, $B8, $0E, $01, $FD 
+LA921:  .byte $0E, $01, $B8, $0E, $01, $FD
 ;Room enemy/door data:
 LA927:  .byte $31, $06, $42, $FF
 
@@ -308,7 +309,7 @@ LA988:  .byte $02, $B1, $01, $02, $2B, $11, $02, $BB, $21, $82, $5B, $31, $02, $
 LA997:  .byte $01                               ;Attribute table data.
 ;Room object data:
 LA998:  .byte $00, $27, $01, $08, $27, $01, $1C, $24, $01, $20, $24, $01, $5F, $03, $02, $8C
-LA9A8:  .byte $24, $01, $BA, $26, $01, $C4, $26, $01, $C8, $0E, $01, $D0, $0E, $01, $FD 
+LA9A8:  .byte $24, $01, $BA, $26, $01, $C4, $26, $01, $C8, $0E, $01, $D0, $0E, $01, $FD
 ;Room enemy/door data:
 LA9B7:  .byte $02, $A1, $51, $02, $85, $41, $02, $C5, $31, $05, $BA, $21, $05, $C5, $FF
 
@@ -381,7 +382,7 @@ LAB3F:  .byte $02, $B0, $11, $04, $38, $31, $06, $27, $FF
 LAB48:  .byte $00                               ;Attribute table data.
 ;Room object data:
 LAB49:  .byte $00, $2D, $02, $08, $2D, $02, $0F, $28, $02, $5F, $03, $02, $87, $14, $00, $8F
-LAB59:  .byte $28, $02, $9A, $15, $00, $C3, $26, $01, $D0, $2D, $02, $D8, $2D, $02, $FD 
+LAB59:  .byte $28, $02, $9A, $15, $00, $C3, $26, $01, $D0, $2D, $02, $D8, $2D, $02, $FD
 ;Room enemy/door data:
 LAB68:  .byte $02, $A1, $01, $06, $23, $31, $05, $7D, $FF
 

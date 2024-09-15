@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -192,4 +192,3 @@ SongKraidTri:
         SongNoteLength $4 ;1 second
         SongNote "E2"
     SongRepeat
-

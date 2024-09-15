@@ -4,6 +4,9 @@ ca65 instructions in lowercase
 hex numbers in uppercase
 labels in camelcase
 macros in camelcase
+last character in a file must be newline
+utf-8
+
 only use asterisk labels for super obvious stuff
 
 tabulation

@@ -1,38 +1,38 @@
 RioRoutine:
-    LDA $81
-    CMP #$01
-    BEQ RioExitC
+    lda $81
+    cmp #$01
+    beq RioExitC
 
-    CMP #$03
-    BEQ RioExitB
+    cmp #$03
+    beq RioExitB
 
-    LDA #$80
-    STA EnData1A,X
-    LDA EnData02,X ; y speed?
-    BMI RioExitA
+    lda #$80
+    sta EnData1A,X
+    lda EnData02,X ; y speed?
+    bmi RioExitA
 
-    LDA EnData05,X
-    AND #$10
-    BEQ RioExitA
+    lda EnData05,X
+    and #$10
+    beq RioExitA
 
-    LDA EnYRoomPos,X
-    SEC 
-    SBC ObjectY ; Compare with Samus' Y position
-    BPL RioBranch
-        JSR TwosCompliment_
+    lda EnYRoomPos,X
+    sec
+    sbc ObjectY ; Compare with Samus' Y position
+    bpl RioBranch
+        jsr TwosCompliment_
     RioBranch:
-    CMP #$10
-    BCS RioExitA
-    LDA #$00
-    STA EnData1A,X
+    cmp #$10
+    bcs RioExitA
+    lda #$00
+    sta EnData1A,X
 
 RioExitA:
-    LDA #$03
-    JMP CommonJump_00
+    lda #$03
+    jmp CommonJump_00
 
 RioExitB:
-    JMP CommonJump_02
+    jmp CommonJump_02
 
 RioExitC:
-    LDA #$08
-    JMP CommonJump_01
+    lda #$08
+    jmp CommonJump_01

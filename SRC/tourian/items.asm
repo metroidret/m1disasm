@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -21,7 +21,7 @@
 ;The way the bytes work int the special items table is as follows:
 ;Long entry(one with a data word in it):
 ;Byte 0=Y coordinate of room on the world map.
-;Word 0=Address of next entry in the table that has a different Y coordinate.--> 
+;Word 0=Address of next entry in the table that has a different Y coordinate.-->
 ;       $FFFF=No more items with different Y coordinates.
 ;Byte 1=X coordinate of room in the world map.
 ;Byte 2=byte offset-1 of next special item in the table that has the same-->
@@ -58,7 +58,7 @@ SpecItmsTbl:
     ;Elevator to end.
         .byte $01, $FF
         .byte it_Elevator, $8F
-        .byte $00 
+        .byte $00
 
 LA843:
     .byte $04

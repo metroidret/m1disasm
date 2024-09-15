@@ -23,7 +23,7 @@ PPUDATA                = $2007   ;
     PPUCTRL_OBJH_16        = %00100000
     PPUCTRL_VBLKNMI_OFF    = %00000000
     PPUCTRL_VBLKNMI_ON     = %10000000
-    
+
     PPUMASK_COLOR          = %00000000
     PPUMASK_GREYSCALE      = %00000001
     PPUMASK_HIDE8BG        = %00000000
@@ -68,7 +68,7 @@ APUCommonCntrl1        = $4017   ;Joypad2/APU common control 2 register.
 
 ;----------------------------------------------------------------------------------------------------
 
-MMC1Reg0               = $8000   ;Writing to any of these addresses or any--> 
+MMC1Reg0               = $8000   ;Writing to any of these addresses or any-->
 MMC1Reg1               = $A000   ;address in between will write configuration-->
 MMC1Reg2               = $C000   ;bits to the MMC chip.
 MMC1Reg3               = $E000   ;

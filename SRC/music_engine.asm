@@ -105,7 +105,7 @@ DoorSFXData:
 NoiseSFXInitPointers:
     .word NoiseSFXInitRoutineTbl, LoadNoiseSFXContFlags              ;Noise init SFX         (1st).
     .byte $00
-        
+
 NoiseSFXContPointers:
     .word NoiseSFXContRoutineTbl, LB4EE              ;Noise continue SFX     (2nd).
     .byte $00
@@ -231,7 +231,7 @@ LoadSQ1SFXContFlags:
     bne GotoSFXCheckFlags           ;Branch always.
 
 GotoSFXCheckFlags:
-    jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX flags set.         
+    jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX flags set.
     jmp ($00E2)                     ;if no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling routine.
 LoadSTriangleSFXInitFlags:
@@ -297,7 +297,7 @@ LoadSFXRegisters:
 
 PauseSFX:
     inc SFXPaused                   ;SFXPaused=#$01
-    jsr ClearSounds                 ;($B43E)Clear sound registers of data.          
+    jsr ClearSounds                 ;($B43E)Clear sound registers of data.
     sta PauseSFXStatus              ;PauseSFXStatus=#$00
     rts                             ;
 
@@ -318,19 +318,19 @@ LB3B3:
     rts
 
 ;------------------------------------[ Sound Engine Entry Point ]------------------------------------
-;NOTES:  
+;NOTES:
 ;SFX take priority over music.
 ;
 ;There are 10 SFX cycles run every time the sound engine subroutine is called.  The cycles
 ;search for set sound flags in the following registers in order:
-;$680, $688, $684, $68C, $681, $689, $683, $68B, $65D, $685 
+;$680, $688, $684, $68C, $681, $689, $683, $68B, $65D, $685
 ;
 ;The sound channels are assigned SFX numbers.  Those SFX numbers are:
 ;Noise=0, sq1=1, sq2=2, triangle=3, Multi=4
 ;The sound channels are assigned music numbers.  Those music numbers are:
 ;SQ1=0, SQ2=1, Triangle=2, Noise=3
 
-SoundEngine: 
+SoundEngine:
     lda #$C0                        ;Set APU to 5 frame cycle, disable frame interrupt.
     sta APUCommonCntrl1             ;
     lda NoiseSFXFlag                ;is bit zero is set in NoiseSFXFlag(Silence-->
@@ -357,7 +357,7 @@ ClearSFXFlags:
     rts                             ;
 
 LB3EB:
-    jsr InitializeSoundAddresses    ;($B404)Prepare to start playing music.         
+    jsr InitializeSoundAddresses    ;($B404)Prepare to start playing music.
     beq ClearSFXFlags               ;Branch always.
 
 CheckRepeatMusic:
@@ -380,7 +380,7 @@ LB40A:
     rts                             ;
 
 ClearSpecialAddresses:
-    lda #$00                        ;       
+    lda #$00                        ;
     sta TriangleCounterCntrl        ;Clears addresses used for repeating music,-->
     sta SFXPaused                   ;pausing music and controlling triangle length.
     sta CurrentMusicRepeat          ;
@@ -393,7 +393,7 @@ ClearMusicAndSFXAddresses:              ;
     sta SQ2InUse                    ;
     sta TriangleInUse               ;
     sta WriteMultiChannelData       ;
-    sta NoiseContSFX                ;Clears any SFX or music--> 
+    sta NoiseContSFX                ;Clears any SFX or music-->
     sta SQ1ContSFX                  ;currently being played.
     sta SQ2ContSFX                  ;
     sta TriangleContSFX             ;
@@ -518,7 +518,7 @@ LB4EE:
 
 SFXFlagFound:                           ;
     lda ($E0),Y                     ;This routine stores the starting address of the-->
-    sta $E2                         ;specific SFX handling routine for the SFX flag--> 
+    sta $E2                         ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
     lda ($E0),Y                     ;$E2 and $E3.
     sta $E2+1                       ;
@@ -546,7 +546,7 @@ SpitFlameSFXContinue:
     lda $B4FB,Y                     ;Load data from table above and store in NoiseCntrl0.
     sta NoiseCntrl0                 ;
     inc NoiseSFXData                ;Increment to next entry in data table.
-    rts 
+    rts
 
 ScrewAttackSFXStart:
     lda #$05                        ;Number of frames to play sound before a change.
@@ -608,7 +608,7 @@ GotoSelectSFXRoutine:
 
 NoiseSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne MusicBranch02               ;If more frames to process, branch to exit. 
+    bne MusicBranch02               ;If more frames to process, branch to exit.
 
 EndNoiseSFX:
     jsr ClearCurrentSFXFlags        ;($B4A2)Clear all SFX flags.
@@ -617,7 +617,7 @@ EndNoiseSFX:
 
 MusicBranch02:
     rts                             ;Exit for multiple routines.
- 
+
 SamusWalkSFXStart:
     lda NoiseContSFX                ;If MissileLaunch, SamusWalk or SpitFire SFX are-->
     and #$34                        ;already being played, branch to exit.
@@ -756,7 +756,7 @@ IncorrectPasswordSFXContinue:
 ;MissilePickupSFXContinue routine.
 
 MissilePickupSFXTbl:
-    .byte $BD, $8D, $7E, $5E, $46, $3E, $00 
+    .byte $BD, $8D, $7E, $5E, $46, $3E, $00
 
 MissilePickupSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
@@ -917,7 +917,7 @@ LoadSQ1PeriodLow:
 
 MusicBranch10:
     rts                             ;Exit for multiple routines.
- 
+
 WaveBeamSFXPeriodLowTbl:
     .byte $58                       ;Wave beam SFX period low data.
     .byte $6F                       ;
@@ -1156,7 +1156,7 @@ StatueRaiseSFXContinue:
     jmp WriteTrianglePeriods        ;($B869)Save new periods.
 
 IncreaseTrianglePeriods:
-    clc 
+    clc
     lda TrianglePeriodLow           ;
     adc TriangleChangeLow           ;Calculate new TrianglePeriodLow.
     sta TrianglePeriodLow           ;
@@ -1166,7 +1166,7 @@ IncreaseTrianglePeriods:
     rts                             ;
 
 DecreaseTrianglePeriods:
-    sec 
+    sec
     lda TrianglePeriodLow           ;
     sbc TriangleChangeLow           ;Calculate new TrianglePeriodLow.
     sta TrianglePeriodLow           ;
@@ -1208,7 +1208,7 @@ DivideTrianglePeriods:
     rts                             ;
 
 ;--------------------------------------[ End SFX routines ]-------------------------------------
- 
+
 SetVolumeAndDisableSweep:
     lda #$7F                        ;
     sta MusicSQ1Sweep               ;Disable sweep generator on SQ1 and SQ2.
@@ -1285,7 +1285,7 @@ LBA5C:
     cmp #$F0                        ;Volume data.  If #$F0 is last entry, turn sound-->
     beq MusicBranch06               ;off on current channel until next note.
     lda SQ1DutyEnvelope,X           ;Remove duty cycle data For current channel and-->
-    and #$F0                        ;add this frame of volume data and store results--> 
+    and #$F0                        ;add this frame of volume data and store results-->
     ora Cntrl0Data                  ;in Cntrl0Data.
     tay                             ;
 LBA7D:
@@ -1407,7 +1407,7 @@ LoadMusicChannel:
     clc                             ;
     adc NoteLengthTblOffset         ;Find proper note lengths table for current music.
     tay                             ;
-    lda NoteLengths0Tbl,Y           ;(Base is $BEF7)Load note length and store in--> 
+    lda NoteLengths0Tbl,Y           ;(Base is $BEF7)Load note length and store in-->
     sta SQ1FrameCountInit,X         ;frame count init address.
     tay                             ;Y now contains note length.
     txa                             ;
@@ -1485,7 +1485,7 @@ SQ1SQ2InUse:
 
 LoadTriangleCntrl0:
     lda TriangleCounterCntrl        ;
-    and #$0F                        ;If lower bits set, branch to play shorter note. 
+    and #$0F                        ;If lower bits set, branch to play shorter note.
     bne LBBD8                       ;
     lda TriangleCounterCntrl        ;
     and #$F0                        ;If upper bits are set, branch to play longer note.
@@ -1543,7 +1543,7 @@ InitMusicIndexTbl:
 
 MultiSFXInitRoutineTbl:
     .word Music03Start                     ;Fade in music.
-    .word Music01Start                     ;Power up music. 
+    .word Music01Start                     ;Power up music.
     .word Music05Start                     ;End game music.
     .word Music01Start                     ;Intro music.
     .word LB4EE                     ;No sound.
@@ -1614,7 +1614,7 @@ LBC63:
     rts                             ;number of music in MusicInitIndex.
 
 ;The following routine is used to add eight to the music index when looking for music flags
-;in the MultiSFX address.  
+;in the MultiSFX address.
 Add8:
     lda MusicInitIndex              ;
     clc                             ;
@@ -1702,7 +1702,7 @@ VolumeDataTbl4:
 VolumeDataTbl5:
     .byte $0A, $0A, $09, $08, $07, $06, $05, $04, $03, $02, $07, $07, $06, $05, $04, $04
     .byte $03, $02, $02, $02, $05, $05, $05, $04, $03, $02, $02, $02, $01, $01, $04, $04
-    .byte $03, $02, $01, $02, $02, $01, $01, $01, $02, $02, $02, $01, $01, $F0 
+    .byte $03, $02, $01, $02, $02, $01, $01, $01, $02, $02, $02, $01, $01, $F0
 
 ;The init music table loads addresses $062B thru $0637 with the initial data needed to play the
 ;selected music.  The data for each entry in the table have the following format:
@@ -1949,7 +1949,7 @@ NoteLengths2Tbl:
     .byte $02                       ;About    1/32 seconds ($B9)
     .byte $03                       ;About    3/64 seconds ($BA)
 
-InitializeMusic:                                        
+InitializeMusic:
     jsr CheckMusicFlags             ;($B3FC)Check to see if restarting current music.
     lda CurrentSFXFlags             ;Load current SFX flags and store CurrentMusic address.
     sta CurrentMusic                ;

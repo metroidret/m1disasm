@@ -67,4 +67,3 @@ SongMthrBrnRoomSQ2:
         SongNote "F#2"
     SongRepeat
     SongEnd ;End mother brain room music.
-

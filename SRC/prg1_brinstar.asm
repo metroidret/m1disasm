@@ -8,7 +8,7 @@
 ;    N.SHIOTANI
 ;     M.HOUDAI
 ; (C) 1986 NINTENDO
-; 
+;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
 ;Disassembled using TRaCER.
 
@@ -64,7 +64,7 @@ PalPntrTbl:
 
 AreaPointers:
     .word SpecItmsTbl               ;($A3D6)Beginning of special items table.
-    .word RmPtrTbl                  ;($A314)Beginning of room pointer table.        
+    .word RmPtrTbl                  ;($A314)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A372)Beginning of structure pointer table.
     .word MacroDefs                 ;($AEF0)Beginning of macro definitions.
     .word EnemyFramePtrTbl1         ;($9DE0)Pointer table into enemy animation data. Two-->
@@ -85,17 +85,17 @@ AreaPointers:
     .byte $60, $EA, $EA
 
 AreaRoutine: ; L95C3
-    JMP AreaRoutineStub ; Just an RTS
+    jmp AreaRoutineStub ; Just an RTS
 
 TwosCompliment_:
-    EOR #$FF                        ;
-    CLC                             ;The following routine returns the twos-->
-    ADC #$01                        ;compliment of the value stored in A.
-    RTS                             ;
+    eor #$FF                        ;
+    clc                             ;The following routine returns the twos-->
+    adc #$01                        ;compliment of the value stored in A.
+    rts                             ;
 
 ; area init data
     .byte $FF                       ;Not used.
-                                
+
     .byte $01                       ;Brinstar music init flag.
 
     .byte $80                       ;Base damage caused by area enemies to lower health byte.
@@ -109,12 +109,12 @@ TwosCompliment_:
     .byte $B0                       ;Samus start verticle screen position.
 
     .byte $01, $00, $03, $43, $00
-    .byte $00, $00, $00, $00, $00, $69 
+    .byte $00, $00, $00, $00, $00, $69
 
 ; Enemy AI jump table
 ChooseEnemyRoutine:
-    LDA EnDataIndex, X
-    JSR CommonJump_ChooseRoutine
+    lda EnDataIndex, X
+    jsr CommonJump_ChooseRoutine
         .word SidehopperFloorRoutine ; 00 - Sidehopper
         .word SidehopperCeilingRoutine ; 01 - Ceiling sidehopper
         .word WaverRoutine ; 02 - Waver
@@ -140,7 +140,7 @@ EnemyHitPointTbl:
 L962B:  .byte $08, $08, $04, $FF, $02, $02, $04, $01, $20, $FF, $FF, $04, $01, $00, $00, $00
 
 ; ResetAnimIndex table
-L963B:  .byte $05, $05, $0B, $0B, $17, $13, $1B, $19, $23, $23, $35, $35, $48, $48, $59, $57 
+L963B:  .byte $05, $05, $0B, $0B, $17, $13, $1B, $19, $23, $23, $35, $35, $48, $48, $59, $57
 L964B:  .byte $6C, $6F, $5B, $5D, $62, $67, $69, $69, $69, $69, $00, $00, $00, $00, $00, $00
 
 ; another ResetAnimIndex table
@@ -148,17 +148,17 @@ L965B:  .byte $05, $05, $0B, $0B, $17, $13, $1B, $19, $23, $23, $35, $35, $48, $
 L966B:  .byte $6C, $6F, $5B, $5D, $5F, $64, $69, $69, $69, $69, $00, $00, $00, $00, $00, $00
 
 ;another animation related table
-L967B:  .byte $00, $00, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $00 
+L967B:  .byte $00, $00, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $00
 
 ; Screw attack vulnerability? Hit sound?
 ; Bit 5 (0x20) determines something about how it computes velocity
-L968B:  .byte $01, $01, $01, $00, $86, $04, $89, $80, $81, $00, $00, $00, $82, $00, $00, $00 
+L968B:  .byte $01, $01, $01, $00, $86, $04, $89, $80, $81, $00, $00, $00, $82, $00, $00, $00
 
 ; EnData0D table (set upon load, and a couple other times)
-L969B:  .byte $01, $01, $01, $01, $01, $01, $01, $01, $20, $01, $01, $01, $40, $00, $00, $00 
+L969B:  .byte $01, $01, $01, $01, $01, $01, $01, $01, $20, $01, $01, $01, $40, $00, $00, $00
 
 ; Some table referenced when loading an enemy
-L96AB:  .byte $00, $00, $06, $00, $83, $00, $88, $00, $00, $00, $00, $00, $00, $00, $00, $00 
+L96AB:  .byte $00, $00, $06, $00, $83, $00, $88, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyInitDelayTbl:
 L96BB:  .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $00, $00, $00
@@ -188,7 +188,7 @@ L9753:  .byte $F6, $FC, $FE, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $
 L9767:  .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; Behavior-Related Table?
-L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00 
+L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 
 ; Enemy animation related table?
 L978B:  .byte $00, $00, $64, $67, $69, $69, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -261,7 +261,7 @@ L98B9:  .byte $14, $11, $0A, $00, $14, $19, $FE
 
 L98C0:  .byte $14, $19, $0A, $00, $14, $11, $FE
 
-L98C7:  .byte $1E, $11, $0A, $00, $1E, $19, $FE 
+L98C7:  .byte $1E, $11, $0A, $00, $1E, $19, $FE
 
 L98CE:  .byte $1E, $19, $0A, $00, $1E, $11, $FE
 
@@ -307,18 +307,18 @@ L9992:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $
 ;-------------------------------------------------------------------------------
 
 CommonEnemyJump_00_01_02:
-    LDA $81
-    CMP #$01
-    BEQ L99B0
-    CMP #$03
-    BEQ L99B5
-        LDA $00
-        JMP CommonJump_00
+    lda $81
+    cmp #$01
+    beq L99B0
+    cmp #$03
+    beq L99B5
+        lda $00
+        jmp CommonJump_00
     L99B0:
-        LDA $01
-        JMP CommonJump_01
+        lda $01
+        jmp CommonJump_01
     L99B5:
-        JMP CommonJump_02
+        jmp CommonJump_02
 
 .include "enemies/sidehopper.asm"
 
@@ -355,7 +355,7 @@ CommonEnemyJump_00_01_02:
 ;  on removing it.
 
 AreaRoutineStub: ;L9D35
-    RTS
+    rts
 
 ; More strings pointed to by L97A7
 L9D36:  .byte $22, $FF, $FF, $FF, $FF
@@ -512,7 +512,7 @@ L9FA0:  .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $
 
 L9FB0:  .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
 
-L9FBE:  .byte $FC, $F8, $FC, $00 
+L9FBE:  .byte $FC, $F8, $FC, $00
 
 ;Enemy frame drawing data.
 
@@ -665,10 +665,8 @@ LA267:  .byte $21, $00, $00, $C7, $C5, $D7, $D5, $E7, $E5, $FF
 
 ;----------------------------[ Room and structure pointer tables ]-----------------------------------
 
-RmPtrTbl:
 .include "brinstar/room_ptrs.asm"
 
-StrctPtrTbl:
 .include "brinstar/structure_ptrs.asm"
 
 ;------------------------------------[ Special items table ]-----------------------------------------
@@ -683,9 +681,8 @@ StrctPtrTbl:
 
 .include "brinstar/structures.asm"
 
-;----------------------------------------[ Macro definitions ]--------------------------------------- 
+;----------------------------------------[ Macro definitions ]---------------------------------------
 
-MacroDefs:
 .include "brinstar/metatiles.asm"
 
 ;------------------------------------------[ Area music data ]---------------------------------------

@@ -13,7 +13,7 @@ if not os.path.exists('out/'):
     os.mkdir('out/')
 
 is_windows = os.path.join("a", "b") == "a\\b"
-cc65_bin_path = "cc65\\bin\\" if is_windows else "cc65-master/bin"
+cc65_bin_path = "cc65\\bin\\" if is_windows else "cc65-master/bin/"
 ext = ".exe" if is_windows else ""
 
 banks_asm = [

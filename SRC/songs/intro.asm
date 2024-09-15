@@ -314,4 +314,3 @@ SongIntroNoise:
         SongNoteLength $4 ;7/8 Seconds
         .byte .lobyte(DrumBeat01SFXData)
     SongRepeat
-

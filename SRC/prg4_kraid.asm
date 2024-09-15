@@ -81,14 +81,14 @@ L95A8:  .byte $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $
 L95B8:  .byte $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA
 
 AreaRoutine:
-    JMP L9C49                       ;Area specific routine.
+    jmp L9C49                       ;Area specific routine.
 
 TwosCompliment_:
-    EOR #$FF                        ;
-    CLC                             ;The following routine returns the twos-->
-    ADC #$01                        ;compliment of the value stored in A.
-L95CB:  
-    RTS                             ;
+    eor #$FF                        ;
+    clc                             ;The following routine returns the twos-->
+    adc #$01                        ;compliment of the value stored in A.
+L95CB:
+    rts                             ;
 
 L95CC:  .byte $1D                       ;Kraid's room.
 
@@ -107,8 +107,8 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $06, $00, $03, $43, $00, $00, $00, $00, $00, $00, $64
 
 ChooseEnemyRoutine:
-    LDA EnDataIndex,X
-    JSR CommonJump_ChooseRoutine
+    lda EnDataIndex,X
+    jsr CommonJump_ChooseRoutine
         .word SidehopperFloorRoutine ; 00 - sidehopper
         .word SidehopperCeilingRoutine ; 01 - ceiling sidehopper
         .word L95CB ; 02 - unused enemy type that doesn't properly clear itself
@@ -233,18 +233,18 @@ L98E7:  .byte $07, $C2, $06, $A2, $05, $92, $05, $12, $06, $22, $07, $42, $50, $
 L98F6:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $72, $FF
 
 CommonEnemyJump_00_01_02:
-    LDA $81
-    CMP #$01
-    BEQ L9914
-    CMP #$03
-    BEQ L9919
-        LDA $00
-        JMP CommonJump_00
+    lda $81
+    cmp #$01
+    beq L9914
+    cmp #$03
+    beq L9919
+        lda $00
+        jmp CommonJump_00
     L9914:
-        LDA $01
-        JMP CommonJump_01
+        lda $01
+        jmp CommonJump_01
     L9919:
-        JMP CommonJump_02
+        jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------
 
@@ -392,8 +392,8 @@ L9CF5:  .byte $96, $FF
 EnemyFramePtrTbl1:
     .word L9ED9, L9EDE, L9EE3, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
     .word L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
-    .word L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8 
-    .word L9EE8, L9EE8, L9EF6, L9F04, L9F10, L9F1E, L9F2C, L9F38 
+    .word L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
+    .word L9EE8, L9EE8, L9EF6, L9F04, L9F10, L9F1E, L9F2C, L9F38
     .word L9F41, L9F4B, L9F55, L9F5E, L9F68, L9F72, L9F72, L9F72
     .word L9F80, L9F87, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90
     .word L9F90, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90
@@ -582,14 +582,11 @@ LA14B:  .byte $21, $00, $00, $C7, $C5, $D7, $D5, $E7, $E5, $FF
 
 ;----------------------------[ Room and structure pointer tables ]-----------------------------------
 
-RmPtrTbl:
 .include "kraid/room_ptrs.asm"
 
-StrctPtrTbl:
 .include "kraid/structure_ptrs.asm"
 
 ;-----------------------------------[ Special items table ]-----------------------------------------
-
 
 .include "kraid/items.asm"
 
@@ -603,20 +600,12 @@ StrctPtrTbl:
 
 ;----------------------------------------[ Macro definitions ]---------------------------------------
 
-;The macro definitions are simply index numbers into the pattern tables that represent the 4 quadrants
-;of the macro definition. The bytes correspond to the following position in order: lower right tile,
-;lower left tile, upper right tile, upper left tile. 
-
-MacroDefs:
-
 .include "kraid/metatiles.asm"
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-; Ridley Music Data
 .include "songs/ridley.asm"
 
-; Kraid Music Data
 .include "songs/kraid.asm"
 
 ;Not used.

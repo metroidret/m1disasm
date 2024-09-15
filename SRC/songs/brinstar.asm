@@ -334,4 +334,3 @@ SongBrinstarNoise:
         .byte .lobyte(DrumBeat01SFXData)
         .byte .lobyte(DrumBeat01SFXData)
     SongRepeat
-

@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -18,9 +18,10 @@
 
 ;Norfair Room Pointer Table
 
-LA21B:  .word $A3AB, $A3BE, $A3C6, $A3F8, $A42F, $A473, $A4AB, $A4F5
-LA22B:  .word $A527, $A55F, $A598, $A5D9, $A617, $A63E, $A678, $A6AA
-LA23B:  .word $A6DF, $A70E, $A749, $A77E, $A7B3, $A7E6, $A82B, $A852
-LA24B:  .word $A87F, $A8B2, $A8DC, $A909, $A947, $A979, $A9AB, $A9D5
-LA25B:  .word $A9FF, $AA3D, $AA6F, $AAA7, $AAD4, $AB0D, $AB34, $AB70
-LA26B:  .word $ABA5, $ABDA, $AC0D, $AC42, $AC72, $AC99
+RmPtrTbl:
+    .word LA3AB, LA3BE, LA3C6, LA3F8, LA42F, LA473, LA4AB, LA4F5
+    .word LA527, LA55F, LA598, LA5D9, LA617, LA63E, LA678, LA6AA
+    .word LA6DF, LA70E, LA749, LA77E, LA7B3, LA7E6, LA82B, LA852
+    .word LA87F, LA8B2, LA8DC, LA909, LA947, LA979, LA9AB, LA9D5
+    .word LA9FF, LAA3D, LAA6F, LAAA7, LAAD4, LAB0D, LAB34, LAB70
+    .word LABA5, LABDA, LAC0D, LAC42, LAC72, LAC99

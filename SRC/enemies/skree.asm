@@ -1,48 +1,48 @@
 ; SkreeRoutine
 SkreeRoutine:
-    LDA $81
-    CMP #$01
-    BEQ SkreeExitB
-    CMP #$03
-    BEQ SkreeExitC
-    LDA EnCounter,X
-    CMP #$0F
-    BCC SkreeExitA
-    CMP #$11
-    BCS SkreeBranch
-    LDA #$3A
-    STA EnData1D,X
-    BNE SkreeExitA
+    lda $81
+    cmp #$01
+    beq SkreeExitB
+    cmp #$03
+    beq SkreeExitC
+    lda EnCounter,X
+    cmp #$0F
+    bcc SkreeExitA
+    cmp #$11
+    bcs SkreeBranch
+    lda #$3A
+    sta EnData1D,X
+    bne SkreeExitA
 
 SkreeBranch:
-    DEC EnData1D,X
-    BNE SkreeExitA
-    LDA #$00
-    STA EnStatus,X
-    LDY #$0C
+    dec EnData1D,X
+    bne SkreeExitA
+    lda #$00
+    sta EnStatus,X
+    ldy #$0C
 
 SkreeLoop:
-    LDA #$0A
-    STA $A0,Y
-    LDA EnYRoomPos,X
-    STA $A1,Y
-    LDA EnXRoomPos,X
-    STA $A2,Y
-    LDA EnNameTable,X
-    STA $A3,Y
-    DEY 
-    DEY 
-    DEY 
-    DEY 
-    BPL SkreeLoop
+    lda #$0A
+    sta $A0,Y
+    lda EnYRoomPos,X
+    sta $A1,Y
+    lda EnXRoomPos,X
+    sta $A2,Y
+    lda EnNameTable,X
+    sta $A3,Y
+    dey
+    dey
+    dey
+    dey
+    bpl SkreeLoop
 
 SkreeExitA:
-    LDA #$02
-    JMP CommonJump_00
+    lda #$02
+    jmp CommonJump_00
 
 SkreeExitB:
-    LDA #$08
-    JMP CommonJump_01
+    lda #$08
+    jmp CommonJump_01
 
 SkreeExitC:
-    JMP CommonJump_02
+    jmp CommonJump_02

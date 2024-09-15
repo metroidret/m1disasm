@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -162,7 +162,7 @@ LA699:  .byte $03, $B5, $06, $03, $FD
 LA69E:  .byte $02, $B1, $11, $86, $A6, $31, $02, $EA, $21, $02, $39, $FF
 
 ;Room #$0F
-LA6A9:  .byte $00                       ;Attribute table data.
+LA6AA:  .byte $00                       ;Attribute table data.
 ;Room object data:
 LA6AB:  .byte $00, $0E, $00, $04, $0D, $00, $0C, $0D, $00, $10, $0C, $00, $50, $04, $02, $80
 LA6BB:  .byte $09, $00, $90, $0C, $00, $92, $09, $00, $AF, $09, $00, $B9, $09, $00, $D0, $0E

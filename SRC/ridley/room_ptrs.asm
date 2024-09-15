@@ -10,7 +10,7 @@
 ; (C) 1986 NINTENDO
 ;
 ;Commented by Dirty McDingus (nmikstas@yahoo.com)
-;Disassembled using TRaCER by YOSHi 
+;Disassembled using TRaCER by YOSHi
 ;Can be reassembled using Ophis.
 ;Last updated: 3/9/2010
 
@@ -18,9 +18,10 @@
 
 ;Ridley Room Pointers
 
-LA17F:  .word $A23F, $A23F, $A247, $A273, $A29E, $A2B2, $A2E4, $A30F
-LA18F:  .word $A34D, $A383, $A3B8, $A3F9, $A429, $A455, $A48C, $A4C3
-LA19F:  .word $A4F6, $A525, $A555, $A5A1, $A5E5, $A618, $A653, $A67C
-LA1AF:  .word $A6A9, $A6D6, $A6FF, $A72C, $A76B, $A79D, $A7CF, $A7FC
-LA1BF:  .word $A826, $A849, $A867, $A88D, $A8BF, $A8EC, $A92A, $A95D
-LA1CF:  .word $A97B, $A9A5
+RmPtrTbl:
+    .word LA23F, LA23F, LA247, LA273, LA29E, LA2B2, LA2E4, LA30F
+    .word LA34D, LA383, LA3B8, LA3F9, LA429, LA455, LA48C, LA4C3
+    .word LA4F6, LA525, LA555, LA5A1, LA5E5, LA618, LA653, LA67C
+    .word LA6A9, LA6D6, LA6FF, LA72C, LA76B, LA79D, LA7CF, LA7FC
+    .word LA826, LA849, LA867, LA88D, LA8BF, LA8EC, LA92A, LA95D
+    .word LA97B, LA9A5

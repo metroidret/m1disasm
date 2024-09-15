@@ -87,14 +87,14 @@ AreaPointers:
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
 
-AreaRoutine:  
-    JMP PolypRTS                       ;Area specific routine.(RTS)
+AreaRoutine:
+    jmp PolypRTS                       ;Area specific routine.(RTS)
 
 TwosCompliment_:
-    EOR #$FF                        ;
-    CLC                             ;The following routine returns the twos-->
-    ADC #$01                        ;compliment of the value stored in A.
-    RTS                             ;
+    eor #$FF                        ;
+    clc                             ;The following routine returns the twos-->
+    adc #$01                        ;compliment of the value stored in A.
+    rts                             ;
 
 L95CC:  .byte $FF                       ;Not used.
 
@@ -114,8 +114,8 @@ L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 
 ; Enemy AI jump table
 ChooseEnemyRoutine:
-    LDA EnDataIndex,X
-    JSR CommonJump_ChooseRoutine
+    lda EnDataIndex,X
+    jsr CommonJump_ChooseRoutine
         .word SwooperRoutine ; 00 - swooper
         .word SwooperRoutine2 ; 01 - becomes swooper?
         .word RipperRoutine ; 02 - ripper
@@ -174,7 +174,7 @@ L9773:  .byte $01, $00, $01, $01, $03, $00, $00, $00
 L977B:  .byte $4C, $4C, $01, $00, $00, $00, $00, $40, $00, $64, $44, $44, $40, $00, $00, $00
 
 L978B:  .byte $00, $00, $00, $00, $4D, $4D, $53, $57, $00, $00, $00, $00, $00, $00, $00, $00
-L979B:  .byte $08, $F8, $00, $00, $00, $00, $08, $F8, $00, $00, $00, $F8 
+L979B:  .byte $08, $F8, $00, $00, $00, $00, $08, $F8, $00, $00, $00, $F8
 
 L97A7:  .word L97F7, L9806, L9815, L9824
 
@@ -201,23 +201,23 @@ L9824:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $
 
 ;-------------------------------------------------------------------------------
 InvalidEnemy:
-    LDA #$00
-    STA EnStatus,X
-    RTS
+    lda #$00
+    sta EnStatus,X
+    rts
 
 CommonEnemyJump_00_01_02:
-    LDA $81
-    CMP #$01
-    BEQ L9848
-    CMP #$03
-    BEQ L984D
-        LDA $00
-        JMP CommonJump_00
+    lda $81
+    cmp #$01
+    beq L9848
+    cmp #$03
+    beq L984D
+        lda $00
+        jmp CommonJump_00
     L9848:
-        LDA $01
-        JMP CommonJump_01
+        lda $01
+        jmp CommonJump_01
     L984D:
-        JMP CommonJump_02
+        jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------
 
@@ -234,28 +234,28 @@ CommonEnemyJump_00_01_02:
 ;-------------------------------------------------------------------------------
 ; is this unused?
 L9963:
-    JSR CommonJump_09
-    LDA #$06
-    STA $00
-    JMP CommonEnemyJump_00_01_02
-    JSR CommonJump_09
-    LDA #$06
-    STA $00
-    JMP CommonEnemyJump_00_01_02
-    JSR CommonJump_09
-    LDA #$06
-    STA $00
-    LDA $81
-    CMP #$02
-    BNE L9993
-    CMP EnStatus,X
-    BNE L9993
-    JSR CommonJump_03
-    AND #$03
-    BNE L9993
-    JMP L984D
+    jsr CommonJump_09
+    lda #$06
+    sta $00
+    jmp CommonEnemyJump_00_01_02
+    jsr CommonJump_09
+    lda #$06
+    sta $00
+    jmp CommonEnemyJump_00_01_02
+    jsr CommonJump_09
+    lda #$06
+    sta $00
+    lda $81
+    cmp #$02
+    bne L9993
+    cmp EnStatus,X
+    bne L9993
+    jsr CommonJump_03
+    and #$03
+    bne L9993
+    jmp L984D
 L9993:
-    JMP CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02
 
 ;-------------------------------------------------------------------------------
 ; Crawler Routine
@@ -264,23 +264,23 @@ L9993:
 ;-------------------------------------------------------------------------------
 
 StorePositionToTemp:
-    LDA EnYRoomPos,X
-    STA $08
-    LDA EnXRoomPos,X
-    STA $09
-    LDA EnNameTable,X
-    STA $0B
-    RTS
+    lda EnYRoomPos,X
+    sta $08
+    lda EnXRoomPos,X
+    sta $09
+    lda EnNameTable,X
+    sta $0B
+    rts
 
 LoadPositionFromTemp:
-    LDA $0B
-    AND #$01
-    STA EnNameTable,X
-    LDA $08
-    STA EnYRoomPos,X
-    LDA $09
-    STA EnXRoomPos,X
-    RTS
+    lda $0B
+    and #$01
+    sta EnNameTable,X
+    lda $08
+    sta EnYRoomPos,X
+    lda $09
+    sta EnXRoomPos,X
+    rts
 
 ;-------------------------------------------------------------------------------
 
@@ -650,10 +650,8 @@ LA173:  .byte $00, $04, $04, $8A, $FF
 
 ;--------------------------[ Room and structure pointer tables ]-----------------------------------
 
-RmPtrTbl:
 .include "norfair/room_ptrs.asm"
 
-StrctPtrTbl:
 .include "norfair/structure_ptrs.asm"
 
 ;---------------------------------[ Special items table ]-----------------------------------------
@@ -670,7 +668,6 @@ StrctPtrTbl:
 
 ;----------------------------------------[ Macro definitions ]---------------------------------------
 
-MacroDefs:
 .include "norfair/metatiles.asm"
 
 ;------------------------------------------[ Area music data ]---------------------------------------
@@ -686,7 +683,7 @@ MacroDefs:
     .byte $18, $26, $18, $B2, $18, $FF, $C2, $B2, $1E, $B9, $1E, $18, $1E, $B2, $1E, $B9
     .byte $1E, $18, $1E, $B2, $1C, $B9, $1C, $14, $1C, $B2, $1C, $B9, $1C, $14, $1C, $FF
     .byte $B2, $26, $12, $16, $18, $1C, $20, $24, $26, $B2, $28, $B9, $28, $1E, $18, $B2
-    .byte $10, $B9, $30, $2C, $28, $B2, $1E, $1C, $18, $14, $2A, $2A, $2A, $2A, $CC, $B9 
+    .byte $10, $B9, $30, $2C, $28, $B2, $1E, $1C, $18, $14, $2A, $2A, $2A, $2A, $CC, $B9
     .byte $2A, $FF, $E8, $B2, $04, $04, $04, $B9, $04, $04, $04, $FF, $E0, $E0, $F0, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05, $26, $52, $63, $00
     .byte $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B, $8D, $A7, $B1, $00

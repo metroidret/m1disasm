@@ -51,4 +51,3 @@ SongTourianTri:
         SongNoteLength $3 ;3/4 seconds
         SongRest
     SongRepeat
-

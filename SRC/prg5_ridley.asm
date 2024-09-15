@@ -99,13 +99,13 @@ AreaPointers:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    JMP PolypRTS                       ;Area specific routine.
+    jmp PolypRTS                       ;Area specific routine.
 
 TwosCompliment_:
-    EOR #$FF                        ;
-    CLC                             ;The following routine returns the twos-->
-    ADC #$01                        ;compliment of the value stored in A.
-    RTS                             ;
+    eor #$FF                        ;
+    clc                             ;The following routine returns the twos-->
+    adc #$01                        ;compliment of the value stored in A.
+    rts                             ;
 
 L95CC:  .byte $12                       ;Ridley's room.
 
@@ -124,8 +124,8 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $06, $00, $03, $58, $44, $4A, $48, $4A, $4A, $36, $25
 
 ChooseEnemyRoutine:
-    LDA EnDataIndex,X
-    JSR CommonJump_ChooseRoutine
+    lda EnDataIndex,X
+    jsr CommonJump_ChooseRoutine
         .word SwooperRoutine ; 00 - swooper
         .word SwooperRoutine2 ; 01 - becomes swooper ?
         .word SidehopperFloorRoutine ; 02 - dessgeegas
@@ -211,23 +211,23 @@ L981B:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $
 
 ;-------------------------------------------------------------------------------
 InvalidEnemy:
-    LDA #$00
-    STA EnStatus,X
-    RTS
+    lda #$00
+    sta EnStatus,X
+    rts
 
 CommonEnemyJump_00_01_02:
-    LDA $81
-    CMP #$01
-    BEQ L983F
-    CMP #$03
-    BEQ L9844
-        LDA $00
-        JMP CommonJump_00
+    lda $81
+    cmp #$01
+    beq L983F
+    cmp #$03
+    beq L9844
+        lda $00
+        jmp CommonJump_00
     L983F:
-        LDA $01
-        JMP CommonJump_01
+        lda $01
+        jmp CommonJump_01
     L9844:
-        JMP CommonJump_02
+        jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------
 
@@ -251,23 +251,23 @@ CommonEnemyJump_00_01_02:
 .include "enemies/ridley.asm"
 
 StorePositionToTemp:
-    LDA EnYRoomPos,X
-    STA $08
-    LDA EnXRoomPos,X
-    STA $09
-    LDA EnNameTable,X
-    STA $0B
-    RTS
+    lda EnYRoomPos,X
+    sta $08
+    lda EnXRoomPos,X
+    sta $09
+    lda EnNameTable,X
+    sta $0B
+    rts
 
 LoadPositionFromTemp:
-    LDA $0B
-    AND #$01
-    STA EnNameTable,X
-    LDA $08
-    STA EnYRoomPos,X
-    LDA $09
-    STA EnXRoomPos,X
-    RTS
+    lda $0B
+    and #$01
+    sta EnNameTable,X
+    lda $08
+    sta EnYRoomPos,X
+    lda $09
+    sta EnXRoomPos,X
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Bouncy Orb Routine
@@ -594,10 +594,8 @@ LA0E6:   .byte $00, $04, $04, $8A, $FF
 
 ;----------------------------[ Room and structure pointer tables ]-----------------------------------
 
-RmPtrTbl:
 .include "ridley/room_ptrs.asm"
 
-StrctPtrTbl:
 .include "ridley/structure_ptrs.asm"
 
 ;-----------------------------------[ Special items table ]-----------------------------------------
@@ -614,20 +612,12 @@ StrctPtrTbl:
 
 ;----------------------------------------[ Macro definitions ]---------------------------------------
 
-;The macro definitions are simply index numbers into the pattern tables that represent the 4 quadrants
-;of the macro definition. The bytes correspond to the following position in order: lower right tile,
-;lower left tile, upper right tile, upper left tile. 
-
-MacroDefs:
-
 .include "ridley/metatiles.asm"
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-; Ridley Music Data
 .include "songs/ridley.asm"
 
-; Kraid Music Data
 .include "songs/kraid.asm"
 
 ;Not used.
