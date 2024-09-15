@@ -127,6 +127,16 @@ SoundEngine            = $B3B4
 .import EndGamePalWrite
 .import CopyMap
 
+.import GotoLA320
+.import GotoMetroid_LA315
+.import GotoL9C6F
+.import GotoCannonRoutine
+.import GotoMotherBrainRoutine
+.import GotoZebetiteRoutine
+.import GotoRinkaSpawnerRoutine
+.import GotoLA0C6
+.import GotoLA142
+
 .import GFX_Samus
 .import GFX_IntroSprites
 .import GFX_Title
@@ -1681,7 +1691,7 @@ LC8BB:
         inx
         bne LC8BF
     stx MetroidOnSamus              ;Samus had no Metroid stuck to her.
-    jmp $95AB
+    jmp GotoMetroid_LA315
 
 ; SamusInit
 ; =========
@@ -3457,7 +3467,7 @@ SamusDoor:
     Lx049:
     jsr LD48C
     jsr LED65
-    jsr $95AB
+    jsr GotoMetroid_LA315 ; if it is defined in the current bank
     lda ItemRoomMusicStatus
     beq Lx051
     pha
@@ -3820,7 +3830,7 @@ LD609:
     lda ($04),y     ; get tile # that bullet touches
     cmp #$A0
     bcs LD624
-    jsr $95C0
+    jsr GotoLA142
     cmp #$4E
     beq Lx079
     jsr LD651
@@ -6774,7 +6784,7 @@ LE7E6:
     lda ($04),y     ; get tile value
     cmp #$4E
     beq LE81E
-    jsr $95C0
+    jsr GotoLA142
     jsr LD651
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
     cmp #$A0        ; is tile >= A0h? (walkable tile)
@@ -7091,7 +7101,7 @@ IsBlastTile:
     beq Exit18
 LE9C2:
     tay
-    jsr $95BD
+    jsr GotoLA0C6
     cpy #$98
     bcs Lx223
 ; attempt to find a vacant tile slot
@@ -7714,7 +7724,7 @@ LEC9B:
     jsr LED8C
     ldx #$08
     jsr LED8C
-    jmp $95AE
+    jmp GotoL9C6F
 
 UpdateDoorData:
     txa                             ;
@@ -7826,7 +7836,7 @@ ChooseHandlerRoutine:
         .word CannonHandler             ;($EEA6)Mother brain room cannons.
         .word MotherBrainHandler        ;($EEAE)Mother brain.
         .word ZeebetiteHandler          ;($EECA)Zeebetites.
-        .word RinkaHandler              ;($EEEE)Rinkas.
+        .word RinkaSpawnerHandler       ;($EEEE)Rinkas.
         .word DoorHandler               ;($EEF4)Some doors.
         .word PaletteHandler            ;($EEFA)Background palette change.
 
@@ -7946,12 +7956,12 @@ ElevatorHandler:
     bne Lx256                          ;Branch always.
 
 CannonHandler:
-    jsr $95B1
+    jsr GotoCannonRoutine
     lda #$02
 Lx258:  jmp ChooseHandlerRoutine        ;($EDD6)Exit handler routines.
 
 MotherBrainHandler:
-    jsr $95B4
+    jsr GotoMotherBrainRoutine
     lda #$38
     sta $07
     lda #$00
@@ -7967,7 +7977,7 @@ MotherBrainHandler:
     bne Lx258
 
 ZeebetiteHandler:
-    jsr $95B7
+    jsr GotoZebetiteRoutine
     txa
     lsr
     adc #$3C
@@ -7985,8 +7995,8 @@ ZeebetiteHandler:
 Lx259:
     jmp LEEC6
 
-RinkaHandler:
-    jsr $95BA
+RinkaSpawnerHandler:
+    jsr GotoRinkaSpawnerRoutine
     jmp LEEC6
 
 DoorHandler:
@@ -9053,7 +9063,7 @@ LF536:
     beq Lx315
     lda #$05
     sta EnHitPoints,x
-    jmp $95A8
+    jmp GotoLA320
 Lx315:
     rts
 

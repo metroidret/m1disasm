@@ -987,10 +987,10 @@ it_Squeept             = $1
 it_PowerUp             = $2
 it_Mellow              = $3
 it_Elevator            = $4
-it_Turret              = $5
+it_Cannon              = $5
 it_MotherBrain         = $6
 it_Zebetite            = $7
-it_Rinka               = $8
+it_RinkaSpawner        = $8
 it_Door                = $9
 it_PaletteChange       = $A
 

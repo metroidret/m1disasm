@@ -78,12 +78,12 @@ LA84B:
     ;Rinkas
     LA853:
         .byte $04, (LA857-*)+1
-        .byte it_Rinka
+        .byte it_RinkaSpawner
         .byte $00
     ;Rinkas
     LA857:
         .byte $09, $FF
-        .byte it_Rinka
+        .byte it_RinkaSpawner
         .byte $00
 
 LA85B:
@@ -91,7 +91,7 @@ LA85B:
     .word LA862
     ;Rinkas
         .byte $0A, $FF
-        .byte it_Rinka | $10
+        .byte it_RinkaSpawner | $10
         .byte $00
 
 LA862:
@@ -99,7 +99,7 @@ LA862:
     .word LA869
     ;Rinkas
         .byte $0A, $FF
-        .byte it_Rinka
+        .byte it_RinkaSpawner
         .byte $00
 
 LA869:
@@ -107,7 +107,7 @@ LA869:
     .word LA870
     ;Rinkas
         .byte $0A, $FF
-        .byte it_Rinka | $10
+        .byte it_RinkaSpawner | $10
         .byte $00
 
 LA870:
@@ -123,10 +123,10 @@ LA870:
         .byte $02, (LA884-*)+1
         .byte it_MotherBrain
         .byte it_Zebetite | $40
-        .byte it_Rinka | $10
-        .byte it_Turret | $00, $49
-        .byte it_Turret | $10, $4B
-        .byte it_Turret | $20, $3E
+        .byte it_RinkaSpawner | $10
+        .byte it_Cannon | $00, $49
+        .byte it_Cannon | $10, $4B
+        .byte it_Cannon | $20, $3E
         .byte $00
 
     ;2 Zebetites, 6 cannons and Rinkas.
@@ -134,13 +134,13 @@ LA870:
         .byte $03, (LA896-*)+1
         .byte it_Zebetite | $30
         .byte it_Zebetite | $20
-        .byte it_Rinka
-        .byte it_Turret | $00, $41
-        .byte it_Turret | $10, $43
-        .byte it_Turret | $20, $36
-        .byte it_Turret | $00, $49
-        .byte it_Turret | $10, $4B
-        .byte it_Turret | $30, $3E
+        .byte it_RinkaSpawner
+        .byte it_Cannon | $00, $41
+        .byte it_Cannon | $10, $43
+        .byte it_Cannon | $20, $36
+        .byte it_Cannon | $00, $49
+        .byte it_Cannon | $10, $4B
+        .byte it_Cannon | $30, $3E
         .byte $00
 
     ;Right door, 2 Zebetites, 6 cannons and Rinkas.
@@ -149,13 +149,13 @@ LA870:
         .byte it_Door, $A3
         .byte it_Zebetite | $10
         .byte it_Zebetite | $00
-        .byte it_Rinka
-        .byte it_Turret | $00, $41
-        .byte it_Turret | $10, $43
-        .byte it_Turret | $20, $36
-        .byte it_Turret | $00, $49
-        .byte it_Turret | $10, $4B
-        .byte it_Turret | $30, $3E
+        .byte it_RinkaSpawner
+        .byte it_Cannon | $00, $41
+        .byte it_Cannon | $10, $43
+        .byte it_Cannon | $20, $36
+        .byte it_Cannon | $00, $49
+        .byte it_Cannon | $10, $4B
+        .byte it_Cannon | $30, $3E
         .byte $00
 
     ;Left door.
