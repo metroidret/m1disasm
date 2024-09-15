@@ -47,37 +47,52 @@
 ;#$04=Elevator.
 ;#$05=Mother brain room cannon.
 ;#$06=Mother brain.
-;#$07=Zeebetite.
+;#$07=Zebetite.
 ;#$08=Rinka.
 ;#$09=Door.
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+    .byte $18
+    .word LA21B
+    ;Missiles.
+        .byte $12, (LA216-*)+1
+        .byte it_PowerUp, pu_MISSILES, $6D
+        .byte $00
+    ;Elevator to Norfair.
+    LA216:
+        .byte $19, $FF
+        .byte it_Elevator, $84
+        .byte $00
 
-;Missiles.
-LA20D:  .byte $18
-LA20E:  .word $A21B
-LA210:  .byte $12, $06, $02, $09, $6D, $00
+LA21B:
+    .byte $19
+    .word LA224
+    ;Energy tank.
+        .byte $11, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $74
+        .byte $00
 
-;Elevator to Norfair.
-LA216:  .byte $19, $FF, $04, $84, $00
+LA224:
+    .byte $1B
+    .word LA22D
+    ;Missiles.
+        .byte $18, $FF
+        .byte it_PowerUp, pu_MISSILES, $6D
+        .byte $00
 
-;Energy tank.
-LA21B:  .byte $19
-LA21C:  .word $A224
-LA21E:  .byte $11, $FF, $02, $08, $74, $0
+LA22D:
+    .byte $1D
+    .word LA236
+    ;Energy tank.
+        .byte $0F, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $66
+        .byte $00
 
-;Missiles.
-LA224:  .byte $1B
-LA225:  .word $A22D
-LA227:  .byte $18, $FF, $02, $09, $6D, $00
-
-;Energy tank.
-LA22D:  .byte $1D
-LA22E:  .word $A236
-LA230:  .byte $0F, $FF, $02, $08, $66, $00
-
-;Missiles.
-LA236:  .byte $1E
-LA237:  .word $FFFF
-LA239:  .byte $14, $FF, $02, $09, $6D, $00
+LA236:
+    .byte $1E
+    .word $FFFF
+    ;Missiles.
+        .byte $14, $FF
+        .byte it_PowerUp, pu_MISSILES, $6D
+        .byte $00

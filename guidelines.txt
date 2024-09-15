@@ -1,0 +1,27 @@
+use 4 spaces instead of tabs
+asm instructions in lowercase
+ca65 instructions in lowercase
+hex numbers in uppercase
+labels in camelcase
+macros in camelcase
+only use asterisk labels for super obvious stuff
+
+tabulation
+    general rule is, the more important you are, the less tabs
+
+    branches that form an if structure are tabulated like this
+
+    bne MyLabel
+        ; code
+    MyLabel:
+    ; code
+
+    loops are tabulated like this
+
+    ; code
+    MyLabel:
+        ; code
+        bne MyLabel
+    ; code
+
+    if a label is used by multiple branches, no tabs: its an important label

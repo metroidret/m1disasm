@@ -982,6 +982,30 @@ SamusData              = $77FE   ;Thru $782D. Samus saved game data (not used).
 
 modeTitle              = 1
 
+;Special item types.
+it_Squeept             = $1
+it_PowerUp             = $2
+it_Mellow              = $3
+it_Elevator            = $4
+it_Turret              = $5
+it_MotherBrain         = $6
+it_Zebetite            = $7
+it_Rinka               = $8
+it_Door                = $9
+it_PaletteChange       = $A
+
+;Power up id for items
+pu_BOMBS               = $00
+pu_HIGHJUMP            = $01
+pu_LONGBEAM            = $02
+pu_SCREWATTACK         = $03
+pu_MARUMARI            = $04
+pu_VARIA               = $05
+pu_WAVEBEAM            = $06
+pu_ICEBEAM             = $07
+pu_ENERGYTANK          = $08
+pu_MISSILES            = $09
+
 ;Bitmask defs used for SamusGear.
 gr_BOMBS               = %00000001
 gr_HIGHJUMP            = %00000010
@@ -1041,5 +1065,3 @@ wa_LayBomb             = 8
 wa_BombCount           = 9
 wa_BombExplode         = 10
 wa_Missile             = 11
-
-

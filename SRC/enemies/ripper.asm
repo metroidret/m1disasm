@@ -6,7 +6,7 @@ RipperRoutine:
         JSR CommonJump_0A
     Ripper01:
     .if BANK = 1 || BANK = 4
-        JMP CommonEnemyStub2
+        JMP CommonEnemyStub2 ;sidehopper.asm
     .elseif BANK = 2
         LDA #$03
         STA $00

@@ -54,64 +54,100 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+    .byte $02
+    .word LA3E4
+    ;Elevator to Tourian.
+        .byte $03, (LA3DE-*)+1
+        .byte it_Elevator, $03
+        .byte $00
+    ;Varia suit.
+    LA3DE:
+        .byte $0F, $FF
+        .byte it_PowerUp, pu_VARIA, $37
+        .byte $00
 
-;Elevator to Tourian.
-LA3D6:  .byte $02
-LA3D7:  .word $A3E4
-LA3D9:  .byte $03, $05, $04, $03, $00
+LA3E4:
+    .byte $03
+    .word LA3F3
+    ;Missiles.
+        .byte $18, (LA3ED-*)+1
+        .byte it_PowerUp, pu_MISSILES, $67
+        .byte $00
+    ;Energy tank.
+    LA3ED:
+        .byte $1B, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $87
+        .byte $00
 
-;Varia suit.
-LA3DE:  .byte $0F, $FF, $02, $05, $37, $00
+LA3F3:
+    .byte $05
+    .word LA402
+    ;Long beam.
+        .byte $07, (LA3FC-*)+1
+        .byte it_PowerUp, pu_LONGBEAM, $37
+        .byte $00
+    ;Bombs.
+    LA3FC:
+        .byte $19, $FF
+        .byte it_PowerUp, pu_BOMBS, $37
+        .byte $00
 
-;Missiles.
-LA3E4:  .byte $03
-LA3E5:  .word $A3F3
-LA3E7:  .byte $18, $06, $02, $09, $67, $00
+LA402:
+    .byte $07
+    .word LA40F
+    ;Palette change room.
+        .byte $0C, (LA409-*)+1
+        .byte it_PaletteChange
+        .byte $00
+    ;Energy tank.
+    LA409:
+        .byte $19, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $87
+        .byte $00
 
-;Energy tank.
-LA3ED:  .byte $1B, $FF, $02, $08, $87, $00
+LA40F:
+    .byte $09
+    .word LA41C
+    ;Ice beam.
+        .byte $13, (LA418-*)+1
+        .byte it_PowerUp, pu_ICEBEAM, $37
+        .byte $00
+    ;Mellows.
+    LA418:
+        .byte $15, $FF
+        .byte it_Mellow
+        .byte $00
 
-;Long beam.
-LA3F3:  .byte $05
-LA3F4:  .word $A402
-LA3F6:  .byte $07, $06, $02, $02, $37, $00
+LA41C:
+    .byte $0B
+    .word LA42A
+    ;Missiles.
+        .byte $12, (LA425-*)+1
+        .byte it_PowerUp, pu_MISSILES, $67
+        .byte $00
+    ;Elevator to Norfair.
+    LA425:
+        .byte $16, $FF
+        .byte it_Elevator, $01
+        .byte $00
 
-;Bombs.
-LA3FC:  .byte $19, $FF, $02, $00, $37, $00
+LA42A:
+    .byte $0E
+    .word LA439
+    ;Maru Mari.
+        .byte $02, (LA433-*)+1
+        .byte it_PowerUp, pu_MARUMARI, $96
+        .byte $00
+    ;Energy tank.
+    LA433:
+        .byte $09, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $12
+        .byte $00
 
-;Palette change room.
-LA402:  .byte $07
-LA403:  .word $A40F
-LA405:  .byte $0C, $04, $0A, $00
-
-;Energy tank.
-LA409:  .byte $19, $FF, $02, $08, $87, $00
-
-;Ice beam.
-LA40F:  .byte $09
-LA410:  .word $A41C
-LA412:  .byte $13, $06, $02, $07, $37, $00
-
-;Mellows.
-LA418:  .byte $15, $FF, $03, $00
-
-;Missiles.
-LA41C:  .byte $0B
-LA41D:  .word $A42A
-LA41F:  .byte $12, $06, $02, $09, $67, $00
-
-;Elevator to Norfair.
-LA425:  .byte $16, $FF, $04, $01, $00
-
-;Maru Mari.
-LA42A:  .byte $0E
-LA42B:  .word $A439
-LA42D:  .byte $02, $06, $02, $04, $96, $00
-
-;Energy tank.
-LA433:  .byte $09, $FF, $02, $08, $12, $00
-
-;Elevator to Kraid.
-LA439:  .byte $12
-LA43A:  .word $FFFF
-LA43C:  .byte $07, $FF, $04, $02, $00
+LA439:
+    .byte $12
+    .word $FFFF
+    ;Elevator to Kraid.
+        .byte $07, $FF
+        .byte it_Elevator, $02
+        .byte $00

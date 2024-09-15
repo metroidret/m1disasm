@@ -53,58 +53,113 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+    .byte $03
+    .word LA843
+    ;Elevator to end.
+        .byte $01, $FF
+        .byte it_Elevator, $8F
+        .byte $00 
 
-;Elevator to end.
-LA83B:  .byte $03
-LA83C:  .word $A843
-LA83E:  .byte $01, $FF, $04, $8F, $00 
+LA843:
+    .byte $04
+    .word LA84B
+    ;Elevator to Brinstar.
+        .byte $03, $FF
+        .byte it_Elevator, $83
+        .byte $00
 
-;Elevator to Brinstar.
-LA843:  .byte $04
-LA844:  .word $A84B
-LA846:  .byte $03, $FF, $04, $83, $00
+LA84B:
+    .byte $07
+    .word LA85B
+    ;10 missile door.
+        .byte $03, (LA853-*)+1
+        .byte it_Door, $A2
+        .byte $00
+    ;Rinkas
+    LA853:
+        .byte $04, (LA857-*)+1
+        .byte it_Rinka
+        .byte $00
+    ;Rinkas
+    LA857:
+        .byte $09, $FF
+        .byte it_Rinka
+        .byte $00
 
-;10 missile door.
-LA84B:  .byte $07
-LA84C:  .word $A85B
-LA84E:  .byte $03, $05, $09, $A2, $00
+LA85B:
+    .byte $08
+    .word LA862
+    ;Rinkas
+        .byte $0A, $FF
+        .byte it_Rinka | $10
+        .byte $00
 
-;Rinkas
-LA853:  .byte $04, $04, $08, $00
+LA862:
+    .byte $09
+    .word LA869
+    ;Rinkas
+        .byte $0A, $FF
+        .byte it_Rinka
+        .byte $00
 
-;Rinkas
-LA857:  .byte $09, $FF, $08, $00
+LA869:
+    .byte $0A
+    .word LA870
+    ;Rinkas
+        .byte $0A, $FF
+        .byte it_Rinka | $10
+        .byte $00
 
-;Rinkas
-LA85B:  .byte $08
-LA85C:  .word $A862
-LA85E:  .byte $0A, $FF, $18, $00
+LA870:
+    .byte $0B
+    .word $FFFF
+    ;Door at bottom of escape shaft.
+        .byte $01, (LA878-*)+1
+        .byte it_Door, $A3
+        .byte $00
 
-;Rinkas
-LA862:  .byte $09
-LA863:  .word $A869
-LA865:  .byte $0A, $FF, $08, $00
+    ;Mother brain, Zebetite, 3 cannons and Rinkas.
+    LA878:
+        .byte $02, (LA884-*)+1
+        .byte it_MotherBrain
+        .byte it_Zebetite | $40
+        .byte it_Rinka | $10
+        .byte it_Turret | $00, $49
+        .byte it_Turret | $10, $4B
+        .byte it_Turret | $20, $3E
+        .byte $00
 
-;Rinkas
-LA869:  .byte $0A
-LA86A:  .word $A870
-LA86C:  .byte $0A, $FF, $18, $00
+    ;2 Zebetites, 6 cannons and Rinkas.
+    LA884:
+        .byte $03, (LA896-*)+1
+        .byte it_Zebetite | $30
+        .byte it_Zebetite | $20
+        .byte it_Rinka
+        .byte it_Turret | $00, $41
+        .byte it_Turret | $10, $43
+        .byte it_Turret | $20, $36
+        .byte it_Turret | $00, $49
+        .byte it_Turret | $10, $4B
+        .byte it_Turret | $30, $3E
+        .byte $00
 
-;Door at bottom of escape shaft.
-LA870:  .byte $0B
-LA871:  .word $FFFF
-LA873:  .byte $01, $05, $09, $A3, $00
+    ;Right door, 2 Zebetites, 6 cannons and Rinkas.
+    LA896:
+        .byte $04, (LA8AA-*)+1
+        .byte it_Door, $A3
+        .byte it_Zebetite | $10
+        .byte it_Zebetite | $00
+        .byte it_Rinka
+        .byte it_Turret | $00, $41
+        .byte it_Turret | $10, $43
+        .byte it_Turret | $20, $36
+        .byte it_Turret | $00, $49
+        .byte it_Turret | $10, $4B
+        .byte it_Turret | $30, $3E
+        .byte $00
 
-;Mother brain, Zeebetite, 3 cannons and Rinkas.
-LA878:  .byte $02, $0C, $06, $47, $18, $05, $49, $15, $4B, $25, $3E, $00
-
-;2 Zeebetites, 6 cannons and Rinkas.
-LA884:  .byte $03, $12, $37, $27, $08, $05, $41, $15, $43, $25, $36, $05, $49, $15, $4B, $35
-LA894:  .byte $3E, $00
-
-;Right door, 2 Zeebetites, 6 cannons and Rinkas.
-LA896:  .byte $04, $14, $09, $A3, $17, $07, $08, $05, $41, $15, $43, $25, $36, $05, $49, $15
-LA8A6:  .byte $4B, $35, $3E, $00
-
-;Left door.
-LA8AA:  .byte $05, $FF, $09, $B3, $00 
+    ;Left door.
+    LA8AA:
+        .byte $05, $FF
+        .byte it_Door, $B3
+        .byte $00

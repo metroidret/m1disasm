@@ -52,45 +52,72 @@
 ;#$09=Door.
 ;#$0A=Palette change room.
 
-;Elevator from Brinstar.
-LA26D:  .byte $12
-LA26E:  .word $A275
-LA270:  .byte $07, $FF, $04, $81, $00
+SpecItmsTbl:
+    .byte $12
+    .word LA275
+    ;Elevator from Brinstar.
+        .byte $07, $FF
+        .byte it_Elevator, $81
+        .byte $00
 
-;Elevator to Brinstar.
-LA275:  .byte $14
-LA276:  .word $A27D
-LA278:  .byte $07, $FF, $04, $82, $00
+LA275:
+    .byte $14
+    .word LA27D
+    ;Elevator to Brinstar.
+        .byte $07, $FF
+        .byte it_Elevator, $82
+        .byte $00
 
-;Missiles.
-LA27D:  .byte $15
-LA27E:  .word $A28C
-LA27F:  .byte $04, $06, $02, $09, $47, $00
+LA27D:
+    .byte $15
+    .word LA28C
+    ;Missiles.
+        .byte $04, (LA286-*)+1
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
 
-;Missiles.
-LA286:  .byte $09, $FF, $02, $09, $47, $00
+    ;Missiles.
+    LA286:
+        .byte $09, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+LA28C:
+    .byte $16
+    .word LA295
+    ;Energy tank.
+        .byte $0A, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $66
+        .byte $00
+
+LA295:
+    .byte $19
+    .word LA29E
+    ;Missiles.
+        .byte $0A, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+LA29E:
+    .byte $1B
+    .word LA2A7
+    ;Missiles.
+        .byte $05, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+LA2A7:
+    .byte $1C
+    .word LA2AE
+    ;Memus.
+        .byte $07, $FF
+        .byte it_Mellow
+        .byte $00
 
 ;Energy tank.
-LA28C:  .byte $16
-LA28D:  .word $A295
-LA28F:  .byte $0A, $FF, $02, $08, $66, $00
-
-;Missiles.
-LA295:  .byte $19
-LA296:  .word $A29E
-LA298:  .byte $0A, $FF, $02, $09, $47, $00
-
-;Missiles.
-LA29E:  .byte $1B
-LA29F:  .word $A2A7
-LA2A1:  .byte $05, $FF, $02, $09, $47, $00
-
-;Memus.
-LA2A7:  .byte $1C
-LA2A8:  .word $A2AE
-LA2A9:  .byte $07, $FF, $03, $00
-
-;Energy tank.
-LA2AE:  .byte $1D
-LA2AF:  .word $FFFF
-LA2B1:  .byte $08, $FF, $02, $08, $BE, $00
+LA2AE:
+    .byte $1D
+    .word $FFFF
+        .byte $08, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $BE
+        .byte $00
