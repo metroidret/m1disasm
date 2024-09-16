@@ -26,6 +26,7 @@ BANK .set 7
 ;-------------------------------------[ Forward declarations ]--------------------------------------
 
 ObjectAnimIndexTbl     = $8572
+L85E0                  = $85E0
 FramePtrTable          = $860B
 PlacePtrTable          = $86DF
 
@@ -126,6 +127,7 @@ SoundEngine            = $B3B4
 .import NMIScreenWrite
 .import EndGamePalWrite
 .import CopyMap
+.import IntroStarsData
 
 .import GotoLA320
 .import GotoMetroid_LA315
@@ -137,6 +139,16 @@ SoundEngine            = $B3B4
 .import GotoLA0C6
 .import GotoLA142
 
+.import GFX_TheEndFont
+.import GFX_BrinstarSprites
+.import GFX_NorfairSprites
+.import GFX_TourianSprites
+.import GFX_KraidSprites
+.import GFX_RidleySprites
+.import GFX_EndingSprites
+.import GFX_KraiBG3
+.import GFX_CREBG1
+.import GFX_TourianFont
 .import GFX_Samus
 .import GFX_IntroSprites
 .import GFX_Title
@@ -739,9 +751,9 @@ Amul8:
 CheckPPUWrite:
     lda PPUDataPending              ;
     beq LC2E3                       ;If zero no PPU data to write, branch to exit.
-    lda #$A1                        ;
+    lda #.lobyte(PPUDataString)     ;
     sta $00                         ;Sets up PPU writer to start at address $07A1.
-    lda #$07                        ;
+    lda #.hibyte(PPUDataString)     ;
     sta $01                         ;$0000 = ptr to PPU data string ($07A1).
     jsr ProcessPPUString            ;($C30C)write it to PPU.
     lda #$00                        ;
@@ -1211,8 +1223,8 @@ InitBank0:
 
     ldy #$A0                        ;
     LC543:
-        lda $98BF,y                     ;
-        sta $6DFF,y                     ;Loads sprite info for stars into RAM $6E00 thru 6E9F.
+        lda IntroStarsData-1,y                     ;
+        sta IntroStarSprite00-1,y                     ;Loads sprite info for stars into RAM $6E00 thru 6E9F.
         dey                             ;
         bne LC543                       ;
 
@@ -1294,7 +1306,7 @@ InitBank5:
     lda #$00                        ;GameMode = play.
     sta GameMode                    ;
     jsr ScreenNmiOff                ;($C45D)Disable screen and Vblank.
-    jsr InitRidleyGFX               ;($C69F)Loag Ridley GFX.
+    jsr InitRidleyGFX               ;($C69F)Load Ridley GFX.
     jmp NMIOn                       ;($C487)Turn on VBlank interrupts.
 
 InitEndGFX:
@@ -1437,44 +1449,44 @@ InitGFX7: ; Load Password Font
 GFXInfo:
     .byte .bank(GFX_Samus)          ;[SPR]Samus, items.             Entry 0.
         .word GFX_Samus, $0000, $09A0
-    .byte $04                       ;[SPR]Samus in ending.          Entry 1.
-        .word $8D60, $0000, $0520
-    .byte $01                       ;[BGR]Partial font, "The End".  Entry 2.
-        .word $8D60, $1000, $0400
+    .byte .bank(GFX_EndingSprites)  ;[SPR]Samus in ending.          Entry 1.
+        .word GFX_EndingSprites, $0000, $0520
+    .byte .bank(GFX_TheEndFont)     ;[BGR]Partial font, "The End".  Entry 2.
+        .word GFX_TheEndFont, $1000, $0400
     .byte .bank(GFX_BrinBG1)        ;[BGR]Brinstar rooms.           Entry 3.
         .word GFX_BrinBG1, $1000, $0150
-    .byte $05                       ;[BGR]Common Room Elements      Entry 4.
-        .word $8D60, $1200, $0450
+    .byte .bank(GFX_CREBG1)         ;[BGR]Common Room Elements      Entry 4.
+        .word GFX_CREBG1, $1200, $0450
     .byte .bank(GFX_CREBG2)         ;[BGR]More CRE                  Entry 5.
         .word GFX_CREBG2, $1800, $0800
-    .byte $01                       ;[SPR]Brinstar enemies.         Entry 6.
-        .word $9160, $0C00, $0400
+    .byte .bank(GFX_BrinstarSprites);[SPR]Brinstar enemies.         Entry 6.
+        .word GFX_BrinstarSprites, $0C00, $0400
     .byte .bank(GFX_NorfBG1)        ;[BGR]Norfair rooms.            Entry 7.
         .word GFX_NorfBG1, $1000, $0260
     .byte .bank(GFX_NorfBG2)        ;[BGR]More Norfair rooms.       Entry 8.
         .word GFX_NorfBG2, $1700, $0070
-    .byte $02                       ;[SPR]Norfair enemies.          Entry 9.
-        .word $8D60, $0C00, $0400
+    .byte .bank(GFX_NorfairSprites) ;[SPR]Norfair enemies.          Entry 9.
+        .word GFX_NorfairSprites, $0C00, $0400
     .byte .bank(GFX_BossBG)         ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
         .word GFX_BossBG, $1000, $02E0
     .byte .bank(GFX_TourBG)         ;[BGR]Tourian rooms.            Entry 11. (0B)
         .word GFX_TourBG, $1200, $0600
     .byte .bank(GFX_Zebetite)       ;[BGR]Mother Brain room.        Entry 12. (0C)
         .word GFX_Zebetite, $1900, $0090
-    .byte $05                       ;[BGR]Misc. object.             Entry 13. (0D)
-        .word $91B0, $1D00, $0300
-    .byte $02                       ;[SPR]Tourian enemies.          Entry 14. (0E)
-        .word $9160, $0C00, $0400
+    .byte .bank(GFX_TourianFont)    ;[BGR]Misc. object.             Entry 13. (0D)
+        .word GFX_TourianFont, $1D00, $0300
+    .byte .bank(GFX_TourianSprites) ;[SPR]Tourian enemies.          Entry 14. (0E)
+        .word GFX_TourianSprites, $0C00, $0400
     .byte .bank(GFX_KraiBG2)        ;[BGR]More Kraid Rooms          Entry 15. (0F)
         .word GFX_KraiBG2, $1700, $00C0
-    .byte $04                       ;[BGR]More Kraid Rooms          Entry 16. (10)
-        .word $9360, $1E00, $0200
-    .byte $03                       ;[SPR]Miniboss I enemies.       Entry 17. (11)
-        .word $8D60, $0C00, $0400
+    .byte .bank(GFX_KraiBG3)        ;[BGR]More Kraid Rooms          Entry 16. (10)
+        .word GFX_KraiBG3, $1E00, $0200
+    .byte .bank(GFX_KraidSprites)   ;[SPR]Miniboss I enemies.       Entry 17. (11)
+        .word GFX_KraidSprites, $0C00, $0400
     .byte .bank(GFX_RidlBG)         ;[BGR]More Ridley Rooms         Entry 18. (12)
         .word GFX_RidlBG, $1700, $00C0
-    .byte $03                       ;[SPR]Miniboss II enemies.      Entry 19. (13)
-        .word $9160, $0C00, $0400
+    .byte .bank(GFX_RidleySprites)  ;[SPR]Miniboss II enemies.      Entry 19. (13)
+        .word GFX_RidleySprites, $0C00, $0400
     .byte .bank(GFX_IntroSprites)   ;[SPR]Intro/End sprites.        Entry 20. (14)
         .word GFX_IntroSprites, $0C00, $0100
     .byte .bank(GFX_Title)          ;[BGR]Title.                    Entry 21. (15)
@@ -1676,8 +1688,7 @@ CopyPtrs:
 ; DestroyEnemies
 ; ==============
 
-DestroyEnemies:
-LC8BB:
+DestroyEnemies: ; LC8BB
     lda #$00
     tax
     LC8BF:
@@ -4272,7 +4283,7 @@ Lx110:
     sta AnimIndex
     lda #$7A
     sta AnimResetIndex,x
-    lda #$6E
+    lda #(L85E0-ObjectAnimIndexTbl)
     sta AnimIndex,x
     inc ObjAction,x
     lda #$40
@@ -4839,7 +4850,6 @@ ExplodeRotationTbl:
 ; Advance to object's next frame of animation
 
 UpdateObjAnim:
-LDC8F:
     ldx PageIndex
     ldy AnimDelay,x
     beq Lx130      ; is it time to advance to the next anim frame?

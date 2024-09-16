@@ -23,6 +23,8 @@ BANK .set 3
 
 ;--------------------------------------------[ Export ]---------------------------------------------
 
+.export GFX_KraidSprites
+.export GFX_RidleySprites
 .export GotoLA320
 .export GotoMetroid_LA315
 .export GotoL9C6F
@@ -39,8 +41,10 @@ BANK .set 3
 
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
-.incbin "kraid/sprite_tiles.chr" ; 8D60 - Kraid Sprite CHR
-.incbin "ridley/sprite_tiles.chr" ; 9160 - Ridley Sprite CHR
+GFX_KraidSprites:
+    .incbin "kraid/sprite_tiles.chr" ; 8D60 - Kraid Sprite CHR
+GFX_RidleySprites:
+    .incbin "ridley/sprite_tiles.chr" ; 9160 - Ridley Sprite CHR
 
 ;----------------------------------------------------------------------------------------------------
 

@@ -29,6 +29,7 @@ BANK .set 0
 .export NMIScreenWrite
 .export EndGamePalWrite
 .export CopyMap
+.export IntroStarsData
 
 ;---------------------------------------------[ Import ]---------------------------------------------
 
@@ -735,11 +736,13 @@ L82F4:
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ;The following error message is diplayed if the player enters an incorrect password.
-L8759:  .byte "ERROR TRY AGAIN"
+L8759:
+    .byte "ERROR TRY AGAIN"
 
 ;If the error message above is not being displayed on the password
 ;screen, the following fifteen blanks spaces are used to cover it up.
-L8768:  .byte "               "
+L8768:
+    .byte "               "
 
 ;Not used.
     .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
@@ -765,7 +768,7 @@ LoadSparkleData:
 ;thru $6EAA and $6EB0 thru $6EBA.
 
 InitSparkleDataTbl:
-L87C4:  .byte $3C, $C6, $01, $18, $00, $00, $00, $00, $20, $00, $00
+    .byte $3C, $C6, $01, $18, $00, $00, $00, $00, $20, $00, $00
 
 UpdateSparkleSprites:
     ldx #$00                        ;
@@ -1067,7 +1070,7 @@ L89A9:
 ;starts the cross out small, it then grows bigger and gets small again.
 
 CrossSpriteIndexTbl:
-L89AA: .byte $05, $19, $41, $19, $05
+    .byte $05, $19, $41, $19, $05
 
 ;The following table is used to find the data for the sparkle routine in the table below:
 
@@ -1177,32 +1180,32 @@ BottomSparkleDataTbl:
 ;sprite data bytes.
 
 CrossSpriteDataTbl:
-L8A4B:  .byte $10                       ;Load following sprite data into Sprite04RAM.
-L8A4C:  .byte $5A, $C0, $00, $79        ;Sprite data.
-L8A50:  .byte $14                       ;Load following sprite data into Sprite05RAM.
-L8A51:  .byte $52, $C8, $00, $79        ;Sprite data.
-L8A55:  .byte $18                       ;Load following sprite data into Sprite06RAM.
-L8A56:  .byte $5A, $C2, $40, $71        ;Sprite data.
-L8A5A:  .byte $1C                       ;Load following sprite data into Sprite07RAM.
-L8A5B:  .byte $5A, $C2, $00, $81        ;Sprite data.
-L8A5F:  .byte $20                       ;Load following sprite data into Sprite08RAM.
-L8A60:  .byte $62, $C8, $80, $79        ;Sprite data.
-L8A64:  .byte $14                       ;Load following sprite data into Sprite05RAM.
-L8A65:  .byte $52, $C9, $00, $79        ;Sprite data.
-L8A69:  .byte $18                       ;Load following sprite data into Sprite06RAM.
-L8A6A:  .byte $5A, $C1, $00, $71        ;Sprite data.
-L8A6E:  .byte $1C                       ;Load following sprite data into Sprite07RAM.
-L8A6F:  .byte $5A, $C1, $00, $81        ;Sprite data.
-L8A73:  .byte $20                       ;Load following sprite data into Sprite08RAM.
-L8A74:  .byte $62, $C9, $00, $79        ;Sprite data.
-L8A78:  .byte $24                       ;Load following sprite data into Sprite09RAM.
-L8A79:  .byte $4A, $C8, $00, $79        ;Sprite data.
-L8A7D:  .byte $28                       ;Load following sprite data into Sprite0ARAM.
-L8A7E:  .byte $5A, $C2, $40, $69        ;Sprite data.
-L8A82:  .byte $2C                       ;Load following sprite data into Sprite0BRAM.
-L8A83:  .byte $5A, $C2, $00, $89        ;Sprite data.
-L8A87:  .byte $30                       ;Load following sprite data into Sprite0CRAM.
-L8A88:  .byte $6A, $C8, $80, $79        ;Sprite data.
+    .byte $10                       ;Load following sprite data into Sprite04RAM.
+    .byte $5A, $C0, $00, $79        ;Sprite data.
+    .byte $14                       ;Load following sprite data into Sprite05RAM.
+    .byte $52, $C8, $00, $79        ;Sprite data.
+    .byte $18                       ;Load following sprite data into Sprite06RAM.
+    .byte $5A, $C2, $40, $71        ;Sprite data.
+    .byte $1C                       ;Load following sprite data into Sprite07RAM.
+    .byte $5A, $C2, $00, $81        ;Sprite data.
+    .byte $20                       ;Load following sprite data into Sprite08RAM.
+    .byte $62, $C8, $80, $79        ;Sprite data.
+    .byte $14                       ;Load following sprite data into Sprite05RAM.
+    .byte $52, $C9, $00, $79        ;Sprite data.
+    .byte $18                       ;Load following sprite data into Sprite06RAM.
+    .byte $5A, $C1, $00, $71        ;Sprite data.
+    .byte $1C                       ;Load following sprite data into Sprite07RAM.
+    .byte $5A, $C1, $00, $81        ;Sprite data.
+    .byte $20                       ;Load following sprite data into Sprite08RAM.
+    .byte $62, $C9, $00, $79        ;Sprite data.
+    .byte $24                       ;Load following sprite data into Sprite09RAM.
+    .byte $4A, $C8, $00, $79        ;Sprite data.
+    .byte $28                       ;Load following sprite data into Sprite0ARAM.
+    .byte $5A, $C2, $40, $69        ;Sprite data.
+    .byte $2C                       ;Load following sprite data into Sprite0BRAM.
+    .byte $5A, $C2, $00, $89        ;Sprite data.
+    .byte $30                       ;Load following sprite data into Sprite0CRAM.
+    .byte $6A, $C8, $80, $79        ;Sprite data.
 
 LoadPalData:
     ldy PalDataIndex                ;
@@ -1848,7 +1851,7 @@ TwoLowerAndSixLower:
     rts                             ;
 
 PasswordBitmaskTbl:
-L9021:  .byte $01, $02, $04, $08, $10, $20, $40, $80
+    .byte $01, $02, $04, $08, $10, $20, $40, $80
 
 ;The following table contains the unique items in the game.  The two bytes can be deciphered
 ;as follows:IIIIIIXX XXXYYYYY. I = item type, X = X coordinate on world map, Y = Y coordinate
@@ -2371,28 +2374,34 @@ L93B9:
 
     .byte $00                       ;End PPU string write.
 
+
 PasswordToScreen:
     jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
+
     ldy #$05                        ;Index to find password characters(base=$699A).
     jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
     ldx #$A9                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
     jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+
     ldy #$0B                        ;Index to find password characters(base=$699A).
     jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
     ldx #$B0                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
     jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+
     ldy #$11                        ;Index to find password characters(base=$699A).
     jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
     ldx #$E9                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
     jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+
     ldy #$17                        ;Index to find password characters(base=$699A).
     jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
     ldx #$F0                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
     jmp PrepareEraseTiles           ;($9450)Erase tiles on screen.
+
 
 LoadPasswordTiles:
     lda #$16                        ;Tiles to replace are one block-->
@@ -3913,7 +3922,7 @@ LA052:
 ;It is used to locate the start of the PPU strings below.
 
 EndMessageStringTbl0:
-LA1BA:  .word LA1C2, LA1EB, LA20F, LA240
+    .word LA1C2, LA1EB, LA20F, LA240
 
 LA1C2:
     ;Writes end message on name table 0 in row $2060 (4th row from top).
@@ -3955,7 +3964,7 @@ LA240:
 ;It is used to locate the start of the PPU strings below.
 
 EndMessageStringTbl1:
-LA265:  .word LA26D, LA276, LA27F, LA288
+    .word LA26D, LA276, LA27F, LA288
 
 LA26D:
     ;Erases end message on name table 0 in row $2060 (4th row from top).

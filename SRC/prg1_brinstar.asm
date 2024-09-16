@@ -21,14 +21,21 @@
 BANK .set 1
 .segment "BANK_01_MAIN"
 
+;--------------------------------------------[ Export ]---------------------------------------------
+
+.export GFX_TheEndFont
+.export GFX_BrinstarSprites
+
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"
 
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
-.incbin "ending/end_font.chr"       ; 8D60 - "THE END" graphics + partial font
-.incbin "brinstar/sprite_tiles.chr" ; 9160 - Brinstar Enemies
+GFX_TheEndFont:
+    .incbin "ending/end_font.chr"       ; 8D60 - "THE END" graphics + partial font
+GFX_BrinstarSprites:
+    .incbin "brinstar/sprite_tiles.chr" ; 9160 - Brinstar Enemies
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -556,11 +563,13 @@ LA07B:  .byte $28, $0C, $08, $CE, $CF, $EF, $FF
 
 LA082:  .byte $28, $0C, $08, $CE, $FD, $62, $CF, $EF, $FF
 
-LA08B:  .byte $21, $00, $00, $FC, $08, $FC, $A3, $FC, $00, $08, $A3, $FC, $00, $F8, $B3, $FC
-LA09B:  .byte $00, $08, $B3, $FF
+LA08B:
+    .byte $21, $00, $00, $FC, $08, $FC, $A3, $FC, $00, $08, $A3, $FC, $00, $F8, $B3, $FC
+    .byte $00, $08, $B3, $FF
 
-LA09F:  .byte $21, $00, $00, $FC, $00, $FC, $B3, $FC, $00, $08, $B3, $FC, $00, $F8, $A3, $FC
-LA0AF:  .byte $00, $08, $A3, $FF
+LA09F:
+    .byte $21, $00, $00, $FC, $00, $FC, $B3, $FC, $00, $08, $B3, $FC, $00, $F8, $A3, $FC
+    .byte $00, $08, $A3, $FF
 
 LA0B3:  .byte $21, $00, $00, $FC, $04, $00, $F1, $F0, $F1, $F0, $FF
 
@@ -592,8 +601,9 @@ LA126:  .byte $21, $00, $00, $CC, $CD, $DC, $DD, $FF
 
 LA12E:  .byte $0A, $00, $00, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
 
-LA13C:  .byte $0A, $00, $00, $FE, $FE, $FE, $FE, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD
-LA14C:  .byte $E0, $4E, $3E, $3D, $FD, $A0, $4E, $3D, $3E, $FF
+LA13C:
+    .byte $0A, $00, $00, $FE, $FE, $FE, $FE, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD
+    .byte $E0, $4E, $3E, $3D, $FD, $A0, $4E, $3D, $3E, $FF
 
 LA156:  .byte $2B, $08, $08, $E2, $E3, $E4, $FE, $FD, $62, $E3, $E4, $FF
 

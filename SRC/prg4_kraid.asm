@@ -21,6 +21,11 @@
 BANK .set 4
 .segment "BANK_04_MAIN"
 
+;--------------------------------------------[ Export ]---------------------------------------------
+
+.export GFX_EndingSprites
+.export GFX_KraiBG3
+
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"
@@ -28,12 +33,14 @@ BANK .set 4
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
 ;Samus end tile patterns.
-.incbin "ending/sprite_tiles.chr"
+GFX_EndingSprites:
+    .incbin "ending/sprite_tiles.chr"
 
 ;Unused tile patterns (needed so the Palette Pointer Table, etc. below are properly aligned)
-.incbin "kraid/unused_tiles.chr"
+    .incbin "kraid/unused_tiles.chr"
 
-.incbin "kraid/bg_chr_3.chr" ; 9360 - Misc Kraid BG CHR
+GFX_KraiBG3:
+    .incbin "kraid/bg_chr_3.chr" ; 9360 - Misc Kraid BG CHR
 
 ;----------------------------------------------------------------------------------------------------
 

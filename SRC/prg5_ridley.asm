@@ -21,15 +21,22 @@
 BANK .set 5
 .segment "BANK_05_MAIN"
 
+;--------------------------------------------[ Export ]---------------------------------------------
+
+.export GFX_CREBG1
+.export GFX_TourianFont
+
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"
 
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
-.incbin "common_chr/bg_CRE.chr" ; 8D60 - Common Room Elements (loaded everywhere except Tourian)
+GFX_CREBG1:
+    .incbin "common_chr/bg_CRE.chr" ; 8D60 - Common Room Elements (loaded everywhere except Tourian)
 
-.incbin "tourian/font_chr.chr" ; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
+GFX_TourianFont:
+    .incbin "tourian/font_chr.chr" ; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
 
 ;Unused tile patterns.
     .byte $06, $0C, $38, $F0, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00

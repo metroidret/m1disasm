@@ -21,6 +21,11 @@
 BANK .set 2
 .segment "BANK_02_MAIN"
 
+;--------------------------------------------[ Export ]---------------------------------------------
+
+.export GFX_NorfairSprites
+.export GFX_TourianSprites
+
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"
@@ -28,10 +33,12 @@ BANK .set 2
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
 ;Norfair enemy tile patterns.
-.incbin "norfair/sprite_tiles.chr"
+GFX_NorfairSprites:
+    .incbin "norfair/sprite_tiles.chr"
 
 ;Tourian enemy tile patterns.
-.incbin "tourian/sprite_tiles.chr"
+GFX_TourianSprites:
+    .incbin "tourian/sprite_tiles.chr"
 
 ;----------------------------------------------------------------------------------------------------
 
