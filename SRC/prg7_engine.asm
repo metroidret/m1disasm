@@ -25,6 +25,8 @@ BANK .set 7
 
 ;-------------------------------------[ Forward declarations ]--------------------------------------
 
+CommonEnemyAI          = $8058
+LoadTableAt977B        = $80B0
 ObjectAnimIndexTbl     = $8572
 L85E0                  = $85E0
 FramePtrTable          = $860B
@@ -4546,10 +4548,10 @@ LDADA:
     ldy #$08
 Lx129:
     lda #$03
-    sta $0500,x
+    sta TileRoutine,x
     tya
     asl
-    sta $0507,x
+    sta TileDelay,x
     lda #$04
     sta TileType,x
     lda $036C
@@ -4647,14 +4649,13 @@ CheckOneItem:
     ldy ItemIndex                   ;Load index to proper power up data slot.
     lda PowerUpType,y               ;Reload power up type data.
     ldy #$01                        ;Set power up color for ice beam orb.
-    cmp #$07                        ;Is power up item the ice beam?-->
+    cmp #pu_ICEBEAM                        ;Is power up item the ice beam?-->
     beq LDB9F                       ;If so, branch.
-
-        dey                             ;Set power up color for long/wave beam orb.
-        cmp #$06                        ;Is power up item the wave beam?-->
-        beq LDB9F                       ;If so, branch.
-        cmp #$02                        ;Is power up item the long beam?-->
-        bne LDBA5                       ;If not, branch.
+    dey                             ;Set power up color for long/wave beam orb.
+    cmp #pu_WAVEBEAM                        ;Is power up item the wave beam?-->
+    beq LDB9F                       ;If so, branch.
+    cmp #pu_LONGBEAM                        ;Is power up item the long beam?-->
+    bne LDBA5                       ;If not, branch.
     LDB9F:
         tya                             ;Transfer color data to A.
         sta Sprite01RAM+2,x             ;Store power up color for beam weapon.
@@ -4681,12 +4682,12 @@ CheckOneItem:
     LDBC6:
     lda PowerUpType,x               ;Get power-up type byte again.
     tay                             ;
-    cpy #$08                        ;Is power-up item a missile or energy tank?-->
-    bcs MissileEnergyPickup                       ;If so, branch.
-    cpy #$06                        ;Is item the wave beam or ice beam?-->
+    cpy #pu_ENERGYTANK                        ;Is power-up item a missile or energy tank?-->
+    bcs MissileEnergyPickup         ;If so, branch.
+    cpy #pu_WAVEBEAM                        ;Is item the wave beam or ice beam?-->
     bcc LDBDA                       ;If not, branch.
         lda SamusGear                   ;Clear status of wave beam and ice beam power ups.
-        and #$3F                        ;
+        and #~(gr_WAVEBEAM | gr_ICEBEAM)
         sta SamusGear                   ;Remove beam weapon data from Samus gear byte.
     LDBDA:
     jsr MakeBitMask                 ;($DB2F)Create a bit mask for beam weapon just obtained.
@@ -4805,11 +4806,11 @@ LDC54:
 ;Missile door  = 001010
 ;Bombs         = 001100
 ;Mother brain  = 001110
-;1st Zeebetite = 001111
-;2nd Zeebetite = 010000
-;3rd Zeebetite = 010001
-;4th Zeebetite = 010010
-;5th Zeebetite = 010011
+;1st Zebetite = 001111
+;2nd Zebetite = 010000
+;3rd Zebetite = 010001
+;4th Zebetite = 010010
+;5th Zebetite = 010011
 ;
 ;The results are stored in $06(upper byte) and $07(lower byte).
 
@@ -4948,7 +4949,7 @@ LDCFC:
 
     jsr ReadTableAt968B
     sta $00
-    jsr $80B0 ; TableAtL977B[EnemyType[x]]*2
+    jsr LoadTableAt977B ; TableAtL977B[EnemyType[x]]*2
     and #$20
     sta EnDataIndex,x
     lda #$05
@@ -5344,7 +5345,7 @@ ExplodeYDisplace:
 
     ;Special case for Samus exploding.
     LDF8F:
-           adc ObjectCounter               ;Increments every frame Samus is exploding. Initial=#$01.
+        adc ObjectCounter               ;Increments every frame Samus is exploding. Initial=#$01.
     LDF91:
     tay                             ;
     lda ExplodeIndexTbl+2,y         ;Get data from ExplodePlacementTbl.
@@ -6353,20 +6354,20 @@ Table11:
 ;---------------------------------[ Get PPU and RoomRAM addresses ]----------------------------------
 
 PPUAddrs:
-LE560:  .byte $20                       ;High byte of nametable #0(PPU).
-LE561:  .byte $2C                       ;High byte of nametable #3(PPU)
+    .byte $20                       ;High byte of nametable #0(PPU).
+    .byte $2C                       ;High byte of nametable #3(PPU)
 
 WRAMAddrs:
-LE562:  .byte $60                       ;High byte of RoomRAMA(cart RAM).
-LE563:  .byte $64                       ;High byte of RoomRAMB(cart RAM).
+    .byte .hibyte(RoomRAMA)         ;High byte of RoomRAMA(cart RAM).
+    .byte .hibyte(RoomRAMB)         ;High byte of RoomRAMB(cart RAM).
 
 GetNameAddrs:
-LE564:  jsr GetNameTable                ;($EB85)Get current name table number.
-LE567:  and #$01                        ;Update name table 0 or 3.
-LE569:  tay                             ;
-LE56A:  lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
-LE56D:  ldx WRAMAddrs,y                 ;Get high cart RAM addr of nametable(src).
-LE570:  rts                             ;
+    jsr GetNameTable                ;($EB85)Get current name table number.
+    and #$01                        ;Update name table 0 or 3.
+    tay                             ;
+    lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
+    ldx WRAMAddrs,y                 ;Get high cart RAM addr of nametable(src).
+    rts                             ;
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -6624,7 +6625,7 @@ Lx196:
     rts
 
 Table02:
-        .byte $07,$00
+    .byte $07,$00
 
 ; check if it's time to update nametable (when scrolling is HORIZONTAL)
 
@@ -6661,7 +6662,7 @@ GetRoomNum:
     pha                             ;Save A.
     jsr OnNameTable0                ;($EC93)Y=1 if name table=0, Y=0 if name table=3.
     pla                             ;Restore A.
-    and $006C,y                     ;
+    and DoorOnNameTable3,y                     ;
     sec                             ;
     bne LE76F                       ;Can't load room, a door is in the way. This has the-->
                                         ;effect of stopping the scrolling until Samus walks-->
@@ -7478,7 +7479,7 @@ LEB92:
     rol
     and #$03
     tay
-    ldx $EC00,y
+    ldx LEC00,y
     pla          ; retrieve door info
     and #$03
     sta $0307,x     ; door palette
@@ -7551,13 +7552,13 @@ LEC09:
     lda ($00),y
     sta $032F
     ldy #$83
-    sty $032D       ; elevator Y coord
+    sty ObjectY+$20       ; elevator Y coord
     lda #$80
-    sta $032E       ; elevator X coord
+    sta ObjectX+$20       ; elevator X coord
     jsr GetNameTable                ;($EB85)
-    sta $032C       ; high Y coord
+    sta ObjectHi+$20       ; high Y coord
     lda #$23
-    sta $0323       ; elevator frame
+    sta AnimFrame+$20       ; elevator frame
     inc ElevatorStatus              ;1
 Lx234:
     lda #$02
@@ -7845,7 +7846,7 @@ ChooseHandlerRoutine:
         .word ElevatorHandler           ;($EEA1)Elevators.
         .word CannonHandler             ;($EEA6)Mother brain room cannons.
         .word MotherBrainHandler        ;($EEAE)Mother brain.
-        .word ZeebetiteHandler          ;($EECA)Zeebetites.
+        .word ZebetiteHandler          ;($EECA)Zebetites.
         .word RinkaSpawnerHandler       ;($EEEE)Rinkas.
         .word DoorHandler               ;($EEF4)Some doors.
         .word PaletteHandler            ;($EEFA)Background palette change.
@@ -7986,7 +7987,7 @@ MotherBrainHandler:
     lda #$01
     bne Lx258
 
-ZeebetiteHandler:
+ZebetiteHandler:
     jsr GotoZebetiteRoutine
     txa
     lsr
@@ -8878,7 +8879,7 @@ LF40D:
 ; Entry Point 1 ; CommonJump_00
 LF410:
     jsr UpdateEnemyAnim
-    jsr $8058
+    jsr CommonEnemyAI
 ; Entry Point 2 ; CommonJump_02
 LF416:
     ldx PageIndex
@@ -9016,7 +9017,7 @@ DoHurtEnemy:
     and #$3F
     sta EnStatus,x
     pha
-    jsr $80B0
+    jsr LoadTableAt977B
     and #$20
     beq Lx312
         pla
@@ -9068,7 +9069,7 @@ LF536:
     jsr LF515
     lda #$40
     sta EnData0D,x
-    jsr $80B0
+    jsr LoadTableAt977B
     and #$20
     beq Lx315
     lda #$05
@@ -9078,7 +9079,7 @@ Lx315:
     rts
 
 Lx316:
-    jsr $80B0
+    jsr LoadTableAt977B
     and #$20
     bne Lx314
     jsr SFX_Metal
@@ -9111,7 +9112,7 @@ PlaySnd3:
     jsr SFX_BigEnemyHit             ;($CBCE)
 Lx319:
     ldx PageIndex
-    jsr $80B0
+    jsr LoadTableAt977B
     and #$20
     beq Lx320
         lda EnData0E,x
@@ -9127,7 +9128,7 @@ Lx319:
     sta EnData0C,x
     asl
     bmi Lx322
-    jsr $80B0
+    jsr LoadTableAt977B
     and #$20
     bne Lx322
     ldy EnData0E,x
@@ -9212,7 +9213,7 @@ Lx329:
     rts
 
 LF676:
-    jsr $80B0
+    jsr LoadTableAt977B
     asl
     asl
     asl
@@ -9454,7 +9455,7 @@ Lx348:
     iny
     lda ($00),y
     sta EnData08,x
-    jsr $80B0
+    jsr LoadTableAt977B
     bpl Lx351
     lda #$00
     sta EnCounter,x
@@ -9960,7 +9961,7 @@ Lx381:
     jmp KillObject                  ;($FA18)Free enemy data slot.
 
 LFB7B:
-    jsr $80B0
+    jsr LoadTableAt977B
     ror EnData05,x
     lda EnemyInitDelayTbl,y         ;($96BB)Load initial delay for enemy movement.
     sta EnDelay,x           ;
@@ -10047,16 +10048,16 @@ LFBEC:
     bcc Lx388
     lda $08
     sta $A1,x
-    sta $034D
+    sta PowerUpY
     lda $09
     sta $A2,x
-    sta $034E
+    sta PowerUpX
     lda $0B
     and #$01
     sta $A3,x
-    sta $034C
+    sta PowerUpHi
     lda $A3,x
-    sta $034C
+    sta PowerUpHi
     lda #$5A
     sta PowerUpAnimFrame            ;Save index to find object animation.
     txa
@@ -10137,9 +10138,9 @@ LFC98:
 ; Pointer table to code
 
     .word ExitSub       ;($C45C) rts
-    .word $FCA5
-    .word $FCB1
-    .word $FCBA
+    .word LFCA5
+    .word LFCB1
+    .word LFCBA
 
 LFCA5:
     jsr LFD84
@@ -10254,11 +10255,11 @@ Lx401:
 ; Table used by above subroutine
 
 Table18:
-    .byte $02
-    .byte $FE
-    .byte $01
-    .byte $FF
-    .byte $02
+    .byte  $02
+    .byte -$02
+    .byte  $01
+    .byte -$01
+    .byte  $02
 
 LFD5F:
     lda $B3,x
