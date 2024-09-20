@@ -539,6 +539,7 @@ L8290:
 ; Read the sign/magnitude of the speed from the next byte
     iny
     lda ($81),Y
+
 ; Save the sign bit to the carry flag
     asl
     php

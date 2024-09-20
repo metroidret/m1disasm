@@ -869,13 +869,13 @@ WriteIntroSprite:
     lda IntroSpr0YCoord,X           ;
     sec                             ;Subtract #$01 from first byte to get proper y coordinate.
     sbc #$01                        ;
-    sta Sprite04RAM,X               ;
+    sta SpriteRAM+$04<<2,X               ;
     lda IntroSpr0PattTbl,X          ;
-    sta Sprite04RAM+1,X             ;Load the four bytes for the-->
+    sta SpriteRAM+$04<<2+1,X             ;Load the four bytes for the-->
     lda IntroSpr0Cntrl,X            ;intro sprites into sprite RAM.
-    sta Sprite04RAM+2,X             ;
+    sta SpriteRAM+$04<<2+2,X             ;
     lda IntroSpr0XCoord,X           ;
-    sta Sprite04RAM+3,X             ;
+    sta SpriteRAM+$04<<2+3,X             ;
     rts                             ;
 
 LoadInitialSpriteData:
@@ -1049,7 +1049,7 @@ L898D:
     iny                             ;
 L8991:
     lda CrossSpriteDataTbl,Y        ;Get sprite data byte.
-    sta Sprite00RAM,X               ;Store byte in sprite RAM.
+    sta SpriteRAM,X               ;Store byte in sprite RAM.
     inx                             ;Move to next sprite RAM address.
     iny                             ;Move to next data byte in table.
     txa                             ;
@@ -1987,13 +1987,13 @@ L90EB:
 L90FF:
     ldy StartContinue               ;
     lda StartContTbl,Y              ;Get y pos of selection sprite.
-    sta Sprite00RAM                 ;
+    sta SpriteRAM                 ;
     lda #$6E                        ;Load sprite info for square selection sprite.
-    sta Sprite00RAM+1               ;
+    sta SpriteRAM+1               ;
     lda #$03                        ;
-    sta Sprite00RAM+2               ;
+    sta SpriteRAM+2               ;
     lda #$50                        ;Set data for selection sprite.
-    sta Sprite00RAM+3               ;
+    sta SpriteRAM+3               ;
     rts                             ;
 
 StartContTbl:
@@ -2142,11 +2142,11 @@ CheckBackspace:
         bcc L9222                       ;
             lda #$4F                        ;
         L9222:
-        sta Sprite01RAM                 ;Set Y-coord of password cursor sprite.
+        sta SpriteRAM+$01<<2                 ;Set Y-coord of password cursor sprite.
         lda #$6E                        ;
-        sta Sprite01RAM+1               ;Set pattern for password cursor sprite.
+        sta SpriteRAM+$01<<2+1               ;Set pattern for password cursor sprite.
         lda #$20                        ;
-        sta Sprite01RAM+2               ;Set attributes for password cursor sprite.
+        sta SpriteRAM+$01<<2+2               ;Set attributes for password cursor sprite.
         lda PasswordCursor              ;If the password cursor is at the 12th-->
         cmp #$0C                        ;character or less, branch.
         bcc L9238                       ;
@@ -2154,7 +2154,7 @@ CheckBackspace:
         L9238:
         tax                             ;is from the left if on the second row of password.
         lda CursorPosTbl,X              ;Load X position of PasswordCursor.
-        sta Sprite01RAM+3               ;
+        sta SpriteRAM+$01<<2+3               ;
     L923F:
     ldx InputRow                    ;Load X and Y with row and column-->
     ldy InputColumn                 ;of current character selected.
@@ -2215,13 +2215,13 @@ CheckBackspace:
     and #$08                        ;If FrameCount bit 3 not set, branch.
     beq L92B3                       ;
         lda CharSelectYTbl,X            ;Set Y-coord of character selection sprite.
-        sta Sprite02RAM                 ;
+        sta SpriteRAM+$02<<2                 ;
         lda #$6E                        ;Set pattern for character selection sprite.
-        sta Sprite02RAM+1               ;
+        sta SpriteRAM+$02<<2+1               ;
         lda #$20                        ;Set attributes for character selection sprite.
-        sta Sprite02RAM+2               ;
+        sta SpriteRAM+$02<<2+2               ;
         lda CharSelectXTbl,Y            ;Set x-Coord of character selection sprite.
-        sta Sprite02RAM+3               ;
+        sta SpriteRAM+$02<<2+3               ;
     L92B3:
     rts                             ;
 
@@ -2925,7 +2925,7 @@ DecSpriteYCoord:
     ldx #$9F                        ;
     L989B:
         dec IntroStarSprite00,X         ;Decrement y coord of the intro star sprites.
-        dec Sprite18RAM,X               ;Decrement y coord of 40 sprites.
+        dec SpriteRAM+$18<<2,X               ;Decrement y coord of 40 sprites.
         dex                             ;
         dex                             ;
         dex                             ;Move to next sprite.
@@ -2941,7 +2941,7 @@ LoadStarSprites:
     ldy #$9F                        ;
 L98B0:
     lda IntroStarSprite00,Y         ;
-    sta Sprite18RAM,Y               ;Store RAM contents of $6E00 thru $6E9F -->
+    sta SpriteRAM+$18<<2,Y               ;Store RAM contents of $6E00 thru $6E9F -->
     dey                             ;in sprite RAM at locations $0260 thru $02FF.
     cpy #$FF                        ;
     bne L98B0                       ;
@@ -3400,7 +3400,7 @@ LoadWaveSprites:
     ldy #$00                        ;
     L9C8F:
         lda ($00),Y                     ;
-        sta Sprite00RAM,X               ;Load wave sprites into sprite RAM starting at-->
+        sta SpriteRAM,X               ;Load wave sprites into sprite RAM starting at-->
         inx                             ;location $220 (Sprite08RAM).
         iny                             ;
         cpy WaveSpriteCounter           ;Check to see if sprite RAM load complete.-->
@@ -3416,26 +3416,26 @@ LoadEndSamusSprites:
     ldy #$00                        ;
     L9CAA:
         lda ($00),Y                     ;Load sprite data starting at Sprite0CRAM.
-        sta Sprite00RAM,X               ;Load sprite Y-coord.
+        sta SpriteRAM,X               ;Load sprite Y-coord.
         inx                             ;
         iny                             ;Increment X and Y.
         lda ($00),Y                     ;
         bpl L9CC0                       ;If sprite pattern byte MSB cleared, branch.
             and #$7F                        ;
-            sta Sprite00RAM,X               ;Remove MSB and write sprite pattern data-->
+            sta SpriteRAM,X               ;Remove MSB and write sprite pattern data-->
             lda SpriteAttribByte            ;to sprite RAM.
             eor #$40                        ;
             bne L9CC5                       ;
         L9CC0:
-            sta Sprite00RAM,X               ;Writes sprite pattern byte to-->
+            sta SpriteRAM,X               ;Writes sprite pattern byte to-->
             lda SpriteAttribByte            ;sprite RAM if its MSB is not set.
         L9CC5:
         inx                             ;
-        sta Sprite00RAM,X               ;Writes sprite attribute byte to sprite RAM.
+        sta SpriteRAM,X               ;Writes sprite attribute byte to sprite RAM.
         iny                             ;
         inx                             ;Increment X and Y.
         lda ($00),Y                     ;
-        sta Sprite00RAM,X               ;Load sprite X-coord.
+        sta SpriteRAM,X               ;Load sprite X-coord.
         iny                             ;
         inx                             ;Increment X and Y.
         cpy SpriteByteCounter           ;
@@ -3453,7 +3453,7 @@ LoadEndSamusSprites:
     ldx #$00                        ;
     L9CED:
         lda SamusHeadSpriteTble,Y       ;The following code loads the sprite graphics-->
-        sta Sprite00RAM,X               ;when the helmet off ending is playing.  The-->
+        sta SpriteRAM,X               ;when the helmet off ending is playing.  The-->
         iny                             ;sprites below keep Samus head from flashing-->
         inx                             ;while the rest of her body does.
         cpy #$18                        ;
@@ -3636,7 +3636,7 @@ LoadEndStarSprites:
     ldy #$00
     L9EAC:
         lda EndStarDataTable,Y
-        sta Sprite1CRAM,Y               ;Load the table below into sprite RAM-->
+        sta SpriteRAM+$1C<<2,Y               ;Load the table below into sprite RAM-->
         iny                             ;starting at address $0270.
         cpy #$9C
         bne L9EAC

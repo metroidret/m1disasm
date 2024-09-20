@@ -347,70 +347,8 @@ MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
-Sprite00RAM            = $0200   ;$0200 thru $02FF
-Sprite01RAM            = $0204   ;
-Sprite02RAM            = $0208   ;
-Sprite03RAM            = $020C   ;
-Sprite04RAM            = $0210   ;
-Sprite05RAM            = $0214   ;
-Sprite06RAM            = $0218   ;
-Sprite07RAM            = $021C   ;
-Sprite08RAM            = $0220   ;
-Sprite09RAM            = $0224   ;
-Sprite0ARAM            = $0228   ;
-Sprite0BRAM            = $022C   ;
-Sprite0CRAM            = $0230   ;
-Sprite0DRAM            = $0234   ;
-Sprite0ERAM            = $0238   ;
-Sprite0FRAM            = $023C   ;
-Sprite10RAM            = $0240   ;
-Sprite11RAM            = $0244   ;
-Sprite12RAM            = $0248   ;
-Sprite13RAM            = $024C   ;
-Sprite14RAM            = $0250   ;
-Sprite15RAM            = $0254   ;
-Sprite16RAM            = $0258   ;
-Sprite17RAM            = $025C   ;
-Sprite18RAM            = $0260   ;
-Sprite19RAM            = $0264   ;
-Sprite1ARAM            = $0268   ;These 256 bytes of memory are loaded into sprite
-Sprite1BRAM            = $026C   ;RAM using the DMA sprite register $4014.
-Sprite1CRAM            = $0270   ;
-Sprite1DRAM            = $0274   ;
-Sprite1ERAM            = $0278   ;
-Sprite1FRAM            = $027C   ;
-Sprite20RAM            = $0280   ;
-Sprite21RAM            = $0284   ;
-Sprite22RAM            = $0288   ;
-Sprite23RAM            = $028C   ;
-Sprite24RAM            = $0290   ;
-Sprite25RAM            = $0294   ;
-Sprite26RAM            = $0298   ;
-Sprite27RAM            = $029C   ;
-Sprite28RAM            = $02A0   ;
-Sprite29RAM            = $02A4   ;
-Sprite2ARAM            = $02A8   ;
-Sprite2BRAM            = $02AC   ;
-Sprite2CRAM            = $02B0   ;
-Sprite2DRAM            = $02B4   ;
-Sprite2ERAM            = $02B8   ;
-Sprite2FRAM            = $02BC   ;
-Sprite30RAM            = $02C0   ;
-Sprite31RAM            = $02C4   ;
-Sprite32RAM            = $02C8   ;
-Sprite33RAM            = $02CC   ;
-Sprite34RAM            = $02D0   ;
-Sprite35RAM            = $02D4   ;
-Sprite36RAM            = $02D8   ;
-Sprite37RAM            = $02DC   ;
-Sprite38RAM            = $02E0   ;
-Sprite39RAM            = $02E4   ;
-Sprite3ARAM            = $02E8   ;
-Sprite3BRAM            = $02EC   ;
-Sprite3CRAM            = $02F0   ;
-Sprite3DRAM            = $02F4   ;
-Sprite3ERAM            = $02F8   ;
-Sprite3FRAM            = $02FC   ;
+SpriteRAM            = $0200   ;$0200 thru $02FF
+
 
 ;-----------------------------------------[ Object RAM ]---------------------------------------------
 
@@ -628,6 +566,15 @@ CurrentMusic           = $068D   ;Stores the flag of the current music being pla
 
 ;----------------------------------------------------------------------------------------------------
 
+; used by ZebHole in bank 7
+Mem0728                = $0728
+Mem0729                = $0729
+Mem072A                = $072A
+Mem072B                = $072B
+Mem072C                = $072C
+Mem0730                = $0730
+Mem0732                = $0732
+Mem0738                = $0738
 PowerUpType            = $0748   ;Holds the byte describing what power-up is on name table.
 PowerUpYCoord          = $0749   ;Y coordinate of the power-up.
 PowerUpXCoord          = $074A   ;X coordiante of the power-up

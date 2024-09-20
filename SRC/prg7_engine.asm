@@ -1721,10 +1721,10 @@ SamusInit:
     ldx #$00
     stx SamusBlink
     dex                             ;X = $FF
-    stx $0728
-    stx $0730
-    stx $0732
-    stx $0738
+    stx Mem0728
+    stx Mem0730
+    stx Mem0732
+    stx Mem0738
     stx EndTimerLo                  ;Set end timer bytes to #$FF as-->
     stx EndTimerHi                  ;escape timer not currently active.
     stx $8B
@@ -2142,7 +2142,7 @@ UpdateWorld:
     ldx SpritePagePos
     lda #$F4
     Lx003:
-        sta Sprite00RAM,x
+        sta SpriteRAM,x
         jsr Xplus4       ; X = X + 4
         bne Lx003
     rts
@@ -3617,10 +3617,10 @@ LD48C:
         bne Lx066
 LD4A8:
     tya
-    cmp $072C,x
+    cmp Mem072C,x
     bne Lx067
         lda #$FF
-        sta $0728,x
+        sta Mem0728,x
     Lx067:
     rts
 
@@ -4658,7 +4658,7 @@ CheckOneItem:
     bne LDBA5                       ;If not, branch.
     LDB9F:
         tya                             ;Transfer color data to A.
-        sta Sprite01RAM+2,x             ;Store power up color for beam weapon.
+        sta SpriteRAM+$01<<2+2,x             ;Store power up color for beam weapon.
         lda #$FF                        ;Indicate power up obtained is a beam weapon.
 
     LDBA5:
@@ -5234,23 +5234,23 @@ LDEE6:
     ldy $0F                         ;Load index for placement data.
     jsr YDisplacement               ;($DF6B)Get displacement for y direction.
     adc $10                         ;Add initial Y position.
-    sta Sprite00RAM,x               ;Store sprite Y coord.
-    dec Sprite00RAM,x               ;Because PPU uses Y + 1 as real Y coord.
+    sta SpriteRAM,x               ;Store sprite Y coord.
+    dec SpriteRAM,x               ;Because PPU uses Y + 1 as real Y coord.
     inc $0F                         ;Increment index to next byte of placement data.
     ldy $11                         ;Get index to frame data.
     lda ($00),y                     ;Tile value.
-    sta Sprite00RAM+1,x             ;Store tile value in sprite RAM.
+    sta SpriteRAM+1,x             ;Store tile value in sprite RAM.
     lda ObjectCntrl                 ;
     asl                             ;Move horizontal mirror control byte to bit 6 and-->
     asl                             ;discard all other bits.
     and #$40                        ;
     eor $05                         ;Use it to override sprite horz mirror bit.
-    sta Sprite00RAM+2,x             ;Store sprite control byte in sprite RAM.
+    sta SpriteRAM+2,x             ;Store sprite control byte in sprite RAM.
     inc $11                         ;Increment to next byte of frame data.
     ldy $0F                         ;Load index for placement data.
     jsr XDisplacement               ;($DFA3)Get displacement for x direction.
     adc $0E                         ;Add initial X pos
-    sta Sprite00RAM+3,x             ;Store sprite X coord
+    sta SpriteRAM+3,x             ;Store sprite X coord
     inc $0F                         ;Increment to next placement data byte.
     inx                             ;
     inx                             ;
@@ -5558,7 +5558,7 @@ DisplayBar:
     tax                             ;
     LE0C7:
         lda DataDisplayTbl,y            ;
-        sta Sprite00RAM,x               ;Stor contents of DataDisplayTbl in sprite RAM.
+        sta SpriteRAM,x               ;Stor contents of DataDisplayTbl in sprite RAM.
         inx                             ;
         iny                             ;
         cpy #$28                        ;10*4. At end of DataDisplayTbl? If not, loop to-->
@@ -5596,10 +5596,10 @@ LE10A:
     lda #$FF                        ;"Blank" tile.
     cpx #$F4                        ;If at last 3 sprites, branch to skip.
     bcs LE14A                          ;
-    sta Sprite03RAM+1,x             ;Erase left half of missile.
+    sta SpriteRAM+$03<<2+1,x             ;Erase left half of missile.
     cpx #$F0                        ;If at last 4 sprites, branch to skip.
     bcs LE14A                          ;
-    sta Sprite04RAM+1,x             ;Erase right half of missile.
+    sta SpriteRAM+$04<<2+1,x             ;Erase right half of missile.
     bne LE14A                          ;Branch always.
 
 ;Display 3-digit end sequence timer.
@@ -5614,13 +5614,13 @@ LE11C:
     jsr Adiv16                      ;($C2BF)Lower timer digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
     lda #$58                        ;"TI" sprite(left half of "TIME").
-    sta Sprite00RAM+1,x             ;
-    inc Sprite00RAM+2,x             ;Change color of sprite.
+    sta SpriteRAM+1,x             ;
+    inc SpriteRAM+2,x             ;Change color of sprite.
     cpx #$FC                        ;If at last sprite, branch to skip.
     bcs LE14A                           ;
     lda #$59                        ;"ME" sprite(right half of "TIME").
-    sta Sprite01RAM+1,x             ;
-    inc Sprite01RAM+2,x             ;Change color of sprite.
+    sta SpriteRAM+$01<<2+1,x             ;
+    inc SpriteRAM+$01<<2+2,x             ;Change color of sprite.
 
 LE14A:
     ldx SpritePagePos               ;Restore initial sprite page pos.
@@ -5658,7 +5658,7 @@ LE172:
 
 SPRWriteDigit:
     ora #$A0                        ;#$A0 is index into pattern table for numbers.
-    sta Sprite00RAM+1,x             ;Store proper nametable pattern in sprite RAM.
+    sta SpriteRAM+1,x             ;Store proper nametable pattern in sprite RAM.
     jmp Xplus4                      ;Find next sprite pattern table byte.
 
 ;----------------------------------[ Add energy tank to display ]------------------------------------
@@ -5667,13 +5667,13 @@ SPRWriteDigit:
 
 AddOneTank:
     lda #$17                        ;Y coord-1.
-    sta Sprite00RAM,x               ;
+    sta SpriteRAM,x               ;
     tya                             ;Tile value.
-    sta Sprite00RAM+1,x             ;
+    sta SpriteRAM+1,x             ;
     lda #$01                        ;Palette #.
-    sta Sprite00RAM+2,x             ;
+    sta SpriteRAM+2,x             ;
     lda $00                         ;X coord.
-    sta Sprite00RAM+3,x             ;
+    sta SpriteRAM+3,x             ;
     sec                             ;
     sbc #$0A                        ;Find x coord of next energy tank.
     sta $00                         ;
@@ -7597,28 +7597,28 @@ LEC57:
         sbc #$08
         bmi Lx239
         tax
-        ldy $0728,x
+        ldy Mem0728,x
         iny
         bne Lx238
     ldy #$00
     lda ($00),y
     and #$F0
-    sta $0729,x
+    sta Mem0729,x
     iny
     lda ($00),y
-    sta $0728,x
+    sta Mem0728,x
     iny
     lda ($00),y
     tay
     and #$F0
     ora #$08
-    sta $072A,x
+    sta Mem072A,x
     tya
     jsr Amul16       ; * 16
     ora #$00
-    sta $072B,x
+    sta Mem072B,x
     jsr GetNameTable                ;($EB85)
-    sta $072C,x
+    sta Mem072C,x
 Lx239:
     lda #$03
     bne Lx237
@@ -7721,10 +7721,10 @@ LEC9B:
     ldx #$18
     Lx250:
         tya
-        cmp $072C,x
+        cmp Mem072C,x
         bne Lx251
             lda #$FF
-            sta $0728,x
+            sta Mem0728,x
         Lx251:
         txa
         sec
@@ -9909,10 +9909,10 @@ Lx379:
 
 LFAFF:
     sty PageIndex
-    ldx $0728,y
+    ldx Mem0728,y
     inx
     beq Lx375
-    ldx $0729,y
+    ldx Mem0729,y
     lda EnStatus,x
     beq Lx380
     lda EnData05,x
@@ -9925,14 +9925,14 @@ Lx380:
     bne Lx381
     dec EnDelay,x
     bne Exit13
-    lda $0728,y
+    lda Mem0728,y
     jsr LEB28
     ldy PageIndex
-    lda $072A,y
+    lda Mem072A,y
     sta EnYRoomPos,x
-    lda $072B,y
+    lda Mem072B,y
     sta EnXRoomPos,x
-    lda $072C,y
+    lda Mem072C,y
     sta EnNameTable,x
     lda #$18
     sta EnRadX,x
