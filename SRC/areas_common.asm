@@ -116,8 +116,16 @@ CommonJump_SubtractHealth: ;$8042
 CommonJump_Base10Subtract: ;$8045
     jmp Base10Subtract              ;($C3FB)
 
-; Zoomer jump table
-L8048:  .word L84FE-1, L84A7-1, L844B-1, L844B-1, L84A7-1, L84FE-1, L83F5-1, L83F5-1
+; Crawler jump table
+CrawlerMovementRoutinesTable:
+    .word L84FE-1 ; right
+    .word L84A7-1 ; left
+    .word L844B-1 ; down
+    .word L844B-1 ; down
+    .word L84A7-1 ; right
+    .word L84FE-1 ; left
+    .word L83F5-1 ; up
+    .word L83F5-1 ; up
 
 ;-------------------------------------------------------------------------------
 ; A common enemy AI/movement routine

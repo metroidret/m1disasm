@@ -2370,7 +2370,7 @@ GameOver:
 
 L93B9:
     ;Information below is for above routine to display "GAME OVER" on the screen.
-    PPUString $218C,  "GAME OVER"
+    PPUString $218C, "GAME OVER"
 
     .byte $00                       ;End PPU string write.
 

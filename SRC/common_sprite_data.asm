@@ -119,27 +119,27 @@ L8603:  .byte $67, $67, $67, $68, $68, $69, $F7, $FF
 ;for the animation sequences.
 
 FramePtrTable:
-    .word L87CB, L87CB, L87CB, L87CB, L87DD, L87F0, L8802, L8802
-    .word L8818, L882C, L882C, L882C, L882C, L883E, L8851, L8863
-    .word L8863, L8874, L8874, L8885, L8885, L8885, L8885, L8885
-    .word L888F, L8899, L88A3, L88AD, L88B8, L88C3, L88CE, L88D9
-    .word L88D9, L88D9, L88D9, L88EE, L88F8, L88F8, L88FE, L8904
-    .word L890A, L890F, L890F, L8914, L8928, L8928, L8928, L8928
-    .word L8928, L893C, L8948, L8948, L8954, L8954, L8961, L8961
-    .word L8961, L8974, L8987, L8987, L8987, L8995, L8995, L8995
-    .word L8995, L89A9, L89BE, L89D2, L89D2, L89D2, L89D2, L89E6
-    .word L89FB, L8A0F, L8A1D, L8A21, L8A26, L8A26, L8A3C, L8A41
-    .word L8A46, L8A4E, L8A56, L8A5E, L8A66, L8A6E, L8A76, L8A7E
-    .word L8A86, L8A8E, L8A9C, L8AA1, L8AA6, L8AAE, L8ABA, L8AC4
-    .word L8AC4, L8AC4, L8AC4, L8AC4, L8AC4, L8AC4, L8AD8, L8AE9
-    .word L8AF3, L8B03
+    .word Frame_87CB, Frame_87CB, Frame_87CB, Frame_87CB, Frame_87DD, Frame_87F0, Frame_8802, Frame_8802
+    .word Frame_8818, Frame_882C, Frame_882C, Frame_882C, Frame_882C, Frame_883E, Frame_8851, Frame_8863
+    .word Frame_8863, Frame_8874, Frame_8874, Frame_8885, Frame_8885, Frame_8885, Frame_8885, Frame_8885
+    .word Frame_888F, Frame_8899, Frame_88A3, Frame_88AD, Frame_88B8, Frame_88C3, Frame_88CE, Frame_88D9
+    .word Frame_88D9, Frame_88D9, Frame_88D9, Frame_88EE, Frame_88F8, Frame_88F8, Frame_88FE, Frame_8904
+    .word Frame_890A, Frame_890F, Frame_890F, Frame_8914, Frame_8928, Frame_8928, Frame_8928, Frame_8928
+    .word Frame_8928, Frame_893C, Frame_8948, Frame_8948, Frame_8954, Frame_8954, Frame_8961, Frame_8961
+    .word Frame_8961, Frame_8974, Frame_8987, Frame_8987, Frame_8987, Frame_8995, Frame_8995, Frame_8995
+    .word Frame_8995, Frame_89A9, Frame_89BE, Frame_89D2, Frame_89D2, Frame_89D2, Frame_89D2, Frame_89E6
+    .word Frame_89FB, Frame_8A0F, Frame_8A1D, Frame_8A21, Frame_8A26, Frame_8A26, Frame_8A3C, Frame_8A41
+    .word Frame_8A46, Frame_8A4E, Frame_8A56, Frame_8A5E, Frame_8A66, Frame_8A6E, Frame_8A76, Frame_8A7E
+    .word Frame_8A86, Frame_8A8E, Frame_8A9C, Frame_8AA1, Frame_8AA6, Frame_8AAE, Frame_8ABA, Frame_8AC4
+    .word Frame_8AC4, Frame_8AC4, Frame_8AC4, Frame_8AC4, Frame_8AC4, Frame_8AC4, Frame_8AD8, Frame_8AE9
+    .word Frame_8AF3, Frame_8B03
 
 ;The following table provides pointers to data used for the placement of the sprites that make up
 ;Samus and other non-enemy objects.
 
 PlacePtrTable:
-    .word L8701, L871F, L872B, L8737, L8747, L8751, L86FD, L875D
-    .word L8775, L878D, L8791, L8799, L87A5, L8749, L87B1
+    .word Place_8701, Place_871F, Place_872B, Place_8737, Place_8747, Place_8751, Place_86FD, Place_875D
+    .word Place_8775, Place_878D, Place_8791, Place_8799, Place_87A5, Place_8749, Place_87B1
 
 ;------------------------------[ Sprite placement data tables ]-------------------------------------
 
@@ -170,8 +170,9 @@ PlacePtrTable:
 ;
 ;
 ;               *
-;              +--0--+   +--1--+
-L86FD:  .byte $E8, $FC, $EA, $FC
+Place_86FD:
+;          +--0--+   +--1--+
+    .byte $E8, $FC, $EA, $FC
 
 ;Several Samus frames.
 ;      +-------+ <---------------D
@@ -198,10 +199,11 @@ L86FD:  .byte $E8, $FC, $EA, $FC
 ;          |        |        |        |
 ;          |       8|       9|       A|
 ;          +--------+--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
-L8701:  .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00, $00, $F8, $00, $00, $00, $08
-;              +--8--+   +--9--+   +--A--+   +--B--+   +--C--+   +--D--+   +--E--+
-L8711:  .byte $08, $F8, $08, $00, $08, $08, $F8, $F4, $F8, $F6, $EC, $F4, $EE, $F4
+Place_8701:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
+    .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00, $00, $F8, $00, $00, $00, $08
+;          +--8--+   +--9--+   +--A--+   +--B--+   +--C--+   +--D--+   +--E--+
+    .byte $08, $F8, $08, $00, $08, $08, $F8, $F4, $F8, $F6, $EC, $F4, $EE, $F4
 
 ;Samus somersault and roll frames.
 ;          +--------+--------+
@@ -217,8 +219,9 @@ L8711:  .byte $08, $F8, $08, $00, $08, $08, $F8, $F4, $F8, $F6, $EC, $F4, $EE, $
 ;          +--------+--------+
 ;          |       4|       5|
 ;          +--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L871F:  .byte $F3, $F8, $F3, $00, $FB, $F8, $FB, $00, $03, $F8, $03, $00
+Place_871F:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $F3, $F8, $F3, $00, $FB, $F8, $FB, $00, $03, $F8, $03, $00
 
 ;Samus somersault frame.
 ;          +--------+--------+--------+
@@ -232,8 +235,9 @@ L871F:  .byte $F3, $F8, $F3, $00, $FB, $F8, $FB, $00, $03, $F8, $03, $00
 ;          |        |        |        |
 ;          |       3|       4|       5|
 ;          +--------+--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L872B:  .byte $F8, $F6, $F8, $FE, $F8, $06, $00, $F6, $00, $FE, $00, $06
+Place_872B:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $F8, $F6, $F8, $FE, $F8, $06, $00, $F6, $00, $FE, $00, $06
 
 ;Elevator frame.
 ;          +--------+--------+--------+--------+--------+--------+--------+--------+
@@ -242,8 +246,9 @@ L872B:  .byte $F8, $F6, $F8, $FE, $F8, $06, $00, $F6, $00, $FE, $00, $06
 ;          |        |        *        |        |        |        |        |        |
 ;          |       0|       1|       2|       3|       4|       5|       6|       7|
 ;          +--------+--------+--------+--------+--------+--------+--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
-L8737:  .byte $FC, $F0, $FC, $F8, $FC, $00, $FC, $08, $FC, $10, $FC, $18, $FC, $20, $FC, $28
+Place_8737:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
+    .byte $FC, $F0, $FC, $F8, $FC, $00, $FC, $08, $FC, $10, $FC, $18, $FC, $20, $FC, $28
 
 ;Several projectile frames.
 ;          +--------+
@@ -252,8 +257,9 @@ L8737:  .byte $FC, $F0, $FC, $F8, $FC, $00, $FC, $08, $FC, $10, $FC, $18, $FC, $
 ;          |    *   |
 ;          |       0|
 ;          +--------+
-;              +--0--+
-L8747:  .byte $FC, $FC
+Place_8747:
+;          +--0--+
+    .byte $FC, $FC
 
 ;Power-up items and bomb explode frames.
 ;          +--------+--------+
@@ -267,8 +273,9 @@ L8747:  .byte $FC, $FC
 ;          |        |        |
 ;          |       2|       3|
 ;          +--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+
-L8749:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
+Place_8749:
+;          +--0--+   +--1--+   +--2--+   +--3--+
+    .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
 
 ;Door frames.
 ;          +--------+
@@ -302,8 +309,9 @@ L8749:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
 ;          |        |
 ;          |       5|
 ;          +--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L8751:  .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00
+Place_8751:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00
 
 ;Samus explode. Special case. The bytes that are #$8X indicate displacement data will be loaded
 ;from a table for the y direction and from a counter for the x direction.  The initial displacement
@@ -326,10 +334,11 @@ L8751:  .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00
 ;          |        |        |
 ;          |       4|       5|
 ;          +--------+--------+
-;                                                                          +--0--+   +--1--+
-L875D:  .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85, $F4, $F8, $F4, $00
-;              +--2--+   +--3--+   +--4--+   +--5--+
-L876D:  .byte $FC, $F8, $FC, $00, $04, $F8, $04, $00
+Place_875D:
+;                                                                      +--0--+   +--1--+
+    .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85, $F4, $F8, $F4, $00
+;          +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
 ;Bomb explode frame.
 ;          +--------+--------+--------+--------+
@@ -353,10 +362,11 @@ L876D:  .byte $FC, $F8, $FC, $00, $04, $F8, $04, $00
 ;          |        |        |        |        |
 ;          |       7|       8|       A|       B|
 ;          +--------+--------+--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
-L8775:  .byte $F0, $00, $F0, $08, $F8, $08, $F0, $F0, $F0, $F8, $F8, $F0, $00, $F0, $08, $F0
-;              +--8--+   +--9--+   +--A--+   +--B--+
-L8785:  .byte $08, $F8, $00, $08, $08, $00, $08, $08
+Place_8775:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
+    .byte $F0, $00, $F0, $08, $F8, $08, $F0, $F0, $F0, $F8, $F8, $F0, $00, $F0, $08, $F0
+;          +--8--+   +--9--+   +--A--+   +--B--+
+    .byte $08, $F8, $00, $08, $08, $00, $08, $08
 
 ;Missile up frame.
 ;          +--------+
@@ -370,8 +380,9 @@ L8785:  .byte $08, $F8, $00, $08, $08, $00, $08, $08
 ;          |        |
 ;          |       1|
 ;          +--------+
-;              +--0--+   +--1--+
-L878D:  .byte $F8, $FC, $00, $FC
+Place_878D:
+;          +--0--+   +--1--+
+    .byte $F8, $FC, $00, $FC
 
 ;Missile left/right and missile explode frames.
 ;          +--------+--------+        +--------+--------+
@@ -380,8 +391,9 @@ L878D:  .byte $F8, $FC, $00, $FC
 ;          |        *        |        |        |        |
 ;          |       0|       1|        |       2|       3|
 ;          +--------+--------+        +--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+
-L8791:  .byte $FC, $F8, $FC, $00, $FC, $10, $FC, $18
+Place_8791:
+;          +--0--+   +--1--+   +--2--+   +--3--+
+    .byte $FC, $F8, $FC, $00, $FC, $10, $FC, $18
 
 ;Missile explode frame.
 ;                   +--------+--------+
@@ -400,8 +412,9 @@ L8791:  .byte $FC, $F8, $FC, $00, $FC, $10, $FC, $18
 ;                   |        |        |
 ;                   |       4|       5|
 ;                   +--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L8799:  .byte $FC, $F0, $F4, $F8, $F4, $00, $FC, $08, $04, $F8, $04, $00
+Place_8799:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $FC, $F0, $F4, $F8, $F4, $00, $FC, $08, $04, $F8, $04, $00
 
 ;Missile explode frame.
 ;                    +--------+                 +--------+
@@ -430,8 +443,9 @@ L8799:  .byte $FC, $F0, $F4, $F8, $F4, $00, $FC, $08, $04, $F8, $04, $00
 ;                    |        |                 |        |
 ;                    |       4|                 |       5|
 ;                    +--------+                 +--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
-L87A5:  .byte $FC, $E8, $EC, $F0, $EC, $08, $FC, $10, $0C, $F0, $0C, $08
+Place_87A5:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+
+    .byte $FC, $E8, $EC, $F0, $EC, $08, $FC, $10, $0C, $F0, $0C, $08
 
 ;Statue frames.
 ;          +--------+--------+--------+
@@ -460,10 +474,11 @@ L87A5:  .byte $FC, $E8, $EC, $F0, $EC, $08, $FC, $10, $0C, $F0, $0C, $08
 ;                   |        |        |
 ;                   |       2|       3|
 ;                   +--------+--------+
-;              +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
-L87B1:  .byte $00, $F8, $00, $00, $08, $F8, $08, $00, $E8, $F0, $E8, $F8, $E8, $00, $F0, $F0
-;              +--8--+   +--9--+   +--A--+   +--B--+   +--C--+
-L87C1:  .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00
+Place_87B1:
+;          +--0--+   +--1--+   +--2--+   +--3--+   +--4--+   +--5--+   +--6--+   +--7--+
+    .byte $00, $F8, $00, $00, $08, $F8, $08, $00, $E8, $F0, $E8, $F8, $E8, $00, $F0, $F0
+;          +--8--+   +--9--+   +--A--+   +--B--+   +--C--+
+    .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00
 
 ;-------------------------------[ Sprite frame data tables ]---------------------------------------
 
@@ -490,7 +505,7 @@ L87C1:  .byte $F0, $F8, $F0, $00, $F8, $F0, $F8, $F8, $F8, $00
 ;as the object's x radius.
 
 ;Samus run.
-L87CB:
+Frame_87CB:
     .byte $40, $0F, $04
     .byte $00
     .byte $01
@@ -507,7 +522,7 @@ L87CB:
     .byte $FF
 
 ;Samus run.
-L87DD:
+Frame_87DD:
     .byte $40, $0F, $04
     .byte $02
     .byte $03
@@ -525,269 +540,269 @@ L87DD:
     .byte $FF
 
 ;Samus run.
-L87F0:
+Frame_87F0:
     .byte $40, $0F, $04, $05, $06, $FD, $20, $FE, $45, $44, $FD, $60, $25, $26, $27, $35
     .byte $36, $FF
 
 ;Samus facing forward.
-L8802:
+Frame_8802:
     .byte $00, $0F, $04, $09, $FD, $60, $09, $FD, $20, $FE, $19, $1A, $FD, $20, $29, $2A
     .byte $FE, $39, $FD, $60, $39, $FF
 
 ;Samus stand.
-L8818:
+Frame_8818:
     .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
     .byte $3C, $FE, $17, $FF
 
 ;Samus run and fire.
-L882C:
+Frame_882C:
     .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $20, $21, $FE, $FE
     .byte $31, $FF
 
 ;Samus run and fire.
-L883E:
+Frame_883E:
     .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $23, $FE, $32
     .byte $33, $34, $FF
 
 ;Samus run and fire.
-L8851:
+Frame_8851:
     .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $25, $26, $27, $35
     .byte $36, $FF
 
 ;Samus stand and jump.
-L8863:
+Frame_8863:
     .byte $40, $0F, $04, $00, $01, $FD, $20, $FE, $41, $40, $FD, $60, $22, $07, $08, $32
     .byte $FF
 
 ;Samus jump and fire.
-L8874:
+Frame_8874:
     .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $07, $08, $32
     .byte $FF
 
 ;Samus somersault.
-L8885:
+Frame_8885:
     .byte $41, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
 
 ;Samus somersault.
-L888F:
+Frame_888F:
     .byte $42, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
 
 ;Samus somersault.
-L8899:
+Frame_8899:
     .byte $81, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
 
 ;Samus somersault.
-L88A3:
+Frame_88A3:
     .byte $82, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
 
 ;Samus roll.
-L88AD:
+Frame_88AD:
     .byte $01, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88B8:
+Frame_88B8:
     .byte $81, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88C3:
+Frame_88C3:
     .byte $C1, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88CE:
+Frame_88CE:
     .byte $41, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
 
 ;Samus stand and fire.
-L88D9:
+Frame_88D9:
     .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
     .byte $3C, $FE, $FE, $17, $FF
 
 ;Elevator.
-L88EE:
+Frame_88EE:
     .byte $03, $04, $10, $28, $38, $38, $FD, $60, $28, $FF
 
 ;Missile right.
-L88F8:
+Frame_88F8:
     .byte $4A, $04, $08, $5E, $5F, $FF
 
 ;Missile left.
-L88FE:
+Frame_88FE:
     .byte $0A, $04, $08, $5E, $5F, $FF
 
 ;Missile up.
-L8904:
+Frame_8904:
     .byte $09, $08, $04, $14, $24, $FF
 
 ;Bullet fire.
-L890A:
+Frame_890A:
     .byte $04, $02, $02, $30, $FF
 
 ;Bullet hit.
-L890F:
+Frame_890F:
     .byte $04, $00, $00, $04, $FF
 
 ;Samus stand and point up.
-L8914:
+Frame_8914:
     .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
     .byte $60, $3B, $3C, $FF
 
 ;Samus from ball to pointing up.
-L8928:
+Frame_8928:
     .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
     .byte $60, $3B, $3C, $FF
 
 ;Door closed.
-L893C:
+Frame_893C:
     .byte $35, $18, $08, $0F, $1F, $2F, $FD, $A3, $2F, $1F, $0F, $FF
 
 ;Door open/close.
-L8948:
+Frame_8948:
     .byte $35, $18, $04, $6A, $6B, $6C, $FD, $A3, $6C, $6B, $6A, $FF
 
 ;Samus explode.
-L8954:
+Frame_8954:
     .byte $07, $00, $00, $FC, $FC, $00, $0B, $0C, $1B, $1C, $2B, $2C, $FF
 
 ;Samus jump and point up.
-L8961:
+Frame_8961:
     .byte $46, $0F, $04, $69, $FD, $20, $FE, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
     .byte $08, $32, $FF
 
 ;Samus jump and point up.
-L8974:
+Frame_8974:
     .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
     .byte $08, $32, $FF
 
 ;Bomb explode.
-L8987:
+Frame_8987:
     .byte $0D, $0C, $0C, $74, $FD, $60, $74, $FD, $A0, $74, $FD, $E0, $74, $FF
 
 ;Samus run and point up.
-L8995:
+Frame_8995:
     .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
     .byte $FE, $FE, $31, $FF
 
 ;Samus run and point up.
-L89A9:
+Frame_89A9:
     .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
     .byte $FE, $32, $33, $34, $FF
 
 ;Samus run and point up.
-L89BE:
+Frame_89BE:
     .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
     .byte $27, $35, $36, $FF
 
 ;Samus run and point up.
-L89D2:
+Frame_89D2:
     .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
     .byte $FE, $FE, $31, $FF
 
 ;Samus point up, run and fire.
-L89E6:
+Frame_89E6:
     .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
     .byte $FE, $32, $33, $34, $FF
 
 ;Samus point up, run and fire.
-L89FB:
+Frame_89FB:
     .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
     .byte $27, $35, $36, $FF
 
 ;Bomb explode.
-L8A0F:
+Frame_8A0F:
     .byte $0D, $0C, $0C, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
 
 ;Bomb explode.
-L8A1D:
+Frame_8A1D:
     .byte $00, $00, $00, $FF
 
 ;Wave beam.
-L8A21:
+Frame_8A21:
     .byte $04, $04, $04, $4C, $FF
 
 ;Bomb explode.
-L8A26:
+Frame_8A26:
     .byte $08, $10, $10, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD, $E0, $4E, $3E, $3D
     .byte $FD, $A0, $4E, $3D, $3E, $FF
 
 ;Bomb tick.
-L8A3C:
+Frame_8A3C:
     .byte $04, $04, $04, $70, $FF
 
 ;Bomb tick.
-L8A41:
+Frame_8A41:
     .byte $04, $04, $04, $71, $FF
 
 ;Bomb item.
-L8A46:
+Frame_8A46:
     .byte $0D, $03, $03, $86, $87, $96, $97, $FF
 
 ;High jump item.
-L8A4E:
+Frame_8A4E:
     .byte $0D, $03, $03, $7B, $7C, $8B, $8C, $FF
 
-;Long beam item.
-L8A56:
+;Frame_ong beam item.
+Frame_8A56:
     .byte $0D, $03, $03, $88, $67, $98, $99, $FF
 
 ;Screw attack item.
-L8A5E:
+Frame_8A5E:
     .byte $0D, $03, $03, $80, $81, $90, $91, $FF
 
 ;Maru Mari item.
-L8A66:
+Frame_8A66:
     .byte $0D, $03, $03, $7D, $7E, $8D, $8E, $FF
 
 ;Varia item.
-L8A6E:
+Frame_8A6E:
     .byte $0D, $03, $03, $82, $83, $92, $93, $FF
 
 ;Wave beam item.
-L8A76:
+Frame_8A76:
     .byte $0D, $03, $03, $88, $89, $98, $99, $FF
 
 ;Ice beam item.
-L8A7E:
+Frame_8A7E:
     .byte $0D, $03, $03, $88, $68, $98, $99, $FF
 
 ;Energy tank item.
-L8A86:
+Frame_8A86:
     .byte $0D, $03, $03, $84, $85, $94, $95, $FF
 
 ;Missile item.
-L8A8E:
+Frame_8A8E:
     .byte $0D, $03, $03, $3F, $FD, $40, $3F, $FD, $00, $4F, $FD, $40, $4F, $FF
 
 ;Skree burrow.
-L8A9C:
+Frame_8A9C:
     .byte $34, $04, $04, $F2, $FF
 
 ;Not used.
-L8AA1:
+Frame_8AA1:
     .byte $04, $00, $00, $5A, $FF
-L8AA6:
+Frame_8AA6:
     .byte $13, $00, $00, $B0, $B1, $B2, $B3, $FF
-L8AAE:
+Frame_8AAE:
     .byte $13, $00, $00, $B4, $B5, $B6, $B7, $B8, $B6, $B9, $B3, $FF
-L8ABA:
+Frame_8ABA:
     .byte $13, $00, $00, $B3, $BA, $BA, $FE, $80, $80, $FF
 
 ;Kraid statue.
-L8AC4:
+Frame_8AC4:
     .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FC, $00, $04, $C5, $C6, $C7, $D5, $D6, $D7
     .byte $E5, $E6, $E7, $FF
 
 ;Ridley statue.
-L8AD8:
+Frame_8AD8:
     .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FE, $C8, $C9, $EB, $D8, $D9, $EA, $E8, $E9
     .byte $FF
 
 ;Missile explode.
-L8AE9:
+Frame_8AE9:
     .byte $0A, $04, $08, $FD, $00, $57, $FD, $40, $57, $FF
 
 ;Missile explode.
-L8AF3:
+Frame_8AF3:
     .byte $0B, $04, $0C, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF
 
 ;Missile explode.
-L8B03:
+Frame_8B03:
     .byte $0C, $04, $10, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF

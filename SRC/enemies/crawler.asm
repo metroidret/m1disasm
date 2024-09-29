@@ -111,8 +111,8 @@ JumpByRTS:
     rol
     asl
     tay
-    lda L8048+1,y
+    lda CrawlerMovementRoutinesTable+1,y
     pha
-    lda L8048,y
+    lda CrawlerMovementRoutinesTable,y
     pha
     rts

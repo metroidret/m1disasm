@@ -3078,7 +3078,7 @@ SamusRoll:
         jsr CheckMoveUp
         bcc Lx032     ; branch if not possible to stand up
         ldx #$00
-        jsr LE8BE
+        jsr StoreObjectPositionToTemp
         stx $05
         lda #$F5
         sta $04
@@ -3375,7 +3375,7 @@ Lx046:
 
 LD306:
     ldx #$00
-    jsr LE8BE
+    jsr StoreObjectPositionToTemp
     tya
     tax
     jsr LFD8F
@@ -3858,7 +3858,7 @@ LD624:
     sta $05
     lda ObjVertSpeed,x
     sta $04
-    jsr LE8BE
+    jsr StoreObjectPositionToTemp
     jsr LFD8F
     bcc Lx078
 LD638:
@@ -6487,7 +6487,7 @@ LE626:
     sbc ObjRadX
     and #$07
     bne Lx177              ; only call crash detection every 8th pixel
-        jsr CheckMoveLeft       ; check if player is obstructed to the LEFT
+        jsr ObjectCheckMoveLeft       ; check if player is obstructed to the LEFT
         bcc Lx181        ; branch if yes! (CF = 0)
     Lx177:
     jsr SamusOnElevatorOrEnemy
@@ -6529,7 +6529,7 @@ MoveSamusRight:
     adc ObjRadX
     and #$07
     bne Lx182              ; only call crash detection every 8th pixel
-        jsr CheckMoveRight      ; check if Samus is obstructed to the RIGHT
+        jsr ObjectCheckMoveRight      ; check if Samus is obstructed to the RIGHT
         bcc Lx186       ; branch if yes! (CF = 0)
     Lx182:
     jsr SamusOnElevatorOrEnemy
@@ -6758,7 +6758,7 @@ CheckMoveDown: ; For Samus
     sbc ObjRadY,x
 Lx197:
     sta $02
-    jsr LE8BE
+    jsr StoreObjectPositionToTemp
     lda ObjRadX,x
 
 LE7BD:
@@ -6883,26 +6883,26 @@ ClcExit:
 PlaySnd4:
     jmp SFX_Metal
 
-CheckMoveLeft:
+ObjectCheckMoveLeft:
     ldx PageIndex
     lda ObjRadX,x
     clc
     adc #$08
-    jmp Lx207
+    jmp ObjectCheckMoveHorizontalBranch
 
-CheckMoveRight:
+ObjectCheckMoveRight:
     ldx PageIndex
     lda #$00
     sec
     sbc ObjRadX,x
     ; fallthrough
 
-Lx207:
+ObjectCheckMoveHorizontalBranch:
     sta $03
-    jsr LE8BE
+    jsr StoreObjectPositionToTemp
     ldy ObjRadY,x
 
-LE89B:
+CheckMoveVertical:
     bne Lx208
         sec
         rts
@@ -6924,7 +6924,7 @@ LE89B:
     lda $01
     jmp LE7DE
 
-LE8BE:
+StoreObjectPositionToTemp:
     lda ObjectHi,x
     sta $0B
     lda ObjectY,x
@@ -6968,7 +6968,7 @@ EnemyCheckMoveLeft:
     lda EnRadX,x
     clc
     adc #$08
-    jmp LE904
+    jmp EnemyCheckMoveHorizontalBranch
 
 EnemyCheckMoveRight:
     ldx PageIndex
@@ -6976,11 +6976,11 @@ EnemyCheckMoveRight:
     sec
     sbc EnRadX,x
 
-LE904:
+EnemyCheckMoveHorizontalBranch:
     sta $03
     jsr StoreEnemyPositionToTemp
     ldy EnRadY,x
-    jmp LE89B
+    jmp CheckMoveVertical
 
 ;----------------------------------------------
 ; $02 stores some sort of adjusted temp hitbox radius ?
