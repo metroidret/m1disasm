@@ -114,7 +114,7 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $06, $00, $03, $43, $00, $00, $00, $00, $00, $00, $64
 
 ChooseEnemyRoutine:
-    lda EnDataIndex,X
+    lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorRoutine ; 00 - sidehopper
         .word SidehopperCeilingRoutine ; 01 - ceiling sidehopper

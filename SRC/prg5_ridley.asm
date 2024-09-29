@@ -131,7 +131,7 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $06, $00, $03, $58, $44, $4A, $48, $4A, $4A, $36, $25
 
 ChooseEnemyRoutine:
-    lda EnDataIndex,X
+    lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
         .word SwooperRoutine ; 00 - swooper
         .word SwooperRoutine2 ; 01 - becomes swooper ?
@@ -219,7 +219,7 @@ L981B:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $
 ;-------------------------------------------------------------------------------
 InvalidEnemy:
     lda #$00
-    sta EnStatus,X
+    sta EnStatus,x
     rts
 
 CommonEnemyJump_00_01_02:
@@ -258,22 +258,22 @@ CommonEnemyJump_00_01_02:
 .include "enemies/ridley.asm"
 
 StorePositionToTemp:
-    lda EnYRoomPos,X
+    lda EnYRoomPos,x
     sta $08
-    lda EnXRoomPos,X
+    lda EnXRoomPos,x
     sta $09
-    lda EnNameTable,X
+    lda EnNameTable,x
     sta $0B
     rts
 
 LoadPositionFromTemp:
     lda $0B
     and #$01
-    sta EnNameTable,X
+    sta EnNameTable,x
     lda $08
-    sta EnYRoomPos,X
+    sta EnYRoomPos,x
     lda $09
-    sta EnXRoomPos,X
+    sta EnXRoomPos,x
     rts
 
 ;-------------------------------------------------------------------------------

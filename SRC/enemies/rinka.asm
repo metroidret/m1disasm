@@ -1,5 +1,5 @@
 RinkaRoutine:
-    ldy EnStatus,X
+    ldy EnStatus,x
     cpy #$02
     bne L9AB0
     dey
@@ -7,13 +7,13 @@ RinkaRoutine:
     bne L9AB0
     lda #$00
     jsr L99D1
-    sta $6AFC,X
-    sta $6AFD,X
+    sta $6AFC,x
+    sta $6AFD,x
     lda ObjectX
     sec
-    sbc EnXRoomPos,X
+    sbc EnXRoomPos,x
     sta $01
-    lda $0405,X
+    lda $0405,x
     pha
     lsr
     pha
@@ -24,7 +24,7 @@ RinkaRoutine:
     L9A5A:
     lda ObjectY
     sec
-    sbc EnYRoomPos,X
+    sbc EnYRoomPos,x
     sta $00
     pla
     lsr
@@ -55,50 +55,50 @@ L9A7A:
     pha
     bcc L9A9B
         lda #$00
-        sbc $0407,X
-        sta $0407,X
+        sbc $0407,x
+        sta $0407,x
         lda #$00
-        sbc EnData03,X
-        sta EnData03,X
+        sbc EnData03,x
+        sta EnData03,x
     L9A9B:
     pla
     lsr
     lsr
     bcc L9AB0
     lda #$00
-    sbc $0406,X
-    sta $0406,X
+    sbc $0406,x
+    sta $0406,x
     lda #$00
-    sbc EnData02,X
-    sta EnData02,X
+    sbc EnData02,x
+    sta EnData02,x
 L9AB0:
-    lda $0405,X
+    lda $0405,x
     asl
     bmi L9AF4
-        lda $0406,X
+        lda $0406,x
         clc
-        adc $6AFC,X
-        sta $6AFC,X
-        lda EnData02,X
+        adc $6AFC,x
+        sta $6AFC,x
+        lda EnData02,x
         adc #$00
         sta $04
-        lda $0407,X
+        lda $0407,x
         clc
-        adc $6AFD,X
-        sta $6AFD,X
-        lda EnData03,X
+        adc $6AFD,x
+        sta $6AFD,x
+        lda EnData03,x
         adc #$00
         sta $05
-        lda EnYRoomPos,X
+        lda EnYRoomPos,x
         sta $08
-        lda EnXRoomPos,X
+        lda EnXRoomPos,x
         sta $09
-        lda EnNameTable,X
+        lda EnNameTable,x
         sta $0B
         jsr CommonJump_0D
         bcs L9AF1
             lda #$00
-            sta EnStatus,X
+            sta EnStatus,x
         L9AF1:
         jsr L99F4
     L9AF4:
@@ -109,17 +109,17 @@ L9AF9:
     lda $00
     pha
     jsr Adiv16_
-    sta EnData02,X
+    sta EnData02,x
     pla
     jsr Amul16_
-    sta $0406,X
+    sta $0406,x
     lda $01
     pha
     jsr Adiv16_
-    sta EnData03,X
+    sta EnData03,x
     pla
     jsr Amul16_
-    sta $0407,X
+    sta $0407,x
     rts
 
     lsr

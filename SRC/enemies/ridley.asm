@@ -1,6 +1,6 @@
 ; Ridley Routine
 RidleyRoutine:
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     bcc L9A33
     beq L9A20
@@ -33,7 +33,7 @@ L9A41:
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
 RidleyFireballRoutine:
-    lda $0405,X
+    lda $0405,x
     pha
     lda #$02
     sta $00
@@ -41,13 +41,13 @@ RidleyFireballRoutine:
     jsr CommonEnemyJump_00_01_02
     pla
     ldx $4B
-    eor $0405,X
+    eor $0405,x
     lsr
     bcs L9A73
-    lda $0405,X
+    lda $0405,x
     lsr
     bcs L9A78
-    lda $0401,X
+    lda $0401,x
     sec
     sbc $030E
     bcc L9A78
@@ -55,7 +55,7 @@ RidleyFireballRoutine:
     bcc L9A78
 L9A73:
     lda #$00
-    sta EnStatus,X
+    sta EnStatus,x
 L9A78:
     rts
 
@@ -79,9 +79,9 @@ L9A79:
     bne L9AA9
     ldx #$50
     L9A94:
-        lda EnStatus,X
+        lda EnStatus,x
         beq L9AAA
-        lda $0405,X
+        lda $0405,x
         and #$02
         beq L9AAA
         txa
@@ -101,21 +101,21 @@ L9AAA:
     tya
     tax
     lda $0405
-    sta $0405,X
+    sta $0405,x
     and #$01
     tay
-    lda L9ADF,Y
+    lda L9ADF,y
     sta $05
     lda #$F8
     sta $04
     jsr CommonJump_0D
     bcc L9AA9
     lda #$00
-    sta $040F,X
+    sta $040F,x
     lda #$0A
-    sta EnDataIndex,X
+    sta EnDataIndex,x
     lda #$01
-    sta EnStatus,X
+    sta EnStatus,x
     jsr LoadPositionFromTemp
     jmp CommonJump_0E
 L9ADF:

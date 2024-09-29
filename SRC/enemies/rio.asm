@@ -7,15 +7,15 @@ RioRoutine:
     beq RioExitB
 
     lda #$80
-    sta EnData1A,X
-    lda EnData02,X ; y speed?
+    sta EnData1A,x
+    lda EnData02,x ; y speed?
     bmi RioExitA
 
-    lda EnData05,X
+    lda EnData05,x
     and #$10
     beq RioExitA
 
-    lda EnYRoomPos,X
+    lda EnYRoomPos,x
     sec
     sbc ObjectY ; Compare with Samus' Y position
     bpl RioBranch
@@ -24,7 +24,7 @@ RioRoutine:
     cmp #$10
     bcs RioExitA
     lda #$00
-    sta EnData1A,X
+    sta EnData1A,x
 
 RioExitA:
     lda #$03

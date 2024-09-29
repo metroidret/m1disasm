@@ -1,6 +1,6 @@
 ; RipperRoutine
 RipperRoutine:
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq Ripper01
         jsr CommonJump_0A

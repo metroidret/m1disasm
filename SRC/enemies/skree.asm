@@ -5,31 +5,31 @@ SkreeRoutine:
     beq SkreeExitB
     cmp #$03
     beq SkreeExitC
-    lda EnCounter,X
+    lda EnCounter,x
     cmp #$0F
     bcc SkreeExitA
     cmp #$11
     bcs SkreeBranch
     lda #$3A
-    sta EnData1D,X
+    sta EnData1D,x
     bne SkreeExitA
 
 SkreeBranch:
-    dec EnData1D,X
+    dec EnData1D,x
     bne SkreeExitA
     lda #$00
-    sta EnStatus,X
+    sta EnStatus,x
     ldy #$0C
 
 SkreeLoop:
     lda #$0A
-    sta $A0,Y
-    lda EnYRoomPos,X
-    sta $A1,Y
-    lda EnXRoomPos,X
-    sta $A2,Y
-    lda EnNameTable,X
-    sta $A3,Y
+    sta $A0,y
+    lda EnYRoomPos,x
+    sta $A1,y
+    lda EnXRoomPos,x
+    sta $A2,y
+    lda EnNameTable,x
+    sta $A3,y
     dey
     dey
     dey

@@ -525,206 +525,269 @@ L87DD:
     .byte $FF
 
 ;Samus run.
-L87F0:  .byte $40, $0F, $04, $05, $06, $FD, $20, $FE, $45, $44, $FD, $60, $25, $26, $27, $35
-L8800:  .byte $36, $FF
+L87F0:
+    .byte $40, $0F, $04, $05, $06, $FD, $20, $FE, $45, $44, $FD, $60, $25, $26, $27, $35
+    .byte $36, $FF
 
 ;Samus facing forward.
-L8802:  .byte $00, $0F, $04, $09, $FD, $60, $09, $FD, $20, $FE, $19, $1A, $FD, $20, $29, $2A
-L8812:  .byte $FE, $39, $FD, $60, $39, $FF
+L8802:
+    .byte $00, $0F, $04, $09, $FD, $60, $09, $FD, $20, $FE, $19, $1A, $FD, $20, $29, $2A
+    .byte $FE, $39, $FD, $60, $39, $FF
 
 ;Samus stand.
-L8818:  .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
-L8828:  .byte $3C, $FE, $17, $FF
+L8818:
+    .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
+    .byte $3C, $FE, $17, $FF
 
 ;Samus run and fire.
-L882C:  .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $20, $21, $FE, $FE
-L883C:  .byte $31, $FF
+L882C:
+    .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $20, $21, $FE, $FE
+    .byte $31, $FF
 
 ;Samus run and fire.
-L883E:  .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $23, $FE, $32
-L884E:  .byte $33, $34, $FF
+L883E:
+    .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $23, $FE, $32
+    .byte $33, $34, $FF
 
 ;Samus run and fire.
-L8851:  .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $25, $26, $27, $35
-L8861:  .byte $36, $FF
+L8851:
+    .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $25, $26, $27, $35
+    .byte $36, $FF
 
 ;Samus stand and jump.
-L8863:  .byte $40, $0F, $04, $00, $01, $FD, $20, $FE, $41, $40, $FD, $60, $22, $07, $08, $32
-L8873:  .byte $FF
+L8863:
+    .byte $40, $0F, $04, $00, $01, $FD, $20, $FE, $41, $40, $FD, $60, $22, $07, $08, $32
+    .byte $FF
 
 ;Samus jump and fire.
-L8874:  .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $07, $08, $32
-L8884:  .byte $FF
+L8874:
+    .byte $40, $0F, $04, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60, $22, $07, $08, $32
+    .byte $FF
 
 ;Samus somersault.
-L8885:  .byte $41, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
+L8885:
+    .byte $41, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
 
 ;Samus somersault.
-L888F:  .byte $42, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
+L888F:
+    .byte $42, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
 
 ;Samus somersault.
-L8899:  .byte $81, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
+L8899:
+    .byte $81, $0F, $04, $52, $53, $62, $63, $72, $73, $FF
 
 ;Samus somersault.
-L88A3:  .byte $82, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
+L88A3:
+    .byte $82, $0F, $04, $54, $55, $56, $64, $65, $66, $FF
 
 ;Samus roll.
-L88AD:  .byte $01, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
+L88AD:
+    .byte $01, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88B8:  .byte $81, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
+L88B8:
+    .byte $81, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88C3:  .byte $C1, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
+L88C3:
+    .byte $C1, $08, $04, $FC, $FD, $00, $50, $51, $60, $61, $FF
 
 ;Samus roll.
-L88CE:  .byte $41, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
+L88CE:
+    .byte $41, $08, $04, $FC, $03, $00, $50, $51, $60, $61, $FF
 
 ;Samus stand and fire.
-L88D9:  .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
-L88E9:  .byte $3C, $FE, $FE, $17, $FF
+L88D9:
+    .byte $40, $0F, $04, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
+    .byte $3C, $FE, $FE, $17, $FF
 
 ;Elevator.
-L88EE:  .byte $03, $04, $10, $28, $38, $38, $FD, $60, $28, $FF
+L88EE:
+    .byte $03, $04, $10, $28, $38, $38, $FD, $60, $28, $FF
 
 ;Missile right.
-L88F8:  .byte $4A, $04, $08, $5E, $5F, $FF
+L88F8:
+    .byte $4A, $04, $08, $5E, $5F, $FF
 
 ;Missile left.
-L88FE:  .byte $0A, $04, $08, $5E, $5F, $FF
+L88FE:
+    .byte $0A, $04, $08, $5E, $5F, $FF
 
 ;Missile up.
-L8904:  .byte $09, $08, $04, $14, $24, $FF
+L8904:
+    .byte $09, $08, $04, $14, $24, $FF
 
 ;Bullet fire.
-L890A:  .byte $04, $02, $02, $30, $FF
+L890A:
+    .byte $04, $02, $02, $30, $FF
 
 ;Bullet hit.
-L890F:  .byte $04, $00, $00, $04, $FF
+L890F:
+    .byte $04, $00, $00, $04, $FF
 
 ;Samus stand and point up.
-L8914:  .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
-L8924:  .byte $60, $3B, $3C, $FF
+L8914:
+    .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
+    .byte $60, $3B, $3C, $FF
 
 ;Samus from ball to pointing up.
-L8928:  .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
-L8938:  .byte $60, $3B, $3C, $FF
+L8928:
+    .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE, $FD
+    .byte $60, $3B, $3C, $FF
 
 ;Door closed.
-L893C:  .byte $35, $18, $08, $0F, $1F, $2F, $FD, $A3, $2F, $1F, $0F, $FF
+L893C:
+    .byte $35, $18, $08, $0F, $1F, $2F, $FD, $A3, $2F, $1F, $0F, $FF
 
 ;Door open/close.
-L8948:  .byte $35, $18, $04, $6A, $6B, $6C, $FD, $A3, $6C, $6B, $6A, $FF
+L8948:
+    .byte $35, $18, $04, $6A, $6B, $6C, $FD, $A3, $6C, $6B, $6A, $FF
 
 ;Samus explode.
-L8954:  .byte $07, $00, $00, $FC, $FC, $00, $0B, $0C, $1B, $1C, $2B, $2C, $FF
+L8954:
+    .byte $07, $00, $00, $FC, $FC, $00, $0B, $0C, $1B, $1C, $2B, $2C, $FF
 
 ;Samus jump and point up.
-L8961:  .byte $46, $0F, $04, $69, $FD, $20, $FE, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
-L8971:  .byte $08, $32, $FF
+L8961:
+    .byte $46, $0F, $04, $69, $FD, $20, $FE, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
+    .byte $08, $32, $FF
 
 ;Samus jump and point up.
-L8974:  .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
-L8984:  .byte $08, $32, $FF
+L8974:
+    .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $07
+    .byte $08, $32, $FF
 
 ;Bomb explode.
-L8987:  .byte $0D, $0C, $0C, $74, $FD, $60, $74, $FD, $A0, $74, $FD, $E0, $74, $FF
+L8987:
+    .byte $0D, $0C, $0C, $74, $FD, $60, $74, $FD, $A0, $74, $FD, $E0, $74, $FF
 
 ;Samus run and point up.
-L8995:  .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
-L89A5:  .byte $FE, $FE, $31, $FF
+L8995:
+    .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
+    .byte $FE, $FE, $31, $FF
 
 ;Samus run and point up.
-L89A9:  .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
-L89B9:  .byte $FE, $32, $33, $34, $FF
+L89A9:
+    .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
+    .byte $FE, $32, $33, $34, $FF
 
 ;Samus run and point up.
-L89BE:  .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
-L89CE:  .byte $27, $35, $36, $FF
+L89BE:
+    .byte $46, $0F, $04, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
+    .byte $27, $35, $36, $FF
 
 ;Samus run and point up.
-L89D2:  .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
-L89E2:  .byte $FE, $FE, $31, $FF
+L89D2:
+    .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $20, $21
+    .byte $FE, $FE, $31, $FF
 
 ;Samus point up, run and fire.
-L89E6:  .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
-L89F6:  .byte $FE, $32, $33, $34, $FF
+L89E6:
+    .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $22, $23
+    .byte $FE, $32, $33, $34, $FF
 
 ;Samus point up, run and fire.
-L89FB:  .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
-L8A0B:  .byte $27, $35, $36, $FF
+L89FB:
+    .byte $46, $0F, $04, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26
+    .byte $27, $35, $36, $FF
 
 ;Bomb explode.
-L8A0F:  .byte $0D, $0C, $0C, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
+L8A0F:
+    .byte $0D, $0C, $0C, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
 
 ;Bomb explode.
-L8A1D:  .byte $00, $00, $00, $FF
+L8A1D:
+    .byte $00, $00, $00, $FF
 
 ;Wave beam.
-L8A21:  .byte $04, $04, $04, $4C, $FF
+L8A21:
+    .byte $04, $04, $04, $4C, $FF
 
 ;Bomb explode.
-L8A26:  .byte $08, $10, $10, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD, $E0, $4E, $3E, $3D
-L8A36:  .byte $FD, $A0, $4E, $3D, $3E, $FF
+L8A26:
+    .byte $08, $10, $10, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD, $E0, $4E, $3E, $3D
+    .byte $FD, $A0, $4E, $3D, $3E, $FF
 
 ;Bomb tick.
-L8A3C:  .byte $04, $04, $04, $70, $FF
+L8A3C:
+    .byte $04, $04, $04, $70, $FF
 
 ;Bomb tick.
-L8A41:  .byte $04, $04, $04, $71, $FF
+L8A41:
+    .byte $04, $04, $04, $71, $FF
 
 ;Bomb item.
-L8A46:  .byte $0D, $03, $03, $86, $87, $96, $97, $FF
+L8A46:
+    .byte $0D, $03, $03, $86, $87, $96, $97, $FF
 
 ;High jump item.
-L8A4E:  .byte $0D, $03, $03, $7B, $7C, $8B, $8C, $FF
+L8A4E:
+    .byte $0D, $03, $03, $7B, $7C, $8B, $8C, $FF
 
 ;Long beam item.
-L8A56:  .byte $0D, $03, $03, $88, $67, $98, $99, $FF
+L8A56:
+    .byte $0D, $03, $03, $88, $67, $98, $99, $FF
 
 ;Screw attack item.
-L8A5E:  .byte $0D, $03, $03, $80, $81, $90, $91, $FF
+L8A5E:
+    .byte $0D, $03, $03, $80, $81, $90, $91, $FF
 
 ;Maru Mari item.
-L8A66:  .byte $0D, $03, $03, $7D, $7E, $8D, $8E, $FF
+L8A66:
+    .byte $0D, $03, $03, $7D, $7E, $8D, $8E, $FF
 
 ;Varia item.
-L8A6E:  .byte $0D, $03, $03, $82, $83, $92, $93, $FF
+L8A6E:
+    .byte $0D, $03, $03, $82, $83, $92, $93, $FF
 
 ;Wave beam item.
-L8A76:  .byte $0D, $03, $03, $88, $89, $98, $99, $FF
+L8A76:
+    .byte $0D, $03, $03, $88, $89, $98, $99, $FF
 
 ;Ice beam item.
-L8A7E:  .byte $0D, $03, $03, $88, $68, $98, $99, $FF
+L8A7E:
+    .byte $0D, $03, $03, $88, $68, $98, $99, $FF
 
 ;Energy tank item.
-L8A86:  .byte $0D, $03, $03, $84, $85, $94, $95, $FF
+L8A86:
+    .byte $0D, $03, $03, $84, $85, $94, $95, $FF
 
 ;Missile item.
-L8A8E:  .byte $0D, $03, $03, $3F, $FD, $40, $3F, $FD, $00, $4F, $FD, $40, $4F, $FF
+L8A8E:
+    .byte $0D, $03, $03, $3F, $FD, $40, $3F, $FD, $00, $4F, $FD, $40, $4F, $FF
 
 ;Skree burrow.
-L8A9C:  .byte $34, $04, $04, $F2, $FF
+L8A9C:
+    .byte $34, $04, $04, $F2, $FF
 
 ;Not used.
-L8AA1:  .byte $04, $00, $00, $5A, $FF
-L8AA6:  .byte $13, $00, $00, $B0, $B1, $B2, $B3, $FF
-L8AAE:  .byte $13, $00, $00, $B4, $B5, $B6, $B7, $B8, $B6, $B9, $B3, $FF
-L8ABA:  .byte $13, $00, $00, $B3, $BA, $BA, $FE, $80, $80, $FF
+L8AA1:
+    .byte $04, $00, $00, $5A, $FF
+L8AA6:
+    .byte $13, $00, $00, $B0, $B1, $B2, $B3, $FF
+L8AAE:
+    .byte $13, $00, $00, $B4, $B5, $B6, $B7, $B8, $B6, $B9, $B3, $FF
+L8ABA:
+    .byte $13, $00, $00, $B3, $BA, $BA, $FE, $80, $80, $FF
 
 ;Kraid statue.
-L8AC4:  .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FC, $00, $04, $C5, $C6, $C7, $D5, $D6, $D7
-L8AD4:  .byte $E5, $E6, $E7, $FF
+L8AC4:
+    .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FC, $00, $04, $C5, $C6, $C7, $D5, $D6, $D7
+    .byte $E5, $E6, $E7, $FF
 
 ;Ridley statue.
-L8AD8:  .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FE, $C8, $C9, $EB, $D8, $D9, $EA, $E8, $E9
-L8AE8:  .byte $FF
+L8AD8:
+    .byte $1E, $00, $08, $FA, $FB, $FA, $FB, $FE, $C8, $C9, $EB, $D8, $D9, $EA, $E8, $E9
+    .byte $FF
 
 ;Missile explode.
-L8AE9:  .byte $0A, $04, $08, $FD, $00, $57, $FD, $40, $57, $FF
+L8AE9:
+    .byte $0A, $04, $08, $FD, $00, $57, $FD, $40, $57, $FF
 
 ;Missile explode.
-L8AF3:  .byte $0B, $04, $0C, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF
+L8AF3:
+    .byte $0B, $04, $0C, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF
 
 ;Missile explode.
-L8B03:  .byte $0C, $04, $10, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF
+L8B03:
+    .byte $0C, $04, $10, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18, $FF

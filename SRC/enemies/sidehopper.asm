@@ -9,7 +9,7 @@ SidehopperFloorRoutine:
 Sidehopper_Common:
     sta $85
     sta $86
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq CommonEnemyStub2
         jsr CommonJump_09

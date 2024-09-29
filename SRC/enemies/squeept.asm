@@ -3,20 +3,20 @@ SqueeptRoutine:
     lda $81
     cmp #$01
     bne L9A88
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq L9ACA
     cmp #$02
     bne L9A88
-    ldy $0408,X
-    lda L9AD2,Y
-    sta $0402,X
+    ldy $0408,x
+    lda L9AD2,y
+    sta $0402,x
     lda #$40
-    sta $6AFE,X
+    sta $6AFE,x
     lda #$00
-    sta $0406,X
+    sta $0406,x
 L9A88:
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq L9ACA
     lda $81
@@ -34,7 +34,7 @@ L9A88:
     bmi L9AAC
         lda #$20
     L9AAC:
-    sta $6AF9,X
+    sta $6AF9,x
     jsr StorePositionToTemp
     jsr CommonJump_0D
     lda #$E8
@@ -43,9 +43,9 @@ L9A88:
         bcs L9AC7
     L9ABD:
     sta $08
-    lda $0405,X
+    lda $0405,x
     ora #$20
-    sta $0405,X
+    sta $0405,x
 L9AC7:
     jsr LoadPositionFromTemp
 L9ACA:
@@ -56,5 +56,5 @@ L9ACF:
     jmp CommonJump_02
 
 L9AD2:
-    inc $F8,X
-    inc $FA,X
+    inc $F8,x
+    inc $FA,x

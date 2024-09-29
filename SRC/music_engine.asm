@@ -287,8 +287,8 @@ LoadSFXData:
     ldy #$00                        ;Starting index for loading four byte sound data.
 
 LoadSFXRegisters:
-    lda ($E2),Y                     ;Load A with SFX data byte.
-    sta ($E0),Y                     ;Store A in SFX register.
+    lda ($E2),y                     ;Load A with SFX data byte.
+    sta ($E0),y                     ;Store A in SFX register.
     iny                             ;
     tya                             ;The four registers associated with each sound-->
     cmp #$04                        ;channel are loaded one after the other (the loop-->
@@ -413,7 +413,7 @@ ClearSounds:                            ;
 
 SelectSFXRoutine:
     ldx ChannelType                 ;
-    sta NoiseSFXLength,X            ;Stores frame length of SFX in corresponding address.
+    sta NoiseSFXLength,x            ;Stores frame length of SFX in corresponding address.
     txa                             ;
     beq LB477                       ;Branch if SFX uses noise channel.
     cmp #$01                        ;
@@ -438,21 +438,21 @@ LB477:
 LB47A:
     jsr UpdateContFlags             ;($B493)Set continuation flags for this SFX.
     txa                             ;
-    sta NoiseInUse,X                ;Indicate sound channel is in use.
+    sta NoiseInUse,x                ;Indicate sound channel is in use.
     lda #$00                        ;
-    sta ThisNoiseFrame,X            ;
-    sta NoiseSFXData,X              ;Clears all the following addresses before going-->
-    sta MultiSFXData,X              ;to the proper SFX handling routine.
-    sta ScrewAttackSFXData,X        ;
+    sta ThisNoiseFrame,x            ;
+    sta NoiseSFXData,x              ;Clears all the following addresses before going-->
+    sta MultiSFXData,x              ;to the proper SFX handling routine.
+    sta ScrewAttackSFXData,x        ;
     sta WriteMultiChannelData       ;
     rts                             ;
 
 UpdateContFlags:
     ldx ChannelType                 ;Loads X register with sound channel just changed.
-    lda NoiseContSFX,X              ;Clear existing continuation SFX-->
+    lda NoiseContSFX,x              ;Clear existing continuation SFX-->
     and #$00                        ;flags for that channel.
     ora CurrentSFXFlags             ;Load new continuation flags.
-    sta NoiseContSFX,X              ;Save results.
+    sta NoiseContSFX,x              ;Save results.
     rts                             ;
 
 ClearCurrentSFXFlags:
@@ -462,12 +462,12 @@ ClearCurrentSFXFlags:
 
 IncrementSFXFrame:
     ldx ChannelType                 ;Load SFX channel number.
-    inc ThisNoiseFrame,X            ;increment current frame to play on given channel.
-    lda ThisNoiseFrame,X            ;Load current frame to play on given channel.
-    cmp NoiseSFXLength,X            ;Check to see if current frame is last frame to play.
+    inc ThisNoiseFrame,x            ;increment current frame to play on given channel.
+    lda ThisNoiseFrame,x            ;Load current frame to play on given channel.
+    cmp NoiseSFXLength,x            ;Check to see if current frame is last frame to play.
     bne LB4BC                       ;
     lda #$00                        ;If current frame is last frame,-->
-    sta ThisNoiseFrame,X            ;reset current frame to 0.
+    sta ThisNoiseFrame,x            ;reset current frame to 0.
 LB4BC:
     rts                             ;
 
@@ -490,13 +490,13 @@ CheckSFXFlag:
     sty $E4+1                       ;
     ldy #$00                        ;Y=0 for counting loop ahead.
     LB4C8:
-        lda ($E4),Y                     ;
-        sta $00E0,Y                     ;See table above for values loaded into $E0-->
+        lda ($E4),y                     ;
+        sta $00E0,y                     ;See table above for values loaded into $E0-->
         iny                             ;thru $E3 during this loop.
         tya                             ;
         cmp #$04                        ;Loop repeats four times to load the values.
         bne LB4C8                       ;
-    lda ($E4),Y                     ;
+    lda ($E4),y                     ;
     sta ChannelType                 ;#$00=SQ1,#$01=SQ2,#$02=Triangle,#$03=Noise
     ldy #$00                        ;Set y to 0 for counting loop ahead.
     lda CurrentSFXFlags             ;
@@ -517,10 +517,10 @@ LB4EE:
     rts                             ;
 
 SFXFlagFound:                           ;
-    lda ($E0),Y                     ;This routine stores the starting address of the-->
+    lda ($E0),y                     ;This routine stores the starting address of the-->
     sta $E2                         ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
-    lda ($E0),Y                     ;$E2 and $E3.
+    lda ($E0),y                     ;$E2 and $E3.
     sta $E2+1                       ;
     jmp RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
 
@@ -543,7 +543,7 @@ SpitFlameSFXContinue:
         jmp EndNoiseSFX                 ;($B58F)End SFX.
     LB51E:
     ldy NoiseSFXData                ;
-    lda $B4FB,Y                     ;Load data from table above and store in NoiseCntrl0.
+    lda $B4FB,y                     ;Load data from table above and store in NoiseCntrl0.
     sta NoiseCntrl0                 ;
     inc NoiseSFXData                ;Increment to next entry in data table.
     rts
@@ -666,7 +666,7 @@ BossHitSFXStart:
 BossHitSFXContinue:
     inc SQ1SFXData                  ;Increment index to data in table below.
     ldy SQ1SFXData                  ;
-    lda LB63C,Y                     ;
+    lda LB63C,y                     ;
     sta SQ1Cntrl0                   ;Load SQ1Cntrl0 and SQ2Cntrl0 from table below.
     sta SQ2Cntrl0                   ;
     lda SQ1SFXData                  ;
@@ -762,7 +762,7 @@ MissilePickupSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne MusicBranch03               ;If more frames to process, branch to exit.
     ldy SQ1SFXData                  ;
-    lda MissilePickupSFXTbl,Y       ;Load SFX data from table above.
+    lda MissilePickupSFXTbl,y       ;Load SFX data from table above.
     bne LB6C0                       ;
     jmp EndSQ1SFX                   ;($B6F2)SFX completed.
 LB6C0:
@@ -884,7 +884,7 @@ LB76D:
     lda SQ1SFXData                  ;
     and #$01                        ;Determine index for IceBeamSFXDataTbl below.
     tay                             ;
-    lda IceBeamSFXDataTbl,Y         ;Loads A with value from IceBeamSFXDataTbl below.
+    lda IceBeamSFXDataTbl,y         ;Loads A with value from IceBeamSFXDataTbl below.
     bne LoadSQ1PeriodLow            ;
 
 IceBeamSFXDataTbl:
@@ -901,7 +901,7 @@ WaveBeamSFXContinue:
     bne LB797                       ;If more frames to process, branch.
     ldy SQ1SQ2SFXData               ;
     inc SQ1SQ2SFXData               ;Load wave beam SFXDisable/enable envelope length-->
-    lda WaveBeamSFXDisLngthTbl,Y    ;data from WaveBeamSFXDisableLengthTbl.
+    lda WaveBeamSFXDisLngthTbl,y    ;data from WaveBeamSFXDisableLengthTbl.
     sta SQ1Cntrl0                   ;
     bne MusicBranch10               ;If at end of WaveBeamSFXDisableLengthTbl, end SFX.
     jmp EndSQ1SFX                   ;($B6F2)If SFX finished, jump.
@@ -909,7 +909,7 @@ LB797:
     lda SQ1SFXData
     and #$01                        ;
     tay                             ;Load wave beam SFX period low data from-->
-    lda WaveBeamSFXPeriodLowTbl,Y   ;WaveBeamSFXPeriodLowTbl.
+    lda WaveBeamSFXPeriodLowTbl,y   ;WaveBeamSFXPeriodLowTbl.
 
 LoadSQ1PeriodLow:
     sta SQ1Cntrl2                   ;Change the period low data for SQ1 channel.
@@ -1258,11 +1258,11 @@ LoadSQ1SQ2Channels:
     rts                             ;
 
 WriteSQCntrl0:
-    lda SQ1VolumeCntrl,X            ;Load SQ channel volume data. If zero, branch to exit.
+    lda SQ1VolumeCntrl,x            ;Load SQ channel volume data. If zero, branch to exit.
     beq LBA8B                       ;
     sta VolumeCntrlAddress          ;
     jsr LoadSQ1SQ2Periods           ;($BA08)Load SQ1 and SQ2 control information.
-    lda SQ1VolumeData,X             ;
+    lda SQ1VolumeData,x             ;
     cmp #$10                        ;If sound channel is not currently-->
     beq LBA99                       ;playing sound, branch.
     ldy #$00                        ;
@@ -1273,25 +1273,25 @@ WriteSQCntrl0:
         iny                             ;
         bne LBA54                       ;Keep decrementing until desired address is found.
 LBA5C:
-    lda VolumeCntrlAddressTbl,Y     ;Base is $BCB0.
+    lda VolumeCntrlAddressTbl,y     ;Base is $BCB0.
     sta $EC                         ;Volume data address low byte.
-    lda VolumeCntrlAddressTbl+1,Y   ;Base is $BCB1.
+    lda VolumeCntrlAddressTbl+1,y   ;Base is $BCB1.
     sta $ED                         ;Volume data address high byte.
-    ldy SQ1VolumeIndex,X            ;Index to desired volume data.
-    lda ($EC),Y                     ;Load desired volume for current channel into-->
+    ldy SQ1VolumeIndex,x            ;Index to desired volume data.
+    lda ($EC),y                     ;Load desired volume for current channel into-->
     sta Cntrl0Data                  ;Cntrl0Data.
     cmp #$FF                        ;If last entry in volume table is #$FF, restore-->
     beq MusicBranch05               ;volume to its original level after done reading-->
     cmp #$F0                        ;Volume data.  If #$F0 is last entry, turn sound-->
     beq MusicBranch06               ;off on current channel until next note.
-    lda SQ1DutyEnvelope,X           ;Remove duty cycle data For current channel and-->
+    lda SQ1DutyEnvelope,x           ;Remove duty cycle data For current channel and-->
     and #$F0                        ;add this frame of volume data and store results-->
     ora Cntrl0Data                  ;in Cntrl0Data.
     tay                             ;
 LBA7D:
-    inc SQ1VolumeIndex,X            ;Increment Index to volume data.
+    inc SQ1VolumeIndex,x            ;Increment Index to volume data.
 LBA80:
-    lda SQ1InUse,X                  ;If SQ1 or SQ2(depends on loop iteration) in use,-->
+    lda SQ1InUse,x                  ;If SQ1 or SQ2(depends on loop iteration) in use,-->
     bne LBA8B                       ;branch to exit, else write SQ(1 or 2)Cntrl0.
     txa                             ;
     beq WriteSQ1Cntrl0              ;If currently on SQ1, branch to write SQ1 data.
@@ -1306,7 +1306,7 @@ WriteSQ1Cntrl0:                         ;
     rts                             ;
 
 MusicBranch05:
-    ldy SQ1DutyEnvelope,X           ;Restore original volume of sound channel.
+    ldy SQ1DutyEnvelope,x           ;Restore original volume of sound channel.
     bne LBA80                       ;Branch always.
 
 MusicBranch06:
@@ -1348,22 +1348,22 @@ LBAC2:
     txa                             ;
     asl                             ;*2(two bytes for sound channel info base address).
     tax                             ;
-    lda SQ1LowBaseByte,X            ;
+    lda SQ1LowBaseByte,x            ;
     sta $E6                         ;Load sound channel info base address into $E6-->
-    lda SQ1HighBaseByte,X           ;and $E7. ($E6=low byte, $E7=high byte).
+    lda SQ1HighBaseByte,x           ;and $E7. ($E6=low byte, $E7=high byte).
     sta $E7                         ;
-    lda SQ1HighBaseByte,X           ;If no data for this sound channel, branch-->
+    lda SQ1HighBaseByte,x           ;If no data for this sound channel, branch-->
     beq LBAB0                       ;to find data for next sound channel.
     txa                             ;
     lsr                             ;/2. Determine current sound channel (0,1,2 or3).
     tax                             ;
-    dec SQ1MusicFrameCount,X        ;Decrement the current sound channel frame count-->
+    dec SQ1MusicFrameCount,x        ;Decrement the current sound channel frame count-->
     bne IncrementToNextChannel      ;If not zero, branch to check next channel, else-->
                                         ;load the next set of sound channel data.
 LoadNextChannelIndexData:
-    ldy SQ1MusicIndexIndex,X        ;Load current channel index to music data index.
-    inc SQ1MusicIndexIndex,X        ;Increment current channel index to music data index.
-    lda ($E6),Y                     ;
+    ldy SQ1MusicIndexIndex,x        ;Load current channel index to music data index.
+    inc SQ1MusicIndexIndex,x        ;Increment current channel index to music data index.
+    lda ($E6),y                     ;
     beq GotoCheckRepeatMusic        ;Branch if music has reached the end.
     tay                             ;Transfer music data index to Y (base=$BE77) .
     cmp #$FF                        ;
@@ -1374,20 +1374,20 @@ LoadNextChannelIndexData:
     jmp LoadMusicChannel            ;($BB1C)Load music data into channel.
 
 RepeatMusicLoop:
-    lda SQ1RepeatCounter,X          ;If loop counter has reached zero, branch to exit.
+    lda SQ1RepeatCounter,x          ;If loop counter has reached zero, branch to exit.
     beq LBB13                       ;
-    dec SQ1RepeatCounter,X          ;Decrement loop counter.
-    lda SQ1LoopIndex,X              ;Load loop index for proper channel and store it in-->
-    sta SQ1MusicIndexIndex,X        ;music index index address.
+    dec SQ1RepeatCounter,x          ;Decrement loop counter.
+    lda SQ1LoopIndex,x              ;Load loop index for proper channel and store it in-->
+    sta SQ1MusicIndexIndex,x        ;music index index address.
     bne LBB13                       ;Branch unless music has reached the end.
 
 StartNewMusicLoop:
     tya                             ;
     and #$3F                        ;Remove last six bits of loop controller and save-->
-    sta SQ1RepeatCounter,X          ;in repeat counter addresses.  # of times to loop.
-    dec SQ1RepeatCounter,X          ;Decrement loop counter.
-    lda SQ1MusicIndexIndex,X        ;Store location of loop start in loop index address.
-    sta SQ1LoopIndex,X              ;
+    sta SQ1RepeatCounter,x          ;in repeat counter addresses.  # of times to loop.
+    dec SQ1RepeatCounter,x          ;Decrement loop counter.
+    lda SQ1MusicIndexIndex,x        ;Store location of loop start in loop index address.
+    sta SQ1LoopIndex,x              ;
 LBB13:
     jmp LoadNextChannelIndexData    ;($BADC)Load next channel index data.
 
@@ -1407,17 +1407,17 @@ LoadMusicChannel:
     clc                             ;
     adc NoteLengthTblOffset         ;Find proper note lengths table for current music.
     tay                             ;
-    lda NoteLengths0Tbl,Y           ;(Base is $BEF7)Load note length and store in-->
-    sta SQ1FrameCountInit,X         ;frame count init address.
+    lda NoteLengths0Tbl,y           ;(Base is $BEF7)Load note length and store in-->
+    sta SQ1FrameCountInit,x         ;frame count init address.
     tay                             ;Y now contains note length.
     txa                             ;
     cmp #$02                        ;If loading Triangle channel data, branch.
     beq LBB19                       ;
 
 LoadSoundDataIndexIndex:
-    ldy SQ1MusicIndexIndex,X        ;Load current index to sound data index.
-    inc SQ1MusicIndexIndex,X        ;Increment music index index address.
-    lda ($E6),Y                     ;Load index to sound channel music data.
+    ldy SQ1MusicIndexIndex,x        ;Load current index to sound data index.
+    inc SQ1MusicIndexIndex,x        ;Increment music index index address.
+    lda ($E6),y                     ;Load index to sound channel music data.
     tay                             ;
 LBB40:
     txa                             ;
@@ -1425,12 +1425,12 @@ LBB40:
     beq LBB16                       ;
     pha                             ;Push music channel number on stack(0, 1 or 2).
     ldx ThisSoundChannel            ;
-    lda MusicNotesTbl+1,Y           ;(Base=$BE78)Load A with music channel period low data.
+    lda MusicNotesTbl+1,y           ;(Base=$BE78)Load A with music channel period low data.
     beq LBB59                       ;If data is #$00, skip period high and low loading.
-    sta MusicSQ1PeriodLow,X         ;Store period low data in proper period low address.
-    lda MusicNotesTbl,Y             ;(Base=$BE77)Load A with music channel period high data.
+    sta MusicSQ1PeriodLow,x         ;Store period low data in proper period low address.
+    lda MusicNotesTbl,y             ;(Base=$BE77)Load A with music channel period high data.
     ora #$08                        ;Ensure minimum index length of 1.
-    sta MusicSQ1PeriodHigh,X        ;Store period high data in proper period high address.
+    sta MusicSQ1PeriodHigh,x        ;Store period high data in proper period high address.
 LBB59:
     tay                             ;
     pla                             ;Pull stack and restore channel number to X.
@@ -1447,40 +1447,40 @@ LBB59:
         sta Cntrl0Data                  ;
         bne LBB73                       ;Branch always.
     PeriodInformationFound:
-        lda SQ1DutyEnvelope,X           ;Store channel duty cycle and volume info in $EA.
+        lda SQ1DutyEnvelope,x           ;Store channel duty cycle and volume info in $EA.
         sta Cntrl0Data                  ;
     LBB73:
     txa                             ;
-    dec SQ1InUse,X                  ;
-    cmp SQ1InUse,X                  ;If SQ1 or SQ2 are being used by SFX routines, branch.
+    dec SQ1InUse,x                  ;
+    cmp SQ1InUse,x                  ;If SQ1 or SQ2 are being used by SFX routines, branch.
     beq SQ1SQ2InUse                 ;
-    inc SQ1InUse,X                  ;Restore not in use status of SQ1 or SQ2.
+    inc SQ1InUse,x                  ;Restore not in use status of SQ1 or SQ2.
     ldy ThisSoundChannel            ;
     txa                             ;
     cmp #$02                        ;If loading triangle channel data, branch.
     beq LBB8C                       ;
-    lda SQ1VolumeCntrl,X            ;If $062E or $062F has volume data, skip writing-->
+    lda SQ1VolumeCntrl,x            ;If $062E or $062F has volume data, skip writing-->
     bne LBB91                       ;Cntrl0Data to SQ1 or SQ2.
 LBB8C:
     lda Cntrl0Data                  ;
-    sta SQ1Cntrl0,Y                 ;Write Cntrl0Data.
+    sta SQ1Cntrl0,y                 ;Write Cntrl0Data.
 LBB91:
     lda Cntrl0Data                  ;
-    sta SQ1VolumeData,X             ;Store volume data index to volume data.
-    lda MusicSQ1PeriodLow,Y         ;
-    sta SQ1Cntrl2,Y                 ;
-    lda MusicSQ1PeriodHigh,Y        ;Write data to three sound channel addresses.
-    sta SQ1Cntrl3,Y                 ;
-    lda MusicSQ1Sweep,X             ;
-    sta SQ1Cntrl1,Y                 ;
+    sta SQ1VolumeData,x             ;Store volume data index to volume data.
+    lda MusicSQ1PeriodLow,y         ;
+    sta SQ1Cntrl2,y                 ;
+    lda MusicSQ1PeriodHigh,y        ;Write data to three sound channel addresses.
+    sta SQ1Cntrl3,y                 ;
+    lda MusicSQ1Sweep,x             ;
+    sta SQ1Cntrl1,y                 ;
 
 LoadNewMusicFrameCount:
-    lda SQ1FrameCountInit,X         ;Load new music frame count and store it in music-->
-    sta SQ1MusicFrameCount,X        ;frame count address.
+    lda SQ1FrameCountInit,x         ;Load new music frame count and store it in music-->
+    sta SQ1MusicFrameCount,x        ;frame count address.
     jmp IncrementToNextChannel      ;($BAB3)Move to next sound channel.
 
 SQ1SQ2InUse:
-    inc SQ1InUse,X                  ;Restore in use status of SQ1 or SQ1.
+    inc SQ1InUse,x                  ;Restore in use status of SQ1 or SQ1.
     jmp LoadNewMusicFrameCount      ;($BBA8)Load new music frame count.
 
 LoadTriangleCntrl0:
@@ -1512,11 +1512,11 @@ LoadNoiseChannelMusic:
     lda NoiseContSFX                ;
     and #$FC                        ;If playing any Noise SFX, branch to exit.
     bne LBBF7                       ;
-        lda SFXData,Y                     ;
+        lda SFXData,y                     ;
         sta NoiseCntrl0                 ;Load noise channel with drum beat SFX starting-->
-        lda SFXData+1,Y                   ;at address B201.  The possible values of Y are-->
+        lda SFXData+1,y                   ;at address B201.  The possible values of Y are-->
         sta NoiseCntrl2                 ;#$01, #$04, #$07 or #$0A.
-        lda SFXData+2,Y                   ;
+        lda SFXData+2,y                   ;
         sta NoiseCntrl3                 ;
     LBBF7:
     jmp LoadNewMusicFrameCount      ;($BBA8)Load new music frame count.
@@ -1955,12 +1955,12 @@ InitializeMusic:
     sta CurrentMusic                ;
     lda MusicInitIndex              ;
     tay                             ;
-    lda InitMusicIndexTbl,Y         ;($BBFA)Find index for music in InitMusicInitIndexTbl.
+    lda InitMusicIndexTbl,y         ;($BBFA)Find index for music in InitMusicInitIndexTbl.
     tay                             ;
     ldx #$00                        ;
     LBF2C:
-        lda SongHeaders,Y              ;Base is $BD31.
-        sta NoteLengthTblOffset,X       ;
+        lda SongHeaders,y              ;Base is $BD31.
+        sta NoteLengthTblOffset,x       ;
         iny                             ;The following loop repeats 13 times to-->
         inx                             ;load the initial music addresses -->
         txa                             ;(registers $062B thru $0637).

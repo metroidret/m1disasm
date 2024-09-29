@@ -15,14 +15,14 @@ CrawlerRoutine:
         cmp #$03
         beq Crawler03b
     .endif
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq Crawler03
-    lda EnData0A,X
+    lda EnData0A,x
     and #$03
     cmp #$01
     bne Crawler01
-    ldy EnYRoomPos,X
+    ldy EnYRoomPos,x
     .if BANK = 1 || BANK = 4
         cpy #$E4
     .elseif BANK = 2 || BANK = 5
@@ -31,7 +31,7 @@ CrawlerRoutine:
     bne Crawler01
     jsr Crawler07
     lda #$03
-    sta EnData0A,X
+    sta EnData0A,x
     bne Crawler02
 Crawler01:
     jsr JumpByRTS
@@ -50,13 +50,13 @@ Crawler03b:
 .endif
 
 Crawler04:
-    lda EnData05,X
+    lda EnData05,x
     lsr
-    lda EnData0A,X
+    lda EnData0A,x
     and #$03
     rol
     tay
-    lda Crawler05,Y
+    lda Crawler05,y
     jmp CommonJump_05
 
 .if BANK = 1 || BANK = 4
@@ -72,17 +72,17 @@ Crawler06:
     bcs Crawler08
     lda $00
     bne Crawler07
-    ldy EnData0A,X
+    ldy EnData0A,x
     dey
     tya
     and #$03
-    sta EnData0A,X
+    sta EnData0A,x
     jmp Crawler04
 
 Crawler07:
-    lda EnData05,X
+    lda EnData05,x
     eor #$01
-    sta EnData05,X
+    sta EnData05,x
 Crawler08:
     rts
 
@@ -92,27 +92,27 @@ Crawler09:
     ldx PageIndex
     bcc Crawler10
     jsr Crawler11
-    sta EnData0A,X
+    sta EnData0A,x
     jsr Crawler04
 Crawler10:
     rts
 
 Crawler11:
-    ldy EnData0A,X
+    ldy EnData0A,x
     iny
     tya
     and #$03
     rts
 
 JumpByRTS:
-    ldy EnData05,X
+    ldy EnData05,x
     sty $00
     lsr $00
     rol
     asl
     tay
-    lda L8048+1,Y
+    lda L8048+1,y
     pha
-    lda L8048,Y
+    lda L8048,y
     pha
     rts

@@ -2,7 +2,7 @@
 
 ; Kraid Routine
 KraidRoutine:
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     bcc KraidBranchB
     beq KraidBranchA
@@ -31,41 +31,41 @@ KraidBranchC:
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
 KraidLint:
-    lda EnData05,X
+    lda EnData05,x
     and #$02
     beq KraidLintBranchA
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     bne KraidLintBranchB
 
 KraidLintBranchA:
     lda #$00
-    sta EnStatus,X
+    sta EnStatus,x
     beq KraidLintBranchC
 
 KraidLintBranchB:
-    lda EnData05,X
+    lda EnData05,x
     asl
     bmi KraidLintBranchC
 
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$02
     bne KraidLintBranchC
 
     jsr CommonJump_VertMoveProc
     ldx PageIndex
     lda $00
-    sta EnData02,X
+    sta EnData02,x
 
     jsr CommonJump_HoriMoveProc
     ldx PageIndex
     lda $00
-    sta EnData03,X
+    sta EnData03,x
     jsr CommonJump_11
     bcs KraidLintBranchC
 
     lda #$03
-    sta EnStatus,X
+    sta EnStatus,x
 
 KraidLintBranchC:
     lda #$01
@@ -93,16 +93,16 @@ KraidSubA: ; L9B2F
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1.1
 KraidSubASub:
-    ldy EnStatus,X
+    ldy EnStatus,x
     beq KraidSubASub_BranchB
-    lda EnDataIndex,X
+    lda EnDataIndex,x
     cmp #$0A
     beq KraidSubASub_BranchA
     cmp #$09
     bne KraidSubASub_Exit
 
 KraidSubASub_BranchA:
-    lda EnData05,X
+    lda EnData05,x
     and #$02
     beq KraidSubASub_BranchB
     dey
@@ -111,20 +111,20 @@ KraidSubASub_BranchA:
     beq KraidSubASub_BranchB
     cpy #$03
     bne KraidSubASub_Exit
-    lda EnData0C,X
+    lda EnData0C,x
     cmp #$01
     bne KraidSubASub_Exit
     beq KraidSubASub_BranchC
 
 KraidSubASub_BranchB:
     lda #$00
-    sta EnStatus,X
-    sta EnSpecialAttribs,X
+    sta EnStatus,x
+    sta EnSpecialAttribs,x
     jsr CommonJump_0E
 
 KraidSubASub_BranchC:
     lda EnData05
-    sta EnData05,X
+    sta EnData05,x
     lsr
     php ;
     txa  ;\
@@ -133,17 +133,17 @@ KraidSubASub_BranchC:
     lsr  ;|
     lsr  ;|
     tay  ;/
-    lda KraidBulletY-1,Y
+    lda KraidBulletY-1,y
     sta $04
-    lda KraidBulletType-1,Y
-    sta EnDataIndex,X
+    lda KraidBulletType-1,y
+    sta EnDataIndex,x
 
 KraidSubASub_BranchD:
     tya
     plp ;
     rol
     tay ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
-    lda KraidBulletX-2,Y
+    lda KraidBulletX-2,y
     sta $05
 
 KraidSubASub_BranchE:
@@ -170,28 +170,28 @@ KraidSubASub_BranchE:
 .ENDIF
 
     bcc KraidSubASub_Exit
-    lda EnStatus,X
+    lda EnStatus,x
     bne LoadPositionFromTemp
-    inc EnStatus,X
+    inc EnStatus,x
 
 LoadPositionFromTemp:
     lda $08
-    sta EnYRoomPos,X
+    sta EnYRoomPos,x
     lda $09
-    sta EnXRoomPos,X
+    sta EnXRoomPos,x
     lda $0B
     and #$01
-    sta EnNameTable,X
+    sta EnNameTable,x
 
 KraidSubASub_Exit:
     rts
 
 StorePositionToTemp:
-    lda EnYRoomPos,X
+    lda EnYRoomPos,x
     sta $08
-    lda EnXRoomPos,X
+    lda EnXRoomPos,x
     sta $09
-    lda EnNameTable,X
+    lda EnNameTable,x
     sta $0B
     rts
 
@@ -229,20 +229,20 @@ KraidSubB_BranchA:
     bne KraidSubB_Exit
     lda #$01
     ldx #$10
-    cmp EnStatus,X
+    cmp EnStatus,x
     beq KraidSubB_BranchB
     ldx #$20
-    cmp EnStatus,X
+    cmp EnStatus,x
     beq KraidSubB_BranchB
     ldx #$30
-    cmp EnStatus,X
+    cmp EnStatus,x
     beq KraidSubB_BranchB
     inc $7E
     rts
 
 KraidSubB_BranchB:
     lda #$08
-    sta EnDelay,X
+    sta EnDelay,x
 
 KraidSubB_Exit:
     rts
@@ -268,17 +268,17 @@ KraidSubC_BranchA:
     bne KraidSubC_Exit
     lda #$01
     ldx #$40
-    cmp EnStatus,X
+    cmp EnStatus,x
     beq KraidSubC_BranchB
     ldx #$50
-    cmp EnStatus,X
+    cmp EnStatus,x
     beq KraidSubC_BranchB
     inc $7F
     rts
 
 KraidSubC_BranchB:
     lda #$08
-    sta EnDelay,X
+    sta EnDelay,x
 
 KraidSubC_Exit:
     rts

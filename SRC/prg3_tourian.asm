@@ -136,7 +136,7 @@ L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
 ; Enemy AI Jump Table
 ChooseEnemyRoutine:
-    lda EnDataIndex,X
+    lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
         .word MetroidRoutine ; 00 - metroid
         .word MetroidRoutine ; 01 - same as 0
@@ -217,7 +217,7 @@ L97DB:  .byte $FF
 
 InvalidEnemy:
     lda #$00
-    sta EnStatus,X
+    sta EnStatus,x
     rts
 
 CommonEnemyJump_00_01_02:
@@ -271,7 +271,7 @@ L9B37:
 
 L9B44:
     stx $97
-    ldy $6BF4,X
+    ldy $6BF4,x
     bne L9B4C
 L9B4B:
     rts
@@ -283,7 +283,7 @@ L9B4C:
     ldy $010B
     iny
     bne L9B65
-    lda $6BF8,X
+    lda $6BF8,x
     cmp #$05
     beq L9B4B
     jsr L9B70
@@ -297,35 +297,35 @@ L9B65:
     jmp L9C31
 
 L9B70:
-    ldy $6BF8,X
-    lda $6BFA,X
+    ldy $6BF8,x
+    lda $6BFA,x
     bne L9B81
-        lda L9D8F,Y
-        sta $6BFA,X
-        inc $6BFB,X
+        lda L9D8F,y
+        sta $6BFA,x
+        inc $6BFB,x
     L9B81:
-    dec $6BFA,X
+    dec $6BFA,x
 L9B84:
-    lda L9D94,Y
+    lda L9D94,y
     clc
-    adc $6BFB,X
+    adc $6BFB,x
     tay
-    lda L9D99,Y
+    lda L9D99,y
     bpl L9BAB
         cmp #$FF
         bne L9B9F
-            ldy $6BF8,X
+            ldy $6BF8,x
             lda #$00
-            sta $6BFB,X
+            sta $6BFB,x
             beq L9B84
         L9B9F:
-        inc $6BFB,X
+        inc $6BFB,x
         jsr L9BAF
-        ldy $6BF8,X
+        ldy $6BF8,x
         jmp L9B84
 
     L9BAB:
-        sta $6BF9,X
+        sta $6BF9,x
         rts
 
 L9BAF:
@@ -335,7 +335,7 @@ L9BAF:
     bcs L9BC6
     ldy #$60
     L9BB8:
-        lda EnStatus,Y
+        lda EnStatus,y
         beq L9BC8
         tya
         clc
@@ -349,37 +349,37 @@ L9BC6:
 
 L9BC8:
     sty $4B
-    lda $6BF5,X
-    sta EnYRoomPos,Y
-    lda $6BF6,X
-    sta EnXRoomPos,Y
-    lda $6BF7,X
-    sta EnNameTable,Y
+    lda $6BF5,x
+    sta EnYRoomPos,y
+    lda $6BF6,x
+    sta EnXRoomPos,y
+    lda $6BF7,x
+    sta EnNameTable,y
     lda #$02
-    sta EnStatus,Y
+    sta EnStatus,y
     lda #$00
-    sta $0409,Y
-    sta EnAnimDelay,Y
-    sta $0408,Y
+    sta $0409,y
+    sta EnAnimDelay,y
+    sta $0408,y
     pla
     jsr TwosCompliment_
     tax
-    sta $040A,Y
+    sta $040A,y
     ora #$02
-    sta $0405,Y
-    lda L9C28-2,X
-    sta EnResetAnimIndex,Y
-    sta EnAnimIndex,Y
-    lda L9DCC,X
+    sta $0405,y
+    lda L9C28-2,x
+    sta EnResetAnimIndex,y
+    sta EnAnimIndex,y
+    lda L9DCC,x
     sta $05
-    lda L9DCF,X
+    lda L9DCF,x
     sta $04
     ldx $97
-    lda $6BF5,X
+    lda $6BF5,x
     sta $08
-    lda $6BF6,X
+    lda $6BF6,x
     sta $09
-    lda $6BF7,X
+    lda $6BF7,x
     sta $0B
     tya
     tax
@@ -391,15 +391,15 @@ L9BC8:
 L9C28:  .byte $0C, $0A, $0E
 
 L9C2B:
-    ldy $6BF9,X
-    lda L9DC6,Y
+    ldy $6BF9,x
+    lda L9DC6,y
 L9C31:
     sta $6BD7
-    lda $6BF5,X
+    lda $6BF5,x
     sta $04E0
-    lda $6BF6,X
+    lda $6BF6,x
     sta $04E1
-    lda $6BF7,X
+    lda $6BF7,x
     sta $6BDB
     lda #$E0
     sta $4B
@@ -407,15 +407,15 @@ L9C31:
 
 L9C4D:
     ldy #$00
-    lda $6BF6,X
+    lda $6BF6,x
     cmp $FD
     lda $49
     and #$02
     bne L9C5F
-        lda $6BF5,X
+        lda $6BF5,x
         cmp $FC
     L9C5F:
-    lda $6BF7,X
+    lda $6BF7,x
     eor $FF
     and #$01
     beq L9C6B
@@ -433,12 +433,12 @@ L9C6F:
     sty $02
     ldy #$00
     L9C73:
-        lda $6BF7,Y
+        lda $6BF7,y
         eor $02
         lsr
         bcs L9C80
             lda #$00
-            sta $6BF4,Y
+            sta $6BF4,y
         L9C80:
         tya
         clc
@@ -447,12 +447,12 @@ L9C6F:
         bpl L9C73
     ldx #$00
     L9C89:
-        lda $0758,X
+        lda $0758,x
         beq L9C99
         jsr L9D64
-        eor $075A,X
+        eor $075A,x
         bne L9C99
-        sta $0758,X
+        sta $0758,x
     L9C99:
         txa
         clc
@@ -489,14 +489,14 @@ L9CD5:
     rts
 
 L9CD6:
-    lda $8B,X
+    lda $8B,x
     bmi L9CE5
-    lda $8C,X
+    lda $8C,x
     eor $02
     lsr
     bcs L9CE5
     lda #$FF
-    sta $8B,X
+    sta $8B,x
 L9CE5:
     rts
 
@@ -505,7 +505,7 @@ L9CE5:
 CannonRoutine:
     ldx #$00
     L9CE8:
-        lda $6BF4,X
+        lda $6BF4,x
         beq L9CF6
         txa
         clc
@@ -514,24 +514,24 @@ CannonRoutine:
         bpl L9CE8
     bmi L9D20
 L9CF6:
-    lda ($00),Y
+    lda ($00),y
     jsr Adiv16_
-    sta $6BF8,X
+    sta $6BF8,x
     lda #$01
-    sta $6BF4,X
-    sta $6BFB,X
+    sta $6BF4,x
+    sta $6BFB,x
     iny
-    lda ($00),Y
+    lda ($00),y
     pha
     and #$F0
     ora #$07
-    sta $6BF5,X
+    sta $6BF5,x
     pla
     jsr Amul16_
     ora #$07
-    sta $6BF6,X
+    sta $6BF6,x
     jsr L9D88
-    sta $6BF7,X
+    sta $6BF7,x
 L9D20:
     rts
 
@@ -545,8 +545,8 @@ MotherBrainRoutine:
     eor #$01
     tax
     lda L9D3C
-    ora $6C,X
-    sta $6C,X
+    ora $6C,x
+    sta $6C,x
     lda #$20
     sta $9A
     sta $9B
@@ -558,7 +558,7 @@ L9D3C:  .byte $01
 ;-------------------------------------------------------------------------------
 ; Zebetite Handler
 ZebetiteRoutine:
-    lda ($00),Y
+    lda ($00),y
     and #$F0
     lsr
     tax
@@ -566,15 +566,15 @@ ZebetiteRoutine:
     and #$10
     eor #$10
     ora #$84
-    sta $0759,X
+    sta $0759,x
     jsr L9D64
-    sta $075A,X
+    sta $075A,x
     lda #$01
-    sta $0758,X
+    sta $0758,x
     lda #$00
-    sta $075B,X
-    sta $075C,X
-    sta $075D,X
+    sta $075B,x
+    sta $075C,x
+    sta $075D,x
     rts
 
 L9D64:
@@ -592,13 +592,13 @@ RinkaSpawnerRoutine:
         bmi L9D87
         ldx #$00
     L9D75:
-    lda $8B,X
+    lda $8B,x
     bpl L9D87
-    lda ($00),Y
+    lda ($00),y
     jsr Adiv16_
-    sta $8B,X
+    sta $8B,x
     jsr L9D88
-    sta $8C,X
+    sta $8C,x
     lda #$FF
 L9D87:
     rts
@@ -682,7 +682,7 @@ L9E31:
 ;-------------------------------------------------------------------------------
 L9E36:
     jsr L9E43
-    lda L9E41,Y
+    lda L9E41,y
     sta $1C
     jmp L9E31
 
@@ -702,7 +702,7 @@ L9E43:
 
 ;-------------------------------------------------------------------------------
 L9E52:  JSR L9E43
-    lda L9E41,Y
+    lda L9E41,y
     sta $1C
     tya
     asl
@@ -716,7 +716,7 @@ L9E52:  JSR L9E43
     tax
     L9E68:
         tya
-        sta EnStatus,X
+        sta EnStatus,x
         jsr L9EF9
         cpx #$C0
         bne L9E68
@@ -740,18 +740,18 @@ L9E86:
     jsr L9E43
     ldx #$00
     L9E98:
-        lda EnStatus,X
+        lda EnStatus,x
         cmp #$05
         bne L9EA4
             lda #$00
-            sta EnStatus,X
+            sta EnStatus,x
         L9EA4:
         jsr L9EF9
         cmp #$40
         bne L9E98
     lda $07A0
     bne L9EB5
-        lda L9F00,Y
+        lda L9F00,y
         sta $1C
     L9EB5:
     ldy MotherBrainStatus
@@ -789,11 +789,11 @@ L9EE7:
     pha
     and #$F0
     ora #$07
-    sta EnYRoomPos,X
+    sta EnYRoomPos,x
     pla
     jsr Amul16_
     ora #$07
-    sta EnXRoomPos,X
+    sta EnXRoomPos,x
     rts
 
 L9EF9:
@@ -813,9 +813,9 @@ L9F02:
         cmp #$08
         beq L9F36
         tay
-        lda L9F41,Y
+        lda L9F41,y
         sta $0503
-        lda L9F39,Y
+        lda L9F39,y
         clc
         adc #$42
         sta $0508
@@ -869,26 +869,26 @@ L9F69:
     rol
     and #$03
     tay
-    ldx L9F65,Y
+    ldx L9F65,y
     lda #$01
-    sta $030F,X
+    sta $030F,x
     lda #$01
-    sta $0307,X
+    sta $0307,x
     lda #$03
-    sta $0300,X
+    sta $0300,x
     lda $9D
-    sta $030C,X
+    sta $030C,x
     lda #$10
-    sta ObjectX,X
+    sta ObjectX,x
     lda #$68
-    sta ObjectY,X
+    sta ObjectY,x
     lda #$55
-    sta $0305,X
-    sta $0306,X
+    sta $0305,x
+    sta $0306,x
     lda #$00
-    sta $0304,X
+    sta $0304,x
     lda #$F7
-    sta $0303,X
+    sta $0303,x
     lda #$10
     sta $0503
     lda #$40
@@ -947,7 +947,7 @@ L9FED:
     ldx #$00
     LA007:
         lda #$00
-        sta $0500,X
+        sta $0500,x
         jsr L9EF9
         cmp #$D0
         bne LA007
@@ -1000,7 +1000,7 @@ LA041:
     lda #$48
     sta $04E1
     ldy $9C
-    lda LA06D,Y
+    lda LA06D,y
     sta $6BD7
     jsr CommonJump_14
     lda $9B
@@ -1016,11 +1016,11 @@ LA06D:  .byte $13, $14, $15, $16, $17
 LA072:
     ldy MotherBrainHits
     beq LA086
-    lda LA0C0,Y
+    lda LA0C0,y
     clc
     adc $9A
     tay
-    lda LA0A3,Y
+    lda LA0A3,y
     cmp #$FF
     bne LA087
     dec $9A
@@ -1053,14 +1053,14 @@ LA0C6:
     lda $71
     beq LA13E
     ldx $4B
-    lda $0300,X
+    lda $0300,x
     cmp #$0B
     bne LA13E
     cpy #$98
     bne LA103
         ldx #$00
     LA0D9:
-        lda $0500,X
+        lda $0500,x
         beq LA0E7
             jsr L9EF9
             cmp #$D0
@@ -1068,11 +1068,11 @@ LA0C6:
             beq LA13E
         LA0E7:
         lda #$8C
-        sta $0508,X
+        sta $0508,x
         lda $05
-        sta $0509,X
+        sta $0509,x
         lda #$01
-        sta $0503,X
+        sta $0503,x
         lda $4B
         pha
         stx $4B
@@ -1087,7 +1087,7 @@ LA0C6:
         dec $04
     LA10A:
     ldy #$00
-    lda ($04),Y
+    lda ($04),y
     lsr
     bcs LA13E
     cmp #$48
@@ -1095,14 +1095,14 @@ LA0C6:
     cmp #$4C
     bcs LA13E
     LA119:
-        lda $0758,Y
+        lda $0758,y
         beq LA12E
         lda $04
         and #$9E
-        cmp $0759,Y
+        cmp $0759,y
         bne LA12E
         lda $05
-        cmp $075A,Y
+        cmp $075A,y
         beq LA139
     LA12E:
         tya
@@ -1114,7 +1114,7 @@ LA0C6:
     beq LA13E
 LA139:
     lda #$01
-    sta $075D,Y
+    sta $075D,y
 LA13E:
     pla
     pla
@@ -1127,7 +1127,7 @@ LA142:
     lda $71
     beq LA15C
     ldx $4B
-    lda $0300,X
+    lda $0300,x
     cmp #$0B
     bne LA15C
     cpy #$5E
@@ -1151,9 +1151,9 @@ LA15E:
         ldy #$00
     LA16B:
     sty $4B
-    lda $008B,Y
+    lda $008B,y
     bmi LA15D
-    lda $008C,Y
+    lda $008C,y
     eor $2D
     lsr
     bcc LA15D
@@ -1165,9 +1165,9 @@ LA15E:
     bne LA15D
     ldx #$20
     LA188:
-        lda EnStatus,X
+        lda EnStatus,x
         beq LA19C
-        lda $0405,X
+        lda $0405,x
         and #$02
         beq LA19C
         txa
@@ -1179,32 +1179,32 @@ LA15E:
 
 LA19C:
     lda #$01
-    sta EnStatus,X
+    sta EnStatus,x
     lda #$04
-    sta $6B02,X
+    sta $6B02,x
     lda #$00
-    sta $040F,X
-    sta $0404,X
+    sta $040F,x
+    sta $0404,x
     jsr CommonJump_0E
     lda #$F7
-    sta $6AF7,X
+    sta $6AF7,x
     ldy $4B
-    lda $008C,Y
-    sta EnNameTable,X
-    lda $008D,Y
+    lda $008C,y
+    sta EnNameTable,x
+    lda $008D,y
     asl
-    ora $008B,Y
+    ora $008B,y
     tay
-    lda LA1DB,Y
+    lda LA1DB,y
     jsr L9EE7
     ldx $4B
-    inc $8D,X
-    lda $8D,X
+    inc $8D,x
+    lda $8D,x
     cmp #$06
     bne LA1DA
     lda #$00
 LA1D8:
-    sta $8D,X
+    sta $8D,x
 LA1DA:
     rts
 
@@ -1279,11 +1279,11 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta $0201,X
+    sta $0201,x
     lda $010B
     and #$0F
     ora #$A0
-    sta $0205,X
+    sta $0205,x
     lda $010A
     lsr
     lsr
@@ -1292,7 +1292,7 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta $0209,X
+    sta $0209,x
 LA28A:
     rts
 
@@ -1309,26 +1309,26 @@ LA28B:
         tax
         bne LA291
 LA29B:
-    lda $0758,X
+    lda $0758,x
     and #$0F
     cmp #$01
     bne LA28A
-    lda $075D,X
+    lda $075D,x
     beq LA2F2
-    inc $075B,X
-    lda $075B,X
+    inc $075B,x
+    lda $075B,x
     lsr
     bcs LA2F2
     tay
     sbc #$03
     bne LA2BA
-    inc $0758,X
+    inc $0758,x
 LA2BA:
-    lda LA310,Y
+    lda LA310,y
     sta $0513
-    lda $0759,X
+    lda $0759,x
     sta $0518
-    lda $075A,X
+    lda $075A,x
     sta $0519
     lda $07A0
     bne LA2DA
@@ -1339,34 +1339,34 @@ LA2BA:
         tax
         bcc LA2EB
     LA2DA:
-    lda $0758,X
+    lda $0758,x
     and #$80
     ora #$01
-    sta $0758,X
-    sta $075D,X
-    dec $075B,X
+    sta $0758,x
+    sta $075D,x
+    dec $075B,x
     rts
 
 LA2EB:
     lda #$40
-    sta $075C,X
+    sta $075C,x
     bne LA30A
 LA2F2:
-    ldy $075B,X
+    ldy $075B,x
     beq LA30A
-    dec $075C,X
+    dec $075C,x
     bne LA30A
     lda #$40
-    sta $075C,X
+    sta $075C,x
     dey
     tya
-    sta $075B,X
+    sta $075B,x
     lsr
     tay
     bcc LA2BA
 LA30A:
     lda #$00
-    sta $075D,X
+    sta $075D,x
     rts
 
 LA310:  .byte $0C, $0D, $0E, $0F, $07

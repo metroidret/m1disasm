@@ -120,7 +120,7 @@ TwosCompliment_:
 
 ; Enemy AI jump table
 ChooseEnemyRoutine:
-    lda EnDataIndex, X
+    lda EnDataIndex, x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorRoutine ; 00 - Sidehopper
         .word SidehopperCeilingRoutine ; 01 - Ceiling sidehopper

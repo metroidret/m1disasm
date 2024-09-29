@@ -1,5 +1,5 @@
 MultiviolaRoutine:
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$02
     bne L9AE0
         jsr CommonJump_0A

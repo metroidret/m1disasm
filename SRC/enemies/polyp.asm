@@ -1,10 +1,10 @@
 ; Polyp Routine (mini volcano)
 PolypRoutine:
     lda #$00
-    sta EnRadY,X
-    sta EnRadX,X
+    sta EnRadY,x
+    sta EnRadX,x
     lda #$10
-    sta $0405,X
+    sta $0405,x
     .if BANK = 2
         txa
         asl
@@ -24,12 +24,12 @@ PolypRoutine:
         and #$07
     .endif
     bne PolypRTS
-    lsr $0405,X
+    lsr $0405,x
     lda #$03
     sta $87
     lda $2E
     lsr
-    rol $0405,X
+    rol $0405,x
     and #$03
     beq PolypRTS
     sta $88

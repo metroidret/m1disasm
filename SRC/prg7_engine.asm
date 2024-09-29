@@ -561,8 +561,8 @@ LC1FF:
     tya                             ;
     asl                             ;* 2, each pal data ptr is 2 bytes (16-bit).
     tay                             ;
-    ldx PalPntrTbl,y                     ;X = low byte of PPU data pointer.
-    lda PalPntrTbl+1,y                     ;
+    ldx PalPntrTbl,y                ;X = low byte of PPU data pointer.
+    lda PalPntrTbl+1,y              ;
     tay                             ;Y = high byte of PPU data pointer.
     lda #$00                        ;Clear A.
     sta PalDataPending              ;Reset palette data pending byte.
@@ -947,7 +947,7 @@ Base10Add:
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
     adc $01                         ;Add lower nibble to number.
     cmp #$0A                        ;
-    bcc LC3E5                           ;If result is greater than 9, add 5 to create-->
+    bcc LC3E5                           ;If result is greater than 9, add 6 (5+carry) to create-->
         adc #$05                        ;valid result(skip #$0A thru #$0F).
     LC3E5:
     clc                             ;
@@ -958,12 +958,12 @@ Base10Add:
     adc $02                         ;
     bcc LC3F6                       ;
 LC3F2:
-    adc #$5F                        ;If upper result caused a carry, add #$5F to create-->
+    adc #$5F                        ;If upper result caused a carry, add #$60 (#$5f+carry) to create-->
     sec                             ;valid result. Set carry indicating carry to next digit.
     rts                             ;
 LC3F6:
     cmp #$A0                        ;If result of upper nibble add is greater than #$90,-->
-    bcs LC3F2                       ;Branch to add #$5F to create valid result.
+    bcs LC3F2                       ;Branch to add #$60 to create valid result.
     rts                             ;
 
 Base10Subtract:
@@ -1017,7 +1017,7 @@ ClearNMIStat:
 
 ScreenOff:
     lda PPUMASK_ZP                   ;
-    and #$E7                        ; BG & SPR visibility = off
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)                        ; BG & SPR visibility = off
 
 WriteAndWait:
 LC43D:
@@ -1032,7 +1032,7 @@ WaitNMIPass_:
 
 ScreenOn:
     lda PPUMASK_ZP                   ;
-    ora #$1E                        ;BG & SPR visibility = on
+    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON)                        ;BG & SPR visibility = on
     bne WriteAndWait                ;Branch always
 
 ;Update the actual PPU control registers.
@@ -1052,10 +1052,10 @@ ExitSub:
 
 ScreenNmiOff:
     lda PPUMASK_ZP                   ;
-    and #$E7                        ;BG & SPR visibility = off
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON) ;BG & SPR visibility = off
     jsr WriteAndWait                ;($C43D)Wait for end of NMI.
     lda PPUCTRL_ZP                   ;Prepare to turn off NMI in PPU.
-    and #$7F                        ;NMI = off
+    and #~PPUCTRL_VBLKNMI_ON         ;NMI = off
     sta PPUCTRL_ZP                   ;
     sta PPUCTRL                 ;Actually load PPU register with NMI off value.
     rts                             ;
@@ -1063,27 +1063,28 @@ ScreenNmiOff:
 ;The following routine does not appear to be used.
 
     lda PPUCTRL_ZP                   ;Enable VBlank.
-    ora #$80                        ;
+    ora #PPUCTRL_VBLKNMI_ON                        ;
     sta PPUCTRL_ZP                   ;Write PPU control register 0 and PPU status byte.
     sta PPUCTRL                 ;
     lda PPUMASK_ZP                   ;Turn sprites and screen on.
-    ora #$1E                        ;
+    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG
     bne WriteAndWait                ;Branch always.
 
 VBOffAndHorzWrite:
     lda PPUCTRL_ZP                   ;
-    and #$7B                        ;Horizontal write, disable VBlank.
+    and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON)
+    ;Horizontal write, disable VBlank.
 LC481:
     sta PPUCTRL                 ;Save new values in the PPU control register-->
-    sta PPUCTRL_ZP                   ;and PPU status byte.
+    sta PPUCTRL_ZP                  ;and PPU status byte.
     rts                             ;
 
 NMIOn:
         lda PPUSTATUS                   ;
         and #$80                        ;Wait for end of VBlank.
         bne NMIOn                       ;
-    lda PPUCTRL_ZP                   ;
-    ora #$80                        ;Enable VBlank interrupts.
+    lda PPUCTRL_ZP                  ;
+    ora #PPUCTRL_VBLKNMI_ON         ;Enable VBlank interrupts.
     bne LC481                       ;Branch always.
 
 ;--------------------------------------[ Timer routines ]--------------------------------------------

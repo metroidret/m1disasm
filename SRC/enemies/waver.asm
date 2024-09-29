@@ -4,7 +4,7 @@ WaverRoutine:
     sta $85
     lda #$1E
     sta $86
-    lda EnStatus,X
+    lda EnStatus,x
     cmp #$03
     beq L99F7
         jsr CommonJump_09
