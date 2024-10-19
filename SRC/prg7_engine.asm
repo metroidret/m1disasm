@@ -3241,8 +3241,10 @@ Lx042:
 LD210:
     lda MetroidOnSamus
     bne LD269
+    
     jsr LD1F7
     bne LD269
+    
     jsr LD2EB
     jsr LD359
     jsr LD38E
