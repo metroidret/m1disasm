@@ -47,12 +47,8 @@ for i in range(len(banks_o)):
 print('Success\n')
 
 print('Linking .o files')
-run_or_exit(cc65_bin_path + "ld65" + ext + " " + " ".join(["out/" + bank_o for bank_o in banks_o]) + " -o out/M1.nes -C SRC/main.cfg", "Linker Error.")
+run_or_exit(cc65_bin_path + "ld65" + ext + " " + " ".join(["out/" + bank_o for bank_o in banks_o]) + " -C SRC/main.cfg -o out/M1.nes -m out/M1.map", "Linker Error.")
 print('Success\n')
-
-"""print('Fixing header')
-run_or_exit("rgbfix -v out/M2RoS.gb", "RGBFIX Error.")
-print('Done\n')"""
 
 with open("out/M1.nes", "rb") as f:
     md5_hash = hashlib.md5(f.read())

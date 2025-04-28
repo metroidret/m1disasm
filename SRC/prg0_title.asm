@@ -228,40 +228,40 @@ FadeInDelay:
 FlashEffect:
     lda FrameCount                  ;Every third frame, run change palette-->
     and #$03                        ;Creates METROID flash effect.
-    bne L812B                       ;
+    bne RTS_812B                       ;
     lda PalDataIndex                ;Uses only the first three palette-->
     and #$03                        ;data sets in the flash routine.
     sta PalDataIndex                ;
     jsr LoadPalData                 ;
     lda Timer3                      ;If Timer 3 has not expired, branch-->
-    bne L812B                       ;so routine will keep running.
+    bne RTS_812B                       ;so routine will keep running.
     lda PalDataIndex                ;
     cmp #$04                        ;Ensures the palette index is back at 0.
-    bne L812B                       ;
+    bne RTS_812B                       ;
     inc TitleRoutine                ;Increment to next routine.
     jsr LoadSparkleData             ;($87AB) Loads data for next routine.
     lda #$18                        ;Sets Timer 3 for a delay of 240 frames-->
     sta Timer3                      ;(4 seconds).
-L812B:
+RTS_812B:
     rts                             ;
 
 METROIDFadeIn:
     lda Timer3                      ;
-    bne L8141                       ;
+    bne RTS_8141                       ;
     lda FrameCount                  ;Every 16th FrameCount, Change palette.-->
     and #$0F                        ;Causes the fade in effect.
-    bne L8141                       ;
+    bne RTS_8141                       ;
     jsr LoadPalData                 ;($8A8C)Load data into Palettes.
-    bne L8141                       ;
+    bne RTS_8141                       ;
     lda #$20                        ;Set timer delay for METROID flash effect.-->
     sta Timer3                      ;Delays flash by 320 frames (5.3 seconds).
     inc TitleRoutine                ;
-L8141:
+RTS_8141:
     rts                             ;
 
 LoadFlashTimer:
     lda Timer3                      ;If 320 frames have not passed, exit
-    bne L8141                       ;
+    bne RTS_8141                       ;
     lda #$08                        ;
     sta Timer3                      ;Stores a value of 80 frames in Timer3-->
     inc TitleRoutine                ;(1.3 seconds).
@@ -269,22 +269,22 @@ LoadFlashTimer:
 
 METROIDSparkle:
     lda Timer3                      ;Wait until 3 seconds have passed since-->
-    bne L8162                       ;last routine before continuing.
+    bne RTS_8162                       ;last routine before continuing.
     lda IntroSpr0Complete           ;Check if sparkle sprites are done moving.
     and IntroSpr1Complete           ;
     cmp #$01                        ;Is sparkle routine finished? If so,-->
     bne L815F                       ;go to next title routine, else continue-->
     inc TitleRoutine                ;with sparkle routine.
-    bne L8162                       ;
+    bne RTS_8162                       ;
 L815F:
     jsr UpdateSparkleSprites        ;($87CF)Update sparkle sprites on the screen.
-L8162:
+RTS_8162:
     rts                             ;
 
 METROIDFadeOut:
     lda FrameCount                  ;Wait until the frame count is a multiple-->
     and #$07                        ;of eight before proceeding.
-    bne L8181                       ;
+    bne RTS_8181                       ;
     lda FadeDataIndex               ;If FadeDataIndex is less than #$04, keep-->
     cmp #$04                        ;doing the palette changing routine.
     bne L817E                       ;
@@ -297,7 +297,7 @@ METROIDFadeOut:
     inc TitleRoutine                ;Move to next routine
 L817E:
     jsr DoFadeOut                   ;($8B5F)Fades METROID off the screen.
-L8181:
+RTS_8181:
     rts                             ;
 
 Crosshairs:
@@ -306,7 +306,7 @@ Crosshairs:
     jsr FlashIntroScreen            ;($8AA7)Flash screen white.
 L8189:
     lda Timer3                      ;Wait 80 frames from last routine-->
-    bne L81D0                       ;before running this one.
+    bne RTS_81D0                       ;before running this one.
     lda IntroSpr0Complete           ;
     and IntroSpr1Complete           ;Check if first 4 sprites have completed-->
     and IntroSpr2Complete           ;their movements.  If not, branch.
@@ -338,7 +338,7 @@ L81CA:
     jsr DrawCrosshairsSprites       ;($88FE)Draw sprites that converge in center of screen.
 L81CD:
     jsr DrawCrossSprites            ;($8976)Draw cross sprites in middle of the screen.
-L81D0:
+RTS_81D0:
     rts                             ;
 
 MoreCrosshairs:
@@ -373,7 +373,7 @@ UnusedIntroRoutine1:
 UnusedIntroRoutine2:
     lda ObjAction                   ;
     cmp #$04                        ;
-    bne L822D                       ;
+    bne RTS_822D                       ;
     lda #$00                        ;
     sta ObjAction                   ;
     lda #$0B                        ;Unused intro routine. It looks like this routine-->
@@ -388,7 +388,7 @@ UnusedIntroRoutine2:
     sta SpareMemC9                  ;Not accessed by game.
     sta SpareMemCB                  ;Not accessed by game.
     inc TitleRoutine                ;
-L822D:
+RTS_822D:
     rts                             ;
 
 ChangeIntroNameTable:
@@ -406,10 +406,10 @@ ChangeIntroNameTable:
 
 MessageFadeIn:
     lda Timer3                      ;Check if delay timer has expired.  If not, branch-->
-    bne L8262                       ;to exit, else run this rouine.
+    bne RTS_8262                       ;to exit, else run this rouine.
     lda FrameCount                  ;
     and #$07                        ;Perform next step of fade every 8th frame.
-    bne L8262                       ;
+    bne RTS_8262                       ;
     lda FadeDataIndex               ;
     cmp #$0B                        ;Has end of fade in palette data been reached?-->
     bne L825F                       ;If not, branch.
@@ -418,18 +418,18 @@ MessageFadeIn:
     lda #$30                        ;
     sta Timer3                      ;Set Timer3 to 480 frames(8 seconds).
     inc TitleRoutine                ;Next routine is MessageFadeOut.
-    bne L8262                       ;Branch always.
+    bne RTS_8262                       ;Branch always.
 L825F:
     jsr DoFadeOut                   ;($8B5F)Fade message onto screen.
-L8262:
+RTS_8262:
     rts                             ;
 
 MessageFadeOut:
     lda Timer3                      ;Check if delay timer has expired.  If not, branch-->
-    bne L8282                       ;to exit, else run this rouine.
+    bne RTS_8282                       ;to exit, else run this rouine.
     lda FrameCount                  ;
     and #$07                        ;Perform next step of fade every 8th frame.
-    bne L8282                       ;
+    bne RTS_8282                       ;
     lda FadeDataIndex               ;
     cmp #$05                        ;Has end of fade out palette data been reached?-->
     bne L827F                       ;If not, branch.
@@ -438,10 +438,10 @@ MessageFadeOut:
     lda #$00                        ;
     sta SpareMemCB                  ;Not accessed by game.
     inc TitleRoutine                ;Next routine is DelayIntroReplay.
-    bne L8282                       ;Branch always.
+    bne RTS_8282                       ;Branch always.
 L827F:
     jsr DoFadeOut                   ;($8B5F)Fade message off of screen.
-L8282:
+RTS_8282:
     rts                             ;
 
 DelayIntroReplay:
@@ -452,23 +452,23 @@ DelayIntroReplay:
 
 UnusedIntroRoutine3:
     lda Timer3                      ;
-    bne L82A2                       ;
+    bne RTS_82A2                       ;
     lda SpareMemB7                  ;
-    bne L82A2                       ;
+    bne RTS_82A2                       ;
     lda SpareMemB8                  ;
     and #$0F                        ;Unused intro routine.
-    bne L82A2                       ;
+    bne RTS_82A2                       ;
     lda #$01                        ;
     sta SpareMemD2                  ;
     lda #$10                        ;
     sta Timer3                      ;
     inc TitleRoutine                ;
-L82A2:
+RTS_82A2:
     rts                             ;
 
 PrepIntroRestart:
     lda Timer3                      ;Check if delay timer has expired.  If not, branch-->
-    bne L82E9                       ;to exit, else run this rouine.
+    bne RTS_82E9                       ;to exit, else run this rouine.
     sta SpareMemD2                  ;Not accessed by game.
     sta SpareMemBB                  ;Not accessed by game.
     sta IsSamus                     ;Clear IsSamus memory address.
@@ -504,7 +504,7 @@ L82AF:
     sta MultiSFXFlag                ;Restart intro music.
     lda #$02                        ;Set restart of intro music after another two cycles-->
     sta IntroMusicRestart           ;of the title routines.
-L82E9:
+RTS_82E9:
     rts                             ;
 
 L82EA:
@@ -784,7 +784,7 @@ SparkleUpdate:
         jsr DoSparkleSpriteCoord        ;($881A)Update sparkle sprite screen position.
     L87E1:
     lda IntroSpr0Complete,x         ;
-    bne L8819                       ;If sprite is already done, skip routine.
+    bne RTS_8819                       ;If sprite is already done, skip routine.
     dec IntroSpr0NextCntr,x         ;
 
     lda SparkleSpr0YChange,x        ;
@@ -809,7 +809,7 @@ SparkleUpdate:
         sta IntroSpr0Cntrl,x            ;horizontally when displayed.
     L8816:
     jmp WriteIntroSprite            ;($887B)Transfer sprite info into sprite RAM.
-L8819:
+RTS_8819:
     rts                             ;
 
 DoSparkleSpriteCoord:
@@ -859,10 +859,10 @@ DoSparkleSpriteCoord:
 
 NibbleSubtract:
     cmp #$08                        ;If bit 3 is set, nibble is a negative number-->
-    bcc L887A                       ;and lower three bits are converted to twos-->
+    bcc RTS_887A                       ;and lower three bits are converted to twos-->
     and #$07                        ;compliment for subtraction, else exit.
     jsr TwosCompliment              ;($C3D4)Prepare for subtraction with twos compliment.
-L887A:
+RTS_887A:
     rts                             ;
 
 WriteIntroSprite:
@@ -1020,23 +1020,23 @@ L894F:
 
 DoSpriteMovement:
     lda IntroSpr0Complete,x         ;If the current sprite has finished-->
-    bne L8975                       ;its movements, exit this routine.
+    bne RTS_8975                       ;its movements, exit this routine.
     jsr UpdateSpriteCoords          ;($981E)Calculate new sprite position.
     bcs L8972                       ;If sprite not at final position, branch to move next frame.
     lda #$01                        ;Sprite movement complete.
     sta IntroSpr0Complete,x         ;
 L8972:
     jmp WriteIntroSprite            ;($887B)Write sprite data to sprite RAM.
-L8975:
+RTS_8975:
     rts                             ;
 
 DrawCrossSprites:
     lda DrawCross                   ;If not ready to draw crosshairs,-->
-    beq L89A9                       ;branch to exit.
+    beq RTS_89A9                       ;branch to exit.
     ldy CrossDataIndex              ;
     cpy #$04                        ;Check to see if at last index in table.  If so, branch-->
     bcc L8986                       ;to draw cross sprites.
-    bne L89A9                       ;If beyond last index, branch to exit.
+    bne RTS_89A9                       ;If beyond last index, branch to exit.
     lda #$00                        ;
     sta DrawCross                   ;If at last index, clear indicaor to draw cross sprites.
 L8986:
@@ -1060,9 +1060,9 @@ L8991:
 
     lda FrameCount                  ;
     lsr                             ;Increment index into CrossSpriteIndexTbl every-->
-    bcc L89A9                       ;other frame.  This updates the cross sprites-->
+    bcc RTS_89A9                       ;other frame.  This updates the cross sprites-->
     inc CrossDataIndex              ;every two frames.
-L89A9:
+RTS_89A9:
     rts                             ;
 
 ;The following table tells the routine above how many data bytes to load from CrossSpriteDataTbl.
@@ -1211,10 +1211,10 @@ LoadPalData:
     ldy PalDataIndex                ;
     lda PalSelectTbl,y              ;Chooses which set of palette data-->
     cmp #$FF                        ;to load from the table below.
-    beq L8A99                       ;
+    beq RTS_8A99                       ;
     sta PalDataPending              ;Prepare to write palette data.
     inc PalDataIndex                ;
-L8A99:
+RTS_8A99:
     rts                             ;
 
 ;The table below is used by above routine to pick the proper palette.
@@ -1230,11 +1230,11 @@ FlashIntroScreen:
     lda #$00                        ;
     sta ScreenFlashPalIndex         ;Clear screen flash palette index and reset-->
     sta FlashScreen                 ;screen flash control address.
-    beq L8ABC                       ;Branch always.
+    beq RTS_8ABC                       ;Branch always.
 L8AB8:
     sta PalDataPending              ;Store palette change data.
     inc ScreenFlashPalIndex         ;Increment index into table below.
-L8ABC:
+RTS_8ABC:
     rts                             ;
 
 ScreenFlashPalTbl:
@@ -1245,10 +1245,10 @@ ScreenFlashPalTbl:
 StarPalSwitch:
     lda FrameCount                  ;
     and #$0F                        ;Change star palette every 16th frame.
-    bne L8AD2                       ;
+    bne RTS_8AD2                       ;
     lda PPUStrIndex                 ;
     beq L8AD3                       ;Is any other PPU data waiting? If so, exit.
-L8AD2:
+RTS_8AD2:
     rts                             ;
 
 L8AD3:
@@ -1301,10 +1301,10 @@ DoFadeOut:
     ldy FadeDataIndex               ;Load palette data from table below.
     lda FadeOutPalData,y            ;
     cmp #$FF                        ;If palette data = #$FF, exit.
-    beq L8B6C                       ;
+    beq RTS_8B6C                       ;
     sta PalDataPending              ;Store new palette data.
     inc FadeDataIndex               ;
-L8B6C:
+RTS_8B6C:
     rts                             ;
 
 FadeOutPalData:
@@ -1320,37 +1320,37 @@ ProcessUniqueItems:
     sta $03                         ;Store NumberOfUniqueItems at $03.
     ldy #$00                        ;
     sty $04                         ;Set $04 to #$00.
-L8B82:
-    ldy $04                         ;Use $04 at index into unique itme list.
-    iny                             ;
-    lda UniqueItemHistory-1,y       ;
-    sta $00                         ;Load the two bytes representing the aquired-->
-    iny                             ;Unique item and store them in $00 and $01.
-    lda UniqueItemHistory-1,y       ;
-    sta $01                         ;
-    sty $04                         ;Increment $04 by two (load unique item complete).
-    jsr UniqueItemSearch            ;($8B9C)Find unique item.
-    ldy $04                         ;
-    cpy $03                         ;If all unique items processed, return, else-->
-    bcc L8B82                       ;branch to process next unique item.
+    L8B82:
+        ldy $04                         ;Use $04 at index into unique itme list.
+        iny                             ;
+        lda UniqueItemHistory-1,y       ;
+        sta $00                         ;Load the two bytes representing the aquired-->
+        iny                             ;Unique item and store them in $00 and $01.
+        lda UniqueItemHistory-1,y       ;
+        sta $01                         ;
+        sty $04                         ;Increment $04 by two (load unique item complete).
+        jsr UniqueItemSearch            ;($8B9C)Find unique item.
+        ldy $04                         ;
+        cpy $03                         ;If all unique items processed, return, else-->
+        bcc L8B82                       ;branch to process next unique item.
     rts                             ;
 
 UniqueItemSearch:
     ldx #$00                        ;
-L8B9E:
-    txa                             ;Transfer X to A(Item number).
-    asl                             ;Multiply by 2.
-    tay                             ;Store multiplied value in y.
-    lda ItemData,y                  ;Load unique item reference starting at $9029(2 bytes).
-    cmp $00                         ;
-    bne L8BAF                       ;
-    lda ItemData+1,y                ;Get next byte of unique item.
-    cmp $01                         ;
-    beq UniqueItemFound             ;If unique item found, branch to UniqueItemFound.
-L8BAF:
-    inx                             ;
-    cpx #$3C                        ;If the unque item is a Zeebetite, return-->
-    bcc L8B9E                       ;else branch to find next unique item.
+    L8B9E:
+        txa                             ;Transfer X to A(Item number).
+        asl                             ;Multiply by 2.
+        tay                             ;Store multiplied value in y.
+        lda ItemData,y                  ;Load unique item reference starting at $9029(2 bytes).
+        cmp $00                         ;
+        bne L8BAF                       ;
+            lda ItemData+1,y                ;Get next byte of unique item.
+            cmp $01                         ;
+            beq UniqueItemFound             ;If unique item found, branch to UniqueItemFound.
+        L8BAF:
+        inx                             ;
+        cpx #$3C                        ;If the unque item is a Zeebetite, return-->
+        bcc L8B9E                       ;else branch to find next unique item.
     rts                             ;
 
 ;The following routine sets the item bits for aquired items in addresses $6988 thru $698E.-->
@@ -1419,7 +1419,7 @@ ProcessNewItemByte:
     inc $09                         ;
     ldx $09                         ;If all 59 unique items have been-->
     cpx $07                         ;searched through, exit.
-    bcs L8C38                       ;
+    bcs RTS_8C38                       ;
     jmp ProcessNewItemByte          ;($8C0A)Repeat routine for next item byte.
 
 L8C27:
@@ -1429,10 +1429,10 @@ L8C27:
     inc $09                         ;
     ldx $09                         ;If all 59 unique items have been-->
     cpx $07                         ;searched through, exit.
-    bcs L8C38                       ;
+    bcs RTS_8C38                       ;
     jmp ProcessNextItem             ;($8C03)Process next item.
 
-L8C38:
+RTS_8C38:
     rts                             ;
 
 SamusHasItem:
@@ -1548,7 +1548,7 @@ CalculatePassword:
 
 LoadPasswordData:
     lda NARPASSWORD                 ;If invincible Samus active, skip-->
-    bne L8D3C                       ;further password processing.
+    bne RTS_8D3C                       ;further password processing.
     jsr LoadUniqueItems             ;($8BD4)Load unique items from password.
     jsr LoadTanksAndMissiles        ;($8D3D)Calculate number of missiles from password.
     ldy #$00                        ;
@@ -1567,7 +1567,7 @@ LoadPasswordData:
         sta SamusAge,y                  ;
         dey                             ;
         bpl L8D33                       ;Loop to load all 3 age bytes.
-L8D3C:
+RTS_8D3C:
     rts                             ;
 
 LoadTanksAndMissiles:
@@ -1619,9 +1619,9 @@ L8D95:
     and #$FC                        ;the 6 MSBs to #$20. If it matches,-->
     cmp #$20                        ;an energy tank has been found.
     bne L8DA3                       ;
-    inc $00                         ;Increment number of energy tanks found.
-    jmp IncrementToNextItem         ;
-L8DA3:
+        inc $00                         ;Increment number of energy tanks found.
+        jmp IncrementToNextItem         ;
+    L8DA3:
     cmp #$24                        ;Load second byte of item and compare the 6 MSBs to-->
     bne IncrementToNextItem         ;#$24. If it matches, missiles have been found.
     inc $02                         ;Increment number of missiles found.
@@ -1634,56 +1634,63 @@ IncrementToNextItem:
     lda $00                         ;
     cmp #$06                        ;Ensure the Tank Count does not exceed 6-->
     bcc L8DB7                       ;tanks. Then stores the number of-->
-    lda #$06                        ;energy tanks found in TankCount.
-L8DB7:
+        lda #$06                        ;energy tanks found in TankCount.
+    L8DB7:
     sta TankCount                   ;
     lda #$00                        ;
     ldy $02                         ;
     beq L8DC6                       ;Branch if no missiles found.
-    clc                             ;
-L8DC1:
-    adc #$05                        ;
-    dey                             ;For every missile item found, this-->
-    bne L8DC1                       ;loop adds 5 missiles to MaxMissiles.
-L8DC6:
+        clc                             ;
+        L8DC1:
+            adc #$05                        ;
+            dey                             ;For every missile item found, this-->
+            bne L8DC1                       ;loop adds 5 missiles to MaxMissiles.
+    L8DC6:
     ldy KraidStatueStatus           ;
     beq L8DCF                       ;
-    adc #$4B                        ;75 missiles are added to MaxMissiles-->
-    bcs L8DD8                       ;if Kraid has been defeated and another-->
+        adc #$4B                        ;75 missiles are added to MaxMissiles-->
+        bcs L8DD8                       ;if Kraid has been defeated and another-->
 L8DCF:
     ldy RidleyStatueStatus          ;75 missiles are added if the ridley-->
     beq L8DDA                       ;has been defeated.
-    adc #$4B                        ;
-    bcc L8DDA                       ;
-L8DD8:
-    lda #$FF                        ;If number of missiles exceeds 255, it stays at 255.
+        adc #$4B                        ;
+        bcc L8DDA                       ;
+    L8DD8:
+        lda #$FF                        ;If number of missiles exceeds 255, it stays at 255.
 L8DDA:
     sta MaxMissiles                 ;
     rts                             ;
 
 ValidatePassword:
-    lda NARPASSWORD                 ;
-    bne L8DF7                       ;If invincible Samus already active, branch.
-    ldy #$0F                        ;
-L8DE5:
-    lda PasswordChar00,y            ;
-    cmp NARPASSWORDTbl,y            ;If NARPASSWORD was entered at the-->
-    bne L8DF7                       ;password screen, activate invincible-->
-    dey                             ;Samus, else continue to process password.
-    bpl L8DE5                       ;
-    lda #$01                        ;
-    sta NARPASSWORD                 ;
-    bne L8E05                       ;
+    ;If invincible Samus already active, branch.
+    lda NARPASSWORD
+    bne L8DF7
+    
+    ;Check if NARPASSWORD was entered at the password screen
+    ldy #$0F
+    L8DE5:
+        lda PasswordChar00,y
+        cmp NARPASSWORDTbl,y
+        bne L8DF7
+        dey
+        bpl L8DE5
+    
+    ;NARPASSWORD was entered, activate invincible Samus
+    lda #$01
+    sta NARPASSWORD
+    bne L8E05
+    
 L8DF7:
+    ;NARPASSWORD was not entered, continue to process password
     jsr UnscramblePassword          ;($8E4E)Unscramble password.
     jsr PasswordChecksum            ;($8E21)Calculate password checksum.
     cmp PasswordByte11              ;Verify proper checksum.
     beq L8E05                       ;
     sec                             ;If password is invalid, sets carry flag.
-    bcs L8E06                       ;
+    bcs RTS_8E06                       ;
 L8E05:
     clc                             ;If password is valid, clears carry flag.
-L8E06:
+RTS_8E06:
     rts                             ;
 
 ;The table below is used by the code above. It checks to see if NARPASSWORD has been entered.
@@ -1712,39 +1719,39 @@ PasswordChecksum:
 PasswordScramble:
     lda PasswordByte10              ;
     sta $02                         ;
-L8E32:
-    lda PasswordByte00              ;Store contents of $6988 in $00 for-->
-    sta $00                         ;further processing after rotation.
-    ldx #$00                        ;
-    ldy #$0F                        ;
-L8E3B:
-    ror PasswordByte00,x            ;Rotate right, including carry, all values in-->
-    inx                             ;addresses $6988 thru $6997.
-    dey                             ;
-    bpl L8E3B                       ;
-    ror $00                         ;Rotate right $6988 to ensure the LSB-->
-    lda $00                         ;from address $6997 is rotated to the-->
-    sta PasswordByte00              ;MSB of $6988.
-    dec $02                         ;
-    bne L8E32                       ;Continue rotating until $02 = 0.
+    L8E32:
+        lda PasswordByte00              ;Store contents of $6988 in $00 for-->
+        sta $00                         ;further processing after rotation.
+        ldx #$00                        ;
+        ldy #$0F                        ;
+        L8E3B:
+            ror PasswordByte00,x            ;Rotate right, including carry, all values in-->
+            inx                             ;addresses $6988 thru $6997.
+            dey                             ;
+            bpl L8E3B                       ;
+        ror $00                         ;Rotate right $6988 to ensure the LSB-->
+        lda $00                         ;from address $6997 is rotated to the-->
+        sta PasswordByte00              ;MSB of $6988.
+        dec $02                         ;
+        bne L8E32                       ;Continue rotating until $02 = 0.
     rts                             ;
 
 UnscramblePassword:
     lda PasswordByte10              ;Stores random number used to scramble the password.
     sta $02                         ;
-L8E53:
-    lda PasswordByte0F              ;Preserve MSB that may have been rolled from $6988.
-    sta $00                         ;
-    ldx #$0F                        ;
-L8E5A:
-    rol PasswordByte00,x            ;The following loop rolls left the first 16 bytes-->
-    dex                             ;of the password one time.
-    bpl L8E5A                       ;
-    rol $00                         ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
-    lda $00                         ;
-    sta PasswordByte0F              ;
-    dec $02                         ;
-    bne L8E53                       ;Loop repeats the number of times decided by the random-->
+    L8E53:
+        lda PasswordByte0F              ;Preserve MSB that may have been rolled from $6988.
+        sta $00                         ;
+        ldx #$0F                        ;
+        L8E5A:
+            rol PasswordByte00,x            ;The following loop rolls left the first 16 bytes-->
+            dex                             ;of the password one time.
+            bpl L8E5A                       ;
+        rol $00                         ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
+        lda $00                         ;
+        sta PasswordByte0F              ;
+        dec $02                         ;
+        bne L8E53                       ;Loop repeats the number of times decided by the random-->
     rts                             ;number in $6998 to properly unscramble the password.
 
 ;The following code takes the 18 password bytes and converts them into 24 characters
@@ -1875,65 +1882,65 @@ PasswordBitmaskTbl:
 ;5th Zeebetite = 010011
 
 ItemData: ; $9029
-    .word $104E                     ;Maru Mari at coord 02,0E                    (Item 0)
-    .word $264B                     ;Missiles at coord 12,0B                     (Item 1)
-    .word $28E5                     ;Red door to long beam at coord 07,05        (Item 2)
-    .word $2882                     ;Red door to Tourian elevator at coord 05,02 (Item 3)
-    .word $2327                     ;Energy tank at coord 19,07                  (Item 4)
-    .word $2B25                     ;Red door to bombs at coord 1A,05            (Item 5)
-    .word $0325                     ;Bombs at coord 19,05                        (Item 6)
-    .word $2A69                     ;Red door to ice beam at coord 13,09         (Item 7)
-    .word $2703                     ;Missiles at coord 18,03                     (Item 8)
-    .word $2363                     ;Energy tank at coord 1B,03                  (Item 9)
-    .word $29E2                     ;Red door to varia suit at coord 0F,02       (Item 10)
-    .word $15E2                     ;Varia suit at coord 0F,02                   (Item 11)
-    .word $212E                     ;Energy tank at coord 09,0E                  (Item 12)
-    .word $264E                     ;Missiles at coord 12,0E                     (Item 13)
-    .word $262F                     ;Missiles at coord 11,0F                     (Item 14)
-    .word $2B4C                     ;Red door to ice beam at coord 1B,0C         (Item 15)
-    .word $276A                     ;Missiles at coord 1B,0A                     (Item 16)
-    .word $278A                     ;Missiles at coord 1C,0A                     (Item 17)
-    .word $278B                     ;Missiles at coord 1C,0B                     (Item 18)
-    .word $276B                     ;Missiles at coord 1B,0B                     (Item 19)
-    .word $274B                     ;Missiles at coord 1A,0B                     (Item 20)
-    .word $268F                     ;Missiles at coord 14,0F                     (Item 21)
-    .word $266F                     ;Missiles at coord 13,0F                     (Item 22)
-    .word $2B71                     ;Red door to high jump at coord 1C,11        (Item 23)
-    .word $0771                     ;High jump at coord 1B,11                    (Item 24)
-    .word $29F0                     ;Red door to screw attack at coord 0E,10     (Item 25)
-    .word $0DF0                     ;Screw attack at coord 0D,1D                 (Item 26)
-    .word $2676                     ;Missiles at coord 13,16                     (Item 27)
-    .word $2696                     ;Misslies at coord 14,16                     (Item 28)
-    .word $2A55                     ;Red door to wave beam at coord 1C,15        (Item 29)
-    .word $2353                     ;Energy tank at coord 1A,13                  (Item 30)
-    .word $2794                     ;Missiles at coord 1C,14                     (Item 31)
-    .word $28F5                     ;Red door at coord 07,15                     (Item 32)
-    .word $2535                     ;Missiles at coord 09,15                     (Item 33)
-    .word $2495                     ;Missiles at coord 04,15                     (Item 34)
-    .word $28F6                     ;Red door at coord 07,16                     (Item 35)
-    .word $2156                     ;Energy tank at coord 0A,16                  (Item 36)
-    .word $28F8                     ;Red door at coord 07,18                     (Item 37)
-    .word $287B                     ;Red door at coord 03,1B                     (Item 38)
-    .word $24BB                     ;Missiles at coord 05,1B                     (Item 39)
-    .word $2559                     ;Missiles at coord 0A,19                     (Item 40)
-    .word $291D                     ;Red door to Kraid at coord 08,1D            (Item 41)
-    .word $211D                     ;Energy tank at coord 08,1D(Kraid's room)    (Item 42)
-    .word $2658                     ;Missiles at coord 12,18                     (Item 43)
-    .word $2A39                     ;Red door at coord 11,19                     (Item 44)
-    .word $2239                     ;Energy tank at coord 11,19                  (Item 45)
-    .word $269E                     ;Missiles at coord 14,1E                     (Item 46)
-    .word $2A1D                     ;purple door at coord 10,1D(Ridley's room)   (Item 47)
-    .word $21FD                     ;Energy tank at coord 0F,1D                  (Item 48)
-    .word $271B                     ;Missile at coord 18,1B                      (Item 49)
-    .word $2867                     ;Orange door at coord 03,07                  (Item 50)
-    .word $2927                     ;Red door at coord 09,07                     (Item 51)
-    .word $292B                     ;Red door at coord 0A,0B                     (Item 52)
-    .word $3C00                     ;1st Zeebetite in mother brain room          (Item 53)
-    .word $4000                     ;2nd Zeebetite in mother brain room          (Item 54)
-    .word $4400                     ;3rd Zeebetite in mother brain room          (Item 55)
-    .word $4800                     ;4th Zeebetite in mother brain room          (Item 56)
-    .word $4C00                     ;5th Zeebetite in mother brain room          (Item 57)
-    .word $3800                     ;Mother brain                                (Item 58)
+    .word (%000100 << 10) + ($02 << 5) + $0E  ;Maru Mari at coord 02,0E                    (Item 0)
+    .word (%001001 << 10) + ($12 << 5) + $0B  ;Missiles at coord 12,0B                     (Item 1)
+    .word (%001010 << 10) + ($07 << 5) + $05  ;Red door to long beam at coord 07,05        (Item 2)
+    .word (%001010 << 10) + ($04 << 5) + $02  ;Red door to Tourian elevator at coord 05,02 (Item 3)
+    .word (%001000 << 10) + ($19 << 5) + $07  ;Energy tank at coord 19,07                  (Item 4)
+    .word (%001010 << 10) + ($19 << 5) + $05  ;Red door to bombs at coord 1A,05            (Item 5)
+    .word (%000000 << 10) + ($19 << 5) + $05  ;Bombs at coord 19,05                        (Item 6)
+    .word (%001010 << 10) + ($13 << 5) + $09  ;Red door to ice beam at coord 13,09         (Item 7)
+    .word (%001001 << 10) + ($18 << 5) + $03  ;Missiles at coord 18,03                     (Item 8)
+    .word (%001000 << 10) + ($1B << 5) + $03  ;Energy tank at coord 1B,03                  (Item 9)
+    .word (%001010 << 10) + ($0F << 5) + $02  ;Red door to varia suit at coord 0F,02       (Item 10)
+    .word (%000101 << 10) + ($0F << 5) + $02  ;Varia suit at coord 0F,02                   (Item 11)
+    .word (%001000 << 10) + ($09 << 5) + $0E  ;Energy tank at coord 09,0E                  (Item 12)
+    .word (%001001 << 10) + ($12 << 5) + $0E  ;Missiles at coord 12,0E                     (Item 13)
+    .word (%001001 << 10) + ($11 << 5) + $0F  ;Missiles at coord 11,0F                     (Item 14)
+    .word (%001010 << 10) + ($1A << 5) + $0C  ;Red door to ice beam at coord 1B,0C         (Item 15)
+    .word (%001001 << 10) + ($1B << 5) + $0A  ;Missiles at coord 1B,0A                     (Item 16)
+    .word (%001001 << 10) + ($1C << 5) + $0A  ;Missiles at coord 1C,0A                     (Item 17)
+    .word (%001001 << 10) + ($1C << 5) + $0B  ;Missiles at coord 1C,0B                     (Item 18)
+    .word (%001001 << 10) + ($1B << 5) + $0B  ;Missiles at coord 1B,0B                     (Item 19)
+    .word (%001001 << 10) + ($1A << 5) + $0B  ;Missiles at coord 1A,0B                     (Item 20)
+    .word (%001001 << 10) + ($14 << 5) + $0F  ;Missiles at coord 14,0F                     (Item 21)
+    .word (%001001 << 10) + ($13 << 5) + $0F  ;Missiles at coord 13,0F                     (Item 22)
+    .word (%001010 << 10) + ($1B << 5) + $11  ;Red door to high jump at coord 1C,11        (Item 23)
+    .word (%000001 << 10) + ($1B << 5) + $11  ;High jump at coord 1B,11                    (Item 24)
+    .word (%001010 << 10) + ($0F << 5) + $10  ;Red door to screw attack at coord 0E,10     (Item 25)
+    .word (%000011 << 10) + ($0F << 5) + $10  ;Screw attack at coord 0D,1D                 (Item 26)
+    .word (%001001 << 10) + ($13 << 5) + $16  ;Missiles at coord 13,16                     (Item 27)
+    .word (%001001 << 10) + ($14 << 5) + $16  ;Misslies at coord 14,16                     (Item 28)
+    .word (%001010 << 10) + ($12 << 5) + $15  ;Red door to wave beam at coord 1C,15        (Item 29)
+    .word (%001000 << 10) + ($1A << 5) + $13  ;Energy tank at coord 1A,13                  (Item 30)
+    .word (%001001 << 10) + ($1C << 5) + $14  ;Missiles at coord 1C,14                     (Item 31)
+    .word (%001010 << 10) + ($07 << 5) + $15  ;Red door at coord 07,15                     (Item 32)
+    .word (%001001 << 10) + ($09 << 5) + $15  ;Missiles at coord 09,15                     (Item 33)
+    .word (%001001 << 10) + ($04 << 5) + $15  ;Missiles at coord 04,15                     (Item 34)
+    .word (%001010 << 10) + ($07 << 5) + $16  ;Red door at coord 07,16                     (Item 35)
+    .word (%001000 << 10) + ($0A << 5) + $16  ;Energy tank at coord 0A,16                  (Item 36)
+    .word (%001010 << 10) + ($07 << 5) + $18  ;Red door at coord 07,18                     (Item 37)
+    .word (%001010 << 10) + ($03 << 5) + $1B  ;Red door at coord 03,1B                     (Item 38)
+    .word (%001001 << 10) + ($05 << 5) + $1B  ;Missiles at coord 05,1B                     (Item 39)
+    .word (%001001 << 10) + ($0A << 5) + $19  ;Missiles at coord 0A,19                     (Item 40)
+    .word (%001010 << 10) + ($08 << 5) + $1D  ;Red door to Kraid at coord 08,1D            (Item 41)
+    .word (%001000 << 10) + ($08 << 5) + $1D  ;Energy tank at coord 08,1D(Kraid's room)    (Item 42)
+    .word (%001001 << 10) + ($12 << 5) + $18  ;Missiles at coord 12,18                     (Item 43)
+    .word (%001010 << 10) + ($11 << 5) + $19  ;Red door at coord 11,19                     (Item 44)
+    .word (%001000 << 10) + ($11 << 5) + $19  ;Energy tank at coord 11,19                  (Item 45)
+    .word (%001001 << 10) + ($14 << 5) + $1E  ;Missiles at coord 14,1E                     (Item 46)
+    .word (%001010 << 10) + ($10 << 5) + $1D  ;purple door at coord 10,1D(Ridley's room)   (Item 47)
+    .word (%001000 << 10) + ($0F << 5) + $1D  ;Energy tank at coord 0F,1D                  (Item 48)
+    .word (%001001 << 10) + ($18 << 5) + $1B  ;Missile at coord 18,1B                      (Item 49)
+    .word (%001010 << 10) + ($03 << 5) + $07  ;Orange door at coord 03,07                  (Item 50)
+    .word (%001010 << 10) + ($09 << 5) + $07  ;Red door at coord 09,07                     (Item 51)
+    .word (%001010 << 10) + ($09 << 5) + $0B  ;Red door at coord 0A,0B                     (Item 52)
+    .word (%001111 << 10)                     ;1st Zeebetite in mother brain room          (Item 53)
+    .word (%010000 << 10)                     ;2nd Zeebetite in mother brain room          (Item 54)
+    .word (%010001 << 10)                     ;3rd Zeebetite in mother brain room          (Item 55)
+    .word (%010010 << 10)                     ;4th Zeebetite in mother brain room          (Item 56)
+    .word (%010011 << 10)                     ;5th Zeebetite in mother brain room          (Item 57)
+    .word (%001110 << 10)                     ;Mother brain                                (Item 58)
 
 ClearAll:
     jsr ScreenOff                   ;($C439)Turn screen off.
@@ -2213,7 +2220,7 @@ CheckBackspace:
     L9297:
     lda FrameCount                  ;
     and #$08                        ;If FrameCount bit 3 not set, branch.
-    beq L92B3                       ;
+    beq RTS_92B3                       ;
         lda CharSelectYTbl,x            ;Set Y-coord of character selection sprite.
         sta SpriteRAM+$02<<2                 ;
         lda #$6E                        ;Set pattern for character selection sprite.
@@ -2222,7 +2229,7 @@ CheckBackspace:
         sta SpriteRAM+$02<<2+2               ;
         lda CharSelectXTbl,y            ;Set x-Coord of character selection sprite.
         sta SpriteRAM+$02<<2+3               ;
-    L92B3:
+    RTS_92B3:
     rts                             ;
 
 ;The following data does not appear to be used in the program.
@@ -2282,7 +2289,7 @@ InitializeGame:
     tay                             ;
     lda BankTable,y                 ;Change to proper memory page.
     sta SwitchPending               ;
-L9324:
+RTS_9324:
     rts
 
 ;The following two tables are used to find Samus y and x positions on the screen after the game
@@ -2319,7 +2326,7 @@ InitializeStats:
 
 DisplayPassword:
     lda Timer3                      ;Wait for "GAME OVER" to be displayed-->
-    bne L9324                       ;for 160 frames (2.6 seconds).
+    bne RTS_9324                       ;for 160 frames (2.6 seconds).
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
     ldx #.lobyte(L937F)                        ;Low byte of start of PPU data.
     ldy #.hibyte(L937F)                        ;High byte of start of PPU data.
@@ -2349,11 +2356,11 @@ L937F:
 WaitForSTART:
     lda Joy1Change                  ;Waits for START to be ressed proceed-->
     and #$10                        ;past the GAME OVER screen.
-    beq L939D                       ;If start not pressed, branch.
+    beq RTS_939D                       ;If start not pressed, branch.
         jmp CheckPassword               ;($8C5E)Check if password is correct.
 
-    L939D:
-    rts                             ;
+    RTS_939D:
+    rts
 
 GameOver:
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
@@ -2500,13 +2507,13 @@ UnusedIntroRoutine5:
     inx                             ;
     txa                             ;
     cmp #$55                        ;
-    bcc L948E                       ;
+    bcc RTS_948E                       ;
     ldx PPUStrIndex                 ;
     L9487:
         lda #$00                        ;
         sta PPUDataString,x             ;
         beq L9487                       ;
-L948E:
+RTS_948E:
     rts                             ;
 
 UnusedIntroRoutine6:
@@ -2885,13 +2892,13 @@ UpdateSpriteCoords:
         pla                             ;
         eor IntroSpr0YDir,x             ;Eor carry bit with direction byte to see if sprite has-->
         lsr                             ;reached its end point.
-        bcs L9870                       ;Branch if sprite has not reached the end of y movement.
+        bcs RTS_9870                       ;Branch if sprite has not reached the end of y movement.
     L9864:
         lda IntroSpr0YChange,x          ;After sprite has reached its final position, this code-->
         sta IntroSpr0YCoord,x           ;explicitly writes final the x and y coords to to sprite-->
         lda IntroSpr0XChange,x          ;position addresses to make sure the sprites don't-->
         sta IntroSpr0XCoord,x           ;overshoot their mark.
-    L9870:
+    RTS_9870:
     rts                             ;
 
 CalcDisplacement:
@@ -2916,12 +2923,12 @@ CalcDisplacement:
 DecSpriteYCoord:
     lda TitleRoutine                ;
     cmp #$1D                        ;
-    bcs L98AD                       ;If the end game is playing, branch to exit.
+    bcs RTS_98AD                       ;If the end game is playing, branch to exit.
     lda SpriteLoadPending           ;
-    beq L98AD                       ;If no sprite load is pending, branch to exit.
+    beq RTS_98AD                       ;If no sprite load is pending, branch to exit.
     lda FrameCount                  ;
     lsr                             ;
-    bcs L98AD                       ;If not on an odd numbered frame, branch to exit.
+    bcs RTS_98AD                       ;If not on an odd numbered frame, branch to exit.
     ldx #$9F                        ;
     L989B:
         dec IntroStarSprite00,x         ;Decrement y coord of the intro star sprites.
@@ -2934,7 +2941,7 @@ DecSpriteYCoord:
         bne L989B                       ;Loop 40 times.
     lda #$00                        ;
     sta SpriteLoadPending           ;Sprite RAM load complete.
-L98AD:
+RTS_98AD:
     rts                             ;
 
 LoadStarSprites:
@@ -3051,55 +3058,62 @@ Restart:
     beq Exit100                     ;
     ldy #$11                        ;
     lda #$00                        ;
-L9A43:
-    sta PasswordByte00,y            ;Erase PasswordByte00 thru PasswordByte11.
-    dey                             ;
-    bpl L9A43                       ;
+    L9A43:
+        sta PasswordByte00,y            ;Erase PasswordByte00 thru PasswordByte11.
+        dey                             ;
+        bpl L9A43                       ;
     iny                             ;Y = #$00.
-L9A4A:
-    sta UniqueItemHistory,y         ;
-    iny                             ;Erase Unique item history.
-    bne L9A4A                       ;
-    lda SamusGear                   ;
-    and #$10                        ;
+    L9A4A:
+        sta UniqueItemHistory,y         ;
+        iny                             ;Erase Unique item history.
+        bne L9A4A                       ;
+    
+    lda SamusGear
+    and #gr_MARUMARI
     beq L9A5C                       ;If Samus does not have Maru Mari, branch.-->
-    lda #$01                        ;Else load Maru Mari data into PasswordByte00.
-    sta PasswordByte00              ;
-L9A5C:
-    lda SamusGear                   ;
-    and #$01                        ;
+        lda #$01                        ;Else load Maru Mari data into PasswordByte00.
+        sta PasswordByte00              ;
+    L9A5C:
+    
+    lda SamusGear
+    and #gr_BOMBS
     beq L9A6B                       ;If Samus does not have bombs, branch.-->
-    lda PasswordByte00              ;Else load bomb data into PasswordByte00.
-    ora #$40                        ;
-    sta PasswordByte00              ;
-L9A6B:
-    lda SamusGear                   ;
-    and #$20                        ;
+        lda PasswordByte00              ;Else load bomb data into PasswordByte00.
+        ora #$40                        ;
+        sta PasswordByte00              ;
+    L9A6B:
+    
+    lda SamusGear
+    and #gr_VARIA
     beq L9A77                       ;If Samus does not have varia suit, branch.-->
-    lda #$08                        ;Else load varia suit data into PasswordByte01.
-    sta PasswordByte01              ;
-L9A77:
-    lda SamusGear                   ;
-    and #$02                        ;
+        lda #$08                        ;Else load varia suit data into PasswordByte01.
+        sta PasswordByte01              ;
+    L9A77:
+    
+    lda SamusGear
+    and #gr_HIGHJUMP
     beq L9A83                       ;If Samus does not have high jump, branch.-->
-    lda #$01                        ;Else load high jump data into PasswordByte03.
-    sta PasswordByte03              ;
-L9A83:
+        lda #$01                        ;Else load high jump data into PasswordByte03.
+        sta PasswordByte03              ;
+    L9A83:
+    
     lda SamusGear                   ;
-    and #$10                        ;If Samus does not have Maru Mari, branch.-->
+    and #gr_MARUMARI                        ;If Samus does not have Maru Mari, branch.-->
     beq L9A92                       ;Else load screw attack data into PasswordByte03.-->
-    lda PasswordByte03              ;A programmer error?  Should check for screw-->
-    ora #$04                        ;attack data.
-    sta PasswordByte03              ;
-L9A92:
+        lda PasswordByte03              ;A programmer error?  Should check for screw-->
+        ora #$04                        ;attack data.
+        sta PasswordByte03              ;
+    L9A92:
+    
     lda SamusGear                   ;
     sta PasswordByte09              ;Store Samus gear data in PasswordByte09.
     lda #$00                        ;
     ldy JustInBailey                ;
     beq L9AA1                       ;If Samus is wearing suit, branch.  Else-->
-    lda #$80                        ;load suitless Samus data into PasswordByte08.
-L9AA1:
+        lda #$80                        ;load suitless Samus data into PasswordByte08.
+    L9AA1:
     sta PasswordByte08              ;
+    
     jmp InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
 
 EndGame:
@@ -3301,7 +3315,7 @@ RollCredits:
     lda Timer3                      ;If 160 frame timer delay from previous-->
     beq L9C17                       ;routine has expired, branch.
     cmp #$02                        ;If not 20 frames left in Timer3, branch to exit.
-    bne L9C44                       ;
+    bne RTS_9C44                       ;
     jsr ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
     jsr ClearNameTable0             ;($C16D)clear name table 0 and sprites.-->
     jsr EraseAllSprites             ;($C1A3)prepares screen for credits.
@@ -3325,18 +3339,18 @@ L9C1D:
 L9C2A:
     lda FrameCount                  ;credits scroll up one position every 3 frames.
     and #$03                        ;
-    bne L9C44                       ;Ready to scroll? If not, branch.
+    bne RTS_9C44                       ;Ready to scroll? If not, branch.
     inc ScrollY                     ;
     lda ScrollY                     ;Load ScrollY and check it to see if its-->
     cmp #$F0                        ;position is at the very bottom on name table.-->
-    bne L9C44                       ;if not, branch.
+    bne RTS_9C44                       ;if not, branch.
     inc CreditPageNumber            ;
     lda #$00                        ;
     sta ScrollY                     ;When Scrolly is at bottom of the name table,-->
     lda PPUCTRL_ZP                   ;Swap to next name table(0 or 2) and increment-->
     eor #$02                        ;CreditPageNumber.
     sta PPUCTRL_ZP                   ;
-L9C44:
+RTS_9C44:
     rts
 
 ;The following routine is checked every frame and is accessed via the NMIScreenWrite routine.
@@ -3350,9 +3364,9 @@ L9C44:
 
 LoadCredits:
     ldy CreditPageNumber            ;
-    beq L9C7E                       ;If credits are not being displayed, exit.
+    beq RTS_9C7E                       ;If credits are not being displayed, exit.
     cpy #$07                        ;
-    bcs L9C7E                       ;If CreditPageNumber is higher than #$06, exit.
+    bcs RTS_9C7E                       ;If CreditPageNumber is higher than #$06, exit.
     ldx #$00                        ;
     lda ScrollY                     ;If ScrollY is less than #$80 (128), branch.
     bpl L9C57                       ;
@@ -3361,13 +3375,13 @@ LoadCredits:
     sbc #$80                        ;
 L9C57:
     cmp #$04                        ;
-    bcs L9C7E                       ;If ScrollY is not #$04, branch to exit.
+    bcs RTS_9C7E                       ;If ScrollY is not #$04, branch to exit.
     sta $01                         ;Store #$00, #$01, #$02 or #$03 in address $01.
     dey                             ;Y now contains CreditPageNumber - 1.
     txa                             ;
     bne L9C6C                       ;If ScrollY is #$80 (128) or greater, branch.
     dey                             ;Y now contains CreditPageNumber - 2.
-    bmi L9C7E                       ;If on Credit page less than two , branch to exit.
+    bmi RTS_9C7E                       ;If on Credit page less than two , branch to exit.
     tya                             ;
     asl                             ;Start with CreditPageNumber - 2-->
     asl                             ;* 8 + 4 + $01 * 2.
@@ -3387,7 +3401,7 @@ L9C70:
     lda CreditsPointerTbl+1,y       ;Upper byte of pointer to PPU string.
     tay                             ;
     jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-L9C7E:
+RTS_9C7E:
     rts                             ;
 
 LoadWaveSprites:
@@ -3442,13 +3456,13 @@ LoadEndSamusSprites:
         bne L9CAA                       ;Repeat until sprite load is complete.
     lda RoomPtr                     ;
     cmp #$02                        ;If not running the EndSamusFlash routine, branch.
-    bcc L9CF9                       ;
+    bcc RTS_9CF9                       ;
     lda ColorCntIndex               ;
     cmp #$08                        ;If EndSamusFlash routine is more than half-->
-    bcc L9CF9                       ;way done, Check ending type for the Samus helmet-->
+    bcc RTS_9CF9                       ;way done, Check ending type for the Samus helmet-->
     lda EndingType                  ;off ending.  If not helmet off ending, branch.
     cmp #$03                        ;
-    bne L9CF9                       ;
+    bne RTS_9CF9                       ;
     ldy #$00                        ;
     ldx #$00                        ;
     L9CED:
@@ -3458,7 +3472,7 @@ LoadEndSamusSprites:
         inx                             ;while the rest of her body does.
         cpy #$18                        ;
         bne L9CED                       ;
-L9CF9:
+RTS_9CF9:
     rts                             ;
 
 ;The following table is used by the routine above to keep Samus'
@@ -3687,9 +3701,9 @@ EndStarDataTable:
 
 EndGamePalWrite:
     lda PalDataPending              ;If no palette data pending, branch to exit.
-    beq L9F80                       ;
+    beq RTS_9F80                       ;
     cmp #$0C                        ;If PalDataPending has loaded last palette,-->
-    beq L9F80                       ;branch to exit.
+    beq RTS_9F80                       ;branch to exit.
     cmp #$0D                        ;Once end palettes have been cycled through,-->
     bne L9F64                       ;start over.
         ldy #$00                        ;
@@ -3707,7 +3721,7 @@ EndGamePalWrite:
     sta PPUADDR                  ;Set PPU address to $3F00.
     sta PPUADDR                  ;
     sta PPUADDR                  ;Set PPU address to $0000.
-L9F80:
+RTS_9F80:
     rts                             ;
 
 ;The following pointer table is used by the routine above to
