@@ -923,6 +923,14 @@ IntroSpr7YDir          = $6F1F   ;MSB set=decrease sprite y pos, else increase s
 
 WorldMapRAM            = $7000   ;Thru $73FF. The map is 1Kb in size (1024 bytes).
 
+UnknownMetroidProperty_ObjectSlotSamus  = $77F6
+UnknownMetroidProperty_ObjectSlot0320 = $77F8
+UnknownMetroidProperty_ObjectSlot0330 = $77F9
+UnknownMetroidProperty_ObjectSlot0340 = $77FA
+UnknownMetroidProperty_ObjectSlot0350 = $77FB
+UnknownMetroidProperty_ObjectSlot0360 = $77FC
+UnknownMetroidProperty_ObjectSlot0370 = $77FD
+
 SamusData              = $77FE   ;Thru $782D. Samus saved game data (not used).
 
 ;------------------------------------------[ Misc. defines ]-----------------------------------------

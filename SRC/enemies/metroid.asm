@@ -8,20 +8,20 @@ MetroidRoutine:
     lda #$0F
     sta $00
     sta $01
-    lda $0405,x
+    lda EnData05,x
     asl
     bmi CommonEnemyJump_00_01_02
     lda EnStatus,x
     cmp #$03
     beq CommonEnemyJump_00_01_02
-    jsr L99B7
-    lda $77F8,y
+    jsr LoadObjectSlotIDIntoY
+    lda UnknownMetroidProperty_ObjectSlot0320,y
     beq L9822
         jmp L9899
 
     L9822:
-    ldy $0408,x
-    lda $77F6,y
+    ldy EnData08,x
+    lda UnknownMetroidProperty_ObjectSlotSamus,y
     pha
     lda EnData02,x
     bpl L983B
@@ -29,17 +29,17 @@ MetroidRoutine:
         jsr TwosCompliment_
         pha
         lda #$00
-        cmp $0406,x
+        cmp EnCounter,x
         sbc EnData02,x
     L983B:
-    cmp $77F6,y
+    cmp UnknownMetroidProperty_ObjectSlotSamus,y
     pla
     bcc L9849
         sta EnData02,x
         lda #$00
-        sta $0406,x
+        sta EnCounter,x
     L9849:
-    lda $77F6,y
+    lda UnknownMetroidProperty_ObjectSlotSamus,y
     pha
     lda EnData03,x
     bpl L985F
@@ -47,17 +47,17 @@ MetroidRoutine:
         jsr TwosCompliment_
         pha
         lda #$00
-        cmp $0407,x
+        cmp EnData07,x
         sbc EnData03,x
     L985F:
-    cmp $77F6,y
+    cmp UnknownMetroidProperty_ObjectSlotSamus,y
     pla
     bcc L986D
         sta EnData03,x
         lda #$00
-        sta $0407,x
+        sta EnData07,x
     L986D:
-    lda $0405,x
+    lda EnData05,x
     pha
     jsr L9A06
     sta $6AFF,x
@@ -69,15 +69,15 @@ MetroidRoutine:
     lda EnStatus,x
     cmp #$04
     bne L9894
-        ldy $040B,x
+        ldy EnHitPoints,x
         iny
         bne L9899
         lda #$05
-        sta $040B,x
+        sta EnHitPoints,x
         bne L9899
     L9894:
     lda #$FF
-    sta $040B,x
+    sta EnHitPoints,x
 L9899:
     lda $81
     cmp #$06
@@ -87,13 +87,13 @@ L9899:
     lda #$04
     sta EnStatus,x
 L98A9:
-    lda $0404,x
+    lda EnData04,x
     and #$20
     beq L990F
-        jsr L99B7
-        lda $77F8,y
+        jsr LoadObjectSlotIDIntoY
+        lda UnknownMetroidProperty_ObjectSlot0320,y
         beq L98EF
-            lda $040E,x
+            lda EnData0E,x
             cmp #$07
             beq L98C3
                 cmp #$0A
@@ -102,28 +102,28 @@ L98A9:
             lda $2D
             and #$02
             bne L9932
-            lda $77F8,y
+            lda UnknownMetroidProperty_ObjectSlot0320,y
             clc
             adc #$10
-            sta $77F8,y
+            sta UnknownMetroidProperty_ObjectSlot0320,y
             and #$70
             cmp #$50
             bne L9932
             lda #$02
-            ora $040F,x
-            sta $040C,x
+            ora EnSpecialAttribs,x
+            sta EnData0C,x
             lda #$06
             sta EnStatus,x
             lda #$20
-            sta $040F,x
+            sta EnSpecialAttribs,x
             lda #$01
-            sta $040D,x
+            sta EnData0D,x
         L98EF:
         lda #$00
-        sta $0404,x
-        sta $77F8,y
-        sta $0406,x
-        sta $0407,x
+        sta EnData04,x
+        sta UnknownMetroidProperty_ObjectSlot0320,y
+        sta EnCounter,x
+        sta EnData07,x
         lda $6AFE,x
         jsr L9A10
         sta EnData02,x
@@ -131,10 +131,10 @@ L98A9:
         jsr L9A10
         sta EnData03,x
     L990F:
-    jsr L99B7
-    lda $77F8,y
+    jsr LoadObjectSlotIDIntoY
+    lda UnknownMetroidProperty_ObjectSlot0320,y
     bne L9932
-    lda $0404,x
+    lda EnData04,x
     and #$04
     beq L9964
     lda EnData03,x
@@ -144,21 +144,21 @@ L98A9:
     jsr L99C3
     jsr L99BD
     tya
-    sta $77F8,x
+    sta UnknownMetroidProperty_ObjectSlot0320,x
     txa
     tay
 L9932:
     tya
     tax
-    lda $77F8,x
+    lda UnknownMetroidProperty_ObjectSlot0320,x
     php
     and #$0F
     cmp #$0C
     beq L9941
-        inc $77F8,x
+        inc UnknownMetroidProperty_ObjectSlot0320,x
     L9941:
     tay
-    lda L99D7,y
+    lda RTS_99D7,y
     sta $04
     sty $05
     lda #$0C
@@ -184,12 +184,12 @@ L9967:
         jsr L99AE
     L9971:
     ldy #$00
-    lda $77F8
-    ora $77F9
-    ora $77FA
-    ora $77FB
-    ora $77FC
-    ora $77FD
+    lda UnknownMetroidProperty_ObjectSlot0320
+    ora UnknownMetroidProperty_ObjectSlot0330
+    ora UnknownMetroidProperty_ObjectSlot0340
+    ora UnknownMetroidProperty_ObjectSlot0350
+    ora UnknownMetroidProperty_ObjectSlot0360
+    ora UnknownMetroidProperty_ObjectSlot0370
     and #$0C
     cmp #$0C
     bne L999E
@@ -212,13 +212,13 @@ L999E:
     jmp CommonEnemyJump_00_01_02
 
 L99AE:
-    jsr L99B7
+    jsr LoadObjectSlotIDIntoY
 MetroidRoutine_L99B1:
     lda #$00
     sta $77F8,y
     rts
 
-L99B7:
+LoadObjectSlotIDIntoY:
     txa
     jsr Adiv16_
     tay
@@ -234,12 +234,12 @@ L99C3:
     lda #$00
     sta EnData02,x
     sta EnData03,x
-    sta $0407,x
-    sta $0406,x
+    sta EnData07,x
+    sta EnCounter,x
 L99D1:
-    sta $6AFF,x
-    sta $6AFE,x
-L99D7:
+    sta EnData1B,x
+    sta EnData1A,x
+RTS_99D7:
     rts
 
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
@@ -249,7 +249,7 @@ L99E4:
     sta $09
     lda ObjectY
     sta $08
-    lda $030C
+    lda ObjectHi
     sta $0B
     rts
 
@@ -265,7 +265,7 @@ L99F4:
 
 L9A06:
     lsr
-    lda $0408,x
+    lda EnData08,x
     rol
     tay
     lda $77F2,y

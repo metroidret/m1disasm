@@ -206,7 +206,7 @@ LoadTableAt977B: ; L80B0
 ; Up movement related ?
 L80B8:
     ldx PageIndex
-    bcs L80FA ; If MoveUpOnePixel returned the carry flag, exit
+    bcs RTS_80FA ; If MoveUpOnePixel returned the carry flag, exit
 ; Otherwise, do stuff, and make sure it doesn't move anymore pixels the rest of this frame
     lda EnData05,X
     bpl L80C7
@@ -248,13 +248,13 @@ L80F6:
     lda #$01
     sta $66
 
-L80FA:
+RTS_80FA:
     rts
 ;-------------------------------------------------------------------------------
 ; Down movement related?
 L80FB:
     ldx PageIndex
-    bcs L8133
+    bcs RTS_8133
     lda EnData05,X
     bpl L810A
 L8104:
@@ -284,14 +284,14 @@ L8123:
 L812F:
     lda #$01
     sta $66
-L8133:
+RTS_8133:
     rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related ?
 L8134:
     ldx PageIndex
-    bcs L816D
+    bcs RTS_816D
 
     jsr LoadTableAt977B
     bpl L815E
@@ -323,14 +323,14 @@ L8169:
     lda #$01
     sta $66
 
-L816D:
+RTS_816D:
     rts
 
 ;-------------------------------------------------------------------------------
 ; Left Movement related?
 L816E:
     ldx PageIndex
-    bcs L81B0
+    bcs RTS_81B0
     jsr LoadTableAt977B
     bpl L81A0
     lda EnData05,X
@@ -365,7 +365,7 @@ L81A0:
 L81AC:
     lda #$01
     sta $66
-L81B0:
+RTS_81B0:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ SetBit5OfEnData05_AndClearEnData1B:
 ; Horizontal Movement Related
 L81C7:
     jsr LoadBit5ofTableAt968B
-    bne L81F5
+    bne RTS_81F5
     lda #$01
     jsr XorEnData05
     lda EnData1B,X
@@ -399,7 +399,7 @@ L81C7:
     sta EnData1B,X
 
     jsr LoadBit5ofTableAt968B
-    bne L81F5
+    bne RTS_81F5
     jsr LoadTableAt977B
     sec
     bpl L81ED
@@ -413,7 +413,7 @@ L81ED:
     sbc EnData03,X
     sta EnData03,X
 
-L81F5:
+RTS_81F5:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -426,7 +426,7 @@ LoadBit5ofTableAt968B:
 ; Vertical Movement Related
 L81FC:
     jsr LoadBit5ofTableAt968B
-    bne L81F5 ; Exit if bit 5 is set
+    bne RTS_81F5 ; Exit if bit 5 is set
     lda #$04
     jsr XorEnData05
     lda EnData1A,X
@@ -434,7 +434,7 @@ L81FC:
     sta EnData1A,X
 
     jsr LoadBit5ofTableAt968B
-    bne L822A ; Exit if bit 5 is set
+    bne RTS_822A ; Exit if bit 5 is set
     jsr LoadTableAt977B
     sec
     bpl L8222
@@ -447,7 +447,7 @@ L8222:
     lda #$00
     sbc EnData02,X
     sta EnData02,X
-L822A:
+RTS_822A:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -808,7 +808,7 @@ L83F5:
     ldy #$00
     sty $00
     ldx PageIndex
-    bcc L844A
+    bcc RTS_844A
     inc $00
     ldy EnYRoomPos,X
     bne L8429
@@ -817,9 +817,9 @@ L83F5:
     cmp #$02
     bcs L8429
     lda $FC
-    beq L844A
+    beq RTS_844A
     jsr GetOtherNameTableIndex
-    beq L844A
+    beq RTS_844A
     jsr SwitchEnemyNameTable
 L8429:
     dey
@@ -842,7 +842,7 @@ L8441:
         inc EnData1D,X
     L8449:
     sec
-L844A:
+RTS_844A:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -860,7 +860,7 @@ L844B:
     ldy #$00
     sty $00
     ldx PageIndex
-    bcc L84A6
+    bcc RTS_84A6
     inc $00
     ldy EnYRoomPos,X
     cpy #$EF
@@ -870,9 +870,9 @@ L844B:
     cmp #$02
     bcs L8481
     lda $FC
-    beq L84A6
+    beq RTS_84A6
     jsr GetOtherNameTableIndex
-    bne L84A6
+    bne RTS_84A6
     jsr SwitchEnemyNameTable
 L8481:
     iny
@@ -889,14 +889,14 @@ L8481:
     L8497:
     dec EnYRoomPos,X
     clc
-    bcc L84A6
+    bcc RTS_84A6
 L849D:
     lda EnData05,X
     bmi L84A5
         dec EnData1D,X
     L84A5:
     sec
-L84A6:
+RTS_84A6:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -914,7 +914,7 @@ L84A7:
     ldy #$00
     sty $00
     ldx PageIndex
-    bcc L84FD
+    bcc RTS_84FD
     inc $00
     ldy EnXRoomPos,X
     bne L84DA
@@ -926,7 +926,7 @@ L84A7:
         jsr GetOtherNameTableIndex
     L84D4:
     clc
-    beq L84FD
+    beq RTS_84FD
     jsr SwitchEnemyNameTable
 L84DA:
     dec EnXRoomPos,X
@@ -940,14 +940,14 @@ L84DA:
     L84EE:
     inc EnXRoomPos,X
     clc
-    bcc L84FD
+    bcc RTS_84FD
 L84F4:
     lda EnData05,X
     bpl L84FC
         inc EnData1D,X
     L84FC:
     sec
-L84FD:
+RTS_84FD:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -966,7 +966,7 @@ L84FE:
     ldy #$00
     sty $00
     ldx PageIndex
-    bcc L8559
+    bcc RTS_8559
     inc $00
     inc EnXRoomPos,X
     bne L8536
@@ -980,7 +980,7 @@ L84FE:
     L852D:
         dec EnXRoomPos,X
         clc
-        bcc L8559
+        bcc RTS_8559
     L8533:
     jsr SwitchEnemyNameTable
 
@@ -997,7 +997,7 @@ L8536:
     L854A:
     dec EnXRoomPos,X
     clc
-    bcc L8559
+    bcc RTS_8559
 
 L8550:
     lda EnData05,X
@@ -1005,7 +1005,7 @@ L8550:
         dec EnData1D,X
     L8558:
     sec
-L8559:
+RTS_8559:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1042,9 +1042,9 @@ XorEnData05: ; L856B
 
 SamusEnterDoor:
     lda DoorStatus                  ;The code determines if Samus has entered a door if the-->
-    bne L8B6C                       ;door status is 0, but door data information has been-->
+    bne RTS_8B6C                       ;door status is 0, but door data information has been-->
     ldy SamusDoorData               ;written. If both conditions are met, Samus has just-->
-    beq L8B6C                       ;entered a door.
+    beq RTS_8B6C                       ;entered a door.
     sta CurrentMissilePickups       ;
     sta CurrentEnergyPickups        ;Reset current missile and energy power-up counters.
     lda RandomNumber1               ;
@@ -1090,7 +1090,7 @@ SetDoorEntryInfo:
     sta SamusDoorData               ;out of the door as she did going in.
     lda #$05                        ;
     sta ObjAction                   ;Indicate Samus is in a door.
-L8B6C:
+RTS_8B6C:
     rts                             ;
 
 L8B6D:

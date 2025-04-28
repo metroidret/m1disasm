@@ -95,7 +95,7 @@ AreaPointers:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    jmp PolypRTS                       ;Area specific routine.(RTS)
+    jmp RTS_Polyp                       ;Area specific routine.(RTS)
 
 TwosCompliment_:
     eor #$FF                        ;

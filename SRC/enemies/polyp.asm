@@ -23,7 +23,7 @@ PolypRoutine:
     .elseif BANK = 5
         and #$07
     .endif
-    bne PolypRTS
+    bne RTS_Polyp
     lsr $0405,x
     lda #$03
     sta $87
@@ -31,11 +31,11 @@ PolypRoutine:
     lsr
     rol $0405,x
     and #$03
-    beq PolypRTS
+    beq RTS_Polyp
     sta $88
     lda #$02
     sta $85
     jmp CommonJump_0B
 
-PolypRTS:
+RTS_Polyp:
     rts
