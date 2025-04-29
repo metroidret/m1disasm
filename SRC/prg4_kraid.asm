@@ -95,7 +95,7 @@ TwosComplement_:
     clc                             ;The following routine returns the twos-->
     adc #$01                        ;complement of the value stored in A.
 L95CB:
-    rts                             ;
+    rts
 
 L95CC:  .byte $1D                       ;Kraid's room.
 
@@ -282,7 +282,7 @@ CommonEnemyJump_00_01_02:
 ;  on removing it.
 
 ; Area Specific Routine
-L9C49:  RTS
+L9C49:  rts
 
 ; What's this table?
 L9C4A:  .byte $22, $FF, $FF, $FF, $FF

@@ -289,6 +289,11 @@ MotherBrainStatus      = $98     ;#$00=Mother brain not in room, #$01=Mother bra
                                         ;#$09, #$0A=Mother brain already dead.
 MotherBrainHits        = $99     ;Number of times mother brain has been hit. Dies at #$20.
 
+MotherBrain9A          = $9A
+MotherBrain9B          = $9B
+MotherBrainAnimFrameTableID = $9C
+MotherBrainNameTable   = $9D     ;what is this
+
 SpareMemB7             = $B7     ;Written to in title routine and accessed by unsed routine.
 SpareMemB8             = $B8     ;Written to in title routine and accessed by unsed routine.
 SpareMemBB             = $BB     ;Written to in title routine, but never accessed.

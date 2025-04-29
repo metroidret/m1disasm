@@ -16,38 +16,26 @@ is_windows = os.path.join("a", "b") == "a\\b"
 cc65_bin_path = "cc65\\bin\\" if is_windows else "cc65-master/bin/"
 ext = ".exe" if is_windows else ""
 
-banks_asm = [
-    "header.asm",
-    "prg0_title.asm",
-    "prg1_brinstar.asm",
-    "prg2_norfair.asm",
-    "prg3_tourian.asm",
-    "prg4_kraid.asm",
-    "prg5_ridley.asm",
-    "prg6_graphics.asm",
-    "prg7_engine.asm",
+banks = [
+    "header",
+    "prg0_title",
+    "prg1_brinstar",
+    "prg2_norfair",
+    "prg3_tourian",
+    "prg4_kraid",
+    "prg5_ridley",
+    "prg6_graphics",
+    "prg7_engine",
 ]
 
-banks_o = [
-    "header.o",
-    "bank0.o",
-    "bank1.o",
-    "bank2.o",
-    "bank3.o",
-    "bank4.o",
-    "bank5.o",
-    "bank6.o",
-    "bank7.o",
-]
-    
 print('Assembling .asm files')
-for i in range(len(banks_o)):
-    run_or_exit(cc65_bin_path + "ca65" + ext + " SRC/" + banks_asm[i] + " -o out/" + banks_o[i], "Assembler Error.")
-    print(banks_o[i] + ' assembled')
+for i in range(len(banks)):
+    run_or_exit(cc65_bin_path + "ca65" + ext + " SRC/" + banks[i] + ".asm -o out/" + banks[i] + ".o -l out/" + banks[i] + ".lst -g", "Assembler Error.")
+    print(banks[i] + '.o assembled')
 print('Success\n')
 
 print('Linking .o files')
-run_or_exit(cc65_bin_path + "ld65" + ext + " " + " ".join(["out/" + bank_o for bank_o in banks_o]) + " -C SRC/main.cfg -o out/M1.nes -m out/M1.map", "Linker Error.")
+run_or_exit(cc65_bin_path + "ld65" + ext + " " + " ".join([("out/" + bank + ".o") for bank in banks]) + " -C SRC/main.cfg -o out/M1.nes -m out/M1.map -Ln out/M1.lbl", "Linker Error.")
 print('Success\n')
 
 with open("out/M1.nes", "rb") as f:

@@ -219,9 +219,9 @@ L98A9:
     L9956:
     sta $05
     ; set metroid position to Samus position
-    jsr MetroidPrepareCommonJump_0D
+    jsr StoreSamusPositionToTemp
     jsr CommonJump_0D ; scroll enemy position and update enemy speed?
-    jsr MetroidSaveResultsOfCommonJump_0D
+    jsr LoadPositionFromTemp
     jmp L9967
 
 L9964:
@@ -302,7 +302,7 @@ ClearRinkaSomething: ; referenced in rinka.asm
 Table99D8:
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
 
-MetroidPrepareCommonJump_0D:
+StoreSamusPositionToTemp:
     ; put Samus position as parameters to CommonJump_0D
     lda ObjectX
     sta $09
@@ -312,7 +312,7 @@ MetroidPrepareCommonJump_0D:
     sta $0B
     rts
 
-MetroidSaveResultsOfCommonJump_0D:
+LoadPositionFromTemp:
     ; save function result as enemy position
     lda $09
     sta EnXRoomPos,x

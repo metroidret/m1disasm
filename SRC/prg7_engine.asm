@@ -8882,9 +8882,11 @@ LF410:
     jsr CommonEnemyAI
 ; Entry Point 2 ; CommonJump_02
 LF416:
+    ; check if enemy is miniboss
     ldx PageIndex
     lda EnSpecialAttribs,x
     bpl Lx301
+    
     lda ObjectCntrl
     bmi Lx301
     lda #$A3

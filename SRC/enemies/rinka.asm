@@ -100,7 +100,7 @@ L9AB0:
             lda #$00
             sta EnStatus,x
         L9AF1:
-        jsr MetroidSaveResultsOfCommonJump_0D
+        jsr LoadPositionFromTemp
     L9AF4:
     lda #$08
     jmp CommonJump_01
