@@ -26,7 +26,7 @@ BANK .set 3
 .export GFX_KraidSprites
 .export GFX_RidleySprites
 .export GotoLA320
-.export GotoMetroid_LA315
+.export GotoClearAllMetroidLatches
 .export GotoL9C6F
 .export GotoCannonRoutine
 .export GotoMotherBrainRoutine
@@ -91,8 +91,8 @@ AreaPointers:
 ; Special Tourian Routines
 GotoLA320:
     jmp LA320
-GotoMetroid_LA315:
-    jmp Metroid_LA315
+GotoClearAllMetroidLatches:
+    jmp ClearAllMetroidLatches
 GotoL9C6F:
     jmp L9C6F
 GotoCannonRoutine:
@@ -273,26 +273,26 @@ L9B44:
     stx $97
     ldy $6BF4,x
     bne L9B4C
-L9B4B:
+RTS_9B4B:
     rts
 
 L9B4C:
     jsr L9C4D
     tya
-    bne L9B4B
+    bne RTS_9B4B
     ldy $010B
     iny
     bne L9B65
     lda $6BF8,x
     cmp #$05
-    beq L9B4B
+    beq RTS_9B4B
     jsr L9B70
     jmp L9C2B
 
 L9B65:
     lda $2D
     and #$02
-    bne L9B4B
+    bne RTS_9B4B
     lda #$19
     jmp L9C31
 
@@ -348,7 +348,7 @@ L9BC6:
     rts
 
 L9BC8:
-    sty $4B
+    sty PageIndex
     lda $6BF5,x
     sta EnYRoomPos,y
     lda $6BF6,x
@@ -384,7 +384,7 @@ L9BC8:
     tya
     tax
     jsr CommonJump_0D
-    jsr L99F4
+    jsr MetroidSaveResultsOfCommonJump_0D
     ldx $97
     rts
 
@@ -402,7 +402,7 @@ L9C31:
     lda $6BF7,x
     sta $6BDB
     lda #$E0
-    sta $4B
+    sta PageIndex
     jmp CommonJump_14
 
 L9C4D:
@@ -422,10 +422,10 @@ L9C4D:
         bcs L9C6D
         sec
     L9C6B:
-    bcs L9C6E
+    bcs RTS_9C6E
 L9C6D:
     iny
-L9C6E:
+RTS_9C6E:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -478,26 +478,26 @@ L9C6F:
     sta MotherBrainStatus
 L9CC3:
     lda $010D
-    beq L9CD5
+    beq RTS_9CD5
     lda $010C
     eor $02
     lsr
-    bcs L9CD5
+    bcs RTS_9CD5
     lda #$00
     sta $010D
-L9CD5:
+RTS_9CD5:
     rts
 
 L9CD6:
     lda $8B,x
-    bmi L9CE5
+    bmi RTS_9CE5
     lda $8C,x
     eor $02
     lsr
-    bcs L9CE5
+    bcs RTS_9CE5
     lda #$FF
     sta $8B,x
-L9CE5:
+RTS_9CE5:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -512,7 +512,7 @@ CannonRoutine:
         adc #$08
         tax
         bpl L9CE8
-    bmi L9D20
+    bmi RTS_9D20
 L9CF6:
     lda ($00),y
     jsr Adiv16_
@@ -532,7 +532,7 @@ L9CF6:
     sta $6BF6,x
     jsr L9D88
     sta $6BF7,x
-L9D20:
+RTS_9D20:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -589,18 +589,18 @@ L9D64:
 RinkaSpawnerRoutine:
     ldx #$03
     jsr L9D75
-        bmi L9D87
+        bmi RTS_9D87
         ldx #$00
     L9D75:
     lda $8B,x
-    bpl L9D87
+    bpl RTS_9D87
     lda ($00),y
     jsr Adiv16_
     sta $8B,x
     jsr L9D88
     sta $8C,x
     lda #$FF
-L9D87:
+RTS_9D87:
     rts
 
 L9D88:
@@ -624,7 +624,7 @@ L9DCF:  .byte $F7, $00, $09, $09, $0B
 ; This is code:
 MotherBrainStatusHandler:
     lda MotherBrainStatus
-    beq L9DF1
+    beq RTS_9DF1
     jsr CommonJump_ChooseRoutine
         .word Exit__    ;#$00=Mother brain not in room,
         .word L9E22     ;#$01=Mother brain in room
@@ -637,19 +637,19 @@ MotherBrainStatusHandler:
         .word L9F02     ;#$08=Initialize mother brain
         .word L9FDA     ;#$09
         .word Exit__    ;#$0A=Mother brain already dead.
-L9DF1:
+RTS_9DF1:
     rts
 
 ;-------------------------------------------------------------------------------
 L9DF2:
-    lda $030C
+    lda ObjectHi
     eor $9D
-    bne L9DF1
+    bne RTS_9DF1
     lda ObjectX
     sec
     sbc #$48
     cmp #$2F
-    bcs L9DF1
+    bcs RTS_9DF1
     lda ObjectY
     sec
     sbc #$80
@@ -657,13 +657,13 @@ L9DF2:
         jsr TwosComplement_
     L9E0E:
     cmp #$20
-    bcs L9DF1
+    bcs RTS_9DF1
     lda #$00
     sta $6E
     lda #$02
     sta $6F
     lda #$38
-    sta $030A
+    sta SamusHit
     jmp CommonJump_SubtractHealth
 
 ;-------------------------------------------------------------------------------
@@ -756,7 +756,7 @@ L9E86:
     L9EB5:
     ldy MotherBrainStatus
     dey
-    bne L9ED5
+    bne RTS_9ED5
     sty $9A
     lda #$04
     sta MotherBrainStatus
@@ -767,12 +767,12 @@ L9E86:
     cpy #$04
     beq L9ED3
         ldx #$00
-        bcc L9ED5
+        bcc RTS_9ED5
         jmp L9ED6
 
     L9ED3:
     lsr $9F
-L9ED5:
+RTS_9ED5:
     rts
 
 L9ED6:
@@ -827,18 +827,18 @@ L9F02:
         adc #$61
         sta $0509
         lda #$00
-        sta $4B
+        sta PageIndex
         lda $07A0
-        bne L9F38
+        bne RTS_9F38
         jsr CommonJump_15
-        bcs L9F38
+        bcs RTS_9F38
     L9F33:
     inc MotherBrainHits
     rts
 
 L9F36:
     inc MotherBrainStatus
-L9F38:
+RTS_9F38:
     rts
 
 L9F39:  .byte $00, $40, $08, $48, $80, $C0, $88, $C8
@@ -846,7 +846,7 @@ L9F41:  .byte $08, $02, $09, $03, $0A, $04, $0B, $05
 
 L9F49:
     jsr L9F69
-    bcs L9F64
+    bcs RTS_9F64
     lda #$00
     sta MotherBrainStatus
     lda #$99
@@ -856,7 +856,7 @@ L9F49:
     sta $010D
     lda $9D
     sta $010C
-L9F64:
+RTS_9F64:
     rts
 
 L9F65:  .byte $80, $B0, $A0, $90
@@ -871,24 +871,24 @@ L9F69:
     tay
     ldx L9F65,y
     lda #$01
-    sta $030F,x
+    sta SamusJumpDsplcmnt,x
     lda #$01
-    sta $0307,x
+    sta SamusOnElevator,x
     lda #$03
-    sta $0300,x
+    sta ObjAction,x
     lda $9D
-    sta $030C,x
+    sta ObjectHi,x
     lda #$10
     sta ObjectX,x
     lda #$68
     sta ObjectY,x
     lda #$55
-    sta $0305,x
-    sta $0306,x
+    sta AnimResetIndex,x
+    sta AnimIndex,x
     lda #$00
-    sta $0304,x
+    sta AnimDelay,x
     lda #$F7
-    sta $0303,x
+    sta AnimFrame,x
     lda #$10
     sta $0503
     lda #$40
@@ -899,42 +899,42 @@ L9F69:
     ora #$61
     sta $0509
     lda #$00
-    sta $4B
+    sta PageIndex
     jmp CommonJump_15
 
 ;-------------------------------------------------------------------------------
 L9FC0:
     lda #$10
-    ora $0680
-    sta $0680
-    lda $2C
-    bne L9FD9
+    ora NoiseSFXFlag
+    sta NoiseSFXFlag
+    lda Timer3
+    bne RTS_9FD9
     lda #$08
-    sta $0300
+    sta ObjAction
     lda #$0A
     sta MotherBrainStatus
     lda #$01
-    sta $1C
-L9FD9:
+    sta PalDataPending
+RTS_9FD9:
     rts
 
 ;-------------------------------------------------------------------------------
 L9FDA:
     jsr L9F69
-    bcs L9FEC
+    bcs RTS_9FEC
     lda $9D
     sta $010C
     ldy #$01
     sty $010D
     dey
     sty MotherBrainStatus
-L9FEC:
+RTS_9FEC:
     rts
 
 ;-------------------------------------------------------------------------------
 L9FED:
     lda $9E
-    beq LA01A
+    beq RTS_A01A
     lda $0684
     ora #$02
     sta $0684
@@ -947,7 +947,7 @@ L9FED:
     ldx #$00
     LA007:
         lda #$00
-        sta $0500,x
+        sta TileRoutine,x
         jsr L9EF9
         cmp #$D0
         bne LA007
@@ -956,13 +956,13 @@ L9FED:
 LA016:
     sty MotherBrainStatus
     sta $9F
-LA01A:
+RTS_A01A:
     rts
 
 ;-------------------------------------------------------------------------------
 LA01B:
     dec $9A
-    bne LA02D
+    bne RTS_A02D
     lda $2E
     and #$03
     sta $9C
@@ -971,7 +971,7 @@ LA01B:
     sbc MotherBrainHits
     lsr
     sta $9A
-LA02D:
+RTS_A02D:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -979,43 +979,43 @@ LA02E:
     dec $9B
     lda $9B
     asl
-    bne LA040
+    bne RTS_A040
     lda #$20
     sec
     sbc MotherBrainHits
     ora #$80
     eor $9B
     sta $9B
-LA040:
+RTS_A040:
     rts
 
 ;-------------------------------------------------------------------------------
 LA041:
     lda #$E0
-    sta $4B
+    sta PageIndex
     lda $9D
     sta $6BDB
     lda #$70
-    sta $04E0
+    sta EnYRoomPos+$E0
     lda #$48
-    sta $04E1
+    sta EnXRoomPos+$E0
     ldy $9C
     lda LA06D,y
-    sta $6BD7
+    sta EnAnimFrame+$E0
     jsr CommonJump_14
     lda $9B
-    bmi LA06C
+    bmi RTS_A06C
     lda LA06D+4
-    sta $6BD7
+    sta EnAnimFrame+$E0
     jsr CommonJump_14
-LA06C:
+RTS_A06C:
     rts
 
 LA06D:  .byte $13, $14, $15, $16, $17
 
 LA072:
     ldy MotherBrainHits
-    beq LA086
+    beq RTS_A086
     lda LA0C0,y
     clc
     adc $9A
@@ -1024,12 +1024,12 @@ LA072:
     cmp #$FF
     bne LA087
     dec $9A
-LA086:
+RTS_A086:
     rts
 
 LA087:
     adc #$44
-    sta $0508
+    sta TileWRAMLo
     php
     lda $9D
     asl
@@ -1037,10 +1037,10 @@ LA087:
     ora #$61
     plp
     adc #$00
-    sta $0509
+    sta TileWRAMHi
     lda #$00
-    sta $0503
-    sta $4B
+    sta TileAnimFrame
+    sta PageIndex
     jmp CommonJump_15
 
 LA0A3:  .byte $00, $02, $04, $06, $08, $40, $80, $C0, $48, $88, $C8, $FF, $42, $81, $C1, $27
@@ -1052,7 +1052,7 @@ LA0C3:  .byte $11, $16, $1A
 LA0C6:
     lda $71
     beq LA13E
-    ldx $4B
+    ldx PageIndex
     lda $0300,x
     cmp #$0B
     bne LA13E
@@ -1060,7 +1060,7 @@ LA0C6:
     bne LA103
         ldx #$00
     LA0D9:
-        lda $0500,x
+        lda TileRoutine,x
         beq LA0E7
             jsr L9EF9
             cmp #$D0
@@ -1068,17 +1068,17 @@ LA0C6:
             beq LA13E
         LA0E7:
         lda #$8C
-        sta $0508,x
+        sta TileWRAMLo,x
         lda $05
-        sta $0509,x
+        sta TileWRAMHi,x
         lda #$01
-        sta $0503,x
-        lda $4B
+        sta TileAnimFrame,x
+        lda PageIndex
         pha
-        stx $4B
+        stx PageIndex
         jsr CommonJump_15
         pla
-        sta $4B
+        sta PageIndex
         bne LA13E
     LA103:
     lda $04
@@ -1126,8 +1126,8 @@ LA142:
     tay
     lda $71
     beq LA15C
-    ldx $4B
-    lda $0300,x
+    ldx PageIndex
+    lda ObjAction,x
     cmp #$0B
     bne LA15C
     cpy #$5E
@@ -1138,36 +1138,36 @@ LA142:
     sta $9E
 LA15C:
     tya
-LA15D:
+RTS_A15D:
     rts
 
 ;-------------------------------------------------------------------------------
 LA15E:
-    ldy $010B
+    ldy EndTimerHi
     iny
-    bne LA1DA
+    bne RTS_A1DA
     ldy #$03
     jsr LA16B
         ldy #$00
     LA16B:
-    sty $4B
-    lda $008B,y
-    bmi LA15D
-    lda $008C,y
-    eor $2D
+    sty PageIndex
+    lda $8B,y
+    bmi RTS_A15D
+    lda $8C,y
+    eor FrameCount
     lsr
-    bcc LA15D
+    bcc RTS_A15D
     lda MotherBrainStatus
     cmp #$04
-    bcs LA15D
+    bcs RTS_A15D
     lda $2D
     and #$06
-    bne LA15D
+    bne RTS_A15D
     ldx #$20
     LA188:
         lda EnStatus,x
         beq LA19C
-        lda $0405,x
+        lda EnData05,x
         and #$02
         beq LA19C
         txa
@@ -1181,97 +1181,97 @@ LA19C:
     lda #$01
     sta EnStatus,x
     lda #$04
-    sta $6B02,x
+    sta EnDataIndex,x
     lda #$00
-    sta $040F,x
-    sta $0404,x
+    sta EnSpecialAttribs,x
+    sta EnData04,x
     jsr CommonJump_0E
     lda #$F7
-    sta $6AF7,x
-    ldy $4B
-    lda $008C,y
+    sta EnAnimFrame,x
+    ldy PageIndex
+    lda $8C,y
     sta EnNameTable,x
-    lda $008D,y
+    lda $8D,y
     asl
-    ora $008B,y
+    ora $8B,y
     tay
     lda LA1DB,y
     jsr L9EE7
-    ldx $4B
+    ldx PageIndex
     inc $8D,x
     lda $8D,x
     cmp #$06
-    bne LA1DA
+    bne RTS_A1DA
     lda #$00
 LA1D8:
     sta $8D,x
-LA1DA:
+RTS_A1DA:
     rts
 
 LA1DB:  .byte $22, $2A, $2A, $BA, $B2, $2A, $C4, $2A, $C8, $BA, $BA, $BA
 
 ;-------------------------------------------------------------------------------
 LA1E7:
-    ldy $010B
+    ldy EndTimerHi
     iny
-    beq LA237
-    lda $010A
+    beq RTS_A237
+    lda EndTimerLo
     sta $03
     lda #$01
     sec
     jsr CommonJump_Base10Subtract
-    sta $010A
-    lda $010B
+    sta EndTimerLo
+    lda EndTimerHi
     sta $03
     lda #$00
     jsr CommonJump_Base10Subtract
-    sta $010B
+    sta EndTimerHi
     lda $2D
     and #$1F
     bne LA216
-        lda $0681
+        lda SQ1SFXFlag
         ora #$08
-        sta $0681
+        sta SQ1SFXFlag
     LA216:
-    lda $010A
-    ora $010B
-    bne LA237
-    dec $010B
+    lda EndTimerLo
+    ora EndTimerHi
+    bne RTS_A237
+    dec EndTimerHi
     sta MotherBrainHits
     lda #$07
     sta MotherBrainStatus
-    lda $0680
+    lda NoiseSFXFlag
     ora #$01
-    sta $0680
+    sta NoiseSFXFlag
     lda #$0C
-    sta $2C
+    sta Timer3
     lda #$0B
-    sta $1C
-LA237:
+    sta PalDataPending
+RTS_A237:
     rts
 
 ;-------------------------------------------------------------------------------
 LA238:
     lda $010D
-    beq LA28A
+    beq RTS_A28A
     lda $010C
-    sta $6BDB
+    sta EnNameTable+$E0
     lda #$84
-    sta $04E0
+    sta EnYRoomPos+$E0
     lda #$64
-    sta $04E1
+    sta EnXRoomPos+$E0
     lda #$1A
-    sta $6BD7
+    sta EnAnimFrame+$E0
     lda #$E0
-    sta $4B
-    lda $5B
+    sta PageIndex
+    lda SpritePagePos
     pha
     jsr CommonJump_14
     pla
-    cmp $5B
-    beq LA28A
+    cmp SpritePagePos
+    beq RTS_A28A
     tax
-    lda $010B
+    lda EndTimerHi
     lsr
     lsr
     lsr
@@ -1279,12 +1279,12 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta $0201,x
-    lda $010B
+    sta SpriteRAM+$01,x
+    lda EndTimerHi
     and #$0F
     ora #$A0
-    sta $0205,x
-    lda $010A
+    sta SpriteRAM+$05,x
+    lda EndTimerLo
     lsr
     lsr
     lsr
@@ -1292,14 +1292,14 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta $0209,x
-LA28A:
+    sta SpriteRAM+$09,x
+RTS_A28A:
     rts
 
 ;-------------------------------------------------------------------------------
 LA28B:
     lda #$10
-    sta $4B
+    sta PageIndex
     ldx #$20
     LA291:
         jsr LA29B
@@ -1312,7 +1312,7 @@ LA29B:
     lda $0758,x
     and #$0F
     cmp #$01
-    bne LA28A
+    bne RTS_A28A
     lda $075D,x
     beq LA2F2
     inc $075B,x
@@ -1330,7 +1330,7 @@ LA2BA:
     sta $0518
     lda $075A,x
     sta $0519
-    lda $07A0
+    lda PPUStrIndex
     bne LA2DA
         txa
         pha
@@ -1371,11 +1371,11 @@ LA30A:
 
 LA310:  .byte $0C, $0D, $0E, $0F, $07
 
-; maybe smtg to do with removing the connection between metroid and samus
-Metroid_LA315:
+; Samus no longer has a metroid on her
+ClearAllMetroidLatches:
     ldy #$05
     LA317:
-        jsr MetroidRoutine_L99B1
+        jsr ClearMetroidLatch
         dey
         bpl LA317
     sta $92
@@ -1385,7 +1385,7 @@ LA320:
     txa
     jsr Adiv16_
     tay
-    jsr MetroidRoutine_L99B1
+    jsr ClearMetroidLatch
     sta $92
     rts
 

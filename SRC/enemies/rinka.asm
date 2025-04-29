@@ -6,7 +6,7 @@ RinkaRoutine:
     cpy $81
     bne L9AB0
     lda #$00
-    jsr L99D1
+    jsr ClearRinkaSomething ; in metroid.asm
     sta $6AFC,x
     sta $6AFD,x
     lda ObjectX
@@ -100,7 +100,7 @@ L9AB0:
             lda #$00
             sta EnStatus,x
         L9AF1:
-        jsr L99F4
+        jsr MetroidSaveResultsOfCommonJump_0D
     L9AF4:
     lda #$08
     jmp CommonJump_01

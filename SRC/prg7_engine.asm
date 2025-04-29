@@ -132,7 +132,7 @@ SoundEngine            = $B3B4
 .import IntroStarsData
 
 .import GotoLA320
-.import GotoMetroid_LA315
+.import GotoClearAllMetroidLatches
 .import GotoL9C6F
 .import GotoCannonRoutine
 .import GotoMotherBrainRoutine
@@ -1700,8 +1700,9 @@ DestroyEnemies: ; LC8BB
         pla
         inx
         bne LC8BF
-    stx MetroidOnSamus              ;Samus had no Metroid stuck to her.
-    jmp GotoMetroid_LA315
+    ;Force Samus to have no Metroid stuck to her.
+    stx MetroidOnSamus
+    jmp GotoClearAllMetroidLatches
 
 ; SamusInit
 ; =========
@@ -3479,7 +3480,7 @@ SamusDoor:
     Lx049:
     jsr LD48C
     jsr LED65
-    jsr GotoMetroid_LA315 ; if it is defined in the current bank
+    jsr GotoClearAllMetroidLatches ; if it is defined in the current bank
     lda ItemRoomMusicStatus
     beq Lx051
     pha
@@ -10358,9 +10359,8 @@ RTS_X410:
     rts
 
 ;-------------------------------------------------------------------------------
-UpdateTourianItems:
+UpdateTourianItems: ; $FDE3
 ; Adds mother brain and zebetite
-LFDE3:
     lda EndTimerHi          ; Determine if this is the first frame the end timer is running
     cmp #$99                ; (it will have a value of 99.99 the first frame)
     bne Lx411
@@ -10382,8 +10382,7 @@ Lx411:
         tax
         bne Lx412
 
-CheckZebetite:
-LFE05:
+CheckZebetite: ; $FE05
     lda $0758,x             ;
     sec
     sbc #$02                ;
