@@ -108,10 +108,10 @@ AreaPointers:
 AreaRoutine:
     jmp RTS_Polyp                       ;Area specific routine.
 
-TwosCompliment_:
+TwosComplement_:
     eor #$FF                        ;
     clc                             ;The following routine returns the twos-->
-    adc #$01                        ;compliment of the value stored in A.
+    adc #$01                        ;complement of the value stored in A.
     rts                             ;
 
 L95CC:  .byte $12                       ;Ridley's room.

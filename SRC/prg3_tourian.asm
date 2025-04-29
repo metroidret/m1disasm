@@ -111,10 +111,10 @@ GotoLA142:
 AreaRoutine:
     jmp L9B25                       ;Area specific routine.
 
-TwosCompliment_:
+TwosComplement_:
     eor #$FF                        ;
     clc                             ;The following routine returns the twos-->
-    adc #$01                        ;compliment of the value stored in A.
+    adc #$01                        ;complement of the value stored in A.
 Exit__:
     rts                             ;
 
@@ -362,7 +362,7 @@ L9BC8:
     sta EnAnimDelay,y
     sta $0408,y
     pla
-    jsr TwosCompliment_
+    jsr TwosComplement_
     tax
     sta $040A,y
     ora #$02
@@ -654,7 +654,7 @@ L9DF2:
     sec
     sbc #$80
     bpl L9E0E
-        jsr TwosCompliment_
+        jsr TwosComplement_
     L9E0E:
     cmp #$20
     bcs L9DF1

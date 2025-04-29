@@ -19,7 +19,7 @@ RioRoutine:
     sec
     sbc ObjectY ; Compare with Samus' Y position
     bpl RioBranch
-        jsr TwosCompliment_
+        jsr TwosComplement_
     RioBranch:
     cmp #$10
     bcs RioExitA

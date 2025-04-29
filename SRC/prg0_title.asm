@@ -51,7 +51,7 @@ BANK .set 0
 .import EraseTile
 .import WritePPUByte
 .import PrepPPUPaletteString
-.import TwosCompliment
+.import TwosComplement
 .import WaitNMIPass
 .import ScreenOff
 .import WaitNMIPass_
@@ -846,11 +846,11 @@ DoSparkleSpriteCoord:
         sta IntroSpr0ByteType,x         ;Set IntroSpr0ByteType to #$00 after processing.
         pla                             ;
         jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
-        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
-        sta SparkleSpr0YChange,x        ;Twos compliment stored if Y coord decreasing.
+        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
+        sta SparkleSpr0YChange,x        ;Twos complement stored if Y coord decreasing.
         pla                             ;
         and #$0F                        ;Discard upper 4 bits.
-        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos compliment.
+        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
     L8867:
     sta SparkleSpr0XChange,x        ;Store amount to move spite in x direction.
     inc IntroSpr0Index,x            ;
@@ -860,8 +860,8 @@ DoSparkleSpriteCoord:
 NibbleSubtract:
     cmp #$08                        ;If bit 3 is set, nibble is a negative number-->
     bcc RTS_887A                       ;and lower three bits are converted to twos-->
-    and #$07                        ;compliment for subtraction, else exit.
-    jsr TwosCompliment              ;($C3D4)Prepare for subtraction with twos compliment.
+    and #$07                        ;complement for subtraction, else exit.
+    jsr TwosComplement              ;($C3D4)Prepare for subtraction with twos complement.
 RTS_887A:
     rts                             ;
 
@@ -2862,7 +2862,7 @@ UpdateSpriteCoords:
     ldy IntroSpr0XDir,x             ;Get byte describing if sprite increasing or decreasing pos.
     bpl L982E                       ;
         eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-        clc                             ;value in A (result from CalcDisplacement) to twos compliment.
+        clc                             ;value in A (result from CalcDisplacement) to twos complement.
         adc #$01                        ;
     L982E:
     clc                             ;
@@ -2880,7 +2880,7 @@ UpdateSpriteCoords:
         ldy IntroSpr0YDir,x             ;Get byte describing if sprite increasing or decreasing pos.
         bpl L9851                       ;
             eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-            clc                             ;value in A (result from CalcDisplacement) to twos compliment.
+            clc                             ;value in A (result from CalcDisplacement) to twos complement.
             adc #$01                        ;
         L9851:
         clc                             ;

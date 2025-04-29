@@ -1,10 +1,12 @@
 MetroidRoutine:
-    ldy $010B
+    ; Delete self if escape timer is active (EndTimerHi != $FF)
+    ldy EndTimerHi
     iny
     beq L9804
         lda #$00
         sta EnStatus,x
     L9804:
+    
     lda #$0F
     sta $00
     sta $01
@@ -15,42 +17,44 @@ MetroidRoutine:
     cmp #$03
     beq CommonEnemyJump_00_01_02
     jsr LoadObjectSlotIDIntoY
-    lda UnknownMetroidProperty_ObjectSlot0320,y
+    lda MetroidLatch0400,y
     beq L9822
         jmp L9899
 
     L9822:
+    ; load whether the metroid is red ($00) or green ($01) into y
     ldy EnData08,x
-    lda UnknownMetroidProperty_ObjectSlotSamus,y
+    
+    lda MetroidMaxSpeed,y
     pha
     lda EnData02,x
     bpl L983B
         pla
-        jsr TwosCompliment_
+        jsr TwosComplement_
         pha
         lda #$00
         cmp EnCounter,x
         sbc EnData02,x
     L983B:
-    cmp UnknownMetroidProperty_ObjectSlotSamus,y
+    cmp MetroidMaxSpeed,y
     pla
     bcc L9849
         sta EnData02,x
         lda #$00
         sta EnCounter,x
     L9849:
-    lda UnknownMetroidProperty_ObjectSlotSamus,y
+    lda MetroidMaxSpeed,y
     pha
     lda EnData03,x
     bpl L985F
         pla
-        jsr TwosCompliment_
+        jsr TwosComplement_
         pha
         lda #$00
         cmp EnData07,x
         sbc EnData03,x
     L985F:
-    cmp UnknownMetroidProperty_ObjectSlotSamus,y
+    cmp MetroidMaxSpeed,y
     pla
     bcc L986D
         sta EnData03,x
@@ -60,12 +64,12 @@ MetroidRoutine:
     lda EnData05,x
     pha
     jsr L9A06
-    sta $6AFF,x
+    sta EnData1B,x
     pla
     lsr
     lsr
     jsr L9A06
-    sta $6AFE,x
+    sta EnData1A,x
     lda EnStatus,x
     cmp #$04
     bne L9894
@@ -90,25 +94,35 @@ L98A9:
     lda EnData04,x
     and #$20
     beq L990F
+        ; check if metroid is latched onto Samus
         jsr LoadObjectSlotIDIntoY
-        lda UnknownMetroidProperty_ObjectSlot0320,y
+        lda MetroidLatch0400,y
         beq L98EF
-            lda EnData0E,x
-            cmp #$07
+            ; don't count bomb hit if not hit by a bomb explosion
+            lda EnWeaponAction,x
+            cmp #wa_Unknown7
             beq L98C3
-                cmp #$0A
+                cmp #wa_BombExplode
                 bne L9932
             L98C3:
-            lda $2D
+            
+            ; don't count bomb hit when bit 1 of FrameCount is set
+            lda FrameCount
             and #$02
             bne L9932
-            lda UnknownMetroidProperty_ObjectSlot0320,y
+            
+            ; count up one bomb hit
+            lda MetroidLatch0400,y
             clc
             adc #$10
-            sta UnknownMetroidProperty_ObjectSlot0320,y
+            sta MetroidLatch0400,y
+            
+            ; check if 5 bomb hits have been dealt to the metroid
             and #$70
             cmp #$50
             bne L9932
+            
+            ; the bomb hits have released the latch of the metroid onto Samus
             lda #$02
             ora EnSpecialAttribs,x
             sta EnData0C,x
@@ -119,20 +133,21 @@ L98A9:
             lda #$01
             sta EnData0D,x
         L98EF:
+        ; let go of Samus
         lda #$00
         sta EnData04,x
-        sta UnknownMetroidProperty_ObjectSlot0320,y
+        sta MetroidLatch0400,y
         sta EnCounter,x
         sta EnData07,x
-        lda $6AFE,x
+        lda EnData1A,x
         jsr L9A10
         sta EnData02,x
-        lda $6AFF,x
+        lda EnData1B,x
         jsr L9A10
         sta EnData03,x
     L990F:
     jsr LoadObjectSlotIDIntoY
-    lda UnknownMetroidProperty_ObjectSlot0320,y
+    lda MetroidLatch0400,y
     bne L9932
     lda EnData04,x
     and #$04
@@ -144,18 +159,18 @@ L98A9:
     jsr L99C3
     jsr L99BD
     tya
-    sta UnknownMetroidProperty_ObjectSlot0320,x
+    sta MetroidLatch0400,x
     txa
     tay
 L9932:
     tya
     tax
-    lda UnknownMetroidProperty_ObjectSlot0320,x
+    lda MetroidLatch0400,x
     php
     and #$0F
     cmp #$0C
     beq L9941
-        inc UnknownMetroidProperty_ObjectSlot0320,x
+        inc MetroidLatch0400,x
     L9941:
     tay
     lda RTS_99D7,y
@@ -164,10 +179,10 @@ L9932:
     lda #$0C
     sec
     sbc $05
-    ldx $4B
+    ldx PageIndex
     plp
     bmi L9956
-        jsr TwosCompliment_
+        jsr TwosComplement_
     L9956:
     sta $05
     jsr L99E4
@@ -183,31 +198,40 @@ L9967:
     bne L9971
         jsr L99AE
     L9971:
+    
+    ; MetroidOnSamus defaults to false
     ldy #$00
-    lda UnknownMetroidProperty_ObjectSlot0320
-    ora UnknownMetroidProperty_ObjectSlot0330
-    ora UnknownMetroidProperty_ObjectSlot0340
-    ora UnknownMetroidProperty_ObjectSlot0350
-    ora UnknownMetroidProperty_ObjectSlot0360
-    ora UnknownMetroidProperty_ObjectSlot0370
+    
+    ; Don't suck Samus's energy if no metroids are fully attached to Samus
+    lda MetroidLatch0400
+    ora MetroidLatch0410
+    ora MetroidLatch0420
+    ora MetroidLatch0430
+    ora MetroidLatch0440
+    ora MetroidLatch0450
     and #$0C
     cmp #$0C
     bne L999E
-    lda $0106
-    ora $0107
+    
+    ; Don't suck Samus's energy if she is dead
+    lda HealthLo
+    ora HealthHi
     beq L999E
-    sty $6F
+    
+    ; Subtract 1/4 health from Samus
+    sty HealthHiChange
     ldy #$04
-    sty $6E
+    sty HealthLoChange
     jsr CommonJump_SubtractHealth
+    ; Set MetroidOnSamus to true
     ldy #$01
 L999E:
-    sty $92
-    lda $6B
+    sty MetroidOnSamus
+    lda ObjectCntrl
     bmi L99AB
-        lda $6B02,x
+        lda EnDataIndex,x
         ora #$A2
-        sta $6B
+        sta ObjectCntrl
     L99AB:
     jmp CommonEnemyJump_00_01_02
 
@@ -215,7 +239,7 @@ L99AE:
     jsr LoadObjectSlotIDIntoY
 MetroidRoutine_L99B1:
     lda #$00
-    sta $77F8,y
+    sta MetroidLatch0400,y
     rts
 
 LoadObjectSlotIDIntoY:
@@ -268,7 +292,7 @@ L9A06:
     lda EnData08,x
     rol
     tay
-    lda $77F2,y
+    lda MetroidAccel,y
     rts
 
 L9A10:
@@ -276,7 +300,7 @@ L9A10:
     rol
     and #$01
     tay
-    lda $77F0,y
+    lda MetroidRepelSpeed,y
     rts
 
     .byte $F8, $08, $30, $D0, $60, $A0, $02, $04, $00, $00, $00, $00, $00, $00

@@ -90,10 +90,10 @@ L95B8:  .byte $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA
 AreaRoutine:
     jmp L9C49                       ;Area specific routine.
 
-TwosCompliment_:
+TwosComplement_:
     eor #$FF                        ;
     clc                             ;The following routine returns the twos-->
-    adc #$01                        ;compliment of the value stored in A.
+    adc #$01                        ;complement of the value stored in A.
 L95CB:
     rts                             ;
 

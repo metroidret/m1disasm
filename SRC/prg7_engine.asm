@@ -65,7 +65,7 @@ SoundEngine            = $B3B4
 .export EraseTile
 .export WritePPUByte
 .export PrepPPUPaletteString
-.export TwosCompliment
+.export TwosComplement
 .export Base10Subtract
 .export SubtractHealth
 .export SetProjectileAnim
@@ -928,9 +928,9 @@ SeparateControlBits:
 
 ;----------------------------------------[ Math routines ]-------------------------------------------
 
-TwosCompliment:
+TwosComplement:
     eor #$FF                        ;
-    clc                             ;Generate twos compliment of value stored in A.
+    clc                             ;Generate twos complement of value stored in A.
     adc #$01                        ;
     rts                             ;
 
@@ -2668,7 +2668,7 @@ LCDFA:
     Lx007:
     dex
     bne Lx008
-        jsr TwosCompliment              ;($C3D4)
+        jsr TwosComplement              ;($C3D4)
     Lx008:
     sta ObjHorzSpeed
 Lx009:
@@ -2814,7 +2814,7 @@ LCF2E:  lda SamusHit
     bmi Lx013
     bne RTS_X014
 Lx013:
-    jsr TwosCompliment              ;($C3D4)
+    jsr TwosComplement              ;($C3D4)
     sta SamusHorzAccel
 
 ClearHorzMvmntData:
@@ -3732,7 +3732,7 @@ Lx071:
     lsr
     bcc Lx073
         tya
-        jsr TwosCompliment              ;($C3D4)
+        jsr TwosComplement              ;($C3D4)
         sta ObjHorzSpeed,x
     Lx073:
     jsr LD609
@@ -5374,7 +5374,7 @@ NegativeDisplacement:
     sec                             ;NOTE:Setting carry makes solution 1 higher than expected.
     adc #$F8                        ;If flip bit is set in $04, this function flips the-->
 LDFB6:
-    clc                             ;object by using two compliment minus 8(Each sprite is-->
+    clc                             ;object by using two complement minus 8(Each sprite is-->
     rts                             ;8x8 pixels).
 
 ExplodeXDisplace:
@@ -5390,7 +5390,7 @@ ExplodeXDisplace:
     lda ($02),y                     ;Load placement data byte.
     lsr                             ;
     bcs LDFD2                       ;Check if LSB is set. If not, the byte stored on stack-->
-        pla                             ;Will be twos complimented and used to move sprite in-->
+        pla                             ;Will be twos complemented and used to move sprite in-->
         eor #$FF                        ;the negative x direction.
         adc #$01                        ;
         pha                             ;
@@ -5908,7 +5908,7 @@ SamusMoveVertically:
     lda $00                         ;Load temp copy of vertical speed.
     bpl LE2D7                        ;If Samus is moving downwards, branch.
 
-    jsr TwosCompliment              ;($C3D4)Get twos compliment of vertical speed.
+    jsr TwosComplement              ;($C3D4)Get twos complement of vertical speed.
     ldy SamusInLava                 ;Is Samus in lava?
     beq LE2C2                           ;If not, branch,-->
     lsr                             ;else cut vertical speed in half.
@@ -5983,7 +5983,7 @@ SamusMoveHorizontally:
     bpl LE347                         ;Branch if moving right.
 
 ;Samus is moving left.
-    jsr TwosCompliment              ;($C3D4)Get twos compliment of horizontal speed.
+    jsr TwosComplement              ;($C3D4)Get twos complement of horizontal speed.
     ldy SamusInLava                 ;Is Samus in lava?-->
     beq LE333                           ;If not, branch,-->
         lsr                             ;else cut horizontal speed in half.
@@ -8298,7 +8298,7 @@ Lx263:
     beq Lx265            ; try next one if not
     cmp #wa_BulletExplode
     bcc Lx264
-    cmp #$07
+    cmp #wa_Unknown7
     beq Lx264
     cmp #wa_BombExplode
     beq Lx264
@@ -8350,7 +8350,7 @@ Lx271:
     beq Lx273            ; branch if not
     cmp #wa_BulletExplode
     bcc Lx272
-    cmp #$07
+    cmp #wa_Unknown7
     beq Lx272
     cmp #wa_BombExplode
     beq Lx272
@@ -8652,8 +8652,8 @@ Lx287:
     jsr LF338
     jmp LF306
 Lx289:
-    lda #$81
-    sta EnData0E,x
+    lda #wa_ScrewAttack
+    sta EnWeaponAction,x
     bne Lx291
 LF2B4:
     bcs RTS_X290
@@ -8673,7 +8673,7 @@ RTS_X290:
 LF2CA:
     bcs Lx293
     lda ObjAction,y
-    sta EnData0E,x
+    sta EnWeaponAction,x
     jsr LF279
 Lx291:
     jsr LF332
@@ -8897,7 +8897,7 @@ Lx301:
     ldx PageIndex
     lda #$00
     sta EnData04,x
-    sta EnData0E,x
+    sta EnWeaponAction,x
     rts
 
 ; Entry Point 3 ; CommonJump_01
@@ -9057,8 +9057,8 @@ LF536:
     lda EnData04,x
     and #$20
     beq RTS_X315
-    lda EnData0E,x
-    cmp #$03
+    lda EnWeaponAction,x
+    cmp #wa_IceBeam
     bne Lx317
     bit $0A
     bvs Lx317
@@ -9114,8 +9114,8 @@ Lx319:
     jsr LoadTableAt977B
     and #$20
     beq Lx320
-        lda EnData0E,x
-        cmp #$0B
+        lda EnWeaponAction,x
+        cmp #wa_Missile
         bne Lx316
     Lx320:
     lda EnStatus,x
@@ -9130,10 +9130,10 @@ Lx319:
     jsr LoadTableAt977B
     and #$20
     bne Lx322
-    ldy EnData0E,x
-    cpy #$0B
+    ldy EnWeaponAction,x
+    cpy #wa_Missile
     beq Lx326
-    cpy #$81
+    cpy #wa_ScrewAttack
     beq Lx326
 Lx322:
     lda #$06
@@ -9144,12 +9144,12 @@ Lx322:
         lda #$03
     Lx323:
     sta EnSpecialAttribs,x
-    cpy #$02
+    cpy #wa_WaveBeam
     beq Lx324
         bit $0A
         bvc Lx325
-        ldy EnData0E,x
-        cpy #$0B
+        ldy EnWeaponAction,x
+        cpy #wa_Missile
         bne Lx325
         dec EnHitPoints,x
         beq Lx326
@@ -9166,8 +9166,8 @@ Lx326:
     sta EnStatus,x
     bit $0A
     bvs Lx327
-    lda EnData0E,x
-    cmp #$02
+    lda EnWeaponAction,x
+    cmp #wa_WaveBeam
     bcs Lx327
     lda #$00
     jsr LDCFC
@@ -9405,7 +9405,7 @@ LF75B:
     sec
     sbc $00
     bpl Lx344
-        jsr TwosCompliment              ;($C3D4)
+        jsr TwosComplement              ;($C3D4)
     Lx344:
     lsr
     lsr
@@ -9726,7 +9726,7 @@ Lx363:
     php
     bcc Lx364
     tya
-    jsr TwosCompliment              ;($C3D4)
+    jsr TwosComplement              ;($C3D4)
     sta EnData03,x
 Lx364:
     plp
@@ -9982,7 +9982,7 @@ LFB88:
         pla
     Lx382:
     bpl Lx383
-        jsr TwosCompliment              ;($C3D4)
+        jsr TwosComplement              ;($C3D4)
     Lx383:
     cmp #$08
     bcc Lx384
@@ -10209,7 +10209,7 @@ LFD08:
     sbc $B2,x
     bpl Lx398
         iny
-        jsr TwosCompliment              ;($C3D4)
+        jsr TwosComplement              ;($C3D4)
     Lx398:
     cmp #$10
     bcs RTS_X399
@@ -10242,7 +10242,7 @@ LFD25:
     lda #$02
     cpy #$20
     bcc Lx400
-    jsr TwosCompliment              ;($C3D4)
+    jsr TwosComplement              ;($C3D4)
     cpy #$80
     bcc Lx401
 Lx400:

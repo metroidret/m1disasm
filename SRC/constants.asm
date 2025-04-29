@@ -411,7 +411,7 @@ EnData0A               = $040A   ; unknown -- For crawlers, orientation
 EnHitPoints            = $040B   ;Current hit points of enemy.
 EnData0C               = $040C   ; unknown
 EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
-EnData0E               = $040E   ; unknown
+EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
 
 ;----------------------------------------------------------------------------------------------------
@@ -923,13 +923,15 @@ IntroSpr7YDir          = $6F1F   ;MSB set=decrease sprite y pos, else increase s
 
 WorldMapRAM            = $7000   ;Thru $73FF. The map is 1Kb in size (1024 bytes).
 
-UnknownMetroidProperty_ObjectSlotSamus  = $77F6
-UnknownMetroidProperty_ObjectSlot0320 = $77F8
-UnknownMetroidProperty_ObjectSlot0330 = $77F9
-UnknownMetroidProperty_ObjectSlot0340 = $77FA
-UnknownMetroidProperty_ObjectSlot0350 = $77FB
-UnknownMetroidProperty_ObjectSlot0360 = $77FC
-UnknownMetroidProperty_ObjectSlot0370 = $77FD
+MetroidRepelSpeed      = $77F0   ;$77F0 for negative, $77F1 for positive
+MetroidAccel           = $77F2   ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
+MetroidMaxSpeed        = $77F6   ;$77F6 for red metroid, $77F7 for green metroid
+MetroidLatch0400       = $77F8   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
+MetroidLatch0410       = $77F9   ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
+MetroidLatch0420       = $77FA   ;bit 7 is ???
+MetroidLatch0430       = $77FB
+MetroidLatch0440       = $77FC
+MetroidLatch0450       = $77FD
 
 SamusData              = $77FE   ;Thru $782D. Samus saved game data (not used).
 
@@ -1016,7 +1018,9 @@ wa_RegularBeam         = 1
 wa_WaveBeam            = 2
 wa_IceBeam             = 3
 wa_BulletExplode       = 4
+wa_Unknown7            = 7
 wa_LayBomb             = 8
 wa_BombCount           = 9
 wa_BombExplode         = 10
 wa_Missile             = 11
+wa_ScrewAttack         = 129

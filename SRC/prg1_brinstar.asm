@@ -94,10 +94,10 @@ AreaPointers:
 AreaRoutine: ; L95C3
     jmp AreaRoutineStub ; Just an RTS
 
-TwosCompliment_:
+TwosComplement_:
     eor #$FF                        ;
     clc                             ;The following routine returns the twos-->
-    adc #$01                        ;compliment of the value stored in A.
+    adc #$01                        ;complement of the value stored in A.
     rts                             ;
 
 ; area init data

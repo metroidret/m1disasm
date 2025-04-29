@@ -24,7 +24,7 @@
 .import Adiv16
 .import Adiv8
 .import Amul16
-.import TwosCompliment
+.import TwosComplement
 .import Base10Subtract
 .import SubtractHealth
 .import SetProjectileAnim
@@ -145,7 +145,7 @@ CommonEnemyAI:
     jsr VertMoveProc
     lda $00
     bpl CommonEnemyAI_BranchA
-    jsr TwosCompliment              ;($C3D4)
+    jsr TwosComplement              ;($C3D4)
     sta $66
 
 ; Up Movement
@@ -170,7 +170,7 @@ CommonEnemyAI_BranchB:
     jsr HoriMoveProc
     lda $00
     bpl CommonEnemyAI_BranchC
-    jsr TwosCompliment              ;($C3D4)
+    jsr TwosComplement              ;($C3D4)
     sta $66
 
 ; Left Movement
@@ -395,7 +395,7 @@ L81C7:
     lda #$01
     jsr XorEnData05
     lda EnData1B,X
-    jsr TwosCompliment
+    jsr TwosComplement
     sta EnData1B,X
 
     jsr LoadBit5ofTableAt968B
@@ -430,7 +430,7 @@ L81FC:
     lda #$04
     jsr XorEnData05
     lda EnData1A,X
-    jsr TwosCompliment
+    jsr TwosComplement
     sta EnData1A,X
 
     jsr LoadBit5ofTableAt968B
@@ -688,7 +688,7 @@ L8320:
     plp
 ; Negate, according to the sign bit
     beq L833C
-    jsr TwosCompliment
+    jsr TwosComplement
 
 L833C:
     sta $00
@@ -709,11 +709,11 @@ L833F:
     sta EnData02,X
     bpl L8376
     L8357:
-        jsr TwosCompliment
+        jsr TwosComplement
         ldy #$F2
         bne L8376
     L835E:
-        jsr TwosCompliment
+        jsr TwosComplement
         sec
         sta $00
         lda EnCounter,X

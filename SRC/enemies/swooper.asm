@@ -65,7 +65,7 @@ L9923:
     sec
     sbc $030D
     bpl L9940
-        jsr TwosCompliment_
+        jsr TwosComplement_
     L9940:
     cmp #$10
     bcs L9949
