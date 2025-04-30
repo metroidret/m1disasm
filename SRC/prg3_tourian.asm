@@ -25,7 +25,7 @@ BANK .set 3
 
 .export GFX_KraidSprites
 .export GFX_RidleySprites
-.export GotoLA320
+.export GotoClearCurrentMetroidLatchAndMetroidOnSamus
 .export GotoClearAllMetroidLatches
 .export GotoL9C6F
 .export GotoCannonRoutine
@@ -89,8 +89,8 @@ AreaPointers:
     .word EnemyAnimIndexTbl         ;($A406)Index to values in addr tables for enemy animations.
 
 ; Special Tourian Routines
-GotoLA320:
-    jmp LA320
+GotoClearCurrentMetroidLatchAndMetroidOnSamus:
+    jmp ClearCurrentMetroidLatchAndMetroidOnSamus
 GotoClearAllMetroidLatches:
     jmp ClearAllMetroidLatches
 GotoL9C6F:
@@ -280,7 +280,7 @@ L9B4C:
     jsr L9C4D
     tya
     bne RTS_9B4B
-    ldy $010B
+    ldy EndTimerHi
     iny
     bne L9B65
     lda $6BF8,x
@@ -477,14 +477,14 @@ L9C6F:
     lda #$00
     sta MotherBrainStatus
 L9CC3:
-    lda $010D
+    lda MotherBrain010D
     beq RTS_9CD5
-    lda $010C
+    lda MotherBrain010C
     eor $02
     lsr
     bcs RTS_9CD5
     lda #$00
-    sta $010D
+    sta MotherBrain010D
 RTS_9CD5:
     rts
 
@@ -853,9 +853,9 @@ L9F49:
     sta EndTimerLo
     sta EndTimerHi
     lda #$01
-    sta $010D
+    sta MotherBrain010D
     lda MotherBrainNameTable
-    sta $010C
+    sta MotherBrain010C
 RTS_9F64:
     rts
 
@@ -923,9 +923,9 @@ L9FDA:
     jsr L9F69
     bcs RTS_9FEC
     lda MotherBrainNameTable
-    sta $010C
+    sta MotherBrain010C
     ldy #$01
-    sty $010D
+    sty MotherBrain010D
     dey
     sty MotherBrainStatus
 RTS_9FEC:
@@ -1255,9 +1255,9 @@ RTS_A237:
 
 ;-------------------------------------------------------------------------------
 LA238:
-    lda $010D
+    lda MotherBrain010D
     beq RTS_A28A
-    lda $010C
+    lda MotherBrain010C
     sta EnNameTable+$E0
     lda #$84
     sta EnYRoomPos+$E0
@@ -1384,7 +1384,7 @@ ClearAllMetroidLatches:
     sta $92
     rts
 ;-----------------
-LA320:
+ClearCurrentMetroidLatchAndMetroidOnSamus:
     txa
     jsr Adiv16_
     tay

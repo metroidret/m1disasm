@@ -198,14 +198,14 @@ WalkSoundDelay         = $53
 IsSamus                = $55     ;1=Samus object being accessed, 0=not Samus.
 DoorStatus             = $56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
                                         ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
-                                        ;is 3 or 4, a door was entered while in a verticle shaft and-->
+                                        ;is 3 or 4, a door was entered while in a vertical shaft and-->
                                         ;the door was not centered on the screen and up or down-->
                                         ;scrolling needs to occur before scrolling to the next room.
 DoorScrollStatus       = $57     ;#$01=Entered right hand door from horizontal area.-->
                                         ;#$02=Entered left hand door from horizontal area.-->
-                                        ;#$03=Entered door from verticle shaft and room needs to-->
+                                        ;#$03=Entered door from vertical shaft and room needs to-->
                                         ;be centered before horizontal scrolling. #$04=Entered-->
-                                        ;door from verticle shaft and room was already centered.
+                                        ;door from vertical shaft and room was already centered.
 SamusDoorData          = $58     ;The upper 4 bits store either 1 or 2. If 1 is stored(bit 4-->
                                         ;set), the scrolling after Samus exits the door is toggled.-->
                                         ;If 2 is stored(bit 5 set), the scrolling is set to-->
@@ -294,8 +294,8 @@ MotherBrain9B          = $9B
 MotherBrainAnimFrameTableID = $9C
 MotherBrainNameTable   = $9D     ;what is this
 
-SpareMemB7             = $B7     ;Written to in title routine and accessed by unsed routine.
-SpareMemB8             = $B8     ;Written to in title routine and accessed by unsed routine.
+SpareMemB7             = $B7     ;Written to in title routine and accessed by unused routine.
+SpareMemB8             = $B8     ;Written to in title routine and accessed by unused routine.
 SpareMemBB             = $BB     ;Written to in title routine, but never accessed.
 
 First4SlowCntr         = $BC     ;This address holds an 8 frame delay. when the delay is up,-->
@@ -348,6 +348,9 @@ PowerUpDelay           = $0109   ;Initiate power up music and delay after item p
 EndTimerLo             = $010A   ;Lower byte of end game escape timer.
 EndTimerHi             = $010B   ;Upper byte of end game escape timer.
 
+MotherBrain010C        = $010C
+MotherBrain010D        = $010D
+
 MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
@@ -374,10 +377,10 @@ ObjectHi               = $030C   ;0=Object on nametable 0, 1=Object on nametable
 ObjectY                = $030D   ;Object y position in room(not actual screen position).
 ObjectX                = $030E   ;Object x position in room(not actual screen position).
 SamusJumpDsplcmnt      = $030F   ;Number of pixels vertically displaced from jump point.
-VertCntrNonLinear      = $0310   ;Verticle movement counter. Exponential change in speed.
-HorzCntrNonLinear      = $0311   ;Horizontal movement counter. Exponential change in speed.
-VertCntrLinear         = $0312   ;Verticle movement counter. Linear change in speed.
-HorzCntrLinear         = $0313   ;Horizontal movement counter. Linear change in speed.
+SamusYSubPixel         = $0310   ;Vertical movement counter. Exponential change in speed.
+SamusXSubPixel         = $0311   ;Horizontal movement counter. Exponential change in speed.
+SamusVertSpeedSubPixel = $0312   ;Vertical movement counter. Linear change in speed.
+SamusHorzSpeedSubPixel = $0313   ;Horizontal movement counter. Linear change in speed.
 SamusGravity           = $0314   ;Value used in calculating vertical acceleration on Samus.
 SamusHorzAccel         = $0315   ;Value used in calculating horizontal acceleration on Samus.
 SamusHorzSpeedMax      = $0316   ;Used to calc maximum horizontal speed Samus can reach.

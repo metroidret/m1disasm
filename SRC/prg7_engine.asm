@@ -131,7 +131,7 @@ SoundEngine            = $B3B4
 .import CopyMap
 .import IntroStarsData
 
-.import GotoLA320
+.import GotoClearCurrentMetroidLatchAndMetroidOnSamus
 .import GotoClearAllMetroidLatches
 .import GotoL9C6F
 .import GotoCannonRoutine
@@ -2822,7 +2822,7 @@ ClearHorzMvmntData:
     ldy #$00                        ;
 LCF4E:
     sty ObjHorzSpeed                ;Set Samus Horizontal speed and horizontal-->
-    sty HorzCntrLinear              ;linear counter to #$00.
+    sty SamusHorzSpeedSubPixel              ;linear counter to #$00.
 RTS_X014:
     rts                             ;
 
@@ -3112,7 +3112,7 @@ StopVertMovement:
 LD147:
     ldy #$00
     sty ObjVertSpeed
-    sty VertCntrLinear
+    sty SamusVertSpeedSubPixel
     rts
 
 ; CheckBombLaunch
@@ -5924,7 +5924,7 @@ LE2C4:
 
     sec                             ;Samus blocked upwards. Divide her speed by 2 and set the
     ror ObjVertSpeed                ;MSB to reverse her direction of travel.
-    ror VertCntrLinear              ;
+    ror SamusVertSpeedSubPixel              ;
     jmp SamusMoveHorizontally       ;($E31A)Attempt to move Samus left/right.
 
 LE2D3:
@@ -5952,11 +5952,11 @@ LE2E3:
     bne LE30B                           ;If not, branch.
     lsr ObjVertSpeed                ;Divide verticle speed by 2.
     beq LE30E                          ;Speed not fast enough to bounce. branch to skip.
-    ror VertCntrLinear              ;Move carry bit into MSB to reverse Linear counter.
+    ror SamusVertSpeedSubPixel              ;Move carry bit into MSB to reverse Linear counter.
     lda #$00                        ;
     sec                             ;
-    sbc VertCntrLinear              ;Subtract linear counter from 0 and save the results.-->
-    sta VertCntrLinear              ;Carry will be cleared.
+    sbc SamusVertSpeedSubPixel              ;Subtract linear counter from 0 and save the results.-->
+    sta SamusVertSpeedSubPixel              ;Carry will be cleared.
     lda #$00                        ;
     sbc ObjVertSpeed                ;Subtract vertical speed from 0. this will reverse the-->
     sta ObjVertSpeed                ;vertical direction of travel(bounce up).
@@ -6072,10 +6072,10 @@ LE394:
 
 LE3A5:
     ldx #$05                        ;Load X with maximum downward speed.
-    lda VertCntrLinear              ;
+    lda SamusVertSpeedSubPixel              ;
     clc                             ;The higher the gravity, the faster this addition overflows-->
     adc SamusGravity                ;and the faster ObjVertSpeed is incremented.
-    sta VertCntrLinear              ;
+    sta SamusVertSpeedSubPixel              ;
     lda ObjVertSpeed                ;Every time above addition sets carry bit, ObjVertSpeed is-->
     adc #$00                        ;incremented. This has the effect of speeding up a fall-->
     sta ObjVertSpeed                ;and slowing down a jump.
@@ -6083,7 +6083,7 @@ LE3A5:
 
 ;Check if maximum upward speed has been exceeded. If so, prepare to set maximum speed.
     lda #$00                        ;
-    cmp VertCntrLinear              ;Sets carry bit.
+    cmp SamusVertSpeedSubPixel              ;Sets carry bit.
     sbc ObjVertSpeed                ;Subtract ObjVertSpeed to see if maximum speed has-->
     cmp #$06                        ;been exceeded.
     ldx #$FA                        ;Load X with maximum upward speed.
@@ -6102,10 +6102,10 @@ LE3CB:
 ;This portion of the function creates an exponential increase/decrease in verticle speed. This is the
 ;part of the function that does all the work to make Samus' jump seem natural.
 LE3D3:
-    lda VertCntrNonLinear           ;
+    lda SamusYSubPixel           ;
     clc                             ;This function adds itself plus the linear verticle counter-->
-    adc VertCntrLinear              ;onto itself every frame.  This causes the non-linear-->
-    sta VertCntrNonLinear           ;counter to increase exponentially.  This function will-->
+    adc SamusVertSpeedSubPixel              ;onto itself every frame.  This causes the non-linear-->
+    sta SamusYSubPixel           ;counter to increase exponentially.  This function will-->
     lda #$00                        ;cause Samus to reach maximum speed first in most-->
     adc ObjVertSpeed                ;situations before the linear counter.
     sta $00                         ;$00 stores temp copy of current verticle speed.
@@ -6124,10 +6124,10 @@ LE3E5:
     sta $01
     sta $03
 
-    lda HorzCntrLinear
+    lda SamusHorzSpeedSubPixel
     clc
     adc SamusHorzAccel
-    sta HorzCntrLinear
+    sta SamusHorzSpeedSubPixel
     tax
     lda #$00
     bit SamusHorzAccel
@@ -6142,7 +6142,7 @@ LE3E5:
 
         lda #$00
         sec
-        sbc HorzCntrLinear
+        sbc SamusHorzSpeedSubPixel
         tax
         lda #$00
         sbc ObjHorzSpeed
@@ -6154,14 +6154,14 @@ LE3E5:
     sbc $03
     bcc Lx149
         lda $00
-        sta HorzCntrLinear
+        sta SamusHorzSpeedSubPixel
         lda $01
         sta ObjHorzSpeed
     Lx149:
-    lda HorzCntrNonLinear
+    lda SamusXSubPixel
     clc
-    adc HorzCntrLinear
-    sta HorzCntrNonLinear
+    adc SamusHorzSpeedSubPixel
+    sta SamusXSubPixel
     lda #$00
     adc ObjHorzSpeed
     sta $00                         ;$00 stores temp copy of current horizontal speed.
@@ -9076,7 +9076,7 @@ LF536:
     beq RTS_X315
     lda #$05
     sta EnHitPoints,x
-    jmp GotoLA320
+    jmp GotoClearCurrentMetroidLatchAndMetroidOnSamus
 RTS_X315:
     rts
 
