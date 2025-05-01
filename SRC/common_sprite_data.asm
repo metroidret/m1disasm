@@ -615,14 +615,14 @@ Frame00:
 Frame01:
 Frame02:
 Frame03:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $41
     .byte $40
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $20
     .byte $21
     .byte $FE
@@ -632,14 +632,14 @@ Frame03:
 
 ;Samus run.
 Frame04:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $02
     .byte $03
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $43
     .byte $42
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $23
     .byte $FE
@@ -650,14 +650,14 @@ Frame04:
 
 ;Samus run.
 Frame05:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $05
     .byte $06
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $45
     .byte $44
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $25
     .byte $26
     .byte $27
@@ -670,25 +670,25 @@ Frame06:
 Frame07:
     .byte ($0 << 4) + _id_Place0, $0F, $04
     .byte $09
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $09
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $19
     .byte $1A
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $29
     .byte $2A
     .byte $FE
     .byte $39
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $39
     .byte $FF
 
 ;Samus stand.
 Frame08:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
-    .byte $FD, $2 << 4
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $0E
     .byte $0D
     .byte $FE
@@ -697,7 +697,7 @@ Frame08:
     .byte $2E
     .byte $2D
     .byte $FE
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3B
     .byte $3C
     .byte $FE
@@ -709,14 +709,14 @@ Frame09:
 Frame0A:
 Frame0B:
 Frame0C:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $4B
     .byte $4A
     .byte $49
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $20
     .byte $21
     .byte $FE
@@ -726,14 +726,14 @@ Frame0C:
 
 ;Samus run and fire.
 Frame0D:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $4B
     .byte $4A
     .byte $49
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $23
     .byte $FE
@@ -744,14 +744,14 @@ Frame0D:
 
 ;Samus run and fire.
 Frame0E:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $4B
     .byte $4A
     .byte $49
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $25
     .byte $26
     .byte $27
@@ -762,14 +762,14 @@ Frame0E:
 ;Samus stand and jump.
 Frame0F:
 Frame10:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $41
     .byte $40
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $07
     .byte $08
@@ -779,14 +779,14 @@ Frame10:
 ;Samus jump and fire.
 Frame11:
 Frame12:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
     .byte $00
     .byte $01
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $4B
     .byte $4A
     .byte $49
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $07
     .byte $08
@@ -799,7 +799,7 @@ Frame14:
 Frame15:
 Frame16:
 Frame17:
-    .byte ($4 << 4) + _id_Place1, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place1, $0F, $04
     .byte $52
     .byte $53
     .byte $62
@@ -810,7 +810,7 @@ Frame17:
 
 ;Samus somersault.
 Frame18:
-    .byte ($4 << 4) + _id_Place2, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place2, $0F, $04
     .byte $54
     .byte $55
     .byte $56
@@ -821,7 +821,7 @@ Frame18:
 
 ;Samus somersault.
 Frame19:
-    .byte ($8 << 4) + _id_Place1, $0F, $04
+    .byte OAMDATA_VFLIP + ($0 << 4) + _id_Place1, $0F, $04
     .byte $52
     .byte $53
     .byte $62
@@ -832,7 +832,7 @@ Frame19:
 
 ;Samus somersault.
 Frame1A:
-    .byte ($8 << 4) + _id_Place2, $0F, $04
+    .byte OAMDATA_VFLIP + ($0 << 4) + _id_Place2, $0F, $04
     .byte $54
     .byte $55
     .byte $56
@@ -853,7 +853,7 @@ Frame1B:
 
 ;Samus roll.
 Frame1C:
-    .byte ($8 << 4) + _id_Place1, $08, $04
+    .byte OAMDATA_VFLIP + ($0 << 4) + _id_Place1, $08, $04
     .byte $FC, $FD, $00
     .byte $50
     .byte $51
@@ -863,7 +863,7 @@ Frame1C:
 
 ;Samus roll.
 Frame1D:
-    .byte ($C << 4) + _id_Place1, $08, $04
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($0 << 4) + _id_Place1, $08, $04
     .byte $FC, $FD, $00
     .byte $50
     .byte $51
@@ -873,7 +873,7 @@ Frame1D:
 
 ;Samus roll.
 Frame1E:
-    .byte ($4 << 4) + _id_Place1, $08, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place1, $08, $04
     .byte $FC, $03, $00
     .byte $50
     .byte $51
@@ -886,8 +886,8 @@ Frame1F:
 Frame20:
 Frame21:
 Frame22:
-    .byte ($4 << 4) + _id_Place0, $0F, $04
-    .byte $FD, $2 << 4
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place0, $0F, $04
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $0E
     .byte $0D
     .byte $FE
@@ -896,7 +896,7 @@ Frame22:
     .byte $2E
     .byte $2D
     .byte $FE
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3B
     .byte $3C
     .byte $FE
@@ -910,14 +910,14 @@ Frame23:
     .byte $28
     .byte $38
     .byte $38
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $28
     .byte $FF
 
 ;Missile right.
 Frame24:
 Frame25:
-    .byte ($4 << 4) + _id_PlaceA, $04, $08
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_PlaceA, $04, $08
     .byte $5E
     .byte $5F
     .byte $FF
@@ -951,10 +951,10 @@ Frame2A:
 
 ;Samus stand and point up.
 Frame2B:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $69
     .byte $FE
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
@@ -963,7 +963,7 @@ Frame2B:
     .byte $2E
     .byte $2D
     .byte $FE
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3B
     .byte $3C
     .byte $FF
@@ -974,10 +974,10 @@ Frame2D:
 Frame2E:
 Frame2F:
 Frame30:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $FE
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
@@ -986,7 +986,7 @@ Frame30:
     .byte $2E
     .byte $2D
     .byte $FE
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3B
     .byte $3C
     .byte $FF
@@ -997,7 +997,7 @@ Frame31:
     .byte $0F
     .byte $1F
     .byte $2F
-    .byte $FD, ($A << 4) + $3
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $3
     .byte $2F
     .byte $1F
     .byte $0F
@@ -1010,7 +1010,7 @@ Frame33:
     .byte $6A
     .byte $6B
     .byte $6C
-    .byte $FD, ($A << 4) + $3
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $3
     .byte $6C
     .byte $6B
     .byte $6A
@@ -1033,16 +1033,16 @@ Frame35:
 Frame36:
 Frame37:
 Frame38:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $FE
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $07
     .byte $08
@@ -1051,16 +1051,16 @@ Frame38:
 
 ;Samus jump and point up.
 Frame39:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $FE
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $07
     .byte $08
@@ -1073,11 +1073,11 @@ Frame3B:
 Frame3C:
     .byte ($0 << 4) + _id_PlaceD, $0C, $0C
     .byte $74
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $74
-    .byte $FD, $A << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
     .byte $74
-    .byte $FD, $E << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $74
     .byte $FF
 
@@ -1086,16 +1086,16 @@ Frame3D:
 Frame3E:
 Frame3F:
 Frame40:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $69
     .byte $FE
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $20
     .byte $21
     .byte $FE
@@ -1105,16 +1105,16 @@ Frame40:
 
 ;Samus run and point up.
 Frame41:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $69
     .byte $FE
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $23
     .byte $FE
@@ -1125,16 +1125,16 @@ Frame41:
 
 ;Samus run and point up.
 Frame42:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $69
     .byte $FE
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $25
     .byte $26
     .byte $27
@@ -1147,16 +1147,16 @@ Frame43:
 Frame44:
 Frame45:
 Frame46:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $FE
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $20
     .byte $21
     .byte $FE
@@ -1166,16 +1166,16 @@ Frame46:
 
 ;Samus point up, run and fire.
 Frame47:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $FE
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $22
     .byte $23
     .byte $FE
@@ -1186,16 +1186,16 @@ Frame47:
 
 ;Samus point up, run and fire.
 Frame48:
-    .byte ($4 << 4) + _id_Place6, $0F, $04
+    .byte OAMDATA_HFLIP + ($0 << 4) + _id_Place6, $0F, $04
     .byte $FE
     .byte $69
-    .byte $FD, $2 << 4
+    .byte $FD, OAMDATA_PRIORITY + $0
     .byte $7A
     .byte $79
     .byte $FE
     .byte $78
     .byte $77
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $25
     .byte $26
     .byte $27
@@ -1207,11 +1207,11 @@ Frame48:
 Frame49:
     .byte ($0 << 4) + _id_PlaceD, $0C, $0C
     .byte $75
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $75
-    .byte $FD, $A << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
     .byte $75
-    .byte $FD, $E << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $75
     .byte $FF
 
@@ -1233,15 +1233,15 @@ Frame4D:
     .byte $3D
     .byte $3E
     .byte $4E
-    .byte $FD, $6 << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3E
     .byte $3D
     .byte $4E
-    .byte $FD, $E << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $4E
     .byte $3E
     .byte $3D
-    .byte $FD, $A << 4
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
     .byte $4E
     .byte $3D
     .byte $3E
@@ -1344,11 +1344,11 @@ Frame58:
 Frame59:
     .byte ($0 << 4) + _id_PlaceD, $03, $03
     .byte $3F
-    .byte $FD, $4 << 4
+    .byte $FD, OAMDATA_HFLIP + $0
     .byte $3F
-    .byte $FD, $0 << 4
+    .byte $FD, $0
     .byte $4F
-    .byte $FD, $4 << 4
+    .byte $FD, OAMDATA_HFLIP + $0
     .byte $4F
     .byte $FF
 
@@ -1437,7 +1437,7 @@ Frame66:
 ;Missile explode.
 Frame67:
     .byte ($0 << 4) + _id_PlaceA, $04, $08
-    .byte $FD, $0 << 4
+    .byte $FD, $0
     .byte $57
     .byte $FD
     .byte $40
@@ -1447,13 +1447,13 @@ Frame67:
 ;Missile explode.
 Frame68:
     .byte ($0 << 4) + _id_PlaceB, $04, $0C
-    .byte $FD, $0 << 4
+    .byte $FD, $0
     .byte $57
     .byte $18
-    .byte $FD, $4 << 4
+    .byte $FD, OAMDATA_HFLIP + $0
     .byte $18
     .byte $57
-    .byte $FD, $C << 4
+    .byte $FD, OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $18
     .byte $18
     .byte $FF
@@ -1461,13 +1461,13 @@ Frame68:
 ;Missile explode.
 Frame69:
     .byte ($0 << 4) + _id_PlaceC, $04, $10
-    .byte $FD, $0 << 4
+    .byte $FD, $0
     .byte $57
     .byte $18
-    .byte $FD, $4 << 4
+    .byte $FD, OAMDATA_HFLIP + $0
     .byte $18
     .byte $57
-    .byte $FD, $C << 4
+    .byte $FD, OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $18
     .byte $18
     .byte $FF

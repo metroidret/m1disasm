@@ -899,7 +899,7 @@ WritePaletteStringByte:
     sty $06                         ;Temporarily store data index.
     ldy #$01                        ;PPU address increment = 1.
     bit $04                         ;If MSB set in control bit, it looks like this routine might-->
-    bpl LC3AF                           ;have been used for a software control verticle mirror, but-->
+    bpl LC3AF                           ;have been used for a software control vertical mirror, but-->
                                         ;the starting address has already been written to the PPU-->
                                         ;string so this section has no effect whether the MSB is set-->
                                         ;or not. The PPU is always incremented by 1.
@@ -4888,7 +4888,7 @@ Lx133:
 ;--------------------------------[ Get sprite control byte ]-----------------------------------------
 
 ;The sprite control byte extracted from the frame data has the following format: AABBXXXX.
-;Where AA are the two bits used to control the horizontal and verticle mirroring of the
+;Where AA are the two bits used to control the horizontal and vertical mirroring of the
 ;sprite and BB are the two bits used control the sprite colors. XXXX is the entry number
 ;in the PlacePtrTbl used to place the sprite on the screen.
 
@@ -4902,8 +4902,8 @@ GetSpriteCntrlData:
     and #$03                        ;
     sta $05                         ;The following lines take the upper 4 bits in the-->
     txa                             ;control byte and transfer bits 4 and 5 into $05 bits 0-->
-    and #$C0                        ;and 1(sprite color bits).  Bits 6 and 7 are-->
-    ora #$20                        ;transferred into $05 bits 6 and 7(sprite flip bits).-->
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP ;and 1(sprite color bits).  Bits 6 and 7 are-->
+    ora #OAMDATA_PRIORITY           ;transferred into $05 bits 6 and 7(sprite flip bits).-->
     ora $05                         ;bit 5 is then set(sprite always drawn behind background).
     sta $05                         ;
     lda ObjectCntrl                 ;Extract bit from control byte that controls the
@@ -5208,7 +5208,7 @@ LDEBC:
     ldx PageIndex                   ;
     iny                             ;Increment to second frame data byte.
     lda ($00),y                     ;
-    sta ObjRadY,x                   ;Get verticle radius in pixles of object.
+    sta ObjRadY,x                   ;Get vertical radius in pixels of object.
     jsr ReduceYRadius               ;($DE3D)Reduce temp y radius by #$10.
     iny                             ;Increment to third frame data byte.
     lda ($00),y                     ;Get horizontal radius in pixels of object.
@@ -5243,7 +5243,7 @@ LDEE6:
     lda ObjectCntrl                 ;
     asl                             ;Move horizontal mirror control byte to bit 6 and-->
     asl                             ;discard all other bits.
-    and #$40                        ;
+    and #OAMDATA_HFLIP                        ;
     eor $05                         ;Use it to override sprite horz mirror bit.
     sta SpriteRAM+2,x             ;Store sprite control byte in sprite RAM.
     inc $11                         ;Increment to next byte of frame data.
@@ -5435,7 +5435,7 @@ VertScrollCheck:
     beq LE012                           ;
     bcs LE01A                          ;If carry is still set, sprite is not in screen boundaries.
     lda $10                         ;
-    sbc #$0F                        ;Move sprite y position up 15 pixles.
+    sbc #$0F                        ;Move sprite y position up 15 pixels.
     sta $10                         ;
     lda $09                         ;
     clc                             ;If a portion of the object is outside the sceen-->
@@ -5950,7 +5950,7 @@ LE2E3:
     lda ObjAction                   ;
     cmp #sa_Roll                    ;Is Samus rolled into a ball?-->
     bne LE30B                           ;If not, branch.
-    lsr ObjVertSpeed                ;Divide verticle speed by 2.
+    lsr ObjVertSpeed                ;Divide vertical speed by 2.
     beq LE30E                          ;Speed not fast enough to bounce. branch to skip.
     ror SamusVertSpeedSubPixel              ;Move carry bit into MSB to reverse Linear counter.
     lda #$00                        ;
@@ -6095,20 +6095,20 @@ LE3C9:
 LE3CB:
     bcc LE3D3                           ;If not, branch.
 
-;Max verticle speed reached or exceeded. Adjust Samus verticle speed to max.
-    jsr StopVertMovement            ;($D147)Clear verticle movement data.
+;Max vertical speed reached or exceeded. Adjust Samus vertical speed to max.
+    jsr StopVertMovement            ;($D147)Clear vertical movement data.
     stx ObjVertSpeed                ;Set Samus vertical speed to max.
 
-;This portion of the function creates an exponential increase/decrease in verticle speed. This is the
+;This portion of the function creates an exponential increase/decrease in vertical speed. This is the
 ;part of the function that does all the work to make Samus' jump seem natural.
 LE3D3:
     lda SamusYSubPixel           ;
-    clc                             ;This function adds itself plus the linear verticle counter-->
+    clc                             ;This function adds itself plus the linear vertical counter-->
     adc SamusVertSpeedSubPixel              ;onto itself every frame.  This causes the non-linear-->
     sta SamusYSubPixel           ;counter to increase exponentially.  This function will-->
     lda #$00                        ;cause Samus to reach maximum speed first in most-->
     adc ObjVertSpeed                ;situations before the linear counter.
-    sta $00                         ;$00 stores temp copy of current verticle speed.
+    sta $00                         ;$00 stores temp copy of current vertical speed.
     rts                             ;
 
 ;----------------------------------------------------------------------------------------------------
