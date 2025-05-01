@@ -41,6 +41,12 @@
     .byte ppuByte
 .endmacro
 
+.macro PtrTableEntry ptrTable, ptr
+    .ident(.concat("_id_", .string(ptr))) .set (* - ptrTable) / 2
+    .word ptr
+.endmacro
+
+
 ;There are 3 control bytes associated with the music data and the rest are musical note indexes.
 ;If the byte has the binary format 1011xxxx ($Bx), then the byte is an index into the corresponding
 ;musical notes table and is used to set the note length until it is set by another note length

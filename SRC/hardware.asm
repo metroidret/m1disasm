@@ -37,6 +37,14 @@ PPUDATA                = $2007   ;
     PPUMASK_OBJ_OFF        = %00000000
     PPUMASK_OBJ_ON         = %00010000
 
+    OAMDATA_PAL0       = %00000000
+    OAMDATA_PAL1       = %00000001
+    OAMDATA_PAL2       = %00000010
+    OAMDATA_PAL3       = %00000011
+    OAMDATA_PRIORITY   = %00100000
+    OAMDATA_HFLIP      = %01000000
+    OAMDATA_VFLIP      = %10000000
+
 
 SQ1Cntrl0              = $4000   ;
 SQ1Cntrl1              = $4001   ;SQ1 hardware control registers.
