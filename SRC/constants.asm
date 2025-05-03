@@ -600,6 +600,16 @@ PowerUpBXCoord         = $0752   ;X coordiante of second power-up.
 PowerUpBNameTable      = $0753   ;#$00 if on name table 0, #$01 if on name table 3.
 PowerUpBAnimIndex      = $0757   ;Entry into FramePtrTable for item animation.
 
+; 5 Zebetite slots of 8 bytes each ($0758-$077F)
+ZebetiteStatus         = $0758
+ZebetiteVRAMPtrLo      = $0759   ;Pointer to top-left tile of Zebetite in the nametable.
+ZebetiteVRAMPtrHi      = $075A
+ZebetiteHits           = $075B   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
+ZebetiteHealingDelay   = $075C   ;Heals 1 hit when counts down from #$40 to #$00.
+ZebetiteJustGotHit     = $075D   ;#$01 if zebetite got hit by a missile this frame, else #$00
+; $075E is unused
+; $075F is unused
+
 TileSize               = $0780   ;4 MSBs=Y size of tile to erase.4 LSBs=X size of tile to erase.
 TileInfo0              = $0781   ;
 TileInfo1              = $0782   ;
@@ -737,7 +747,7 @@ EnData1D               = $6B01   ; Unknown
 EnDataIndex            = $6B02   ;Contains index into enemy data tables.
 EnData1F               = $6B03   ; Unknown
 
-
+; 16 cannon slots of 8 bytes each ($6BF4-$6C73)
 CannonStatus           = $6BF4
 CannonY                = $6BF5
 CannonX                = $6BF6
@@ -967,9 +977,9 @@ it_Squeept             = $1
 it_PowerUp             = $2
 it_Mellow              = $3
 it_Elevator            = $4
-it_Cannon              = $5   ;High nibble is used as CannonInstrListID
+it_Cannon              = $5   ;High nibble is CannonInstrListID
 it_MotherBrain         = $6
-it_Zebetite            = $7
+it_Zebetite            = $7   ;High nibble is Zebetite slot ID
 it_RinkaSpawner        = $8
 it_Door                = $9
 it_PaletteChange       = $A

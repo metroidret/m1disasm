@@ -183,11 +183,42 @@ L96BB:  .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $
 L96CB:  .byte $00, $02, $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementPtrs:
-    .word L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5
-    .word L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5
-    .word L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5
-    .word L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5, L97D5
-    .word L97D5, L97D5, L97D5, L97D5
+    .word EnemyMovement00
+    .word EnemyMovement01
+    .word EnemyMovement02
+    .word EnemyMovement03
+    .word EnemyMovement04
+    .word EnemyMovement05
+    .word EnemyMovement06
+    .word EnemyMovement07
+    .word EnemyMovement08
+    .word EnemyMovement09
+    .word EnemyMovement0A
+    .word EnemyMovement0B
+    .word EnemyMovement0C
+    .word EnemyMovement0D
+    .word EnemyMovement0E
+    .word EnemyMovement0F
+    .word EnemyMovement10
+    .word EnemyMovement11
+    .word EnemyMovement12
+    .word EnemyMovement13
+    .word EnemyMovement14
+    .word EnemyMovement15
+    .word EnemyMovement16
+    .word EnemyMovement17
+    .word EnemyMovement18
+    .word EnemyMovement19
+    .word EnemyMovement1A
+    .word EnemyMovement1B
+    .word EnemyMovement1C
+    .word EnemyMovement1D
+    .word EnemyMovement1E
+    .word EnemyMovement1F
+    .word EnemyMovement20
+    .word EnemyMovement21
+    .word EnemyMovement22
+    .word EnemyMovement23
 
 L9723:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $C0, $D0, $00, $00, $7F
 L9733:  .byte $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $00
@@ -208,6 +239,44 @@ L97BF:  .word LA391, LA3A2, LA3B3, LA3C4, LA3D5, LA3DE, LA3E7, LA3F0
 L97CF:  .word LA3F9
 
 L97D1:  .byte $00, $00, $00, $01
+
+EnemyMovement00:
+EnemyMovement01:
+EnemyMovement02:
+EnemyMovement03:
+EnemyMovement04:
+EnemyMovement05:
+EnemyMovement06:
+EnemyMovement07:
+EnemyMovement08:
+EnemyMovement09:
+EnemyMovement0A:
+EnemyMovement0B:
+EnemyMovement0C:
+EnemyMovement0D:
+EnemyMovement0E:
+EnemyMovement0F:
+EnemyMovement10:
+EnemyMovement11:
+EnemyMovement12:
+EnemyMovement13:
+EnemyMovement14:
+EnemyMovement15:
+EnemyMovement16:
+EnemyMovement17:
+EnemyMovement18:
+EnemyMovement19:
+EnemyMovement1A:
+EnemyMovement1B:
+EnemyMovement1C:
+EnemyMovement1D:
+EnemyMovement1E:
+EnemyMovement1F:
+EnemyMovement20:
+EnemyMovement21:
+EnemyMovement22:
+EnemyMovement23:
+    ; nothing
 
 L97D5:  .byte $50, $22, $FF
 
@@ -255,7 +324,7 @@ L9B25:
     jsr MotherBrainStatusHandler
     jsr LA1E7
     jsr LA238
-    jsr LA28B
+    jsr ZebetiteA28B
     jmp LA15E
 
 ;-------------------------------------------------------------------------------
@@ -447,13 +516,13 @@ L9C6F:
         bpl L9C73
     ldx #$00
     L9C89:
-        lda $0758,x
+        lda ZebetiteStatus,x
         beq L9C99
-        jsr L9D64
-        eor $075A,x
+        jsr GetVRAMPtrHi
+        eor ZebetiteVRAMPtrHi,x
         bne L9C99
-        sta $0758,x
-    L9C99:
+        sta ZebetiteStatus,x
+        L9C99:
         txa
         clc
         adc #$08
@@ -565,32 +634,37 @@ L9D3B:  .byte $02
 L9D3C:  .byte $01
 
 ;-------------------------------------------------------------------------------
-; Zebetite Handler
+; Spawns a new Zebetite into Zebetite slot
+; ($00),y is a pointer to special items data
 ZebetiteRoutine:
+    ; get zebetite slot from special item type high nibble
     lda ($00),y
     and #$F0
     lsr
     tax
+    ; set vram pointer to zebetite's top-left tile in the nametable
     asl
     and #$10
     eor #$10
     ora #$84
-    sta $0759,x
-    jsr L9D64
-    sta $075A,x
+    sta ZebetiteVRAMPtrLo,x
+    jsr GetVRAMPtrHi
+    sta ZebetiteVRAMPtrHi,x
+    
     lda #$01
-    sta $0758,x
+    sta ZebetiteStatus,x
+    
     lda #$00
-    sta $075B,x
-    sta $075C,x
-    sta $075D,x
+    sta ZebetiteHits,x
+    sta ZebetiteHealingDelay,x
+    sta ZebetiteJustGotHit,x
     rts
 
-L9D64:
+GetVRAMPtrHi:
     jsr GetNameTable_
     asl
     asl
-    ora #$61
+    ora #$21+$40
     rts
 
 ;-------------------------------------------------------------------------------
@@ -850,7 +924,7 @@ L9F02:
         sta PageIndex
         lda PPUStrIndex
         bne RTS_9F38
-        jsr CommonJump_15
+        jsr CommonJump_DrawTileBlast
         bcs RTS_9F38
     L9F33:
     inc MotherBrainHits
@@ -920,7 +994,7 @@ L9F69:
     sta TileWRAMHi
     lda #$00
     sta PageIndex
-    jmp CommonJump_15
+    jmp CommonJump_DrawTileBlast
 
 ;-------------------------------------------------------------------------------
 L9FC0:
@@ -1064,7 +1138,7 @@ LA087:
     lda #$00
     sta TileAnimFrame
     sta PageIndex
-    jmp CommonJump_15
+    jmp CommonJump_DrawTileBlast
 
 LA0A3:  .byte $00, $02, $04, $06, $08, $40, $80, $C0, $48, $88, $C8, $FF, $42, $81, $C1, $27
 LA0B3:  .byte $FF, $82, $43, $25, $47, $FF, $C2, $C4, $C6, $FF, $84, $45, $86
@@ -1072,6 +1146,7 @@ LA0C0:  .byte $FF, $00, $0C
 LA0C3:  .byte $11, $16, $1A
 
 ;-------------------------------------------------------------------------------
+;$04-$05 is pointer to projectile ??
 LA0C6:
     lda UpdatingProjectile
     beq LA13E
@@ -1099,7 +1174,7 @@ LA0C6:
         lda PageIndex
         pha
         stx PageIndex
-        jsr CommonJump_15
+        jsr CommonJump_DrawTileBlast
         pla
         sta PageIndex
         bne LA13E
@@ -1109,6 +1184,7 @@ LA0C6:
     bcc LA10A
         dec $04
     LA10A:
+    ; if projectile is a missile
     ldy #$00
     lda ($04),y
     lsr
@@ -1118,26 +1194,32 @@ LA0C6:
     cmp #$4C
     bcs LA13E
     LA119:
-        lda $0758,y
+        ; if zebetite is active
+        lda ZebetiteStatus,y
         beq LA12E
+        ; and if missile touches zebetite
         lda $04
         and #$9E
-        cmp $0759,y
+        cmp ZebetiteVRAMPtrLo,y
         bne LA12E
         lda $05
-        cmp $075A,y
+        cmp ZebetiteVRAMPtrHi,y
         beq LA139
-    LA12E:
-        tya
-        clc
-        adc #$08
-        tay
-        cmp #$28
-        bne LA119
-    beq LA13E
-LA139:
-    lda #$01
-    sta $075D,y
+        LA12E:
+            ; missile is not touching zebetite
+            ; check again for next zebetite
+            tya
+            clc
+            adc #$08
+            tay
+            cmp #$28
+            bne LA119
+            ; no more zebetites to loop through
+            beq LA13E
+        LA139:
+            ; set zebetite flag to indicate it got hit
+            lda #$01
+            sta ZebetiteJustGotHit,y
 LA13E:
     pla
     pla
@@ -1320,76 +1402,85 @@ RTS_A28A:
     rts
 
 ;-------------------------------------------------------------------------------
-LA28B:
+ZebetiteA28B:
     lda #$10
     sta PageIndex
+    ; run LA29B for all zebetite slots
     ldx #$20
-    LA291:
+    @loop:
         jsr LA29B
         txa
         sec
         sbc #$08
         tax
-        bne LA291
+        bne @loop
 LA29B:
-    lda $0758,x
+    ; return if status is not #$x1
+    lda ZebetiteStatus,x
     and #$0F
     cmp #$01
     bne RTS_A28A
-    lda $075D,x
+    
+    ; check if zebetite just got hit
+    lda ZebetiteJustGotHit,x
     beq LA2F2
-    inc $075B,x
-    lda $075B,x
+    
+    ; zebetite was just hit
+    ; increase hits count
+    inc ZebetiteHits,x
+    lda ZebetiteHits,x
+    ; check if hits count is even or odd
     lsr
     bcs LA2F2
+    ; 
     tay
     sbc #$03
     bne LA2BA
-    inc $0758,x
+    inc ZebetiteStatus,x
 LA2BA:
     lda LA310,y
     sta $0513
-    lda $0759,x
+    lda ZebetiteVRAMPtrLo,x
     sta $0518
-    lda $075A,x
+    lda ZebetiteVRAMPtrHi,x
     sta $0519
     lda PPUStrIndex
     bne LA2DA
         txa
         pha
-        jsr CommonJump_15
+        jsr CommonJump_DrawTileBlast
         pla
         tax
         bcc LA2EB
     LA2DA:
-    lda $0758,x
+    lda ZebetiteStatus,x
     and #$80
     ora #$01
-    sta $0758,x
-    sta $075D,x
-    dec $075B,x
+    sta ZebetiteStatus,x
+    sta ZebetiteJustGotHit,x
+    dec ZebetiteHits,x
     rts
 
 LA2EB:
     lda #$40
-    sta $075C,x
+    sta ZebetiteHealingDelay,x
     bne LA30A
 LA2F2:
-    ldy $075B,x
+    ldy ZebetiteHits,x
     beq LA30A
-    dec $075C,x
+    dec ZebetiteHealingDelay,x
     bne LA30A
     lda #$40
-    sta $075C,x
+    sta ZebetiteHealingDelay,x
     dey
     tya
-    sta $075B,x
+    sta ZebetiteHits,x
     lsr
     tay
     bcc LA2BA
 LA30A:
     lda #$00
-    sta $075D,x
+    sta ZebetiteJustGotHit,x
     rts
 
 LA310:  .byte $0C, $0D, $0E, $0F, $07

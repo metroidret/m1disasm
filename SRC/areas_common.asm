@@ -62,7 +62,7 @@
 .import LFBB9
 .import LFBCA
 .import LFD8F
-.import LFEDC
+.import DrawTileBlast
 
 ;-----------------------------------------[ Start of code ]------------------------------------------
 
@@ -109,8 +109,8 @@ CommonJump_13: ;$8039
     jmp L8395
 CommonJump_14: ;$803C
     jmp LDD8B
-CommonJump_15: ;$803F
-    jmp LFEDC
+CommonJump_DrawTileBlast: ;$803F
+    jmp DrawTileBlast
 CommonJump_SubtractHealth: ;$8042
     jmp SubtractHealth              ;($CE92)
 CommonJump_Base10Subtract: ;$8045

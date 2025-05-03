@@ -35,13 +35,23 @@ PlacePtrTable          = $86DF
 SamusEnterDoor         = $8B13
 PalPntrTbl             = $9560
 AreaPointers           = $9598
+SpecItmsTable          = $9598
 AreaRoutine            = $95C3
 ChooseEnemyRoutine     = $95E5
+
+L960B                  = $960B
 EnemyHitPointTbl       = $962B
+L963B                  = $963B
+L965B                  = $965B
+L967B                  = $967B
+L968B                  = $968B
+L969B                  = $969B
+L96AB                  = $96AB
 EnemyInitDelayTbl      = $96BB
+L96CB                  = $96CB
+
 L97AF                  = $97AF
 
-SpecItmsTable          = $9598
 SoundEngine            = $B3B4
 
 ;--------------------------------------------[ Export ]---------------------------------------------
@@ -118,7 +128,7 @@ SoundEngine            = $B3B4
 .export LFBB9
 .export LFBCA
 .export LFD8F
-.export LFEDC
+.export DrawTileBlast
 
 
 ;---------------------------------------------[ Import ]---------------------------------------------
@@ -8645,7 +8655,7 @@ Lx287:
     sta $010F
     tay
     bmi Lx288
-        lda $968B,y
+        lda L968B,y
         and #$10
         bne Exit17
     Lx288:
@@ -8930,7 +8940,7 @@ LF43E:
     lda EnData0C,x
     sta EnStatus,x
     ldy EnDataIndex,x
-    lda $969B,y
+    lda L969B,y
     sta EnData0D,x
 Lx303:
     lda EnData0D,x
@@ -9177,7 +9187,7 @@ Lx326:
     ldx PageIndex
 Lx327:
     jsr LF844
-    lda $960B,y
+    lda L960B,y
     jsr LF68D
     sta EnCounter,x
     ldx #$C0
@@ -9202,7 +9212,7 @@ Lx329:
     bvc Lx330
         lda #$03
     Lx330:
-    sta $0407,x
+    sta EnData07,x
     ldy PageIndex
     lda EnYRoomPos,y
     sta EnYRoomPos,x
@@ -9225,7 +9235,7 @@ LF676:
 
 LF682:
     jsr LF844
-    lda $963B,y
+    lda L963B,y
     cmp EnResetAnimIndex,x
     beq RTS_X331
 LF68D:
@@ -9240,12 +9250,12 @@ RTS_X331:
 
 LF699:
     jsr LF844
-    lda $965B,y
+    lda L965B,y
     cmp EnResetAnimIndex,x
     beq Exit12
     jsr LF68D
     ldy EnDataIndex,x
-    lda $967B,y
+    lda L967B,y
     and #$7F
     beq Exit12
     tay
@@ -9269,12 +9279,12 @@ LF6B9:
     cmp #$02
     bne Lx333
 
-        ; if bit 1 of $968B[EnDataIndex] is not set, exit
+        ; if bit 1 of L968B[EnDataIndex] is not set, exit
         tya
         and #$02
         beq Exit12
 
-    ; If enemy is not active or if bit 1 of $968B[EnDataIndex] is set
+    ; If enemy is not active or if bit 1 of L968B[EnDataIndex] is set
     Lx333:
     tya
     dec EnData0D,x
@@ -9282,7 +9292,7 @@ LF6B9:
 
     pha
     ldy EnDataIndex,x
-    lda $969B,y
+    lda L969B,y
     sta EnData0D,x
     pla
     bpl Lx337
@@ -9355,7 +9365,7 @@ RTS_X341:
 ;-------------------------------------------------------------------------------
 ReadTableAt968B: ; LF74B
     ldy EnDataIndex,x
-    lda $968B,y
+    lda L968B,y
     rts
 
 ;-------------------------------------------------------------------------------
@@ -9374,7 +9384,7 @@ LF75B:
     lda #$18
     jsr OrEnData05
     ldy EnDataIndex,x
-    lda $96AB,y
+    lda L96AB,y
     beq RTS_X346
     tay
     lda EnData05,x
@@ -9442,7 +9452,7 @@ Lx348:
     inc EnStatus,x
     jsr LF699
     ldy EnDataIndex,x
-    lda $96CB,y
+    lda L96CB,y
     clc
     adc #$D1
     sta $00
@@ -9516,7 +9526,7 @@ LF852: ; accessed from CommonJump_03
 
 LF85A:
     ldy EnDataIndex,x
-    lda $969B,y
+    lda L969B,y
     sta EnData0D,x
     lda EnemyHitPointTbl,y          ;($962B)
     ldy EnSpecialAttribs,x
@@ -10003,7 +10013,7 @@ LFB88:
         sta EnResetAnimIndex,x
         jmp LF693
     Lx384:
-    lda $963B,y
+    lda L963B,y
     cmp EnResetAnimIndex,x
     beq Exit13
     jmp LF68D
@@ -10012,7 +10022,7 @@ LFB88:
 LFBCA:
     ldx PageIndex
     jsr LF844
-    lda $965B,y
+    lda L965B,y
     cmp EnResetAnimIndex,x
     beq Exit13
     sta EnResetAnimIndex,x
