@@ -254,6 +254,9 @@ ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing.
 
 OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
 
+KraidLintCounter      = $7E
+KraidNailCounter      = $7F
+
 ;--------------------------------------[ End routine specific ]--------------------------------------
 
 EndMsgWrite            = $7A     ;0=don't write end message, 1=write end message.
@@ -280,6 +283,8 @@ CurrentMissilePickups  = $95     ;Number of missile power-ups currently collecte
                                         ;Reset to 0 when Samus goes through a door.
 CurrentEnergyPickups   = $96     ;Number of energy power-ups currently collected by Samus-->
                                         ;Reset to 0 when Samus goes through a door.
+
+CannonIndex            = $97     ;Current cannon being processed
 
 MotherBrainStatus      = $98     ;#$00=Mother brain not in room, #$01=Mother brain in room,-->
                                         ;#$02=Mother brain hit, #$03=Mother brain dying-->
@@ -731,6 +736,16 @@ EnData1C               = $6B00   ; Unknown
 EnData1D               = $6B01   ; Unknown
 EnDataIndex            = $6B02   ;Contains index into enemy data tables.
 EnData1F               = $6B03   ; Unknown
+
+
+CannonStatus           = $6BF4
+CannonY                = $6BF5
+CannonX                = $6BF6
+CannonHi               = $6BF7
+CannonInstrListID      = $6BF8
+CannonAngle            = $6BF9
+CannonInstrTimer       = $6BFA
+CannonInstrID          = $6BFB
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 

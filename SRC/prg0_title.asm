@@ -3498,19 +3498,31 @@ WavePointerTable:
 
 ;Sprite data table used when Samus is in jumpsuit and her waving hand is up.
 JsHandUpTable:
-    .byte $9B, $1F, $01, $80, $A3, $2F, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
+    .byte $9B, $1F, $01, $80
+    .byte $A3, $2F, $01, $80
+    .byte $AB, $3F, $01, $80
+    .byte $F4, $3F, $01, $80
 
 ;Sprite data table used when Samus is in jumpsuit and her waving hand is down.
 JsHandDownTable:
-    .byte $9B, $2A, $01, $80, $9B, $2B, $01, $88, $A3, $3A, $01, $80, $AB, $3F, $01, $80
+    .byte $9B, $2A, $01, $80
+    .byte $9B, $2B, $01, $88
+    .byte $A3, $3A, $01, $80
+    .byte $AB, $3F, $01, $80
 
 ;Sprite data table used when Samus is in bikini and her waving hand is up.
 BkHandUpTable:
-    .byte $9B, $0C, $01, $80, $A3, $1C, $01, $80, $AB, $3F, $01, $80, $F4, $3F, $01, $80
+    .byte $9B, $0C, $01, $80
+    .byte $A3, $1C, $01, $80
+    .byte $AB, $3F, $01, $80
+    .byte $F4, $3F, $01, $80
 
 ;Sprite data table used when Samus is in bikini and her waving hand is down.
 BkHandDownTable:
-    .byte $9B, $4A, $01, $80, $9B, $4B, $01, $88, $A3, $4D, $01, $80, $AB, $3F, $01, $80
+    .byte $9B, $4A, $01, $80
+    .byte $9B, $4B, $01, $88
+    .byte $A3, $4D, $01, $80
+    .byte $AB, $3F, $01, $80
 
 EndSamusAddrTbl:
     .word NormalSamus               ;($9D66)Pointer to end graphic of Samus wearing suit.

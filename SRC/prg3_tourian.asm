@@ -263,15 +263,15 @@ L9B37:
     ldx #$78
     L9B39:
         jsr L9B44
-        lda $97
+        lda CannonIndex
         sec
         sbc #$08
         tax
         bne L9B39
 
 L9B44:
-    stx $97
-    ldy $6BF4,x
+    stx CannonIndex
+    ldy CannonStatus,x
     bne L9B4C
 RTS_9B4B:
     rts
@@ -283,7 +283,7 @@ L9B4C:
     ldy EndTimerHi
     iny
     bne L9B65
-    lda $6BF8,x
+    lda CannonInstrListID,x
     cmp #$05
     beq RTS_9B4B
     jsr L9B70
@@ -297,35 +297,35 @@ L9B65:
     jmp L9C31
 
 L9B70:
-    ldy $6BF8,x
-    lda $6BFA,x
+    ldy CannonInstrListID,x
+    lda CannonInstrTimer,x
     bne L9B81
         lda L9D8F,y
-        sta $6BFA,x
-        inc $6BFB,x
+        sta CannonInstrTimer,x
+        inc CannonInstrID,x
     L9B81:
-    dec $6BFA,x
+    dec CannonInstrTimer,x
 L9B84:
-    lda L9D94,y
+    lda CannonInstrListsOffset,y
     clc
-    adc $6BFB,x
+    adc CannonInstrID,x
     tay
-    lda L9D99,y
+    lda CannonInstrLists,y
     bpl L9BAB
         cmp #$FF
         bne L9B9F
-            ldy $6BF8,x
+            ldy CannonInstrListID,x
             lda #$00
-            sta $6BFB,x
+            sta CannonInstrID,x
             beq L9B84
         L9B9F:
-        inc $6BFB,x
+        inc CannonInstrID,x
         jsr L9BAF
-        ldy $6BF8,x
+        ldy CannonInstrListID,x
         jmp L9B84
 
     L9BAB:
-        sta $6BF9,x
+        sta CannonAngle,x
         rts
 
 L9BAF:
@@ -349,11 +349,11 @@ L9BC6:
 
 L9BC8:
     sty PageIndex
-    lda $6BF5,x
+    lda CannonY,x
     sta EnYRoomPos,y
-    lda $6BF6,x
+    lda CannonX,x
     sta EnXRoomPos,y
-    lda $6BF7,x
+    lda CannonHi,x
     sta EnNameTable,y
     lda #$02
     sta EnStatus,y
@@ -374,32 +374,32 @@ L9BC8:
     sta $05
     lda L9DCF,x
     sta $04
-    ldx $97
-    lda $6BF5,x
+    ldx CannonIndex
+    lda CannonY,x
     sta $08
-    lda $6BF6,x
+    lda CannonX,x
     sta $09
-    lda $6BF7,x
+    lda CannonHi,x
     sta $0B
     tya
     tax
     jsr CommonJump_0D
     jsr LoadPositionFromTemp
-    ldx $97
+    ldx CannonIndex
     rts
 
 L9C28:  .byte $0C, $0A, $0E
 
 L9C2B:
-    ldy $6BF9,x
+    ldy CannonAngle,x
     lda L9DC6,y
 L9C31:
     sta EnAnimFrame+$E0
-    lda $6BF5,x
+    lda CannonY,x
     sta EnYRoomPos+$E0
-    lda $6BF6,x
+    lda CannonX,x
     sta EnXRoomPos+$E0
-    lda $6BF7,x
+    lda CannonHi,x
     sta EnNameTable+$E0
     lda #$E0
     sta PageIndex
@@ -407,15 +407,15 @@ L9C31:
 
 L9C4D:
     ldy #$00
-    lda $6BF6,x
+    lda CannonX,x
     cmp ScrollX
     lda ScrollDir
     and #$02
     bne L9C5F
-        lda $6BF5,x
+        lda CannonY,x
         cmp ScrollY
     L9C5F:
-    lda $6BF7,x
+    lda CannonHi,x
     eor PPUCTRL_ZP
     and #$01
     beq L9C6B
@@ -433,12 +433,12 @@ L9C6F:
     sty $02
     ldy #$00
     L9C73:
-        lda $6BF7,y
+        lda CannonHi,y
         eor $02
         lsr
         bcs L9C80
             lda #$00
-            sta $6BF4,y
+            sta CannonStatus,y
         L9C80:
         tya
         clc
@@ -505,7 +505,7 @@ RTS_9CE5:
 CannonRoutine:
     ldx #$00
     L9CE8:
-        lda $6BF4,x
+        lda CannonStatus,x
         beq L9CF6
         txa
         clc
@@ -516,22 +516,22 @@ CannonRoutine:
 L9CF6:
     lda ($00),y
     jsr Adiv16_
-    sta $6BF8,x
+    sta CannonInstrListID,x
     lda #$01
-    sta $6BF4,x
-    sta $6BFB,x
+    sta CannonStatus,x
+    sta CannonInstrID,x
     iny
     lda ($00),y
     pha
     and #$F0
     ora #$07
-    sta $6BF5,x
+    sta CannonY,x
     pla
     jsr Amul16_
     ora #$07
-    sta $6BF6,x
+    sta CannonX,x
     jsr L9D88
-    sta $6BF7,x
+    sta CannonHi,x
 RTS_9D20:
     rts
 
@@ -610,11 +610,22 @@ L9D88:
     rts
 
 L9D8F:  .byte $28, $28, $28, $28, $28
-L9D94:  .byte $00, $0B, $16, $21, $27
-L9D99:  .byte $00, $01, $02, $FD, $03, $04
-L9D9F:  .byte $FD, $03, $02, $01, $FF, $00, $07, $06, $FE, $05, $04, $FE, $05, $06, $07, $FF
-L9DAF:  .byte $02, $03, $FC, $04, $05, $06, $05, $FC, $04, $03, $FF, $02, $03, $FC, $04, $03
-L9DBF:  .byte $FF, $06, $05, $FC, $04, $05, $FF
+
+CannonInstrListsOffset:
+    .byte CannonInstrList0 - CannonInstrLists
+    .byte CannonInstrList1 - CannonInstrLists
+    .byte CannonInstrList2 - CannonInstrLists
+    .byte CannonInstrList3 - CannonInstrLists
+    .byte CannonInstrList4 - CannonInstrLists
+
+; #$00-#$07 is angles, #$FE is shooting a bullet, #$FF is end
+CannonInstrLists:
+CannonInstrList0: .byte $00, $01, $02, $FD, $03, $04, $FD, $03, $02, $01, $FF
+CannonInstrList1: .byte $00, $07, $06, $FE, $05, $04, $FE, $05, $06, $07, $FF
+CannonInstrList2: .byte $02, $03, $FC, $04, $05, $06, $05, $FC, $04, $03, $FF
+CannonInstrList3: .byte $02, $03, $FC, $04, $03, $FF
+CannonInstrList4: .byte $06, $05, $FC, $04, $05, $FF
+
 L9DC6:  .byte $06, $07, $08, $09, $0A, $0B
 L9DCC:  .byte $0C, $0D, $09
 
@@ -701,7 +712,8 @@ L9E43:
     rts
 
 ;-------------------------------------------------------------------------------
-L9E52:  JSR L9E43
+L9E52:
+    jsr L9E43
     lda L9E41,y
     sta PalDataPending
     tya
@@ -751,7 +763,7 @@ L9E86:
         bne L9E98
     lda PPUStrIndex
     bne L9EB5
-        lda L9F00,y
+        lda L9EFF+1,y
         sta $1C
     L9EB5:
     ldy MotherBrainStatus
@@ -803,8 +815,7 @@ L9EF9:
     tax
     rts
 
-L9EFF: .byte $60
-L9F00: ORA #$0A
+L9EFF: .byte $60, $09, $0A
 
 ;-------------------------------------------------------------------------------
 L9F02:

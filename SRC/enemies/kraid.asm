@@ -10,6 +10,7 @@ KraidRoutine:
     bne KraidBranchC
 
 KraidBranchA:
+    ; clear projectiles status?
     lda #$00
     sta EnStatus+$10 ;$6B04
     sta EnStatus+$20 ;$6B14
@@ -19,7 +20,7 @@ KraidBranchA:
     beq KraidBranchC
 
 KraidBranchB:
-    jsr KraidSubA
+    jsr KraidUpdateAllProjectiles
     jsr KraidSubB
     jsr KraidSubC
 
@@ -79,10 +80,10 @@ KraidNail: ; L9B2C
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1
-KraidSubA: ; L9B2F
-    ldx #$50 ; For each enemy slot (except Kraid's)
+KraidUpdateAllProjectiles: ; L9B2F
+    ldx #$50 ; For each of Kraid's projectiles
 @loop:
-    jsr KraidSubASub
+    jsr KraidUpdateProjectile
     txa               ;\
     sec               ;|-- X := X-$10
     sbc #$10          ;|
@@ -92,37 +93,40 @@ KraidSubA: ; L9B2F
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1.1
-KraidSubASub:
+KraidUpdateProjectile:
     ldy EnStatus,x
-    beq KraidSubASub_BranchB
+    beq KraidUpdateProjectile_BranchB
+    
+    ; run KraidUpdateProjectile_BranchA if projectile is lint or nail
     lda EnDataIndex,x
     cmp #$0A
-    beq KraidSubASub_BranchA
+    beq KraidUpdateProjectile_BranchA
     cmp #$09
-    bne KraidSubASub_Exit
+    bne KraidUpdateProjectile_Exit
 
-KraidSubASub_BranchA:
+KraidUpdateProjectile_BranchA:
     lda EnData05,x
     and #$02
-    beq KraidSubASub_BranchB
+    beq KraidUpdateProjectile_BranchB
     dey
-    beq KraidSubASub_BranchC
+    beq KraidUpdateProjectile_BranchC
     cpy #$02
-    beq KraidSubASub_BranchB
+    beq KraidUpdateProjectile_BranchB
     cpy #$03
-    bne KraidSubASub_Exit
+    bne KraidUpdateProjectile_Exit
     lda EnData0C,x
     cmp #$01
-    bne KraidSubASub_Exit
-    beq KraidSubASub_BranchC
+    bne KraidUpdateProjectile_Exit
+    beq KraidUpdateProjectile_BranchC
 
-KraidSubASub_BranchB:
+KraidUpdateProjectile_BranchB:
     lda #$00
     sta EnStatus,x
     sta EnSpecialAttribs,x
     jsr CommonJump_0E
 
-KraidSubASub_BranchC:
+KraidUpdateProjectile_BranchC:
+    ; initialize projectile
     lda EnData05
     sta EnData05,x
     lsr
@@ -137,16 +141,12 @@ KraidSubASub_BranchC:
     sta $04
     lda KraidBulletType-1,y
     sta EnDataIndex,x
-
-KraidSubASub_BranchD:
     tya
     plp ;
     rol
     tay ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
     lda KraidBulletX-2,y
     sta $05
-
-KraidSubASub_BranchE:
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
 ;  a crash when attempting to spawn him
@@ -169,7 +169,7 @@ KraidSubASub_BranchE:
     ldx PageIndex
 .ENDIF
 
-    bcc KraidSubASub_Exit
+    bcc KraidUpdateProjectile_Exit
     lda EnStatus,x
     bne LoadPositionFromTemp
     inc EnStatus,x
@@ -183,7 +183,7 @@ LoadPositionFromTemp:
     and #$01
     sta EnNameTable,x
 
-KraidSubASub_Exit:
+KraidUpdateProjectile_Exit:
     rts
 
 StorePositionToTemp:
@@ -196,7 +196,7 @@ StorePositionToTemp:
     rts
 
 KraidBulletY:
-    .byte -11, -3, 5, -10, -2
+    .byte -11,  -3,   5, -10,  -2
 KraidBulletX: ;9BD1
 ; First column is for facing right, second for facing left
     .byte  10, -10
@@ -211,16 +211,15 @@ KraidBulletType: ; L9BDB
 ; Kraid Subroutine 2
 ;  Something to do with the lint
 KraidSubB:
-    ldy $7E
+    ldy KraidLintCounter
     bne KraidSubB_BranchA
-    ldy #$80
-
-KraidSubB_BranchA:
+        ldy #$80
+    KraidSubB_BranchA:
     lda FrameCount
     and #$02
     bne KraidSubB_Exit
     dey
-    sty $7E
+    sty KraidLintCounter
     tya
     asl
     bmi KraidSubB_Exit
@@ -237,7 +236,7 @@ KraidSubB_BranchA:
     ldx #$30
     cmp EnStatus,x
     beq KraidSubB_BranchB
-    inc $7E
+    inc KraidLintCounter
     rts
 
 KraidSubB_BranchB:
@@ -251,16 +250,15 @@ KraidSubB_Exit:
 ; Kraid Subroutine 3
 ;  Something to do with the nails
 KraidSubC:
-    ldy $7F
+    ldy KraidNailCounter
     bne KraidSubC_BranchA
-    ldy #$60
-
-KraidSubC_BranchA:
+        ldy #$60
+    KraidSubC_BranchA:
     lda FrameCount
     and #$02
     bne KraidSubC_Exit
     dey
-    sty $7F
+    sty KraidNailCounter
     tya
     asl
     bmi KraidSubC_Exit
@@ -273,7 +271,7 @@ KraidSubC_BranchA:
     ldx #$50
     cmp EnStatus,x
     beq KraidSubC_BranchB
-    inc $7F
+    inc KraidNailCounter
     rts
 
 KraidSubC_BranchB:
