@@ -742,9 +742,9 @@ CannonStatus           = $6BF4
 CannonY                = $6BF5
 CannonX                = $6BF6
 CannonHi               = $6BF7
-CannonInstrListID      = $6BF8
+CannonInstrListID      = $6BF8   ;Type of cannon: determines where it aims and when it shoots.
 CannonAngle            = $6BF9
-CannonInstrTimer       = $6BFA
+CannonInstrDelay       = $6BFA   ;Number of frames to delay between parsing instructions.
 CannonInstrID          = $6BFB
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
@@ -967,7 +967,7 @@ it_Squeept             = $1
 it_PowerUp             = $2
 it_Mellow              = $3
 it_Elevator            = $4
-it_Cannon              = $5
+it_Cannon              = $5   ;High nibble is used as CannonInstrListID
 it_MotherBrain         = $6
 it_Zebetite            = $7
 it_RinkaSpawner        = $8

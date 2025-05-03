@@ -298,13 +298,13 @@ L9B65:
 
 L9B70:
     ldy CannonInstrListID,x
-    lda CannonInstrTimer,x
+    lda CannonInstrDelay,x
     bne L9B81
         lda L9D8F,y
-        sta CannonInstrTimer,x
+        sta CannonInstrDelay,x
         inc CannonInstrID,x
     L9B81:
-    dec CannonInstrTimer,x
+    dec CannonInstrDelay,x
 L9B84:
     lda CannonInstrListsOffset,y
     clc
@@ -501,25 +501,32 @@ RTS_9CE5:
     rts
 
 ;-------------------------------------------------------------------------------
-; Tourian Cannon Handler
+; Spawns a new Tourian cannon into first available cannon slot
+; ($00),y is a pointer to special items data
 CannonRoutine:
     ldx #$00
-    L9CE8:
+    @loop:
         lda CannonStatus,x
-        beq L9CF6
+        beq @spawnCannon
         txa
         clc
         adc #$08
         tax
-        bpl L9CE8
-    bmi RTS_9D20
-L9CF6:
+        bpl @loop
+    ; cannon failed to spawn, because all 16 slots are occupied
+    bmi @RTS ; always return
+
+@spawnCannon:
+    ; high nibble of special item type is CannonInstrListID
     lda ($00),y
     jsr Adiv16_
     sta CannonInstrListID,x
+    
     lda #$01
     sta CannonStatus,x
     sta CannonInstrID,x
+    
+    ; set Y and X
     iny
     lda ($00),y
     pha
@@ -530,9 +537,11 @@ L9CF6:
     jsr Amul16_
     ora #$07
     sta CannonX,x
-    jsr L9D88
+    
+    ; set nametable for edge of the screen that scrolls in
+    jsr GetNameTable_
     sta CannonHi,x
-RTS_9D20:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -540,7 +549,7 @@ RTS_9D20:
 MotherBrainRoutine:
     lda #$01
     sta MotherBrainStatus
-    jsr L9D88
+    jsr GetNameTable_
     sta MotherBrainNameTable
     eor #$01
     tax
@@ -578,7 +587,7 @@ ZebetiteRoutine:
     rts
 
 L9D64:
-    jsr L9D88
+    jsr GetNameTable_
     asl
     asl
     ora #$61
@@ -597,13 +606,13 @@ RinkaSpawnerRoutine:
     lda ($00),y
     jsr Adiv16_
     sta $8B,x
-    jsr L9D88
+    jsr GetNameTable_
     sta $8C,x
     lda #$FF
 RTS_9D87:
     rts
 
-L9D88:
+GetNameTable_:
     lda PPUCTRL_ZP
     eor ScrollDir
     and #$01
