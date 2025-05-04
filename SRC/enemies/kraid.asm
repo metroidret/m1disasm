@@ -1,7 +1,7 @@
 ; Kraid, Lint, and Nails
 
 ; Kraid Routine
-KraidRoutine:
+KraidAIRoutine:
     lda EnStatus,x
     cmp #$03
     bcc KraidBranchB
@@ -31,7 +31,7 @@ KraidBranchC:
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
-KraidLint:
+KraidLintAIRoutine:
     lda EnData05,x
     and #$02
     beq KraidLintBranchA
@@ -75,8 +75,8 @@ KraidLintBranchC:
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile 2
-KraidNail: ; L9B2C
-    jmp KraidLint
+KraidNailAIRoutine: ; L9B2C
+    jmp KraidLintAIRoutine
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1

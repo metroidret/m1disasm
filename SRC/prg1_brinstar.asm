@@ -119,20 +119,20 @@ TwosComplement_:
     .byte $00, $00, $00, $00, $00, $69
 
 ; Enemy AI jump table
-ChooseEnemyRoutine:
+ChooseEnemyAIRoutine:
     lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
-        .word SidehopperFloorRoutine ; 00 - Sidehopper
-        .word SidehopperCeilingRoutine ; 01 - Ceiling sidehopper
-        .word WaverRoutine ; 02 - Waver
-        .word RipperRoutine ; 03 - Ripper
-        .word SkreeRoutine ; 04 - Skree
-        .word CrawlerRoutine ; 05 - Zoomer (crawler)
-        .word RioRoutine ; 06 - Rio (swoopers)
-        .word PipeBugRoutine ; 07 - Zeb
-        .word KraidRoutine ; 08 - Kraid (crashes due to bug)
-        .word KraidLint ; 09 - Kraid's lint (crashes)
-        .word KraidNail ; 0A - Kraid's nail (crashes)
+        .word SidehopperFloorAIRoutine ; 00 - Sidehopper
+        .word SidehopperCeilingAIRoutine ; 01 - Ceiling sidehopper
+        .word WaverAIRoutine ; 02 - Waver
+        .word RipperAIRoutine ; 03 - Ripper
+        .word SkreeAIRoutine ; 04 - Skree
+        .word CrawlerAIRoutine ; 05 - Zoomer (crawler)
+        .word RioAIRoutine ; 06 - Rio (swoopers)
+        .word PipeBugAIRoutine ; 07 - Zeb
+        .word KraidAIRoutine ; 08 - Kraid (crashes due to bug)
+        .word KraidLintAIRoutine ; 09 - Kraid's lint (crashes)
+        .word KraidNailAIRoutine ; 0A - Kraid's nail (crashes)
         .word $0000 ; 0B - Null pointers (hard crash)
         .word $0000 ; 0C - Null
         .word $0000 ; 0D - Null

@@ -1,5 +1,5 @@
 ; SkreeRoutine
-SkreeRoutine:
+SkreeAIRoutine:
     lda $81
     cmp #$01
     beq SkreeExitB

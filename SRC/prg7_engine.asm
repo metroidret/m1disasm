@@ -37,7 +37,7 @@ PalPntrTbl             = $9560
 AreaPointers           = $9598
 SpecItmsTable          = $9598
 AreaRoutine            = $95C3
-ChooseEnemyRoutine     = $95E5
+ChooseEnemyAIRoutine   = $95E5
 
 L960B                  = $960B
 EnemyHitPointTbl       = $962B
@@ -144,10 +144,10 @@ SoundEngine            = $B3B4
 .import GotoClearCurrentMetroidLatchAndMetroidOnSamus
 .import GotoClearAllMetroidLatches
 .import GotoL9C6F
-.import GotoCannonRoutine
-.import GotoMotherBrainRoutine
-.import GotoZebetiteRoutine
-.import GotoRinkaSpawnerRoutine
+.import GotoSpawnCannonRoutine
+.import GotoSpawnMotherBrainRoutine
+.import GotoSpawnZebetiteRoutine
+.import GotoSpawnRinkaSpawnerRoutine
 .import GotoLA0C6
 .import GotoLA142
 
@@ -7472,11 +7472,11 @@ GetNameTable:
 ; ========
 
 LoadDoor:
-    jsr LEB92
+    jsr SpawnDoorRoutine
 Lx230:
     jmp EnemyLoop    ; do next room object
 
-LEB92:
+SpawnDoorRoutine:
     iny
     lda ($00),y     ; door info byte
     pha
@@ -7552,10 +7552,10 @@ LEC00:
 ; ============
 
 LoadElevator:
-    jsr LEC09
+    jsr SpawnElevatorRoutine
     bne Lx230           ; branch always
 
-LEC09:
+SpawnElevatorRoutine:
     lda ElevatorStatus
     bne Lx234      ; exit if elevator already present
     iny
@@ -7798,7 +7798,7 @@ Exit11:
 ;---------------------------------------[ Setup special items ]--------------------------------------
 
 ;The following routines look for special items on the game map and jump to
-;the appropriate routine to handle those items.
+;the appropriate routine to load those items.
 
 ScanForItems:
     lda SpecItmsTable               ;Low byte of ptr to 1st item data.
@@ -7843,34 +7843,34 @@ ScanItemX:
 LEDD4:
     lda #$02                        ;Move ahead two bytes to find item data.
 
-ChooseHandlerRoutine:
+ChooseSpawningRoutine:
     jsr AddToPtr00                  ;($EF09)Add A to pointer at $0000.
     ldy #$00                        ;
     lda ($00),y                     ;Object type
     and #$0F                        ;Object handling routine index stored in 4 LSBs.
     jsr ChooseRoutine               ;($C27C)Load proper handling routine from table below.
-        .word ExitSub                   ;($C45C)rts.
-        .word SqueeptHandler            ;($EDF8)Some squeepts.
-        .word PowerUpHandler            ;($EDFE)power-ups.
-        .word SpecEnemyHandler          ;($EE63)Special enemies(Mellows, Melias and Memus).
-        .word ElevatorHandler           ;($EEA1)Elevators.
-        .word CannonHandler             ;($EEA6)Mother brain room cannons.
-        .word MotherBrainHandler        ;($EEAE)Mother brain.
-        .word ZebetiteHandler          ;($EECA)Zebetites.
-        .word RinkaSpawnerHandler       ;($EEEE)Rinkas.
-        .word DoorHandler               ;($EEF4)Some doors.
-        .word PaletteHandler            ;($EEFA)Background palette change.
+        .word ExitSub               ;($C45C)rts.
+        .word SpawnSqueept          ;($EDF8)Some squeepts.
+        .word SpawnPowerUp          ;($EDFE)power-ups.
+        .word SpawnSpecEnemy        ;($EE63)Special enemies(Mellows, Melias and Memus).
+        .word SpawnElevator         ;($EEA1)Elevators.
+        .word SpawnCannon           ;($EEA6)Mother brain room cannons.
+        .word SpawnMotherBrain      ;($EEAE)Mother brain.
+        .word SpawnZebetite         ;($EECA)Zebetites.
+        .word SpawnRinkaSpawner     ;($EEEE)Rinkas.
+        .word SpawnDoor             ;($EEF4)Some doors.
+        .word SpawnPalette          ;($EEFA)Background palette change.
 
 ;---------------------------------------[ Squeept handler ]------------------------------------------
 
-SqueeptHandler:
+SpawnSqueept:
     jsr GetEnemyData                ;($EB0C)Load Squeept data.
-LEDFB:
-    jmp ChooseHandlerRoutine        ;($EDD6)Exit handler routines.
+SpawnSqueept_exit:
+    jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
 ;--------------------------------------[ Power-up Handler ]------------------------------------------
 
-PowerUpHandler:
+SpawnPowerUp:
     iny                             ;Prepare to store item type.
     ldx #$00                        ;
     lda #$FF                        ;
@@ -7902,7 +7902,7 @@ PowerUpHandler:
 
 LEE39:
     lda #$03                        ;Get next data byte(Always #$00).
-    bne LEDFB                         ;Branch always to exit handler routines.
+    bne SpawnSqueept_exit           ;Branch always to exit handler routines.
 
 PrepareItemID:
     sta $09                         ;Store item type.
@@ -7935,29 +7935,29 @@ RTS_EE62:
 
 ;-----------------------------------------------------------------------------------------------------
 
-SpecEnemyHandler:
+SpawnSpecEnemy:
     ldx #$18
     lda RandomNumber1
     adc FrameCount
     sta $8A
-    Lx255:
-        jsr LEE86
+    @loop:
+        jsr SpawnSpecEnemy_sub
         txa
         sec
         sbc #$08
         tax
-        bpl Lx255
+        bpl @loop
     lda $95E4
-    sta $6BE9
-    sta $6BEA
+    sta EnResetAnimIndex+$F0
+    sta EnAnimIndex+$F0
     lda #$01
-    sta $6BE4
-Lx256:
-    jmp ChooseHandlerRoutine        ;($EDD6)Exit handler routines.
+    sta EnStatus+$F0
+SpawnSpecEnemy_exit:
+    jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
-LEE86:
+SpawnSpecEnemy_sub:
     lda $B0,x
-    bne RTS_X257
+    bne @RTS
     txa
     adc $8A
     and #$7F
@@ -7969,36 +7969,37 @@ LEE86:
     lda #$01
     sta $B0,x
     rol $8A
-RTS_X257:
+@RTS:
     rts
 
-ElevatorHandler:
-    jsr LEC09
-    bne Lx256                          ;Branch always.
+SpawnElevator:
+    jsr SpawnElevatorRoutine
+    bne SpawnSpecEnemy_exit                          ;Branch always.
 
-CannonHandler:
-    jsr GotoCannonRoutine
+SpawnCannon:
+    jsr GotoSpawnCannonRoutine
     lda #$02
-Lx258:  jmp ChooseHandlerRoutine        ;($EDD6)Exit handler routines.
+SpawnCannon_exit:
+    jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
-MotherBrainHandler:
-    jsr GotoMotherBrainRoutine
+SpawnMotherBrain:
+    jsr GotoSpawnMotherBrainRoutine
     lda #$38
     sta $07
     lda #$00
     sta $06
     jsr CheckForItem
-    bcc LEEC6
+    bcc SpawnMotherBrain_exit
         lda #$08
         sta MotherBrainStatus
         lda #$00
         sta MotherBrainHits
-    LEEC6:
+    SpawnMotherBrain_exit:
     lda #$01
-    bne Lx258
+    bne SpawnCannon_exit
 
-ZebetiteHandler:
-    jsr GotoZebetiteRoutine
+SpawnZebetite:
+    jsr GotoSpawnZebetiteRoutine
     txa
     lsr
     adc #$3C
@@ -8007,27 +8008,28 @@ ZebetiteHandler:
     sta $06
     jsr CheckForItem
     bcc Lx259
-    lda #$81
-    sta $0758,x
-    lda #$01
-    sta $075D,x
-    lda #$07
-    sta $075B,x
-Lx259:
-    jmp LEEC6
+        ; Kill Zebetite
+        lda #$81
+        sta ZebetiteStatus,x
+        lda #$01
+        sta ZebetiteJustGotHit,x
+        lda #$07
+        sta ZebetiteHits,x
+    Lx259:
+    jmp SpawnMotherBrain_exit
 
-RinkaSpawnerHandler:
-    jsr GotoRinkaSpawnerRoutine
-    jmp LEEC6
+SpawnRinkaSpawner:
+    jsr GotoSpawnRinkaSpawnerRoutine
+    jmp SpawnMotherBrain_exit
 
-DoorHandler:
-    jsr LEB92
-    jmp ChooseHandlerRoutine        ;($EDD6)Exit handler routines.
+SpawnDoor:
+    jsr SpawnDoorRoutine
+    jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
-PaletteHandler:
+SpawnPalette:
     lda ScrollDir
     sta $91
-    bne LEEC6
+    bne SpawnMotherBrain_exit
 
 AnotherItem:
     lda ($00),y                     ;Is there another item with same Y pos?-->
@@ -8038,13 +8040,14 @@ AnotherItem:
     rts                             ;off stack and exit.
 
 AddToPtr00:
-    clc                             ;
-    adc $00                         ;
-    sta $00                         ;A is added to the 16 bit address stored in $0000.
-    bcc RTS_X260                           ;
-        inc $01                         ;
+    ;A is added to the 16 bit address stored in $0000.
+    clc
+    adc $00
+    sta $00
+    bcc RTS_X260
+        inc $01
     RTS_X260:
-    rts                             ;
+    rts
 
 ;----------------------------------[ Draw structure routines ]----------------------------------------
 
@@ -8882,7 +8885,7 @@ DoActiveEnemy_BranchA: ; LF401
 DoActiveEnemy_BranchB: ; LF40A
     jsr LF536
 LF40D:
-    jmp ChooseEnemyRoutine
+    jmp ChooseEnemyAIRoutine
 ;-------------------------------------------
 ; This procedure is called by a lot of enemy AI routines, with three different
 ;  entry points
@@ -10101,7 +10104,6 @@ Lx388:
     rts
 
 ; Table used by above subroutine
-
 Table17:
     .byte $00
     .byte $FB

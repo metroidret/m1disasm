@@ -1,4 +1,4 @@
-RioRoutine:
+RioAIRoutine:
     lda $81
     cmp #$01
     beq RioExitC

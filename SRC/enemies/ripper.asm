@@ -1,5 +1,4 @@
-; RipperRoutine
-RipperRoutine:
+RipperAIRoutine:
     lda EnStatus,x
     cmp #$03
     beq Ripper01

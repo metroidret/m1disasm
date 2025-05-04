@@ -1,5 +1,5 @@
 ; Zoomer Routine (Crawler)
-CrawlerRoutine:
+CrawlerAIRoutine:
     jsr CommonJump_03
     and #$03
     beq Crawler03

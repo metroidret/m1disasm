@@ -120,24 +120,24 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 
 ; Enemy AI jump table
-ChooseEnemyRoutine:
+ChooseEnemyAIRoutine:
     lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
-        .word SwooperRoutine ; 00 - swooper
-        .word SwooperRoutine2 ; 01 - becomes swooper?
-        .word RipperRoutine ; 02 - ripper
+        .word SwooperAIRoutine ; 00 - swooper
+        .word SwooperAIRoutine2 ; 01 - becomes swooper?
+        .word RipperAIRoutine ; 02 - ripper
         .word InvalidEnemy ; 03 - disappears
         .word InvalidEnemy ; 04 - same as 3
         .word InvalidEnemy ; 05 - same as 3
-        .word CrawlerRoutine ; 06 - crawler
-        .word PipeBugRoutine ; 07 - gamet
+        .word CrawlerAIRoutine ; 06 - crawler
+        .word PipeBugAIRoutine ; 07 - gamet
         .word InvalidEnemy ; 08 - same as 3
         .word InvalidEnemy ; 09 - same as 3
         .word InvalidEnemy ; 0A - same as 3
-        .word SqueeptRoutine ; 0B - lava jumper
-        .word MultiviolaRoutine ; 0C - bouncy orb
-        .word SeahorseRoutine ; 0D - seahorse
-        .word PolypRoutine ; 0E - rock launcher thing
+        .word SqueeptAIRoutine ; 0B - lava jumper
+        .word MultiviolaAIRoutine ; 0C - bouncy orb
+        .word SeahorseAIRoutine ; 0D - seahorse
+        .word PolypAIRoutine ; 0E - rock launcher thing
         .word InvalidEnemy ; 0F - same as 3
 
 L960B:  .byte $28, $28, $28, $28, $30, $30, $00, $00, $00, $00, $00, $00, $75, $75, $84, $82

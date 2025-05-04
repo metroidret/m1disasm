@@ -1,6 +1,6 @@
 ; Pipe Bug AI Handler
 
-PipeBugRoutine:
+PipeBugAIRoutine:
     lda EnStatus,x      ;
     cmp #$02            ;
     bne PipeBugBranchA  ;

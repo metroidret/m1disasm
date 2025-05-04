@@ -1,5 +1,5 @@
 ; Waver Routine
-WaverRoutine:
+WaverAIRoutine:
     lda #$21
     sta $85
     lda #$1E

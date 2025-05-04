@@ -28,10 +28,10 @@ BANK .set 3
 .export GotoClearCurrentMetroidLatchAndMetroidOnSamus
 .export GotoClearAllMetroidLatches
 .export GotoL9C6F
-.export GotoCannonRoutine
-.export GotoMotherBrainRoutine
-.export GotoZebetiteRoutine
-.export GotoRinkaSpawnerRoutine
+.export GotoSpawnCannonRoutine
+.export GotoSpawnMotherBrainRoutine
+.export GotoSpawnZebetiteRoutine
+.export GotoSpawnRinkaSpawnerRoutine
 .export GotoLA0C6
 .export GotoLA142
 
@@ -95,14 +95,14 @@ GotoClearAllMetroidLatches:
     jmp ClearAllMetroidLatches
 GotoL9C6F:
     jmp L9C6F
-GotoCannonRoutine:
-    jmp CannonRoutine
-GotoMotherBrainRoutine:
-    jmp MotherBrainRoutine
-GotoZebetiteRoutine:
-    jmp ZebetiteRoutine
-GotoRinkaSpawnerRoutine:
-    jmp RinkaSpawnerRoutine
+GotoSpawnCannonRoutine:
+    jmp SpawnCannonRoutine
+GotoSpawnMotherBrainRoutine:
+    jmp SpawnMotherBrainRoutine
+GotoSpawnZebetiteRoutine:
+    jmp SpawnZebetiteRoutine
+GotoSpawnRinkaSpawnerRoutine:
+    jmp SpawnRinkaSpawnerRoutine
 GotoLA0C6:
     jmp LA0C6
 GotoLA142:
@@ -135,14 +135,14 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
 ; Enemy AI Jump Table
-ChooseEnemyRoutine:
+ChooseEnemyAIRoutine:
     lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
-        .word MetroidRoutine ; 00 - metroid
-        .word MetroidRoutine ; 01 - same as 0
+        .word MetroidAIRoutine ; 00 - metroid
+        .word MetroidAIRoutine ; 01 - same as 0
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
         .word InvalidEnemy ; 03 - disappears
-        .word RinkaRoutine ; 04 - rinka ?
+        .word RinkaAIRoutine ; 04 - rinka ?
         .word InvalidEnemy ; 05 - same as 3
         .word InvalidEnemy ; 06 - same as 3
         .word InvalidEnemy ; 07 - same as 3
@@ -572,7 +572,7 @@ RTS_9CE5:
 ;-------------------------------------------------------------------------------
 ; Spawns a new Tourian cannon into first available cannon slot
 ; ($00),y is a pointer to special items data
-CannonRoutine:
+SpawnCannonRoutine:
     ldx #$00
     @loop:
         lda CannonStatus,x
@@ -615,7 +615,7 @@ CannonRoutine:
 
 ;-------------------------------------------------------------------------------
 ; Mother Brain Handler
-MotherBrainRoutine:
+SpawnMotherBrainRoutine:
     lda #$01
     sta MotherBrainStatus
     jsr GetNameTable_
@@ -636,7 +636,7 @@ L9D3C:  .byte $01
 ;-------------------------------------------------------------------------------
 ; Spawns a new Zebetite into Zebetite slot
 ; ($00),y is a pointer to special items data
-ZebetiteRoutine:
+SpawnZebetiteRoutine:
     ; get zebetite slot from special item type high nibble
     lda ($00),y
     and #$F0
@@ -669,7 +669,7 @@ GetVRAMPtrHi:
 
 ;-------------------------------------------------------------------------------
 ; Rinka Handler
-RinkaSpawnerRoutine:
+SpawnRinkaSpawnerRoutine:
     ldx #$03
     jsr L9D75
         bmi RTS_9D87
@@ -1432,18 +1432,19 @@ LA29B:
     ; check if hits count is even or odd
     lsr
     bcs LA2F2
-    ; 
+    ; hit count is even
+    ; update zebetite appearance
     tay
     sbc #$03
     bne LA2BA
     inc ZebetiteStatus,x
 LA2BA:
-    lda LA310,y
-    sta $0513
+    lda ZebetiteAnimFrameTable,y
+    sta TileAnimFrame+$10
     lda ZebetiteVRAMPtrLo,x
-    sta $0518
+    sta TileWRAMLo+$10
     lda ZebetiteVRAMPtrHi,x
-    sta $0519
+    sta TileWRAMHi+$10
     lda PPUStrIndex
     bne LA2DA
         txa
@@ -1466,15 +1467,20 @@ LA2EB:
     sta ZebetiteHealingDelay,x
     bne LA30A
 LA2F2:
+    ; dont heal if at full health
     ldy ZebetiteHits,x
     beq LA30A
+    ; dont heal if healing delay is not zero
     dec ZebetiteHealingDelay,x
     bne LA30A
+    
+    ; reset delay and heal one hit
     lda #$40
     sta ZebetiteHealingDelay,x
     dey
     tya
     sta ZebetiteHits,x
+    ; if hits count is odd, update zebetite appearance
     lsr
     tay
     bcc LA2BA
@@ -1483,8 +1489,10 @@ LA30A:
     sta ZebetiteJustGotHit,x
     rts
 
-LA310:  .byte $0C, $0D, $0E, $0F, $07
+ZebetiteAnimFrameTable:
+    .byte $0C, $0D, $0E, $0F, $07
 
+;-------------------------------------------------------------------------------
 ; Samus no longer has a metroid on her
 ClearAllMetroidLatches:
     ldy #$05
@@ -1494,7 +1502,7 @@ ClearAllMetroidLatches:
         bpl LA317
     sta $92
     rts
-;-----------------
+
 ClearCurrentMetroidLatchAndMetroidOnSamus:
     txa
     jsr Adiv16_
@@ -1502,6 +1510,8 @@ ClearCurrentMetroidLatchAndMetroidOnSamus:
     jsr ClearMetroidLatch
     sta MetroidOnSamus
     rts
+
+;-------------------------------------------------------------------------------
 
 LA32B:  .byte $22, $FF, $FF, $FF, $FF
 

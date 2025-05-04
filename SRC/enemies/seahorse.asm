@@ -1,5 +1,5 @@
 ; Lava Seahorse Routine
-SeahorseRoutine:
+SeahorseAIRoutine:
     lda EnStatus,x
     cmp #$01
     bne L9AF5

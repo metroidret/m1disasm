@@ -1,5 +1,5 @@
 ; Polyp Routine (mini volcano)
-PolypRoutine:
+PolypAIRoutine:
     lda #$00
     sta EnRadY,x
     sta EnRadX,x

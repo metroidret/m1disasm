@@ -1,5 +1,5 @@
 ; Swooper routine
-SwooperRoutine:
+SwooperAIRoutine:
     lda #$03
     sta $00
     lda #$08
@@ -38,7 +38,7 @@ L9907:
 
 ;-------------------------------------------------------------------------------
 ; Swooper Routine 2?
-SwooperRoutine2:
+SwooperAIRoutine2:
     lda $81
     cmp #$01
     beq SwooperExitA

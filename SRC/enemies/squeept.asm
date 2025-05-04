@@ -1,5 +1,5 @@
 ; Lava Jumper Routine
-SqueeptRoutine:
+SqueeptAIRoutine:
     lda $81
     cmp #$01
     bne L9A88

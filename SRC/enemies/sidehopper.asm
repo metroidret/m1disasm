@@ -1,6 +1,6 @@
 ; Sidehopper Routine
 ; Bank 5 is Dessgeega
-SidehopperFloorRoutine:
+SidehopperFloorAIRoutine:
     .if BANK = 1 || BANK = 4
         lda #$09
     .elseif BANK = 5
@@ -22,7 +22,7 @@ CommonEnemyStub:
     jmp CommonEnemyJump_00_01_02
 
 ; Ceiling Sidehopper Routine
-SidehopperCeilingRoutine:
+SidehopperCeilingAIRoutine:
     .if BANK = 1 || BANK = 4
         lda #$0F
     .elseif BANK = 5

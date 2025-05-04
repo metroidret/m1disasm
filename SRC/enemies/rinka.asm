@@ -1,4 +1,4 @@
-RinkaRoutine:
+RinkaAIRoutine:
     ldy EnStatus,x
     cpy #$02
     bne L9AB0

@@ -1,4 +1,4 @@
-MetroidRoutine:
+MetroidAIRoutine:
     ; Delete self if escape timer is active (EndTimerHi != $FF)
     ldy EndTimerHi
     iny

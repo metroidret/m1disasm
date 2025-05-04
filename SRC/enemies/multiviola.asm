@@ -1,4 +1,4 @@
-MultiviolaRoutine:
+MultiviolaAIRoutine:
     lda EnStatus,x
     cmp #$02
     bne L9AE0

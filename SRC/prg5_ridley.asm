@@ -130,24 +130,24 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 
 L95DA:  .byte $06, $00, $03, $58, $44, $4A, $48, $4A, $4A, $36, $25
 
-ChooseEnemyRoutine:
+ChooseEnemyAIRoutine:
     lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
-        .word SwooperRoutine ; 00 - swooper
-        .word SwooperRoutine2 ; 01 - becomes swooper ?
-        .word SidehopperFloorRoutine ; 02 - dessgeegas
-        .word SidehopperCeilingRoutine ; 03 - ceiling dessgeegas
+        .word SwooperAIRoutine ; 00 - swooper
+        .word SwooperAIRoutine2 ; 01 - becomes swooper ?
+        .word SidehopperFloorAIRoutine ; 02 - dessgeegas
+        .word SidehopperCeilingAIRoutine ; 03 - ceiling dessgeegas
         .word InvalidEnemy ; 04 - disappears
         .word InvalidEnemy ; 05 - same as 4
-        .word CrawlerRoutine ; 06 - crawler
-        .word PipeBugRoutine ; 07 - zebbo
+        .word CrawlerAIRoutine ; 06 - crawler
+        .word PipeBugAIRoutine ; 07 - zebbo
         .word InvalidEnemy ; 08 - same as 4
-        .word RidleyRoutine ; 09 - ridley
-        .word RidleyFireballRoutine ; 0A - ridley fireball
+        .word RidleyAIRoutine ; 09 - ridley
+        .word RidleyFireballAIRoutine ; 0A - ridley fireball
         .word InvalidEnemy ; 0B - same as 4
-        .word MultiviolaRoutine ; 0C - bouncy orbs
+        .word MultiviolaAIRoutine ; 0C - bouncy orbs
         .word InvalidEnemy ; 0D - same as 4
-        .word PolypRoutine ; 0E - ???
+        .word PolypAIRoutine ; 0E - ???
         .word InvalidEnemy ; 0F - same as 4
 
 L960B:  .byte $23, $23, $23, $23, $3A, $3A, $3C, $3C, $00, $00, $00, $00, $56, $56, $65, $63

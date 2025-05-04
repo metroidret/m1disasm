@@ -1,5 +1,5 @@
 ; Ridley Routine
-RidleyRoutine:
+RidleyAIRoutine:
     lda EnStatus,x
     cmp #$03
     bcc L9A33
@@ -32,7 +32,7 @@ L9A41:
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
-RidleyFireballRoutine:
+RidleyFireballAIRoutine:
     lda $0405,x
     pha
     lda #$02

@@ -94,7 +94,7 @@ TwosComplement_:
     eor #$FF                        ;
     clc                             ;The following routine returns the twos-->
     adc #$01                        ;complement of the value stored in A.
-L95CB:
+RTS_95CB:
     rts
 
 L95CC:  .byte $1D                       ;Kraid's room.
@@ -113,25 +113,25 @@ L95D9:  .byte $6E                       ;Samus start verticle screen position.
 
 L95DA:  .byte $06, $00, $03, $43, $00, $00, $00, $00, $00, $00, $64
 
-ChooseEnemyRoutine:
+ChooseEnemyAIRoutine:
     lda EnDataIndex,x
     jsr CommonJump_ChooseRoutine
-        .word SidehopperFloorRoutine ; 00 - sidehopper
-        .word SidehopperCeilingRoutine ; 01 - ceiling sidehopper
-        .word L95CB ; 02 - unused enemy type that doesn't properly clear itself
-        .word RipperRoutine ; 03 - ripper
-        .word SkreeRoutine ; 04 - skree
-        .word CrawlerRoutine ; 05 - crawler
-        .word L95CB ; 06 - same as 2
-        .word PipeBugRoutine ; 07 - geega
-        .word KraidRoutine ; 08 - kraid
-        .word KraidLint ; 09 - kraid projectile? lint or nail?
-        .word KraidNail ; 0a - kraid projectile?
-        .word L95CB ; 0b - same as 2
-        .word L95CB ; 0c - same as 2
-        .word L95CB ; 0d - same as 2
-        .word L95CB ; 0e - same as 2
-        .word L95CB ; 0f - same as 2
+        .word SidehopperFloorAIRoutine ; 00 - sidehopper
+        .word SidehopperCeilingAIRoutine ; 01 - ceiling sidehopper
+        .word RTS_95CB ; 02 - unused enemy type that doesn't properly clear itself
+        .word RipperAIRoutine ; 03 - ripper
+        .word SkreeAIRoutine ; 04 - skree
+        .word CrawlerAIRoutine ; 05 - crawler
+        .word RTS_95CB ; 06 - same as 2
+        .word PipeBugAIRoutine ; 07 - geega
+        .word KraidAIRoutine ; 08 - kraid
+        .word KraidLintAIRoutine ; 09 - kraid projectile? lint or nail?
+        .word KraidNailAIRoutine ; 0a - kraid projectile?
+        .word RTS_95CB ; 0b - same as 2
+        .word RTS_95CB ; 0c - same as 2
+        .word RTS_95CB ; 0d - same as 2
+        .word RTS_95CB ; 0e - same as 2
+        .word RTS_95CB ; 0f - same as 2
 
 L960B:  .byte $27, $27, $29, $29, $2D, $2B, $31, $2F, $33, $33, $41, $41, $48, $48, $50, $4E
 
