@@ -2280,8 +2280,8 @@ SFX_SetX2:                              ;Bit 0 - Not used.
     ldx #$02                        ;
                                         ;Page 4: Kraid.
 SFX_SetSoundFlag:                       ;Bit 7 - RidleyAreaMusic.
-    ora $0680,x                     ;Bit 6 - TourianMusic.
-    sta $0680,x                     ;Bit 5 - ItemRoomMusic.
+    ora NoiseSFXFlag,x                     ;Bit 6 - TourianMusic.
+    sta NoiseSFXFlag,x                     ;Bit 5 - ItemRoomMusic.
     rts                             ;Bit 4 - KraidAreaMusic.
                                         ;Bit 3 - Not used.
 SFX_SamusBall:                          ;Bit 2 - Not used.
@@ -2921,7 +2921,7 @@ LCFBE:
     and #gr_SCREWATTACK
     beq Lx017      ; branch if Samus doesn't have Screw Attack
     lda #$00
-    sta $0686
+    sta ScrewAttack0686
     jsr SFX_ScrewAttack
 Lx017:
     jsr SFX_SamusJump
@@ -3056,7 +3056,7 @@ SetSamusRoll:
     lda LCCC0,x
     sta SamusHorzAccel
     lda #$01
-    sta $0686
+    sta ScrewAttack0686
     jmp SFX_SamusBall
 
 Lx030:
@@ -4400,7 +4400,7 @@ Exit8:
 UpdateStatues:
     lda #$60
     sta PageIndex
-    ldy $0360
+    ldy ObjAction+$60
     beq Exit8          ; exit if no statue present
     dey
     bne Lx122
@@ -4408,9 +4408,9 @@ UpdateStatues:
     ldy #$01
     jsr LDAB0
     bcs Lx122
-    inc $0360
+    inc ObjAction+$60
 Lx122:
-    ldy $0360
+    ldy ObjAction+$60
     cpy #$02
     bne Lx125
     lda KraidStatueStatus
@@ -4424,7 +4424,7 @@ Lx122:
         jsr LDAB0
     Lx124:
     bcs Lx125
-    inc $0360
+    inc ObjAction+$60
 Lx125:
     ldx #$60
     jsr LDA1A
@@ -4439,7 +4439,7 @@ LDA1A:
     and #$01
     tay
     lda LDA3B,y
-    sta $0363
+    sta AnimFrame+$60
     lda $681B,x
     beq Lx126
     bmi Lx126
@@ -4457,23 +4457,23 @@ LDA3B:
     .byte $66
 
 LDA3D:
-    lda $0304,x
+    lda AnimDelay,x
     bmi RTS_X127
     lda #$01
-    sta $0304,x
+    sta AnimDelay,x
     lda $030F,x
     and #$0F
     beq RTS_X127
-    inc $0304,x
+    inc AnimDelay,x
     dec $030F,x
     lda $030F,x
     and #$0F
     bne RTS_X127
-    lda $0304,x
+    lda AnimDelay,x
     ora #$80
-    sta $0304,x
+    sta AnimDelay,x
     sta $681B,x
-    inc $0304,x
+    inc AnimDelay,x
     txa
     pha
     and #$01
@@ -4507,9 +4507,9 @@ LDA7C:
     lda $0306,x
     beq Lx128
     dec $030F,x
-    lda $0683
+    lda TriangleSFXFlag
     ora #$10
-    sta $0683
+    sta TriangleSFXFlag
 Lx128:
     lda #$00
     sta $0306,x
@@ -6841,11 +6841,11 @@ LE81E:
     ldx #$06
     Lx203:
         lda $05
-        eor $5D,x
+        eor DoorCartRAMPtrHi,x
         and #$04
         bne Lx206
         lda $04
-        eor $5C,x
+        eor DoorCartRAMPtrLo,x
         and #$1F
         bne Lx206
         txa
@@ -6868,9 +6868,9 @@ LE81E:
                 eor #$91
                 bne PlaySnd4
             Lx204:
-            lda $0683
+            lda TriangleSFXFlag
             ora #$02
-            sta $0683
+            sta TriangleSFXFlag
         Lx205:
         lda #$04
         sta SamusHit,y

@@ -216,8 +216,14 @@ SamusDoorData          = $58     ;The upper 4 bits store either 1 or 2. If 1 is 
 DoorDelay              = $59     ;Number of frames to delay when Samus entering/exiting doors.
 RoomNumber             = $5A     ;Room number currently being loaded.
 SpritePagePos          = $5B     ;Index into sprite RAM used to load object sprite data.
+
+; 4 slots of 2 bytes each ($5C-$63)
+DoorCartRAMPtrLo       = $5C
+DoorCartRAMPtrHi       = $5D
+
 SamusInLava            = $64     ;#$01=Samus in lava, #$00=She is not.
 ObjectCounter          = $65     ;Counts such things as object explosion time.
+Enemy66                = $66     ;when is this read?
 ObjectPal              = $67     ;Attrib. table info for room object(#$00 thru #$03).
 RoomPal                = $68
 TempX                  = $69
@@ -568,6 +574,8 @@ TriangleSFXFlag        = $0683   ;Initialization flags for triangle SFX
 MultiSFXFlag           = $0684   ;Initialization Flags for SFX and some music
 
 MusicInitFlag          = $0685   ;Music init flags
+
+ScrewAttack0686        = $0686
 
 NoiseContSFX           = $0688   ;Continuation flags for noise SFX
 SQ1ContSFX             = $0689   ;Continuation flags for SQ1 SFX
