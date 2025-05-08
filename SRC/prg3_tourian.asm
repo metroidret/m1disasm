@@ -912,14 +912,14 @@ L9F02:
         lda L9F39,y
         clc
         adc #$42
-        sta TileWRAMLo
+        sta TileWRAMPtr
         php
         lda MotherBrainNameTable
         asl
         asl
         plp
         adc #$61
-        sta TileWRAMHi
+        sta TileWRAMPtr+1
         lda #$00
         sta PageIndex
         lda PPUStrIndex
@@ -986,12 +986,12 @@ L9F69:
     lda #$10
     sta TileAnimFrame
     lda #$40
-    sta TileWRAMLo
+    sta TileWRAMPtr
     lda MotherBrainNameTable
     asl
     asl
     ora #$61
-    sta TileWRAMHi
+    sta TileWRAMPtr+1
     lda #$00
     sta PageIndex
     jmp CommonJump_DrawTileBlast
@@ -1126,7 +1126,7 @@ RTS_A086:
 
 LA087:
     adc #$44
-    sta TileWRAMLo
+    sta TileWRAMPtr
     php
     lda MotherBrainNameTable
     asl
@@ -1134,7 +1134,7 @@ LA087:
     ora #$61
     plp
     adc #$00
-    sta TileWRAMHi
+    sta TileWRAMPtr+1
     lda #$00
     sta TileAnimFrame
     sta PageIndex
@@ -1166,9 +1166,9 @@ LA0C6:
             beq LA13E
         LA0E7:
         lda #$8C
-        sta TileWRAMLo,x
+        sta TileWRAMPtr,x
         lda $05
-        sta TileWRAMHi,x
+        sta TileWRAMPtr+1,x
         lda #$01
         sta TileAnimFrame,x
         lda PageIndex
@@ -1442,9 +1442,9 @@ LA2BA:
     lda ZebetiteAnimFrameTable,y
     sta TileAnimFrame+$10
     lda ZebetiteVRAMPtrLo,x
-    sta TileWRAMLo+$10
+    sta TileWRAMPtr+$10
     lda ZebetiteVRAMPtrHi,x
-    sta TileWRAMHi+$10
+    sta TileWRAMPtr+1+$10
     lda PPUStrIndex
     bne LA2DA
         txa

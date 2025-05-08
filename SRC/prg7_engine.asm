@@ -300,9 +300,9 @@ LC057:
     jsr PrepVertMirror              ;($C4B2)
 
     lda #$00                        ;
-    sta DMCCntrl1                   ;PCM volume = 0 - disables DMC channel
+    sta DMC_RAW                     ;PCM volume = 0 - disables DMC channel
     lda #$0F                        ;
-    sta APUCommonCntrl0             ;Enable sound channel 0,1,2,3
+    sta SND_CHN             ;Enable sound channel 0,1,2,3
 
     ldy #$00                        ;
     sty TitleRoutine                ;Set title routine and and main routine function-->
@@ -595,14 +595,14 @@ ReadJoyPads:
 
 ReadOnePad:
     ldy #$01                        ;These lines strobe the -->
-    sty CPUJoyPad1                  ;joystick to enable the -->
+    sty JOY1                  ;joystick to enable the -->
     dey                             ;program to read the -->
-    sty CPUJoyPad1                  ;buttons pressed.
+    sty JOY1                  ;buttons pressed.
 
     ldy #$08                        ;Do 8 buttons.
     LC22A:
         pha                             ;Store A.
-        lda CPUJoyPad1,x                ;Read button status. Joypad 1 or 2.
+        lda JOY1,x                ;Read button status. Joypad 1 or 2.
         sta $00                         ;Store button press at location $00.
         lsr                             ;Move button push to carry bit.
         ora $00                         ;If joystick not connected, -->
@@ -4568,11 +4568,11 @@ Lx129:
     asl
     asl
     ora #$62
-    sta TileWRAMHi,x
+    sta TileWRAMPtr+1,x
     tya
     asl
     adc #$08
-    sta TileWRAMLo,x
+    sta TileWRAMPtr,x
     jsr Xminus16
     dey
     bne Lx129
@@ -7138,9 +7138,9 @@ Lx220:
     inc TileRoutine,x
     lda $04
     and #$DE
-    sta TileWRAMLo,x
+    sta TileWRAMPtr,x
     lda $05
-    sta TileWRAMHi,x
+    sta TileWRAMPtr+1,x
     lda InArea
     cmp #$11                        ; In Norfair?
     bne Lx221
@@ -7687,7 +7687,7 @@ LEC9B:
     ldx #$C0
     Lx244:
         tya
-        eor TileWRAMHi,x
+        eor TileWRAMPtr+1,x
         and #$04
         bne Lx245
             sta $0500,x
@@ -10436,9 +10436,9 @@ LFE3D:
     jsr SetTileAnim
     lda #$50
     sta TileDelay,x
-    lda TileWRAMLo,x     ; low WRAM addr of blasted tile
+    lda TileWRAMPtr,x     ; low WRAM addr of blasted tile
     sta $00
-    lda TileWRAMHi,x     ; high WRAM addr
+    lda TileWRAMPtr+1,x     ; high WRAM addr
     sta $01
 
 LFE54:
@@ -10470,11 +10470,11 @@ Table19:
 LFE83:
     lda #$00
     sta TileRoutine,x       ; tile = respawned
-    lda TileWRAMLo,x
+    lda TileWRAMPtr,x
     clc
     adc #$21
     sta $00
-    lda TileWRAMHi,x
+    lda TileWRAMPtr+1,x
     sta $01
     jsr LFF3C
     lda $02
@@ -10520,9 +10520,9 @@ DrawTileBlast:
     cmp #$1F
     bcs Exit23
     ldx PageIndex
-    lda TileWRAMLo,x
+    lda TileWRAMPtr,x
     sta $00
-    lda TileWRAMHi,x
+    lda TileWRAMPtr+1,x
     sta $01
     jsr GetTileFramePtr
     ldy #$00

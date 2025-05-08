@@ -441,8 +441,7 @@ TileAnimFrame          = $0503
 TileAnimDelay          = $0504
 TileAnimIndex          = $0506
 TileDelay              = $0507
-TileWRAMLo             = $0508
-TileWRAMHi             = $0509
+TileWRAMPtr            = $0508
 TileType               = $050A
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
@@ -450,19 +449,19 @@ TileType               = $050A
 Cntrl0Data             = $EA     ;Temp storage for data of first address sound channel
 VolumeCntrlAddress     = $EB     ;Desired address number in VolumeCntrlAdressTbl
 
-MusicSQ1PeriodLow      = $0600   ;Loaded into SQ1Cntrl2 when playing music
-MusicSQ1PeriodHigh     = $0601   ;Loaded into SQ1Cntrl3 when playing music
+MusicSQ1PeriodLow      = $0600   ;Loaded into SQ1_LO when playing music
+MusicSQ1PeriodHigh     = $0601   ;Loaded into SQ1_HI when playing music
 
 SFXPaused              = $0602   ;0=Game not paused, 1=Game paused
 PauseSFXStatus         = $0603   ;Plays PauseMusic SFX if less than #$12
 
-MusicSQ2PeriodLow      = $0604   ;Loaded into SQ2Cntrl2 when playing music
-MusicSQ2PeriodHigh     = $0605   ;Loaded into SQ2Cntrl3 when playing music
+MusicSQ2PeriodLow      = $0604   ;Loaded into SQ2_LO when playing music
+MusicSQ2PeriodHigh     = $0605   ;Loaded into SQ2_HI when playing music
 
 WriteMultiChannelData  = $0607   ;1=data needs to be written, 0=no data to write
 
-MusicTriPeriodLow      = $0608   ;Loaded into TriangleCntrl2 when playing music
-MisicTriPeriodHigh     = $0609   ;Loaded into TriangleCntrl3 when playing music
+MusicTriPeriodLow      = $0608   ;Loaded into TRI_LO when playing music
+MisicTriPeriodHigh     = $0609   ;Loaded into TRI_HI when playing music
 
 TrianglePeriodLow      = $0610   ;Stores triangle SFX period low for processing
 TrianglePeriodHigh     = $0611   ;Stroes triangle SFX period high for processing
@@ -479,35 +478,35 @@ HasBeamSFX             = $061F   ;Bit 7 set=has long beam, bit 0 set=has ice bea
 ;The following addresses are loaded into $0640 thru $0643 when those
 ;addresses decrement to zero.  These addresses do not decrement.
 
-SQ1FrameCountInit      = $0620   ;Holds number of frames to play sq1 channel data
-SQ2FrameCountInit      = $0621   ;Holds number of frames to play sq2 channel data
-TriangleFrameCountInit = $0622   ;Holds number of frames to play triangle channel data
-NoiseFrameCountInit    = $0623   ;Holds number of frames to play noise channel data
+SQ1FrameCountInit      = $0620   ;Holds number of frames to play SQ1 channel data
+SQ2FrameCountInit      = $0621   ;Holds number of frames to play SQ2 channel data
+TriangleFrameCountInit = $0622   ;Holds number of frames to play Triangle channel data
+NoiseFrameCountInit    = $0623   ;Holds number of frames to play Noise channel data
 
 SQ1RepeatCounter       = $0624   ;Number of times to repeat SQ1 music loop
 SQ2RepeatCounter       = $0625   ;Number of times to repeat SQ2 music loop
 TriangleRepeatCounter  = $0626   ;Number of times to repeat Triangle music loop
 NoiseRepeatCounter     = $0627   ;Number of times to repeat Noise music loop
 
-SQ1DutyEnvelope        = $0628   ;Loaded into SQ1Cntrl0 when playing music
-SQ2DutyEnvelope        = $0629   ;Loaded into SQ2Cntrl0 when playing music
+SQ1DutyEnvelope        = $0628   ;Loaded into SQ1_VOL when playing music
+SQ2DutyEnvelope        = $0629   ;Loaded into SQ2_VOL when playing music
 TriLinearCount         = $062A   ;disable\enable counter, linear count length
 
 NoteLengthTblOffset    = $062B   ;Stores the offset to find proper note length table
 MusicRepeat            = $062C   ;0=Music does not repeat, Nonzero=music repeats
 TriangleCounterCntrl   = $062D   ;$F0=disable length cntr, $00=long note, $0F=short note
-SQ1VolumeCntrl         = $062E   ;Entry number in VolumeCntrlAdressTbl for SQ1
-SQ2VolumeCntrl         = $062F   ;Entry number in VolumeCntrlAdressTbl for SQ2
-SQ1LowBaseByte         = $0630   ;low byte of base address for SQ1 music data
-SQ1HighBaseByte        = $0631   ;High byte of base address for SQ1 music data
-SQ2LowBaseByte         = $0632   ;low byte of base address for SQ2 music data
-SQ2HighBaseByte        = $0633   ;High byte of base address for SQ2 music data
-TriangleLowBaseByte    = $0634   ;low byte of base address for Triangle music data
-TriangleHighBaseByte   = $0635   ;High byte of base address for Triangle music data
-NoiseLowBaseByte       = $0636   ;low byte of base address for Noise music data
-NoiseHighBaseByte      = $0637   ;High byte of base address for Noise music data
+SQ1VolumeCntrl         = $062E   ;Entry number in VolumeCntrlAddressTbl for SQ1
+SQ2VolumeCntrl         = $062F   ;Entry number in VolumeCntrlAddressTbl for SQ2
+SQ1BaseLo              = $0630   ;Low byte of base address for SQ1 music data
+SQ1BaseHi              = $0631   ;High byte of base address for SQ1 music data
+SQ2BaseLo              = $0632   ;Low byte of base address for SQ2 music data
+SQ2BaseHi              = $0633   ;High byte of base address for SQ2 music data
+TriangleBaseLo         = $0634   ;Low byte of base address for Triangle music data
+TriangleBaseHi         = $0635   ;High byte of base address for Triangle music data
+NoiseBaseLo            = $0636   ;Low byte of base address for Noise music data
+NoiseBaseHi            = $0637   ;High byte of base address for Noise music data
 
-SQ1MusicIndexIndex     = $0638   ;Index to find sQ1 sound data index. Base=$630,$631
+SQ1MusicIndexIndex     = $0638   ;Index to find SQ1 sound data index. Base=$630,$631
 SQ2MusicIndexIndex     = $0639   ;Index to find SQ2 sound data index. Base=$632,$633
 TriangleMusicIndexIndex = $063A   ;Index to find Tri sound data index. Base=$634,$635
 NoiseMusicIndexIndex   = $063B   ;Index to find Noise sound data index. Base=$636,$637
@@ -522,9 +521,9 @@ SQ2MusicFrameCount     = $0641   ;Decrements every sq2 frame. when 0, load new d
 TriangleMusicFrameCount= $0642   ;Decrements every triangle frame. When 0, load new data
 NoiseMusicFrameCount   = $0643   ;Decrements every noise frame. When 0, load new data
 
-MusicSQ1Sweep          = $0648   ;Value is loaded into SQ1Cntrl1 when playing music
-MusicSQ2Sweep          = $0649   ;Value is loaded into SQ2Cntrl1 when playing music
-TriangleSweep          = $064A   ;Loaded into TriangleCntrl1(not used)
+MusicSQ1Sweep          = $0648   ;Value is loaded into SQ1_SWEEP when playing music
+MusicSQ2Sweep          = $0649   ;Value is loaded into SQ2_SWEEP when playing music
+TriangleSweep          = $064A   ;Loaded into TRI_UNUSED(not used)
 
 ThisSoundChannel       = $064B   ;Least sig. byte of current channel(00,04,08 or 0C)
 

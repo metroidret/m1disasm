@@ -46,35 +46,35 @@ PPUDATA                = $2007   ;
     OAMDATA_VFLIP      = %10000000
 
 
-SQ1Cntrl0              = $4000   ;
-SQ1Cntrl1              = $4001   ;SQ1 hardware control registers.
-SQ1Cntrl2              = $4002   ;
-SQ1Cntrl3              = $4003   ;
+SQ1_VOL                = $4000   ;
+SQ1_SWEEP              = $4001   ;SQ1 hardware control registers.
+SQ1_LO                 = $4002   ;
+SQ1_HI                 = $4003   ;
 
-SQ2Cntrl0              = $4004   ;
-SQ2Cntrl1              = $4005   ;SQ2 hardware control registers.
-SQ2Cntrl2              = $4006   ;
-SQ2Cntrl3              = $4007   ;
+SQ2_VOL                = $4004   ;
+SQ2_SWEEP              = $4005   ;SQ2 hardware control registers.
+SQ2_LO                 = $4006   ;
+SQ2_HI                 = $4007   ;
 
-TriangleCntrl0         = $4008   ;
-TriangleCntrl1         = $4009   ;Triangle hardware control registers.
-TriangleCntrl2         = $400A   ;
-TriangleCntrl3         = $400B   ;
+TRI_LINEAR             = $4008   ;
+TRI_UNUSED             = $4009   ;Triangle hardware control registers.
+TRI_LO                 = $400A   ;
+TRI_HI                 = $400B   ;
 
-NoiseCntrl0            = $400C   ;
-NoiseCntrl1            = $400D   ;Noise hardware control registers.
-NoiseCntrl2            = $400E   ;
-NoiseCntrl3            = $400F   ;
+NOISE_VOL              = $400C   ;
+NOISE_UNUSED           = $400D   ;Noise hardware control registers.
+NOISE_LO               = $400E   ;
+NOISE_HI               = $400F   ;
 
-DMCCntrl0              = $4010   ;
-DMCCntrl1              = $4011   ;DMC hardware control registers.
-DMCCntrl2              = $4012   ;
-DMCCntrl3              = $4013   ;
+DMC_FREQ               = $4010   ;
+DMC_RAW                = $4011   ;DMC hardware control registers.
+DMC_START              = $4012   ;
+DMC_LEN                = $4013   ;
 
 OAMDMA                 = $4014   ;Sprite RAM DMA register.
-APUCommonCntrl0        = $4015   ;APU common control 1 register.
-CPUJoyPad1             = $4016   ;Joypad1 register.
-APUCommonCntrl1        = $4017   ;Joypad2/APU common control 2 register.
+SND_CHN                = $4015   ;APU common control 1 register.
+JOY1                   = $4016   ;Joypad1 register.
+JOY2                   = $4017   ;Joypad2/APU common control 2 register.
 
 ;----------------------------------------------------------------------------------------------------
 
