@@ -287,7 +287,7 @@ InvalidEnemy:
     rts
 
 CommonEnemyJump_00_01_02:
-    lda $81
+    lda EnemyMovementPtr
     cmp #$01
     beq L9848
     cmp #$03
@@ -326,7 +326,7 @@ L9963:
     jsr CommonJump_09
     lda #$06
     sta $00
-    lda $81
+    lda EnemyMovementPtr
     cmp #$02
     bne L9993
     cmp EnStatus,x

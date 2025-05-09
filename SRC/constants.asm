@@ -218,8 +218,8 @@ RoomNumber             = $5A     ;Room number currently being loaded.
 SpritePagePos          = $5B     ;Index into sprite RAM used to load object sprite data.
 
 ; 4 slots of 2 bytes each ($5C-$63)
-DoorCartRAMPtrLo       = $5C
-DoorCartRAMPtrHi       = $5D
+DoorCartRAMPtr       = $5C
+;      DoorCartRAMPtr+1       = $5D
 
 SamusInLava            = $64     ;#$01=Samus in lava, #$00=She is not.
 ObjectCounter          = $65     ;Counts such things as object explosion time.
@@ -241,8 +241,8 @@ DoorOnNameTable0       = $6D     ;doors loaded on the name tables. The informati
                                         ;#$00 is possible in $6D if 2 doors are on name table 0-->
                                         ;while vertically scrolling.
 
-HealthLoChange         = $6E     ;Amount to add/subtract from HealthLo.
-HealthHiChange         = $6F     ;Amount to add/subtract from HealthHi.
+HealthChange         = $6E     ;Amount to add/subtract from Health.
+;      HealthChange+1         = $6F
 
 SamusBlink             = $70
 UpdatingProjectile     = $71     ;#$01=Projectile update in process. #$00=not in process.
@@ -262,6 +262,9 @@ OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she 
 
 KraidLintCounter      = $7E
 KraidNailCounter      = $7F
+
+EnemyMovementPtr       = $81
+;      EnemyMovementPtr+1       = $82
 
 ;--------------------------------------[ End routine specific ]--------------------------------------
 
@@ -338,6 +341,9 @@ SpareMemD3             = $D3     ;Written to in title routine, but never accesse
 SpareMemD7             = $D7     ;Written to in title routine, but never accessed.
 IntroMusicRestart      = $D8     ;After all title routines run twice, restarts intro music.
 
+SoundChannelBase       = $E6
+;      SoundChannelBase+1       = $E7
+
 ABStatus               = $F0     ;Stores A and B button status in AreaInit. Never used.
 ;                             = $F7
 
@@ -350,14 +356,14 @@ ScrollX                = $FD     ;X value loaded into scroll register.
 PPUMASK_ZP              = $FE     ;Data byte to be loaded into PPU control register 1.
 PPUCTRL_ZP              = $FF     ;Data byte to be loaded into PPU control register 0.
 
-HealthLo               = $0106   ;Lower health digit in upper 4 bits.
-HealthHi               = $0107   ;Upper health digit in lower 4 bits-->
+Health               = $0106   ;Lower health digit in upper 4 bits.
+;      Health+1               = $0107   ;Upper health digit in lower 4 bits-->
                                         ;# of full tanks in upper 4 bits.
 MiniBossKillDelay      = $0108   ;Initiate power up music and delay after Kraid/Ridley killed.
 PowerUpDelay           = $0109   ;Initiate power up music and delay after item pickup.
 
-EndTimerLo             = $010A   ;Lower byte of end game escape timer.
-EndTimerHi             = $010B   ;Upper byte of end game escape timer.
+EndTimer             = $010A   ;Lower byte of end game escape timer.
+;      EndTimer+1             = $010B   ;Upper byte of end game escape timer.
 
 MotherBrain010C        = $010C
 MotherBrain010D        = $010D
@@ -442,6 +448,7 @@ TileAnimDelay          = $0504
 TileAnimIndex          = $0506
 TileDelay              = $0507
 TileWRAMPtr            = $0508
+;      TileWRAMPtr+1            = $0509
 TileType               = $050A
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
@@ -497,14 +504,14 @@ MusicRepeat            = $062C   ;0=Music does not repeat, Nonzero=music repeats
 TriangleCounterCntrl   = $062D   ;$F0=disable length cntr, $00=long note, $0F=short note
 SQ1VolumeCntrl         = $062E   ;Entry number in VolumeCntrlAddressTbl for SQ1
 SQ2VolumeCntrl         = $062F   ;Entry number in VolumeCntrlAddressTbl for SQ2
-SQ1BaseLo              = $0630   ;Low byte of base address for SQ1 music data
-SQ1BaseHi              = $0631   ;High byte of base address for SQ1 music data
-SQ2BaseLo              = $0632   ;Low byte of base address for SQ2 music data
-SQ2BaseHi              = $0633   ;High byte of base address for SQ2 music data
-TriangleBaseLo         = $0634   ;Low byte of base address for Triangle music data
-TriangleBaseHi         = $0635   ;High byte of base address for Triangle music data
-NoiseBaseLo            = $0636   ;Low byte of base address for Noise music data
-NoiseBaseHi            = $0637   ;High byte of base address for Noise music data
+SQ1Base              = $0630   ;Low byte of base address for SQ1 music data
+;      SQ1Base+1              = $0631   ;High byte of base address for SQ1 music data
+SQ2Base              = $0632   ;Low byte of base address for SQ2 music data
+;      SQ2Base+1              = $0633   ;High byte of base address for SQ2 music data
+TriangleBase         = $0634   ;Low byte of base address for Triangle music data
+;      TriangleBase+1         = $0635   ;High byte of base address for Triangle music data
+NoiseBase            = $0636   ;Low byte of base address for Noise music data
+;      NoiseBase+1            = $0637   ;High byte of base address for Noise music data
 
 SQ1MusicIndexIndex     = $0638   ;Index to find SQ1 sound data index. Base=$630,$631
 SQ2MusicIndexIndex     = $0639   ;Index to find SQ2 sound data index. Base=$632,$633
@@ -609,8 +616,8 @@ PowerUpBAnimIndex      = $0757   ;Entry into FramePtrTable for item animation.
 
 ; 5 Zebetite slots of 8 bytes each ($0758-$077F)
 ZebetiteStatus         = $0758
-ZebetiteVRAMPtrLo      = $0759   ;Pointer to top-left tile of Zebetite in the nametable.
-ZebetiteVRAMPtrHi      = $075A
+ZebetiteVRAMPtr        = $0759   ;Pointer to top-left tile of Zebetite in the nametable.
+;      ZebetiteVRAMPtr+1      = $075A
 ZebetiteHits           = $075B   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
 ZebetiteHealingDelay   = $075C   ;Heals 1 hit when counts down from #$40 to #$00.
 ZebetiteJustGotHit     = $075D   ;#$01 if zebetite got hit by a missile this frame, else #$00

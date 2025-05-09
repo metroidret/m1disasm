@@ -1349,11 +1349,11 @@ LBAC2:
     txa                             ;
     asl                             ;*2(two bytes for sound channel info base address).
     tax                             ;
-    lda SQ1BaseLo,x                 ;
-    sta $E6                         ;Load sound channel info base address into $E6-->
-    lda SQ1BaseHi,x                 ;and $E7. ($E6=low byte, $E7=high byte).
-    sta $E7                         ;
-    lda SQ1BaseHi,x                 ;If no data for this sound channel, branch-->
+    lda SQ1Base,x                 ;
+    sta SoundChannelBase                         ;Load sound channel info base address into $E6-->
+    lda SQ1Base+1,x                 ;and $E7. ($E6=low byte, $E7=high byte).
+    sta SoundChannelBase+1                         ;
+    lda SQ1Base+1,x                 ;If no data for this sound channel, branch-->
     beq LBAB0                       ;to find data for next sound channel.
     txa                             ;
     lsr                             ;/2. Determine current sound channel (0,1,2 or3).
@@ -1364,7 +1364,7 @@ LBAC2:
 LoadNextChannelIndexData:
     ldy SQ1MusicIndexIndex,x        ;Load current channel index to music data index.
     inc SQ1MusicIndexIndex,x        ;Increment current channel index to music data index.
-    lda ($E6),y                     ;
+    lda (SoundChannelBase),y                     ;
     beq GotoCheckRepeatMusic        ;Branch if music has reached the end.
     tay                             ;Transfer music data index to Y (base=$BE77) .
     cmp #$FF                        ;
@@ -1418,7 +1418,7 @@ LoadMusicChannel:
 LoadSoundDataIndexIndex:
     ldy SQ1MusicIndexIndex,x        ;Load current index to sound data index.
     inc SQ1MusicIndexIndex,x        ;Increment music index index address.
-    lda ($E6),y                     ;Load index to sound channel music data.
+    lda (SoundChannelBase),y                     ;Load index to sound channel music data.
     tay                             ;
 LBB40:
     txa                             ;

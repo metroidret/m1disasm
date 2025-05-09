@@ -960,7 +960,7 @@ Base10Add:
     adc $02                         ;Add upper nibble to number.
     sta $02                         ;
     lda $03                         ;
-    and #$F0                        ;Keep upper 4 bits of HealthLo/HealthHi in A.
+    and #$F0                        ;Keep upper 4 bits of Health/Health+1 in A.
     adc $02                         ;
     bcc LC3F6                       ;
 LC3F2:
@@ -983,7 +983,7 @@ Base10Subtract:
         adc #$0F                        ;Adjust $02 to account for borrowing.
         sta $02                         ;
     LC40E:
-    lda $03                         ;Keep upper 4 bits of HealthLo/HealthHi in A.
+    lda $03                         ;Keep upper 4 bits of Health/Health+1 in A.
     and #$F0                        ;
     sec                             ;
     sbc $02                         ;If result is greater than zero, branch to finish.
@@ -996,13 +996,13 @@ Base10Subtract:
 
 ExtractNibbles:
     pha                             ;
-    and #$0F                        ;Lower 4 bits of value to change HealthLo/HealthHi by.
+    and #$0F                        ;Lower 4 bits of value to change Health/Health+1 by.
     sta $01                         ;
     pla                             ;
-    and #$F0                        ;Upper 4 bits of value to change HealthLo/HealthHi by.
+    and #$F0                        ;Upper 4 bits of value to change Health/Health+1 by.
     sta $02                         ;
     lda $03                         ;
-    and #$0F                        ;Keep lower 4 bits of HealthLo/HealthHi in A.
+    and #$0F                        ;Keep lower 4 bits of Health/Health+1 in A.
     rts                             ;
 
 ;---------------------------[ NMI and PPU control routines ]--------------------------------
@@ -1733,8 +1733,8 @@ SamusInit:
     stx Mem0730
     stx Mem0732
     stx Mem0738
-    stx EndTimerLo                  ;Set end timer bytes to #$FF as-->
-    stx EndTimerHi                  ;escape timer not currently active.
+    stx EndTimer                  ;Set end timer bytes to #$FF as-->
+    stx EndTimer+1                  ;escape timer not currently active.
     stx $8B
     stx $8E
     ldy #$27
@@ -1755,9 +1755,9 @@ SamusInit:
     and #$01                        ;Set Samus' name table position to current name table-->
     sta ObjectHi                    ;active in PPU.
     lda #$00                        ;
-    sta HealthLo                    ;Starting health is-->
+    sta Health                    ;Starting health is-->
     lda #$03                        ;set to 30 units.
-    sta HealthHi                    ;
+    sta Health+1                    ;
 RTS_C92A:
     rts                             ;
 
@@ -1770,7 +1770,7 @@ GameEngine:
     lda NARPASSWORD                 ;
     beq LC945                           ;
         lda #$03                        ;The following code is only accessed if -->
-        sta HealthHi                    ;NARPASSWORD has been entered at the -->
+        sta Health+1                    ;NARPASSWORD has been entered at the -->
         lda #$FF                        ;password screen. Gives you new health,-->
         sta SamusGear                   ;missiles and every power-up every frame.
         lda #$05                        ;
@@ -1849,7 +1849,7 @@ PauseMode:
     and #$88                        ;
     eor #$88                        ;both A & UP pressed?-->
     bne Exit14                      ;Exit if not.
-    ldy EndTimerHi                  ;
+    ldy EndTimer+1                  ;
     iny                             ;Is escape timer active?-->
     bne Exit14                      ;Sorry, can't quit if this is during escape scence.
     sta GamePaused                  ;Clear pause game indicator.
@@ -2694,11 +2694,11 @@ Lx009:
     sty AnimFrame
 
 CheckHealthBeep:
-    ldy HealthHi
+    ldy Health+1
     dey
     bmi Lx010
     bne Lx011
-    lda HealthLo
+    lda Health
     cmp #$70
     bcs Lx011
 ; health < 17
@@ -2729,12 +2729,12 @@ Exit3:
 ;----------------------------------------[ Subtract health ]-----------------------------------------
 
 SubtractHealth:
-    lda HealthLoChange              ;Check to see if health needs to be changed.-->
-    ora HealthHiChange              ;If not, branch to exit.
+    lda HealthChange              ;Check to see if health needs to be changed.-->
+    ora HealthChange+1              ;If not, branch to exit.
     beq Exit3                       ;
     jsr IsSamusDead                 ;($CE84)Check if Samus is already dead.
     beq ClearDamage                 ;Samus is dead. Branch to clear damage values.
-    ldy EndTimerHi                  ;If end escape timer is running, Samus cannot be hurt.
+    ldy EndTimer+1                  ;If end escape timer is running, Samus cannot be hurt.
     iny                             ;
     beq LCEA6                           ;Branch if end escape timer not active.
     ClearDamage:
@@ -2747,36 +2747,36 @@ SubtractHealth:
     lda SamusGear                   ;
     and #gr_VARIA                   ;Check is Samus has Varia.
     beq LCEBF                           ;
-    lsr HealthLoChange              ;If Samus has Varia, divide damage by 2.
-    lsr HealthHiChange              ;
-    bcc LCEBF                           ;If HealthHi moved a bit into the carry flag while-->
-    lda #$4F                        ;dividing, add #$4F to HealthLo for proper-->
-    adc HealthLoChange              ;division results.
-    sta HealthLoChange              ;
+    lsr HealthChange              ;If Samus has Varia, divide damage by 2.
+    lsr HealthChange+1              ;
+    bcc LCEBF                           ;If Health+1 moved a bit into the carry flag while-->
+    lda #$4F                        ;dividing, add #$4F to Health for proper-->
+    adc HealthChange              ;division results.
+    sta HealthChange              ;
 
 LCEBF:
-    lda HealthLo                    ;Prepare to subtract from HealthLo.
+    lda Health                    ;Prepare to subtract from Health.
     sta $03                         ;
-    lda HealthLoChange              ;Amount to subtract from HealthLo.
+    lda HealthChange              ;Amount to subtract from Health.
     sec                             ;
     jsr Base10Subtract              ;($C3FB)Perform base 10 subtraction.
-    sta HealthLo                    ;Save results.
+    sta Health                    ;Save results.
 
-    lda HealthHi                   ;Prepare to subtract from HealthHi.
+    lda Health+1                   ;Prepare to subtract from Health+1.
     sta $03                         ;
-    lda HealthHiChange              ;Amount to subtract from HealthHi.
+    lda HealthChange+1              ;Amount to subtract from Health+1.
     jsr Base10Subtract              ;($C3FB)Perform base 10 subtraction.
-    sta HealthHi                    ;Save Results.
+    sta Health+1                    ;Save Results.
 
-    lda HealthLo                    ;
+    lda Health                    ;
     and #$F0                        ;Is Samus health at 0?  If so, branch to-->
-    ora HealthHi                    ;begin death routine.
+    ora Health+1                    ;begin death routine.
     beq LCEE6                           ;
         bcs LCF2B                       ;Samus not dead. Branch to exit.
     LCEE6:
     lda #$00                        ;Samus is dead.
-    sta HealthLo                    ;
-    sta HealthHi                    ;Set health to #$00.
+    sta Health                    ;
+    sta Health+1                    ;Set health to #$00.
     lda #sa_Dead                    ;
     sta ObjAction                   ;Death handler.
     jsr SFX_SamusDie                ;($CBE2)Start Samus die SFX.
@@ -2785,28 +2785,28 @@ LCEBF:
 ;----------------------------------------[ Add health ]----------------------------------------------
 
 AddHealth:
-    lda HealthLo                    ;Prepare to add to HealthLo.
+    lda Health                    ;Prepare to add to Health.
     sta $03                         ;
-    lda HealthLoChange              ;Amount to add to HealthLo.
+    lda HealthChange              ;Amount to add to Health.
     clc                             ;
     jsr Base10Add                   ;($C3DA)Perform base 10 addition.
-    sta HealthLo                    ;Save results.
+    sta Health                    ;Save results.
 
-    lda HealthHi                    ;Prepare to add to HealthHi.
+    lda Health+1                    ;Prepare to add to Health+1.
     sta $03                         ;
-    lda HealthHiChange              ;Amount to add to HealthHi.
+    lda HealthChange+1              ;Amount to add to Health+1.
     jsr Base10Add                   ;($C3DA)Perform base 10 addition.
-    sta HealthHi                    ;Save results.
+    sta Health+1                    ;Save results.
 
     lda TankCount                   ;
     jsr Amul16                      ;($C2C5)*16. Move tank count to upper 4 bits.
     ora #$0F                        ;Set lower 4 bits.
-    cmp HealthHi                    ;
+    cmp Health+1                    ;
     bcs LCF2B                           ;Is life less than max? if so, branch.
     and #$F9                        ;Life is more than max amount.
-    sta HealthHi                    ;
+    sta Health+1                    ;
     lda #$99                        ;Set life to max amount.
-    sta HealthLo                    ;
+    sta Health                    ;
 LCF2B:
     jmp ClearHealthChange           ;($F323)
 
@@ -4732,9 +4732,9 @@ MissileEnergyPickup:
     lda TankCount                   ;
     jsr Amul16                      ;Get tank count and shift into upper nibble.
     ora #$09                        ;
-    sta HealthHi                    ;Set new tank count. Upper health digit set to 9.
+    sta Health+1                    ;Set new tank count. Upper health digit set to 9.
     lda #$99                        ;Max out low health digit.
-    sta HealthLo                    ;Health is now FULL!
+    sta Health                    ;Health is now FULL!
     bne LDBE3                       ;Branch always.
 
 ;It is possible for the current nametable in the PPU to not be the actual nametable the special item
@@ -5578,13 +5578,13 @@ DisplayBar:
     stx SpritePagePos               ;Save new location in sprite RAM.
     pla                             ;Restore initial sprite page pos.
     tax                             ;
-    lda HealthHi                    ;
+    lda Health+1                    ;
     and #$0F                        ;Extract upper health digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda HealthLo                    ;
+    lda Health                    ;
     jsr Adiv16                      ;($C2BF)Move lower health digit to 4 LSBs.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    ldy EndTimerHi                  ;
+    ldy EndTimer+1                  ;
     iny                             ;Is Samus in escape sequence?-->
     bne LE11C                          ;If so, branch.
     ldy MaxMissiles                 ;
@@ -5614,13 +5614,13 @@ LE10A:
 
 ;Display 3-digit end sequence timer.
 LE11C:
-    lda EndTimerHi                  ;
+    lda EndTimer+1                  ;
     jsr Adiv16                      ;($C2BF)Upper timer digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda EndTimerHi                  ;
+    lda EndTimer+1                  ;
     and #$0F                        ;Middle timer digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda EndTimerLo                  ;
+    lda EndTimer                  ;
     jsr Adiv16                      ;($C2BF)Lower timer digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
     lda #$58                        ;"TI" sprite(left half of "TIME").
@@ -5642,7 +5642,7 @@ LE14A:
     lda #$40                        ;X coord of right-most energy tank.
     sta $00                         ;Energy tanks are drawn from right to left.
     ldy #$6F                        ;"Full energy tank" tile.
-    lda HealthHi                    ;
+    lda Health+1                    ;
     jsr Adiv16                      ;($C2BF)/16. A contains # of full energy tanks.
     sta $01                         ;Storage of full tanks.
     bne AddTanks                    ;Branch if at least 1 tank is full.
@@ -5901,7 +5901,7 @@ LavaAndMoveCheck:
         bcc LE2A4                          ;Samus has varia. Carry set every other frame. Half damage.
     LE29D:
     lda #$07                        ;
-    sta HealthLoChange              ;Samus takes lava damage.
+    sta HealthChange              ;Samus takes lava damage.
     jsr SubtractHealth              ;($CE92)
 LE2A4:
     ldy #$00                        ;Prepare to indicate Samus is in lava.
@@ -6841,11 +6841,11 @@ LE81E:
     ldx #$06
     Lx203:
         lda $05
-        eor DoorCartRAMPtrHi,x
+        eor DoorCartRAMPtr+1,x
         and #$04
         bne Lx206
         lda $04
-        eor DoorCartRAMPtrLo,x
+        eor DoorCartRAMPtr,x
         and #$1F
         bne Lx206
         txa
@@ -8721,9 +8721,9 @@ LF2ED:
     jsr LF270
 LF306:
     lda $95CE
-    sta HealthLoChange
+    sta HealthChange
     lda $95CF
-    sta HealthHiChange
+    sta HealthChange+1
 RTS_X294:
     rts
 
@@ -8740,8 +8740,8 @@ Lx295:
 
 ClearHealthChange:
     lda #$00
-    sta HealthLoChange
-    sta HealthHiChange
+    sta HealthChange
+    sta HealthChange+1
 
 Exit22:
     rts                             ;Return for routine above and below.
@@ -8785,7 +8785,7 @@ DoOneEnemy: ;LF351
 @label:
     jsr LF3AA
     lda EnStatus,x
-    sta $81
+    sta EnemyMovementPtr
     cmp #$07
     bcs @kill
     jsr ChooseRoutine
@@ -8977,14 +8977,15 @@ LF483:
     pla
     cmp #$81
     bne Lx305
-    ldx #$00                        ;Increase HealthHi by 0.
-    ldy #$50                        ;Increase HealthLo by 5.
+    ;Increase Health by 5.
+    ldx #$00
+    ldy #$50
 Lx305:
     pha
 Lx306:
     pla
-    sty HealthLoChange
-    stx HealthHiChange
+    sty HealthChange
+    stx HealthChange+1
     jsr AddHealth                   ;($CEF9)Add health to Samus.
     jmp SFX_EnergyPickup
 
@@ -10090,7 +10091,7 @@ LFBEC:
     clc
     jsr LF311
     lda #$50
-    sta HealthLoChange
+    sta HealthChange
     jsr SubtractHealth              ;($CE92)
 Lx386:
     pla
@@ -10375,11 +10376,11 @@ RTS_X410:
 ;-------------------------------------------------------------------------------
 UpdateTourianItems: ; $FDE3
 ; Adds mother brain and zebetite
-    lda EndTimerHi          ; Determine if this is the first frame the end timer is running
+    lda EndTimer+1          ; Determine if this is the first frame the end timer is running
     cmp #$99                ; (it will have a value of 99.99 the first frame)
     bne Lx411
     clc
-    sbc EndTimerLo
+    sbc EndTimer
     bne Lx411                   ; On the first frame of the end timer:
 
     sta $06	                ;
@@ -10500,7 +10501,7 @@ LFE83:
     bcs Exit23
     jsr LF311
     lda #$50
-    sta HealthLoChange
+    sta HealthChange
     jmp SubtractHealth              ;($CE92)
 
     GetTileFramePtr:

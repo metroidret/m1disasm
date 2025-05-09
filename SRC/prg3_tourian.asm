@@ -290,7 +290,7 @@ InvalidEnemy:
     rts
 
 CommonEnemyJump_00_01_02:
-    lda $81
+    lda EnemyMovementPtr
     cmp #$01
     beq L97F1
     cmp #$03
@@ -349,7 +349,7 @@ L9B4C:
     jsr L9C4D
     tya
     bne RTS_9B4B
-    ldy EndTimerHi
+    ldy EndTimer+1
     iny
     bne L9B65
     lda CannonInstrListID,x
@@ -753,9 +753,9 @@ L9DF2:
     cmp #$20
     bcs RTS_9DF1
     lda #$00
-    sta HealthLoChange
+    sta HealthChange
     lda #$02
-    sta HealthHiChange
+    sta HealthChange+1
     lda #$38
     sta SamusHit
     jmp CommonJump_SubtractHealth
@@ -944,8 +944,8 @@ L9F49:
     lda #$00
     sta MotherBrainStatus
     lda #$99
-    sta EndTimerLo
-    sta EndTimerHi
+    sta EndTimer
+    sta EndTimer+1
     lda #$01
     sta MotherBrain010D
     lda MotherBrainNameTable
@@ -1248,7 +1248,7 @@ RTS_A15D:
 
 ;-------------------------------------------------------------------------------
 LA15E:
-    ldy EndTimerHi
+    ldy EndTimer+1
     iny
     bne RTS_A1DA
     ldy #$03
@@ -1317,20 +1317,20 @@ LA1DB:  .byte $22, $2A, $2A, $BA, $B2, $2A, $C4, $2A, $C8, $BA, $BA, $BA
 
 ;-------------------------------------------------------------------------------
 LA1E7:
-    ldy EndTimerHi
+    ldy EndTimer+1
     iny
     beq RTS_A237
-    lda EndTimerLo
+    lda EndTimer
     sta $03
     lda #$01
     sec
     jsr CommonJump_Base10Subtract
-    sta EndTimerLo
-    lda EndTimerHi
+    sta EndTimer
+    lda EndTimer+1
     sta $03
     lda #$00
     jsr CommonJump_Base10Subtract
-    sta EndTimerHi
+    sta EndTimer+1
     lda FrameCount
     and #$1F
     bne LA216
@@ -1338,10 +1338,10 @@ LA1E7:
         ora #$08
         sta SQ1SFXFlag
     LA216:
-    lda EndTimerLo
-    ora EndTimerHi
+    lda EndTimer
+    ora EndTimer+1
     bne RTS_A237
-    dec EndTimerHi
+    dec EndTimer+1
     sta MotherBrainHits
     lda #$07
     sta MotherBrainStatus
@@ -1376,7 +1376,7 @@ LA238:
     cmp SpritePagePos
     beq RTS_A28A
     tax
-    lda EndTimerHi
+    lda EndTimer+1
     lsr
     lsr
     lsr
@@ -1385,11 +1385,11 @@ LA238:
     and #$0F
     ora #$A0
     sta SpriteRAM+$01,x
-    lda EndTimerHi
+    lda EndTimer+1
     and #$0F
     ora #$A0
     sta SpriteRAM+$05,x
-    lda EndTimerLo
+    lda EndTimer
     lsr
     lsr
     lsr

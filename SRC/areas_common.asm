@@ -1166,7 +1166,7 @@ DoorAction1:
     lda #$03
     cmp $0307,x
     bne L8BEE
-        ldy EndTimerHi
+        ldy EndTimer+1
         iny
         bne ObjActionSubRoutine8BB1
     L8BEE:
@@ -1352,9 +1352,9 @@ WriteDoorBGTiles_Common:
     and #$06
     tay
     lda $04
-    sta DoorCartRAMPtrLo,y
+    sta DoorCartRAMPtr,y
     lda $05
-    sta DoorCartRAMPtrHi,y
+    sta DoorCartRAMPtr+1,y
     rts
 
 ; x coordinate of door in pixels

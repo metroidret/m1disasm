@@ -1,6 +1,6 @@
 MetroidAIRoutine:
-    ; Delete self if escape timer is active (EndTimerHi != $FF)
-    ldy EndTimerHi
+    ; Delete self if escape timer is active (EndTimer+1 != #$FF)
+    ldy EndTimer+1
     iny
     beq L9804
         lda #$00
@@ -23,7 +23,7 @@ MetroidAIRoutine:
         jmp L9899
 
     L9822:
-    ; load whether the metroid is red ($00) or green ($01) into y
+    ; load whether the metroid is red (#$00) or green (#$01) into y
     ldy EnData08,x
     
     ; push y max speed to stack
@@ -109,7 +109,7 @@ MetroidAIRoutine:
         lda #$FF
         sta EnHitPoints,x
 L9899:
-    lda $81
+    lda EnemyMovementPtr
     cmp #$06
     bne L98A9
     cmp EnStatus,x
@@ -248,14 +248,14 @@ L9967:
     bne L999E
     
     ; Don't suck Samus's energy if she is dead
-    lda HealthLo
-    ora HealthHi
+    lda Health
+    ora Health+1
     beq L999E
     
     ; Subtract 1/4 health point from Samus
-    sty HealthHiChange
+    sty HealthChange+1
     ldy #$04
-    sty HealthLoChange
+    sty HealthChange
     jsr CommonJump_SubtractHealth
     ; Set MetroidOnSamus to true
     ldy #$01
@@ -326,7 +326,7 @@ LoadPositionFromTemp:
 GetMetroidAccel:
     ; put acceleration sign bit in carry
     lsr
-    ; load whether the metroid is red ($00) or green ($01) into a
+    ; load whether the metroid is red (#$00) or green (#$01) into a
     lda EnData08,x
     ; rotate direction bit back into a
     rol
