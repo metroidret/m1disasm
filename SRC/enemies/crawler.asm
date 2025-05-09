@@ -16,7 +16,7 @@ CrawlerAIRoutine:
         beq Crawler03b
     .endif
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq Crawler03
     lda EnData0A,x
     and #$03

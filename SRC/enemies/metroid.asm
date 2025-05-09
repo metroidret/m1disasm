@@ -149,10 +149,10 @@ L98A9:
             bne L9932
             
             ; the bomb hits have released the latch of the metroid onto Samus
-            lda #$02
+            lda #enemyStatus_Active
             ora EnSpecialAttribs,x
-            sta EnData0C,x
-            lda #$06
+            sta EnPrevStatus,x
+            lda #enemyStatus_Hurt
             sta EnStatus,x
             lda #$20
             sta EnSpecialAttribs,x

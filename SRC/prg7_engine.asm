@@ -1233,7 +1233,7 @@ InitBank0:
     ldy #$A0                        ;
     LC543:
         lda IntroStarsData-1,y                     ;
-        sta IntroStarSprite00-1,y                     ;Loads sprite info for stars into RAM $6E00 thru 6E9F.
+        sta IntroStarSprite-1,y                     ;Loads sprite info for stars into RAM $6E00 thru 6E9F.
         dey                             ;
         bne LC543                       ;
 
@@ -1703,7 +1703,8 @@ DestroyEnemies: ; LC8BB
     LC8BF:
         cpx #$48
         bcs LC89X
-            sta $97,x
+            ; what is this doing?
+            sta CannonIndex,x
         LC89X:
         sta EnStatus,x
         pha
@@ -4351,7 +4352,7 @@ SamusOnElevatorOrEnemy:
     jsr GetObject1CoordData
 Lx117:
     lda EnStatus,x
-    cmp #$04
+    cmp #enemyStatus_Frozen
     bne Lx118
     jsr LF152
     jsr DistFromEn0ToObj1
@@ -4418,7 +4419,7 @@ Lx122:
         ldy #$02
         jsr LDAB0
     Lx123:
-    lda $687C
+    lda RidleyStatueStatus
     bpl Lx124
         ldy #$03
         jsr LDAB0
@@ -4551,7 +4552,7 @@ LDADA:
     lda DoorStatus
     bne Exit0
     lda KraidStatueStatus
-    and $687C
+    and RidleyStatueStatus
     bpl Exit0
     sta $54
     ldx #$70
@@ -4953,7 +4954,7 @@ LDCFC:
         beq Lx139
     Lx135:
     ; Branch if boss just killed
-    lda EnData0C,x
+    lda EnPrevStatus,x
     asl
     bmi LDD75
 
@@ -4962,7 +4963,7 @@ LDCFC:
     jsr LoadTableAt977B ; TableAtL977B[EnemyType[x]]*2
     and #$20
     sta EnDataIndex,x
-    lda #$05
+    lda #enemyStatus_Pickup
     sta EnStatus,x
     lda #$60
     sta EnData0D,x
@@ -5000,7 +5001,7 @@ LDD5B:
     cmp #$13
     beq Lx140
     Lx139:
-        jmp KillObject                  ;($FA18)Free enemy data slot.
+        jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
     Lx140:
     lda RandomNumber1
     ldy #$00
@@ -5533,7 +5534,7 @@ ExplodePlacementTbl:
 UpdateEnemyAnim:
     ldx PageIndex                   ;Load index to desired enemy.
     ldy EnStatus,x                  ;
-    cpy #$05                        ;Is enemy in the process of dying?-->
+    cpy #enemyStatus_Pickup                        ;Is enemy in the process of dying?-->
     beq RTS_E0BB                         ;If so, branch to exit.
     ldy EnAnimDelay,x               ;
     beq LE0A7                           ;Check if current anumation frame is ready to be updated.
@@ -7579,22 +7580,22 @@ Lx234:
 
 LoadStatues:
     jsr GetNameTable                ;($EB85)
-    sta $036C
+    sta ObjectHi+$60
     lda #$40
     ldx RidleyStatueStatus
     bpl Lx235      ; branch if Ridley statue not hit
         lda #$30
     Lx235:
-    sta $0370
+    sta ObjAction+$70
     lda #$60
     ldx KraidStatueStatus
     bpl Lx236      ; branch if Kraid statue not hit
         lda #$50
     Lx236:
     sta $036F
-    sty $54
+    sty Statues54
     lda #$01
-    sta $0360
+    sta ObjAction+$60
 Lx237:
     jmp EnemyLoop   ; do next room object
 
@@ -7690,7 +7691,7 @@ LEC9B:
         eor TileWRAMPtr+1,x
         and #$04
         bne Lx245
-            sta $0500,x
+            sta TileRoutine,x
         Lx245:
         jsr Xminus16
         cmp #$F0
@@ -7707,7 +7708,7 @@ LEC9B:
     jsr LED7A
     tya
     sec
-    sbc $032C
+    sbc ObjectHi+$20
     bne Lx246
         sta ElevatorStatus
     Lx246:
@@ -7750,9 +7751,9 @@ LEC9B:
 UpdateDoorData:
     txa                             ;
     eor #$03                        ;
-    and $006C,y                     ;Moves door info from one name table to the next-->
+    and DoorOnNameTable3,y                     ;Moves door info from one name table to the next-->
 LED57:
-    sta $006C,y                     ;when the room is transferred across name tables.
+    sta DoorOnNameTable3,y                     ;when the room is transferred across name tables.
     rts                             ;
 
 LED5B:
@@ -8779,15 +8780,16 @@ DoOneEnemy: ;LF351
                                     ;iteration. There is a max of 6 enemies at a time.
     ldy EnStatus,x
     beq @label
-    cpy #$03
-    bcs @label
-    jsr LF37F
-@label:
+        cpy #enemyStatus_Active+1
+        bcs @label
+            ; enemy status is enemyStatus_Resting or enemyStatus_Active here
+            jsr LF37F
+    @label:
     jsr LF3AA
     lda EnStatus,x
     sta EnemyMovementPtr
-    cmp #$07
-    bcs @kill
+    cmp #enemyStatus_Hurt+1
+    bcs @invalidStatus
     jsr ChooseRoutine
         .word ExitSub ; 00 ($C45C) rts
         .word DoRestingEnemy ; 01 Resting (Offscreen or Inactive)
@@ -8797,8 +8799,8 @@ DoOneEnemy: ;LF351
         .word DoEnemyPickup ; 05 Pickup
         .word DoHurtEnemy ; 06 Hurt
 
-@kill:
-    jmp KillObject                  ;($FA18)Free enemy data slot.
+@invalidStatus:
+    jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 ;-------------------------------------------------------------------------------
 LF37F:
@@ -8935,25 +8937,25 @@ LF43E:
     lda FrameCount
     and #$07
     bne Lx303
-    dec EnData0D,x
-    bne Lx303
-    lda EnStatus,x
-    cmp #$03
-    beq Lx303
-    lda EnData0C,x
-    sta EnStatus,x
-    ldy EnDataIndex,x
-    lda L969B,y
-    sta EnData0D,x
-Lx303:
+        dec EnData0D,x
+        bne Lx303
+            lda EnStatus,x
+            cmp #enemyStatus_Explode
+            beq Lx303
+                lda EnPrevStatus,x
+                sta EnStatus,x
+                ldy EnDataIndex,x
+                lda L969B,y
+                sta EnData0D,x
+    Lx303:
     lda EnData0D,x
     cmp #$0B
     bcs Lx304
-    lda FrameCount
-    and #$02
-    beq Lx304
-    asl ObjectCntrl
-Lx304:
+        lda FrameCount
+        and #$02
+        beq Lx304
+            asl ObjectCntrl
+    Lx304:
     jmp LF416
 ;--------------------------------------
 DoEnemyPickup:
@@ -8961,7 +8963,7 @@ LF483:
     lda EnData04,x
     and #$24
     beq Lx310
-    jsr KillObject                  ;($FA18)Free enemy data slot.
+    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     ldy EnAnimFrame,x
     cpy #$80
     beq PickupMissile
@@ -9011,7 +9013,7 @@ Lx310:
     bne Lx311
     dec EnData0D,x
     bne Lx311
-    jsr KillObject                  ;($FA18)Free enemy data slot.
+    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
 Lx311:
     lda FrameCount
     and #$02
@@ -9024,7 +9026,7 @@ DoHurtEnemy:
     dec EnSpecialAttribs,x
     bne Lx313
     ; Preserve upper two bits of EnSpecialAttribs
-    lda EnData0C,x
+    lda EnPrevStatus,x
     tay
     and #$C0
     sta EnSpecialAttribs,x
@@ -9046,9 +9048,9 @@ Lx313:
     jmp LF423
 
 LF515:
-    sta EnData0C,x
+    sta EnPrevStatus,x
 LF518:
-    lda #$04
+    lda #enemyStatus_Frozen
     sta EnStatus,x
     rts
 
@@ -9061,7 +9063,7 @@ LF51E:
     lda EnYRoomPos,x     ; Y coord
     cmp #$EC
     bcc RTS_X315
-    jmp KillObject                  ;($FA18)Free enemy data slot.
+    jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 Lx314:
     jsr SFX_MetroidHit
@@ -9136,12 +9138,12 @@ Lx319:
         bne Lx316
     Lx320:
     lda EnStatus,x
-    cmp #$04
+    cmp #enemyStatus_Frozen
     bne Lx321
-        lda EnData0C,x
+        lda EnPrevStatus,x
     Lx321:
     ora $0A
-    sta EnData0C,x
+    sta EnPrevStatus,x
     asl
     bmi Lx322
     jsr LoadTableAt977B
@@ -9153,7 +9155,7 @@ Lx319:
     cpy #wa_ScrewAttack
     beq Lx326
 Lx322:
-    lda #$06
+    lda #enemyStatus_Hurt
     sta EnStatus,x
     lda #$0A
     bit $0A
@@ -9179,7 +9181,7 @@ Lx325:
     dec EnHitPoints,x
     bne GetPageIndex
 Lx326:
-    lda #$03
+    lda #enemyStatus_Explode
     sta EnStatus,x
     bit $0A
     bvs Lx327
@@ -9274,13 +9276,13 @@ Exit12:
 LF6B9:
     ; clear $82
     lda #$00
-    sta $82
+    sta EnemyMovementPtr+1
     jsr ReadTableAt968B
     tay
 
     ; branch if enemy is not active
     lda EnStatus,x
-    cmp #$02
+    cmp #enemyStatus_Active
     bne Lx333
 
         ; if bit 1 of L968B[EnDataIndex] is not set, exit
@@ -9570,7 +9572,7 @@ LF870:
     pla
     jsr LF68D
     ldx PageIndex
-    lda #$01
+    lda #enemyStatus_Resting
     sta EnStatus,y
     and EnData05,x
     tax
@@ -9624,7 +9626,7 @@ LF8F8:
     rol
     and #$07
     sta EnData0A,y
-    lda #$02
+    lda #enemyStatus_Active
     sta EnStatus,y
     lda #$00
     sta EnDelay,y
@@ -9668,7 +9670,7 @@ LF949:
     lda EnData05,x
     and #$02
     bne Lx360
-        jsr KillObject                  ;($FA18)Free enemy data slot.
+        jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     Lx360:
     lda EnStatus,x
     beq Exit19
@@ -9774,10 +9776,11 @@ Lx365:
 Lx367:
     jmp LF97C
 
-KillObject:
-    lda #$00                        ;
-    sta EnStatus,x                  ;Store #$00 as enemy status(enemy slot is open).
-    rts                             ;
+RemoveEnemy:
+    ;Store #$00 as enemy status(enemy slot is open).
+    lda #enemyStatus_NoEnemy
+    sta EnStatus,x
+    rts
 
 ; enemy<-->background crash detection
 
@@ -9803,7 +9806,7 @@ LFA1E:
 LFA41:
     jsr StoreEnemyPositionToTemp
     jsr LFD8F
-    bcc KillObject                  ;($FA18)Free enemy data slot.
+    bcc RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 LoadEnemyPositionFromTemp:
     lda $08
@@ -9822,7 +9825,7 @@ LFA5B:
 LFA60:
     lda #$00
     sta EnData04,x
-    lda #$05
+    lda #enemyStatus_Pickup
     sta EnStatus,x
 Exit20:
     rts
@@ -9834,7 +9837,7 @@ LFA6B:
         dec EnDelay,x
         bne Lx372
     Lx371:
-        jsr KillObject                  ;($FA18)Free enemy data slot.
+        jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     Lx372:
     jmp LF97C
 
@@ -9849,7 +9852,7 @@ LFA7D:
     jmp MakeCartRAMPtr              ;($E96A)Find enemy position in room RAM.
 
 LFA91:
-    jsr KillObject                  ;($FA18)Free enemy data slot.
+    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     lda $95DC
     jsr LF68D
     jmp LF97C
@@ -9881,7 +9884,7 @@ LFAB4:
     bmi Lx376
     bne Lx377
 Lx376:
-    jsr KillObject                  ;($FA18)Free enemy data slot.
+    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
 Lx377:
     lda EnCounter,x
     cmp #$09
@@ -9960,7 +9963,7 @@ Lx380:
     jsr DistFromEn0ToObj1
     jsr LF1FA
     bcc Exit13
-    lda #$01
+    lda #enemyStatus_Resting ; #$01
     sta EnDelay,x
     sta EnStatus,x
     and ScrollDir
@@ -9974,7 +9977,7 @@ Lx381:
     sta EnDataIndex,x
     lda #$01
     sta EnDelay,x
-    jmp KillObject                  ;($FA18)Free enemy data slot.
+    jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 LFB7B:
     jsr LoadTableAt977B
@@ -10144,7 +10147,7 @@ Lx389:
 RTS_X390:
     rts
 Lx391:
-    jmp KillObject                   ;($FA18)Free enemy data slot.
+    jmp RemoveEnemy                   ;($FA18)Free enemy data slot.
 
 LFC98:
     lda $B0,x

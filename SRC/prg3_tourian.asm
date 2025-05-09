@@ -519,7 +519,7 @@ L9C6F:
         lda ZebetiteStatus,x
         beq L9C99
         jsr GetVRAMPtrHi
-        eor ZebetiteVRAMPtrHi,x
+        eor ZebetiteVRAMPtr+1,x
         bne L9C99
         sta ZebetiteStatus,x
         L9C99:
@@ -647,9 +647,9 @@ SpawnZebetiteRoutine:
     and #$10
     eor #$10
     ora #$84
-    sta ZebetiteVRAMPtrLo,x
+    sta ZebetiteVRAMPtr,x
     jsr GetVRAMPtrHi
-    sta ZebetiteVRAMPtrHi,x
+    sta ZebetiteVRAMPtr+1,x
     
     lda #$01
     sta ZebetiteStatus,x
@@ -770,7 +770,7 @@ L9E2E:
     jsr LA041
 L9E31:
     lda #$00
-    sta $9E
+    sta MotherBrain9E
     rts
 
 ;-------------------------------------------------------------------------------
@@ -783,12 +783,12 @@ L9E36:
 L9E41:  .byte $08, $07
 
 L9E43:
-    dec $9F
+    dec MotherBrain9F
     bne L9E4B
         lda #$01
         sta MotherBrainStatus
     L9E4B:
-    lda $9F
+    lda MotherBrain9F
     and #$02
     lsr
     tay
@@ -818,7 +818,7 @@ L9E52:
     lda #$04
     sta MotherBrainStatus
     lda #$28
-    sta $9F
+    sta MotherBrain9F
     lda NoiseSFXFlag
     ora #$01
     sta NoiseSFXFlag
@@ -856,7 +856,7 @@ L9E86:
     lda #$04
     sta MotherBrainStatus
     lda #$1C
-    sta $9F
+    sta MotherBrain9F
     ldy MotherBrainHits
     inc MotherBrainHits
     cpy #$04
@@ -866,7 +866,7 @@ L9E86:
         jmp L9ED6
 
     L9ED3:
-    lsr $9F
+    lsr MotherBrain9F
 RTS_9ED5:
     rts
 
@@ -1027,7 +1027,7 @@ RTS_9FEC:
 
 ;-------------------------------------------------------------------------------
 L9FED:
-    lda $9E
+    lda MotherBrain9E
     beq RTS_A01A
     lda MultiSFXFlag
     ora #$02
@@ -1049,7 +1049,7 @@ L9FED:
     lda #$80
 LA016:
     sty MotherBrainStatus
-    sta $9F
+    sta MotherBrain9F
 RTS_A01A:
     rts
 
@@ -1200,10 +1200,10 @@ LA0C6:
         ; and if missile touches zebetite
         lda $04
         and #$9E
-        cmp ZebetiteVRAMPtrLo,y
+        cmp ZebetiteVRAMPtr,y
         bne LA12E
         lda $05
-        cmp ZebetiteVRAMPtrHi,y
+        cmp ZebetiteVRAMPtr+1,y
         beq LA139
         LA12E:
             ; missile is not touching zebetite
@@ -1240,7 +1240,7 @@ LA142:
     cpy #$72
     bcs LA15C
     lda #$01
-    sta $9E
+    sta MotherBrain9E
 LA15C:
     tya
 RTS_A15D:
@@ -1441,9 +1441,9 @@ LA29B:
 LA2BA:
     lda ZebetiteAnimFrameTable,y
     sta TileAnimFrame+$10
-    lda ZebetiteVRAMPtrLo,x
+    lda ZebetiteVRAMPtr,x
     sta TileWRAMPtr+$10
-    lda ZebetiteVRAMPtrHi,x
+    lda ZebetiteVRAMPtr+1,x
     sta TileWRAMPtr+1+$10
     lda PPUStrIndex
     bne LA2DA

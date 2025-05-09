@@ -114,7 +114,7 @@ KraidUpdateProjectile_BranchA:
     beq KraidUpdateProjectile_BranchB
     cpy #$03
     bne KraidUpdateProjectile_Exit
-    lda EnData0C,x
+    lda EnPrevStatus,x
     cmp #$01
     bne KraidUpdateProjectile_Exit
     beq KraidUpdateProjectile_BranchC

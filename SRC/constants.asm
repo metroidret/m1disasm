@@ -195,6 +195,7 @@ MapPosX                = $50     ;Current x position on world map.
 SamusScrX              = $51     ;Samus x position on screen.
 SamusScrY              = $52     ;Samus y position on screen.
 WalkSoundDelay         = $53
+Statues54              = $54
 IsSamus                = $55     ;1=Samus object being accessed, 0=not Samus.
 DoorStatus             = $56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
                                         ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
@@ -218,7 +219,7 @@ RoomNumber             = $5A     ;Room number currently being loaded.
 SpritePagePos          = $5B     ;Index into sprite RAM used to load object sprite data.
 
 ; 4 slots of 2 bytes each ($5C-$63)
-DoorCartRAMPtr       = $5C
+DoorCartRAMPtr         = $5C
 ;      DoorCartRAMPtr+1       = $5D
 
 SamusInLava            = $64     ;#$01=Samus in lava, #$00=She is not.
@@ -241,7 +242,7 @@ DoorOnNameTable0       = $6D     ;doors loaded on the name tables. The informati
                                         ;#$00 is possible in $6D if 2 doors are on name table 0-->
                                         ;while vertically scrolling.
 
-HealthChange         = $6E     ;Amount to add/subtract from Health.
+HealthChange           = $6E     ;Amount to add/subtract from Health.
 ;      HealthChange+1         = $6F
 
 SamusBlink             = $70
@@ -260,8 +261,8 @@ ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing.
 
 OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
 
-KraidLintCounter      = $7E
-KraidNailCounter      = $7F
+KraidLintCounter       = $7E
+KraidNailCounter       = $7F
 
 EnemyMovementPtr       = $81
 ;      EnemyMovementPtr+1       = $82
@@ -307,6 +308,8 @@ MotherBrain9A          = $9A
 MotherBrain9B          = $9B
 MotherBrainAnimFrameTableID = $9C
 MotherBrainNameTable   = $9D     ;what is this
+MotherBrain9E          = $9E
+MotherBrain9F          = $9F
 
 SpareMemB7             = $B7     ;Written to in title routine and accessed by unused routine.
 SpareMemB8             = $B8     ;Written to in title routine and accessed by unused routine.
@@ -353,8 +356,8 @@ MirrorCntrl            = $FA     ;If bit 3 is set, PPU set to horizontal mirrori
 
 ScrollY                = $FC     ;Y value loaded into scroll register.
 ScrollX                = $FD     ;X value loaded into scroll register.
-PPUMASK_ZP              = $FE     ;Data byte to be loaded into PPU control register 1.
-PPUCTRL_ZP              = $FF     ;Data byte to be loaded into PPU control register 0.
+PPUMASK_ZP             = $FE     ;Data byte to be loaded into PPU control register 1.
+PPUCTRL_ZP             = $FF     ;Data byte to be loaded into PPU control register 0.
 
 Health               = $0106   ;Lower health digit in upper 4 bits.
 ;      Health+1               = $0107   ;Upper health digit in lower 4 bits-->
@@ -376,6 +379,14 @@ SpriteRAM            = $0200   ;$0200 thru $02FF
 
 
 ;-----------------------------------------[ Object RAM ]---------------------------------------------
+
+; 16 slots of 16 bytes each ($0300-$03FF)
+; slot 0 to 1 is for samus
+; slot 2 is for elevator
+; slot 4 is for power-up
+; slot 6 to 7 is for tourian bridge
+; slot 8 to B is for doors
+; slot D to F is for samus projectiles
 
 ;Samus RAM.
 ObjAction              = $0300   ;Status of object. 0=object slot not in use.
@@ -421,6 +432,9 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 
 ;------------------------------------------[ Enemy RAM ]---------------------------------------------
 
+; 16 slots of 16 bytes each ($0400-$04FF)
+; slot 0 to 5 is for normal enemies
+; slot E is for mother brain
 EnYRoomPos             = $0400   ;Enemy y position in room.(not actual screen position).
 EnXRoomPos             = $0401   ;Enemy x position in room.(not actual screen position).
 EnData02               = $0402   ; unknown - y speed?
@@ -434,7 +448,7 @@ EnDelay                = $0409   ;Delay counter between enemy actions.
 EnData0A               = $040A   ; unknown -- For crawlers, orientation
                                  ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
 EnHitPoints            = $040B   ;Current hit points of enemy.
-EnData0C               = $040C   ; unknown
+EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
 EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
 EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
@@ -504,18 +518,18 @@ MusicRepeat            = $062C   ;0=Music does not repeat, Nonzero=music repeats
 TriangleCounterCntrl   = $062D   ;$F0=disable length cntr, $00=long note, $0F=short note
 SQ1VolumeCntrl         = $062E   ;Entry number in VolumeCntrlAddressTbl for SQ1
 SQ2VolumeCntrl         = $062F   ;Entry number in VolumeCntrlAddressTbl for SQ2
-SQ1Base              = $0630   ;Low byte of base address for SQ1 music data
+SQ1Base                = $0630   ;Low byte of base address for SQ1 music data
 ;      SQ1Base+1              = $0631   ;High byte of base address for SQ1 music data
-SQ2Base              = $0632   ;Low byte of base address for SQ2 music data
+SQ2Base                = $0632   ;Low byte of base address for SQ2 music data
 ;      SQ2Base+1              = $0633   ;High byte of base address for SQ2 music data
-TriangleBase         = $0634   ;Low byte of base address for Triangle music data
+TriangleBase           = $0634   ;Low byte of base address for Triangle music data
 ;      TriangleBase+1         = $0635   ;High byte of base address for Triangle music data
-NoiseBase            = $0636   ;Low byte of base address for Noise music data
+NoiseBase              = $0636   ;Low byte of base address for Noise music data
 ;      NoiseBase+1            = $0637   ;High byte of base address for Noise music data
 
 SQ1MusicIndexIndex     = $0638   ;Index to find SQ1 sound data index. Base=$630,$631
 SQ2MusicIndexIndex     = $0639   ;Index to find SQ2 sound data index. Base=$632,$633
-TriangleMusicIndexIndex = $063A   ;Index to find Tri sound data index. Base=$634,$635
+TriangleMusicIndexIndex= $063A   ;Index to find Tri sound data index. Base=$634,$635
 NoiseMusicIndexIndex   = $063B   ;Index to find Noise sound data index. Base=$636,$637
 
 SQ1LoopIndex           = $063C   ;SQ1 Loop start index
@@ -773,198 +787,31 @@ CannonInstrID          = $6BFB
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 
-IntroStarSprite00      = $6E00   ;thru $6E9F
-IntroStarSprite01      = $6E04   ;
-IntroStarSprite02      = $6E08   ;
-IntroStarSprite03      = $6E0C   ;
-IntroStarSprite04      = $6E10   ;
-IntroStarSprite05      = $6E14   ;
-IntroStarSprite06      = $6E18   ;
-IntroStarSprite07      = $6E1C   ;
-IntroStarSprite08      = $6E20   ;
-IntroStarSprite09      = $6E24   ;
-IntroStarSprite0A      = $6E28   ;
-IntroStarSprite0B      = $6E2C   ;
-IntroStarSprite0C      = $6E30   ;
-IntroStarSprite0D      = $6E34   ;
-IntroStarSprite0E      = $6E38   ;
-IntroStarSprite0F      = $6E3C   ;
-IntroStarSprite10      = $6E40   ;
-IntroStarSprite11      = $6E44   ;
-IntroStarSprite12      = $6E48   ;
-IntroStarSprite13      = $6E4C   ;
-IntroStarSprite14      = $6E50   ;RAM used for storing intro star sprite data.
-IntroStarSprite15      = $6E54   ;
-IntroStarSprite16      = $6E58   ;
-IntroStarSprite17      = $6E5C   ;
-IntroStarSprite18      = $6E60   ;
-IntroStarSprite19      = $6E64   ;
-IntroStarSprite1A      = $6E68   ;
-IntroStarSprite1B      = $6E6C   ;
-IntroStarSprite1C      = $6E70   ;
-IntroStarSprite1D      = $6E74   ;
-IntroStarSprite1E      = $6E78   ;
-IntroStarSprite1F      = $6E7C   ;
-IntroStarSprite20      = $6E80   ;
-IntroStarSprite21      = $6E84   ;
-IntroStarSprite22      = $6E88   ;
-IntroStarSprite23      = $6E8C   ;
-IntroStarSprite24      = $6E90   ;
-IntroStarSprite25      = $6E94   ;
-IntroStarSprite26      = $6E98   ;
-IntroStarSprite27      = $6E9C   ;
+; 40 slots of 4 bytes each ($6E00-$6E9F)
+IntroStarSprite        = $6E00   ;RAM used for storing intro star sprite data.
 
+; 8 slots of 16 bytes each ($6EA0-$6F1F)
 ;Intro sprite 0 and sparkle sprite.
-IntroSpr0YCoord        = $6EA0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr0PattTbl       = $6EA1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr0Cntrl         = $6EA2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr0XCoord        = $6EA3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr0Index         = $6EA4   ;Index to next sparkle sprite data byte.
-IntroSpr0NextCntr      = $6EA5   ;Decrements each frame. When 0, load new sparkle sprite data.
-SparkleSpr0YChange     = $6EA6   ;Sparkle sprite y coordinate change.
-IntroSpr0XChange       = $6EA6   ;Intro sprite x total movement distance.
-SparkleSpr0XChange     = $6EA7   ;Sparkle sprite x coordinate change.
-IntroSpr0YChange       = $6EA7   ;Intro sprite y total movement distance.
-IntroSpr0ChngCntr      = $6EA8   ;decrements each frame from #$20. At 0, change sparkle sprite.
-IntroSpr0ByteType      = $6EA9   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
+IntroSprYCoord         = $6EA0   ;Loaded into byte 0 of sprite RAM(Y position).
+IntroSprPattTbl        = $6EA1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
+IntroSprCntrl          = $6EA2   ;Loaded into byte 2 of sprite RAM(Control byte).
+IntroSprXCoord         = $6EA3   ;Loaded into byte 3 of sprite RAM(X position).
+IntroSprIndex          = $6EA4   ;Index to next sparkle sprite data byte.
+IntroSprNextCntr       = $6EA5   ;Decrements each frame. When 0, load new sparkle sprite data.
+SparkleSprYChange      = $6EA6   ;Sparkle sprite y coordinate change.
+IntroSprXChange        = $6EA6   ;Intro sprite x total movement distance.
+SparkleSprXChange      = $6EA7   ;Sparkle sprite x coordinate change.
+IntroSprYChange        = $6EA7   ;Intro sprite y total movement distance.
+IntroSprChngCntr       = $6EA8   ;decrements each frame from #$20. At 0, change sparkle sprite.
+IntroSprByteType       = $6EA9   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
                                         ;bits for x coord change. if #$00, next data byte contains-->
                                         ;4 bits for x coord change and 4 bits for y coord change.
-IntroSpr0Complete      = $6EAA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr0SpareB        = $6EAB   ;Not used.
-IntroSpr0XRun          = $6EAC   ;x displacement of sprite movement(run).
-IntroSpr0YRise         = $6EAD   ;y displacement of sprite movement(rise).
-IntroSpr0XDir          = $6EAE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr0YDir          = $6EAF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 1 and sparkle sprite.
-IntroSpr1YCoord        = $6EB0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr1PattTbl       = $6EB1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr1Cntrl         = $6EB2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr1XCoord        = $6EB3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr1Index         = $6EB4   ;Index to next sparkle sprite data byte.
-IntroSpr1NextCntr      = $6EB5   ;Decrements each frame. When 0, load new sparkle sprite data.
-SparkleSpr1YChange     = $6EB6   ;Sparkle sprite y coordinate change.
-IntroSpr1XChange       = $6EB6   ;Intro sprite x total movement distance.
-SparkleSpr1XChange     = $6EB7   ;Sparkle sprite x coordinate change.
-IntroSpr1YChange       = $6EB7   ;Intro sprite y total movement distance.
-IntroSpr1ChngCntr      = $6EB8   ;decrements each frame from #$20. At 0, change sparkle sprite.
-IntroSpr1ByteType      = $6EB9   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
-                                        ;bits for x coord change. if #$00, next data byte contains-->
-                                        ;4 bits for x coord change and 4 bits for y coord change.
-IntroSpr1Complete      = $6EBA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr1SpareB        = $6EBB   ;Not used.
-IntroSpr1XRun          = $6EBC   ;x displacement of sprite movement(run).
-IntroSpr1YRise         = $6EBD   ;y displacement of sprite movement(rise).
-IntroSpr1XDir          = $6EBE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr1YDir          = $6EBF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 2.
-IntroSpr2YCoord        = $6EC0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr2PattTbl       = $6EC1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr2Cntrl         = $6EC2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr2XCoord        = $6EC3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr2Spare5        = $6EC4   ;Not used.
-IntroSpr2Spare6        = $6EC5   ;Not used.
-IntroSpr2XChange       = $6EC6   ;Intro sprite x total movement distance.
-IntroSpr2YChange       = $6EC7   ;Intro sprite y total movement distance.
-IntroSpr2Spare8        = $6EC8   ;Not used.
-IntroSpr2Spare9        = $6EC9   ;Not used.
-IntroSpr2Complete      = $6ECA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr2SpareB        = $6ECB   ;Not used.
-IntroSpr2XRun          = $6ECC   ;x displacement of sprite movement(run).
-IntroSpr2YRise         = $6ECD   ;y displacement of sprite movement(rise).
-IntroSpr2XDir          = $6ECE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr2YDir          = $6ECF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 3.
-IntroSpr3YCoord        = $6ED0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr3PattTbl       = $6ED1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr3Cntrl         = $6ED2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr3XCoord        = $6ED3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr3Spare5        = $6ED4   ;Not used.
-IntroSpr3Spare6        = $6ED5   ;Not used.
-IntroSpr3XChange       = $6ED6   ;Intro sprite x total movement distance.
-IntroSpr3YChange       = $6ED7   ;Intro sprite y total movement distance.
-IntroSpr3Spare8        = $6ED8   ;Not used.
-IntroSpr3Spare9        = $6ED9   ;Not used.
-IntroSpr3Complete      = $6EDA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr3SpareB        = $6EDB   ;Not used.
-IntroSpr3XRun          = $6EDC   ;x displacement of sprite movement(run).
-IntroSpr3YRise         = $6EDD   ;y displacement of sprite movement(rise).
-IntroSpr3XDir          = $6EDE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr3YDir          = $6EDF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 4.
-IntroSpr4YCoord        = $6EE0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr4PattTbl       = $6EE1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr4Cntrl         = $6EE2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr4XCoord        = $6EE3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr4Spare5        = $6EE4   ;Not used.
-IntroSpr4Spare6        = $6EE5   ;Not used.
-IntroSpr4XChange       = $6EE6   ;Intro sprite x total movement distance.
-IntroSpr4YChange       = $6EE7   ;Intro sprite y total movement distance.
-IntroSpr4Spare8        = $6EE8   ;Not used.
-IntroSpr4Spare9        = $6EE9   ;Not used.
-IntroSpr4Complete      = $6EEA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr4SpareB        = $6EEB   ;Not used.
-IntroSpr4XRun          = $6EEC   ;x displacement of sprite movement(run).
-IntroSpr4YRise         = $6EED   ;y displacement of sprite movement(rise).
-IntroSpr4XDir          = $6EEE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr4YDir          = $6EEF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 5.
-IntroSpr5YCoord        = $6EF0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr5PattTbl       = $6EF1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr5Cntrl         = $6EF2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr5XCoord        = $6EF3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr5Spare5        = $6EF4   ;Not used.
-IntroSpr5Spare6        = $6EF5   ;Not used.
-IntroSpr5XChange       = $6EF6   ;Intro sprite x total movement distance.
-IntroSpr5YChange       = $6EF7   ;Intro sprite y total movement distance.
-IntroSpr5Spare8        = $6EF8   ;Not used.
-IntroSpr5Spare9        = $6EF9   ;Not used.
-IntroSpr5Complete      = $6EFA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr5SpareB        = $6EFB   ;Not used.
-IntroSpr5XRun          = $6EFC   ;x displacement of sprite movement(run).
-IntroSpr5YRise         = $6EFD   ;y displacement of sprite movement(rise).
-IntroSpr5XDir          = $6EFE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr5YDir          = $6EFF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 6.
-IntroSpr6YCoord        = $6F00   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr6PattTbl       = $6F01   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr6Cntrl         = $6F02   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr6XCoord        = $6F03   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr6Spare5        = $6F04   ;Not used.
-IntroSpr6Spare6        = $6F05   ;Not used.
-IntroSpr6XChange       = $6F06   ;Intro sprite x total movement distance.
-IntroSpr6YChange       = $6F07   ;Intro sprite y total movement distance.
-IntroSpr6Spare8        = $6F08   ;Not used.
-IntroSpr6Spare9        = $6F09   ;Not used.
-IntroSpr6Complete      = $6F0A   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr6SpareB        = $6F0B   ;Not used.
-IntroSpr6XRun          = $6F0C   ;x displacement of sprite movement(run).
-IntroSpr6YRise         = $6F0D   ;y displacement of sprite movement(rise).
-IntroSpr6XDir          = $6F0E   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr6YDir          = $6F0F   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
-
-;Intro sprite 7.
-IntroSpr7YCoord        = $6F10   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSpr7PattTbl       = $6F11   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSpr7Cntrl         = $6F12   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSpr7XCoord        = $6F13   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSpr7Spare5        = $6F14   ;Not used.
-IntroSpr7Spare6        = $6F15   ;Not used.
-IntroSpr7XChange       = $6F16   ;Intro sprite x total movement distance.
-IntroSpr7YChange       = $6F17   ;Intro sprite y total movement distance.
-IntroSpr7Spare8        = $6F18   ;Not used.
-IntroSpr7Spare9        = $6F19   ;Not used.
-IntroSpr7Complete      = $6F1A   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSpr7SpareB        = $6F1B   ;Not used.
-IntroSpr7XRun          = $6F1C   ;x displacement of sprite movement(run).
-IntroSpr7YRise         = $6F1D   ;y displacement of sprite movement(rise).
-IntroSpr7XDir          = $6F1E   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSpr7YDir          = $6F1F   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
+IntroSprComplete       = $6EAA   ;#$01=sprite has completed its task, #$00 if not complete.
+IntroSprSpareB         = $6EAB   ;Not used.
+IntroSprXRun           = $6EAC   ;x displacement of sprite movement(run).
+IntroSprYRise          = $6EAD   ;y displacement of sprite movement(rise).
+IntroSprXDir           = $6EAE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
+IntroSprYDir           = $6EAF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -1071,3 +918,14 @@ wa_BombCount           = $09
 wa_BombExplode         = $0A
 wa_Missile             = $0B
 wa_ScrewAttack         = $81
+
+;Enemy Status
+enemyStatus_NoEnemy    = 0
+enemyStatus_Resting    = 1
+enemyStatus_Active     = 2
+enemyStatus_Explode    = 3
+enemyStatus_Frozen     = 4
+enemyStatus_Pickup     = 5
+enemyStatus_Hurt       = 6
+; greater than 6 is the same as no enemy
+

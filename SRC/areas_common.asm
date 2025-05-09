@@ -464,9 +464,9 @@ LoadEnemyMovementPtr:
     asl
     tay
     lda EnemyMovementPtrs,y
-    sta $81
+    sta EnemyMovementPtr
     lda EnemyMovementPtrs+1,y
-    sta $82
+    sta EnemyMovementPtr+1
     rts
 
 ;-------------------------------------------------------------------------------
@@ -487,7 +487,7 @@ VertMoveProc:
 L8258:
     ldy EnCounter,x
 VertMoveProc_ReadByte:
-    lda ($81),y
+    lda (EnemyMovementPtr),y
 
 ;CommonCase
 ; Branch if the value is <$F0
@@ -546,7 +546,7 @@ L8290:
 
 ; Read the sign/magnitude of the speed from the next byte
     iny
-    lda ($81),y
+    lda (EnemyMovementPtr),y
 
 ; Save the sign bit to the carry flag
     asl
@@ -677,7 +677,7 @@ L8320:
 ; Read the same velocity byte as in VertMoveProc
     ldy EnCounter,x
     iny
-    lda ($81),y ; $81/$82 were loaded during VertMoveProc earlier
+    lda (EnemyMovementPtr),y ; $81/$82 were loaded during VertMoveProc earlier
     tax
 ; Save the sign bit to the processor flags
     and #$08

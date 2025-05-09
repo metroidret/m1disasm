@@ -270,8 +270,8 @@ LoadFlashTimer:
 METROIDSparkle:
     lda Timer3                      ;Wait until 3 seconds have passed since-->
     bne RTS_8162                       ;last routine before continuing.
-    lda IntroSpr0Complete           ;Check if sparkle sprites are done moving.
-    and IntroSpr1Complete           ;
+    lda IntroSprComplete           ;Check if sparkle sprites are done moving.
+    and IntroSprComplete+$10           ;
     cmp #$01                        ;Is sparkle routine finished? If so,-->
     bne L815F                       ;go to next title routine, else continue-->
     inc TitleRoutine                ;with sparkle routine.
@@ -307,10 +307,10 @@ Crosshairs:
 L8189:
     lda Timer3                      ;Wait 80 frames from last routine-->
     bne RTS_81D0                       ;before running this one.
-    lda IntroSpr0Complete           ;
-    and IntroSpr1Complete           ;Check if first 4 sprites have completed-->
-    and IntroSpr2Complete           ;their movements.  If not, branch.
-    and IntroSpr3Complete           ;
+    lda IntroSprComplete           ;
+    and IntroSprComplete+$10           ;Check if first 4 sprites have completed-->
+    and IntroSprComplete+$20           ;their movements.  If not, branch.
+    and IntroSprComplete+$30           ;
     beq L81CA                       ;
     lda #$01                        ;Prepare to flash screen and draw cross.
     cmp SecondCrosshairSprites      ;Branch if second crosshair sprites are already-->
@@ -321,10 +321,10 @@ L8189:
     lda #$00                        ;
     sta CrossDataIndex              ;Reset index to cross sprite data.
 L81AB:
-    and IntroSpr4Complete           ;
-    and IntroSpr5Complete           ;Check if second 4 sprites have completed-->
-    and IntroSpr6Complete           ;their movements.  If not, branch.
-    and IntroSpr7Complete           ;
+    and IntroSprComplete+$40           ;
+    and IntroSprComplete+$50           ;Check if second 4 sprites have completed-->
+    and IntroSprComplete+$60           ;their movements.  If not, branch.
+    and IntroSprComplete+$70           ;
     beq L81CA                       ;
     lda #$01                        ;Prepare to flash screen and draw cross.
     sta DrawCross                   ;Draw cross animation on screen.
@@ -754,14 +754,14 @@ LoadSparkleData:
     ldx #$0A                        ;
     L87AD:
         lda InitSparkleDataTbl,x        ;
-        sta IntroSpr0YCoord,x           ;Loads $6EA0 thru $6EAA with the table below.
-        sta IntroSpr1YCoord,x           ;Loads $6EB0 thru $6EBA with the table below.
+        sta IntroSprYCoord,x           ;Loads $6EA0 thru $6EAA with the table below.
+        sta IntroSprYCoord+$10,x           ;Loads $6EB0 thru $6EBA with the table below.
         dex                             ;
         bpl L87AD                       ;Loop until all values from table below are loaded.
     lda #$6B                        ;
-    sta IntroSpr1YCoord             ;$6EA0 thru $6EAA = #$3C, #$C6, #$01, #$18, #$00,-->
+    sta IntroSprYCoord+$10             ;$6EA0 thru $6EAA = #$3C, #$C6, #$01, #$18, #$00,-->
     lda #$DC                        ;#$00, #$00, #$00, #$20, #$00, #$00, initial.
-    sta IntroSpr1XCoord             ;$6EB0 thru $6EBA = #$6B, #$C6, #$01, #$DC, #$00,-->
+    sta IntroSprXCoord+$10             ;$6EB0 thru $6EBA = #$6B, #$C6, #$01, #$DC, #$00,-->
     rts                             ;#$00, #$00, #$00, #$20, #$00, #$00, initial.
 
 ;Used by above routine to load Metroid initial sparkle data into $6EA0
@@ -779,34 +779,34 @@ DoOneSparkleUpdate:
     jsr SparkleUpdate               ;($87D9)Update sparkle sprite data.
 
 SparkleUpdate:
-    lda IntroSpr0NextCntr,x         ;If $6EA5 has not reached #$00, skip next routine.
+    lda IntroSprNextCntr,x         ;If $6EA5 has not reached #$00, skip next routine.
     bne L87E1                       ;
         jsr DoSparkleSpriteCoord        ;($881A)Update sparkle sprite screen position.
     L87E1:
-    lda IntroSpr0Complete,x         ;
+    lda IntroSprComplete,x         ;
     bne RTS_8819                       ;If sprite is already done, skip routine.
-    dec IntroSpr0NextCntr,x         ;
+    dec IntroSprNextCntr,x         ;
 
-    lda SparkleSpr0YChange,x        ;
+    lda SparkleSprYChange,x        ;
     clc                             ;
-    adc IntroSpr0YCoord,x           ;Updates sparkle sprite Y coord.
-    sta IntroSpr0YCoord,x           ;
+    adc IntroSprYCoord,x           ;Updates sparkle sprite Y coord.
+    sta IntroSprYCoord,x           ;
 
-    lda SparkleSpr0XChange,x        ;
+    lda SparkleSprXChange,x        ;
     clc                             ;
-    adc IntroSpr0XCoord,x           ;Updates sparkle sprite X coord.
-    sta IntroSpr0XCoord,x           ;
+    adc IntroSprXCoord,x           ;Updates sparkle sprite X coord.
+    sta IntroSprXCoord,x           ;
 
-    dec IntroSpr0ChngCntr,x         ;Decrement IntroSpr0ChngCntr. If 0, time to change-->
+    dec IntroSprChngCntr,x         ;Decrement IntroSpr0ChngCntr. If 0, time to change-->
     bne L8816                       ;sprite graphic.
-        lda IntroSpr0PattTbl,x          ;
+        lda IntroSprPattTbl,x          ;
         eor #$03                        ;If IntroSpr0ChngCntr=$00, the sparkle sprite graphic is-->
-        sta IntroSpr0PattTbl,x          ;changed back and forth between pattern table-->
+        sta IntroSprPattTbl,x          ;changed back and forth between pattern table-->
         lda #$20                        ;graphic $C6 and $C7.  IntroSpr0ChngCntr is reset to #$20.
-        sta IntroSpr0ChngCntr,x         ;
+        sta IntroSprChngCntr,x         ;
         asl                             ;
-        eor IntroSpr0Cntrl,x            ;Flips pattern at $C5 in pattern table-->
-        sta IntroSpr0Cntrl,x            ;horizontally when displayed.
+        eor IntroSprCntrl,x            ;Flips pattern at $C5 in pattern table-->
+        sta IntroSprCntrl,x            ;horizontally when displayed.
     L8816:
     jmp WriteIntroSprite            ;($887B)Transfer sprite info into sprite RAM.
 RTS_8819:
@@ -820,41 +820,41 @@ DoSparkleSpriteCoord:
     sta $00                         ;When working with top sparkle sprite, E1,E0=$89B3-->
     lda SparkleAddressTbl+1,y       ;and when botton sparkle sprite, E1,E0=$89E9.
     sta $01                         ;
-    ldy IntroSpr0Index,x            ;Loads index for finding sparkle data (x=$00 or $10).
+    ldy IntroSprIndex,x            ;Loads index for finding sparkle data (x=$00 or $10).
     lda ($00),y                     ;
     bpl L8835                       ;If data byte MSB is set, set $6EA9 to #$01 and move to-->
         lda #$01                        ;next index for sparkle sprite data.
-        sta IntroSpr0ByteType,x         ;
+        sta IntroSprByteType,x         ;
     L8835:
     bne L883C                       ;
         lda #$01                        ;If value is equal to zero, sparkle sprite-->
-        sta IntroSpr0Complete,x         ;processing is complete.
+        sta IntroSprComplete,x         ;processing is complete.
     L883C:
-    sta IntroSpr0NextCntr,x         ;
+    sta IntroSprNextCntr,x         ;
     iny                             ;
     lda ($00),y                     ;Get x/y position byte.
-    dec IntroSpr0ByteType,x         ;If MSB of second byte is set, branch.
+    dec IntroSprByteType,x         ;If MSB of second byte is set, branch.
     bmi L8850                       ;
         lda #$00                        ;This code is run when the MSB of the first byte-->
-        sta SparkleSpr0YChange,x        ;is set.  This allows the sprite to change X coord-->
+        sta SparkleSprYChange,x        ;is set.  This allows the sprite to change X coord-->
         lda ($00),y                     ;by more than 7.  Ensures Y coord does not change.
         bmi L8867                       ;
     L8850:
         pha                             ;Store value twice so X and Y-->
         pha                             ;coordinates can be extracted.
         lda #$00                        ;
-        sta IntroSpr0ByteType,x         ;Set IntroSpr0ByteType to #$00 after processing.
+        sta IntroSprByteType,x         ;Set IntroSpr0ByteType to #$00 after processing.
         pla                             ;
         jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
         jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
-        sta SparkleSpr0YChange,x        ;Twos complement stored if Y coord decreasing.
+        sta SparkleSprYChange,x        ;Twos complement stored if Y coord decreasing.
         pla                             ;
         and #$0F                        ;Discard upper 4 bits.
         jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
     L8867:
-    sta SparkleSpr0XChange,x        ;Store amount to move spite in x direction.
-    inc IntroSpr0Index,x            ;
-    inc IntroSpr0Index,x            ;Add two to find index for next data byte.
+    sta SparkleSprXChange,x        ;Store amount to move spite in x direction.
+    inc IntroSprIndex,x            ;
+    inc IntroSprIndex,x            ;Add two to find index for next data byte.
     rts                             ;
 
 NibbleSubtract:
@@ -866,15 +866,15 @@ RTS_887A:
     rts                             ;
 
 WriteIntroSprite:
-    lda IntroSpr0YCoord,x           ;
+    lda IntroSprYCoord,x           ;
     sec                             ;Subtract #$01 from first byte to get proper y coordinate.
     sbc #$01                        ;
     sta SpriteRAM+$04<<2,x               ;
-    lda IntroSpr0PattTbl,x          ;
+    lda IntroSprPattTbl,x          ;
     sta SpriteRAM+$04<<2+1,x             ;Load the four bytes for the-->
-    lda IntroSpr0Cntrl,x            ;intro sprites into sprite RAM.
+    lda IntroSprCntrl,x            ;intro sprites into sprite RAM.
     sta SpriteRAM+$04<<2+2,x             ;
-    lda IntroSpr0XCoord,x           ;
+    lda IntroSprXCoord,x           ;
     sta SpriteRAM+$04<<2+3,x             ;
     rts                             ;
 
@@ -887,18 +887,18 @@ LoadInitialSpriteData:
         lda Sprite0and4InitTbl,x        ;Load data from tables below.
         cmp $FF                         ;If #$FF, skip loading that byte and move to next item.
         beq L88AA                       ;
-            sta IntroSpr0YCoord,x           ;Store initial values for sprites 0 thru 3.
-            sta IntroSpr4YCoord,x           ;Store initial values for sprites 4 thru 7.
+            sta IntroSprYCoord,x           ;Store initial values for sprites 0 thru 3.
+            sta IntroSprYCoord+$40,x           ;Store initial values for sprites 4 thru 7.
         L88AA:
         dex                             ;
         bpl L889D                       ;Loop until all data is loaded.
 
     lda #$B8                        ;Special case for sprite 6 and 7.
-    sta IntroSpr6YCoord             ;
-    sta IntroSpr7YCoord             ;Change sprite 6 and 7 initial y position.
+    sta IntroSprYCoord+$60             ;
+    sta IntroSprYCoord+$70             ;Change sprite 6 and 7 initial y position.
     lda #$16                        ;
-    sta IntroSpr6YRise              ;Change sprite 6 and 7 y displacement. The combination-->
-    sta IntroSpr7YRise              ;of these two changes the slope of the sprite movement.
+    sta IntroSprYRise+$60              ;Change sprite 6 and 7 y displacement. The combination-->
+    sta IntroSprYRise+$70              ;of these two changes the slope of the sprite movement.
     rts                             ;
 
 ;The following tables are loaded into RAM as initial sprite control values for the crosshair sprites.
@@ -980,22 +980,22 @@ DrawCrosshairsSprites:
     beq L8936                       ;Has First4SlowCntr already hit 0? If so, branch.
     dec First4SlowCntr              ;
     bne L8936                       ;Is First4SlowCntr now equal to 0? if not, branch.
-    asl IntroSpr0XRun               ;
-    asl IntroSpr0YRise              ;
-    asl IntroSpr1XRun               ;
-    asl IntroSpr1YRise              ;
-    asl IntroSpr2XRun               ;
-    asl IntroSpr2YRise              ;
-    asl IntroSpr3XRun               ;Multiply the rise and run of the 8 sprites by 2.-->
-    asl IntroSpr3YRise              ;This doubles their speed.
-    asl IntroSpr4XRun               ;
-    asl IntroSpr4YRise              ;
-    asl IntroSpr5XRun               ;
-    asl IntroSpr5YRise              ;
-    asl IntroSpr6XRun               ;
-    asl IntroSpr6YRise              ;
-    asl IntroSpr7XRun               ;
-    asl IntroSpr7YRise              ;
+    asl IntroSprXRun               ;
+    asl IntroSprYRise              ;
+    asl IntroSprXRun+$10               ;
+    asl IntroSprYRise+$10              ;
+    asl IntroSprXRun+$20               ;
+    asl IntroSprYRise+$20              ;
+    asl IntroSprXRun+$30               ;Multiply the rise and run of the 8 sprites by 2.-->
+    asl IntroSprYRise+$30              ;This doubles their speed.
+    asl IntroSprXRun+$40               ;
+    asl IntroSprYRise+$40              ;
+    asl IntroSprXRun+$50               ;
+    asl IntroSprYRise+$50              ;
+    asl IntroSprXRun+$60               ;
+    asl IntroSprYRise+$60              ;
+    asl IntroSprXRun+$70               ;
+    asl IntroSprYRise+$70              ;
 L8936:
     ldx #$00                        ;
     jsr DoSpriteMovement            ;($8963)Move sprite 0.
@@ -1019,12 +1019,12 @@ L894F:
     ldx #$70                        ;($8963)Move sprite 7.
 
 DoSpriteMovement:
-    lda IntroSpr0Complete,x         ;If the current sprite has finished-->
+    lda IntroSprComplete,x         ;If the current sprite has finished-->
     bne RTS_8975                       ;its movements, exit this routine.
     jsr UpdateSpriteCoords          ;($981E)Calculate new sprite position.
     bcs L8972                       ;If sprite not at final position, branch to move next frame.
     lda #$01                        ;Sprite movement complete.
-    sta IntroSpr0Complete,x         ;
+    sta IntroSprComplete,x         ;
 L8972:
     jmp WriteIntroSprite            ;($887B)Write sprite data to sprite RAM.
 RTS_8975:
@@ -2857,47 +2857,47 @@ EndGamePal0C:
     .byte $00                       ;End EndGamePal0C data.
 
 UpdateSpriteCoords:
-    lda IntroSpr0XRun,x             ;Load sprite run(sprite x component).
+    lda IntroSprXRun,x             ;Load sprite run(sprite x component).
     jsr CalcDisplacement            ;($9871)Calculate sprite displacement in x direction.
-    ldy IntroSpr0XDir,x             ;Get byte describing if sprite increasing or decreasing pos.
+    ldy IntroSprXDir,x             ;Get byte describing if sprite increasing or decreasing pos.
     bpl L982E                       ;
         eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
         clc                             ;value in A (result from CalcDisplacement) to twos complement.
         adc #$01                        ;
     L982E:
     clc                             ;
-    adc IntroSpr0XCoord,x           ;Add change to sprite x coord.
-    sta IntroSpr0XCoord,x           ;
+    adc IntroSprXCoord,x           ;Add change to sprite x coord.
+    sta IntroSprXCoord,x           ;
     sec                             ;
-    sbc IntroSpr0XChange,x          ;Subtract total sprite movemnt value from current sprite x pos.
+    sbc IntroSprXChange,x          ;Subtract total sprite movemnt value from current sprite x pos.
     php                             ;Transfer processor status to A.
     pla                             ;
-    eor IntroSpr0XDir,x             ;Eor carry bit with direction byte to see if sprite has-->
+    eor IntroSprXDir,x             ;Eor carry bit with direction byte to see if sprite has-->
     lsr                             ;reached its end point.
     bcc L9864                       ;Branch if sprite has reached the end of x movement.
-        lda IntroSpr0YRise,x            ;Load sprite rise(sprite y component).
+        lda IntroSprYRise,x            ;Load sprite rise(sprite y component).
         jsr CalcDisplacement            ;($9871)Calculate sprite displacement in y direction.
-        ldy IntroSpr0YDir,x             ;Get byte describing if sprite increasing or decreasing pos.
+        ldy IntroSprYDir,x             ;Get byte describing if sprite increasing or decreasing pos.
         bpl L9851                       ;
             eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
             clc                             ;value in A (result from CalcDisplacement) to twos complement.
             adc #$01                        ;
         L9851:
         clc                             ;
-        adc IntroSpr0YCoord,x           ;Add change to sprite y coord.
-        sta IntroSpr0YCoord,x           ;
+        adc IntroSprYCoord,x           ;Add change to sprite y coord.
+        sta IntroSprYCoord,x           ;
         sec                             ;
-        sbc IntroSpr0YChange,x          ;Subtract total sprite movemnt value from current sprite y pos.
+        sbc IntroSprYChange,x          ;Subtract total sprite movemnt value from current sprite y pos.
         php                             ;Transfer processor status to A.
         pla                             ;
-        eor IntroSpr0YDir,x             ;Eor carry bit with direction byte to see if sprite has-->
+        eor IntroSprYDir,x             ;Eor carry bit with direction byte to see if sprite has-->
         lsr                             ;reached its end point.
         bcs RTS_9870                       ;Branch if sprite has not reached the end of y movement.
     L9864:
-        lda IntroSpr0YChange,x          ;After sprite has reached its final position, this code-->
-        sta IntroSpr0YCoord,x           ;explicitly writes final the x and y coords to to sprite-->
-        lda IntroSpr0XChange,x          ;position addresses to make sure the sprites don't-->
-        sta IntroSpr0XCoord,x           ;overshoot their mark.
+        lda IntroSprYChange,x          ;After sprite has reached its final position, this code-->
+        sta IntroSprYCoord,x           ;explicitly writes final the x and y coords to to sprite-->
+        lda IntroSprXChange,x          ;position addresses to make sure the sprites don't-->
+        sta IntroSprXCoord,x           ;overshoot their mark.
     RTS_9870:
     rts                             ;
 
@@ -2931,7 +2931,7 @@ DecSpriteYCoord:
     bcs RTS_98AD                       ;If not on an odd numbered frame, branch to exit.
     ldx #$9F                        ;
     L989B:
-        dec IntroStarSprite00,x         ;Decrement y coord of the intro star sprites.
+        dec IntroStarSprite,x         ;Decrement y coord of the intro star sprites.
         dec SpriteRAM+$18<<2,x               ;Decrement y coord of 40 sprites.
         dex                             ;
         dex                             ;
@@ -2947,7 +2947,7 @@ RTS_98AD:
 LoadStarSprites:
     ldy #$9F                        ;
 L98B0:
-    lda IntroStarSprite00,y         ;
+    lda IntroStarSprite,y         ;
     sta SpriteRAM+$18<<2,y               ;Store RAM contents of $6E00 thru $6E9F -->
     dey                             ;in sprite RAM at locations $0260 thru $02FF.
     cpy #$FF                        ;
