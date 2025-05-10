@@ -4401,35 +4401,38 @@ Exit8:
 UpdateStatues:
     lda #$60
     sta PageIndex
-    ldy ObjAction+$60
+    ldy StatueStatus
     beq Exit8          ; exit if no statue present
     dey
     bne Lx122
-    jsr LDAB0
-    ldy #$01
-    jsr LDAB0
-    bcs Lx122
-    inc ObjAction+$60
-Lx122:
-    ldy ObjAction+$60
+        ; put bg tiles for lowered statues
+        jsr UpdateStatueBGTiles
+        ldy #$01
+        jsr UpdateStatueBGTiles
+        bcs Lx122
+            inc StatueStatus
+    Lx122:
+    ldy StatueStatus
     cpy #$02
     bne Lx125
     lda KraidStatueStatus
     bpl Lx123
+        ; put bg tiles for kraid raised statue
         ldy #$02
-        jsr LDAB0
+        jsr UpdateStatueBGTiles
     Lx123:
     lda RidleyStatueStatus
     bpl Lx124
+        ; put bg tiles for ridley raised statue
         ldy #$03
-        jsr LDAB0
+        jsr UpdateStatueBGTiles
     Lx124:
     bcs Lx125
-    inc ObjAction+$60
+    inc StatueStatus
 Lx125:
-    ldx #$60
+    ldx #(KraidStatueStatus-(KraidStatueStatus-$60))
     jsr LDA1A
-    ldx #$61
+    ldx #(RidleyStatueStatus-(KraidStatueStatus-$60))
     jsr LDA1A
     jmp LDADA
 
@@ -4439,9 +4442,9 @@ LDA1A:
     txa
     and #$01
     tay
-    lda LDA3B,y
-    sta AnimFrame+$60
-    lda $681B,x
+    lda StatueAnimFrameTable,y
+    sta StatueAnimFrame
+    lda KraidStatueStatus-$60,x
     beq Lx126
     bmi Lx126
     lda FrameCount
@@ -4450,82 +4453,82 @@ LDA1A:
 Lx126:
     jmp DrawFrame       ; display statue
 
-LDA39:
-    .byte $88
-    .byte $68
-LDA3B:
-    .byte $65
-    .byte $66
+StatueXTable:
+    .byte $88 ; Kraid's X
+    .byte $68 ; Ridley's X
+StatueAnimFrameTable:
+    .byte $65 ; Kraid anim frame
+    .byte $66 ; Ridley anim frame
 
 LDA3D:
     lda AnimDelay,x
     bmi RTS_X127
     lda #$01
     sta AnimDelay,x
-    lda $030F,x
+    lda KraidStatueY-$60,x
     and #$0F
     beq RTS_X127
     inc AnimDelay,x
-    dec $030F,x
-    lda $030F,x
+    dec KraidStatueY-$60,x
+    lda KraidStatueY-$60,x
     and #$0F
     bne RTS_X127
     lda AnimDelay,x
     ora #$80
     sta AnimDelay,x
-    sta $681B,x
+    sta KraidStatueStatus-$60,x
     inc AnimDelay,x
     txa
     pha
     and #$01
     pha
     tay
-    jsr LDAB0
+    jsr UpdateStatueBGTiles
     pla
     tay
     iny
     iny
-    jsr LDAB0
+    jsr UpdateStatueBGTiles
     pla
     tax
 RTS_X127:
     rts
 
 LDA7C:
-    lda $030F,x
-    sta $036D
+    lda KraidStatueY-$60,x
+    sta StatueY
     txa
     and #$01
     tay
-    lda LDA39,y
-    sta $036E
-    lda $681B,x
+    lda StatueXTable,y
+    sta StatueX
+    lda KraidStatueStatus-$60,x
     beq Lx128
     bmi Lx128
-    lda $0304,x
+    lda KraidStatueRaiseState-$60,x
     cmp #$01
     bne Lx128
-    lda $0306,x
+    lda AnimIndex,x
     beq Lx128
-    dec $030F,x
+    dec KraidStatueY-$60,x
     lda TriangleSFXFlag
     ora #$10
     sta TriangleSFXFlag
 Lx128:
     lda #$00
-    sta $0306,x
+    sta AnimIndex,x
     rts
 
-LDAB0:
-    lda Table0E,y
-    sta $05C8
-    lda $036C
+UpdateStatueBGTiles:
+    lda StatueTileWRAMPtrLoTable,y
+    sta TileWRAMPtr+$C0
+    lda StatueHi
     asl
     asl
-    ora Table1B,y
-    sta $05C9
+    ora StatueTileWRAMPtrHiTable,y
+    sta TileWRAMPtr+1+$C0
     lda #$09
-    sta $05C3
+    sta TileAnimFrame+$C0
     lda #$C0
     sta PageIndex
     jsr DrawTileBlast
@@ -4534,27 +4537,26 @@ LDAB0:
     rts
 
 ; Table used by above subroutine
-
-Table0E:
-    .byte $30
-    .byte $AC
-    .byte $F0
-    .byte $6C
-Table1B:
-    .byte $61
-    .byte $60
-    .byte $60
-    .byte $60
+StatueTileWRAMPtrLoTable:
+    .byte <$6130 ; non-raised kraid top left corner
+    .byte <$60AC ; non-raised ridley top left corner
+    .byte <$60F0 ; raised kraid top left corner
+    .byte <$606C ; raised ridley top left corner
+StatueTileWRAMPtrHiTable:
+    .byte >$6130
+    .byte >$60AC
+    .byte >$60F0
+    .byte >$606C
 
 LDADA:
-    lda $54
+    lda Statues54
     bmi Exit0
     lda DoorStatus
     bne Exit0
     lda KraidStatueStatus
     and RidleyStatueStatus
     bpl Exit0
-    sta $54
+    sta Statues54
     ldx #$70
     ldy #$08
 Lx129:
@@ -4565,7 +4567,7 @@ Lx129:
     sta TileDelay,x
     lda #$04
     sta TileType,x
-    lda $036C
+    lda StatueHi
     asl
     asl
     ora #$62
@@ -7580,22 +7582,22 @@ Lx234:
 
 LoadStatues:
     jsr GetNameTable                ;($EB85)
-    sta ObjectHi+$60
+    sta StatueHi
     lda #$40
     ldx RidleyStatueStatus
     bpl Lx235      ; branch if Ridley statue not hit
         lda #$30
     Lx235:
-    sta ObjAction+$70
+    sta RidleyStatueY
     lda #$60
     ldx KraidStatueStatus
     bpl Lx236      ; branch if Kraid statue not hit
         lda #$50
     Lx236:
-    sta $036F
-    sty Statues54
+    sta KraidStatueY
+    sty Statues54 ; y is #$00
     lda #$01
-    sta ObjAction+$60
+    sta StatueStatus
 Lx237:
     jmp EnemyLoop   ; do next room object
 

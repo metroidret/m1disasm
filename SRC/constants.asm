@@ -347,6 +347,9 @@ IntroMusicRestart      = $D8     ;After all title routines run twice, restarts i
 SoundChannelBase       = $E6
 ;      SoundChannelBase+1       = $E7
 
+Cntrl0Data             = $EA     ;Temp storage for data of first address sound channel
+VolumeCntrlAddress     = $EB     ;Desired address number in VolumeCntrlAdressTbl
+
 ABStatus               = $F0     ;Stores A and B button status in AreaInit. Never used.
 ;                             = $F7
 
@@ -359,13 +362,13 @@ ScrollX                = $FD     ;X value loaded into scroll register.
 PPUMASK_ZP             = $FE     ;Data byte to be loaded into PPU control register 1.
 PPUCTRL_ZP             = $FF     ;Data byte to be loaded into PPU control register 0.
 
-Health               = $0106   ;Lower health digit in upper 4 bits.
+Health                 = $0106   ;Lower health digit in upper 4 bits.
 ;      Health+1               = $0107   ;Upper health digit in lower 4 bits-->
                                         ;# of full tanks in upper 4 bits.
 MiniBossKillDelay      = $0108   ;Initiate power up music and delay after Kraid/Ridley killed.
 PowerUpDelay           = $0109   ;Initiate power up music and delay after item pickup.
 
-EndTimer             = $010A   ;Lower byte of end game escape timer.
+EndTimer               = $010A   ;Lower byte of end game escape timer.
 ;      EndTimer+1             = $010B   ;Upper byte of end game escape timer.
 
 MotherBrain010C        = $010C
@@ -375,7 +378,7 @@ MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
-SpriteRAM            = $0200   ;$0200 thru $02FF
+SpriteRAM              = $0200   ;$0200 thru $02FF
 
 
 ;-----------------------------------------[ Object RAM ]---------------------------------------------
@@ -422,6 +425,17 @@ PowerUpHi              = $034C   ;Name table power up item is located on.
 PowerUpY               = $034D   ;Room Y coord of power up item.
 PowerUpX               = $034E   ;Room x coord of power up item.
 
+;Statues and bridge RAM
+StatueStatus           = $0360
+StatueAnimFrame        = $0363
+KraidStatueRaiseState  = $0364   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
+RidleyStatueRaiseState = $0365
+StatueHi               = $036C
+StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
+StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
+KraidStatueY           = $036F
+RidleyStatueY          = $0370
+
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 
 PasswordCursor         = $0320   ;Password write position (#$00 - #$17).
@@ -467,8 +481,7 @@ TileType               = $050A
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
 
-Cntrl0Data             = $EA     ;Temp storage for data of first address sound channel
-VolumeCntrlAddress     = $EB     ;Desired address number in VolumeCntrlAdressTbl
+
 
 MusicSQ1PeriodLow      = $0600   ;Loaded into SQ1_LO when playing music
 MusicSQ1PeriodHigh     = $0601   ;Loaded into SQ1_HI when playing music
@@ -704,52 +717,32 @@ EndItemHistory         = $68FC   ;Two bytes per item.
 
 KraidRidleyPresent     = $6987   ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
 
-PasswordBytes          = $6988
-PasswordByte00         = $6988   ;Stores status of items 0 thru 7.
-PasswordByte01         = $6989   ;Stores status of items 8 thru 15.
-PasswordByte02         = $698A   ;Stores status of items 16 thru 23.
-PasswordByte03         = $698B   ;Stores status of items 24 thru 31.
-PasswordByte04         = $698C   ;Stores status of items 32 thru 39.
-PasswordByte05         = $698D   ;Stores status of items 40 thru 47.
-PasswordByte06         = $698E   ;Stores status of items 48 thru 55.
-PasswordByte07         = $698F   ;Stores status of items 56 thru 58(bits 0 thru 2).
-PasswordByte08         = $6990   ;start location(bits 0 thru 5), Samus suit status (bit 7).
-PasswordByte09         = $6991   ;Stores SamusGear.
-PasswordByte0A         = $6992   ;Stores MissileCount.
-PasswordByte0B         = $6993   ;Stores SamusAge.
-PasswordByte0C         = $6994   ;Stores SamusAge+1.
-PasswordByte0D         = $6995   ;Stores SamusAge+2.
-PasswordByte0E         = $6996   ;Stores no data.
-PasswordByte0F         = $6997   ;Stores Statue statuses(bits 4 thu 7).
-PasswordByte10         = $6998   ;Stores value RandomNumber1.
-PasswordByte11         = $6999   ;Stores sum of $6988 thru $6998(Checksum).
+; 18 bytes ($6988-$6999)
+PasswordByte          = $6988
+;      PasswordByte+$00         = $6988   ;Stores status of items 0 thru 7.
+;      PasswordByte+$01         = $6989   ;Stores status of items 8 thru 15.
+;      PasswordByte+$02         = $698A   ;Stores status of items 16 thru 23.
+;      PasswordByte+$03         = $698B   ;Stores status of items 24 thru 31.
+;      PasswordByte+$04         = $698C   ;Stores status of items 32 thru 39.
+;      PasswordByte+$05         = $698D   ;Stores status of items 40 thru 47.
+;      PasswordByte+$06         = $698E   ;Stores status of items 48 thru 55.
+;      PasswordByte+$07         = $698F   ;Stores status of items 56 thru 58(bits 0 thru 2).
+;      PasswordByte+$08         = $6990   ;start location(bits 0 thru 5), Samus suit status (bit 7).
+;      PasswordByte+$09         = $6991   ;Stores SamusGear.
+;      PasswordByte+$0A         = $6992   ;Stores MissileCount.
+;      PasswordByte+$0B         = $6993   ;Stores SamusAge.
+;      PasswordByte+$0C         = $6994   ;Stores SamusAge+1.
+;      PasswordByte+$0D         = $6995   ;Stores SamusAge+2.
+;      PasswordByte+$0E         = $6996   ;Stores no data.
+;      PasswordByte+$0F         = $6997   ;Stores Statue statuses(bits 4 thu 7).
+;      PasswordByte+$10         = $6998   ;Stores value RandomNumber1.
+;      PasswordByte+$11         = $6999   ;Stores sum of $6988 thru $6998(Checksum).
 
-;Upper two bits of PasswordChar bytes will always be 00.
-PasswordChars          = $699A
-PasswordChar00         = $699A   ;
-PasswordChar01         = $699B   ;
-PasswordChar02         = $699C   ;
-PasswordChar03         = $699D   ;
-PasswordChar04         = $699E   ;
-PasswordChar05         = $699F   ;
-PasswordChar06         = $69A0   ;
-PasswordChar07         = $69A1   ;
-PasswordChar08         = $69A2   ;
-PasswordChar09         = $69A3   ;
-PasswordChar0A         = $69A4   ;These 18 memory addresses store the 18 characters-->
-PasswordChar0B         = $69A5   ;of the password to be displayed on the screen.
-PasswordChar0C         = $69A6   ;
-PasswordChar0D         = $69A7   ;
-PasswordChar0E         = $69A8   ;
-PasswordChar0F         = $69A9   ;
-PasswordChar10         = $69AA   ;
-PasswordChar11         = $69AB   ;
-PasswordChar12         = $69AC   ;
-PasswordChar13         = $69AD   ;
-PasswordChar14         = $69AE   ;
-PasswordChar15         = $69AF   ;
-PasswordChar16         = $69B0   ;
-PasswordChar17         = $69B1   ;
+; 24 bytes ($699A-$69B1)
+;These 24 memory addresses store the 24 characters
+;of the password to be displayed on the screen.
+;Upper two bits of PasswordChar bytes will always be %00.
+PasswordChar           = $699A
 
 NARPASSWORD            = $69B2   ;0 = invinsible Samus not active, 1 = invinsible Samus active.
 JustInBailey           = $69B3   ;0 = Samus has suit, 1 = Samus is without suit.
@@ -797,12 +790,12 @@ IntroSprPattTbl        = $6EA1   ;Loaded into byte 1 of sprite RAM(Pattern table
 IntroSprCntrl          = $6EA2   ;Loaded into byte 2 of sprite RAM(Control byte).
 IntroSprXCoord         = $6EA3   ;Loaded into byte 3 of sprite RAM(X position).
 IntroSprIndex          = $6EA4   ;Index to next sparkle sprite data byte.
-IntroSprNextCntr       = $6EA5   ;Decrements each frame. When 0, load new sparkle sprite data.
+IntroSprNextDelay      = $6EA5   ;Decrements each frame. When 0, load new sparkle sprite data.
 SparkleSprYChange      = $6EA6   ;Sparkle sprite y coordinate change.
 IntroSprXChange        = $6EA6   ;Intro sprite x total movement distance.
 SparkleSprXChange      = $6EA7   ;Sparkle sprite x coordinate change.
 IntroSprYChange        = $6EA7   ;Intro sprite y total movement distance.
-IntroSprChngCntr       = $6EA8   ;decrements each frame from #$20. At 0, change sparkle sprite.
+IntroSprChangeDelay    = $6EA8   ;decrements each frame from #$20. At 0, change sparkle sprite.
 IntroSprByteType       = $6EA9   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
                                         ;bits for x coord change. if #$00, next data byte contains-->
                                         ;4 bits for x coord change and 4 bits for y coord change.
