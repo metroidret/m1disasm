@@ -290,10 +290,10 @@ METROIDFadeOut:
     lda FadeDataIndex               ;If FadeDataIndex is less than #$04, keep-->
     cmp #$04                        ;doing the palette changing routine.
     bne L817E                       ;
-    jsr LoadInitialSpriteData       ;($8897)Load initial sprite values for crosshair routine.
+    jsr InitCrossMissiles           ;($8897)Load initial sprite values for crosshair routine.
     lda #$08                        ;
     sta Timer3                      ;Load Timer3 with a delay of 80 frames(1.3 seconds).
-    sta First4SlowCntr              ;Set counter for slow sprite movement for 8 frames,
+    sta CrossMsl0to3SlowDelay       ;Set counter for slow sprite movement for 8 frames,
     lda #$00                        ;
     sta SecondCrosshairSprites      ;Set SecondCrosshairSprites = #$00
     inc TitleRoutine                ;Move to next routine
@@ -318,10 +318,10 @@ L8189:
     cmp SecondCrosshairSprites      ;Branch if second crosshair sprites are already-->
     beq L81AB                       ;active.
     inc SecondCrosshairSprites      ;Indicates second crosshair sprites are active.
-    sta DrawCross                   ;Draw cross animation on screen.
+    sta IsUpdatingCrossExplode            ;Draw cross animation on screen.
     sta FlashScreen                 ;Flash screen white.
     lda #$00                        ;
-    sta CrossDataIndex              ;Reset index to cross sprite data.
+    sta CrossExplodeLengthIndex              ;Reset index to cross sprite data.
 L81AB:
     and IntroSprComplete+$40        ;
     and IntroSprComplete+$50        ;Check if second 4 sprites have completed-->
@@ -329,24 +329,24 @@ L81AB:
     and IntroSprComplete+$70        ;
     beq L81CA                       ;
     lda #$01                        ;Prepare to flash screen and draw cross.
-    sta DrawCross                   ;Draw cross animation on screen.
+    sta IsUpdatingCrossExplode            ;Draw cross animation on screen.
     sta FlashScreen                 ;Flash screen white.
     jsr LoadStarSprites             ;($98AE)Loads stars on intro screen.
     lda #$00                        ;
-    sta CrossDataIndex              ;Reset index to cross sprite data.
+    sta CrossExplodeLengthIndex              ;Reset index to cross sprite data.
     inc TitleRoutine                ;Do MoreCrosshairs next frame.
     bne L81CD                       ;Branch always.
 L81CA:
-    jsr DrawCrosshairsSprites       ;($88FE)Draw sprites that converge in center of screen.
+    jsr UpdateCrossMissiles         ;($88FE)Draw sprites that converge in center of screen.
 L81CD:
-    jsr DrawCrossSprites            ;($8976)Draw cross sprites in middle of the screen.
+    jsr UpdateCrossExplode          ;($8976)Draw cross sprites in middle of the screen.
 RTS_81D0:
     rts
 
 MoreCrosshairs:
     lda FlashScreen                 ;Is it time to flash the screen white?-->
     beq L81DB                       ;If not, branch.
-    jsr DrawCrossSprites            ;($8976)Draw cross sprites in middle of the screen.
+    jsr UpdateCrossExplode          ;($8976)Draw cross sprites in middle of the screen.
     jmp FlashIntroScreen            ;($8AA7)Flash screen white.
 L81DB:
     inc TitleRoutine                ;ChangeIntroNameTable is next routine to run.
@@ -867,28 +867,33 @@ NibbleSubtract:
     and #$07                        ;complement for subtraction, else exit.
     jsr TwosComplement              ;($C3D4)Prepare for subtraction with twos complement.
 RTS_887A:
-    rts                             ;
+    rts
 
+;Load the four bytes for the intro sprites into sprite RAM.
 WriteIntroSprite:
-    lda IntroSprYCoord,x            ;
-    sec                             ;Subtract #$01 from first byte to get proper y coordinate.
-    sbc #$01                        ;
-    sta SpriteRAM+$04<<2,x          ;
-    lda IntroSprPattTbl,x           ;
-    sta SpriteRAM+$04<<2+1,x        ;Load the four bytes for the-->
-    lda IntroSprCntrl,x             ;intro sprites into sprite RAM.
-    sta SpriteRAM+$04<<2+2,x        ;
-    lda IntroSprXCoord,x            ;
-    sta SpriteRAM+$04<<2+3,x        ;
-    rts                             ;
+    lda IntroSprYCoord,x
+    sec ;Subtract #$01 from first byte to get proper y coordinate.
+    sbc #$01
+    sta SpriteRAM+$04<<2,x
+    
+    lda IntroSprPattTbl,x
+    sta SpriteRAM+$04<<2+1,x
+    
+    lda IntroSprCntrl,x
+    sta SpriteRAM+$04<<2+2,x
+    
+    lda IntroSprXCoord,x
+    sta SpriteRAM+$04<<2+3,x
+    
+    rts
 
-LoadInitialSpriteData:
+InitCrossMissiles:
     lda #$20                        ;
-    sta Second4Delay                ;Set delay for second 4 sprites to 32 frames.
+    sta CrossMsl4to7SpawnDelay      ;Set delay for second 4 sprites to 32 frames.
     ldx #$3F                        ;Prepare to loop 64 times.
 
     L889D:
-        lda Sprite0and4InitTbl,x        ;Load data from tables below.
+        lda InitCrossMissile0and4Tbl,x        ;Load data from tables below.
         cmp $FF                         ;If #$FF, skip loading that byte and move to next item.
         beq L88AA                       ;
             sta IntroSprYCoord,x            ;Store initial values for sprites 0 thru 3.
@@ -903,11 +908,11 @@ LoadInitialSpriteData:
     lda #$16                        ;
     sta IntroSprYRise+$60           ;Change sprite 6 and 7 y displacement. The combination-->
     sta IntroSprYRise+$70           ;of these two changes the slope of the sprite movement.
-    rts                             ;
+    rts
 
 ;The following tables are loaded into RAM as initial sprite control values for the crosshair sprites.
 
-Sprite0and4InitTbl:
+InitCrossMissile0and4Tbl:
     .byte $20                       ;Initial starting y screen position.
     .byte $C5                       ;Sprite pattern table index.
     .byte $80                       ;Sprite control byte.
@@ -925,7 +930,7 @@ Sprite0and4InitTbl:
     .byte $01                       ;Change sprite x coord in positive direction.
     .byte $01                       ;Change sprite y coord in positive direction.
 
-Sprite1and5InitTbl:
+InitCrossMissile1and5Tbl:
     .byte $20                       ;Initial starting y screen position.
     .byte $C5                       ;Sprite pattern table index.
     .byte $C0                       ;Sprite control byte.
@@ -943,7 +948,7 @@ Sprite1and5InitTbl:
     .byte $80                       ;Change sprite x coord in negative direction.
     .byte $01                       ;Change sprite y coord in positive direction.
 
-Sprite2and6InitTbl:
+InitCrossMissile2and6Tbl:
     .byte $C8                       ;Initial starting y screen position.
     .byte $C5                       ;Sprite pattern table index.
     .byte $00                       ;Sprite control byte.
@@ -961,7 +966,7 @@ Sprite2and6InitTbl:
     .byte $01                       ;Change sprite x coord in positive direction.
     .byte $80                       ;Change sprite y coord in negative direction.
 
-Sprite3and7InitTbl:
+InitCrossMissile3and7Tbl:
     .byte $C8                       ;Initial starting y screen position.
     .byte $C5                       ;Sprite pattern table index.
     .byte $40                       ;Sprite control byte.
@@ -979,102 +984,148 @@ Sprite3and7InitTbl:
     .byte $80                       ;Change sprite x coord in negative direction.
     .byte $80                       ;Change sprite y coord in negative direction.
 
-DrawCrosshairsSprites:
-    lda First4SlowCntr              ;
-    beq L8936                       ;Has First4SlowCntr already hit 0? If so, branch.
-    dec First4SlowCntr              ;
-    bne L8936                       ;Is First4SlowCntr now equal to 0? if not, branch.
-    asl IntroSprXRun               ;
-    asl IntroSprYRise              ;
-    asl IntroSprXRun+$10               ;
-    asl IntroSprYRise+$10              ;
-    asl IntroSprXRun+$20               ;
-    asl IntroSprYRise+$20              ;
-    asl IntroSprXRun+$30               ;Multiply the rise and run of the 8 sprites by 2.-->
-    asl IntroSprYRise+$30              ;This doubles their speed.
-    asl IntroSprXRun+$40               ;
-    asl IntroSprYRise+$40              ;
-    asl IntroSprXRun+$50               ;
-    asl IntroSprYRise+$50              ;
-    asl IntroSprXRun+$60               ;
-    asl IntroSprYRise+$60              ;
-    asl IntroSprXRun+$70               ;
-    asl IntroSprYRise+$70              ;
+; this is for the two volleys of 4 missiles colliding in the title screen
+UpdateCrossMissiles:
+    ;Has CrossMsl0to3SlowDelay already hit 0? If so, branch.
+    lda CrossMsl0to3SlowDelay
+    beq L8936
+    
+    dec CrossMsl0to3SlowDelay
+    ;Is CrossMsl0to3SlowDelay now equal to 0? if not, branch.
+    bne L8936
+    
+    ;Multiply the rise and run of the 8 sprites by 2.-->
+    ;This doubles their speed.
+    asl IntroSprXRun
+    asl IntroSprYRise
+    asl IntroSprXRun+$10
+    asl IntroSprYRise+$10
+    asl IntroSprXRun+$20
+    asl IntroSprYRise+$20
+    asl IntroSprXRun+$30
+    asl IntroSprYRise+$30
+    asl IntroSprXRun+$40
+    asl IntroSprYRise+$40
+    asl IntroSprXRun+$50
+    asl IntroSprYRise+$50
+    asl IntroSprXRun+$60
+    asl IntroSprYRise+$60
+    asl IntroSprXRun+$70
+    asl IntroSprYRise+$70
+    
 L8936:
-    ldx #$00                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 0.
-    ldx #$10                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 1.
-    ldx #$20                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 2.
-    ldx #$30                        ;
-    lda Second4Delay                ;Check to see if the delay to start movement of the second-->
-    beq L894F                       ;4 sprites has ended.  If so, start drawing those sprites.
-    dec Second4Delay                ;
-    bne DoSpriteMovement            ;
-L894F:
-    jsr DoSpriteMovement            ;($8963)Move sprite 3.
-    ldx #$40                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 4.
-    ldx #$50                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 5.
-    ldx #$60                        ;
-    jsr DoSpriteMovement            ;($8963)Move sprite 6.
-    ldx #$70                        ;($8963)Move sprite 7.
+    ;Move sprite 0.
+    ldx #$00
+    jsr UpdateCrossMissile
+    ;Move sprite 1.
+    ldx #$10
+    jsr UpdateCrossMissile
+    ;Move sprite 2.
+    ldx #$20
+    jsr UpdateCrossMissile
+    ;Move sprite 3.
+    ldx #$30
+    ;Check to see if the delay to start movement of the second-->
+    ;4 sprites has ended.
+    lda CrossMsl4to7SpawnDelay
+    beq L894F
+        ;If not, return after moving sprite 3.
+        dec CrossMsl4to7SpawnDelay
+        bne UpdateCrossMissile
+    L894F:
+    ;If so, start moving those sprites.
+    jsr UpdateCrossMissile
+    ;Move sprite 4.
+    ldx #$40
+    jsr UpdateCrossMissile
+    ;Move sprite 5.
+    ldx #$50
+    jsr UpdateCrossMissile
+    ;Move sprite 6.
+    ldx #$60
+    jsr UpdateCrossMissile
+    ;Move sprite 7.
+    ldx #$70
+    ; fallthrough
+UpdateCrossMissile: ;($8963)
+    ;If the current sprite has finished its movements, exit this routine.
+    lda IntroSprComplete,x
+    bne RTS_8975
+    
+    ;Calculate new sprite position.
+    jsr UpdateCrossMissileCoords
+    ;If sprite not at final position, branch to move next frame.
+    bcs L8972
+        ;Sprite movement complete.
+        lda #$01
+        sta IntroSprComplete,x
+    L8972:
+    ;($887B)Write sprite data to sprite RAM.
+    jmp WriteIntroSprite
 
-DoSpriteMovement:
-    lda IntroSprComplete,x          ;If the current sprite has finished-->
-    bne RTS_8975                    ;its movements, exit this routine.
-    jsr UpdateSpriteCoords          ;($981E)Calculate new sprite position.
-    bcs L8972                       ;If sprite not at final position, branch to move next frame.
-    lda #$01                        ;Sprite movement complete.
-    sta IntroSprComplete,x          ;
-L8972:
-    jmp WriteIntroSprite            ;($887B)Write sprite data to sprite RAM.
 RTS_8975:
-    rts                             ;
+    rts
 
-DrawCrossSprites:
-    lda DrawCross                   ;If not ready to draw crosshairs,-->
-    beq RTS_89A9                    ;branch to exit.
-    ldy CrossDataIndex              ;
-    cpy #$04                        ;Check to see if at last index in table.  If so, branch-->
-    bcc L8986                       ;to draw cross sprites.
-    bne RTS_89A9                    ;If beyond last index, branch to exit.
-    lda #$00                        ;
-    sta DrawCross                   ;If at last index, clear indicaor to draw cross sprites.
-L8986:
-    lda CrossSpriteIndexTbl,y       ;
-    sta $00                         ;
-    ldy #$00                        ;Reset index into CrossSpriteDataTbl
+UpdateCrossExplode:
+    ;If not ready to draw crosshairs, branch to exit.
+    lda IsUpdatingCrossExplode
+    beq RTS_89A9
+    
+    ;Check to see if before last index in table.
+    ldy CrossExplodeLengthIndex
+    cpy #$04
+    ;If so, branch to draw cross sprites.
+    bcc L8986
+        ;If beyond last index, branch to exit.
+        bne RTS_89A9
+        ;If at last index, clear indicator to draw cross sprites.
+        lda #$00
+        sta IsUpdatingCrossExplode
+    L8986:
+    lda CrossExplodeLengthTbl,y
+    sta $00
+    ldy #$00 ;Reset index into CrossExplodeDataTbl
 
-L898D:
-    ldx CrossSpriteDataTbl,y        ;Get offet into sprite RAM to load sprite.
-    iny                             ;
-L8991:
-    lda CrossSpriteDataTbl,y        ;Get sprite data byte.
-    sta SpriteRAM,x                 ;Store byte in sprite RAM.
-    inx                             ;Move to next sprite RAM address.
-    iny                             ;Move to next data byte in table.
-    txa                             ;
-    and #$03                        ;Is new sprite position reached?-->
-    bne L8991                       ;if not, branch to load next sprite data byte.
-    cpy $00                         ;Has all the sprites been loaded for cross graphic?-->
-    bne L898D                       ;If not, branch to load next set of sprite data.
+    L898D:
+        ;Get offset into sprite RAM to load sprite.
+        ldx CrossExplodeDataTbl,y
+        iny
+        L8991:
+            ;Store sprite data byte in sprite RAM.
+            lda CrossExplodeDataTbl,y
+            sta SpriteRAM,x
+            inx ;Move to next sprite RAM address.
+            iny ;Move to next data byte in table.
+            ;Is new sprite position reached?-->
+            txa
+            and #$03
+            ;if not, branch to load next sprite data byte.
+            bne L8991
+        ;Has all the sprites been loaded for cross graphic?-->
+        cpy $00
+        ;If not, branch to load next set of sprite data.
+        bne L898D
 
-    lda FrameCount                  ;
-    lsr                             ;Increment index into CrossSpriteIndexTbl every-->
-    bcc RTS_89A9                    ;other frame.  This updates the cross sprites-->
-    inc CrossDataIndex              ;every two frames.
+    ;Increment index into CrossExplodeLengthTbl every-->
+    ;other frame.  This updates the cross sprites-->
+    ;every two frames.
+    lda FrameCount
+    lsr
+    bcc RTS_89A9
+    inc CrossExplodeLengthIndex
 RTS_89A9:
-    rts                             ;
+    rts
 
-;The following table tells the routine above how many data bytes to load from CrossSpriteDataTbl.
+;The following table tells the routine above how many data bytes to load from CrossExplodeDataTbl.
 ;The more data that is loaded, the bigger the cross that is drawn on the screen.  The table below
 ;starts the cross out small, it then grows bigger and gets small again.
 
-CrossSpriteIndexTbl:
-    .byte $05, $19, $41, $19, $05
+CrossExplodeLengthTbl:
+    .byte CrossExplodeLength0
+    .byte CrossExplodeLength1
+    .byte CrossExplodeLength2
+    .byte CrossExplodeLength1
+    .byte CrossExplodeLength0
 
 ;The following table is used to find the data for the sparkle routine in the table below:
 
@@ -1178,14 +1229,15 @@ BottomSparkleDataTbl:
     SignMagSpeed $16, -1,  0
     SignMagSpeed $00,  0,  0
 
-;The following table is used by the DrawCrossSprites routine to draw the sprites on the screen that
+;The following table is used by the UpdateCrossExplode routine to draw the sprites on the screen that
 ;make up the cross that appears during the Crosshairs routine.  The single byte is the index into
 ;the sprite RAM where the sprite data is to be written.  The 4 bytes that follow it are the actual
 ;sprite data bytes.
 
-CrossSpriteDataTbl:
+CrossExplodeDataTbl:
     .byte $10                       ;Load following sprite data into Sprite04RAM.
     .byte $5A, $C0, $00, $79        ;Sprite data.
+    CrossExplodeLength0 = * - CrossExplodeDataTbl
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C8, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1194,6 +1246,7 @@ CrossSpriteDataTbl:
     .byte $5A, $C2, $00, $81        ;Sprite data.
     .byte $20                       ;Load following sprite data into Sprite08RAM.
     .byte $62, $C8, $80, $79        ;Sprite data.
+    CrossExplodeLength1 = * - CrossExplodeDataTbl
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C9, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1210,6 +1263,7 @@ CrossSpriteDataTbl:
     .byte $5A, $C2, $00, $89        ;Sprite data.
     .byte $30                       ;Load following sprite data into Sprite0CRAM.
     .byte $6A, $C8, $80, $79        ;Sprite data.
+    CrossExplodeLength2 = * - CrossExplodeDataTbl
 
 LoadPalData:
     ldy PalDataIndex                ;
@@ -1247,11 +1301,13 @@ ScreenFlashPalTbl:
 ;----------------------------------[ Intro star palette routines ]-----------------------------------
 
 StarPalSwitch:
-    lda FrameCount                  ;
-    and #$0F                        ;Change star palette every 16th frame.
-    bne RTS_8AD2                    ;
-    lda PPUStrIndex                 ;
-    beq L8AD3                       ;Is any other PPU data waiting? If so, exit.
+    ;Change star palette every 16th frame.
+    lda FrameCount
+    and #$0F
+    bne RTS_8AD2
+    ;Is any other PPU data waiting? If so, exit.
+    lda PPUStrIndex
+    beq L8AD3
 RTS_8AD2:
     rts
 
@@ -1340,7 +1396,7 @@ ProcessUniqueItems:
     rts
 
 UniqueItemSearch:
-    ldx #$00                        ;
+    ldx #$00
     L8B9E:
         txa                             ;Transfer X to A(Item number).
         asl                             ;Multiply by 2.
@@ -1457,7 +1513,7 @@ SamusHasItem:
     sta UniqueItemHistory,y         ;
     iny                             ;
     sty NumberOfUniqueItems         ;Keeps a running total of unique items.
-    rts                             ;
+    rts
 
 CheckPassword:
     jsr ConsolidatePassword         ;($8F60)Convert password characters to password bytes.
@@ -1472,7 +1528,7 @@ CheckPassword:
     sta Timer3                      ;Set Timer3 time for 120 frames (2 seconds).
     lda #$18                        ;
     sta TitleRoutine                ;Run EnterPassword routine.
-    rts                             ;
+    rts
 
 CalculatePassword:
     lda #$00                        ;
@@ -1710,19 +1766,20 @@ PasswordChecksumAndScramble:
     jsr PasswordScramble            ;($8E2D)Scramble password.
     rts                             ;
 
+;Add the values at addresses $6988 thru $6998 together.
 PasswordChecksum:
-    ldy #$10                        ;
-    lda #$00                        ;
+    ldy #$10
+    lda #$00
     L8E25:
-        clc                             ;Add the values at addresses-->
-        adc PasswordByte,y              ;$6988 thru $6998 together.
-        dey                             ;
-        bpl L8E25                       ;
-    rts                             ;
+        clc
+        adc PasswordByte,y
+        dey
+        bpl L8E25
+    rts
 
 PasswordScramble:
-    lda PasswordByte+$10            ;
-    sta $02                         ;
+    lda PasswordByte+$10
+    sta $02
     L8E32:
         lda PasswordByte                ;Store contents of $6988 in $00 for-->
         sta $00                         ;further processing after rotation.
@@ -1738,7 +1795,7 @@ PasswordScramble:
         sta PasswordByte                ;MSB of $6988.
         dec $02                         ;
         bne L8E32                       ;Continue rotating until $02 = 0.
-    rts                             ;
+    rts
 
 UnscramblePassword:
     lda PasswordByte+$10            ;Stores random number used to scramble the password.
@@ -1763,29 +1820,33 @@ UnscramblePassword:
 
 LoadPasswordChar:
     .repeat 6, I
-        ldy #(I*3+0)                    ;Password byte #$00.
-        jsr SixUpperBits                ;($8F2D)
-        sta PasswordChar+I*4+0          ;Store results.
-        ldy #(I*3+0)                    ;Password bytes #$00 and #$01.
-        jsr TwoLowerAndFourUpper        ;($8F33)
-        sta PasswordChar+I*4+1          ;Store results.
-        ldy #(I*3+1)                    ;Password bytes #$01 and #$02.
-        jsr FourLowerAndTwoUpper        ;($8F46)
-        sta PasswordChar+I*4+2          ;Store results.
-        ldy #(I*3+2)                    ;Password byte #$02.
-        jsr SixLowerBits                ;($8F5A)
-        sta PasswordChar+I*4+3          ;Store results.
+        ;%XXXXXX-- %-------- %--------
+        ldy #(I*3+0)
+        jsr SixUpperBits
+        sta PasswordChar+I*4+0
+        ;%------XX %XXXX---- %--------
+        ldy #(I*3+0)
+        jsr TwoLowerAndFourUpper
+        sta PasswordChar+I*4+1
+        ;%-------- %----XXXX %XX------
+        ldy #(I*3+1)
+        jsr FourLowerAndTwoUpper
+        sta PasswordChar+I*4+2
+        ;%-------- %-------- %--XXXXXX
+        ldy #(I*3+2)
+        jsr SixLowerBits
+        sta PasswordChar+I*4+3
     .endrep
     rts
 
-SixUpperBits:
-    lda PasswordByte,y            ;Uses six upper bits to create a new byte.-->
+SixUpperBits: ;($8F2D)
+    lda PasswordByte,y              ;Uses six upper bits to create a new byte.-->
     lsr                             ;Bits are right shifted twice and two lower-->
     lsr                             ;bits are discarded.
     rts                             ;
 
-TwoLowerAndFourUpper:
-    lda PasswordByte,y            ;
+TwoLowerAndFourUpper: ;($8F33)
+    lda PasswordByte,y              ;
     and #$03                        ;Saves two lower bits and stores them-->
     jsr Amul16                      ;($C2C5)in bits 4 and 5.
     sta $00                         ;
@@ -1794,8 +1855,8 @@ TwoLowerAndFourUpper:
     ora $00                         ;Add two sets of bits together to make a byte-->
     rts                             ;where bits 6 and 7 = 0.
 
-FourLowerAndTwoUpper:
-    lda PasswordByte,y            ;
+FourLowerAndTwoUpper: ;($8F46)
+    lda PasswordByte,y              ;
     and #$0F                        ;Keep lower 4 bits.
     asl                             ;Move lower 4 bits to bits 5, 4, 3 and 2.
     asl                             ;
@@ -1808,8 +1869,8 @@ FourLowerAndTwoUpper:
     ora $00                         ;where bits 6 and 7 = 0.
     rts                             ;
 
-SixLowerBits:
-    lda PasswordByte,y            ;Discard bits 6 and 7.
+SixLowerBits: ;($8F5A)
+    lda PasswordByte,y              ;Discard bits 6 and 7.
     and #$3F                        ;
     rts
 
@@ -1818,20 +1879,23 @@ SixLowerBits:
 
 ConsolidatePassword:
     .repeat 6, I
-        ldy #(I*4+0)                        ;Password characters #$00 and #$01.
-        jsr SixLowerAndTwoUpper         ;($8FF1)
-        sta PasswordByte+I*3+0              ;Store results.
-        ldy #(I*4+1)                        ;Password characters #$01 and #$02.
-        jsr FourLowerAndFiveThruTwo     ;($9001)
-        sta PasswordByte+I*3+1              ;Store results.
-        ldy #(I*4+2)                        ;Password characters #$02 and #$03.
-        jsr TwoLowerAndSixLower         ;($9011)
-        sta PasswordByte+I*3+2              ;Store results.
+        ;%00XXXXXX %00XX---- %00------ %00------
+        ldy #(I*4+0)
+        jsr SixLowerAndTwoUpper
+        sta PasswordByte+I*3+0
+        ;%00------ %00--XXXX %00XXXX-- %00------
+        ldy #(I*4+1)
+        jsr FourLowerAndFiveThruTwo
+        sta PasswordByte+I*3+1
+        ;%00------ %00------ %00----XX %00XXXXXX
+        ldy #(I*4+2)
+        jsr TwoLowerAndSixLower
+        sta PasswordByte+I*3+2
     .endrep
     rts
 
 SixLowerAndTwoUpper:
-    lda PasswordChar,y            ;Remove upper two bits and transfer-->
+    lda PasswordChar,y              ;Remove upper two bits and transfer-->
     asl                             ;lower six bits to upper six bits.
     asl                             ;
     sta $00                         ;
@@ -1841,7 +1905,7 @@ SixLowerAndTwoUpper:
     rts                             ;
 
 FourLowerAndFiveThruTwo:
-    lda PasswordChar,y            ;Take four lower bits and transfer-->
+    lda PasswordChar,y              ;Take four lower bits and transfer-->
     jsr Amul16                      ;($C2C5)them to upper four bits. Discard the rest.
     sta $00                         ;
     lda PasswordChar+1,y            ;Remove two lower bits and transfer-->
@@ -1851,7 +1915,7 @@ FourLowerAndFiveThruTwo:
     rts                             ;
 
 TwoLowerAndSixLower:
-    lda PasswordChar,y            ;Shifts two lower bits to two higest bits-->
+    lda PasswordChar,y              ;Shifts two lower bits to two higest bits-->
     ror                             ;and discards the rest
     ror                             ;
     ror                             ;
@@ -2869,7 +2933,7 @@ EndGamePal0C:
 
     .byte $00                       ;End EndGamePal0C data.
 
-UpdateSpriteCoords:
+UpdateCrossMissileCoords: ;($981E)
     lda IntroSprXRun,x             ;Load sprite run(sprite x component).
     jsr CalcDisplacement            ;($9871)Calculate sprite displacement in x direction.
     ldy IntroSprXDir,x             ;Get byte describing if sprite increasing or decreasing pos.

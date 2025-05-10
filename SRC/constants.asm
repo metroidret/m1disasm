@@ -315,9 +315,9 @@ SpareMemB7             = $B7     ;Written to in title routine and accessed by un
 SpareMemB8             = $B8     ;Written to in title routine and accessed by unused routine.
 SpareMemBB             = $BB     ;Written to in title routine, but never accessed.
 
-First4SlowCntr         = $BC     ;This address holds an 8 frame delay. when the delay is up,-->
+CrossMsl0to3SlowDelay  = $BC     ;This address holds an 8 frame delay. when the delay is up,-->
                                         ;The crosshair sprites double their speed.
-Second4Delay           = $BD     ;This address holds a 32 frame delay.  When the delay is-->
+CrossMsl4to7SpawnDelay = $BD     ;This address holds a 32 frame delay.  When the delay is-->
                                         ;up, the second set of crosshair sprites start their movement.
 SecondCrosshairSprites = $BF     ;#$01=Second crosshair sprites active in intro.
 
@@ -328,8 +328,8 @@ IntroStarOffset        = $C3     ;Contains offset into IntroStarPntr table for t
 FadeDataIndex          = $C4     ;Index to palette data to fade items in and out during intro.
 
 SpareMemC5             = $C5     ;Written to in title routine, but never accessed.
-CrossDataIndex         = $C6     ;#$00 thru #$04. Index to find cross sprite data.
-DrawCross              = $C7     ;#$01=Draw cross on screen during crosshairs routine.
+CrossExplodeLengthIndex= $C6     ;#$00 thru #$04. Index to find cross sprite data.
+IsUpdatingCrossExplode = $C7     ;#$01=Draw cross on screen during crosshairs routine.
 SpriteLoadPending      = $C8     ;Set to #$00 after sprite RAM load complete.
 SpareMemC9             = $C9     ;Written to in title routine, but never accessed.
 SpareMemCB             = $CB     ;Written to in title routine, but never accessed.
