@@ -1734,7 +1734,7 @@ SamusInit:
     stx Mem0730
     stx Mem0732
     stx Mem0738
-    stx EndTimer                  ;Set end timer bytes to #$FF as-->
+    stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1                  ;escape timer not currently active.
     stx $8B
     stx $8E
@@ -1749,14 +1749,14 @@ SamusInit:
     sty MaxMissilePickup
     sty MaxEnergyPickup
     lda $95D9                       ;Samus' initial vertical position
-    sta ObjectY                     ;
+    sta ObjY                        ;
     lda #$80                        ;Samus' initial horizontal position
-    sta ObjectX                     ;
-    lda PPUCTRL_ZP                   ;
+    sta ObjX                        ;
+    lda PPUCTRL_ZP                  ;
     and #$01                        ;Set Samus' name table position to current name table-->
-    sta ObjectHi                    ;active in PPU.
+    sta ObjHi                       ;active in PPU.
     lda #$00                        ;
-    sta Health                    ;Starting health is-->
+    sta Health                      ;Starting health is-->
     lda #$03                        ;set to 30 units.
     sta Health+1                    ;
 RTS_C92A:
@@ -1790,9 +1790,9 @@ GameEngine:
     LC95F:
     lda ObjAction                   ;Check is Samus is dead.
     cmp #sa_Dead2                   ;Is Samus dead?-->
-    bne RTS_C92A                       ;exit if not.
-    lda AnimDelay                   ;Is Samus still exploding?-->
-    bne RTS_C92A                       ;Exit if still exploding.
+    bne RTS_C92A                    ;exit if not.
+    lda ObjAnimDelay                ;Is Samus still exploding?-->
+    bne RTS_C92A                    ;Exit if still exploding.
     jsr SilenceMusic                ;Turn off music.
     lda MotherBrainStatus           ;
     cmp #$0A                        ;Is mother brain already dead? If so, branch.
@@ -2415,7 +2415,7 @@ SetSamusRun:
     lda #$09
     sta WalkSoundDelay
     ldx #$00
-    lda AnimResetIndex
+    lda ObjAnimResetIndex
     cmp #an_SamusStand
     beq LCCBX
     inx
@@ -2425,7 +2425,7 @@ SetSamusRun:
         jsr SetSamusNextAnim
     LCCBX:
     lda RunAnimationTbl,x
-    sta AnimResetIndex
+    sta ObjAnimResetIndex
     ldx SamusDir
 LCCB7:
     lda RunAccelerationTbl,x
@@ -2454,16 +2454,16 @@ LCCC2:
             cpy #$18
             bcs samL04
             lda #an_SamusJump
-            sta AnimResetIndex
+            sta ObjAnimResetIndex
             bcc samL04          ; branch always
         samL01:
         cpy #$18
         bcc samL04
-        lda AnimResetIndex
+        lda ObjAnimResetIndex
         cmp #an_SamusFireJump
         beq samL02
             lda #an_SamusSalto
-            sta AnimResetIndex
+            sta ObjAnimResetIndex
         samL02:
         cpy #$20
         bcc samL04
@@ -2471,17 +2471,17 @@ LCCC2:
         and #$08
         beq samL03
             lda #an_SamusJumpPntUp
-            sta AnimResetIndex
+            sta ObjAnimResetIndex
         samL03:
         bit Joy1Status
         bmi samL04
         jsr StopVertMovement            ;($D147)
     samL04:
         lda #an_SamusRun
-        cmp AnimResetIndex
+        cmp ObjAnimResetIndex
         bne samL05
             lda #an_SamusJump
-            sta AnimResetIndex
+            sta ObjAnimResetIndex
         samL05:
         lda SamusInLava
         beq samL06
@@ -2577,8 +2577,8 @@ IsScrewAttackActive:
     bne RTS_CDBE                       ;If not, branch to exit.
     lda SamusGear                   ;
     and #gr_SCREWATTACK             ;Does Samus have screw attack?-->
-    beq RTS_CDBE                       ;If not, branch to exit.
-    lda AnimResetIndex              ;
+    beq RTS_CDBE                    ;If not, branch to exit.
+    lda ObjAnimResetIndex           ;
     cmp #an_SamusSalto              ;Is Samus somersaulting?-->
     beq LCDBB                           ;If so, branch to clear carry(screw attack active).
         cmp #an_SamusJump               ;
@@ -2587,7 +2587,7 @@ IsScrewAttackActive:
         bit ObjVertSpeed                ;If Samus is jumping and still moving upwards, screw-->
         bpl RTS_CDBE                       ;attack is active.
     LCDBB:
-    cmp AnimIndex                   ;Screw attack will still be active if not spinning, but-->
+    cmp ObjAnimIndex                ;Screw attack will still be active if not spinning, but-->
 RTS_CDBE:
     rts                             ;jumping while running and still moving upwards.
 
@@ -2601,7 +2601,7 @@ LCDBF:
     lsr
     tax
     lda LCCBE,x
-    cmp AnimResetIndex
+    cmp ObjAnimResetIndex
     beq RTS_CDBE
     jsr SetSamusAnim
     pla
@@ -2614,13 +2614,13 @@ LCDD7:
     and #$08
     bne LCDEX
         lda #an_SamusFireRun
-        sta AnimIndex
+        sta ObjAnimIndex
         rts
 
     LCDEX:
-    lda AnimIndex
+    lda ObjAnimIndex
     sec
-    sbc AnimResetIndex
+    sbc ObjAnimResetIndex
     and #$03
     tax
     lda Table05,x
@@ -2690,9 +2690,9 @@ Lx009:
     and #$01
     bne CheckHealthBeep
     tay
-    sty AnimDelay
+    sty ObjAnimDelay
     ldy #$F7
-    sty AnimFrame
+    sty ObjAnimFrame
 
 CheckHealthBeep:
     ldy Health+1
@@ -2851,12 +2851,12 @@ ClearHorzMvmtAnimData:
     lda #an_SamusStand              ;Set Samus animation for standing.
 
 SetSamusAnim:
-    sta AnimResetIndex              ;Set new animation reset index.
+    sta ObjAnimResetIndex           ;Set new animation reset index.
 
 SetSamusNextAnim:
-    sta AnimIndex                   ;Set new animation data index.
+    sta ObjAnimIndex                ;Set new animation data index.
     lda #$00                        ;
-    sta AnimDelay                   ;New animation to take effect immediately.
+    sta ObjAnimDelay                ;New animation to take effect immediately.
     rts                             ;
 
 SetSamusPntUp:
@@ -2867,7 +2867,7 @@ SetSamusPntUp:
 
 NoHorzMoveNoDelay:
     jsr ClearHorzData               ;($CFB7)Clear all horizontal movement data.
-    sty AnimDelay                   ;Clear animation delay data.
+    sty ObjAnimDelay                ;Clear animation delay data.
     rts                             ;
 
 LCF88:
@@ -2879,7 +2879,7 @@ LCF88:
         jsr LCCB7
         lda SamusGravity
         bmi RTS_X016
-        lda AnimResetIndex
+        lda ObjAnimResetIndex
         cmp #an_SamusSalto
         beq RTS_X016
         stx SamusDir
@@ -2890,7 +2890,7 @@ LCF88:
     lda SamusGravity
     bmi RTS_X016
     beq RTS_X016
-    lda AnimResetIndex
+    lda ObjAnimResetIndex
     cmp #an_SamusJump
     bne RTS_X016
 
@@ -2906,11 +2906,11 @@ LCFBE:
     SetSamusJump:
         ldy #an_SamusJump
     LCFC5:
-    sty AnimResetIndex
+    sty ObjAnimResetIndex
     dey
-    sty AnimIndex
+    sty ObjAnimIndex
     lda #$04
-    sta AnimDelay
+    sta ObjAnimDelay
     lda #$00
     sta SamusJumpDsplcmnt
     lda #$FC
@@ -2951,7 +2951,7 @@ Lx019:
     and #$08     ; UP pressed?
     beq Lx020      ; branch if not
         lda #an_SamusJumpPntUp
-        sta AnimResetIndex
+        sta ObjAnimResetIndex
         lda #sa_PntJump      ; "jumping & pointing up" handler
         sta ObjAction
     Lx020:
@@ -2994,21 +2994,21 @@ Lx024:
     lda ObjAction
     cmp #sa_PntJump
     bne Lx025
-        lda AnimResetIndex
+        lda ObjAnimResetIndex
         cmp Table04,y
         bne Lx026
         lda Table04+1,y
         jmp Lx026
 
     Lx025:
-    lda AnimResetIndex
+    lda ObjAnimResetIndex
     cmp Table06,y
     bne Lx026
     lda Table06+1,y
 Lx026:
     jsr SetSamusAnim
     lda #$08
-    sta AnimDelay
+    sta ObjAnimDelay
     sty SamusDir
 Lx027:
     stx ObjHorzSpeed
@@ -3031,7 +3031,7 @@ LD09C:
     ora Joy1Retrig
     asl
     bpl RTS_X028      ; exit if FIRE not pressed
-    lda AnimResetIndex
+    lda ObjAnimResetIndex
     cmp #an_SamusJumpPntUp
     bne Lx029
     jmp LD275
@@ -3051,9 +3051,9 @@ SetSamusRoll:
 ;Turn Samus into ball
     ldx SamusDir
     lda #an_SamusRoll
-    sta AnimResetIndex
+    sta ObjAnimResetIndex
     lda #an_SamusRunJump
-    sta AnimIndex
+    sta ObjAnimIndex
     lda LCCC0,x
     sta SamusHorzAccel
     lda #$01
@@ -3093,7 +3093,7 @@ SamusRoll:
         jsr LFD8F
         jsr LD638
         jsr StopHorzMovement
-        dec AnimIndex
+        dec ObjAnimIndex
         jsr StopVertMovement            ;($D147)
         lda #$04
         jmp LD144
@@ -3158,14 +3158,14 @@ CheckBombLaunch:
     bne RTS_X036    ; no bomb slots available, exit
 ; launch bomb... give it same coords as Samus
 Lx035:
-    lda ObjectHi
-    sta ObjectHi,x
-    lda ObjectX
-    sta ObjectX,x
-    lda ObjectY
+    lda ObjHi
+    sta ObjHi,x
+    lda ObjX
+    sta ObjX,x
+    lda ObjY
     clc
     adc #$04        ; 4 pixels further down than Samus' center
-    sta ObjectY,x
+    sta ObjY,x
     lda #wa_LayBomb
     sta ObjAction,x
     jsr SFX_BombLaunch
@@ -3264,7 +3264,7 @@ LD210:
     lda #$00
     sta ObjVertSpeed,y
     lda #$01
-    sta ObjectOnScreen,y
+    sta ObjOnScreen,y
     jsr CheckMissileLaunch
     lda ObjAction,y
     asl
@@ -3318,7 +3318,7 @@ LD275:
     lda #$00
     sta ObjHorzSpeed,y
     lda #$01
-    sta ObjectOnScreen,y
+    sta ObjOnScreen,y
     jsr LD340
     ldx SamusDir
     lda Table09+4,x
@@ -3375,11 +3375,11 @@ LD2EB:
     lda #an_Bullet
 
 SetProjectileAnim:
-    sta AnimResetIndex,x
+    sta ObjAnimResetIndex,x
 SetProjectileAnim2:
-    sta AnimIndex,x
+    sta ObjAnimIndex,x
     lda #$00
-    sta AnimDelay,x
+    sta ObjAnimDelay,x
 RTS_X046:
     rts
 
@@ -3426,10 +3426,10 @@ LD340:
     bne Lx047
 
 SetBulletAnim:
-    sta AnimIndex,y
-    sta AnimResetIndex,y
+    sta ObjAnimIndex,y
+    sta ObjAnimResetIndex,y
     lda #$00
-    sta AnimDelay,y
+    sta ObjAnimDelay,y
 Exit4:
     rts
 
@@ -3523,14 +3523,15 @@ Lx052:
 MoveOutDoor:
     lda SamusDoorDir
     beq Lx054    ; branch if door leads to the right
-    ldy ObjectX
+    ldy ObjX
     bne Lx053
         jsr ToggleSamusHi       ; toggle 9th bit of Samus' X coord
     Lx053:
-    dec ObjectX
+    dec ObjX
     jmp Lx055
 
-Lx054:  inc ObjectX
+Lx054:
+    inc ObjX
     bne Lx055
     jsr ToggleSamusHi       ; toggle 9th bit of Samus' X coord
 Lx055:
@@ -3543,7 +3544,7 @@ SamusDead:
     jmp SetSamusData                ;($CD6D)Set Samus control data and animation.
 
 SamusDead2:
-    dec AnimDelay
+    dec ObjAnimDelay
     rts
 
 ; SamusElevator
@@ -3558,36 +3559,37 @@ SamusElevator:
     Lx056:
     lda $032F
     bmi Lx059
-        lda ObjectY
+        lda ObjY
         sec
         sbc ScrollY     ; A = Samus' Y position on the visual screen
         cmp #$84
         bcc Lx057      ; if ScreenY < $84, don't scroll
             jsr ScrollDown  ; otherwise, attempt to scroll
-        Lx057:  ldy ObjectY
+        Lx057:
+        ldy ObjY
         cpy #239        ; wrap-around required?
         bne Lx058
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
-            ldy #$FF        ; ObjectY will now be 0
+            ldy #$FF        ; ObjY will now be 0
         Lx058:
         iny
-        sty ObjectY
+        sty ObjY
         jmp LD47E
     Lx059:
-    lda ObjectY
+    lda ObjY
     sec
     sbc ScrollY     ; A = Samus' Y position on the visual screen
     cmp #$64
     bcs Lx060      ; if ScreenY >= $64, don't scroll
         jsr ScrollUp    ; otherwise, attempt to scroll
     Lx060:
-    ldy ObjectY
+    ldy ObjY
     bne Lx061      ; wraparound required? (branch if not)
         jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
-        ldy #240        ; ObjectY will now be 239
+        ldy #240        ; ObjY will now be 239
     Lx061:
     dey
-    sty ObjectY
+    sty ObjY
     jmp LD47E
 Lx062:
     ldy #$00
@@ -3663,12 +3665,12 @@ DoOneProjectile:
         .word UpdateWaveBullet      ; wave beam
         .word UpdateIceBullet       ; ice beam
         .word BulletExplode    ; bullet/missile explode
-        .word $D65E       ; lay bomb
-        .word $D670       ; lay bomb
-        .word $D691       ; lay bomb
-        .word $D65E       ; lay bomb
-        .word $D670       ; bomb countdown
-        .word $D691       ; bomb explode
+        .word LD65E       ; lay bomb
+        .word LD670       ; lay bomb
+        .word LD691       ; lay bomb
+        .word LD65E       ; lay bomb
+        .word LD670       ; bomb countdown
+        .word LD691       ; bomb explode
         .word UpdateBullet  ; missile
 
 UpdateBullet:
@@ -3837,7 +3839,7 @@ Exit5:
     rts
 
 LD5FC:
-    lda ObjectOnScreen,x
+    lda ObjOnScreen,x
     lsr
     bcs Exit5
 Lx078:
@@ -3873,17 +3875,17 @@ LD624:
     bcc Lx078
 LD638:
     lda $08
-    sta ObjectY,x
+    sta ObjY,x
     lda $09
-    sta ObjectX,x
+    sta ObjX,x
     lda $0B
     and #$01
     bpl Lx080      ; branch always
-        ToggleObjectHi:
-        lda ObjectHi,x
+ToggleObjHi:
+        lda ObjHi,x
         eor #$01
     Lx080:
-    sta ObjectHi,x
+    sta ObjHi,x
 RTS_X081:
     rts
 
@@ -4091,11 +4093,11 @@ RTS_X098:
 
 GetObjCoords:
     ldx PageIndex                   ;Load index into object RAM to find proper object.
-    lda ObjectY,x                   ;
+    lda ObjY,x                      ;
     sta $02                         ;Load and save temp copy of object y coord.
-    lda ObjectX,x                   ;
+    lda ObjX,x                      ;
     sta $03                         ;Load and save temp copy of object x coord.
-    lda ObjectHi,x                  ;
+    lda ObjHi,x                     ;
     sta $0B                         ;Load and save temp copy of object nametable.
     jmp MakeCartRAMPtr              ;($E96A)Find object position in room RAM.
 
@@ -4129,7 +4131,7 @@ ElevatorIdle:
     beq ShowElevator
 ; start elevator!
     jsr StopVertMovement            ;($D147)
-    sty AnimDelay
+    sty ObjAnimDelay
     sty SamusGravity
     tya
     sta ObjVertSpeed,x
@@ -4139,9 +4141,9 @@ ElevatorIdle:
     lda #an_SamusFront
     jsr SetSamusAnim
     lda #128
-    sta ObjectX     ; center
+    sta ObjX     ; center
     lda #112
-    sta ObjectY     ; center
+    sta ObjY     ; center
     ShowElevator:
     lda FrameCount
     lsr
@@ -4162,8 +4164,8 @@ LD80E:
 
 Lx100:
     lda #$80
-    sta ObjectX
-    lda ObjectX,x
+    sta ObjX
+    lda ObjX,x
     sec
     sbc ScrollX
     bmi Lx101
@@ -4178,25 +4180,25 @@ ElevatorMove:
     lda $030F,x
     bpl Lx103    ; branch if elevator going down
     ; move elevator up one pixel
-    ldy ObjectY,x
+    ldy ObjY,x
     bne Lx102
-        jsr ToggleObjectHi
+        jsr ToggleObjHi
         ldy #240
     Lx102:
     dey
     tya
-    sta ObjectY,x
+    sta ObjY,x
     jmp Lx104
 
     ; move elevator down one pixel
 Lx103:
-    inc ObjectY,x
-    lda ObjectY,x
+    inc ObjY,x
+    lda ObjY,x
     cmp #240
     bne Lx104
-    jsr ToggleObjectHi
+    jsr ToggleObjHi
     lda #$00
-    sta ObjectY,x
+    sta ObjY,x
 Lx104:
     cmp #$83
     bne Lx105      ; move until Y coord = $83
@@ -4208,13 +4210,13 @@ ElevatorScroll:
     lda ScrollY
     bne ElevScrollRoom  ; scroll until ScrollY = 0
     lda #$4E
-    sta AnimResetIndex
+    sta ObjAnimResetIndex
     lda #$41
-    sta AnimIndex
+    sta ObjAnimIndex
     lda #$5D
-    sta AnimResetIndex,x
+    sta ObjAnimResetIndex,x
     lda #$50
-    sta AnimIndex,x
+    sta ObjAnimIndex,x
     inc ObjAction,x
     lda #$40
     sta Timer1
@@ -4291,13 +4293,13 @@ Lx110:
     ldx #$20
     stx PageIndex
     lda #$6B
-    sta AnimResetIndex
+    sta ObjAnimResetIndex
     lda #$5F
-    sta AnimIndex
+    sta ObjAnimIndex
     lda #$7A
-    sta AnimResetIndex,x
+    sta ObjAnimResetIndex,x
     lda #(L85E0-ObjectAnimIndexTbl)
-    sta AnimIndex,x
+    sta ObjAnimIndex,x
     inc ObjAction,x
     lda #$40
     sta Timer1
@@ -4461,23 +4463,23 @@ StatueAnimFrameTable:
     .byte $66 ; Ridley anim frame
 
 LDA3D:
-    lda AnimDelay,x
+    lda ObjAnimDelay,x
     bmi RTS_X127
     lda #$01
-    sta AnimDelay,x
+    sta ObjAnimDelay,x
     lda KraidStatueY-$60,x
     and #$0F
     beq RTS_X127
-    inc AnimDelay,x
+    inc ObjAnimDelay,x
     dec KraidStatueY-$60,x
     lda KraidStatueY-$60,x
     and #$0F
     bne RTS_X127
-    lda AnimDelay,x
+    lda ObjAnimDelay,x
     ora #$80
-    sta AnimDelay,x
+    sta ObjAnimDelay,x
     sta KraidStatueStatus-$60,x
-    inc AnimDelay,x
+    inc ObjAnimDelay,x
     txa
     pha
     and #$01
@@ -4508,7 +4510,7 @@ LDA7C:
     lda KraidStatueRaiseState-$60,x
     cmp #$01
     bne Lx128
-    lda AnimIndex,x
+    lda ObjAnimIndex,x
     beq Lx128
     dec KraidStatueY-$60,x
     lda TriangleSFXFlag
@@ -4516,7 +4518,7 @@ LDA7C:
     sta TriangleSFXFlag
 Lx128:
     lda #$00
-    sta AnimIndex,x
+    sta ObjAnimIndex,x
     rts
 
 UpdateStatueBGTiles:
@@ -4865,26 +4867,26 @@ ExplodeRotationTbl:
 
 UpdateObjAnim:
     ldx PageIndex
-    ldy AnimDelay,x
+    ldy ObjAnimDelay,x
     beq Lx130      ; is it time to advance to the next anim frame?
-        dec AnimDelay,x     ; nope
+        dec ObjAnimDelay,x     ; nope
         bne RTS_X132   ; exit if still not zero (don't update animation)
     Lx130:
-    sta AnimDelay,x     ; set initial anim countdown value
-    ldy AnimIndex,x
+    sta ObjAnimDelay,x     ; set initial anim countdown value
+    ldy ObjAnimIndex,x
 Lx131:
     lda ObjectAnimIndexTbl,y                ;($8572)Load frame number.
     cmp #$FF        ; has end of anim been reached?
     beq Lx133
-    sta AnimFrame,x     ; store frame number
+    sta ObjAnimFrame,x     ; store frame number
     iny          ; inc anim index
     tya
-    sta AnimIndex,x     ; store anim index
+    sta ObjAnimIndex,x     ; store anim index
 RTS_X132:
     rts
 
 Lx133:
-    ldy AnimResetIndex,x     ; reset anim frame index
+    ldy ObjAnimResetIndex,x     ; reset anim frame index
     jmp Lx131    ; do first frame of animation
 
 ;is this unused?
@@ -5157,7 +5159,7 @@ AnimDrawObject:
 
 DrawFrame:
     ldx PageIndex                   ;Get index to proper object to work with.
-    lda AnimFrame,x                 ;
+    lda ObjAnimFrame,x              ;
     cmp #$F7                        ;Is the frame valid?-->
     bne LDE56                          ;Branch if yes.
     LDE53:
@@ -5171,13 +5173,13 @@ DrawFrame:
     sta ObjectCntrl                 ;elevators.
 
 LDE60:
-    lda ObjectY,x                   ;
+    lda ObjY,x                      ;
     sta $0A                         ;
-    lda ObjectX,x                   ;Copy object y and x room position and name table-->
+    lda ObjX,x                      ;Copy object y and x room position and name table-->
     sta $0B                         ;data into $0A, $0B and $06 respectively.
-    lda ObjectHi,x                  ;
+    lda ObjHi,x                     ;
     sta $06                         ;
-    lda AnimFrame,x                 ;Load A with index into FramePtrTable.
+    lda ObjAnimFrame,x              ;Load A with index into FramePtrTable.
     asl                             ;*2. Frame pointers are two bytes.
     tax                             ;X is now the index into the FramePtrTable.
     lda FramePtrTable,x             ;
@@ -5212,7 +5214,7 @@ LDE60:
     lda #sa_Dead2                   ;
     sta ObjAction,x                 ;Move to next part of the death handler.
     lda #$28                        ;
-    sta AnimDelay,x                 ;Set animation delay for 40 frames(.667 seconds).
+    sta ObjAnimDelay,x                 ;Set animation delay for 40 frames(.667 seconds).
     pla                             ;Pull last return address off of the stack.
     pla                             ;
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
@@ -5232,7 +5234,7 @@ LDEBC:
     jsr IsObjectVisible             ;($DFDF)Determine if object is within the screen boundaries.
     txa                             ;
     ldx PageIndex                   ;Get index to object.
-    sta ObjectOnScreen,x            ;Store visibility status of object.
+    sta ObjOnScreen,x               ;Store visibility status of object.
     tax                             ;
     beq LDEE3                           ;Branch if object is not within the screen boundaries.
 LDEDE:
@@ -5805,10 +5807,10 @@ LE21B:
     stx DoorOnNameTable3            ;
     stx DoorOnNameTable0            ;Erase door nametable data.
     inx                             ;X=1.
-    lda ObjectX                     ;Did Samus enter in the right hand door?-->
-    bmi LE241                          ;If so, branch.
+    lda ObjX                        ;Did Samus enter in the right hand door?-->
+    bmi LE241                       ;If so, branch.
     inx                             ;X=2. Samus is in left door.
-    bne LE241                          ;Branch always.
+    bne LE241                       ;Branch always.
 
 ;This function is called once after door scrolling is complete.
 
@@ -5837,9 +5839,9 @@ Exit15:
 ;------------------------------------[ Toggle Samus nametable ]--------------------------------------
 
 ToggleSamusHi:
-    lda ObjectHi                    ;
+    lda ObjHi                    ;
     eor #$01                        ;Change Samus' current nametable from one to the other.
-    sta ObjectHi                    ;
+    sta ObjHi                    ;
     rts                             ;
 
 ;-------------------------------------------[ Toggle scroll ]----------------------------------------
@@ -5865,11 +5867,11 @@ ToggleScroll:
 IsSamusInLava:
     lda #$01                        ;
     cmp ScrollDir                   ;Set carry bit(and exit) if scrolling up or down.
-    bcs RTS_E268                           ;
+    bcs RTS_E268                    ;
     lda #$D8                        ;If Samus is Scrolling left or right and within 24 pixels-->
-    cmp ObjectY                     ;of the bottom of the screen, she is in lava. Clear carry bit.
+    cmp ObjY                        ;of the bottom of the screen, she is in lava. Clear carry bit.
 RTS_E268:
-    rts                             ;
+    rts
 
 ;----------------------------------[ Check lava and movement routines ]------------------------------
 
@@ -5915,7 +5917,7 @@ LE2A7:
 
 SamusMoveVertically:
     jsr VertAccelerate              ;($E37A)Calculate vertical acceleration.
-    lda ObjectY                     ;
+    lda ObjY                        ;
     sec                             ;
     sbc ScrollY                     ;Calculate Samus' screen y position.
     sta SamusScrY                   ;
@@ -5985,11 +5987,11 @@ LE30E:
 
 LE316:
     dec ObjectCounter               ;1 pixel movement is complete.
-    bne LE2E3                        ;Branch if Samus needs to be moved another pixel.
+    bne LE2E3                       ;Branch if Samus needs to be moved another pixel.
 
 SamusMoveHorizontally:
     jsr HorzAccelerate              ;($E3E5)Horizontally accelerate Samus.
-    lda ObjectX                     ;
+    lda ObjX                        ;
     sec                             ;Calculate Samus' x position on screen.
     sbc ScrollX                     ;
     sta SamusScrX                   ;Save Samus' x position.
@@ -6067,7 +6069,7 @@ VertAccelerate:
     bne LE3A5                          ;Branch if yes.
     lda #$18                        ;
     sta SamusHorzSpeedMax           ;Set Samus maximum running speed.
-    lda ObjectY                     ;
+    lda ObjY                        ;
     clc                             ;
     adc ObjRadY                     ;Check is Samus is obstructed downwards on y room-->
     and #$07                        ;positions divisible by 8(every 8th pixel).
@@ -6195,7 +6197,7 @@ LE449:
 ;Attempt to move Samus one pixel up.
 
 MoveSamusUp:
-    lda ObjectY                     ;Get Samus' y position in room.
+    lda ObjY                        ;Get Samus' y position in room.
     sec                             ;
     sbc ObjRadY                     ;Subtract Samus' vertical radius.
     and #$07                        ;Check if result is a multiple of 8. If so, branch to-->
@@ -6221,7 +6223,7 @@ MoveSamusUp:
     Lx152:
         dec SamusScrY
     Lx153:
-    lda ObjectY
+    lda ObjY
     bne Lx155
         lda ScrollDir
         and #$02
@@ -6229,9 +6231,9 @@ MoveSamusUp:
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
         Lx154:
         lda #240
-        sta ObjectY
+        sta ObjY
     Lx155:
-    dec ObjectY
+    dec ObjY
     inc SamusJumpDsplcmnt
     sec
 RTS_X156:
@@ -6240,7 +6242,7 @@ RTS_X156:
 ; attempt to move Samus one pixel down
 
 MoveSamusDown:
-    lda ObjectY
+    lda ObjY
     clc
     adc ObjRadY
     and #$07
@@ -6266,7 +6268,7 @@ MoveSamusDown:
     Lx159:
         inc SamusScrY
     Lx160:
-    lda ObjectY
+    lda ObjY
     cmp #239
     bne Lx162
         lda ScrollDir
@@ -6275,9 +6277,9 @@ MoveSamusDown:
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
         Lx161:
         lda #$FF
-        sta ObjectY
+        sta ObjY
     Lx162:
-    inc ObjectY
+    inc ObjY
     dec SamusJumpDsplcmnt
     sec
 RTS_X163:
@@ -6299,7 +6301,7 @@ ScrollUp:
     bne Lx165
         dec MapPosY     ; decrement MapY
         jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx166   ; if function returns CF = 1, moving up is not possible
+        bcs Lx166       ; if function returns CF = 1, moving up is not possible
         jsr LE9B7       ; switch to the opposite Name Table
         ldx #240        ; new Y coord
     Lx165:
@@ -6327,7 +6329,7 @@ ScrollDown:
     bne Lx169
         inc MapPosY     ; increment MapY
         jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx171   ; if function returns CF = 1, moving down is not possible
+        bcs Lx171       ; if function returns CF = 1, moving down is not possible
     Lx169:
     ldx ScrollY
     cpx #239
@@ -6494,7 +6496,7 @@ WritePPUAttribTbl:
 
 MoveSamusLeft:
 LE626:
-    lda ObjectX
+    lda ObjX
     sec
     sbc ObjRadX
     and #$07
@@ -6516,14 +6518,14 @@ LE626:
     Lx178:
         dec SamusScrX
     Lx179:
-    lda ObjectX
+    lda ObjX
     bne Lx180
         lda ScrollDir
         and #$02
         beq Lx180
         jsr ToggleSamusHi       ; toggle 9th bit of Samus' X coord
     Lx180:
-    dec ObjectX
+    dec ObjX
     sec
     rts
 
@@ -6536,7 +6538,7 @@ Lx181:
 ; attempt to move Samus one pixel right
 
 MoveSamusRight:
-    lda ObjectX
+    lda ObjX
     clc
     adc ObjRadX
     and #$07
@@ -6558,7 +6560,7 @@ MoveSamusRight:
     Lx183:
         inc SamusScrX
     Lx184:
-    inc ObjectX      ; go right, Samus!
+    inc ObjX      ; go right, Samus!
     bne Lx185
         lda ScrollDir
         and #$02
@@ -6867,7 +6869,7 @@ LE81E:
                 lda ObjAction,x
                 eor #$04
                 bne PlaySnd4
-                lda AnimResetIndex,x
+                lda ObjAnimResetIndex,x
                 eor #$91
                 bne PlaySnd4
             Lx204:
@@ -6937,11 +6939,11 @@ CheckMoveVertical:
     jmp LE7DE
 
 StoreObjectPositionToTemp:
-    lda ObjectHi,x
+    lda ObjHi,x
     sta $0B
-    lda ObjectY,x
+    lda ObjY,x
     sta $08
-    lda ObjectX,x
+    lda ObjX,x
     sta $09
     rts
 
@@ -7060,7 +7062,7 @@ LE95F:
 ;------------------------------------[ Object pointer into cart RAM ]-------------------------------
 
 ;Find object's equivalent position in room RAM based on object's coordinates.
-;In: $02 = ObjectY, $03 = ObjectX, $0B = ObjectHi. Out: $04 = cart RAM pointer.
+;In: $02 = ObjY, $03 = ObjX, $0B = ObjHi. Out: $04 = cart RAM pointer.
 
 MakeCartRAMPtr:
     lda #$18                        ;Set pointer to $6xxx(cart RAM).
@@ -7075,12 +7077,12 @@ MakeCartRAMPtr:
     lda $03                         ;Object X room position.
     lsr                             ;
     lsr                             ;
-    lsr                             ;A=ObjectX/8.
+    lsr                             ;A=ObjX/8.
     ora $04                         ;
     sta $04                         ;Put bits 0 thru 4 into $04.
     lda $0B                         ;Object nametable.
     asl                             ;
-    asl                             ; A=ObjectHi*4.
+    asl                             ; A=ObjHi*4.
     and #$04                        ;Set bit 2 if object is on nametable 3.
     ora $05                         ;
     sta $05                         ;Include nametable bit in $05.
@@ -7523,11 +7525,11 @@ SpawnDoorRoutine:
     and #$01        ; A = door side (0=right, 1=left)
     tay
     jsr GetNameTable                ;($EB85)
-    sta ObjectHi,x
+    sta ObjHi,x
     lda DoorXs,y    ; get door's X coordinate
-    sta ObjectX,x
+    sta ObjX,x
     lda #$68        ; door Y coord is always #$68
-    sta ObjectY,x
+    sta ObjY,x
     lda LEBFE,y
     tay
     jsr GetNameTable                ;($EB85)
@@ -7565,13 +7567,13 @@ SpawnElevatorRoutine:
     lda ($00),y
     sta $032F
     ldy #$83
-    sty ObjectY+$20       ; elevator Y coord
+    sty ObjY+$20       ; elevator Y coord
     lda #$80
-    sta ObjectX+$20       ; elevator X coord
+    sta ObjX+$20       ; elevator X coord
     jsr GetNameTable                ;($EB85)
-    sta ObjectHi+$20       ; high Y coord
+    sta ObjHi+$20       ; high Y coord
     lda #$23
-    sta AnimFrame+$20       ; elevator frame
+    sta ObjAnimFrame+$20       ; elevator frame
     inc ElevatorStatus              ;1
 Lx234:
     lda #$02
@@ -7710,7 +7712,7 @@ LEC9B:
     jsr LED7A
     tya
     sec
-    sbc ObjectHi+$20
+    sbc ObjHi+$20
     bne Lx246
         sta ElevatorStatus
     Lx246:
@@ -7769,7 +7771,7 @@ LED65:
     Lx252:
         lda ObjAction,x
         beq Lx253
-        lda ObjectOnScreen,x
+        lda ObjOnScreen,x
         bne Lx253
         sta ObjAction,x
     Lx253:
@@ -7782,7 +7784,7 @@ LED7A:
     cmp #$05
     bcc RTS_X254
     tya
-    eor ObjectHi,x
+    eor ObjHi,x
     lsr
     bcs RTS_X254
     sta ObjAction,x
@@ -8461,11 +8463,11 @@ LF162:
     jmp LF193
 
 GetObject0CoordData:
-    lda ObjectY,x
+    lda ObjY,x
     sta $07
-    lda ObjectX,x
+    lda ObjX,x
     sta $09
-    lda ObjectHi,x
+    lda ObjHi,x
 
 LF17F:
     eor PPUCTRL_ZP
@@ -8474,11 +8476,11 @@ LF17F:
     rts
 
 GetObject1CoordData:
-    lda ObjectY,y
+    lda ObjY,y
     sta $06
-    lda ObjectX,y
+    lda ObjX,y
     sta $08
-    lda ObjectHi,y
+    lda ObjHi,y
 
 LF193:
     eor PPUCTRL_ZP
@@ -9318,7 +9320,7 @@ LF6B9:
     bcs Lx336
 Lx334:
     lda EnXRoomPos,x
-    cmp ObjectX
+    cmp ObjX
     bne Lx335
         inc $82
     Lx335:
@@ -9344,7 +9346,7 @@ Lx337:
     bcs Lx340
     Lx338:
         lda EnYRoomPos,x
-        cmp ObjectY
+        cmp ObjY
         bne Lx339
             inc $82
             inc $82
@@ -9381,7 +9383,7 @@ ReadTableAt968B: ; LF74B
 LF752:
     lda EnNameTable,x
     tay
-    eor ObjectHi
+    eor ObjHi
     lsr
     rts
 
@@ -9407,16 +9409,16 @@ LF75B:
     lsr
     sta $02
     sty $06
-    lda ObjectY
+    lda ObjY
     sta $00
     ldy EnYRoomPos,x
     lda EnData05,x
     bmi Lx343
-        ldy ObjectX
+        ldy ObjX
         sty $00
         ldy EnXRoomPos,x
     Lx343:
-    lda ObjectHi
+    lda ObjHi
     lsr
     ror $00
     lda EnNameTable,x
@@ -10184,7 +10186,7 @@ LFCC1:
     cmp #$02
     bcs Lx392
     ldy $08
-    cpy ObjectY
+    cpy ObjY
     bcc Lx392
     ora #$02
     sta $B4,x
@@ -10225,7 +10227,7 @@ LFD08:
     lda #$00
     sta $B5,x
     tay
-    lda ObjectX
+    lda ObjX
     sec
     sbc $B2,x
     bpl Lx398

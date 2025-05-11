@@ -304,11 +304,11 @@ Table99D8:
 
 StoreSamusPositionToTemp:
     ; put Samus position as parameters to CommonJump_0D
-    lda ObjectX
+    lda ObjX
     sta $09
-    lda ObjectY
+    lda ObjY
     sta $08
-    lda ObjectHi
+    lda ObjHi
     sta $0B
     rts
 

@@ -351,11 +351,11 @@ MoreCrosshairs:
 L81DB:
     inc TitleRoutine                ;ChangeIntroNameTable is next routine to run.
     lda #$60                        ;
-    sta ObjectY                     ;
+    sta ObjY                        ;
     lda #$7C                        ;These values are written into memory, but they are-->
-    sta ObjectX                     ;not used later in the title routine.  This is the-->
-    lda AnimResetIndex              ;remnants of some abandoned code.
-    sta AnimIndex                   ;
+    sta ObjX                        ;not used later in the title routine.  This is the-->
+    lda ObjAnimResetIndex           ;remnants of some abandoned code.
+    sta ObjAnimIndex                ;
     rts
 
 ;Unused intro routine.
@@ -381,12 +381,12 @@ UnusedIntroRoutine2:
     bne RTS_822D
     lda #$00
     sta ObjAction
-    lda #$0B                        
-    sta AnimResetIndex              
+    lda #$0B
+    sta ObjAnimResetIndex
     lda #$0C
-    sta AnimIndex
+    sta ObjAnimIndex
     lda #$07
-    sta AnimFrame
+    sta ObjAnimFrame
     lda #$08
     sta Timer3
     lda #$00
@@ -2329,10 +2329,10 @@ InitializeGame:
     sty SpritePagePos               ;
     sty PageIndex                   ;Clear object data.
     sty ObjectCntrl                 ;
-    sty ObjectHi                    ;
+    sty ObjHi                       ;
     jsr SilenceMusic                ;($CB8E)Turn off music.
     lda #$5A                        ;
-    sta AnimFrame                   ;Set animframe index. changed by initializing routines.
+    sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
     ldx #$01                        ;x is the index into the position tables below.
     lda InArea                      ;Load starting area.
     and #$0F                        ;
@@ -2340,9 +2340,9 @@ InitializeGame:
         dex                             ;Starting in Brinstar. Get forst item in each table.
     L92F9:
     lda RestartYPosTbl,x            ;
-    sta ObjectY                     ;Set Samus restart y position on screen.
+    sta ObjY                        ;Set Samus restart y position on screen.
     lda RestartXPosTbl,x            ;
-    sta ObjectX                     ;Set Samus restart x position on screen.
+    sta ObjX                        ;Set Samus restart x position on screen.
     inc SamusStat02                 ;The combination of SamusStat02 and 03 keep track of how-->
     bne L930D                       ;many times Samus has died and beaten the game as they are-->
         inc SamusStat03                 ;incremented every time this routine is run, but they are-->

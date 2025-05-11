@@ -395,18 +395,18 @@ SpriteRAM              = $0200   ;$0200 thru $02FF
 ObjAction              = $0300   ;Status of object. 0=object slot not in use.
 ObjRadY                = $0301   ;Distance in pixels from object center to top or bottom.
 ObjRadX                = $0302   ;Distance in pixels from object center to left or right side.
-AnimFrame              = $0303   ;*2 = Index into FramePtrTable for current animation.
-AnimDelay              = $0304   ;Number of frames to delay between animation frames.
-AnimResetIndex         = $0305   ;Restart index-1 when AnimIndex finished with last frame.
-AnimIndex              = $0306   ;Current index into ObjectAnimIndexTbl.
+ObjAnimFrame           = $0303   ;*2 = Index into FramePtrTable for current animation.
+ObjAnimDelay           = $0304   ;Number of frames to delay between animation frames.
+ObjAnimResetIndex      = $0305   ;Restart index-1 when AnimIndex finished with last frame.
+ObjAnimIndex           = $0306   ;Current index into ObjectAnimIndexTbl.
 SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
 ObjVertSpeed           = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
 ObjHorzSpeed           = $0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
 SamusHit               = $030A   ;Samus hit by enemy.
-ObjectOnScreen         = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
-ObjectHi               = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ObjectY                = $030D   ;Object y position in room(not actual screen position).
-ObjectX                = $030E   ;Object x position in room(not actual screen position).
+ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
+ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
+ObjY                   = $030D   ;Object y position in room(not actual screen position).
+ObjX                   = $030E   ;Object x position in room(not actual screen position).
 SamusJumpDsplcmnt      = $030F   ;Number of pixels vertically displaced from jump point.
 SamusYSubPixel         = $0310   ;Vertical movement counter. Exponential change in speed.
 SamusXSubPixel         = $0311   ;Horizontal movement counter. Exponential change in speed.

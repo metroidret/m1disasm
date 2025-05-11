@@ -736,15 +736,15 @@ RTS_9DF1:
 
 ;-------------------------------------------------------------------------------
 L9DF2:
-    lda ObjectHi
+    lda ObjHi
     eor MotherBrainNameTable
     bne RTS_9DF1
-    lda ObjectX
+    lda ObjX
     sec
     sbc #$48
     cmp #$2F
     bcs RTS_9DF1
-    lda ObjectY
+    lda ObjY
     sec
     sbc #$80
     bpl L9E0E
@@ -971,18 +971,18 @@ L9F69:
     lda #$03
     sta ObjAction,x
     lda MotherBrainNameTable
-    sta ObjectHi,x
+    sta ObjHi,x
     lda #$10
-    sta ObjectX,x
+    sta ObjX,x
     lda #$68
-    sta ObjectY,x
+    sta ObjY,x
     lda #$55
-    sta AnimResetIndex,x
-    sta AnimIndex,x
+    sta ObjAnimResetIndex,x
+    sta ObjAnimIndex,x
     lda #$00
-    sta AnimDelay,x
+    sta ObjAnimDelay,x
     lda #$F7
-    sta AnimFrame,x
+    sta ObjAnimFrame,x
     lda #$10
     sta TileAnimFrame
     lda #$40

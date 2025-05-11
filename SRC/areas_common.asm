@@ -1042,9 +1042,9 @@ XorEnData05: ; L856B
 
 SamusEnterDoor:
     lda DoorStatus                  ;The code determines if Samus has entered a door if the-->
-    bne RTS_8B6C                       ;door status is 0, but door data information has been-->
+    bne RTS_8B6C                    ;door status is 0, but door data information has been-->
     ldy SamusDoorData               ;written. If both conditions are met, Samus has just-->
-    beq RTS_8B6C                       ;entered a door.
+    beq RTS_8B6C                    ;entered a door.
     sta CurrentMissilePickups       ;
     sta CurrentEnergyPickups        ;Reset current missile and energy power-up counters.
     lda RandomNumber1               ;
@@ -1053,28 +1053,28 @@ SamusEnterDoor:
     asl                             ;
     ora #$40                        ;*2 for energy pickups and set bit 6(128 max, 64 min).
     sta MaxEnergyPickup             ;
-    lda PPUCTRL_ZP                   ;
+    lda PPUCTRL_ZP                  ;
     eor #$01                        ;
     and #$01                        ;Erase name table door data for new room.
     tay                             ;
     lsr                             ;
-    sta DoorOnNameTable3,y                     ;
+    sta DoorOnNameTable3,y          ;
     lda ScrollDir                   ;
     and #$02                        ;Is Samus scrolling horizontally?-->
     bne L8B4B                       ;If so, branch.
         ldx #$04                        ;Samus currently scrolling vertically.
         lda ScrollY                     ;Is room centered on screen?-->
         beq L8B6D                       ;If so, branch.
-        lda PPUCTRL_ZP                         ;
-        eor ObjectHi                    ;Get inverse of Samus' current nametable.
+        lda PPUCTRL_ZP                  ;
+        eor ObjHi                       ;Get inverse of Samus' current nametable.
         lsr                             ;
-        bcc SetDoorEntryInfo                       ;If Samus is on nametable 3, branch.
+        bcc SetDoorEntryInfo            ;If Samus is on nametable 3, branch.
         bcs L8B52                       ;If Samus is on nametable 0, branch to decrement x.
 
     L8B4B:
         ldx #$02                        ;Samus is currently scrolling horizontally.
-        lda ObjectX                     ;Is Samus entering a left hand door?-->
-        bpl SetDoorEntryInfo                       ;If so, branch.
+        lda ObjX                        ;Is Samus entering a left hand door?-->
+        bpl SetDoorEntryInfo            ;If so, branch.
     L8B52:
     dex                             ;
 
@@ -1328,7 +1328,7 @@ WriteDoorBGTiles_Common:
     lda DoorXTable,y
     sta $03
     ; door nametable
-    lda ObjectHi,x
+    lda ObjHi,x
     sta $0B
     ; call
     jsr MakeCartRAMPtr

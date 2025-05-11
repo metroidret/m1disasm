@@ -17,7 +17,7 @@ RioAIRoutine:
 
     lda EnYRoomPos,x
     sec
-    sbc ObjectY ; Compare with Samus' Y position
+    sbc ObjY ; Compare with Samus' Y position
     bpl RioBranch
         jsr TwosComplement_
     RioBranch:

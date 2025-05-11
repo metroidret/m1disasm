@@ -3,17 +3,17 @@ RinkaAIRoutine:
     cpy #$02
     bne L9AB0
     dey
-    cpy $81
+    cpy EnemyMovementPtr
     bne L9AB0
     lda #$00
     jsr ClearRinkaSomething ; in metroid.asm
-    sta $6AFC,x
-    sta $6AFD,x
-    lda ObjectX
+    sta EnData18,x
+    sta EnData19,x
+    lda ObjX
     sec
     sbc EnXRoomPos,x
     sta $01
-    lda $0405,x
+    lda EnData05,x
     pha
     lsr
     pha
@@ -22,7 +22,7 @@ RinkaAIRoutine:
         sbc $01
         sta $01
     L9A5A:
-    lda ObjectY
+    lda ObjY
     sec
     sbc EnYRoomPos,x
     sta $00
@@ -55,8 +55,8 @@ L9A7A:
     pha
     bcc L9A9B
         lda #$00
-        sbc $0407,x
-        sta $0407,x
+        sbc EnData07,x
+        sta EnData07,x
         lda #$00
         sbc EnData03,x
         sta EnData03,x
@@ -66,26 +66,26 @@ L9A7A:
     lsr
     bcc L9AB0
     lda #$00
-    sbc $0406,x
-    sta $0406,x
+    sbc EnCounter,x
+    sta EnCounter,x
     lda #$00
     sbc EnData02,x
     sta EnData02,x
 L9AB0:
-    lda $0405,x
+    lda EnData05,x
     asl
     bmi L9AF4
-        lda $0406,x
+        lda EnCounter,x
         clc
-        adc $6AFC,x
-        sta $6AFC,x
+        adc EnData18,x
+        sta EnData18,x
         lda EnData02,x
         adc #$00
         sta $04
-        lda $0407,x
+        lda EnData07,x
         clc
-        adc $6AFD,x
-        sta $6AFD,x
+        adc EnData19,x
+        sta EnData19,x
         lda EnData03,x
         adc #$00
         sta $05
@@ -112,14 +112,14 @@ L9AF9:
     sta EnData02,x
     pla
     jsr Amul16_
-    sta $0406,x
+    sta EnCounter,x
     lda $01
     pha
     jsr Adiv16_
     sta EnData03,x
     pla
     jsr Amul16_
-    sta $0407,x
+    sta EnData07,x
     rts
 
     lsr

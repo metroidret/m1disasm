@@ -9,7 +9,7 @@ PipeBugAIRoutine:
     lda EnData1A,x      ;
     bne PipeBugBranchB  ;
 
-    lda ObjectY         ;\
+    lda ObjY            ;\
     sec                 ;|
     sbc EnYRoomPos,x    ;| - branch if (SamusY - PipeBugY) >= 0x40
     cmp #$40            ;|
