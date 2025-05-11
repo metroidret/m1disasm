@@ -79,13 +79,22 @@ AreaPointers:
     .word RmPtrTbl                  ;($A1D5)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A21F)Beginning of structure pointer table.
     .word MacroDefs                 ;($AC32)Beginning of macro definitions.
-    .word EnemyFramePtrTbl1         ;($9CF7)Address table into enemy animation data. Two-->
-    .word EnemyFramePtrTbl2         ;($9DF7)tables needed to accommodate all entries.
-    .word EnemyPlacePtrTbl          ;($9E25)Pointers to enemy frame placement data.
+    .word EnFramePtrTable1         ;($9CF7)Address table into enemy animation data. Two-->
+    .word EnFramePtrTable2         ;($9DF7)tables needed to accommodate all entries.
+    .word EnPlacePtrTable          ;($9E25)Pointers to enemy frame placement data.
     .word EnemyAnimIndexTbl         ;($9C86)Index to values in addr tables for enemy animations.
 
-L95A8:  .byte $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60
-L95B8:  .byte $EA, $EA, $60, $EA, $EA, $60, $EA, $EA, $60, $EA, $EA
+; Tourian-specific jump table (dummied out in other banks)
+;  Each line is RTS, NOP, NOP in this bank
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
+    .byte $60, $EA, $EA
 
 AreaRoutine:
     jmp L9C49                       ;Area specific routine.
@@ -469,276 +478,955 @@ L9C81:  .byte $22, $78, $79, $7A, $7B
 ;-----------------------------------[ Enemy animation data tables ]----------------------------------
 
 EnemyAnimIndexTbl:
-L9C86:  .byte $00, $01, $FF
+L9C86:  .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-L9C89:  .byte $02, $FF
+L9C89:  .byte _id_EnFrame02, $FF
 
-L9C8B:  .byte $19, $1A, $FF
+L9C8B:  .byte _id_EnFrame19, _id_EnFrame1A, $FF
 
-L9C8E:  .byte $1A, $1B, $FF
+L9C8E:  .byte _id_EnFrame1A, _id_EnFrame1B, $FF
 
-L9C91:  .byte $1C, $1D, $FF
+L9C91:  .byte _id_EnFrame1C, _id_EnFrame1D, $FF
 
-L9C94:  .byte $1D, $1E, $FF
+L9C94:  .byte _id_EnFrame1D, _id_EnFrame1E, $FF
 
-L9C97:  .byte $22, $23, $24, $FF
+L9C97:  .byte _id_EnFrame22, _id_EnFrame23, _id_EnFrame24, $FF
 
-L9C9B:  .byte $1F, $20, $21, $FF
+L9C9B:  .byte _id_EnFrame1F, _id_EnFrame20, _id_EnFrame21, $FF
 
-L9C9F:  .byte $22, $FF
+L9C9F:  .byte _id_EnFrame22, $FF
 
-L9CA1:  .byte $1F, $FF
+L9CA1:  .byte _id_EnFrame1F, $FF
 
-L9CA3:  .byte $23, $04, $FF
+L9CA3:  .byte _id_EnFrame23, _id_EnFrame04, $FF
 
-L9CA6:  .byte $20, $03, $FF
+L9CA6:  .byte _id_EnFrame20, _id_EnFrame03, $FF
 
-L9CA9:  .byte $27, $28, $29, $FF
+L9CA9:  .byte _id_EnFrame27, _id_EnFrame28, _id_EnFrame29, $FF
 
-L9CAD:  .byte $37, $FF
+L9CAD:  .byte _id_EnFrame37, $FF
 
-L9CAF:  .byte $38, $FF
+L9CAF:  .byte _id_EnFrame38, $FF
 
-L9CB1:  .byte $39, $FF
+L9CB1:  .byte _id_EnFrame39, $FF
 
-L9CB3:  .byte $3A, $FF
+L9CB3:  .byte _id_EnFrame3A, $FF
 
-L9CB5:  .byte $3B, $FF
+L9CB5:  .byte _id_EnFrame3B, $FF
 
-L9CB7:  .byte $3C, $FF
+L9CB7:  .byte _id_EnFrame3C, $FF
 
-L9CB9:  .byte $3D, $FF
+L9CB9:  .byte _id_EnFrame3D, $FF
 
-L9CBB:  .byte $58, $59, $FF
+L9CBB:  .byte _id_EnFrame58, _id_EnFrame59, $FF
 
-L9CBE:  .byte $5A, $5B, $FF
+L9CBE:  .byte _id_EnFrame5A, _id_EnFrame5B, $FF
 
-L9CC1:  .byte $5C, $5D, $FF
+L9CC1:  .byte _id_EnFrame5C, _id_EnFrame5D, $FF
 
-L9CC4:  .byte $5E, $5F, $FF
+L9CC4:  .byte _id_EnFrame5E, _id_EnFrame5F, $FF
 
-L9CC7:  .byte $60, $FF
+L9CC7:  .byte _id_EnFrame60, $FF
 
-L9CC9:  .byte $61, $F7, $62, $F7, $FF
+L9CC9:  .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
 
-L9CCE:  .byte $66, $67, $FF
+L9CCE:  .byte _id_EnFrame66, _id_EnFrame67, $FF
 
-L9CD1:  .byte $69, $6A, $FF
+L9CD1:  .byte _id_EnFrame69, _id_EnFrame6A, $FF
 
-L9CD4:  .byte $68, $FF
+L9CD4:  .byte _id_EnFrame68, $FF
 
-L9CD6:  .byte $6B, $FF
+L9CD6:  .byte _id_EnFrame6B, $FF
 
-L9CD8:  .byte $66, $FF
+L9CD8:  .byte _id_EnFrame66, $FF
 
-L9CDA:  .byte $69, $FF
+L9CDA:  .byte _id_EnFrame69, $FF
 
-L9CDC:  .byte $6C, $FF
+L9CDC:  .byte _id_EnFrame6C, $FF
 
-L9CDE:  .byte $6D, $FF
+L9CDE:  .byte _id_EnFrame6D, $FF
 
-L9CE0:  .byte $6F, $70, $71, $6E, $FF
+L9CE0:  .byte _id_EnFrame6F, _id_EnFrame70, _id_EnFrame71, _id_EnFrame6E, $FF
 
-L9CE5:  .byte $73, $74, $75, $72, $FF
+L9CE5:  .byte _id_EnFrame73, _id_EnFrame74, _id_EnFrame75, _id_EnFrame72, $FF
 
-L9CEA:  .byte $8F, $90, $FF
+L9CEA:  .byte _id_EnFrame8F, _id_EnFrame90, $FF
 
-L9CED:  .byte $91, $92, $FF
+L9CED:  .byte _id_EnFrame91, _id_EnFrame92, $FF
 
-L9CF0:  .byte $93, $94, $FF
+L9CF0:  .byte _id_EnFrame93, _id_EnFrame94, $FF
 
-L9CF3:  .byte $95, $FF
+L9CF3:  .byte _id_EnFrame95, $FF
 
-L9CF5:  .byte $96, $FF
+L9CF5:  .byte _id_EnFrame96, $FF
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
-EnemyFramePtrTbl1:
-    .word L9ED9, L9EDE, L9EE3, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
-    .word L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
-    .word L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8, L9EE8
-    .word L9EE8, L9EE8, L9EF6, L9F04, L9F10, L9F1E, L9F2C, L9F38
-    .word L9F41, L9F4B, L9F55, L9F5E, L9F68, L9F72, L9F72, L9F72
-    .word L9F80, L9F87, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90
-    .word L9F90, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90, L9F90
-    .word L9FA4, L9FB8, L9FC3, L9FCE, L9FD7, L9FE0, L9FEB, L9FEB
-    .word L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB
-    .word L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB
-    .word L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB, L9FEB
-    .word L9FEB, L9FF3, L9FFB, LA003, LA00B, LA013, LA01B, LA023
-    .word LA02B, LA033, LA041, LA05B, LA05B, LA05B, LA05B, LA063
-    .word LA06B, LA073, LA07B, LA083, LA08B, LA093, LA09B, LA0A3
-    .word LA0AB, LA0B3, LA0BB, LA0C3, LA0CB, LA0D3, LA0DB, LA0DB
-    .word LA0DB, LA0DB, LA0DB, LA0DB, LA0DB, LA0DB, LA0DB, LA0DB
+EnFramePtrTable1:
+    PtrTableEntry EnFramePtrTable1, EnFrame00
+    PtrTableEntry EnFramePtrTable1, EnFrame01
+    PtrTableEntry EnFramePtrTable1, EnFrame02
+    PtrTableEntry EnFramePtrTable1, EnFrame03
+    PtrTableEntry EnFramePtrTable1, EnFrame04
+    PtrTableEntry EnFramePtrTable1, EnFrame05
+    PtrTableEntry EnFramePtrTable1, EnFrame06
+    PtrTableEntry EnFramePtrTable1, EnFrame07
+    PtrTableEntry EnFramePtrTable1, EnFrame08
+    PtrTableEntry EnFramePtrTable1, EnFrame09
+    PtrTableEntry EnFramePtrTable1, EnFrame0A
+    PtrTableEntry EnFramePtrTable1, EnFrame0B
+    PtrTableEntry EnFramePtrTable1, EnFrame0C
+    PtrTableEntry EnFramePtrTable1, EnFrame0D
+    PtrTableEntry EnFramePtrTable1, EnFrame0E
+    PtrTableEntry EnFramePtrTable1, EnFrame0F
+    PtrTableEntry EnFramePtrTable1, EnFrame10
+    PtrTableEntry EnFramePtrTable1, EnFrame11
+    PtrTableEntry EnFramePtrTable1, EnFrame12
+    PtrTableEntry EnFramePtrTable1, EnFrame13
+    PtrTableEntry EnFramePtrTable1, EnFrame14
+    PtrTableEntry EnFramePtrTable1, EnFrame15
+    PtrTableEntry EnFramePtrTable1, EnFrame16
+    PtrTableEntry EnFramePtrTable1, EnFrame17
+    PtrTableEntry EnFramePtrTable1, EnFrame18
+    PtrTableEntry EnFramePtrTable1, EnFrame19
+    PtrTableEntry EnFramePtrTable1, EnFrame1A
+    PtrTableEntry EnFramePtrTable1, EnFrame1B
+    PtrTableEntry EnFramePtrTable1, EnFrame1C
+    PtrTableEntry EnFramePtrTable1, EnFrame1D
+    PtrTableEntry EnFramePtrTable1, EnFrame1E
+    PtrTableEntry EnFramePtrTable1, EnFrame1F
+    PtrTableEntry EnFramePtrTable1, EnFrame20
+    PtrTableEntry EnFramePtrTable1, EnFrame21
+    PtrTableEntry EnFramePtrTable1, EnFrame22
+    PtrTableEntry EnFramePtrTable1, EnFrame23
+    PtrTableEntry EnFramePtrTable1, EnFrame24
+    PtrTableEntry EnFramePtrTable1, EnFrame25
+    PtrTableEntry EnFramePtrTable1, EnFrame26
+    PtrTableEntry EnFramePtrTable1, EnFrame27
+    PtrTableEntry EnFramePtrTable1, EnFrame28
+    PtrTableEntry EnFramePtrTable1, EnFrame29
+    PtrTableEntry EnFramePtrTable1, EnFrame2A
+    PtrTableEntry EnFramePtrTable1, EnFrame2B
+    PtrTableEntry EnFramePtrTable1, EnFrame2C
+    PtrTableEntry EnFramePtrTable1, EnFrame2D
+    PtrTableEntry EnFramePtrTable1, EnFrame2E
+    PtrTableEntry EnFramePtrTable1, EnFrame2F
+    PtrTableEntry EnFramePtrTable1, EnFrame30
+    PtrTableEntry EnFramePtrTable1, EnFrame31
+    PtrTableEntry EnFramePtrTable1, EnFrame32
+    PtrTableEntry EnFramePtrTable1, EnFrame33
+    PtrTableEntry EnFramePtrTable1, EnFrame34
+    PtrTableEntry EnFramePtrTable1, EnFrame35
+    PtrTableEntry EnFramePtrTable1, EnFrame36
+    PtrTableEntry EnFramePtrTable1, EnFrame37
+    PtrTableEntry EnFramePtrTable1, EnFrame38
+    PtrTableEntry EnFramePtrTable1, EnFrame39
+    PtrTableEntry EnFramePtrTable1, EnFrame3A
+    PtrTableEntry EnFramePtrTable1, EnFrame3B
+    PtrTableEntry EnFramePtrTable1, EnFrame3C
+    PtrTableEntry EnFramePtrTable1, EnFrame3D
+    PtrTableEntry EnFramePtrTable1, EnFrame3E
+    PtrTableEntry EnFramePtrTable1, EnFrame3F
+    PtrTableEntry EnFramePtrTable1, EnFrame40
+    PtrTableEntry EnFramePtrTable1, EnFrame41
+    PtrTableEntry EnFramePtrTable1, EnFrame42
+    PtrTableEntry EnFramePtrTable1, EnFrame43
+    PtrTableEntry EnFramePtrTable1, EnFrame44
+    PtrTableEntry EnFramePtrTable1, EnFrame45
+    PtrTableEntry EnFramePtrTable1, EnFrame46
+    PtrTableEntry EnFramePtrTable1, EnFrame47
+    PtrTableEntry EnFramePtrTable1, EnFrame48
+    PtrTableEntry EnFramePtrTable1, EnFrame49
+    PtrTableEntry EnFramePtrTable1, EnFrame4A
+    PtrTableEntry EnFramePtrTable1, EnFrame4B
+    PtrTableEntry EnFramePtrTable1, EnFrame4C
+    PtrTableEntry EnFramePtrTable1, EnFrame4D
+    PtrTableEntry EnFramePtrTable1, EnFrame4E
+    PtrTableEntry EnFramePtrTable1, EnFrame4F
+    PtrTableEntry EnFramePtrTable1, EnFrame50
+    PtrTableEntry EnFramePtrTable1, EnFrame51
+    PtrTableEntry EnFramePtrTable1, EnFrame52
+    PtrTableEntry EnFramePtrTable1, EnFrame53
+    PtrTableEntry EnFramePtrTable1, EnFrame54
+    PtrTableEntry EnFramePtrTable1, EnFrame55
+    PtrTableEntry EnFramePtrTable1, EnFrame56
+    PtrTableEntry EnFramePtrTable1, EnFrame57
+    PtrTableEntry EnFramePtrTable1, EnFrame58
+    PtrTableEntry EnFramePtrTable1, EnFrame59
+    PtrTableEntry EnFramePtrTable1, EnFrame5A
+    PtrTableEntry EnFramePtrTable1, EnFrame5B
+    PtrTableEntry EnFramePtrTable1, EnFrame5C
+    PtrTableEntry EnFramePtrTable1, EnFrame5D
+    PtrTableEntry EnFramePtrTable1, EnFrame5E
+    PtrTableEntry EnFramePtrTable1, EnFrame5F
+    PtrTableEntry EnFramePtrTable1, EnFrame60
+    PtrTableEntry EnFramePtrTable1, EnFrame61
+    PtrTableEntry EnFramePtrTable1, EnFrame62
+    PtrTableEntry EnFramePtrTable1, EnFrame63
+    PtrTableEntry EnFramePtrTable1, EnFrame64
+    PtrTableEntry EnFramePtrTable1, EnFrame65
+    PtrTableEntry EnFramePtrTable1, EnFrame66
+    PtrTableEntry EnFramePtrTable1, EnFrame67
+    PtrTableEntry EnFramePtrTable1, EnFrame68
+    PtrTableEntry EnFramePtrTable1, EnFrame69
+    PtrTableEntry EnFramePtrTable1, EnFrame6A
+    PtrTableEntry EnFramePtrTable1, EnFrame6B
+    PtrTableEntry EnFramePtrTable1, EnFrame6C
+    PtrTableEntry EnFramePtrTable1, EnFrame6D
+    PtrTableEntry EnFramePtrTable1, EnFrame6E
+    PtrTableEntry EnFramePtrTable1, EnFrame6F
+    PtrTableEntry EnFramePtrTable1, EnFrame70
+    PtrTableEntry EnFramePtrTable1, EnFrame71
+    PtrTableEntry EnFramePtrTable1, EnFrame72
+    PtrTableEntry EnFramePtrTable1, EnFrame73
+    PtrTableEntry EnFramePtrTable1, EnFrame74
+    PtrTableEntry EnFramePtrTable1, EnFrame75
+    PtrTableEntry EnFramePtrTable1, EnFrame76
+    PtrTableEntry EnFramePtrTable1, EnFrame77
+    PtrTableEntry EnFramePtrTable1, EnFrame78
+    PtrTableEntry EnFramePtrTable1, EnFrame79
+    PtrTableEntry EnFramePtrTable1, EnFrame7A
+    PtrTableEntry EnFramePtrTable1, EnFrame7B
+    PtrTableEntry EnFramePtrTable1, EnFrame7C
+    PtrTableEntry EnFramePtrTable1, EnFrame7D
+    PtrTableEntry EnFramePtrTable1, EnFrame7E
+    PtrTableEntry EnFramePtrTable1, EnFrame7F
 
-EnemyFramePtrTbl2:
-    .word LA0DB, LA0E3, LA0E8, LA0E8, LA0E8, LA0E8, LA0E8, LA0E8
-    .word LA0E8, LA0E8, LA0ED, LA0ED, LA0ED, LA0ED, LA0ED, LA0ED
-    .word LA0F7, LA101, LA111, LA121, LA131, LA141, LA14B
+EnFramePtrTable2:
+    PtrTableEntry EnFramePtrTable1, EnFrame80
+    PtrTableEntry EnFramePtrTable1, EnFrame81
+    PtrTableEntry EnFramePtrTable1, EnFrame82
+    PtrTableEntry EnFramePtrTable1, EnFrame83
+    PtrTableEntry EnFramePtrTable1, EnFrame84
+    PtrTableEntry EnFramePtrTable1, EnFrame85
+    PtrTableEntry EnFramePtrTable1, EnFrame86
+    PtrTableEntry EnFramePtrTable1, EnFrame87
+    PtrTableEntry EnFramePtrTable1, EnFrame88
+    PtrTableEntry EnFramePtrTable1, EnFrame89
+    PtrTableEntry EnFramePtrTable1, EnFrame8A
+    PtrTableEntry EnFramePtrTable1, EnFrame8B
+    PtrTableEntry EnFramePtrTable1, EnFrame8C
+    PtrTableEntry EnFramePtrTable1, EnFrame8D
+    PtrTableEntry EnFramePtrTable1, EnFrame8E
+    PtrTableEntry EnFramePtrTable1, EnFrame8F
+    PtrTableEntry EnFramePtrTable1, EnFrame90
+    PtrTableEntry EnFramePtrTable1, EnFrame91
+    PtrTableEntry EnFramePtrTable1, EnFrame92
+    PtrTableEntry EnFramePtrTable1, EnFrame93
+    PtrTableEntry EnFramePtrTable1, EnFrame94
+    PtrTableEntry EnFramePtrTable1, EnFrame95
+    PtrTableEntry EnFramePtrTable1, EnFrame96
 
-EnemyPlacePtrTbl:
-    .word L9E45, L9E47, L9E5F, L9E77, L9E77, L9E77, L9E87, L9E93
-    .word L9E9B, L9EA7, L9EA7, L9EC7, L9ED5, L9ED5, L9ED5, L9ED5
+EnPlacePtrTable:
+    PtrTableEntry EnPlacePtrTable, EnPlace0
+    PtrTableEntry EnPlacePtrTable, EnPlace1
+    PtrTableEntry EnPlacePtrTable, EnPlace2
+    PtrTableEntry EnPlacePtrTable, EnPlace3
+    PtrTableEntry EnPlacePtrTable, EnPlace4
+    PtrTableEntry EnPlacePtrTable, EnPlace5
+    PtrTableEntry EnPlacePtrTable, EnPlace6
+    PtrTableEntry EnPlacePtrTable, EnPlace7
+    PtrTableEntry EnPlacePtrTable, EnPlace8
+    PtrTableEntry EnPlacePtrTable, EnPlace9
+    PtrTableEntry EnPlacePtrTable, EnPlaceA
+    PtrTableEntry EnPlacePtrTable, EnPlaceB
+    PtrTableEntry EnPlacePtrTable, EnPlaceC
+    PtrTableEntry EnPlacePtrTable, EnPlaceD
+    PtrTableEntry EnPlacePtrTable, EnPlaceE
+    PtrTableEntry EnPlacePtrTable, EnPlaceF
 
 ;------------------------------[ Enemy sprite placement data tables ]--------------------------------
 
-L9E45:  .byte $FC, $FC
+EnPlace0:
+    .byte $FC, $FC
 
-L9E47:  .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85, $F4, $F8, $F4, $00
-L9E57:  .byte $FC, $F8, $FC, $00, $04, $F8, $04, $00
+EnPlace1:
+    .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
+    .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
-L9E5F:  .byte $F0, $F4, $F0, $FC, $F0, $04, $F8, $F4, $F8, $FC, $F8, $04, $00, $F4, $00, $FC
-L9E6F:  .byte $00, $04, $08, $F4, $08, $FC, $08, $04
+EnPlace2:
+    .byte $F0, $F4, $F0, $FC, $F0, $04, $F8, $F4, $F8, $FC, $F8, $04, $00, $F4, $00, $FC
+    .byte $00, $04, $08, $F4, $08, $FC, $08, $04
 
-L9E77:  .byte $F8, $F4, $00, $F4, $F8, $FC, $00, $FC, $F4, $FC, $FC, $FC, $F8, $04, $00, $04
+EnPlace3:
+EnPlace4:
+EnPlace5:
+    .byte $F8, $F4, $00, $F4, $F8, $FC, $00, $FC, $F4, $FC, $FC, $FC, $F8, $04, $00, $04
 
-L9E87:  .byte $02, $F4, $0A, $F4, $F8, $FC, $00, $FC, $02, $04, $0A, $04
+EnPlace6:
+    .byte $02, $F4, $0A, $F4, $F8, $FC, $00, $FC, $02, $04, $0A, $04
 
-L9E93:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
+EnPlace7:
+    .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
 
-L9E9B:  .byte $F4, $FC, $FC, $FC, $04, $FC, $FC, $04, $04, $04, $0C, $FC
+EnPlace8:
+    .byte $F4, $FC, $FC, $FC, $04, $FC, $FC, $04, $04, $04, $0C, $FC
 
-L9EA7:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0
-L9EB7:  .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $00, $08, $08
+EnPlace9:
+EnPlaceA:
+    .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0
+    .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $00, $08, $08
 
-L9EC7:  .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
+EnPlaceB:
+    .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
 
-L9ED5:  .byte $FC, $F8, $FC, $00
+EnPlaceC:
+EnPlaceD:
+EnPlaceE:
+EnPlaceF:
+    .byte $FC, $F8, $FC, $00
 
 ;Enemy frame drawing data.
 
-L9ED9:  .byte $00, $02, $02, $14, $FF
-
-L9EDE:  .byte $00, $02, $02, $24, $FF
-
-L9EE3:  .byte $00, $00, $00, $04, $FF
-
-L9EE8:  .byte $25, $08, $0A, $E2, $F2, $E3, $F3, $FE, $FE, $FD, $62, $E2, $F2, $FF
-
-L9EF6:  .byte $25, $08, $0A, $E4, $F2, $FE, $FE, $E3, $F3, $FD, $62, $E4, $F2, $FF
-
-L9F04:  .byte $26, $08, $0A, $F4, $F2, $E3, $F3, $FD, $62, $F4, $F2, $FF
-
-L9F10:  .byte $A5, $08, $0A, $E2, $F2, $E3, $F3, $FE, $FE, $FD, $E2, $E2, $F2, $FF
-
-L9F1E:  .byte $A5, $08, $0A, $E4, $F2, $FE, $FE, $E3, $F3, $FD, $E2, $E4, $F2, $FF
-
-L9F2C:  .byte $A6, $08, $0A, $F4, $F2, $E3, $F3, $FD, $E2, $F4, $F2, $FF
-
-L9F38:  .byte $27, $06, $08, $FC, $04, $00, $C0, $C1, $FF
-
-L9F41:  .byte $27, $06, $08, $E0, $E1, $FD, $A2, $E0, $E1, $FF
-
-L9F4B:  .byte $27, $06, $08, $F0, $F1, $FD, $A2, $F0, $F1, $FF
-
-L9F55:  .byte $67, $06, $08, $FC, $04, $00, $C0, $C1, $FF
-
-L9F5E:  .byte $67, $06, $08, $E0, $E1, $FD, $E2, $E0, $E1, $FF
-
-L9F68:  .byte $67, $06, $08, $F0, $F1, $FD, $E2, $F0, $F1, $FF
-
-L9F72:  .byte $28, $0C, $08, $CE, $FC, $00, $FC, $DE, $EE, $DF, $FD, $62, $EE, $FF
-
-L9F80:  .byte $28, $0C, $08, $CE, $CF, $EF, $FF
-
-L9F87:  .byte $28, $0C, $08, $CE, $FD, $62, $CF, $EF, $FF
-
-L9F90:  .byte $21, $00, $00, $FC, $08, $FC, $E2, $FC, $00, $08, $E2, $FC, $00, $F8, $F2, $FC
-L9FA0:  .byte $00, $08, $F2, $FF
-
-L9FA4:  .byte $21, $00, $00, $FC, $00, $FC, $F2, $FC, $00, $08, $F2, $FC, $00, $F8, $E2, $FC
-L9FB4:  .byte $00, $08, $E2, $FF
-
-L9FB8:  .byte $21, $00, $00, $FC, $04, $00, $F1, $F0, $F1, $F0, $FF
-
-L9FC3:  .byte $21, $00, $00, $FC, $04, $00, $F0, $F1, $F0, $F1, $FF
-
-L9FCE:  .byte $21, $00, $00, $FC, $08, $00, $D1, $D0, $FF
-
-L9FD7:  .byte $21, $00, $00, $FC, $08, $00, $D0, $D1, $FF
-
-L9FE0:  .byte $21, $00, $00, $FC, $08, $00, $DE, $DF, $EE, $EE, $FF
-
-L9FEB:  .byte $27, $08, $08, $CC, $CD, $DC, $DD, $FF
-
-L9FF3:  .byte $67, $08, $08, $CC, $CD, $DC, $DD, $FF
-
-L9FFB:  .byte $27, $08, $08, $CA, $CB, $DA, $DB, $FF
-
-LA003:  .byte $A7, $08, $08, $CA, $CB, $DA, $DB, $FF
-
-LA00B:  .byte $A7, $08, $08, $CC, $CD, $DC, $DD, $FF
-
-LA013:  .byte $E7, $08, $08, $CC, $CD, $DC, $DD, $FF
-
-LA01B:  .byte $67, $08, $08, $CA, $CB, $DA, $DB, $FF
-
-LA023:  .byte $E7, $08, $08, $CA, $CB, $DA, $DB, $FF
-
-LA02B:  .byte $21, $00, $00, $CC, $CD, $DC, $DD, $FF
-
-LA033:  .byte $0A, $00, $00, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
-
-LA041:  .byte $0A, $00, $00, $FE, $FE, $FE, $FE, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD
-LA051:  .byte $E0, $4E, $3E, $3D, $FD, $A0, $4E, $3D, $3E, $FF
-
-LA05B:  .byte $2A, $08, $08, $C2, $C3, $D2, $D3, $FF
-
-LA063:  .byte $2A, $08, $08, $C2, $C4, $D2, $D4, $FF
-
-LA06B:  .byte $21, $08, $08, $C2, $C4, $D2, $D4, $FF
-
-LA073:  .byte $6A, $08, $08, $C2, $C3, $D2, $D3, $FF
-
-LA07B:  .byte $6A, $08, $08, $C2, $C4, $D2, $D4, $FF
-
-LA083:  .byte $61, $08, $08, $C2, $C4, $D2, $D4, $FF
-
-LA08B:  .byte $20, $02, $04, $FC, $FF
-
-LA090:  .byte $00, $F8, $FF
-
-LA093:  .byte $60, $02, $04, $FC, $FF
-
-LA098:  .byte $00, $F8, $FF
-
-LA09B:  .byte $20, $02, $02, $FC, $FE, $00, $D9, $FF
-
-LA0A3:  .byte $E0, $02, $02, $FC, $00, $02, $D8, $FF
-
-LA0AB:  .byte $E0, $02, $02, $FC, $02, $00, $D9, $FF
-
-LA0B3:  .byte $20, $02, $02, $FC, $00, $FE, $D8, $FF
-
-LA0BB:  .byte $60, $02, $02, $FC, $FE, $00, $D9, $FF
-
-LA0C3:  .byte $A0, $02, $02, $FC, $00, $FE, $D8, $FF
-
-LA0CB:  .byte $A0, $02, $02, $FC, $02, $00, $D9, $FF
-
-LA0D3:  .byte $60, $02, $02, $FC, $00, $02, $D8, $FF
-
-LA0DB:  .byte $06, $08, $04, $FE, $FE, $14, $24, $FF
-
-LA0E3:  .byte $00, $04, $04, $8A, $FF
-
-LA0E8:  .byte $00, $04, $04, $8A, $FF
-
-LA0ED:  .byte $3F, $04, $08, $FD, $03, $EC, $FD, $43, $EC, $FF
-
-LA0F7:  .byte $3F, $04, $08, $FD, $03, $ED, $FD, $43, $ED, $FF
-
-LA101:  .byte $22, $10, $0C, $C5, $C6, $C7, $D5, $D6, $D7, $E5, $E6, $E7, $F5, $F6, $F7, $FF
-
-LA111:  .byte $22, $10, $0C, $C5, $C6, $C7, $D5, $D6, $D7, $E5, $E6, $E7, $E8, $E9, $F9, $FF
-
-LA121:  .byte $62, $10, $0C, $C5, $C6, $C7, $D5, $D6, $D7, $E5, $E6, $E7, $F5, $F6, $F7, $FF
-
-LA131:  .byte $62, $10, $0C, $C5, $C6, $C7, $D5, $D6, $D7, $E5, $E6, $E7, $E8, $E9, $F9, $FF
-
-LA141:  .byte $21, $00, $00, $C5, $C7, $D5, $D7, $E5, $E7, $FF
-
-LA14B:  .byte $21, $00, $00, $C7, $C5, $D7, $D5, $E7, $E5, $FF
+EnFrame00:
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
+    .byte $14
+    .byte $FF
+
+EnFrame01:
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
+    .byte $24
+    .byte $FF
+
+EnFrame02:
+    .byte ($0 << 4) + _id_EnPlace0, $00, $00
+    .byte $04
+    .byte $FF
+
+EnFrame03:
+EnFrame04:
+EnFrame05:
+EnFrame06:
+EnFrame07:
+EnFrame08:
+EnFrame09:
+EnFrame0A:
+EnFrame0B:
+EnFrame0C:
+EnFrame0D:
+EnFrame0E:
+EnFrame0F:
+EnFrame10:
+EnFrame11:
+EnFrame12:
+EnFrame13:
+EnFrame14:
+EnFrame15:
+EnFrame16:
+EnFrame17:
+EnFrame18:
+EnFrame19:
+    .byte $25, $08, $0A
+    .byte $E2
+    .byte $F2
+    .byte $E3
+    .byte $F3
+    .byte $FE
+    .byte $FE
+    .byte $FD, $62
+    .byte $E2
+    .byte $F2
+    .byte $FF
+
+EnFrame1A:
+    .byte $25, $08, $0A
+    .byte $E4
+    .byte $F2
+    .byte $FE
+    .byte $FE
+    .byte $E3
+    .byte $F3
+    .byte $FD, $62
+    .byte $E4
+    .byte $F2
+    .byte $FF
+
+EnFrame1B:
+    .byte $26, $08, $0A
+    .byte $F4
+    .byte $F2
+    .byte $E3
+    .byte $F3
+    .byte $FD, $62
+    .byte $F4
+    .byte $F2
+    .byte $FF
+
+EnFrame1C:
+    .byte $A5, $08, $0A
+    .byte $E2
+    .byte $F2
+    .byte $E3
+    .byte $F3
+    .byte $FE
+    .byte $FE
+    .byte $FD, $E2
+    .byte $E2
+    .byte $F2
+    .byte $FF
+
+EnFrame1D:
+    .byte $A5, $08, $0A
+    .byte $E4
+    .byte $F2
+    .byte $FE
+    .byte $FE
+    .byte $E3
+    .byte $F3
+    .byte $FD, $E2
+    .byte $E4
+    .byte $F2
+    .byte $FF
+
+EnFrame1E:
+    .byte $A6, $08, $0A
+    .byte $F4
+    .byte $F2
+    .byte $E3
+    .byte $F3
+    .byte $FD, $E2
+    .byte $F4
+    .byte $F2
+    .byte $FF
+
+EnFrame1F:
+    .byte $27, $06, $08
+    .byte $FC, $04, $00
+    .byte $C0
+    .byte $C1
+    .byte $FF
+
+EnFrame20:
+    .byte $27, $06, $08
+    .byte $E0
+    .byte $E1
+    .byte $FD, $A2
+    .byte $E0
+    .byte $E1
+    .byte $FF
+
+EnFrame21:
+    .byte $27, $06, $08
+    .byte $F0
+    .byte $F1
+    .byte $FD, $A2
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+EnFrame22:
+    .byte $67, $06, $08
+    .byte $FC, $04, $00
+    .byte $C0
+    .byte $C1
+    .byte $FF
+
+EnFrame23:
+    .byte $67, $06, $08
+    .byte $E0
+    .byte $E1
+    .byte $FD, $E2
+    .byte $E0
+    .byte $E1
+    .byte $FF
+
+EnFrame24:
+    .byte $67, $06, $08
+    .byte $F0
+    .byte $F1
+    .byte $FD, $E2
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+EnFrame25:
+EnFrame26:
+EnFrame27:
+    .byte $28, $0C, $08
+    .byte $CE
+    .byte $FC, $00, $FC
+    .byte $DE
+    .byte $EE
+    .byte $DF
+    .byte $FD, $62
+    .byte $EE
+    .byte $FF
+
+EnFrame28:
+    .byte $28, $0C, $08
+    .byte $CE
+    .byte $CF
+    .byte $EF
+    .byte $FF
+
+EnFrame29:
+    .byte $28, $0C, $08
+    .byte $CE
+    .byte $FD, $62
+    .byte $CF
+    .byte $EF
+    .byte $FF
+
+EnFrame2A:
+EnFrame2B:
+EnFrame2C:
+EnFrame2D:
+EnFrame2E:
+EnFrame2F:
+EnFrame30:
+EnFrame31:
+EnFrame32:
+EnFrame33:
+EnFrame34:
+EnFrame35:
+EnFrame36:
+EnFrame37:
+    .byte $21, $00, $00
+    .byte $FC, $08, $FC
+    .byte $E2
+    .byte $FC, $00, $08
+    .byte $E2
+    .byte $FC, $00, $F8
+    .byte $F2
+    .byte $FC, $00, $08
+    .byte $F2
+    .byte $FF
+
+EnFrame38:
+    .byte $21, $00, $00
+    .byte $FC, $00, $FC
+    .byte $F2
+    .byte $FC, $00, $08
+    .byte $F2
+    .byte $FC, $00, $F8
+    .byte $E2
+    .byte $FC, $00, $08
+    .byte $E2
+    .byte $FF
+
+EnFrame39:
+    .byte $21, $00, $00
+    .byte $FC, $04, $00
+    .byte $F1
+    .byte $F0
+    .byte $F1
+    .byte $F0
+    .byte $FF
+
+EnFrame3A:
+    .byte $21, $00, $00
+    .byte $FC, $04, $00
+    .byte $F0
+    .byte $F1
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+EnFrame3B:
+    .byte $21, $00, $00
+    .byte $FC, $08, $00
+    .byte $D1
+    .byte $D0
+    .byte $FF
+
+EnFrame3C:
+    .byte $21, $00, $00
+    .byte $FC, $08, $00
+    .byte $D0
+    .byte $D1
+    .byte $FF
+
+EnFrame3D:
+    .byte $21, $00, $00
+    .byte $FC, $08, $00
+    .byte $DE
+    .byte $DF
+    .byte $EE
+    .byte $EE
+    .byte $FF
+
+EnFrame3E:
+EnFrame3F:
+EnFrame40:
+EnFrame41:
+EnFrame42:
+EnFrame43:
+EnFrame44:
+EnFrame45:
+EnFrame46:
+EnFrame47:
+EnFrame48:
+EnFrame49:
+EnFrame4A:
+EnFrame4B:
+EnFrame4C:
+EnFrame4D:
+EnFrame4E:
+EnFrame4F:
+EnFrame50:
+EnFrame51:
+EnFrame52:
+EnFrame53:
+EnFrame54:
+EnFrame55:
+EnFrame56:
+EnFrame57:
+EnFrame58:
+    .byte $27, $08, $08
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+EnFrame59:
+    .byte $67, $08, $08
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+EnFrame5A:
+    .byte $27, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+EnFrame5B:
+    .byte $A7, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+EnFrame5C:
+    .byte $A7, $08, $08
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+EnFrame5D:
+    .byte $E7, $08, $08
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+EnFrame5E:
+    .byte $67, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+EnFrame5F:
+    .byte $E7, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+EnFrame60:
+    .byte $21, $00, $00
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+EnFrame61:
+    .byte $0A, $00, $00
+    .byte $75
+    .byte $FD, $60
+    .byte $75
+    .byte $FD, $A0
+    .byte $75
+    .byte $FD, $E0
+    .byte $75
+    .byte $FF
+
+EnFrame62:
+    .byte $0A, $00, $00
+    .byte $FE
+    .byte $FE
+    .byte $FE
+    .byte $FE
+    .byte $3D
+    .byte $3E
+    .byte $4E
+    .byte $FD, $60
+    .byte $3E
+    .byte $3D
+    .byte $4E
+    .byte $FD, $E0
+    .byte $4E
+    .byte $3E
+    .byte $3D
+    .byte $FD, $A0
+    .byte $4E
+    .byte $3D
+    .byte $3E
+    .byte $FF
+
+EnFrame63:
+EnFrame64:
+EnFrame65:
+EnFrame66:
+    .byte $2A, $08, $08
+    .byte $C2
+    .byte $C3
+    .byte $D2
+    .byte $D3
+    .byte $FF
+
+EnFrame67:
+    .byte $2A, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+EnFrame68:
+    .byte $21, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+EnFrame69:
+    .byte $6A, $08, $08
+    .byte $C2
+    .byte $C3
+    .byte $D2
+    .byte $D3
+    .byte $FF
+
+EnFrame6A:
+    .byte $6A, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+EnFrame6B:
+    .byte $61, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+EnFrame6C:
+    .byte $20, $02, $04
+    .byte $FC, $FF, $00
+    .byte $F8
+    .byte $FF
+
+EnFrame6D:
+    .byte $60, $02, $04
+    .byte $FC, $FF, $00
+    .byte $F8
+    .byte $FF
+
+EnFrame6E:
+    .byte $20, $02, $02
+    .byte $FC, $FE, $00
+    .byte $D9
+    .byte $FF
+
+EnFrame6F:
+    .byte $E0, $02, $02
+    .byte $FC, $00, $02
+    .byte $D8
+    .byte $FF
+
+EnFrame70:
+    .byte $E0, $02, $02
+    .byte $FC, $02, $00
+    .byte $D9
+    .byte $FF
+
+EnFrame71:
+    .byte $20, $02, $02
+    .byte $FC, $00, $FE
+    .byte $D8
+    .byte $FF
+
+EnFrame72:
+    .byte $60, $02, $02
+    .byte $FC, $FE, $00
+    .byte $D9
+    .byte $FF
+
+EnFrame73:
+    .byte $A0, $02, $02
+    .byte $FC, $00, $FE
+    .byte $D8
+    .byte $FF
+
+EnFrame74:
+    .byte $A0, $02, $02
+    .byte $FC, $02, $00
+    .byte $D9
+    .byte $FF
+
+EnFrame75:
+    .byte $60, $02, $02
+    .byte $FC, $00, $02
+    .byte $D8
+    .byte $FF
+
+EnFrame76:
+EnFrame77:
+EnFrame78:
+EnFrame79:
+EnFrame7A:
+EnFrame7B:
+EnFrame7C:
+EnFrame7D:
+EnFrame7E:
+EnFrame7F:
+EnFrame80:
+    .byte $06, $08, $04
+    .byte $FE
+    .byte $FE
+    .byte $14
+    .byte $24
+    .byte $FF
+
+EnFrame81:
+    .byte $00, $04, $04
+    .byte $8A
+    .byte $FF
+
+EnFrame82:
+EnFrame83:
+EnFrame84:
+EnFrame85:
+EnFrame86:
+EnFrame87:
+EnFrame88:
+EnFrame89:
+    .byte $00, $04, $04
+    .byte $8A
+    .byte $FF
+
+EnFrame8A:
+EnFrame8B:
+EnFrame8C:
+EnFrame8D:
+EnFrame8E:
+EnFrame8F:
+    .byte $3F, $04, $08
+    .byte $FD, $03
+    .byte $EC
+    .byte $FD, $43
+    .byte $EC
+    .byte $FF
+
+EnFrame90:
+    .byte $3F, $04, $08
+    .byte $FD, $03
+    .byte $ED
+    .byte $FD, $43
+    .byte $ED
+    .byte $FF
+
+EnFrame91:
+    .byte $22, $10, $0C
+    .byte $C5
+    .byte $C6
+    .byte $C7
+    .byte $D5
+    .byte $D6
+    .byte $D7
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $FF
+
+EnFrame92:
+    .byte $22, $10, $0C
+    .byte $C5
+    .byte $C6
+    .byte $C7
+    .byte $D5
+    .byte $D6
+    .byte $D7
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $E8
+    .byte $E9
+    .byte $F9
+    .byte $FF
+
+EnFrame93:
+    .byte $62, $10, $0C
+    .byte $C5
+    .byte $C6
+    .byte $C7
+    .byte $D5
+    .byte $D6
+    .byte $D7
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $FF
+
+EnFrame94:
+    .byte $62, $10, $0C
+    .byte $C5
+    .byte $C6
+    .byte $C7
+    .byte $D5
+    .byte $D6
+    .byte $D7
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $E8
+    .byte $E9
+    .byte $F9
+    .byte $FF
+
+EnFrame95:
+    .byte $21, $00, $00
+    .byte $C5
+    .byte $C7
+    .byte $D5
+    .byte $D7
+    .byte $E5
+    .byte $E7
+    .byte $FF
+
+EnFrame96:
+    .byte $21, $00, $00
+    .byte $C7
+    .byte $C5
+    .byte $D7
+    .byte $D5
+    .byte $E7
+    .byte $E5
+    .byte $FF
 
 ;----------------------------------------[ Palette data ]--------------------------------------------
 

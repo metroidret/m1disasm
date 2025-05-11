@@ -5682,13 +5682,13 @@ SPRWriteDigit:
 
 AddOneTank:
     lda #$17                        ;Y coord-1.
-    sta SpriteRAM,x               ;
+    sta SpriteRAM,x                 ;
     tya                             ;Tile value.
-    sta SpriteRAM+1,x             ;
+    sta SpriteRAM+1,x               ;
     lda #$01                        ;Palette #.
-    sta SpriteRAM+2,x             ;
+    sta SpriteRAM+2,x               ;
     lda $00                         ;X coord.
-    sta SpriteRAM+3,x             ;
+    sta SpriteRAM+3,x               ;
     sec                             ;
     sbc #$0A                        ;Find x coord of next energy tank.
     sta $00                         ;
@@ -5756,10 +5756,10 @@ BitScan:
     ldx #$00                        ;First bit is bit 0.
 LE1E5:
     lsr                             ;Transfer bit to carry flag.
-    bcs LE1ED                           ;If the shifted bit was 1, Branch out of loop.
+    bcs LE1ED                       ;If the shifted bit was 1, Branch out of loop.
     inx                             ;Increment X to keep of # of bits checked.
     cpx #$08                        ;Have all 8 bit been tested?-->
-    bne LE1E5                           ;If not, branch to check the next bit.
+    bne LE1E5                       ;If not, branch to check the next bit.
 LE1ED:
     txa                             ;Return which bit number was set.
     ldx $0E                         ;Restore X.
@@ -5772,15 +5772,15 @@ RTS_E1F0:
 
 ScrollDoor:
     ldx DoorStatus                  ;
-    beq RTS_E1F0                           ;Exit if Samus isn't in a door.
+    beq RTS_E1F0                    ;Exit if Samus isn't in a door.
     dex                             ;
     bne LE1FE                           ;Not in right door. branch to check left door.
         jsr ScrollRight                 ;($E6D2)DoorStatus=1, scroll 1 pixel right.
-        jmp LE204                          ;Jump to check if door scroll is finished.
+        jmp LE204                       ;Jump to check if door scroll is finished.
 
     LE1FE:
         dex                             ;Check if in left door.
-        bne LE20C                          ;
+        bne LE20C                       ;
         jsr ScrollLeft                  ;($E6A7)DoorStatus=2, scroll 1 pixel left.
     LE204:
     ldx ScrollX                     ;Has x scroll offset reached 0?-->
@@ -5794,7 +5794,7 @@ LE20C:
     dex                             ;
     bne LE215                           ;Check if need to scroll down to center door.
         jsr ScrollDown                  ;($E519)DoorStatus=3, scroll 1 pixel down.
-        jmp VerticalRoomCentered                          ;Jump to check y scrolling value.
+        jmp VerticalRoomCentered        ;Jump to check y scrolling value.
     LE215:
     dex                             ;
     bne Exit15                      ;Check if need to scroll up to center door.
@@ -5820,12 +5820,12 @@ DoOneDoorScroll:
     lda SamusDoorData               ;Check if scrolling should be toggled.
     jsr Amul8                       ;($C2C6)*8. Is door not to toggle scrolling(item room,-->
     bcs LE23D                           ;bridge room, etc.)? If so, branch to NOT toggle scrolling.
-        ldy DoorScrollStatus            ;If comming from vertical shaft, skip ToggleScroll because-->
+        ldy DoorScrollStatus            ;If coming from vertical shaft, skip ToggleScroll because-->
         cpy #$03                        ;the scroll was already toggled after room was centered-->
-        bcc LE241                          ;by the routine just above.
+        bcc LE241                       ;by the routine just above.
     LE23D:
     lda #$47                        ;Set mirroring for vertical mirroring(horz scrolling).
-    bne LE244                          ;Branch always.
+    bne LE244                       ;Branch always.
 
     LE241:
         jsr ToggleScroll                ;($E252)Toggle scrolling and mirroring.
