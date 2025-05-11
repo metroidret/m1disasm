@@ -29,8 +29,8 @@ CommonEnemyAI          = $8058
 LoadTableAt977B        = $80B0
 ObjectAnimIndexTbl     = $8572
 L85E0                  = $85E0
-FramePtrTable          = $860B
-PlacePtrTable          = $86DF
+ObjFramePtrTable       = $860B
+ObjPlacePtrTable       = $86DF
 
 SamusEnterDoor         = $8B13
 PalPntrTbl             = $9560
@@ -2557,7 +2557,7 @@ SetSamusData:
         sta ObjectCntrl                 ;
     LCD8C:
     jsr SetMirrorCntrlBit           ;($CD92)Mirror Samus, if necessary.
-    jmp DrawFrame                   ;($DE4A)Display Samus.
+    jmp ObjDrawFrame                   ;($DE4A)Display Samus.
 
 ;---------------------------------[ Set mirror control bit ]-----------------------------------------
 
@@ -3537,7 +3537,7 @@ Lx054:
 Lx055:
     jsr CheckHealthStatus           ;($CDFA)Check if Samus hit, blinking or Health low.
     jsr SetMirrorCntrlBit
-    jmp DrawFrame       ; display Samus
+    jmp ObjDrawFrame       ; display Samus
 
 SamusDead:
     lda #$01
@@ -4148,7 +4148,7 @@ ElevatorIdle:
     lda FrameCount
     lsr
     bcc RTS_X098    ; only display elevator at odd frames
-    jmp DrawFrame       ; display elevator
+    jmp ObjDrawFrame       ; display elevator
 
 LD80E:
     lda ScrollX
@@ -4453,7 +4453,7 @@ LDA1A:
     lsr
     bcc RTS_X127    ; only display statue at odd frames
 Lx126:
-    jmp DrawFrame       ; display statue
+    jmp ObjDrawFrame       ; display statue
 
 StatueXTable:
     .byte $88 ; Kraid's X
@@ -4654,8 +4654,8 @@ CheckOneItem:
     sta ObjectCntrl                 ;Change color of item every other frame.
     lda SpritePagePos               ;Load current index into sprite RAM.
     pha                             ;Temp save sprite RAM position.
-    lda PowerUpAnimIndex,x          ;Load entry into FramePtrTable for item animation.
-    jsr DrawFrame                   ;($DE4A)Display special item.
+    lda PowerUpAnimIndex,x          ;Load entry into ObjFramePtrTable for item animation.
+    jsr ObjDrawFrame                   ;($DE4A)Display special item.
 
     pla                             ;Restore sprite page position byte.
     cmp SpritePagePos               ;Was power up item successfully drawn?-->
@@ -5157,7 +5157,7 @@ ReduceYRadius:
 AnimDrawObject:
     jsr UpdateObjAnim               ;($DC8F)Update animation if needed.
 
-DrawFrame:
+ObjDrawFrame:
     ldx PageIndex                   ;Get index to proper object to work with.
     lda ObjAnimFrame,x              ;
     cmp #$F7                        ;Is the frame valid?-->
@@ -5179,17 +5179,17 @@ LDE60:
     sta $0B                         ;data into $0A, $0B and $06 respectively.
     lda ObjHi,x                     ;
     sta $06                         ;
-    lda ObjAnimFrame,x              ;Load A with index into FramePtrTable.
+    lda ObjAnimFrame,x              ;Load A with index into ObjFramePtrTable.
     asl                             ;*2. Frame pointers are two bytes.
-    tax                             ;X is now the index into the FramePtrTable.
-    lda FramePtrTable,x             ;
+    tax                             ;X is now the index into the ObjFramePtrTable.
+    lda ObjFramePtrTable,x             ;
     sta $00                         ;
-    lda FramePtrTable+1,x           ;Entry from FramePtrTable is stored in $0000.
+    lda ObjFramePtrTable+1,x           ;Entry from ObjFramePtrTable is stored in $0000.
     sta $01                         ;
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
-    lda PlacePtrTable,x             ;
+    lda ObjPlacePtrTable,x             ;
     sta $02                         ;
-    lda PlacePtrTable+1,x           ;Store pointer from PlacePtrTbl in $0002.
+    lda ObjPlacePtrTable+1,x           ;Store pointer from PlacePtrTbl in $0002.
     sta $03                         ;
     lda IsSamus                     ;Is Samus the object being drawn?-->
     beq LDEBC                           ;If not, branch.
@@ -5838,11 +5838,12 @@ Exit15:
 
 ;------------------------------------[ Toggle Samus nametable ]--------------------------------------
 
+;Change Samus' current nametable from one to the other.
 ToggleSamusHi:
-    lda ObjHi                    ;
-    eor #$01                        ;Change Samus' current nametable from one to the other.
-    sta ObjHi                    ;
-    rts                             ;
+    lda ObjHi
+    eor #$01
+    sta ObjHi
+    rts
 
 ;-------------------------------------------[ Toggle scroll ]----------------------------------------
 
@@ -5850,12 +5851,14 @@ ToggleSamusHi:
 ;a horizontal shaft to a vertical shaft or vice versa.
 
 ToggleScroll:
-    lda ScrollDir                   ;
-    eor #$03                        ;Toggle scroll direction.
-    sta ScrollDir                   ;
-    lda MirrorCntrl                 ;Toggle mirroring.
-    eor #$08                        ;
-    rts                             ;
+    ;Toggle scroll direction.
+    lda ScrollDir
+    eor #$03
+    sta ScrollDir
+    ;Toggle mirroring.
+    lda MirrorCntrl
+    eor #$08
+    rts
 
 ;----------------------------------------[ Is Samus in lava ]----------------------------------------
 
@@ -5865,11 +5868,14 @@ ToggleScroll:
 ;in lava whether its actually there or not.
 
 IsSamusInLava:
-    lda #$01                        ;
-    cmp ScrollDir                   ;Set carry bit(and exit) if scrolling up or down.
-    bcs RTS_E268                    ;
-    lda #$D8                        ;If Samus is Scrolling left or right and within 24 pixels-->
-    cmp ObjY                        ;of the bottom of the screen, she is in lava. Clear carry bit.
+    ;Set carry bit(and exit) if scrolling up or down.
+    lda #$01
+    cmp ScrollDir
+    bcs RTS_E268
+    ;If Samus is Scrolling left or right and within 24 pixels-->
+    ;of the bottom of the screen, she is in lava. Clear carry bit.
+    lda #$D8
+    cmp ObjY
 RTS_E268:
     rts
 
@@ -10085,7 +10091,7 @@ LFBEC:
     sta PowerUpAnimFrame            ;Save index to find object animation.
     txa
     pha
-    jsr DrawFrame
+    jsr ObjDrawFrame
     lda SamusBlink
     bne Lx386
     ldy #$00

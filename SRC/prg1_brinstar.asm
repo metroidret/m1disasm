@@ -74,9 +74,9 @@ AreaPointers:
     .word RmPtrTbl                  ;($A314)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A372)Beginning of structure pointer table.
     .word MacroDefs                 ;($AEF0)Beginning of macro definitions.
-    .word EnemyFramePtrTbl1         ;($9DE0)Pointer table into enemy animation data. Two-->
-    .word EnemyFramePtrTbl2         ;($9EE0)tables needed to accommodate all entries.
-    .word EnemyPlacePtrTbl          ;($9F0E)Pointers to enemy frame placement data.
+    .word EnFramePtrTable1          ;($9DE0)Pointer table into enemy animation data. Two-->
+    .word EnFramePtrTable2          ;($9EE0)tables needed to accommodate all entries.
+    .word EnPlacePtrTable           ;($9F0E)Pointers to enemy frame placement data.
     .word EnemyAnimIndexTbl         ;($9D6A)index to values in addr tables for enemy animations.
 
 ; Tourian-specific jump table (dummied out in other banks)
@@ -689,7 +689,7 @@ L9DDE:  .byte $96, $FF
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
-EnemyFramePtrTbl1:
+EnFramePtrTable1:
     .word L9FC2, L9FC7, L9FCC, L9FD1, L9FDA, L9FE3, L9FE3, L9FE3
     .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
     .word L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3, L9FE3
@@ -707,40 +707,56 @@ EnemyFramePtrTbl1:
     .word LA1C7, LA1CF, LA1D7, LA1DF, LA1E7, LA1EF, LA1F7, LA1F7
     .word LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7, LA1F7
 
-EnemyFramePtrTbl2:
+EnFramePtrTable2:
     .word LA1F7, LA1FF, LA204, LA204, LA204, LA204, LA204, LA204
     .word LA204, LA204, LA209, LA209, LA209, LA209, LA209, LA209
     .word LA213, LA21D, LA22D, LA23D, LA24D, LA25D, LA267
 
-EnemyPlacePtrTbl:
-    .word L9F2E, L9F30, L9F48, L9F60, L9F60, L9F60, L9F70, L9F7C
-    .word L9F84, L9F90, L9F90, L9FB0, L9FBE, L9FBE, L9FBE, L9FBE
+EnPlacePtrTable:
+    .word EnPlace0, EnPlace1, EnPlace2, EnPlace3, EnPlace4, EnPlace5, EnPlace6, EnPlace7
+    .word EnPlace8, EnPlace9, EnPlaceA, EnPlaceB, EnPlaceC, EnPlaceD, EnPlaceE, EnPlaceF
 
 ;------------------------------[ Enemy sprite placement data tables ]--------------------------------
 
-L9F2E:  .byte $FC, $FC
+EnPlace0:
+    .byte $FC, $FC
 
 ;Enemy explode.
-L9F30:  .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85, $F4, $F8, $F4, $00
-L9F40:  .byte $FC, $F8, $FC, $00, $04, $F8, $04, $00
+EnPlace1:
+    .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
+    .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
-L9F48:  .byte $F0, $F4, $F0, $FC, $F0, $04, $F8, $F4, $F8, $FC, $F8, $04, $00, $F4, $00, $FC
-L9F58:  .byte $00, $04, $08, $F4, $08, $FC, $08, $04
+EnPlace2:
+    .byte $F0, $F4, $F0, $FC, $F0, $04, $F8, $F4, $F8, $FC, $F8, $04, $00, $F4, $00, $FC
+    .byte $00, $04, $08, $F4, $08, $FC, $08, $04
 
-L9F60:  .byte $F8, $F4, $00, $F4, $F8, $FC, $00, $FC, $F4, $FC, $FC, $FC, $F8, $04, $00, $04
+EnPlace3:
+EnPlace4:
+EnPlace5:
+    .byte $F8, $F4, $00, $F4, $F8, $FC, $00, $FC, $F4, $FC, $FC, $FC, $F8, $04, $00, $04
 
-L9F70:  .byte $02, $F4, $0A, $F4, $F8, $FC, $00, $FC, $02, $04, $0A, $04
+EnPlace6:
+    .byte $02, $F4, $0A, $F4, $F8, $FC, $00, $FC, $02, $04, $0A, $04
 
-L9F7C:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
+EnPlace7:
+    .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00
 
-L9F84:  .byte $F4, $FC, $FC, $FC, $04, $FC, $FC, $04, $04, $04, $0C, $FC
+EnPlace8:
+    .byte $F4, $FC, $FC, $FC, $04, $FC, $FC, $04, $04, $04, $0C, $FC
 
-L9F90:  .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0
-L9FA0:  .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $00, $08, $08
+EnPlace9:
+EnPlaceA:
+    .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0
+    .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $00, $08, $08
 
-L9FB0:  .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
+EnPlaceB:
+    .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
 
-L9FBE:  .byte $FC, $F8, $FC, $00
+EnPlaceC:
+EnPlaceD:
+EnPlaceE:
+EnPlaceF:
+    .byte $FC, $F8, $FC, $00
 
 ;Enemy frame drawing data.
 
