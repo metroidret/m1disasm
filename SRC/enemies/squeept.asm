@@ -1,31 +1,31 @@
 ; Lava Jumper Routine
 SqueeptAIRoutine:
-    lda $81
-    cmp #$01
+    lda EnemyStatus81
+    cmp #enemyStatus_Resting
     bne L9A88
     lda EnStatus,x
     cmp #$03
     beq L9ACA
     cmp #$02
     bne L9A88
-    ldy $0408,x
+    ldy EnData08,x
     lda L9AD2,y
-    sta $0402,x
+    sta EnSpeedY,x
     lda #$40
-    sta $6AFE,x
+    sta EnAccelY,x
     lda #$00
-    sta $0406,x
+    sta EnSpeedSubPixelY,x
 L9A88:
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq L9ACA
-    lda $81
-    cmp #$01
+    lda EnemyStatus81
+    cmp #enemyStatus_Resting
     beq L9ACA
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq L9ACF
     jsr CommonJump_12
-    ldx $4B
+    ldx PageIndex
     lda #$00
     sta $05
     lda #$1D
@@ -34,7 +34,7 @@ L9A88:
     bmi L9AAC
         lda #$20
     L9AAC:
-    sta $6AF9,x
+    sta EnResetAnimIndex,x
     jsr StorePositionToTemp
     jsr CommonJump_0D
     lda #$E8
@@ -43,9 +43,9 @@ L9A88:
         bcs L9AC7
     L9ABD:
     sta $08
-    lda $0405,x
+    lda EnData05,x
     ora #$20
-    sta $0405,x
+    sta EnData05,x
 L9AC7:
     jsr LoadPositionFromTemp
 L9ACA:
@@ -56,5 +56,4 @@ L9ACF:
     jmp CommonJump_02
 
 L9AD2:
-    inc $F8,x
-    inc $FA,x
+    .byte $F6, $F8, $F6, $FA

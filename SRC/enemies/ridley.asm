@@ -1,14 +1,14 @@
 ; Ridley Routine
 RidleyAIRoutine:
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     bcc L9A33
     beq L9A20
-    cmp #$05
+    cmp #enemyStatus_Pickup
     bne L9A41
 
 L9A20:
-    lda #$00
+    lda #enemyStatus_NoEnemy
     sta EnStatus+$10
     sta EnStatus+$20
     sta EnStatus+$30
@@ -18,9 +18,9 @@ L9A20:
 
 L9A33:
     lda #$0B
-    sta $85
+    sta EnemyLFB88_85
     lda #$0E
-    sta $86
+    sta EnemyLFB88_85+1
     jsr CommonJump_09
     jsr L9A79
 
@@ -33,23 +33,23 @@ L9A41:
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
 RidleyFireballAIRoutine:
-    lda $0405,x
+    lda EnData05,x
     pha
     lda #$02
     sta $00
     sta $01
     jsr CommonEnemyJump_00_01_02
     pla
-    ldx $4B
-    eor $0405,x
+    ldx PageIndex
+    eor EnData05,x
     lsr
     bcs L9A73
-    lda $0405,x
+    lda EnData05,x
     lsr
     bcs L9A78
-    lda $0401,x
+    lda EnX,x
     sec
-    sbc $030E
+    sbc ObjX
     bcc L9A78
     cmp #$20
     bcc L9A78
@@ -62,15 +62,15 @@ L9A78:
 ;-------------------------------------------------------------------------------
 ; Ridley Subroutine
 L9A79:
-    ldy $80
+    ldy Ridley80
     bne L9A7F
         ldy #$60
     L9A7F:
-    lda $2D
+    lda FrameCount
     and #$02
     bne L9AA9
     dey
-    sty $80
+    sty Ridley80
     tya
     asl
     bmi L9AA9
@@ -81,7 +81,7 @@ L9A79:
     L9A94:
         lda EnStatus,x
         beq L9AAA
-        lda $0405,x
+        lda EnData05,x
         and #$02
         beq L9AAA
         txa
@@ -89,7 +89,7 @@ L9A79:
         sbc #$10
         tax
         bne L9A94
-    inc $7E
+    inc Ridley7E
 L9AA9:
     rts
 
@@ -100,8 +100,8 @@ L9AAA:
     jsr StorePositionToTemp
     tya
     tax
-    lda $0405
-    sta $0405,x
+    lda EnData05
+    sta EnData05,x
     and #$01
     tay
     lda L9ADF,y
@@ -111,7 +111,7 @@ L9AAA:
     jsr CommonJump_0D
     bcc L9AA9
     lda #$00
-    sta $040F,x
+    sta EnSpecialAttribs,x
     lda #$0A
     sta EnDataIndex,x
     lda #$01

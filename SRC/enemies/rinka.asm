@@ -123,7 +123,7 @@ L9AF9:
     sta EnSpeedSubPixelX,x
     rts
 
-    lsr
+    lsr ; unused instruction
 Adiv16_:
     lsr
     lsr

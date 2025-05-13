@@ -4,7 +4,7 @@ PolypAIRoutine:
     sta EnRadY,x
     sta EnRadX,x
     lda #$10
-    sta $0405,x
+    sta EnData05,x
     .if BANK = 2
         txa
         asl
@@ -24,12 +24,12 @@ PolypAIRoutine:
         and #$07
     .endif
     bne RTS_Polyp
-    lsr $0405,x
+    lsr EnData05,x
     lda #$03
     sta $87
-    lda $2E
+    lda RandomNumber1
     lsr
-    rol $0405,x
+    rol EnData05,x
     and #$03
     beq RTS_Polyp
     sta $88

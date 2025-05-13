@@ -1,6 +1,6 @@
 MultiviolaAIRoutine:
     lda EnStatus,x
-    cmp #$02
+    cmp #enemyStatus_Active
     bne L9AE0
         jsr CommonJump_0A
     L9AE0:

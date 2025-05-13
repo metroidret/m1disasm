@@ -264,6 +264,8 @@ OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she 
 
 KraidLintCounter       = $7E
 KraidNailCounter       = $7F
+Ridley7E               = $7E
+Ridley80               = $80
 
 EnemyMovementPtr       = $81
 ; EnemyMovementPtr+1     = $82
@@ -285,6 +287,9 @@ WaveSpritePointer      = $83     ;Address pointer to Samus hand waving sprites i
 WaveSpriteCounter      = $84     ;Stores length of wave sprite data (#$10).
 
 ;----------------------------------------------------------------------------------------------------
+
+; 2 bytes ($85-$86)
+EnemyLFB88_85          = $85
 
 MetroidOnSamus         = $92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 

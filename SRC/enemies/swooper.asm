@@ -7,7 +7,7 @@ SwooperAIRoutine:
     lda EnStatus,x
     cmp #$01
     bne L98EE
-    lda $0405,x
+    lda EnData05,x
     and #$10
     beq L98EE
     lda #$01
@@ -24,7 +24,7 @@ L98F4:
     .elseif BANK = 5
         lda #$20
     .endif
-    ldy $0402,x
+    ldy EnSpeedY,x
     bpl L9904
         .if BANK = 2
             lda #$22
@@ -39,7 +39,7 @@ L9907:
 ;-------------------------------------------------------------------------------
 ; Swooper Routine 2?
 SwooperAIRoutine2:
-    lda $81
+    lda EnemyStatus81
     cmp #$01
     beq SwooperExitA
         cmp #$03
@@ -56,14 +56,14 @@ SwooperAIRoutine2:
 L9923:
     lda #$80
     sta EnAccelY,x
-    lda $0402,x
+    lda EnSpeedY,x
     bmi L9949
-    lda $0405,x
+    lda EnData05,x
     and #$10
     beq L9949
-    lda $0400,x
+    lda EnY,x
     sec
-    sbc $030D
+    sbc ObjY
     bpl L9940
         jsr TwosComplement_
     L9940:
@@ -85,5 +85,5 @@ L9954:
     pha
     jsr CommonJump_0E
     pla
-    sta $040B,x
+    sta EnHitPoints,x
     rts

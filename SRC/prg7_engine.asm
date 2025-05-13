@@ -10031,7 +10031,7 @@ LFB88:
         tya
         and #$01
         tay
-        lda $0085,y
+        lda EnemyLFB88_85,y
         cmp EnResetAnimIndex,x
         beq Exit13
         sta EnAnimIndex,x

@@ -1,21 +1,22 @@
 ; Lava Seahorse Routine
 SeahorseAIRoutine:
     lda EnStatus,x
-    cmp #$01
+    cmp #enemyStatus_Resting
     bne L9AF5
         lda #$E8
-        sta $0400,x
+        sta EnY,x
     L9AF5:
     cmp #$02
     bne L9B4F
-    lda $0406,x
+    lda EnSpeedSubPixelY,x
     beq L9B4F
-    lda $6B01,x
+    lda EnData1D,x
     bne L9B4F
-    lda $2D
+    
+    lda FrameCount
     and #$1F
     bne L9B3C
-        lda $2E
+        lda RandomNumber1
         and #$03
         beq L9B59
         lda #$02
@@ -29,19 +30,19 @@ SeahorseAIRoutine:
         lda #$03
         sta $85
         jsr CommonJump_0B
-        lda $0680
+        lda NoiseSFXFlag
         ora #$04
-        sta $0680
-        lda $0405,x
+        sta NoiseSFXFlag
+        lda EnData05,x
         and #$01
         tay
-        lda $0083,y
+        lda $83,y
         jsr CommonJump_05
         beq L9B59
     L9B3C:
     cmp #$0F
     bcc L9B59
-    lda $0405,x
+    lda EnData05,x
     and #$01
     tay
     lda SeahorseTable,y
