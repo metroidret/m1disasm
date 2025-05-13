@@ -1,40 +1,40 @@
 ; SkreeRoutine
 SkreeAIRoutine:
-    lda $81
-    cmp #$01
+    lda EnemyStatus81
+    cmp #enemyStatus_Resting
     beq SkreeExitB
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq SkreeExitC
-    lda EnCounter,x
+    
+    lda EnSpeedSubPixelY,x
     cmp #$0F
     bcc SkreeExitA
     cmp #$11
-    bcs SkreeBranch
+    bcs SkreeBlowUpIntoProjectiles
     lda #$3A
     sta EnData1D,x
     bne SkreeExitA
 
-SkreeBranch:
+SkreeBlowUpIntoProjectiles:
     dec EnData1D,x
     bne SkreeExitA
-    lda #$00
+    lda #enemyStatus_NoEnemy
     sta EnStatus,x
-    ldy #$0C
-
-SkreeLoop:
-    lda #$0A
-    sta $A0,y
-    lda EnYRoomPos,x
-    sta $A1,y
-    lda EnXRoomPos,x
-    sta $A2,y
-    lda EnNameTable,x
-    sta $A3,y
-    dey
-    dey
-    dey
-    dey
-    bpl SkreeLoop
+    ldy #(4-1)*4
+    SkreeLoop:
+        lda #$0A ; projectile is alive for 10 frames
+        sta SkreeProjectileDieDelay,y
+        lda EnY,x
+        sta SkreeProjectileY,y
+        lda EnX,x
+        sta SkreeProjectileX,y
+        lda EnNameTable,x
+        sta SkreeProjectileHi,y
+        dey
+        dey
+        dey
+        dey
+        bpl SkreeLoop
 
 SkreeExitA:
     lda #$02

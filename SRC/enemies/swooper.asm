@@ -55,7 +55,7 @@ SwooperAIRoutine2:
 
 L9923:
     lda #$80
-    sta EnData1A,x
+    sta EnAccelY,x
     lda $0402,x
     bmi L9949
     lda $0405,x
@@ -70,7 +70,7 @@ L9923:
     cmp #$10
     bcs L9949
     lda #$00
-    sta EnData1A,x
+    sta EnAccelY,x
 L9949:
     jsr L98F4
     lda #$03

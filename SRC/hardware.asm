@@ -76,6 +76,23 @@ SND_CHN                = $4015   ;APU common control 1 register.
 JOY1                   = $4016   ;Joypad1 register.
 JOY2                   = $4017   ;Joypad2/APU common control 2 register.
 
+    BUTTON_RIGHT          = %00000001
+    BUTTON_LEFT           = %00000010
+    BUTTON_DOWN           = %00000100
+    BUTTON_UP             = %00001000
+    BUTTON_START          = %00010000
+    BUTTON_SELECT         = %00100000
+    BUTTON_B              = %01000000
+    BUTTON_A              = %10000000
+    BUTTONBIT_RIGHT       = 0
+    BUTTONBIT_LEFT        = 1
+    BUTTONBIT_DOWN        = 2
+    BUTTONBIT_UP          = 3
+    BUTTONBIT_START       = 4
+    BUTTONBIT_SELECT      = 5
+    BUTTONBIT_B           = 6
+    BUTTONBIT_A           = 7
+
 ;----------------------------------------------------------------------------------------------------
 
 MMC1Reg0               = $8000   ;Writing to any of these addresses or any-->
@@ -93,6 +110,4 @@ MMC1Reg3               = $E000   ;
     MMC1_0_PRGBANK_16K     = %01000
     MMC1_0_CHRBANK_8K      = %00000
     MMC1_0_CHRBANK_4K      = %10000
-
-
 

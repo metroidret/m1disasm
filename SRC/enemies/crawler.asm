@@ -3,16 +3,16 @@ CrawlerAIRoutine:
     jsr CommonJump_03
     and #$03
     beq Crawler03
-    lda $81
+    lda EnemyStatus81
     .if BANK = 1 || BANK = 4
-        cmp #$01
+        cmp #enemyStatus_Resting
         beq SkreeExitB
-        cmp #$03
+        cmp #enemyStatus_Explode
         beq SkreeExitC
     .elseif BANK = 2 || BANK = 5
-        cmp #$01
+        cmp #enemyStatus_Resting
         beq Crawler03c
-        cmp #$03
+        cmp #enemyStatus_Explode
         beq Crawler03b
     .endif
     lda EnStatus,x
@@ -22,7 +22,7 @@ CrawlerAIRoutine:
     and #$03
     cmp #$01
     bne Crawler01
-    ldy EnYRoomPos,x
+    ldy EnY,x
     .if BANK = 1 || BANK = 4
         cpy #$E4
     .elseif BANK = 2 || BANK = 5

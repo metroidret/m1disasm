@@ -419,9 +419,9 @@ L9BC6:
 L9BC8:
     sty PageIndex
     lda CannonY,x
-    sta EnYRoomPos,y
+    sta EnY,y
     lda CannonX,x
-    sta EnXRoomPos,y
+    sta EnX,y
     lda CannonHi,x
     sta EnNameTable,y
     lda #$02
@@ -465,9 +465,9 @@ L9C2B:
 L9C31:
     sta EnAnimFrame+$E0
     lda CannonY,x
-    sta EnYRoomPos+$E0
+    sta EnY+$E0
     lda CannonX,x
-    sta EnXRoomPos+$E0
+    sta EnX+$E0
     lda CannonHi,x
     sta EnNameTable+$E0
     lda #$E0
@@ -884,11 +884,11 @@ L9EE7:
     pha
     and #$F0
     ora #$07
-    sta EnYRoomPos,x
+    sta EnY,x
     pla
     jsr Amul16_
     ora #$07
-    sta EnXRoomPos,x
+    sta EnX,x
     rts
 
 L9EF9:
@@ -1090,9 +1090,9 @@ LA041:
     lda MotherBrainNameTable
     sta EnNameTable+$E0
     lda #$70
-    sta EnYRoomPos+$E0
+    sta EnY+$E0
     lda #$48
-    sta EnXRoomPos+$E0
+    sta EnX+$E0
     ldy MotherBrainAnimFrameTableID
     lda LA06D,y
     sta EnAnimFrame+$E0
@@ -1362,9 +1362,9 @@ LA238:
     lda MotherBrain010C
     sta EnNameTable+$E0
     lda #$84
-    sta EnYRoomPos+$E0
+    sta EnY+$E0
     lda #$64
-    sta EnXRoomPos+$E0
+    sta EnX+$E0
     lda #$1A
     sta EnAnimFrame+$E0
     lda #$E0

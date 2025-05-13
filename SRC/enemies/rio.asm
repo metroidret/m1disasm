@@ -1,21 +1,21 @@
 RioAIRoutine:
-    lda $81
-    cmp #$01
+    lda EnemyStatus81
+    cmp #enemyStatus_Resting
     beq RioExitC
 
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq RioExitB
 
     lda #$80
-    sta EnData1A,x
-    lda EnData02,x ; y speed?
+    sta EnAccelY,x
+    lda EnSpeedY,x ; y speed?
     bmi RioExitA
 
     lda EnData05,x
     and #$10
     beq RioExitA
 
-    lda EnYRoomPos,x
+    lda EnY,x
     sec
     sbc ObjY ; Compare with Samus' Y position
     bpl RioBranch
@@ -24,7 +24,7 @@ RioAIRoutine:
     cmp #$10
     bcs RioExitA
     lda #$00
-    sta EnData1A,x
+    sta EnAccelY,x
 
 RioExitA:
     lda #$03

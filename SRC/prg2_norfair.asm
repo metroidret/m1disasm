@@ -345,9 +345,9 @@ L9993:
 ;-------------------------------------------------------------------------------
 
 StorePositionToTemp:
-    lda EnYRoomPos,x
+    lda EnY,x
     sta $08
-    lda EnXRoomPos,x
+    lda EnX,x
     sta $09
     lda EnNameTable,x
     sta $0B
@@ -358,9 +358,9 @@ LoadPositionFromTemp:
     and #$01
     sta EnNameTable,x
     lda $08
-    sta EnYRoomPos,x
+    sta EnY,x
     lda $09
-    sta EnXRoomPos,x
+    sta EnX,x
     rts
 
 ;-------------------------------------------------------------------------------

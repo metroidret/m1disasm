@@ -11,7 +11,7 @@ RinkaAIRoutine:
     sta EnData19,x
     lda ObjX
     sec
-    sbc EnXRoomPos,x
+    sbc EnX,x
     sta $01
     lda EnData05,x
     pha
@@ -24,7 +24,7 @@ RinkaAIRoutine:
     L9A5A:
     lda ObjY
     sec
-    sbc EnYRoomPos,x
+    sbc EnY,x
     sta $00
     pla
     lsr
@@ -53,45 +53,46 @@ L9A7A:
     pla
     lsr
     pha
-    bcc L9A9B
+    bcc endIf9A9B
         lda #$00
-        sbc EnData07,x
-        sta EnData07,x
+        sbc EnSpeedSubPixelX,x
+        sta EnSpeedSubPixelX,x
         lda #$00
-        sbc EnData03,x
-        sta EnData03,x
-    L9A9B:
+        sbc EnSpeedX,x
+        sta EnSpeedX,x
+    endIf9A9B:
     pla
     lsr
     lsr
-    bcc L9AB0
-    lda #$00
-    sbc EnCounter,x
-    sta EnCounter,x
-    lda #$00
-    sbc EnData02,x
-    sta EnData02,x
+    bcc endIf9AB0
+        lda #$00
+        sbc EnSpeedSubPixelY,x
+        sta EnSpeedSubPixelY,x
+        lda #$00
+        sbc EnSpeedY,x
+        sta EnSpeedY,x
+    endIf9AB0:
 L9AB0:
     lda EnData05,x
     asl
     bmi L9AF4
-        lda EnCounter,x
+        lda EnSpeedSubPixelY,x
         clc
         adc EnData18,x
         sta EnData18,x
-        lda EnData02,x
+        lda EnSpeedY,x
         adc #$00
         sta $04
-        lda EnData07,x
+        lda EnSpeedSubPixelX,x
         clc
         adc EnData19,x
         sta EnData19,x
-        lda EnData03,x
+        lda EnSpeedX,x
         adc #$00
         sta $05
-        lda EnYRoomPos,x
+        lda EnY,x
         sta $08
-        lda EnXRoomPos,x
+        lda EnX,x
         sta $09
         lda EnNameTable,x
         sta $0B
@@ -109,17 +110,17 @@ L9AF9:
     lda $00
     pha
     jsr Adiv16_
-    sta EnData02,x
+    sta EnSpeedY,x
     pla
     jsr Amul16_
-    sta EnCounter,x
+    sta EnSpeedSubPixelY,x
     lda $01
     pha
     jsr Adiv16_
-    sta EnData03,x
+    sta EnSpeedX,x
     pla
     jsr Amul16_
-    sta EnData07,x
+    sta EnSpeedSubPixelX,x
     rts
 
     lsr

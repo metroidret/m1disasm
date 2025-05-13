@@ -31,7 +31,7 @@ MetroidAIRoutine:
     pha
     
     ; check if y speed is positive
-    lda EnData02,x
+    lda EnSpeedY,x
     bpl L983B
         ; negate y max speed
         pla
@@ -39,17 +39,17 @@ MetroidAIRoutine:
         pha
         ; get absolute value of y speed
         lda #$00
-        cmp EnCounter,x
-        sbc EnData02,x
+        cmp EnSpeedSubPixelY,x
+        sbc EnSpeedY,x
     L983B:
     ; compare absolute y speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
     bcc L9849
         ; limit speed to max
-        sta EnData02,x
+        sta EnSpeedY,x
         lda #$00
-        sta EnCounter,x
+        sta EnSpeedSubPixelY,x
     L9849:
     
     ; push x max speed to stack
@@ -57,7 +57,7 @@ MetroidAIRoutine:
     pha
     
     ; check if x speed is positive
-    lda EnData03,x
+    lda EnSpeedX,x
     bpl L985F
         ; negate x speed
         pla
@@ -65,17 +65,17 @@ MetroidAIRoutine:
         pha
         ; get absolute value of x speed
         lda #$00
-        cmp EnData07,x
-        sbc EnData03,x
+        cmp EnSpeedSubPixelX,x
+        sbc EnSpeedX,x
     L985F:
     ; compare absolute x speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
     bcc L986D
         ; limit speed to max
-        sta EnData03,x
+        sta EnSpeedX,x
         lda #$00
-        sta EnData07,x
+        sta EnSpeedSubPixelX,x
     L986D:
     
     ; load acceleration sign bits into a (bit0: horizontal sign, bit2: vertical sign)
@@ -83,13 +83,13 @@ MetroidAIRoutine:
     pha
     ; get horizontal acceleration
     jsr GetMetroidAccel
-    sta EnData1B,x
+    sta EnAccelX,x
     pla
     ; get vertical acceleration
     lsr
     lsr
     jsr GetMetroidAccel
-    sta EnData1A,x
+    sta EnAccelY,x
     
     ; check if metroid is frozen or not
     lda EnStatus,x
@@ -163,15 +163,15 @@ L98A9:
         lda #$00
         sta EnData04,x
         sta MetroidLatch0400,y
-        sta EnCounter,x
-        sta EnData07,x
+        sta EnSpeedSubPixelY,x
+        sta EnSpeedSubPixelX,x
         ; set repel speed
-        lda EnData1A,x
+        lda EnAccelY,x
         jsr GetMetroidRepelSpeed
-        sta EnData02,x
-        lda EnData1B,x
+        sta EnSpeedY,x
+        lda EnAccelX,x
         jsr GetMetroidRepelSpeed
-        sta EnData03,x
+        sta EnSpeedX,x
     L990F:
     ; check if latched
     jsr LoadEnemySlotIDIntoY
@@ -185,7 +185,7 @@ L98A9:
         
         ; begin attempt to latch onto Samus
         ; put sign of x speed + $01 into latch
-        lda EnData03,x
+        lda EnSpeedX,x
         and #$80
         ora #$01
         tay
@@ -290,13 +290,13 @@ LoadEnemySlotIDIntoX:
 
 ClearMetroidSpeed:
     lda #$00
-    sta EnData02,x
-    sta EnData03,x
-    sta EnData07,x
-    sta EnCounter,x
+    sta EnSpeedY,x
+    sta EnSpeedX,x
+    sta EnSpeedSubPixelX,x
+    sta EnSpeedSubPixelY,x
 ClearRinkaSomething: ; referenced in rinka.asm
-    sta EnData1B,x
-    sta EnData1A,x
+    sta EnAccelX,x
+    sta EnAccelY,x
     rts
 
 Table99D8:
@@ -315,9 +315,9 @@ StoreSamusPositionToTemp:
 LoadPositionFromTemp:
     ; save function result as enemy position
     lda $09
-    sta EnXRoomPos,x
+    sta EnX,x
     lda $08
-    sta EnYRoomPos,x
+    sta EnY,x
     lda $0B
     and #$01
     sta EnNameTable,x

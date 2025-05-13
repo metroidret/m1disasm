@@ -3,20 +3,20 @@
 ; Kraid Routine
 KraidAIRoutine:
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     bcc KraidBranchB
     beq KraidBranchA
-    cmp #$05
+    cmp #enemyStatus_Pickup
     bne KraidBranchC
 
 KraidBranchA:
-    ; clear projectiles status?
-    lda #$00
-    sta EnStatus+$10 ;$6B04
-    sta EnStatus+$20 ;$6B14
-    sta EnStatus+$30 ;$6B24
-    sta EnStatus+$40 ;$6B34
-    sta EnStatus+$50 ;$6B44 ??
+    ; delete projectiles
+    lda #enemyStatus_NoEnemy
+    sta EnStatus+$10
+    sta EnStatus+$20
+    sta EnStatus+$30
+    sta EnStatus+$40
+    sta EnStatus+$50
     beq KraidBranchC
 
 KraidBranchB:
@@ -27,7 +27,7 @@ KraidBranchB:
 KraidBranchC:
     lda #$0A
     sta $00
-    jmp CommonEnemyStub
+    jmp CommonEnemyStub ;sidehopper.asm
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
@@ -36,11 +36,11 @@ KraidLintAIRoutine:
     and #$02
     beq KraidLintBranchA
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     bne KraidLintBranchB
 
 KraidLintBranchA:
-    lda #$00
+    lda #enemyStatus_NoEnemy
     sta EnStatus,x
     beq KraidLintBranchC
 
@@ -50,22 +50,25 @@ KraidLintBranchB:
     bmi KraidLintBranchC
 
     lda EnStatus,x
-    cmp #$02
+    cmp #enemyStatus_Active
     bne KraidLintBranchC
 
-    jsr CommonJump_VertMoveProc
+    ; save deltaY into EnSpeedY
+    jsr CommonJump_EnemyGetDeltaY
     ldx PageIndex
     lda $00
-    sta EnData02,x
+    sta EnSpeedY,x
 
-    jsr CommonJump_HoriMoveProc
+    ; save deltaX into EnSpeedX
+    jsr CommonJump_EnemyGetDeltaX
     ldx PageIndex
     lda $00
-    sta EnData03,x
+    sta EnSpeedX,x
+
     jsr CommonJump_11
     bcs KraidLintBranchC
 
-    lda #$03
+    lda #enemyStatus_Explode
     sta EnStatus,x
 
 KraidLintBranchC:
@@ -120,7 +123,7 @@ KraidUpdateProjectile_BranchA:
     beq KraidUpdateProjectile_BranchC
 
 KraidUpdateProjectile_BranchB:
-    lda #$00
+    lda #enemyStatus_NoEnemy ; #$00
     sta EnStatus,x
     sta EnSpecialAttribs,x
     jsr CommonJump_0E
@@ -176,9 +179,9 @@ KraidUpdateProjectile_BranchC:
 
 LoadPositionFromTemp:
     lda $08
-    sta EnYRoomPos,x
+    sta EnY,x
     lda $09
-    sta EnXRoomPos,x
+    sta EnX,x
     lda $0B
     and #$01
     sta EnNameTable,x
@@ -187,9 +190,9 @@ KraidUpdateProjectile_Exit:
     rts
 
 StorePositionToTemp:
-    lda EnYRoomPos,x
+    lda EnY,x
     sta $08
-    lda EnXRoomPos,x
+    lda EnX,x
     sta $09
     lda EnNameTable,x
     sta $0B
@@ -226,16 +229,20 @@ KraidSubB:
     and #$0F
     cmp #$0A
     bne KraidSubB_Exit
-    lda #$01
+    lda #enemyStatus_Resting
+    
     ldx #$10
     cmp EnStatus,x
     beq KraidSubB_BranchB
+    
     ldx #$20
     cmp EnStatus,x
     beq KraidSubB_BranchB
+    
     ldx #$30
     cmp EnStatus,x
     beq KraidSubB_BranchB
+    
     inc KraidLintCounter
     rts
 
@@ -264,13 +271,16 @@ KraidSubC:
     bmi KraidSubC_Exit
     and #$0F
     bne KraidSubC_Exit
-    lda #$01
+    lda #enemyStatus_Resting
+    
     ldx #$40
     cmp EnStatus,x
     beq KraidSubC_BranchB
+    
     ldx #$50
     cmp EnStatus,x
     beq KraidSubC_BranchB
+    
     inc KraidNailCounter
     rts
 

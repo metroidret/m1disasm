@@ -97,10 +97,10 @@ CommonJump_0D: ;$8027
     jmp LFD8F
 CommonJump_0E: ;$802A
     jmp LEB6E
-CommonJump_VertMoveProc: ;$802D
-    jmp VertMoveProc
-CommonJump_HoriMoveProc: ;$8030
-    jmp HoriMoveProc
+CommonJump_EnemyGetDeltaY: ;$802D
+    jmp EnemyGetDeltaY
+CommonJump_EnemyGetDeltaX: ;$8030
+    jmp EnemyGetDeltaX
 CommonJump_11: ;$8033
     jmp LFA1E
 CommonJump_12: ;$8036
@@ -118,80 +118,87 @@ CommonJump_Base10Subtract: ;$8045
 
 ; Crawler jump table
 CrawlerMovementRoutinesTable:
-    .word L84FE-1 ; right
-    .word L84A7-1 ; left
-    .word L844B-1 ; down
-    .word L844B-1 ; down
-    .word L84A7-1 ; right
-    .word L84FE-1 ; left
-    .word L83F5-1 ; up
-    .word L83F5-1 ; up
+    .word EnemyMoveOnePixelRight-1
+    .word EnemyMoveOnePixelLeft-1
+    .word EnemyMoveOnePixelDown-1
+    .word EnemyMoveOnePixelDown-1
+    .word EnemyMoveOnePixelLeft-1
+    .word EnemyMoveOnePixelRight-1
+    .word EnemyMoveOnePixelUp-1
+    .word EnemyMoveOnePixelUp-1
 
 ;-------------------------------------------------------------------------------
 ; A common enemy AI/movement routine
 ; called by F410 in the engine, via CommonJump_00
 CommonEnemyAI:
-; Set x to point to enemy
+    ; Set x to point to enemy
     ldx PageIndex
-; Exit if bit 6 of EnData05 is set
+    
+    ; Exit if bit 6 of EnData05 is set
     lda EnData05,x
     asl
-    bmi CommonEnemyAI_Exit
-; Exit if enemy is not active
+    bmi @RTS
+    
+    ; Exit if enemy is not active
     lda EnStatus,x
-    cmp #$02
-    bne CommonEnemyAI_Exit
+    cmp #enemyStatus_Active
+    bne @RTS
 
-    jsr VertMoveProc
+    ; load delta y into a
+    jsr EnemyGetDeltaY
     lda $00
-    bpl CommonEnemyAI_BranchA
-    jsr TwosComplement              ;($C3D4)
-    sta Enemy66
+    bpl @endIf_Up
+        ; save absolute delta y into EnemyMovePixelQty
+        jsr TwosComplement ; flip negative to positive
+        sta EnemyMovePixelQty
 
-; Up Movement
-CommonEnemyAI_LoopA:
-    jsr L83F5 ; Move one pixel
-    jsr L80B8 ; Determine something about the next pixel moved (?0)
-    dec Enemy66
-    bne CommonEnemyAI_LoopA
+        ; move one pixel upwards EnemyMovePixelQty times
+        @loop_Up:
+            jsr EnemyMoveOnePixelUp ; attempt to move one pixel
+            jsr EnemyIfMoveFailedUp ; end loop if attempt failed
+            dec EnemyMovePixelQty
+            bne @loop_Up
+    @endIf_Up:
+    beq @endIf_Down
+        ; save absolute delta y into EnemyMovePixelQty
+        sta EnemyMovePixelQty
 
-CommonEnemyAI_BranchA:
-    beq CommonEnemyAI_BranchB
-    sta Enemy66
-
-; Down Movement
-CommonEnemyAI_LoopB:
-    jsr L844B
-    jsr L80FB
-    dec Enemy66
-    bne CommonEnemyAI_LoopB
-
-CommonEnemyAI_BranchB:
-    jsr HoriMoveProc
+        ; move one pixel downwards EnemyMovePixelQty times
+        @loop_Down:
+            jsr EnemyMoveOnePixelDown ; attempt to move one pixel
+            jsr EnemyIfMoveFailedDown ; end loop if attempt failed
+            dec EnemyMovePixelQty
+            bne @loop_Down
+    @endIf_Down:
+    
+    ; load delta x into a
+    jsr EnemyGetDeltaX
     lda $00
-    bpl CommonEnemyAI_BranchC
-    jsr TwosComplement              ;($C3D4)
-    sta Enemy66
+    bpl @endIf_Left
+        ; save absolute delta x into EnemyMovePixelQty
+        jsr TwosComplement ; flip negative to positive
+        sta EnemyMovePixelQty
 
-; Left Movement
-CommonEnemyAI_LoopC:
-    jsr L84A7
-    jsr L816E
-    dec Enemy66
-    bne CommonEnemyAI_LoopC
+        ; move one pixel to the left EnemyMovePixelQty times
+        @loop_Left:
+            jsr EnemyMoveOnePixelLeft ; attempt to move one pixel
+            jsr EnemyIfMoveFailedLeft ; end loop if attempt failed
+            dec EnemyMovePixelQty
+            bne @loop_Left
+    @endIf_Left:
+    beq @endIf_Right
+        ; save absolute delta x into EnemyMovePixelQty
+        sta EnemyMovePixelQty
 
-CommonEnemyAI_BranchC:
-    beq CommonEnemyAI_Exit
-    sta Enemy66
+        ; move one pixel to the right EnemyMovePixelQty times
+        @loop_Right:
+            jsr EnemyMoveOnePixelRight ; attempt to move one pixel
+            jsr EnemyIfMoveFailedRight ; end loop if attempt failed
+            dec EnemyMovePixelQty
+            bne @loop_Right
+    @endIf_Right:
 
-; Right Movement
-CommonEnemyAI_LoopD:
-    jsr L84FE
-    jsr L8134
-    dec Enemy66
-    bne CommonEnemyAI_LoopD
-
-CommonEnemyAI_Exit:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -204,15 +211,15 @@ LoadTableAt977B: ; L80B0
 
 ;-------------------------------------------------------------------------------
 ; Up movement related ?
-L80B8:
+EnemyIfMoveFailedUp:
     ldx PageIndex
-    bcs RTS_80FA ; If MoveUpOnePixel returned the carry flag, exit
+    bcs RTS_80FA ; If EnemyMoveOnePixelUp returned the carry flag, exit
 ; Otherwise, do stuff, and make sure it doesn't move anymore pixels the rest of this frame
     lda EnData05,x
     bpl L80C7
 
 L80C1:
-    jsr L81FC
+    jsr EnemyIfMoveFailedVertical81FC
     jmp L80F6
 
 L80C7:
@@ -222,18 +229,18 @@ L80C7:
     beq L80C1
 
     bpl L80D8
-    jsr SetBit5OfEnData05_AndClearEnData1A
+    jsr SetBit5OfEnData05_AndClearEnAccelY
     beq L80E2
 
 L80D8:
     sec
-    ror EnData02,x
-    ror EnCounter,x
+    ror EnSpeedY,x
+    ror EnSpeedSubPixelY,x
     jmp L80F6
 
 L80E2:
-    sta EnData02,x
-    sta EnCounter,x
+    sta EnSpeedY,x
+    sta EnSpeedSubPixelY,x
     beq L80F6
 
 L80EA:
@@ -246,19 +253,19 @@ L80EA:
 
 L80F6:
     lda #$01
-    sta Enemy66
+    sta EnemyMovePixelQty
 
 RTS_80FA:
     rts
 ;-------------------------------------------------------------------------------
 ; Down movement related?
-L80FB:
+EnemyIfMoveFailedDown:
     ldx PageIndex
     bcs RTS_8133
     lda EnData05,x
     bpl L810A
 L8104:
-    jsr L81FC
+    jsr EnemyIfMoveFailedVertical81FC
     jmp L812F
 L810A:
     jsr LoadTableAt977B
@@ -267,12 +274,12 @@ L810A:
     beq L8104
     bpl L8120
     clc
-    ror EnData02,x
-    ror EnCounter,x
+    ror EnSpeedY,x
+    ror EnSpeedSubPixelY,x
     jmp L812F
 
 L8120:
-    jsr SetBit5OfEnData05_AndClearEnData1A
+    jsr SetBit5OfEnData05_AndClearEnAccelY
 L8123:
     lda L977B,y
     lsr
@@ -283,13 +290,13 @@ L8123:
 
 L812F:
     lda #$01
-    sta Enemy66
+    sta EnemyMovePixelQty
 RTS_8133:
     rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related ?
-L8134:
+EnemyIfMoveFailedRight:
     ldx PageIndex
     bcs RTS_816D
 
@@ -298,19 +305,19 @@ L8134:
     lda EnData05,x
     bmi L8148
 L8142:
-    jsr L81C7
+    jsr EnemyIfMoveFailedHorizontal81FC
     jmp L8169
 L8148:
     lda EnData1F,x
     beq L8142
     bpl L8159
     clc
-    ror EnData03,x
-    ror EnData07,x
+    ror EnSpeedX,x
+    ror EnSpeedSubPixelX,x
     jmp L8169
 
 L8159:
-    jsr SetBit5OfEnData05_AndClearEnData1B
+    jsr SetBit5OfEnData05_AndClearEnAccelX
     beq L8169
 L815E:
     lda $977B,y
@@ -321,14 +328,14 @@ L815E:
 
 L8169:
     lda #$01
-    sta Enemy66
+    sta EnemyMovePixelQty
 
 RTS_816D:
     rts
 
 ;-------------------------------------------------------------------------------
 ; Left Movement related?
-L816E:
+EnemyIfMoveFailedLeft:
     ldx PageIndex
     bcs RTS_81B0
     jsr LoadTableAt977B
@@ -336,23 +343,23 @@ L816E:
     lda EnData05,x
     bmi L8182
 L817C:
-    jsr L81C7
+    jsr EnemyIfMoveFailedHorizontal81FC
     jmp L81AC
 L8182:
     lda EnData1F,x
     beq L817C
     bpl L818E
-        jsr SetBit5OfEnData05_AndClearEnData1B
+        jsr SetBit5OfEnData05_AndClearEnAccelX
         beq L8198
     L818E:
     sec
-    ror EnData03,x
-    ror EnData07,x
+    ror EnSpeedX,x
+    ror EnSpeedSubPixelX,x
     jmp L81AC
 
 L8198:
-    sta EnData03,x
-    sta EnData07,x
+    sta EnSpeedX,x
+    sta EnSpeedSubPixelX,x
     beq L81AC
 L81A0:
     jsr LoadTableAt977B
@@ -364,14 +371,14 @@ L81A0:
 
 L81AC:
     lda #$01
-    sta Enemy66
+    sta EnemyMovePixelQty
 RTS_81B0:
     rts
 
 ;-------------------------------------------------------------------------------
-SetBit5OfEnData05_AndClearEnData1A:
+SetBit5OfEnData05_AndClearEnAccelY:
     jsr SetBit5OfEnData05
-    sta EnData1A,x
+    sta EnAccelY,x
     rts
 
 ;-------------------------------------------------------------------------------
@@ -382,36 +389,37 @@ SetBit5OfEnData05:
     rts
 
 ;-------------------------------------------------------------------------------
-SetBit5OfEnData05_AndClearEnData1B:
+SetBit5OfEnData05_AndClearEnAccelX:
     jsr SetBit5OfEnData05
-    sta EnData1B,x
+    sta EnAccelX,x
     rts
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related
-L81C7:
+EnemyIfMoveFailedHorizontal81FC:
     jsr LoadBit5ofTableAt968B
     bne RTS_81F5
     lda #$01
     jsr XorEnData05
-    lda EnData1B,x
+    lda EnAccelX,x
     jsr TwosComplement
-    sta EnData1B,x
+    sta EnAccelX,x
 
+L81DA: ;referenced in bank 7
     jsr LoadBit5ofTableAt968B
     bne RTS_81F5
     jsr LoadTableAt977B
     sec
     bpl L81ED
-; Decrement EnCounterX
+; Decrement EnSpeedSubPixelX
     lda #$00
-    sbc EnData07,x
-    sta EnData07,x
+    sbc EnSpeedSubPixelX,x
+    sta EnSpeedSubPixelX,x
 ; Decrement EnSpeedX (if carry is set)
 L81ED:
     lda #$00
-    sbc EnData03,x
-    sta EnData03,x
+    sbc EnSpeedX,x
+    sta EnSpeedX,x
 
 RTS_81F5:
     rts
@@ -424,29 +432,29 @@ LoadBit5ofTableAt968B:
 
 ;-------------------------------------------------------------------------------
 ; Vertical Movement Related
-L81FC:
+EnemyIfMoveFailedVertical81FC:
     jsr LoadBit5ofTableAt968B
     bne RTS_81F5 ; Exit if bit 5 is set
     lda #$04
     jsr XorEnData05
-    lda EnData1A,x
+    lda EnAccelY,x
     jsr TwosComplement
-    sta EnData1A,x
-
+    sta EnAccelY,x
+L820F: ;referenced in bank 7
     jsr LoadBit5ofTableAt968B
     bne RTS_822A ; Exit if bit 5 is set
     jsr LoadTableAt977B
     sec
     bpl L8222
-; Decrement EnCounter
+; Decrement EnSpeedSubPixelY
     lda #$00
-    sbc EnCounter,x
-    sta EnCounter,x
-; Decrement EnSpeedY (if EnCounter rolls over)
+    sbc EnSpeedSubPixelY,x
+    sta EnSpeedSubPixelY,x
+; Decrement EnSpeedY (if EnSpeedSubPixelY rolls over)
 L8222:
     lda #$00
-    sbc EnData02,x
-    sta EnData02,x
+    sbc EnSpeedY,x
+    sta EnSpeedY,x
 RTS_822A:
     rts
 
@@ -470,9 +478,8 @@ LoadEnemyMovementPtr:
     rts
 
 ;-------------------------------------------------------------------------------
-; Vertical Movement Related ?
-; Determines y-delta for a given frame
-VertMoveProc:
+; Determines and returns delta y for a given frame in $00
+EnemyGetDeltaY:
     jsr LoadTableAt977B
     bpl L824C
         jmp L833F
@@ -485,60 +492,60 @@ VertMoveProc:
 
     jsr LoadEnemyMovementPtr ; Puts a pointer at $81
 L8258:
-    ldy EnCounter,x
-VertMoveProc_ReadByte:
+    ldy EnSpeedSubPixelY,x
+EnemyGetDeltaY_ReadByte:
     lda (EnemyMovementPtr),y
 
 ;CommonCase
 ; Branch if the value is <$F0
     cmp #$F0
-    bcc VertMoveProc_CommonCase
+    bcc EnemyGetDeltaY_CommonCase
 
 ;CaseFA
     cmp #$FA
-    beq VertMoveProc_JumpToCaseFA
+    beq EnemyGetDeltaY_JumpToCaseFA
 
 ;CaseFB
     cmp #$FB
-    beq VertMoveProc_CaseFB
+    beq EnemyGetDeltaY_CaseFB
 
 ;CaseFC
     cmp #$FC
-    beq VertMoveProc_CaseFC
+    beq EnemyGetDeltaY_CaseFC
 
 ;CaseFD
     cmp #$FD
-    beq VertMoveProc_CaseFD
+    beq EnemyGetDeltaY_CaseFD
 
 ;CaseFE
     cmp #$FE
-    beq VertMoveProc_CaseFE
+    beq EnemyGetDeltaY_CaseFE
 
 ;Default case
 ; Reset enemy counter
     lda #$00
-    sta EnCounter,x
+    sta EnSpeedSubPixelY,x
     beq L8258
 
 ;---------------------------------------
-VertMoveProc_JumpToCaseFA: ; L827C
-    jmp VertMoveProc_CaseFA
+EnemyGetDeltaY_JumpToCaseFA: ; L827C
+    jmp EnemyGetDeltaY_CaseFA
 
 ;---------------------------------------
-VertMoveProc_CommonCase:
+EnemyGetDeltaY_CommonCase:
 ; Take the value from memory
-; Branch ahead if velocityString[EnCounter] - EnDelay != 0
+; Branch ahead if velocityString[EnSpeedSubPixelY] - EnDelay != 0
     sec
     sbc EnDelay,x
     bne L8290
 
     sta EnDelay,x
-; EnCounter += 2
+; EnSpeedSubPixelY += 2
     iny
     iny
     tya
-    sta EnCounter,x
-    bne VertMoveProc_ReadByte ; Handle another byte
+    sta EnSpeedSubPixelY,x
+    bne EnemyGetDeltaY_ReadByte ; Handle another byte
 
 ; Increment EnDelay
 L8290:
@@ -548,6 +555,7 @@ L8290:
     iny
     lda (EnemyMovementPtr),y
 
+L8296: ;referenced in bank 7
 ; Save the sign bit to the carry flag
     asl
     php
@@ -558,24 +566,24 @@ L8290:
     bcc L82A2
     eor #$FF
     adc #$00 ; Since carry is set in this branch, this increments A
-; Store this frame's delta-y in temp
+; Store this frame's delta y in temp
 L82A2:
     sta $00
     rts
 
 ;---------------------------------------
 ; Clear EnData1D, move on to next byte in the stream
-VertMoveProc_CaseFD:
-    inc EnCounter,x
+EnemyGetDeltaY_CaseFD:
+    inc EnSpeedSubPixelY,x
     iny
     lda #$00
     sta EnData1D,x
-    beq VertMoveProc_ReadByte ; Branch always
+    beq EnemyGetDeltaY_ReadByte ; Branch always
 
 ;---------------------------------------
 ; Don't move, and don't advance the movement counter
 ; HALT, perhaps?
-VertMoveProc_CaseFB:
+EnemyGetDeltaY_CaseFB:
 ; Double RTS !?
     pla
     pla
@@ -584,7 +592,7 @@ VertMoveProc_CaseFB:
 
 ;---------------------------------------
 ; Repeat Previous Movement Until [Condition?]
-VertMoveProc_CaseFC:
+EnemyGetDeltaY_CaseFC:
 ; If bit 7 of EnData1F is set, then check if you can move up and then jump ahead
     lda EnData1F,x
     bpl L82BE
@@ -599,7 +607,7 @@ L82BE:
 L82C3:
     ldx PageIndex
     bcs L82D2
-    ldy EnCounter,x
+    ldy EnSpeedSubPixelY,x
     iny
     lda #$00
     sta EnData1F,x
@@ -607,25 +615,25 @@ L82C3:
 
 ; Else, repeat the previous two bytes
 L82D2:
-    ldy EnCounter,x
+    ldy EnSpeedSubPixelY,x
     dey
     dey
 
-; Save EnCounter
+; Save EnSpeedSubPixelY
 L82D7:
     tya
-    sta EnCounter,x
+    sta EnSpeedSubPixelY,x
 ; Read the next bytes
-    jmp VertMoveProc_ReadByte
+    jmp EnemyGetDeltaY_ReadByte
 
 ;---------------------------------------
 ; Repeat previous until ???
-VertMoveProc_CaseFE:
-; Move EnCounter back to the previous movement
+EnemyGetDeltaY_CaseFE:
+; Move EnSpeedSubPixelY back to the previous movement
     dey
     dey
     tya
-    sta EnCounter,x
+    sta EnSpeedSubPixelY,x
 ; Then do some other stuff
     lda EnData1F,x
     bpl L82EF
@@ -645,7 +653,7 @@ L82FB:
     ldy EnDataIndex,x
     lda L968B,y
     and #$20
-    beq VertMoveProc_CaseFA
+    beq EnemyGetDeltaY_CaseFA
     lda EnData05,x
     eor #$05
     ora L968B,y
@@ -653,16 +661,16 @@ L82FB:
     sta EnData05,x
 
 ;---------------------------------------
-;SetBit5OfEnData05_AndClearEnData1A
+;SetBit5OfEnData05_AndClearEnAccelY
 ; Move horizontally indefinitely (???)
 ; Is this even used?
-VertMoveProc_CaseFA:
-    jsr SetBit5OfEnData05_AndClearEnData1A
+EnemyGetDeltaY_CaseFA:
+    jsr SetBit5OfEnData05_AndClearEnAccelY
     jmp L82A2 ; Set delta-y to zero and exit
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related?
-HoriMoveProc:
+EnemyGetDeltaX:
     jsr LoadTableAt977B
     bpl L8320
     jmp L8395
@@ -674,10 +682,10 @@ L8320:
     eor #$20
     beq L833C
 
-; Read the same velocity byte as in VertMoveProc
-    ldy EnCounter,x
+; Read the same velocity byte as in EnemyGetDeltaY
+    ldy EnSpeedSubPixelY,x
     iny
-    lda (EnemyMovementPtr),y ; $81/$82 were loaded during VertMoveProc earlier
+    lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
     tax
 ; Save the sign bit to the processor flags
     and #$08
@@ -699,14 +707,14 @@ L833C:
 ; Vertical case?
 L833F:
     ldy #$0E
-    lda EnData1A,x
+    lda EnAccelY,x
     bmi L835E
     clc
-    adc EnCounter,x
-    sta EnCounter,x
-    lda EnData02,x
+    adc EnSpeedSubPixelY,x
+    sta EnSpeedSubPixelY,x
+    lda EnSpeedY,x
     adc #$00
-    sta EnData02,x
+    sta EnSpeedY,x
     bpl L8376
     L8357:
         jsr TwosComplement
@@ -716,27 +724,27 @@ L833F:
         jsr TwosComplement
         sec
         sta $00
-        lda EnCounter,x
+        lda EnSpeedSubPixelY,x
         sbc $00
-        sta EnCounter,x
-        lda EnData02,x
+        sta EnSpeedSubPixelY,x
+        lda EnSpeedY,x
         sbc #$00
-        sta EnData02,x
+        sta EnSpeedY,x
         bmi L8357
 L8376:
     cmp #$0E
     bcc L8383
         lda #$00
-        sta EnCounter,x
+        sta EnSpeedSubPixelY,x
         tya
-        sta EnData02,x
+        sta EnSpeedY,x
     L8383:
     lda EnData18,x
     clc
-    adc EnCounter,x
+    adc EnSpeedSubPixelY,x
     sta EnData18,x
     lda #$00
-    adc EnData02,x
+    adc EnSpeedY,x
     sta $00
     rts
 
@@ -750,26 +758,26 @@ L8395:
     lda #$0E
     sta $01
     sta $03
-    lda EnData07,x
+    lda EnSpeedSubPixelX,x
     clc
-    adc EnData1B,x
-    sta EnData07,x
+    adc EnAccelX,x
+    sta EnSpeedSubPixelX,x
     sta $04
     lda #$00
-    ldy EnData1B,x
+    ldy EnAccelX,x
     bpl L83B6
         lda #$FF
     L83B6:
-    adc EnData03,x
-    sta EnData03,x
+    adc EnSpeedX,x
+    sta EnSpeedX,x
     tay
     bpl L83D0
         lda #$00
         sec
-        sbc EnData07,x
+        sbc EnSpeedSubPixelX,x
         sta $04
         lda #$00
-        sbc EnData03,x
+        sbc EnSpeedX,x
         tay
         jsr LE449
     L83D0:
@@ -779,25 +787,25 @@ L8395:
     sbc $03
     bcc L83E3
         lda $00
-        sta EnData07,x
+        sta EnSpeedSubPixelX,x
         lda $01
-        sta EnData03,x
+        sta EnSpeedX,x
     L83E3:
     lda EnData19,x
     clc
-    adc EnData07,x
+    adc EnSpeedSubPixelX,x
     sta EnData19,x
     lda #$00
-    adc EnData03,x
+    adc EnSpeedX,x
     sta $00
     rts
 
 ;-------------------------------------------------------------------------------
 ; Up movement related
 ; Move one pixel?
-L83F5:
+EnemyMoveOnePixelUp:
     ldx PageIndex
-    lda EnYRoomPos,x
+    lda EnY,x
     sec
     sbc EnRadY,x
     and #$07
@@ -810,7 +818,7 @@ L83F5:
     ldx PageIndex
     bcc RTS_844A
     inc $00
-    ldy EnYRoomPos,x
+    ldy EnY,x
     bne L8429
     ldy #$F0
     lda ScrollDir
@@ -824,7 +832,7 @@ L83F5:
 L8429:
     dey
     tya
-    sta EnYRoomPos,x
+    sta EnY,x
     cmp EnRadY,x
     bne L8441
 
@@ -833,7 +841,7 @@ L8429:
         jsr GetOtherNameTableIndex
         bne L8441
     L843C:
-    inc EnYRoomPos,x
+    inc EnY,x
     clc
     rts
 L8441:
@@ -847,9 +855,9 @@ RTS_844A:
 
 ;-------------------------------------------------------------------------------
 ; Down movement related ?
-L844B:
+EnemyMoveOnePixelDown:
     ldx PageIndex
-    lda EnYRoomPos,x
+    lda EnY,x
     clc
     adc EnRadY,x
     and #$07
@@ -862,7 +870,7 @@ L844B:
     ldx PageIndex
     bcc RTS_84A6
     inc $00
-    ldy EnYRoomPos,x
+    ldy EnY,x
     cpy #$EF
     bne L8481
     ldy #$FF
@@ -877,7 +885,7 @@ L844B:
 L8481:
     iny
     tya
-    sta EnYRoomPos,x
+    sta EnY,x
     clc
     adc EnRadY,x
     cmp #$EF
@@ -887,7 +895,7 @@ L8481:
         jsr GetOtherNameTableIndex
         beq L849D
     L8497:
-    dec EnYRoomPos,x
+    dec EnY,x
     clc
     bcc RTS_84A6
 L849D:
@@ -901,9 +909,9 @@ RTS_84A6:
 
 ;-------------------------------------------------------------------------------
 ; Left movement related
-L84A7:
+EnemyMoveOnePixelLeft:
     ldx PageIndex
-    lda EnXRoomPos,x
+    lda EnX,x
     sec
     sbc EnRadX,x
     and #$07
@@ -916,7 +924,7 @@ L84A7:
     ldx PageIndex
     bcc RTS_84FD
     inc $00
-    ldy EnXRoomPos,x
+    ldy EnX,x
     bne L84DA
     lda ScrollDir
     cmp #$02
@@ -929,8 +937,8 @@ L84A7:
     beq RTS_84FD
     jsr SwitchEnemyNameTable
 L84DA:
-    dec EnXRoomPos,x
-    lda EnXRoomPos,x
+    dec EnX,x
+    lda EnX,x
     cmp EnRadX,x
     bne L84F4
     lda ScrollX
@@ -938,7 +946,7 @@ L84DA:
         jsr GetOtherNameTableIndex
         bne L84F4
     L84EE:
-    inc EnXRoomPos,x
+    inc EnX,x
     clc
     bcc RTS_84FD
 L84F4:
@@ -952,10 +960,10 @@ RTS_84FD:
 
 ;-------------------------------------------------------------------------------
 ; Right movement related
-L84FE:
+EnemyMoveOnePixelRight:
     ldx PageIndex
 ; if ((xpos + xrad) % 8) == 0, then EnemyCheckMoveRight()
-    lda EnXRoomPos,x
+    lda EnX,x
     clc
     adc EnRadX,x
     and #$07
@@ -968,7 +976,7 @@ L84FE:
     ldx PageIndex
     bcc RTS_8559
     inc $00
-    inc EnXRoomPos,x
+    inc EnX,x
     bne L8536
     lda ScrollDir
     cmp #$02
@@ -978,14 +986,14 @@ L84FE:
         jsr GetOtherNameTableIndex
         beq L8533
     L852D:
-        dec EnXRoomPos,x
+        dec EnX,x
         clc
         bcc RTS_8559
     L8533:
     jsr SwitchEnemyNameTable
 
 L8536:
-    lda EnXRoomPos,x
+    lda EnX,x
     clc
     adc EnRadX,x
     cmp #$FF
@@ -995,7 +1003,7 @@ L8536:
         jsr GetOtherNameTableIndex
         beq L8550
     L854A:
-    dec EnXRoomPos,x
+    dec EnX,x
     clc
     bcc RTS_8559
 

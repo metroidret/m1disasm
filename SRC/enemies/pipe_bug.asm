@@ -1,44 +1,46 @@
 ; Pipe Bug AI Handler
 
 PipeBugAIRoutine:
-    lda EnStatus,x      ;
-    cmp #$02            ;
-    bne PipeBugBranchA  ;
-    lda EnData03,x      ;
-    bne PipeBugBranchA  ;
-    lda EnData1A,x      ;
-    bne PipeBugBranchB  ;
+    lda EnStatus,x
+    cmp #enemyStatus_Active
+    bne PipeBugBranchA
+    lda EnSpeedX,x
+    bne PipeBugBranchA
+    lda EnAccelY,x
+    bne PipeBugBranchB
 
     lda ObjY            ;\
     sec                 ;|
-    sbc EnYRoomPos,x    ;| - branch if (SamusY - PipeBugY) >= 0x40
+    sbc EnY,x           ;| - branch if (SamusY - PipeBugY) >= 0x40
     cmp #$40            ;|
     bcs PipeBugBranchA  ;/
 
     lda #$7F            ;\
-    sta EnData1A,x      ;| - EnData1A := $7E, branch always
+    sta EnAccelY,x      ;| - EnAccelY := $7E, branch always
     bne PipeBugBranchA  ;/
 
-PipeBugBranchB:      ;
-    lda EnData02,x      ;
-    bmi PipeBugBranchA  ;
-    lda #$00            ;
-    sta EnData02,x      ;
-    sta EnCounter,x     ;
-    sta EnData1A,x      ;
-    lda EnData05,x      ;
-    and #$01            ;
-    tay                 ;
-    lda PipeBugTable,y  ;
-    sta EnData03,x      ;
+PipeBugBranchB:
+    lda EnSpeedY,x
+    bmi PipeBugBranchA
+    lda #$00
+    sta EnSpeedY,x
+    sta EnSpeedSubPixelY,x
+    sta EnAccelY,x
+    lda EnData05,x
+    and #$01
+    tay
+    lda PipeBugTable,y
+    sta EnSpeedX,x
 
 PipeBugBranchA:
     lda EnData05,x
     asl
     bmi PipeBugBranchC
+    
     lda EnStatus,x
-    cmp #$02
+    cmp #enemyStatus_Active
     bne PipeBugBranchC
+    
     jsr CommonJump_12
     pha
     jsr CommonJump_13
@@ -57,7 +59,7 @@ PipeBugBranchC:
 
 ;Exit 2
 PipeBugDelete: ; Set enemy status to 0
-    lda #$00
+    lda #enemyStatus_NoEnemy
     sta EnStatus,x
     rts
 

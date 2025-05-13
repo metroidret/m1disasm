@@ -223,15 +223,14 @@ EnemyMovementPtrs:
 ; Unused padding to the above?
     .byte $00, $00, $00, $00, $00, $00, $00, $00
 
-; I think these next for tables each have 4 unused bytes at the end
-; EnData1A table
-L972B:  .byte $7F, $40, $30, $C0, $D0, $00, $00, $7F, $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
-; EnData1B table
-L973F:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-; EnData02 table
-L9753:  .byte $F6, $FC, $FE, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $00
-; EnData03 table
-L9767:  .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
+; enemy accel y table ($972B)
+EnAccelYTable:  .byte $7F, $40, $30, $C0, $D0, $00, $00, $7F, $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
+; enemy accel x table ($973F)
+EnAccelXTable:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; enemy speed y table ($9753)
+EnSpeedYTable:  .byte $F6, $FC, $FE, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; enemy speed x table ($9767)
+EnSpeedXTable:  .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; Behavior-Related Table?
 L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
@@ -250,8 +249,10 @@ L97CF:  .word L9D6A
 
 ; If I'm reading the code correctly, this table is accessed with this formula:
 ;  EnData08 = L97D1[(L97D1[L96CB[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
-L97D1:  .byte $01, $01, $02, $01, $03, $04, $00, $05, $00, $06, $00, $07, $00, $08, $00, $09
-L97E1:  .byte $00, $00, $00, $0B, $01, $0C, $0D, $00, $0E, $03, $0F, $10, $11, $0F
+; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
+L97D1:
+    .byte $01, $01, $02, $01, $03, $04, $00, $05, $00, $06, $00, $07, $00, $08, $00, $09
+    .byte $00, $00, $00, $0B, $01, $0C, $0D, $00, $0E, $03, $0F, $10, $11, $0F
 
 ;-------------------------------------------------------------------------------
 ;I believe this is the point where the level banks don't need to match addresses
@@ -535,7 +536,7 @@ L9992:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $
 ;-------------------------------------------------------------------------------
 
 CommonEnemyJump_00_01_02:
-    lda EnemyMovementPtr
+    lda EnemyStatus81
     cmp #$01
     beq L99B0
     cmp #$03
