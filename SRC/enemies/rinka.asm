@@ -94,7 +94,7 @@ L9AB0:
         sta $08
         lda EnX,x
         sta $09
-        lda EnNameTable,x
+        lda EnHi,x
         sta $0B
         jsr CommonJump_0D
         bcs L9AF1

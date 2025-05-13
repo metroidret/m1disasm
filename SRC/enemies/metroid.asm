@@ -320,7 +320,7 @@ LoadPositionFromTemp:
     sta EnY,x
     lda $0B
     and #$01
-    sta EnNameTable,x
+    sta EnHi,x
     rts
 
 GetMetroidAccel:

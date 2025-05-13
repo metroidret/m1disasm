@@ -284,22 +284,22 @@ EnPlaceE:
 ;Enemy frame drawing data.
 
 EnFrame00:
-    .byte $00, $02, $02
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
     .byte $14
     .byte $FF
 
 EnFrame01:
-    .byte $00, $02, $02
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
     .byte $24
     .byte $FF
 
 EnFrame02:
-    .byte $00, $00, $00
+    .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
     .byte $FF
 
 EnFrame03:
-    .byte $22, $13, $14
+    .byte ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -318,7 +318,7 @@ EnFrame03:
     .byte $FF
 
 EnFrame04:
-    .byte $22, $13, $14
+    .byte ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -338,7 +338,7 @@ EnFrame04:
     .byte $FF
 
 EnFrame05:
-    .byte $22, $13, $14
+    .byte ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -360,7 +360,7 @@ EnFrame05:
     .byte $FF
 
 EnFrame06:
-    .byte $22, $13, $14
+    .byte ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -382,7 +382,7 @@ EnFrame06:
     .byte $FF
 
 EnFrame07:
-    .byte $62, $13, $14
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -401,7 +401,7 @@ EnFrame07:
     .byte $FF
 
 EnFrame08:
-    .byte $62, $13, $14
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -421,7 +421,7 @@ EnFrame08:
     .byte $FF
 
 EnFrame09:
-    .byte $62, $13, $14
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -443,7 +443,7 @@ EnFrame09:
     .byte $FF
 
 EnFrame0A:
-    .byte $62, $13, $14
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $13, $14
     .byte $C8
     .byte $C9
     .byte $C6
@@ -465,7 +465,7 @@ EnFrame0A:
     .byte $FF
 
 EnFrame0B:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $C6
     .byte $C7
     .byte $D6
@@ -475,42 +475,42 @@ EnFrame0B:
     .byte $FF
 
 EnFrame0C:
-    .byte $30, $07, $07
+    .byte ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $EC
     .byte $FF
 
 EnFrame0D:
-    .byte $30, $07, $07
+    .byte ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $FB
     .byte $FF
 
 EnFrame0E:
-    .byte $F0, $07, $07
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $EC
     .byte $FF
 
 EnFrame0F:
-    .byte $F0, $07, $07
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $FB
     .byte $FF
 
 EnFrame10:
-    .byte $70, $07, $07
+    .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $EC
     .byte $FF
 
 EnFrame11:
-    .byte $70, $07, $07
+    .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $FB
     .byte $FF
 
 EnFrame12:
-    .byte $B0, $07, $07
+    .byte OAMDATA_VFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $EC
     .byte $FF
 
 EnFrame13:
-    .byte $B0, $07, $07
+    .byte OAMDATA_VFLIP + ($3 << 4) + _id_EnPlace0, $07, $07
     .byte $FB
     .byte $FF
 
@@ -518,57 +518,57 @@ EnFrame14:
 EnFrame15:
 EnFrame16:
 EnFrame17:
-    .byte $25, $08, $08
+    .byte ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $CE
     .byte $CF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CE
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $DF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $DF
     .byte $FF
 
 EnFrame18:
-    .byte $25, $08, $08
+    .byte ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $CE
     .byte $CF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CE
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $DE
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $DE
     .byte $FF
 
 EnFrame19:
-    .byte $A5, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $CE
     .byte $CF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CE
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $DF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $DF
     .byte $FF
 
 EnFrame1A:
-    .byte $A5, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $CE
     .byte $CF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CE
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $DE
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $DE
     .byte $FF
 
 EnFrame1B:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CE
     .byte $CE
     .byte $DF
@@ -581,16 +581,16 @@ EnFrame1E:
 EnFrame1F:
 EnFrame20:
 EnFrame21:
-    .byte $29, $04, $08
+    .byte ($2 << 4) + _id_EnPlace9, $04, $08
     .byte $E6
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $E6
     .byte $FF
 
 EnFrame22:
-    .byte $29, $04, $08
+    .byte ($2 << 4) + _id_EnPlace9, $04, $08
     .byte $E5
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $E5
     .byte $FF
 
@@ -599,93 +599,93 @@ EnFrame24:
 EnFrame25:
 EnFrame26:
 EnFrame27:
-    .byte $27, $08, $08
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EE
     .byte $EF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $EF
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame28:
-    .byte $27, $08, $08
-    .byte $FD, $62
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $EF
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $EF
     .byte $ED
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame29:
-    .byte $27, $08, $08
-    .byte $FD, $62
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $EF
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $EF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $EF
     .byte $EE
     .byte $FF
 
 EnFrame2A:
-    .byte $27, $08, $08
-    .byte $FD, $62
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $EF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $ED
     .byte $EF
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame2B:
-    .byte $67, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EE
     .byte $EF
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $EF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame2C:
-    .byte $67, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $EF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $EF
     .byte $ED
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame2D:
-    .byte $67, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $EF
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $EF
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $EF
     .byte $EE
     .byte $FF
 
 EnFrame2E:
-    .byte $67, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $EF
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $ED
     .byte $EF
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $EF
     .byte $FF
 
 EnFrame2F:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $04, $00
     .byte $EE
     .byte $EF
@@ -694,82 +694,82 @@ EnFrame2F:
     .byte $FF
 
 EnFrame30:
-    .byte $2D, $08, $0A
+    .byte ($2 << 4) + _id_EnPlaceD, $08, $0A
     .byte $E2
     .byte $F2
     .byte $E3
     .byte $F3
     .byte $FE
     .byte $FE
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $E2
     .byte $F2
     .byte $FF
 
 EnFrame31:
-    .byte $2D, $08, $0A
+    .byte ($2 << 4) + _id_EnPlaceD, $08, $0A
     .byte $E4
     .byte $F2
     .byte $FE
     .byte $FE
     .byte $E3
     .byte $F3
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $E4
     .byte $F2
     .byte $FF
 
 EnFrame32:
-    .byte $2E, $08, $0A
+    .byte ($2 << 4) + _id_EnPlaceE, $08, $0A
     .byte $F4
     .byte $F2
     .byte $E3
     .byte $F3
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $F4
     .byte $F2
     .byte $FF
 
 EnFrame33:
-    .byte $AD, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlaceD, $08, $0A
     .byte $E2
     .byte $F2
     .byte $E3
     .byte $F3
     .byte $FE
     .byte $FE
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $E2
     .byte $F2
     .byte $FF
 
 EnFrame34:
-    .byte $AD, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlaceD, $08, $0A
     .byte $E4
     .byte $F2
     .byte $FE
     .byte $FE
     .byte $E3
     .byte $F3
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $E4
     .byte $F2
     .byte $FF
 
 EnFrame35:
-    .byte $AE, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlaceE, $08, $0A
     .byte $F4
     .byte $F2
     .byte $E3
     .byte $F3
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $F4
     .byte $F2
     .byte $FF
 
 EnFrame36:
 EnFrame37:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $FC
     .byte $E2
     .byte $FC, $00, $08
@@ -781,7 +781,7 @@ EnFrame37:
     .byte $FF
 
 EnFrame38:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $00, $FC
     .byte $F2
     .byte $FC, $00, $08
@@ -802,20 +802,20 @@ EnFrame3F:
 EnFrame40:
 EnFrame41:
 EnFrame42:
-    .byte $20, $04, $04
+    .byte ($2 << 4) + _id_EnPlace0, $04, $04
     .byte $C0
     .byte $FF
 
 EnFrame43:
-    .byte $20, $00, $00
+    .byte ($2 << 4) + _id_EnPlace0, $00, $00
     .byte $FC, $F8, $00
     .byte $D0
     .byte $FF
 
 EnFrame44:
-    .byte $23, $00, $00
+    .byte ($2 << 4) + _id_EnPlace3, $00, $00
     .byte $D1
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $D1
     .byte $FF
 
@@ -839,87 +839,87 @@ EnFrame55:
 EnFrame56:
 EnFrame57:
 EnFrame58:
-    .byte $27, $08, $08
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CC
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $DC
     .byte $DD
     .byte $FF
 
 EnFrame59:
-    .byte $67, $08, $08
-    .byte $FD, $22
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $CD
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CD
     .byte $DC
     .byte $DD
     .byte $FF
 
 EnFrame5A:
-    .byte $27, $08, $08
-    .byte $FD, $A2
+    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $DA
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $CB
     .byte $DA
     .byte $DB
     .byte $FF
 
 EnFrame5B:
-    .byte $A7, $08, $08
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
-    .byte $FD, $22
+    .byte $FD, OAMDATA_PRIORITY + $2
     .byte $CA
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $DB
     .byte $FF
 
 EnFrame5C:
-    .byte $A7, $08, $08
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $CC
-    .byte $FD, $A2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $DC
     .byte $DD
     .byte $FF
 
 EnFrame5D:
-    .byte $E7, $08, $08
-    .byte $FD, $A2
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
     .byte $CD
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $CD
     .byte $DC
     .byte $DD
     .byte $FF
 
 EnFrame5E:
-    .byte $67, $08, $08
-    .byte $FD, $E2
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $DA
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CB
     .byte $DA
     .byte $DB
     .byte $FF
 
 EnFrame5F:
-    .byte $E7, $08, $08
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
-    .byte $FD, $62
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CA
-    .byte $FD, $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
     .byte $DB
     .byte $FF
 
 EnFrame60:
-    .byte $21, $00, $00
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CC
     .byte $CD
     .byte $DC
@@ -927,18 +927,18 @@ EnFrame60:
     .byte $FF
 
 EnFrame61:
-    .byte $0A, $00, $00
+    .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $75
-    .byte $FD, $60
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $75
-    .byte $FD, $A0
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
     .byte $75
-    .byte $FD, $E0
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $75
     .byte $FF
 
 EnFrame62:
-    .byte $0A, $00, $00
+    .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $FE
     .byte $FE
     .byte $FE
@@ -946,15 +946,15 @@ EnFrame62:
     .byte $3D
     .byte $3E
     .byte $4E
-    .byte $FD, $60
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $3E
     .byte $3D
     .byte $4E
-    .byte $FD, $E0
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
     .byte $4E
     .byte $3E
     .byte $3D
-    .byte $FD, $A0
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
     .byte $4E
     .byte $3D
     .byte $3E
@@ -964,7 +964,7 @@ EnFrame63:
 EnFrame64:
 EnFrame65:
 EnFrame66:
-    .byte $2A, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C3
     .byte $D2
@@ -972,7 +972,7 @@ EnFrame66:
     .byte $FF
 
 EnFrame67:
-    .byte $2A, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -980,7 +980,7 @@ EnFrame67:
     .byte $FF
 
 EnFrame68:
-    .byte $21, $08, $08
+    .byte ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -988,7 +988,7 @@ EnFrame68:
     .byte $FF
 
 EnFrame69:
-    .byte $6A, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C3
     .byte $D2
@@ -996,7 +996,7 @@ EnFrame69:
     .byte $FF
 
 EnFrame6A:
-    .byte $6A, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -1004,7 +1004,7 @@ EnFrame6A:
     .byte $FF
 
 EnFrame6B:
-    .byte $61, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -1032,13 +1032,13 @@ EnFrame7D:
 EnFrame7E:
 EnFrame7F:
 EnFrame80:
-    .byte $0C, $08, $04
+    .byte ($0 << 4) + _id_EnPlaceC, $08, $04
     .byte $14
     .byte $24
     .byte $FF
 
 EnFrame81:
-     .byte $00, $04, $04
+    .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF
 
@@ -1050,6 +1050,6 @@ EnFrame86:
 EnFrame87:
 EnFrame88:
 EnFrame89:
-     .byte $00, $04, $04
+    .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF

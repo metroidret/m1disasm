@@ -1018,15 +1018,15 @@ RTS_8559:
 
 ;-------------------------------------------------------------------------------
 SwitchEnemyNameTable: ; L855A
-    lda EnNameTable,x
+    lda EnHi,x
     eor #$01
-    sta EnNameTable,x
+    sta EnHi,x
     rts
 
 ;-------------------------------------------------------------------------------
 ; Returns the index to the other nametable in A
 GetOtherNameTableIndex: ; L8562
-    lda EnNameTable,x
+    lda EnHi,x
     eor PPUCTRL_ZP
     and #$01
     rts

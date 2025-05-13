@@ -5072,7 +5072,7 @@ Lx143:
     sta $0A  ; Y coord
     lda EnX,x
     sta $0B  ; X coord
-    lda EnNameTable,x
+    lda EnHi,x
     sta $06  ; hi coord
     lda EnAnimFrame,x
     asl
@@ -6771,7 +6771,7 @@ StoreEnemyPositionToTemp:
     sta $09     ; X coord
     lda EnY,x
     sta $08     ; Y coord
-    lda EnNameTable,x
+    lda EnHi,x
     sta $0B     ; hi coord
     rts
 
@@ -7431,7 +7431,7 @@ LEB4D:
     lda #$00
     sta EnData04,x
     jsr GetNameTable                ;($EB85)Get name table to place enemy on.
-    sta EnNameTable,x               ;Store name table.
+    sta EnHi,x               ;Store name table.
 LEB6E:
     ldy EnDataIndex,x               ;Load A with index to enemy data.
     asl EnData05,x                     ;*2
@@ -7676,7 +7676,7 @@ LEC9B:
     tay
     Lx240:
         tya
-        eor EnNameTable,x
+        eor EnHi,x
         lsr
         bcs Lx241
         lda EnData05,x
@@ -8468,7 +8468,7 @@ LF152:
     sta $07  ; Y coord
     lda EnX,x
     sta $09  ; X coord
-    lda EnNameTable,x     ; hi coord
+    lda EnHi,x     ; hi coord
     jmp LF17F
 
 LF162:
@@ -8476,7 +8476,7 @@ LF162:
     sta $06
     lda EnX,y     ; X coord
     sta $08
-    lda EnNameTable,y     ; hi coord
+    lda EnHi,y     ; hi coord
     jmp LF193
 
 GetObject0CoordData:
@@ -8833,7 +8833,7 @@ DoOneEnemyF37F:
     sta $0A
     lda EnX,x     ; X coord
     sta $0B
-    lda EnNameTable,x     ; hi coord
+    lda EnHi,x     ; hi coord
     sta $06
     lda EnRadY,x
     sta $08
@@ -9245,8 +9245,8 @@ Lx329:
     sta EnY,x
     lda EnX,y
     sta EnX,x
-    lda EnNameTable,y
-    sta EnNameTable,x
+    lda EnHi,y
+    sta EnHi,x
     GetPageIndex:
     ldx PageIndex
     rts
@@ -9398,7 +9398,7 @@ ReadTableAt968B: ; LF74B
 ;-------------------------------------------------------------------------------
 
 LF752:
-    lda EnNameTable,x
+    lda EnHi,x
     tay
     eor ObjHi
     lsr
@@ -9438,7 +9438,7 @@ LF75B:
     lda ObjHi
     lsr
     ror $00
-    lda EnNameTable,x
+    lda EnHi,x
     lsr
     tya
     ror
@@ -9835,7 +9835,7 @@ LoadEnemyPositionFromTemp:
     sta EnX,x
     lda $0B
     and #$01
-    sta EnNameTable,x
+    sta EnHi,x
 RTS_X370:
     rts
 
@@ -9867,7 +9867,7 @@ LFA7D:
     sta $02
     lda EnX,x
     sta $03
-    lda EnNameTable,x
+    lda EnHi,x
     sta $0B
     jmp MakeCartRAMPtr              ;($E96A)Find enemy position in room RAM.
 
@@ -9972,7 +9972,7 @@ Lx380:
     lda Mem072B,y
     sta EnX,x
     lda Mem072C,y
-    sta EnNameTable,x
+    sta EnHi,x
     lda #$18
     sta EnRadX,x
     lda #$0C

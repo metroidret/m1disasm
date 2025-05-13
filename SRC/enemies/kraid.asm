@@ -184,7 +184,7 @@ LoadPositionFromTemp:
     sta EnX,x
     lda $0B
     and #$01
-    sta EnNameTable,x
+    sta EnHi,x
 
 KraidUpdateProjectile_Exit:
     rts
@@ -194,7 +194,7 @@ StorePositionToTemp:
     sta $08
     lda EnX,x
     sta $09
-    lda EnNameTable,x
+    lda EnHi,x
     sta $0B
     rts
 

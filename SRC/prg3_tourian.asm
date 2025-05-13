@@ -423,7 +423,7 @@ L9BC8:
     lda CannonX,x
     sta EnX,y
     lda CannonHi,x
-    sta EnNameTable,y
+    sta EnHi,y
     lda #$02
     sta EnStatus,y
     lda #$00
@@ -469,7 +469,7 @@ L9C31:
     lda CannonX,x
     sta EnX+$E0
     lda CannonHi,x
-    sta EnNameTable+$E0
+    sta EnHi+$E0
     lda #$E0
     sta PageIndex
     jmp CommonJump_14
@@ -1088,7 +1088,7 @@ LA041:
     lda #$E0
     sta PageIndex
     lda MotherBrainNameTable
-    sta EnNameTable+$E0
+    sta EnHi+$E0
     lda #$70
     sta EnY+$E0
     lda #$48
@@ -1295,7 +1295,7 @@ LA19C:
     sta EnAnimFrame,x
     ldy PageIndex
     lda $8C,y
-    sta EnNameTable,x
+    sta EnHi,x
     lda $8D,y
     asl
     ora $8B,y
@@ -1360,7 +1360,7 @@ LA238:
     lda MotherBrain010D
     beq RTS_A28A
     lda MotherBrain010C
-    sta EnNameTable+$E0
+    sta EnHi+$E0
     lda #$84
     sta EnY+$E0
     lda #$64

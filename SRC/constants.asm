@@ -769,7 +769,7 @@ EnAnimFrame            = $6AF7   ;Index into enemy animation frame data.
 EnAnimDelay            = $6AF8   ;Number of frames to delay between animation frames.
 EnResetAnimIndex       = $6AF9   ;Index to beginning of animation sequence.
 EnAnimIndex            = $6AFA   ;Index to current animation.
-EnNameTable            = $6AFB   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
+EnHi                   = $6AFB   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
 EnData18               = $6AFC   ; Unknown
 EnData19               = $6AFD   ; Unknown
 EnAccelY               = $6AFE   ; Unknown

@@ -349,14 +349,14 @@ StorePositionToTemp:
     sta $08
     lda EnX,x
     sta $09
-    lda EnNameTable,x
+    lda EnHi,x
     sta $0B
     rts
 
 LoadPositionFromTemp:
     lda $0B
     and #$01
-    sta EnNameTable,x
+    sta EnHi,x
     lda $08
     sta EnY,x
     lda $09

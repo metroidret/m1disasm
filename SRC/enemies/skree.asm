@@ -28,7 +28,7 @@ SkreeBlowUpIntoProjectiles:
         sta SkreeProjectileY,y
         lda EnX,x
         sta SkreeProjectileX,y
-        lda EnNameTable,x
+        lda EnHi,x
         sta SkreeProjectileHi,y
         dey
         dey
