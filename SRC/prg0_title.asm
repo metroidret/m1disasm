@@ -2479,15 +2479,18 @@ PasswordToScreen:
 
 
 LoadPasswordTiles:
-    lda #$16                        ;Tiles to replace are one block-->
-    sta TileSize                    ;high and 6 blocks long.
-    ldx #$05                        ;
+    ;Tiles to replace are one block high and 6 blocks long.
+    lda #$16
+    sta TileSize
+    ldx #$05
+    
+    ;Transfer password characters to TileInfo addresses.
     @loop:
         lda PasswordChar,y
-        sta TileInfo0,x                 ;
-        dey                             ;Transfer password characters to-->
-        dex                             ;TileInfo addresses.
-        bpl @loop                       ;
+        sta TileInfo0,x
+        dey
+        dex
+        bpl @loop
     rts
 
 DisplayInputCharacters:
@@ -2521,7 +2524,6 @@ DisplayInputCharacters:
 
 ;The table below is used by the code above to determine the positions
 ;of the five character rows on the password entry screen.
-
 PasswordRowsTbl:
     .byte $21, $E4                  ;
     .byte $22, $24                  ;The two entries in each row are the upper and lower address-->
@@ -2538,10 +2540,12 @@ PreparePPUProcess:
 PrepareEraseTiles:
     stx $00                         ;PPU low address byte
     sty $01                         ;PPU high address byte
-    ldx #$80                        ;
-    ldy #$07                        ;
-    stx $02                         ;Address of byte where tile size-->
-    sty $03                         ;of tile to be erased is stored.
+    
+    ;Address of byte where tile size of tile to be erased is stored.
+    ldx #<TileSize
+    ldy #>TileSize
+    stx $02
+    sty $03
     jmp EraseTile                   ;($C328)Erase the selected tiles.
 
 ;---------------------------------------[ Unused intro routines ]------------------------------------

@@ -97,25 +97,25 @@ AreaPointers:
 AreaRoutine:
     jmp RTS_Polyp                       ;Area specific routine.(RTS)
 
+;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
-    eor #$FF                        ;
-    clc                             ;The following routine returns the twos-->
-    adc #$01                        ;complement of the value stored in A.
-    rts                             ;
+    eor #$FF
+    clc
+    adc #$01
+    rts
 
 L95CC:  .byte $FF                       ;Not used.
 
 L95CD:  .byte $08                       ;Norfair music init flag.
 
-L95CE:  .byte $00                       ;Base damage caused by area enemies to lower health byte.
-L95CF:  .byte $01                       ;Base damage caused by area enemies to upper health byte.
+AreaEnemyDamage:  .word $0100                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
 L95D0:  .byte $10, $05, $27, $04, $0F, $FF, $FF
 
 L95D7:  .byte $16                       ;Samus start x coord on world map.
 L95D8:  .byte $0D                       ;Samus start y coord on world map.
-L95D9:  .byte $6E                       ;Samus start verticle screen position.
+L95D9:  .byte $6E                       ;Samus start vertical screen position.
 
 L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 

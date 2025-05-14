@@ -94,26 +94,26 @@ AreaPointers:
 AreaRoutine: ; L95C3
     jmp AreaRoutineStub ; Just an RTS
 
+;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
-    eor #$FF                        ;
-    clc                             ;The following routine returns the twos-->
-    adc #$01                        ;complement of the value stored in A.
-    rts                             ;
+    eor #$FF
+    clc
+    adc #$01
+    rts
 
 ; area init data
     .byte $FF                       ;Not used.
 
     .byte $01                       ;Brinstar music init flag.
-
-    .byte $80                       ;Base damage caused by area enemies to lower health byte.
-    .byte $00                       ;Base damage caused by area enemies to upper health byte.
+AreaEnemyDamage:
+    .word $0080                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
     .byte $2B, $2C, $28, $0B, $1C, $0A, $1A
 
     .byte $03                       ;Samus start x coord on world map.
     .byte $0E                       ;Samus start y coord on world map.
-    .byte $B0                       ;Samus start verticle screen position.
+    .byte $B0                       ;Samus start vertical screen position.
 
     .byte $01, $00, $03, $43, $00
     .byte $00, $00, $00, $00, $00, $69

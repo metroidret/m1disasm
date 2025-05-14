@@ -291,6 +291,8 @@ WaveSpriteCounter      = $84     ;Stores length of wave sprite data (#$10).
 ; 2 bytes ($85-$86)
 EnemyLFB88_85          = $85
 
+Memu8A                 = $8A
+
 MetroidOnSamus         = $92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
 MaxMissilePickup       = $93     ;Maximum missiles power-ups that can be picked up. Randomly-->
@@ -324,6 +326,16 @@ SkreeProjectileDieDelay= $A0     ;Delay until projectile dies
 SkreeProjectileY       = $A1
 SkreeProjectileX       = $A2
 SkreeProjectileHi      = $A3
+
+; 4 slots of 8 bytes each ($B0-$CF)
+MemuStatus             = $B0
+MemuB1                 = $B1
+MemuB2                 = $B2
+MemuB3                 = $B3
+MemuB4                 = $B4
+MemuB5                 = $B5
+MemuB6                 = $B6
+; $B7 is unused
 
 SpareMemB7             = $B7     ;Written to in title routine and accessed by unused routine.
 SpareMemB8             = $B8     ;Written to in title routine and accessed by unused routine.
@@ -463,6 +475,7 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
 ; slot E is for mother brain
+; slot F is for memu handler enemy
 EnY                    = $0400   ;Enemy y position in room.(not actual screen position).
 EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
 EnSpeedY               = $0402   ; unknown - y speed?
@@ -664,7 +677,7 @@ ZebetiteJustGotHit     = $075D   ;#$01 if zebetite got hit by a missile this fra
 ; $075E is unused
 ; $075F is unused
 
-TileSize               = $0780   ;4 MSBs=Y size of tile to erase.4 LSBs=X size of tile to erase.
+TileSize               = $0780   ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
 TileInfo0              = $0781   ;
 TileInfo1              = $0782   ;
 TileInfo2              = $0783   ;Tile patterns to replace blasted tiles.
@@ -676,7 +689,7 @@ PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F byte
 
 ;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. The first
 ;byte in the string is the upper address byte of the starting point in the PPU to write
-;the data.  The second bye is the lower address byte. The third byte is a configuration
+;the data.  The second byte is the lower address byte. The third byte is a configuration
 ;byte. if the MSB of this byte is set, the PPU is incremented by 32 after each byte write
 ;(vertical write).  It the MSB is cleared, the PPU is incremented by 1 after each write
 ;(horizontal write). If bit 6 is set, the next data byte is repeated multiple times during
@@ -713,11 +726,8 @@ AtEnding               = $6883   ;1=End scenes playing, 0=Not at ending.
 
 EraseGame              = $6884   ;MSB set=erase selected saved game(not used in password carts).
 
-DataSlot               = $6885   ;#$00 thru #$02. Stored Samus data to load. Apparently a save-->
-                                   ;game system was going to be used instead of a password routine.-->
-                                   ;The code that uses this memory address is never accessed in-->
-                                   ;the actual game. It looks like three player slots were going-->
-                                   ;to be used to store game data(like Zelda).
+DataSlot               = $6885   ;#$00 thru #$02. Stored Samus data to load.
+                                   ;Unused leftover from the original FDS version of the game.
 
 NumberOfUniqueItems    = $6886   ;Counts number of power-ups and red doors-->
                                    ;opened.  Does not count different beams-->
@@ -814,8 +824,8 @@ IntroSprComplete       = $6EAA   ;#$01=sprite has completed its task, #$00 if no
 IntroSprSpareB         = $6EAB   ;Not used.
 IntroSprXRun           = $6EAC   ;x displacement of sprite movement(run).
 IntroSprYRise          = $6EAD   ;y displacement of sprite movement(rise).
-IntroSprXDir           = $6EAE   ;MSB set=decrease sprite x pos, else increase sprite  x pos.
-IntroSprYDir           = $6EAF   ;MSB set=decrease sprite y pos, else increase sprite  y pos.
+IntroSprXDir           = $6EAE   ;MSB set=decrease sprite x pos, else increase sprite x pos.
+IntroSprYDir           = $6EAF   ;MSB set=decrease sprite y pos, else increase sprite y pos.
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -825,8 +835,8 @@ MetroidRepelSpeed      = $77F0   ;$77F0 for negative, $77F1 for positive
 MetroidAccel           = $77F2   ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
 MetroidMaxSpeed        = $77F6   ;$77F6 for red metroid, $77F7 for green metroid
 MetroidLatch0400       = $77F8   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
-MetroidLatch0410       = $77F9   ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
-MetroidLatch0420       = $77FA   ;bit 7 is sign of x speed
+MetroidLatch0410       = $77F9     ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
+MetroidLatch0420       = $77FA     ;bit 7 is sign of x speed
 MetroidLatch0430       = $77FB
 MetroidLatch0440       = $77FC
 MetroidLatch0450       = $77FD

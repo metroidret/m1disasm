@@ -41,6 +41,7 @@ PalPntrTbl             = $9560
 AreaPointers           = $9598
 SpecItmsTable          = $9598
 AreaRoutine            = $95C3
+AreaEnemyDamage        = $95CE
 L95DD                  = $95DD
 ChooseEnemyAIRoutine   = $95E5
 
@@ -2144,7 +2145,7 @@ UpdateWorld:
     jsr UpdateElevator              ;($D7B3)Display of elevators.
     jsr UpdateStatues               ;($D9D4)Display of Ridley & Kraid statues.
     jsr LFA9D       ; destruction of enemies
-    jsr LFC65       ; update of Mellow/Memu enemies
+    jsr UpdateAllMemus       ; update of Mellow/Memu enemies
     jsr LF93B
     jsr UpdateAllSkreeProjectiles       ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
@@ -4367,7 +4368,7 @@ Lx117:
     lda EnStatus,x
     cmp #enemyStatus_Frozen
     bne Lx118
-    jsr LF152
+    jsr Object0_F152
     jsr DistFromEn0ToObj1
     jsr LF1FA
     bcs Lx118
@@ -7689,11 +7690,11 @@ LEC9B:
     ldx #$18
     Lx242:
         tya
-        eor $B3,x
+        eor MemuB3,x
         lsr
         bcs Lx243
             lda #$00
-            sta $B0,x
+            sta MemuStatus,x
         Lx243:
         txa
         sec
@@ -7961,7 +7962,7 @@ SpawnSpecEnemy:
     ldx #$18
     lda RandomNumber1
     adc FrameCount
-    sta $8A
+    sta Memu8A
     @loop:
         jsr SpawnSpecEnemy_sub
         txa
@@ -7978,19 +7979,19 @@ SpawnSpecEnemy_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
 SpawnSpecEnemy_sub:
-    lda $B0,x
+    lda MemuStatus,x
     bne @RTS
     txa
-    adc $8A
+    adc Memu8A
     and #$7F
-    sta $B1,x
+    sta MemuB1,x
     adc RandomNumber2
-    sta $B2,x
+    sta MemuB2,x
     jsr GetNameTable                ;($EB85)
-    sta $B3,x
+    sta MemuB3,x
     lda #$01
-    sta $B0,x
-    rol $8A
+    sta MemuStatus,x
+    rol Memu8A
 @RTS:
     rts
 
@@ -8310,11 +8311,11 @@ FillRoomRAM:
 LF034:
     lda #$FF
     sta $73
-    sta $010F
+    sta SamusHurt010F
 ; check for crash with Memus
     ldx #$18
 Lx261:
-    lda $B0,x
+    lda MemuStatus,x
     beq Lx266           ; branch if no Memu in slot
     cmp #$03
     beq Lx266
@@ -8376,7 +8377,7 @@ LF09F:
     cmp #$03
 Lx270:
     beq NextEnemy      ; next slot
-    jsr LF152
+    jsr Object0_F152
     lda EnStatus,x
     cmp #$05
     beq Lx274
@@ -8412,6 +8413,7 @@ Lx274:
     bmi Lx275
     jmp LF09F
 Lx275:
+    ; get samus coord data
     ldx #$00
     jsr GetObject0CoordData
     ldy #$60
@@ -8425,7 +8427,7 @@ Lx276:
     jsr IsSamusDead
     beq Lx277
     jsr DistFromObj0ToEn1
-    jsr LF162
+    jsr Object1_F162
     jsr LF1FA
     jsr LF2ED
 Lx277:
@@ -8445,7 +8447,7 @@ Lx278:
     bne Lx280
 Lx279:
     jsr LDC82
-    jsr LF311
+    jsr SamusHurtF311
 Lx280:
     jsr Xminus16
     cmp #$C0
@@ -8463,21 +8465,21 @@ LF149:
     jsr LF1D2
     jmp LF1FA
 
-LF152:
+Object0_F152:
     lda EnY,x
     sta $07  ; Y coord
     lda EnX,x
     sta $09  ; X coord
     lda EnHi,x     ; hi coord
-    jmp LF17F
+    jmp Object0_F17F
 
-LF162:
+Object1_F162:
     lda EnY,y     ; Y coord
     sta $06
     lda EnX,y     ; X coord
     sta $08
     lda EnHi,y     ; hi coord
-    jmp LF193
+    jmp Object1_F193
 
 GetObject0CoordData:
     lda ObjY,x
@@ -8486,7 +8488,7 @@ GetObject0CoordData:
     sta $09
     lda ObjHi,x
 
-LF17F:
+Object0_F17F:
     eor PPUCTRL_ZP
     and #$01
     sta $0B
@@ -8499,19 +8501,19 @@ GetObject1CoordData:
     sta $08
     lda ObjHi,y
 
-LF193:
+Object1_F193:
     eor PPUCTRL_ZP
     and #$01
     sta $0A
     rts
 
 LF19A:
-    lda $B1,x
+    lda MemuB1,x
     sta $07
-    lda $B2,x
+    lda MemuB2,x
     sta $09
-    lda $B3,x
-    jmp LF17F
+    lda MemuB3,x
+    jmp Object0_F17F
 
 DistFromObj0ToObj1:
     lda ObjRadY,x
@@ -8677,7 +8679,7 @@ LF282:
     bcs Exit17
     lda EnDataIndex,x
 Lx287:
-    sta $010F
+    sta SamusHurt010F
     tay
     bmi Lx288
         lda L968B,y
@@ -8698,11 +8700,11 @@ LF2B4:
     lda #$C0
     bcs Lx287
 LF2BF:
-    lda $B6,x
+    lda MemuB6,x
     and #$F8
     ora $10
     eor #$03
-    sta $B6,x
+    sta MemuB6,x
 RTS_X290:
     rts
 
@@ -8742,14 +8744,15 @@ LF2ED:
     jsr LF332
     jsr LF270
 LF306:
-    lda $95CE
+    ; apply enemy base damage
+    lda AreaEnemyDamage
     sta HealthChange
-    lda $95CF
+    lda AreaEnemyDamage+1
     sta HealthChange+1
 RTS_X294:
     rts
 
-LF311:
+SamusHurtF311:
     bcs Exit22
     lda #$E0
     sta SamusHurt010F
@@ -9979,7 +9982,7 @@ Lx380:
     sta EnRadY,x
     ldy #$00
     jsr GetObject1CoordData
-    jsr LF152
+    jsr Object0_F152
     jsr DistFromEn0ToObj1
     jsr LF1FA
     bcc Exit13
@@ -10138,7 +10141,7 @@ UpdateSkreeProjectile:
     bcc Lx386
     
     clc
-    jsr LF311
+    jsr SamusHurtF311
     ; deal 5 damage to Samus
     lda #$50
     sta HealthChange
@@ -10162,77 +10165,78 @@ SkreeProjectileSpeedTable:
     .byte $FB, $02
     .byte $00, $05
 
-LFC65:
-    lda $6BE4
+UpdateAllMemus:
+    ; exit if memu handler enemy isn't there
+    lda EnStatus+$F0
     beq RTS_X390
+    
     ldx #$F0
     stx PageIndex
-    lda $6BE9
+    ; delete memu handler enemy if ???
+    lda EnResetAnimIndex+$F0
     cmp $95E4
-    bne Lx391
+    bne RemoveMemuHandlerEnemy
+    
     lda #$03
     jsr UpdateEnemyAnim
     lda RandomNumber1
-    sta $8A
-    lda #$18
+    sta Memu8A
+    lda #(4-1)*$08
 Lx389:
     pha
     tax
-    jsr LFC98
+    jsr UpdateMemu
     pla
     tax
-    lda $B6,x
+    lda MemuB6,x
     and #$F8
-    sta $B6,x
+    sta MemuB6,x
     txa
     sec
     sbc #$08
     bpl Lx389
 RTS_X390:
     rts
-Lx391:
+RemoveMemuHandlerEnemy:
     jmp RemoveEnemy                   ;($FA18)Free enemy data slot.
 
-LFC98:
-    lda $B0,x
+UpdateMemu:
+    lda MemuStatus,x
     jsr ChooseRoutine
+        .word ExitSub       ;($C45C) rts
+        .word UpdateMemu_LFCA5
+        .word UpdateMemu_LFCB1
+        .word UpdateMemu_LFCBA
 
-; Pointer table to code
-
-    .word ExitSub       ;($C45C) rts
-    .word LFCA5
-    .word LFCB1
-    .word LFCBA
-
-LFCA5:
+UpdateMemu_LFCA5:
     jsr LFD84
     jsr LFD08
     jsr LFD25
     jmp LDD8B
 
-LFCB1:
+UpdateMemu_LFCB1:
     jsr LFD84
     jsr LFCC1
     jmp LDD8B
 
-LFCBA:
+UpdateMemu_LFCBA:
     lda #$00
-    sta $B0,x
+    sta MemuStatus,x
     jmp SFX_EnemyHit
 
 LFCC1:
     jsr LFD5F
-    lda $B4,x
+    lda MemuB4,x
     cmp #$02
     bcs Lx392
     ldy $08
     cpy ObjY
     bcc Lx392
     ora #$02
-    sta $B4,x
+    sta MemuB4,x
 Lx392:
     ldy #$01
-    lda $B4,x
+    lda MemuB4,x
     lsr
     bcc Lx393
         ldy #$FF
@@ -10240,36 +10244,36 @@ Lx392:
     sty $05
     ldy #$04
     lsr
-    lda $B5,x
+    lda MemuB5,x
     bcc Lx394
         ldy #$FD
     Lx394:
     sty $04
-    inc $B5,x
+    inc MemuB5,x
     jsr LFD8F
     bcs Lx395
-        lda $B4,x
+        lda MemuB4,x
         ora #$02
-        sta $B4,x
+        sta MemuB4,x
     Lx395:
     bcc Lx396
         jsr LFD6C
     Lx396:
-    lda $B5,x
+    lda MemuB5,x
     cmp #$50
     bcc RTS_X397
     lda #$01
-    sta $B0,x
+    sta MemuStatus,x
 RTS_X397:
     rts
 
 LFD08:
     lda #$00
-    sta $B5,x
+    sta MemuB5,x
     tay
     lda ObjX
     sec
-    sbc $B2,x
+    sbc MemuB2,x
     bpl Lx398
         iny
         jsr TwosComplement              ;($C3D4)
@@ -10277,9 +10281,9 @@ LFD08:
     cmp #$10
     bcs RTS_X399
     tya
-    sta $B4,x
+    sta MemuB4,x
     lda #$02
-    sta $B0,x
+    sta MemuStatus,x
 RTS_X399:
     rts
 
@@ -10288,9 +10292,9 @@ LFD25:
     lsr
     lsr
     lsr
-    adc $8A
-    sta $8A
-    lsr $8A
+    adc Memu8A
+    sta Memu8A
+    lsr Memu8A
     and #$03
     tay
     lda Table18,y
@@ -10324,33 +10328,33 @@ Table18:
     .byte  $02
 
 LFD5F:
-    lda $B3,x
+    lda MemuB3,x
     sta $0B
-    lda $B1,x
+    lda MemuB1,x
     sta $08
-    lda $B2,x
+    lda MemuB2,x
     sta $09
     rts
 
 LFD6C:
     lda $08
-    sta $B1,x
-    sta $04F0
+    sta MemuB1,x
+    sta EnY+$F0
     lda $09
-    sta $B2,x
-    sta $04F1
+    sta MemuB2,x
+    sta EnX+$F0
     lda $0B
     and #$01
-    sta $B3,x
-    sta $6BEB
+    sta MemuB3,x
+    sta EnHi+$F0
     rts
 
 LFD84:
-    lda $B6,x
+    lda MemuB6,x
     and #$04
     beq RTS_X402
     lda #$03
-    sta $B0,x
+    sta MemuStatus,x
 RTS_X402:
     rts
 
@@ -10546,7 +10550,9 @@ LFE83:
     sta $05
     jsr LF1FA
     bcs Exit23
-    jsr LF311
+    
+    jsr SamusHurtF311
+    ; deal 5 damage to samus
     lda #$50
     sta HealthChange
     jmp SubtractHealth              ;($CE92)
