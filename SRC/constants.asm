@@ -291,7 +291,7 @@ WaveSpriteCounter      = $84     ;Stores length of wave sprite data (#$10).
 ; 2 bytes ($85-$86)
 EnemyLFB88_85          = $85
 
-Memu8A                 = $8A
+Mellow8A               = $8A
 
 MetroidOnSamus         = $92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
@@ -317,24 +317,24 @@ MotherBrainHits        = $99     ;Number of times mother brain has been hit. Die
 MotherBrain9A          = $9A
 MotherBrain9B          = $9B
 MotherBrainAnimFrameTableID = $9C
-MotherBrainNameTable   = $9D     ;what is this
+MotherBrainNameTable   = $9D
 MotherBrain9E          = $9E
 MotherBrain9F          = $9F
 
 ; 4 slots of 4 bytes each ($A0-$AF)
-SkreeProjectileDieDelay= $A0     ;Delay until projectile dies
+SkreeProjectileDieDelay= $A0     ;Delay until projectile dies.
 SkreeProjectileY       = $A1
 SkreeProjectileX       = $A2
 SkreeProjectileHi      = $A3
 
 ; 4 slots of 8 bytes each ($B0-$CF)
-MemuStatus             = $B0
-MemuB1                 = $B1
-MemuB2                 = $B2
-MemuB3                 = $B3
-MemuB4                 = $B4
-MemuB5                 = $B5
-MemuB6                 = $B6
+MellowStatus           = $B0
+MellowY                = $B1
+MellowX                = $B2
+MellowHi               = $B3
+MellowAttackState      = $B4
+MellowAttackTimer      = $B5
+MellowB6               = $B6
 ; $B7 is unused
 
 SpareMemB7             = $B7     ;Written to in title routine and accessed by unused routine.
@@ -475,7 +475,7 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
 ; slot E is for mother brain
-; slot F is for memu handler enemy
+; slot F is for mellow handler enemy
 EnY                    = $0400   ;Enemy y position in room.(not actual screen position).
 EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
 EnSpeedY               = $0402   ; unknown - y speed?

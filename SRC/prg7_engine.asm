@@ -2145,7 +2145,7 @@ UpdateWorld:
     jsr UpdateElevator              ;($D7B3)Display of elevators.
     jsr UpdateStatues               ;($D9D4)Display of Ridley & Kraid statues.
     jsr LFA9D       ; destruction of enemies
-    jsr UpdateAllMemus       ; update of Mellow/Memu enemies
+    jsr UpdateAllMellows       ; update of Mellow/Memu enemies
     jsr LF93B
     jsr UpdateAllSkreeProjectiles       ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
@@ -7690,11 +7690,11 @@ LEC9B:
     ldx #$18
     Lx242:
         tya
-        eor MemuB3,x
+        eor MellowHi,x
         lsr
         bcs Lx243
             lda #$00
-            sta MemuStatus,x
+            sta MellowStatus,x
         Lx243:
         txa
         sec
@@ -7875,7 +7875,7 @@ ChooseSpawningRoutine:
         .word ExitSub               ;($C45C)rts.
         .word SpawnSqueept          ;($EDF8)Some squeepts.
         .word SpawnPowerUp          ;($EDFE)power-ups.
-        .word SpawnSpecEnemy        ;($EE63)Special enemies(Mellows, Melias and Memus).
+        .word SpawnMellows          ;($EE63)Special enemies(Mellows, Melias and Memus).
         .word SpawnElevator         ;($EEA1)Elevators.
         .word SpawnCannon           ;($EEA6)Mother brain room cannons.
         .word SpawnMotherBrain      ;($EEAE)Mother brain.
@@ -7958,13 +7958,13 @@ RTS_EE62:
 
 ;-----------------------------------------------------------------------------------------------------
 
-SpawnSpecEnemy:
+SpawnMellows:
     ldx #$18
     lda RandomNumber1
     adc FrameCount
-    sta Memu8A
+    sta Mellow8A
     @loop:
-        jsr SpawnSpecEnemy_sub
+        jsr SpawnMellow
         txa
         sec
         sbc #$08
@@ -7975,29 +7975,29 @@ SpawnSpecEnemy:
     sta EnAnimIndex+$F0
     lda #$01
     sta EnStatus+$F0
-SpawnSpecEnemy_exit:
+SpawnMellows_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
-SpawnSpecEnemy_sub:
-    lda MemuStatus,x
+SpawnMellow:
+    lda MellowStatus,x
     bne @RTS
     txa
-    adc Memu8A
+    adc Mellow8A
     and #$7F
-    sta MemuB1,x
+    sta MellowY,x
     adc RandomNumber2
-    sta MemuB2,x
+    sta MellowX,x
     jsr GetNameTable                ;($EB85)
-    sta MemuB3,x
+    sta MellowHi,x
     lda #$01
-    sta MemuStatus,x
-    rol Memu8A
+    sta MellowStatus,x
+    rol Mellow8A
 @RTS:
     rts
 
 SpawnElevator:
     jsr SpawnElevatorRoutine
-    bne SpawnSpecEnemy_exit                          ;Branch always.
+    bne SpawnMellows_exit                          ;Branch always.
 
 SpawnCannon:
     jsr GotoSpawnCannonRoutine
@@ -8312,11 +8312,11 @@ LF034:
     lda #$FF
     sta $73
     sta SamusHurt010F
-; check for crash with Memus
+; check for crash with Mellows
     ldx #$18
 Lx261:
-    lda MemuStatus,x
-    beq Lx266           ; branch if no Memu in slot
+    lda MellowStatus,x
+    beq Lx266           ; branch if no Mellow in slot
     cmp #$03
     beq Lx266
     jsr LF19A
@@ -8350,7 +8350,7 @@ Lx265:
 Lx266:
     txa
     sec
-    sbc #$08                ; each Memu occupies 8 bytes
+    sbc #$08                ; each Mellow occupies 8 bytes
     tax
     bpl Lx261
 
@@ -8508,11 +8508,11 @@ Object1_F193:
     rts
 
 LF19A:
-    lda MemuB1,x
+    lda MellowY,x
     sta $07
-    lda MemuB2,x
+    lda MellowX,x
     sta $09
-    lda MemuB3,x
+    lda MellowHi,x
     jmp Object0_F17F
 
 DistFromObj0ToObj1:
@@ -8700,11 +8700,11 @@ LF2B4:
     lda #$C0
     bcs Lx287
 LF2BF:
-    lda MemuB6,x
+    lda MellowB6,x
     and #$F8
     ora $10
     eor #$03
-    sta MemuB6,x
+    sta MellowB6,x
 RTS_X290:
     rts
 
@@ -10165,78 +10165,78 @@ SkreeProjectileSpeedTable:
     .byte $FB, $02
     .byte $00, $05
 
-UpdateAllMemus:
-    ; exit if memu handler enemy isn't there
+UpdateAllMellows:
+    ; exit if mellow handler enemy isn't there
     lda EnStatus+$F0
     beq RTS_X390
     
     ldx #$F0
     stx PageIndex
-    ; delete memu handler enemy if ???
+    ; delete mellow handler enemy if ???
     lda EnResetAnimIndex+$F0
     cmp $95E4
-    bne RemoveMemuHandlerEnemy
+    bne RemoveMellowHandlerEnemy
     
     lda #$03
     jsr UpdateEnemyAnim
     lda RandomNumber1
-    sta Memu8A
+    sta Mellow8A
     lda #(4-1)*$08
 Lx389:
     pha
     tax
-    jsr UpdateMemu
+    jsr UpdateMellow
     pla
     tax
-    lda MemuB6,x
+    lda MellowB6,x
     and #$F8
-    sta MemuB6,x
+    sta MellowB6,x
     txa
     sec
     sbc #$08
     bpl Lx389
 RTS_X390:
     rts
-RemoveMemuHandlerEnemy:
+RemoveMellowHandlerEnemy:
     jmp RemoveEnemy                   ;($FA18)Free enemy data slot.
 
-UpdateMemu:
-    lda MemuStatus,x
+UpdateMellow:
+    lda MellowStatus,x
     jsr ChooseRoutine
         .word ExitSub       ;($C45C) rts
-        .word UpdateMemu_LFCA5
-        .word UpdateMemu_LFCB1
-        .word UpdateMemu_LFCBA
+        .word UpdateMellow_Resting
+        .word UpdateMellow_Active
+        .word UpdateMellow_Explode
 
-UpdateMemu_LFCA5:
-    jsr LFD84
-    jsr LFD08
-    jsr LFD25
+UpdateMellow_Resting:
+    jsr UpdateMellow_FD84
+    jsr UpdateMellow_FD08
+    jsr UpdateMellow_FD25
     jmp LDD8B
 
-UpdateMemu_LFCB1:
-    jsr LFD84
-    jsr LFCC1
+UpdateMellow_Active:
+    jsr UpdateMellow_FD84
+    jsr UpdateMellow_RunAI
     jmp LDD8B
 
-UpdateMemu_LFCBA:
+UpdateMellow_Explode:
     lda #$00
-    sta MemuStatus,x
+    sta MellowStatus,x
     jmp SFX_EnemyHit
 
-LFCC1:
-    jsr LFD5F
-    lda MemuB4,x
+UpdateMellow_RunAI:
+    jsr UpdateMellow_StorePositionToTemp
+    lda MellowAttackState,x
     cmp #$02
     bcs Lx392
     ldy $08
     cpy ObjY
     bcc Lx392
     ora #$02
-    sta MemuB4,x
+    sta MellowAttackState,x
 Lx392:
     ldy #$01
-    lda MemuB4,x
+    lda MellowAttackState,x
     lsr
     bcc Lx393
         ldy #$FF
@@ -10244,36 +10244,36 @@ Lx392:
     sty $05
     ldy #$04
     lsr
-    lda MemuB5,x
+    lda MellowAttackTimer,x
     bcc Lx394
         ldy #$FD
     Lx394:
     sty $04
-    inc MemuB5,x
+    inc MellowAttackTimer,x
     jsr LFD8F
     bcs Lx395
-        lda MemuB4,x
+        lda MellowAttackState,x
         ora #$02
-        sta MemuB4,x
+        sta MellowAttackState,x
     Lx395:
     bcc Lx396
-        jsr LFD6C
+        jsr UpdateMellow_LoadPositionFromTemp
     Lx396:
-    lda MemuB5,x
+    lda MellowAttackTimer,x
     cmp #$50
     bcc RTS_X397
     lda #$01
-    sta MemuStatus,x
+    sta MellowStatus,x
 RTS_X397:
     rts
 
-LFD08:
+UpdateMellow_FD08:
     lda #$00
-    sta MemuB5,x
+    sta MellowAttackTimer,x
     tay
     lda ObjX
     sec
-    sbc MemuB2,x
+    sbc MellowX,x
     bpl Lx398
         iny
         jsr TwosComplement              ;($C3D4)
@@ -10281,27 +10281,27 @@ LFD08:
     cmp #$10
     bcs RTS_X399
     tya
-    sta MemuB4,x
+    sta MellowAttackState,x
     lda #$02
-    sta MemuStatus,x
+    sta MellowStatus,x
 RTS_X399:
     rts
 
-LFD25:
+UpdateMellow_FD25:
     txa
     lsr
     lsr
     lsr
-    adc Memu8A
-    sta Memu8A
-    lsr Memu8A
+    adc Mellow8A
+    sta Mellow8A
+    lsr Mellow8A
     and #$03
     tay
     lda Table18,y
     sta $04
     lda Table18+1,y
     sta $05
-    jsr LFD5F
+    jsr UpdateMellow_StorePositionToTemp
     lda $08
     sec
     sbc ScrollY
@@ -10316,7 +10316,7 @@ Lx400:
     sta $04
 Lx401:
     jsr LFD8F
-    jmp LFD6C
+    jmp UpdateMellow_LoadPositionFromTemp
 
 ; Table used by above subroutine
 
@@ -10327,35 +10327,35 @@ Table18:
     .byte -$01
     .byte  $02
 
-LFD5F:
-    lda MemuB3,x
+UpdateMellow_StorePositionToTemp:
+    lda MellowHi,x
     sta $0B
-    lda MemuB1,x
+    lda MellowY,x
     sta $08
-    lda MemuB2,x
+    lda MellowX,x
     sta $09
     rts
 
-LFD6C:
+UpdateMellow_LoadPositionFromTemp:
     lda $08
-    sta MemuB1,x
+    sta MellowY,x
     sta EnY+$F0
     lda $09
-    sta MemuB2,x
+    sta MellowX,x
     sta EnX+$F0
     lda $0B
     and #$01
-    sta MemuB3,x
+    sta MellowHi,x
     sta EnHi+$F0
     rts
 
-LFD84:
-    lda MemuB6,x
+UpdateMellow_FD84:
+    lda MellowB6,x
     and #$04
-    beq RTS_X402
+    beq @RTS
     lda #$03
-    sta MemuStatus,x
-RTS_X402:
+    sta MellowStatus,x
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
