@@ -429,7 +429,7 @@ L9BC8:
     lda #$00
     sta EnDelay,y
     sta EnAnimDelay,y
-    sta EnData08,y
+    sta EnMovementIndex,y
     pla
     jsr TwosComplement_
     tax
@@ -908,18 +908,18 @@ L9F02:
         beq L9F36
         tay
         lda L9F41,y
-        sta TileAnimFrame
+        sta TileBlastAnimFrame
         lda L9F39,y
         clc
         adc #$42
-        sta TileWRAMPtr
+        sta TileBlastWRAMPtr
         php
         lda MotherBrainNameTable
         asl
         asl
         plp
         adc #$61
-        sta TileWRAMPtr+1
+        sta TileBlastWRAMPtr+1
         lda #$00
         sta PageIndex
         lda PPUStrIndex
@@ -984,14 +984,14 @@ L9F69:
     lda #$F7
     sta ObjAnimFrame,x
     lda #$10
-    sta TileAnimFrame
+    sta TileBlastAnimFrame
     lda #$40
-    sta TileWRAMPtr
+    sta TileBlastWRAMPtr
     lda MotherBrainNameTable
     asl
     asl
     ora #$61
-    sta TileWRAMPtr+1
+    sta TileBlastWRAMPtr+1
     lda #$00
     sta PageIndex
     jmp CommonJump_DrawTileBlast
@@ -1041,7 +1041,7 @@ L9FED:
     ldx #$00
     LA007:
         lda #$00
-        sta TileRoutine,x
+        sta TileBlastRoutine,x
         jsr L9EF9
         cmp #$D0
         bne LA007
@@ -1126,7 +1126,7 @@ RTS_A086:
 
 LA087:
     adc #$44
-    sta TileWRAMPtr
+    sta TileBlastWRAMPtr
     php
     lda MotherBrainNameTable
     asl
@@ -1134,9 +1134,9 @@ LA087:
     ora #$61
     plp
     adc #$00
-    sta TileWRAMPtr+1
+    sta TileBlastWRAMPtr+1
     lda #$00
-    sta TileAnimFrame
+    sta TileBlastAnimFrame
     sta PageIndex
     jmp CommonJump_DrawTileBlast
 
@@ -1158,7 +1158,7 @@ LA0C6:
     bne LA103
         ldx #$00
     LA0D9:
-        lda TileRoutine,x
+        lda TileBlastRoutine,x
         beq LA0E7
             jsr L9EF9
             cmp #$D0
@@ -1166,11 +1166,11 @@ LA0C6:
             beq LA13E
         LA0E7:
         lda #$8C
-        sta TileWRAMPtr,x
+        sta TileBlastWRAMPtr,x
         lda $05
-        sta TileWRAMPtr+1,x
+        sta TileBlastWRAMPtr+1,x
         lda #$01
-        sta TileAnimFrame,x
+        sta TileBlastAnimFrame,x
         lda PageIndex
         pha
         stx PageIndex
@@ -1440,11 +1440,11 @@ LA29B:
     inc ZebetiteStatus,x
 LA2BA:
     lda ZebetiteAnimFrameTable,y
-    sta TileAnimFrame+$10
+    sta TileBlastAnimFrame+$10
     lda ZebetiteVRAMPtr,x
-    sta TileWRAMPtr+$10
+    sta TileBlastWRAMPtr+$10
     lda ZebetiteVRAMPtr+1,x
-    sta TileWRAMPtr+1+$10
+    sta TileBlastWRAMPtr+1+$10
     lda PPUStrIndex
     bne LA2DA
         txa

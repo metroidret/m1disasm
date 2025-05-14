@@ -8,7 +8,7 @@ SqueeptAIRoutine:
     beq L9ACA
     cmp #$02
     bne L9A88
-    ldy EnData08,x
+    ldy EnMovementIndex,x
     lda L9AD2,y
     sta EnSpeedY,x
     lda #$40

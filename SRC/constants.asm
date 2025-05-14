@@ -474,6 +474,8 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
+; slot 6 to B is for enemy fireballs
+; slot C to D is for enemy explosions
 ; slot E is for mother brain
 ; slot F is for mellow handler enemy
 EnY                    = $0400   ;Enemy y position in room.(not actual screen position).
@@ -485,7 +487,7 @@ EnData05               = $0405   ; L/R facing in LSB ?
 ; EnCounter              = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelY       = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter
-EnData08               = $0408   ; unknown
+EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.
 EnDelay                = $0409   ;Delay counter between enemy actions.
 EnData0A               = $040A   ; unknown -- For crawlers, orientation
                                    ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
@@ -495,17 +497,28 @@ EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
 EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
 
+; 4 slots of 8 bytes each ($04C0-$04DF)
+EnExplosionY           = $0400
+EnExplosionX           = $0401
+EnExplosion04C2        = $0402
+EnExplosion04C3        = $0403
+EnExplosion04C4        = $0404
+EnExplosion04C5        = $0405
+EnExplosionAnimDelay   = $0406
+EnExplosionAnimFrame   = $0407
+
 ;----------------------------------------------------------------------------------------------------
 
 ;Tile respawning
-TileRoutine            = $0500
-TileAnimFrame          = $0503
-TileAnimDelay          = $0504
-TileAnimIndex          = $0506
-TileDelay              = $0507
-TileWRAMPtr            = $0508
-; TileWRAMPtr+1          = $0509
-TileType               = $050A
+TileBlastRoutine       = $0500
+TileBlastAnimFrame     = $0503
+TileBlastAnimDelay     = $0504
+TileBlast0505          = $0505
+TileBlastAnimIndex     = $0506
+TileBlastDelay         = $0507
+TileBlastWRAMPtr       = $0508
+; TileBlastWRAMPtr+1     = $0509
+TileBlastType          = $050A
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
 
@@ -771,6 +784,7 @@ ItemHistory            = $69B4   ;Thru $6A73. Unique item history saved game dat
 
 ;---------------------------------------[ More enemy RAM ]-------------------------------------------
 
+; 16 slots of 16 bytes each ($6AF4-$6BF3)
 EnStatus               = $6AF4   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
                                    ;#$04=Enemy frozen.
 EnRadY                 = $6AF5   ;Distance in pixels from middle of enemy to top or botom.
@@ -789,7 +803,17 @@ EnData1D               = $6B01   ; Unknown
 EnDataIndex            = $6B02   ;Contains index into enemy data tables.
 EnData1F               = $6B03   ; Unknown
 
-; 16 cannon slots of 8 bytes each ($6BF4-$6C73)
+; 4 slots of 8 bytes each ($6BB4-$6BD3)
+EnExplosionStatus      = $6AF4
+EnExplosion6BB5        = $6AF5
+EnExplosion6BB6        = $6AF6
+EnExplosion6BB7        = $6AF7
+EnExplosion6BB8        = $6AF8
+EnExplosion6BB9        = $6AF9
+EnExplosion6BBA        = $6AFA
+EnExplosionHi          = $6AFB
+
+; 16 slots of 8 bytes each ($6BF4-$6C73)
 CannonStatus           = $6BF4
 CannonY                = $6BF5
 CannonX                = $6BF6

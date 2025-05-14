@@ -24,7 +24,7 @@ MetroidAIRoutine:
 
     L9822:
     ; load whether the metroid is red (#$00) or green (#$01) into y
-    ldy EnData08,x
+    ldy EnMovementIndex,x
     
     ; push y max speed to stack
     lda MetroidMaxSpeed,y
@@ -327,7 +327,7 @@ GetMetroidAccel:
     ; put acceleration sign bit in carry
     lsr
     ; load whether the metroid is red (#$00) or green (#$01) into a
-    lda EnData08,x
+    lda EnMovementIndex,x
     ; rotate direction bit back into a
     rol
     ; get MetroidAccel at that index

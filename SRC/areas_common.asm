@@ -467,7 +467,7 @@ LoadEnemyMovementPtr:
         lsr
     L8232:
     lsr
-    lda EnData08,x
+    lda EnMovementIndex,x
     rol
     asl
     tay

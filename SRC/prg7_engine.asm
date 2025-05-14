@@ -35,8 +35,9 @@ ObjectAnimIndexTbl     = $8572
 L85E0                  = $85E0
 ObjFramePtrTable       = $860B
 ObjPlacePtrTable       = $86DF
-
 SamusEnterDoor         = $8B13
+DisplayDoors           = $8B79
+
 PalPntrTbl             = $9560
 AreaPointers           = $9598
 SpecItmsTable          = $9598
@@ -61,6 +62,7 @@ EnAccelXTable          = $973F
 EnSpeedYTable          = $9753
 EnSpeedXTable          = $9767
 
+L97A7                  = $97A7
 L97AF                  = $97AF
 
 SoundEngine            = $B3B4
@@ -2144,13 +2146,13 @@ UpdateWorld:
     jsr AreaRoutine                 ;($95C3)Area specific routine.
     jsr UpdateElevator              ;($D7B3)Display of elevators.
     jsr UpdateStatues               ;($D9D4)Display of Ridley & Kraid statues.
-    jsr LFA9D       ; destruction of enemies
+    jsr UpdateAllEnemyExplosions       ; destruction of enemies
     jsr UpdateAllMellows       ; update of Mellow/Memu enemies
-    jsr LF93B
+    jsr UpdateAllEnemyFireballs
     jsr UpdateAllSkreeProjectiles       ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
-    jsr $8B79       ; display of doors
-    jsr UpdateTiles ; tile de/regeneration
+    jsr DisplayDoors       ; display of doors
+    jsr UpdateAllTileBlasts ; tile de/regeneration
     jsr LF034       ; Samus <--> enemies crash detection
     jsr DisplayBar                  ;($E0C1)Display of status bar.
     jsr LFAF2
@@ -2175,8 +2177,10 @@ UpdateWorld:
 ; - Is Samus with or without suit?
 
 SelectSamusPal: ;$CB73
-    tya                             ;
-    pha                             ;Temp storage of Y on the stack.
+    ;Temp storage of Y on the stack.
+    tya
+    pha
+    
     lda SamusGear
     asl
     asl
@@ -2185,14 +2189,16 @@ SelectSamusPal: ;$CB73
     rol                             ;Bit 0 of A = 1 if Samus is wearing Varia
     adc #$02
     ldy JustInBailey                ;In suit?-->
-    beq LCB8X                           ;If so, Branch.
+    beq @endIf                           ;If so, Branch.
         clc
         adc #$17                        ;Add #$17 to the pal # to reach "no suit"-palettes.
-    LCB8X:
+    @endIf:
     sta PalDataPending              ;Palette will be written next NMI.
-    pla                             ;
-    tay                             ;Restore the contents of y.
-    rts                             ;
+    
+    ;Restore the contents of y.
+    pla
+    tay
+    rts
 
 ;----------------------------------[ Initiate SFX and music routines ]-------------------------------
 
@@ -4534,15 +4540,15 @@ Lx128:
     rts
 
 UpdateStatueBGTiles:
-    lda StatueTileWRAMPtrLoTable,y
-    sta TileWRAMPtr+$C0
+    lda StatueTileBlastWRAMPtrLoTable,y
+    sta TileBlastWRAMPtr+$C0
     lda StatueHi
     asl
     asl
-    ora StatueTileWRAMPtrHiTable,y
-    sta TileWRAMPtr+1+$C0
+    ora StatueTileBlastWRAMPtrHiTable,y
+    sta TileBlastWRAMPtr+1+$C0
     lda #$09
-    sta TileAnimFrame+$C0
+    sta TileBlastAnimFrame+$C0
     lda #$C0
     sta PageIndex
     jsr DrawTileBlast
@@ -4551,12 +4557,12 @@ UpdateStatueBGTiles:
     rts
 
 ; Table used by above subroutine
-StatueTileWRAMPtrLoTable:
+StatueTileBlastWRAMPtrLoTable:
     .byte <$6130 ; non-raised kraid top left corner
     .byte <$60AC ; non-raised ridley top left corner
     .byte <$60F0 ; raised kraid top left corner
     .byte <$606C ; raised ridley top left corner
-StatueTileWRAMPtrHiTable:
+StatueTileBlastWRAMPtrHiTable:
     .byte >$6130
     .byte >$60AC
     .byte >$60F0
@@ -4575,21 +4581,21 @@ LDADA:
     ldy #$08
 Lx129:
     lda #$03
-    sta TileRoutine,x
+    sta TileBlastRoutine,x
     tya
     asl
-    sta TileDelay,x
+    sta TileBlastDelay,x
     lda #$04
-    sta TileType,x
+    sta TileBlastType,x
     lda StatueHi
     asl
     asl
     ora #$62
-    sta TileWRAMPtr+1,x
+    sta TileBlastWRAMPtr+1,x
     tya
     asl
     adc #$08
-    sta TileWRAMPtr,x
+    sta TileBlastWRAMPtr,x
     jsr Xminus16
     dey
     bne Lx129
@@ -4959,10 +4965,10 @@ LDCF5:
     pla
     ldx PageIndex
 LDCFC:
-    lda InArea ; Branch ahead if not in Tourian
+    ; Branch ahead if not in Tourian
+    lda InArea 
     cmp #$13
     bne Lx135
-
         lda EnDataIndex,x
         cmp #$04
         beq Lx139
@@ -7151,19 +7157,19 @@ LE9C2:
 ; attempt to find a vacant tile slot
     ldx #$C0
     Lx219:
-        lda TileRoutine,x
+        lda TileBlastRoutine,x
         beq Lx220                           ; 0 = free slot
         jsr Xminus16
         bne Lx219
-    lda TileRoutine,x
+    lda TileBlastRoutine,x
     bne Lx223                        ; no more slots, can't blast tile
 Lx220:
-    inc TileRoutine,x
+    inc TileBlastRoutine,x
     lda $04
     and #$DE
-    sta TileWRAMPtr,x
+    sta TileBlastWRAMPtr,x
     lda $05
-    sta TileWRAMPtr+1,x
+    sta TileBlastWRAMPtr+1,x
     lda InArea
     cmp #$11                        ; In Norfair?
     bne Lx221
@@ -7179,7 +7185,7 @@ Lx221:
     lsr
 Lx222:
     lsr
-    sta TileType,x
+    sta TileBlastType,x
 Lx223:
     clc
 Exit18:
@@ -7710,10 +7716,10 @@ LEC9B:
     ldx #$C0
     Lx244:
         tya
-        eor TileWRAMPtr+1,x
+        eor TileBlastWRAMPtr+1,x
         and #$04
         bne Lx245
-            sta TileRoutine,x
+            sta TileBlastRoutine,x
         Lx245:
         jsr Xminus16
         cmp #$F0
@@ -8909,7 +8915,7 @@ DoActiveEnemy_BranchA: ; LF401
     jsr LF75B
     jsr LF51E
 DoActiveEnemy_BranchB: ; LF40A
-    jsr LF536
+    jsr EnemyReactToSamusWeapon
 LF40D:
     jmp ChooseEnemyAIRoutine
 ;-------------------------------------------
@@ -8947,9 +8953,8 @@ LF438:
     jsr UpdateEnemyAnim
     jmp LF416
 ;-------------------------------------------
-DoFrozenEnemy:
-LF43E:
-    jsr LF536
+DoFrozenEnemy: ; ($F43E)
+    jsr EnemyReactToSamusWeapon
     lda EnStatus,x
     cmp #$03
     beq LF410
@@ -9090,30 +9095,44 @@ LF51E:
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 Lx314:
+    ; Samus attacked a non-frozen metroid with something else than the ice beam
+    ; just play a sfx and ignore the attack
     jsr SFX_MetroidHit
     jmp GetPageIndex
 
 ;-------------------------------------------------------------------------------
-LF536:
+; handles enemy getting attacked by Samus
+EnemyReactToSamusWeapon:
     lda EnSpecialAttribs,x
     sta $0A
+    ; exit if enemy was not attacked?
     lda EnData04,x
     and #$20
     beq RTS_X315
+    
+    ; branch if enemy was not attacked by ice beam
     lda EnWeaponAction,x
     cmp #wa_IceBeam
     bne Lx317
+    ; branch if enemy is a miniboss (miniboss cannot be frozen)
     bit $0A
     bvs Lx317
+    ; branch if enemy is already in the frozen state
     lda EnStatus,x
-    cmp #$04
+    cmp #enemyStatus_Frozen
     beq Lx317
+    
+    ; freeze enemy
+    ; set state to frozen
     jsr LF515
+    ; set freeze timer to 64 frames
     lda #$40
     sta EnData0D,x
+    ; exit if enemy is not a metroid
     jsr LoadTableAt977B
     and #$20
     beq RTS_X315
+    ; set hp to 5, and clear metroid latch
     lda #$05
     sta EnHitPoints,x
     jmp GotoClearCurrentMetroidLatchAndMetroidOnSamus
@@ -9121,20 +9140,29 @@ RTS_X315:
     rts
 
 Lx316:
+    ; Samus's attack was ineffective against the enemy
+    ; branch if enemy is a metroid
     jsr LoadTableAt977B
     and #$20
     bne Lx314
+    ; play sfx and clear variables defining Samus's attack on this enemy
     jsr SFX_Metal
     jmp LF42D
 Lx317:
+    ; branch if enemy is completely invulnerable to Samus's attacks
     lda EnHitPoints,x
     cmp #$FF
     beq Lx316
+    
+    ; play enemy hurt sound effect
+    ; check if enemy is a miniboss
     bit $0A
     bvc Lx318
+        ; enemy is a miniboss, so play miniboss hurt sound effect
         jsr SFX_BossHit
-        bne Lx319
+        bne Lx319 ; branch always
     Lx318:
+    ; play different enemy hurt sound effects depending on which enemy it is
     jsr ReadTableAt968B
     and #$0C
     beq PlaySnd1
@@ -9152,15 +9180,23 @@ PlaySnd2:
     bne Lx319       ; branch always
 PlaySnd3:
     jsr SFX_BigEnemyHit             ;($CBCE)
+    ; fallthrough
+
 Lx319:
+    ; check if enemy is a metroid
     ldx PageIndex
     jsr LoadTableAt977B
     and #$20
     beq Lx320
+        ; enemy is a metroid
+        ; since it is not completely invulnerable to Samus's attacks, we assume that the metroid is currently frozen
+        ; ignore all of Samus's attacks except for missiles
         lda EnWeaponAction,x
         cmp #wa_Missile
         bne Lx316
     Lx320:
+    
+    ; update EnPrevStatus
     lda EnStatus,x
     cmp #enemyStatus_Frozen
     bne Lx321
@@ -9168,51 +9204,77 @@ Lx319:
     Lx321:
     ora $0A
     sta EnPrevStatus,x
+    
+    ; branch if enemy is a miniboss
     asl
     bmi Lx322
+    ; branch if enemy is a metroid
     jsr LoadTableAt977B
     and #$20
     bne Lx322
-    ldy EnWeaponAction,x
-    cpy #wa_Missile
-    beq Lx326
-    cpy #wa_ScrewAttack
-    beq Lx326
-Lx322:
+        ; enemy is not a miniboss and is not a metroid
+        ; check attack type
+        ldy EnWeaponAction,x
+        ; instantly kill enemy if it was attacked by Samus's missile
+        cpy #wa_Missile
+        beq ExplodeEnemy
+        ; instantly kill enemy if it was attacked by Samus's screw attack
+        cpy #wa_ScrewAttack
+        beq ExplodeEnemy
+    Lx322:
+    
+    ; set enemy state to hurt
     lda #enemyStatus_Hurt
     sta EnStatus,x
+    
+    ; set EnSpecialAttribs to
+    ; #$0A if enemy is not a miniboss
+    ; #$03 if enemy is a miniboss
     lda #$0A
     bit $0A
     bvc Lx323
         lda #$03
     Lx323:
     sta EnSpecialAttribs,x
+    
+    ; check attack type
+    ; if enemy is attacked by wave beam, damage enemy by 2 hit points
     cpy #wa_WaveBeam
     beq Lx324
+        ; if enemy is not a miniboss, damage enemy by 1 hit point
         bit $0A
         bvc Lx325
+        ; enemy is a miniboss
+        ; if miniboss was not attacked by a missile, damage miniboss by 1 hit point
         ldy EnWeaponAction,x
         cpy #wa_Missile
         bne Lx325
+        ; miniboss was attacked by a missile, damage miniboss by 4 hit points
         dec EnHitPoints,x
-        beq Lx326
+        beq ExplodeEnemy
         dec EnHitPoints,x
-        beq Lx326
+        beq ExplodeEnemy
     Lx324:
     dec EnHitPoints,x
-    beq Lx326
+    beq ExplodeEnemy
 Lx325:
     dec EnHitPoints,x
     bne GetPageIndex
-Lx326:
+ExplodeEnemy:
+    ; the enemy has been killed by Samus's attacks
+    ; set status to explode
     lda #enemyStatus_Explode
     sta EnStatus,x
+    
+    ; branch if enemy is a miniboss
     bit $0A
     bvs Lx327
+    ; branch if enemy was not hit by the regular beam
     lda EnWeaponAction,x
-    cmp #wa_WaveBeam
+    cmp #wa_RegularBeam+1
     bcs Lx327
-    lda #$00
+    ; call LDCFC routine
+    lda #$00 ; useless instruction
     jsr LDCFC
     ldx PageIndex
 Lx327:
@@ -9220,9 +9282,10 @@ Lx327:
     lda L960B,y
     jsr LF68D
     sta EnSpeedSubPixelY,x
+    ; find first open enemy explosion slot
     ldx #$C0
     Lx328:
-        lda EnStatus,x
+        lda EnExplosionStatus,x
         beq Lx329
         txa
         clc
@@ -9230,26 +9293,29 @@ Lx327:
         tax
         cmp #$E0
         bne Lx328
+    ; could not spawn enemy explosion, because all enemy explosion slots are occupied
     beq GetPageIndex
 Lx329:
+    ; open enemy explosion slot found
+    ; initialize explosion based on current enemy's coordinates
     lda L95DD
     jsr LF68D
     lda #$0A
-    sta EnSpeedSubPixelY,x
-    inc EnStatus,x
+    sta EnExplosionAnimDelay,x
+    inc EnExplosionStatus,x
     lda #$00
     bit $0A
     bvc Lx330
         lda #$03
     Lx330:
-    sta EnSpeedSubPixelX,x
+    sta EnExplosionAnimFrame,x
     ldy PageIndex
     lda EnY,y
-    sta EnY,x
+    sta EnExplosionY,x
     lda EnX,y
-    sta EnX,x
+    sta EnExplosionX,x
     lda EnHi,y
-    sta EnHi,x
+    sta EnExplosionHi,x
     GetPageIndex:
     ldx PageIndex
     rts
@@ -9496,13 +9562,13 @@ Lx348:
     tay
     iny
     lda ($00),y
-    sta EnData08,x
+    sta EnMovementIndex,x
     jsr LoadTableAt977B
     bpl Lx351
     lda #$00
     sta EnSpeedSubPixelY,x
     sta EnSpeedSubPixelX,x
-    ldy EnData08,x
+    ldy EnMovementIndex,x
 
     lda EnAccelYTable,y
     sta EnAccelY,x
@@ -9654,7 +9720,7 @@ LF8F8:
     lda #$00
     sta EnDelay,y
     sta EnAnimDelay,y
-    sta EnData08,y
+    sta EnMovementIndex,y
 RTS_X358:
     rts
 
@@ -9680,15 +9746,16 @@ LF92C:
     sta EnData05,y
     rts
 
-LF93B:
+UpdateAllEnemyFireballs:
     ldx #$B0
     Lx359:
-        jsr LF949
+        jsr UpdateEnemyFireball
         ldx PageIndex
         jsr Xminus16
         cmp #$60
         bne Lx359
-LF949:
+        ; fallthrough
+UpdateEnemyFireball:
     stx PageIndex
     lda EnData05,x
     and #$02
@@ -9699,16 +9766,16 @@ LF949:
     beq Exit19
     jsr ChooseRoutine
         .word ExitSub     ;($C45C) rts
-        .word LF96A
-        .word LF991       ; spit dragon's fireball
+        .word UpdateEnemyFireball_Resting
+        .word UpdateEnemyFireball_Active       ; spit dragon's fireball
         .word ExitSub     ;($C45C) rts
-        .word LFA6B
-        .word LFA91
+        .word UpdateEnemyFireball_Frozen
+        .word UpdateEnemyFireball_Pickup
 
 Exit19:
     rts
 
-LF96A:
+UpdateEnemyFireball_Resting:
     jsr LFA5B
     jsr LFA1E
     ldx PageIndex
@@ -9722,28 +9789,28 @@ LF97E:
     jsr UpdateEnemyAnim
     jmp LDD8B
 Lx361:
-    inc EnData08,x
+    inc EnMovementIndex,x
 LF987:
-    inc EnData08,x
+    inc EnMovementIndex,x
     lda #$00
     sta EnDelay,x
     beq Lx362
 
-LF991:
+UpdateEnemyFireball_Active:
     jsr LFA5B
     lda EnData0A,x
     and #$FE
     tay
-    lda $97A7,y
+    lda L97A7,y
     sta $0A
-    lda $97A8,y
+    lda L97A7+1,y
     sta $0B
 Lx362:
-    ldy EnData08,x
+    ldy EnMovementIndex,x
     lda ($0A),y
     cmp #$FF ; If FF, restart string
     bne Lx363
-    sta EnData08,x
+    sta EnMovementIndex,x
     jmp LF987
 
 Lx363:
@@ -9853,7 +9920,7 @@ LFA60:
 Exit20:
     rts
 
-LFA6B:
+UpdateEnemyFireball_Frozen:
     lda EnAnimFrame,x
     cmp #$F7
     beq Lx371
@@ -9874,60 +9941,65 @@ LFA7D:
     sta $0B
     jmp MakeCartRAMPtr              ;($E96A)Find enemy position in room RAM.
 
-LFA91:
+UpdateEnemyFireball_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     lda $95DC
     jsr LF68D
     jmp LF97C
 
 ;-------------------------------------------------------------------------------
-LFA9D:
+UpdateAllEnemyExplosions:
     ldx #$C0
-Lx373:
-    stx PageIndex
-    lda EnStatus,x
-    beq Lx374
-        jsr LFAB4
-    Lx374:
-    lda PageIndex
-    clc
-    adc #$08
-    tax
-    cmp #$E0
-    bne Lx373
+    @loop:
+        stx PageIndex
+        lda EnExplosionStatus,x
+        beq @endIf
+            jsr UpdateEnemyExplosion
+        @endIf:
+        ; move on to next explosion
+        lda PageIndex
+        clc
+        adc #$08
+        tax
+        cmp #$E0
+        bne @loop
 RTS_X375:
     rts
 
-LFAB4:
-    dec EnSpeedSubPixelY,x
+UpdateEnemyExplosion:
+    ; decrement frame delay
+    dec EnExplosionAnimDelay,x
     bne Lx377
+    ; if frame delay is zero, move to next frame
     lda #$0C
-    sta EnSpeedSubPixelY,x
-    dec EnSpeedSubPixelX,x
+    sta EnExplosionAnimDelay,x
+    dec EnExplosionAnimFrame,x
+    ; if frame number <= 0, remove explosion
     bmi Lx376
     bne Lx377
 Lx376:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
+
 Lx377:
-    lda EnSpeedSubPixelY,x
+    
+    lda EnExplosionAnimDelay,x
     cmp #$09
     bne Lx378
-    lda EnSpeedSubPixelX,x
-    asl
-    tay
-    lda Table16,y
-    sta $04
-    lda Table16+1,y
-    sta $05
-    jsr LFA41
-Lx378:
+        lda EnExplosionAnimFrame,x
+        asl
+        tay
+        lda Table16,y
+        sta $04
+        lda Table16+1,y
+        sta $05
+        jsr LFA41
+    Lx378:
     lda #$80
     sta ObjectCntrl
     lda #$03
     jmp LF97E
 
 ; Table used by above subroutine
-
 Table16:
     .byte $00
     .byte $00
@@ -10463,70 +10535,83 @@ CheckZebetite: ; $FE05
 
 ;-------------------------------------------------------------------------------
 ; Tile degenerate/regenerate
-UpdateTiles:
+UpdateAllTileBlasts:
     ldx #$C0
     Lx413:
-        jsr DoOneTile
+        jsr UpdateTileBlast
         ldx PageIndex
         jsr Xminus16
         bne Lx413
-DoOneTile:
+UpdateTileBlast:
     stx PageIndex
-    lda TileRoutine,x
+    lda TileBlastRoutine,x
     beq RTS_X414          ; exit if tile not active
     jsr ChooseRoutine
         .word ExitSub       ;($C45C) rts
-        .word LFE3D
-        .word LFE54
-        .word LFE59
-        .word LFE54
-        .word LFE83
+        .word UpdateTileBlast_Init
+        .word UpdateTileBlast_LFE54
+        .word UpdateTileBlast_LFE59
+        .word UpdateTileBlast_LFE54
+        .word UpdateTileBlast_LFE83
 
-LFE3D:
-    inc TileRoutine,x
+UpdateTileBlast_Init:
+    inc TileBlastRoutine,x
     lda #$00
     jsr SetTileAnim
     lda #$50
-    sta TileDelay,x
-    lda TileWRAMPtr,x     ; low WRAM addr of blasted tile
+    sta TileBlastDelay,x
+    lda TileBlastWRAMPtr,x     ; low WRAM addr of blasted tile
     sta $00
-    lda TileWRAMPtr+1,x     ; high WRAM addr
+    lda TileBlastWRAMPtr+1,x     ; high WRAM addr
     sta $01
 
-LFE54:
+UpdateTileBlast_LFE54:
     lda #$02
-    jmp UpdateTileAnim
+    jmp UpdateTileBlastAnim
 
-LFE59:
+UpdateTileBlast_LFE59:
+    ; only update tile timer every 4th frame
     lda FrameCount
     and #$03
-    bne RTS_X414       ; only update tile timer every 4th frame
-    dec TileDelay,x
-    bne RTS_X414       ; exit if timer not reached zero
-    inc TileRoutine,x
-    ldy TileType,x
-    lda Table19,y
+    bne RTS_X414
+    
+    ; exit if timer not reached zero
+    dec TileBlastDelay,x
+    bne RTS_X414
+    
+    inc TileBlastRoutine,x
+    ldy TileBlastType,x
+    lda TileBlastAnimIndexTable,y
+    
     SetTileAnim:
-    sta TileAnimIndex,x
-    sta $0505,x
+    sta TileBlastAnimIndex,x
+    sta TileBlast0505,x
     lda #$00
-    sta TileAnimDelay,x
+    sta TileBlastAnimDelay,x
 RTS_X414:
     rts
 
 ; Table used for indexing the animations in TileBlastAnim (see below)
+TileBlastAnimIndexTable:
+    .byte TileBlastAnim6 - TileBlastAnim
+    .byte TileBlastAnim7 - TileBlastAnim
+    .byte TileBlastAnim8 - TileBlastAnim
+    .byte TileBlastAnim0 - TileBlastAnim
+    .byte TileBlastAnim1 - TileBlastAnim
+    .byte TileBlastAnim2 - TileBlastAnim
+    .byte TileBlastAnim3 - TileBlastAnim
+    .byte TileBlastAnim4 - TileBlastAnim
+    .byte TileBlastAnim9 - TileBlastAnim
+    .byte TileBlastAnim5 - TileBlastAnim
 
-Table19:
-    .byte $18,$1C,$20,$00,$04,$08,$0C,$10,$24,$14
-
-LFE83:
+UpdateTileBlast_LFE83:
     lda #$00
-    sta TileRoutine,x       ; tile = respawned
-    lda TileWRAMPtr,x
+    sta TileBlastRoutine,x       ; tile = respawned
+    lda TileBlastWRAMPtr,x
     clc
     adc #$21
     sta $00
-    lda TileWRAMPtr+1,x
+    lda TileBlastWRAMPtr+1,x
     sta $01
     jsr LFF3C
     lda $02
@@ -10558,7 +10643,7 @@ LFE83:
     jmp SubtractHealth              ;($CE92)
 
     GetTileFramePtr:
-    lda TileAnimFrame,x
+    lda TileBlastAnimFrame,x
     asl
     tay
     lda L97AF,y
@@ -10574,9 +10659,9 @@ DrawTileBlast:
     cmp #$1F
     bcs Exit23
     ldx PageIndex
-    lda TileWRAMPtr,x
+    lda TileBlastWRAMPtr,x
     sta $00
-    lda TileWRAMPtr+1,x
+    lda TileBlastWRAMPtr+1,x
     sta $01
     jsr GetTileFramePtr
     ldy #$00
@@ -10639,30 +10724,30 @@ LFF3C:
     sta $03
     rts
 
-UpdateTileAnim:
+UpdateTileBlastAnim:
     ldx PageIndex
-    ldy TileAnimDelay,x
+    ldy TileBlastAnimDelay,x
     beq Lx418
-        dec TileAnimDelay,x
+        dec TileBlastAnimDelay,x
         bne RTS_X419
     Lx418:
-    sta TileAnimDelay,x
-    ldy TileAnimIndex,x
+    sta TileBlastAnimDelay,x
+    ldy TileBlastAnimIndex,x
     lda TileBlastAnim,y
     cmp #$FE            ; end of "tile-blast" animation?
     beq Lx420
-    sta TileAnimFrame,x
+    sta TileBlastAnimFrame,x
     iny
     tya
-    sta TileAnimIndex,x
+    sta TileBlastAnimIndex,x
     jsr DrawTileBlast
     bcc RTS_X419
     ldx PageIndex
-    dec TileAnimIndex,x
+    dec TileBlastAnimIndex,x
 RTS_X419:
     rts
 Lx420:
-    inc TileRoutine,x
+    inc TileBlastRoutine,x
     pla
     pla
     rts
@@ -10670,16 +10755,16 @@ Lx420:
 ; Frame data for tile blasts
 
 TileBlastAnim:
-    .byte $06,$07,$00,$FE
-    .byte $07,$06,$01,$FE
-    .byte $07,$06,$02,$FE
-    .byte $07,$06,$03,$FE
-    .byte $07,$06,$04,$FE
-    .byte $07,$06,$05,$FE
-    .byte $07,$06,$09,$FE
-    .byte $07,$06,$0A,$FE
-    .byte $07,$06,$0B,$FE
-    .byte $07,$06,$08,$FE
+TileBlastAnim0:  .byte $06,$07,$00,$FE
+TileBlastAnim1:  .byte $07,$06,$01,$FE
+TileBlastAnim2:  .byte $07,$06,$02,$FE
+TileBlastAnim3:  .byte $07,$06,$03,$FE
+TileBlastAnim4:  .byte $07,$06,$04,$FE
+TileBlastAnim5:  .byte $07,$06,$05,$FE
+TileBlastAnim6:  .byte $07,$06,$09,$FE
+TileBlastAnim7:  .byte $07,$06,$0A,$FE
+TileBlastAnim8:  .byte $07,$06,$0B,$FE
+TileBlastAnim9:  .byte $07,$06,$08,$FE
 
     .byte $00
     .byte $00
