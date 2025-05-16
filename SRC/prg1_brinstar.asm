@@ -120,7 +120,7 @@ AreaEnemyDamage:
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
-    lda EnDataIndex,x
+    lda EnType,x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorAIRoutine ; 00 - Sidehopper
         .word SidehopperCeilingAIRoutine ; 01 - Ceiling sidehopper

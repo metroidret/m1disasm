@@ -263,7 +263,7 @@ L999E:
     sty MetroidOnSamus
     lda ObjectCntrl
     bmi L99AB
-        lda EnDataIndex,x
+        lda EnType,x
         ora #$A2
         sta ObjectCntrl
     L99AB:

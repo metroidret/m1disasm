@@ -113,7 +113,7 @@ L9AAA:
     lda #$00
     sta EnSpecialAttribs,x
     lda #$0A
-    sta EnDataIndex,x
+    sta EnType,x
     lda #$01
     sta EnStatus,x
     jsr LoadPositionFromTemp

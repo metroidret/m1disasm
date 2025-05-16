@@ -80,10 +80,11 @@ SwooperExitB:
     jmp CommonJump_02
 
 L9954:
-    sta EnDataIndex,x
-    lda $040B,x
+    sta EnType,x
+    lda EnHitPoints,x
     pha
     jsr CommonJump_0E
     pla
     sta EnHitPoints,x
     rts
+

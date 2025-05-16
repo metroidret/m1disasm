@@ -101,7 +101,7 @@ KraidUpdateProjectile:
     beq KraidUpdateProjectile_BranchB
     
     ; run KraidUpdateProjectile_BranchA if projectile is lint or nail
-    lda EnDataIndex,x
+    lda EnType,x
     cmp #$0A
     beq KraidUpdateProjectile_BranchA
     cmp #$09
@@ -143,7 +143,7 @@ KraidUpdateProjectile_BranchC:
     lda KraidBulletY-1,y
     sta $04
     lda KraidBulletType-1,y
-    sta EnDataIndex,x
+    sta EnType,x
     tya
     plp ;
     rol

@@ -204,7 +204,7 @@ CommonEnemyAI:
 ;-------------------------------------------------------------------------------
 ; A = TableAtL977B[EnemyType]*2
 LoadTableAt977B: ; L80B0
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L977B,y
     asl                             ;*2
     rts
@@ -650,7 +650,7 @@ L82F4:
     jmp L8258
 
 L82FB:
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L968B,y
     and #$20
     beq EnemyGetDeltaY_CaseFA
@@ -1053,14 +1053,14 @@ SamusEnterDoor:
     bne RTS_8B6C                    ;door status is 0, but door data information has been-->
     ldy SamusDoorData               ;written. If both conditions are met, Samus has just-->
     beq RTS_8B6C                    ;entered a door.
-    sta CurrentMissilePickups       ;
-    sta CurrentEnergyPickups        ;Reset current missile and energy power-up counters.
+    sta MissilePickupQtyCur         ;
+    sta EnergyPickupQtyCur          ;Reset current missile and energy power-up counters.
     lda RandomNumber1               ;
     and #$0F                        ;Randomly recalculate max missile pickups(16 max, 0 min).
-    sta MaxMissilePickup            ;
+    sta MissilePickupQtyMax         ;
     asl                             ;
     ora #$40                        ;*2 for energy pickups and set bit 6(128 max, 64 min).
-    sta MaxEnergyPickup             ;
+    sta EnergyPickupQtyMax          ;
     lda PPUCTRL_ZP                  ;
     eor #$01                        ;
     and #$01                        ;Erase name table door data for new room.

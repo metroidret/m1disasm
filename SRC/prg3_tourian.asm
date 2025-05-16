@@ -136,10 +136,10 @@ L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
 ; Enemy AI Jump Table
 ChooseEnemyAIRoutine:
-    lda EnDataIndex,x
+    lda EnType,x
     jsr CommonJump_ChooseRoutine
-        .word MetroidAIRoutine ; 00 - metroid
-        .word MetroidAIRoutine ; 01 - same as 0
+        .word MetroidAIRoutine ; 00 - red metroid
+        .word MetroidAIRoutine ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
         .word InvalidEnemy ; 03 - disappears
         .word RinkaAIRoutine ; 04 - rinka ?
@@ -1286,7 +1286,7 @@ LA19C:
     lda #$01
     sta EnStatus,x
     lda #$04
-    sta EnDataIndex,x
+    sta EnType,x
     lda #$00
     sta EnSpecialAttribs,x
     sta EnData04,x

@@ -1759,8 +1759,8 @@ SamusInit:
         ldy #$2F                        ;to down. and set PPU for horizontal mirroring.
     Lx002:
     sty MirrorCntrl                 ;
-    sty MaxMissilePickup
-    sty MaxEnergyPickup
+    sty MissilePickupQtyMax
+    sty EnergyPickupQtyMax
     lda $95D9                       ;Samus' initial vertical position
     sta ObjY                        ;
     lda #$80                        ;Samus' initial horizontal position
@@ -1791,12 +1791,12 @@ GameEngine:
         sta MissileCount                ;
     LC945:
     jsr UpdateWorld                 ;($CB29)Update Samus, enemies and room tiles.
-    lda MiniBossKillDelay           ;
-    ora PowerUpDelay                ;Check if mini boss was just killed or powerup aquired.-->
+    lda MiniBossKillDelayFlag       ;
+    ora PowerUpDelayFlag            ;Check if mini boss was just killed or powerup aquired.-->
     beq LC95F                           ;If not, branch.
         lda #$00                        ;
-        sta MiniBossKillDelay           ;Reset delay indicators.
-        sta PowerUpDelay                ;
+        sta MiniBossKillDelayFlag       ;Reset delay indicators.
+        sta PowerUpDelayFlag            ;
         lda #$18                        ;Set timer for 240 frames(4 seconds).
         ldx #$03                        ;GameEngine routine to run after delay expires
         jsr SetTimer                    ;($C4AA)Set delay timer and game engine routine.
@@ -4716,7 +4716,7 @@ CheckOneItem:
     lda PowerUpType,x               ;Get power-up type byte again.
     tay                             ;
     cpy #pu_ENERGYTANK                        ;Is power-up item a missile or energy tank?-->
-    bcs MissileEnergyPickup         ;If so, branch.
+    bcs MissileEnergyTank           ;If so, branch.
     cpy #pu_WAVEBEAM                        ;Is item the wave beam or ice beam?-->
     bcc LDBDA                       ;If not, branch.
         lda SamusGear                   ;Clear status of wave beam and ice beam power ups.
@@ -4728,7 +4728,7 @@ CheckOneItem:
     sta SamusGear                   ;Update Samus gear with new beam weapon.
 LDBE3:
     lda #$FF                        ;
-    sta PowerUpDelay                ;Initiate delay while power up music plays.
+    sta PowerUpDelayFlag            ;Initiate delay while power up music plays.
     sta PowerUpType,x               ;Clear out item data from RAM.
     ldy ItemRoomMusicStatus         ;Is Samus not in an item room?-->
     beq LDBF1                       ;If not, branch.
@@ -4740,7 +4740,7 @@ LDBE3:
 Exit9:
     rts                             ;Exit for multiple routines above.
 
-MissileEnergyPickup:
+MissileEnergyTank:
     beq LDC00                       ;Branch if item is an energy tank.
         lda #$05                        ;
         jsr AddToMaxMissiles            ;($DD97)Increase missile capacity by 5.
@@ -4969,7 +4969,9 @@ LDCFC:
     lda InArea 
     cmp #$13
     bne Lx135
-        lda EnDataIndex,x
+        ; we are in tourian
+        ; never turn into a drop if enemy is a ??? or a rinka
+        lda EnType,x
         cmp #$04
         beq Lx139
         cmp #$02
@@ -4984,40 +4986,55 @@ LDCFC:
     sta $00
     jsr LoadTableAt977B ; TableAtL977B[EnemyType[x]]*2
     and #$20
-    sta EnDataIndex,x
+    sta EnType,x
+    
+    ; enemy becomes a pickup
     lda #enemyStatus_Pickup
     sta EnStatus,x
+    
     lda #$60
     sta EnData0D,x
     lda RandomNumber1
     cmp #$10
     bcc LDD5B
-Lx136:
+LDD30:
     and #$07
     tay
     lda ItemDropTbl,y
     sta EnAnimFrame,x
     cmp #$80
     bne Lx138
-        ldy MaxMissilePickup
-        cpy CurrentMissilePickups
+        ; check if spawning a missile pickup is allowed
+        ; fail if the quantity of missile pickups spawned in this room has reached the max
+        ldy MissilePickupQtyMax
+        cpy MissilePickupQtyCur
         beq LDD5B
+        ; fail if Samus's missile capacity is 0
         lda MaxMissiles
         beq LDD5B
-        inc CurrentMissilePickups
+        ; allow spawning the missile pickup
+        inc MissilePickupQtyCur
     RTS_X137:
         rts
     Lx138:
-        ldy MaxEnergyPickup
-        cpy CurrentEnergyPickups
+        ; drop type is energy pickup or no pickup
+        ; check if spawning an energy pickup is allowed
+        ; fail if the quantity of energy pickups spawned in this room has reached the max
+        ldy EnergyPickupQtyMax
+        cpy EnergyPickupQtyCur
         beq LDD5B
-        inc CurrentEnergyPickups
+        
+        inc EnergyPickupQtyCur
+        ; exit if it is not no pickup (energy pickup)
         cmp #$89
         bne RTS_X137
+        
         lsr $00
         bcs RTS_X137
 
 LDD5B:
+    ; pickup failed to spawn
+    ; if not in tourian, remove enemy
     ldx PageIndex
     lda InArea
     cmp #$13
@@ -5025,23 +5042,35 @@ LDD5B:
     Lx139:
         jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
     Lx140:
+    ; we are in tourian
+    ; the pickup must have failed to spawn because the max quantity was hit
+    ; (BUG: this assumption is false when skipping the minibosses in NARPASSWORD)
+    ; therefore, to force the pickup to spawn anyway, reset the quantities
     lda RandomNumber1
+    ; set current quantities to 0
     ldy #$00
-    sty CurrentEnergyPickups
-    sty CurrentMissilePickups
+    sty EnergyPickupQtyCur
+    sty MissilePickupQtyCur
+    ; set max quantities to 1
     iny
-    sty MaxMissilePickup
-    sty MaxEnergyPickup
-    bne Lx136
+    sty MissilePickupQtyMax
+    sty EnergyPickupQtyMax
+    ; try to spawn the pickup again
+    bne LDD30
 
 LDD75:
+    ; miniboss was just killed
+    ; play item get music
     jsr PowerUpMusic
+    ; trigger kill delay
     lda InArea
     and #$0F
-    sta MiniBossKillDelay
+    sta MiniBossKillDelayFlag
+    ; make corresponding miniboss statue blink
     lsr
     tay
-    sta MaxMissiles,y
+    sta KraidStatueStatus-1,y
+    ; Samus's missile capacity increases by 75 missiles
     lda #75
     jsr AddToMaxMissiles
     bne LDD5B
@@ -7421,7 +7450,7 @@ LEB28:
     Lx228:
     pla                             ;Restore enemy type data.
     and #$3F                        ;Keep 6 lower bits to use as index for enemy data tables.
-    sta EnDataIndex,x               ;Store index byte.
+    sta EnType,x               ;Store index byte.
     rts                             ;
 
 LEB4D:
@@ -7440,7 +7469,7 @@ LEB4D:
     jsr GetNameTable                ;($EB85)Get name table to place enemy on.
     sta EnHi,x               ;Store name table.
 LEB6E:
-    ldy EnDataIndex,x               ;Load A with index to enemy data.
+    ldy EnType,x               ;Load A with index to enemy data.
     asl EnData05,x                     ;*2
     jsr LFB7B
     jmp LF85A
@@ -8683,7 +8712,7 @@ LF282:
     lda EnStatus,x
     cmp #$04
     bcs Exit17
-    lda EnDataIndex,x
+    lda EnType,x
 Lx287:
     sta SamusHurt010F
     tay
@@ -8903,7 +8932,7 @@ DoActiveEnemy: ; LF3E6
     beq DoActiveEnemy_BranchA
 
     ; Set enemy delay
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda EnemyInitDelayTbl,y ;($96BB)
     sta EnDelay,x
     ; Decrement status from active to resting
@@ -8913,7 +8942,7 @@ DoActiveEnemy: ; LF3E6
 DoActiveEnemy_BranchA: ; LF401
     jsr LF6B9
     jsr LF75B
-    jsr LF51E
+    jsr RemoveEnemyIfItIsInLava
 DoActiveEnemy_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
 LF40D:
@@ -8973,7 +9002,7 @@ DoFrozenEnemy: ; ($F43E)
             beq Lx303
                 lda EnPrevStatus,x
                 sta EnStatus,x
-                ldy EnDataIndex,x
+                ldy EnType,x
                 lda L969B,y
                 sta EnData0D,x
     Lx303:
@@ -8993,16 +9022,22 @@ LF483:
     and #$24
     beq Lx310
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
+    
+    ; if anim frame is #$80, it is a missile pickup
     ldy EnAnimFrame,x
     cpy #$80
     beq PickupMissile
+    
+    ; health pickup
     tya
     pha
-    lda EnDataIndex,x
+    lda EnType,x
     pha
+    ;Increase Health by 30.
     ldy #$00
     ldx #$03
     pla
+    ; branch if EnType is non-zero (health pickup from a metroid)
     bne Lx306
     dex
     pla
@@ -9021,11 +9056,15 @@ Lx306:
     jmp SFX_EnergyPickup
 
 PickupMissile:
+    ; add 2 missiles
     lda #$02
-    ldy EnDataIndex,x
+    ; branch if EnType is zero (regular missile pickup)
+    ldy EnType,x
     beq Lx307
-    lda #$1E
-Lx307:
+        ; missile pickup from a metroid
+        ; add 30 missiles
+        lda #$1E
+    Lx307:
     clc
     adc MissileCount
     bcs Lx308              ; can't have more than 255 missiles
@@ -9037,13 +9076,16 @@ Lx309:
     sta MissileCount
     jmp SFX_MissilePickup
 Lx310:
+    ; decrement pickup die delay every 4 frames
     lda FrameCount
     and #$03
     bne Lx311
     dec EnData0D,x
+    ; if die delay is 0, remove pickup
     bne Lx311
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
 Lx311:
+    ; flicker the color of the pickup
     lda FrameCount
     and #$02
     lsr
@@ -9084,23 +9126,27 @@ LF518:
     rts
 
 ;-------------------------------------------------------------------------------
-LF51E:
+RemoveEnemyIfItIsInLava:
+    ; exit if room scrolls vertically
     lda ScrollDir
     ldx PageIndex
     cmp #$02
     bcc RTS_X315
+    ; room scrolls horizontally
+    ; exit if enemy is above lava
     lda EnY,x     ; Y coord
     cmp #$EC
     bcc RTS_X315
+    ; enemy is in lava
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
+;-------------------------------------------------------------------------------
 Lx314:
     ; Samus attacked a non-frozen metroid with something else than the ice beam
     ; just play a sfx and ignore the attack
     jsr SFX_MetroidHit
     jmp GetPageIndex
 
-;-------------------------------------------------------------------------------
 ; handles enemy getting attacked by Samus
 EnemyReactToSamusWeapon:
     lda EnSpecialAttribs,x
@@ -9350,7 +9396,7 @@ LF699:
     cmp EnResetAnimIndex,x
     beq Exit12
     jsr LF68D
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L967B,y
     and #$7F
     beq Exit12
@@ -9375,19 +9421,19 @@ LF6B9:
     cmp #enemyStatus_Active
     bne Lx333
 
-        ; if bit 1 of L968B[EnDataIndex] is not set, exit
+        ; if bit 1 of L968B[EnType] is not set, exit
         tya
         and #$02
         beq Exit12
 
-    ; If enemy is not active or if bit 1 of L968B[EnDataIndex] is set
+    ; If enemy is not active or if bit 1 of L968B[EnType] is set
     Lx333:
     tya
     dec EnData0D,x
     bne Exit12
 
     pha
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L969B,y
     sta EnData0D,x
     pla
@@ -9460,7 +9506,7 @@ RTS_X341:
 
 ;-------------------------------------------------------------------------------
 ReadTableAt968B: ; LF74B
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L968B,y
     rts
 
@@ -9479,7 +9525,7 @@ LF75B:
     sta $06
     lda #$18
     jsr OrEnData05
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L96AB,y
     beq RTS_X346
     tay
@@ -9539,7 +9585,7 @@ LF7BA:
 RTS_X347:
     rts
 Lx348:
-    lda EnDataIndex,x
+    lda EnType,x
     cmp #$07
     bne Lx349
         jsr SFX_OutOfHole
@@ -9547,7 +9593,7 @@ Lx348:
     Lx349:
     inc EnStatus,x
     jsr LF699
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L96CB,y
     clc
     adc #$D1
@@ -9605,7 +9651,7 @@ LF844:
     lsr
 Lx352:
     lsr
-    lda EnDataIndex,x
+    lda EnType,x
     rol
     tay
     rts
@@ -9620,7 +9666,7 @@ LF852: ; accessed from CommonJump_03
     rts
 
 LF85A:
-    ldy EnDataIndex,x
+    ldy EnType,x
     lda L969B,y
     sta EnData0D,x
     lda EnemyHitPointTbl,y          ;($962B)
@@ -10035,7 +10081,7 @@ LFAFF:
 Lx380:
     sta EnData04,x
     lda #$FF
-    cmp EnDataIndex,x
+    cmp EnType,x
     bne Lx381
     dec EnDelay,x
     bne Exit13
@@ -10064,12 +10110,12 @@ Lx380:
     and ScrollDir
     asl
     sta EnData05,x
-    ldy EnDataIndex,x
+    ldy EnType,x
     jsr LFB7B
 LFB70:
     jmp LF85A
 Lx381:
-    sta EnDataIndex,x
+    sta EnType,x
     lda #$01
     sta EnDelay,x
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.

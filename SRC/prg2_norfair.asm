@@ -121,7 +121,7 @@ L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
-    lda EnDataIndex,x
+    lda EnType,x
     jsr CommonJump_ChooseRoutine
         .word SwooperAIRoutine ; 00 - swooper
         .word SwooperAIRoutine2 ; 01 - becomes swooper?

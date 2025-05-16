@@ -231,6 +231,7 @@ TempX                  = $69
 TempY                  = $6A
 ObjectCntrl            = $6B     ;Controls object properties such as mirroring and color-->
                                    ;bits. Bit 4 controls object mirroring.
+                                   ; bit 0 and bit 1 is for the color palette
 
 DoorOnNameTable3       = $6C     ;The following two addresses are used to keep track of the-->
 DoorOnNameTable0       = $6D     ;doors loaded on the name tables. The information is used-->
@@ -295,13 +296,13 @@ Mellow8A               = $8A
 
 MetroidOnSamus         = $92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
-MaxMissilePickup       = $93     ;Maximum missiles power-ups that can be picked up. Randomly-->
+MissilePickupQtyMax    = $93     ;Maximum missile drops that can be picked up. Randomly-->
                                    ;recalculated whenever Samus goes through a door.
-MaxEnergyPickup        = $94     ;Maximum energy power-ups that can be picked up. Randomly-->
+EnergyPickupQtyMax     = $94     ;Maximum energy drops that can be picked up. Randomly-->
                                    ;recalculated whenever Samus goes through a door.
-CurrentMissilePickups  = $95     ;Number of missile power-ups currently collected by Samus-->
+MissilePickupQtyCur    = $95     ;Number of missile drops currently collected by Samus-->
                                    ;Reset to 0 when Samus goes through a door.
-CurrentEnergyPickups   = $96     ;Number of energy power-ups currently collected by Samus-->
+EnergyPickupQtyCur     = $96     ;Number of energy drops currently collected by Samus-->
                                    ;Reset to 0 when Samus goes through a door.
 
 CannonIndex            = $97     ;Current cannon being processed
@@ -391,8 +392,8 @@ PPUCTRL_ZP             = $FF     ;Data byte to be loaded into PPU control regist
 Health                 = $0106   ;Lower health digit in upper 4 bits.
 ; Health+1               = $0107   ;Upper health digit in lower 4 bits-->
                                    ;# of full tanks in upper 4 bits.
-MiniBossKillDelay      = $0108   ;Initiate power up music and delay after Kraid/Ridley killed.
-PowerUpDelay           = $0109   ;Initiate power up music and delay after item pickup.
+MiniBossKillDelayFlag  = $0108   ;Initiate power up music and delay after Kraid/Ridley killed.
+PowerUpDelayFlag       = $0109   ;Initiate power up music and delay after item pickup.
 
 EndTimer               = $010A   ;Lower byte of end game escape timer.
 ; EndTimer+1             = $010B   ;Upper byte of end game escape timer.
@@ -800,7 +801,7 @@ EnAccelY               = $6AFE   ; Unknown
 EnAccelX               = $6AFF   ; Unknown
 EnData1C               = $6B00   ; Unknown
 EnData1D               = $6B01   ; Unknown
-EnDataIndex            = $6B02   ;Contains index into enemy data tables.
+EnType                 = $6B02   ;Enemy type used as index into enemy data tables.
 EnData1F               = $6B03   ; Unknown
 
 ; 4 slots of 8 bytes each ($6BB4-$6BD3)
