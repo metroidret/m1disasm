@@ -111,11 +111,12 @@ L95CD:  .byte $08                       ;Norfair music init flag.
 AreaEnemyDamage:  .word $0100                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
-L95D0:  .byte $10, $05, $27, $04, $0F, $FF, $FF
+AreaItemRoomNumbers:
+    .byte $10, $05, $27, $04, $0F, $FF, $FF
 
-L95D7:  .byte $16                       ;Samus start x coord on world map.
-L95D8:  .byte $0D                       ;Samus start y coord on world map.
-L95D9:  .byte $6E                       ;Samus start vertical screen position.
+AreaSamusMapPosX:   .byte $16   ;Samus start x coord on world map.
+AreaSamusMapPosY:   .byte $0D   ;Samus start y coord on world map.
+AreaSamusY:         .byte $6E   ;Samus start vertical screen position.
 
 L95DA:  .byte $01, $00, $03, $77, $53, $57, $55, $59, $5B, $4F, $32
 
@@ -214,7 +215,11 @@ L977B:  .byte $4C, $4C, $01, $00, $00, $00, $00, $40, $00, $64, $44, $44, $40, $
 L978B:  .byte $00, $00, $00, $00, $4D, $4D, $53, $57, $00, $00, $00, $00, $00, $00, $00, $00
 L979B:  .byte $08, $F8, $00, $00, $00, $00, $08, $F8, $00, $00, $00, $F8
 
-L97A7:  .word L97F7, L9806, L9815, L9824
+EnemyFireballMovementPtrTable:
+    .word EnemyFireballMovement0
+    .word EnemyFireballMovement1
+    .word EnemyFireballMovement2
+    .word EnemyFireballMovement3
 
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -287,13 +292,45 @@ EnemyMovement23:
     SignMagSpeed $14,  0,  1
     .byte $FA
 
-L97F7:  .byte $0A, $D3, $07, $B3, $07, $93, $07, $03, $07, $13, $07, $23, $50, $33, $FF
+EnemyFireballMovement0:
+    SignMagSpeed $0A,  3, -5
+    SignMagSpeed $07,  3, -3
+    SignMagSpeed $07,  3, -1
+    SignMagSpeed $07,  3,  0
+    SignMagSpeed $07,  3,  1
+    SignMagSpeed $07,  3,  2
+    SignMagSpeed $50,  3,  3
+    .byte $FF
 
-L9806:  .byte $09, $C2, $08, $A2, $07, $92, $07, $12, $08, $22, $09, $42, $50, $72, $FF
+EnemyFireballMovement1:
+    SignMagSpeed $09,  2, -4
+    SignMagSpeed $08,  2, -2
+    SignMagSpeed $07,  2, -1
+    SignMagSpeed $07,  2,  1
+    SignMagSpeed $08,  2,  2
+    SignMagSpeed $09,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
-L9815:  .byte $07, $C2, $06, $A2, $05, $92, $05, $12, $06, $22, $07, $42, $50, $72, $FF
+EnemyFireballMovement2:
+    SignMagSpeed $07,  2, -4
+    SignMagSpeed $06,  2, -2
+    SignMagSpeed $05,  2, -1
+    SignMagSpeed $05,  2,  1
+    SignMagSpeed $06,  2,  2
+    SignMagSpeed $07,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
-L9824:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $72, $FF
+EnemyFireballMovement3:
+    SignMagSpeed $05,  2, -4
+    SignMagSpeed $04,  2, -2
+    SignMagSpeed $03,  2, -1
+    SignMagSpeed $03,  2,  1
+    SignMagSpeed $04,  2,  2
+    SignMagSpeed $05,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
 ;-------------------------------------------------------------------------------
 InvalidEnemy:

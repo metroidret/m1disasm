@@ -4428,13 +4428,13 @@ WorldMap:
 ;Loads contents of world map into -->
 ;RAM at addresses $7000 thru $73FF.
 CopyMap:
-    lda #.lobyte(WorldMap)
+    lda #<WorldMap
     sta $00
-    lda #.hibyte(WorldMap)
+    lda #>WorldMap
     sta $01
-    lda #.lobyte(WorldMapRAM)
+    lda #<WorldMapRAM
     sta $02
-    lda #.hibyte(WorldMapRAM)
+    lda #>WorldMapRAM
     sta $03
     ldx #$04
     LA950:

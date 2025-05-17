@@ -43,7 +43,16 @@ AreaPointers           = $9598
 SpecItmsTable          = $9598
 AreaRoutine            = $95C3
 AreaEnemyDamage        = $95CE
+AreaItemRoomNumbers    = $95D0
+AreaSamusMapPosX       = $95D7
+AreaSamusMapPosY       = $95D8
+AreaSamusY             = $95D9
+L95DA                  = $95DA
+L95DC                  = $95DC
 L95DD                  = $95DD
+L95E0                  = $95E0
+L95E2                  = $95E2
+L95E4                  = $95E4
 ChooseEnemyAIRoutine   = $95E5
 
 L960B                  = $960B
@@ -62,7 +71,7 @@ EnAccelXTable          = $973F
 EnSpeedYTable          = $9753
 EnSpeedXTable          = $9767
 
-L97A7                  = $97A7
+EnemyFireballMovementPtrTable = $97A7
 TileBlastFramePtrTable = $97AF
 
 SoundEngine            = $B3B4
@@ -1644,12 +1653,12 @@ MoreInit:
     stx SpareMem30                  ;Not accessed by game.
     inx                             ;X=2.
     stx ScrollDir                   ;Set initial scroll direction as left.
-    lda $95D7                       ;Get Samus start x pos on map.
-    sta MapPosX                     ;
-    lda $95D8                       ;Get Samus start y pos on map.
-    sta MapPosY                     ;
+    lda AreaSamusMapPosX            ;Get Samus start x pos on map.
+    sta SamusMapPosX                ;
+    lda AreaSamusMapPosY            ;Get Samus start y pos on map.
+    sta SamusMapPosY                ;
 
-    lda $95DA       ; Get ??? Something to do with palette switch
+    lda L95DA       ; Get ??? Something to do with palette switch
     sta PalToggle
     lda #$FF
     sta RoomNumber                  ;Room number = $FF(undefined room).
@@ -1761,7 +1770,7 @@ SamusInit:
     sty MirrorCntrl                 ;
     sty MissilePickupQtyMax
     sty EnergyPickupQtyMax
-    lda $95D9                       ;Samus' initial vertical position
+    lda AreaSamusY                       ;Samus' initial vertical position
     sta ObjY                        ;
     lda #$80                        ;Samus' initial horizontal position
     sta ObjX                        ;
@@ -4765,13 +4774,15 @@ MissileEnergyTank:
 ;properly calculated.
 
 GetItemXYPos:
-    lda MapPosX                     ;
+    lda SamusMapPosX
 MapScrollRoutine:
-    sta $07                         ;Temp storage of Samus map position x and y in $07-->
-    lda MapPosY                     ;and $06 respectively.
-    sta $06                         ;
-    lda ScrollDir                   ;Load scroll direction and shift LSB into carry bit.
-    lsr                             ;
+    ;Temp storage of Samus map position x and y in $07 and $06 respectively.
+    sta $07
+    lda SamusMapPosY
+    sta $06
+    ;Load scroll direction and shift LSB into carry bit.
+    lda ScrollDir
+    lsr
     php                             ;Temp storage of processor status.
     beq LDC34                       ;Branch if scrolling up/down.
     bcc LDC3C                       ;Branch if scrolling right.
@@ -4787,11 +4798,11 @@ MapScrollRoutine:
 
     ;Scrolling down.
         lda ScrollY                     ;Unless the scroll y offset is 0, the actual room y pos-->
-        beq LDC3C                           ;needs to be decremented in order to be correct.
+        beq LDC3C                       ;needs to be decremented in order to be correct.
         dec $06                         ;
 
     LDC3C:
-    lda PPUCTRL_ZP                   ;If item is on the same nametable as current nametable,-->
+    lda PPUCTRL_ZP                  ;If item is on the same nametable as current nametable,-->
     eor $08                         ;then no further adjustment to item x and y position needed.
     and #$01                        ;
     plp                             ;Restore the processor status and clear the carry bit.
@@ -6340,20 +6351,20 @@ ScrollUp:
         dec ScrollDir
         lda ScrollY
         beq Lx164
-        dec MapPosY
+        dec SamusMapPosY
     Lx164:
     ldx ScrollY
     bne Lx165
-        dec MapPosY     ; decrement MapY
-        jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx166       ; if function returns CF = 1, moving up is not possible
-        jsr LE9B7       ; switch to the opposite Name Table
-        ldx #240        ; new Y coord
+        dec SamusMapPosY    ; decrement MapY
+        jsr GetRoomNum      ; put room # at current map pos in $5A
+        bcs Lx166           ; if function returns CF = 1, moving up is not possible
+        jsr LE9B7           ; switch to the opposite Name Table
+        ldx #240            ; new Y coord
     Lx165:
     dex
     jmp LE53F
 Lx166:
-    inc MapPosY
+    inc SamusMapPosY
 Lx167:
     sec
     rts
@@ -6368,13 +6379,13 @@ ScrollDown:
         inc ScrollDir
         lda ScrollY
         beq Lx168
-        inc MapPosY
+        inc SamusMapPosY
     Lx168:
     lda ScrollY
     bne Lx169
-        inc MapPosY     ; increment MapY
-        jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx171       ; if function returns CF = 1, moving down is not possible
+        inc SamusMapPosY    ; increment MapY
+        jsr GetRoomNum      ; put room # at current map pos in $5A
+        bcs Lx171           ; if function returns CF = 1, moving down is not possible
     Lx169:
     ldx ScrollY
     cpx #239
@@ -6389,7 +6400,7 @@ LE53F:
     clc
     rts
 Lx171:
-    dec MapPosY
+    dec SamusMapPosY
 Lx172:
     sec
 RTS_X173:
@@ -6632,21 +6643,21 @@ ScrollLeft:
         dec ScrollDir
         lda ScrollX
         beq Lx187
-        dec MapPosX
+        dec SamusMapPosX
     Lx187:
     lda ScrollX
     bne Lx188
-        dec MapPosX     ; decrement MapX
-        jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx189  ; if function returns CF=1, scrolling left is not possible
-        jsr LE9B7       ; switch to the opposite Name Table
+        dec SamusMapPosX    ; decrement MapX
+        jsr GetRoomNum      ; put room # at current map pos in $5A
+        bcs Lx189           ; if function returns CF=1, scrolling left is not possible
+        jsr LE9B7           ; switch to the opposite Name Table
     Lx188:
     dec ScrollX
     jsr LE54A       ; check if it's time to update Name Table
     clc
     rts
 Lx189:
-    inc MapPosX
+    inc SamusMapPosX
 Lx190:
     sec
     rts
@@ -6662,13 +6673,13 @@ ScrollRight:
         inc ScrollDir
         lda ScrollX
         beq Lx191
-        inc MapPosX
+        inc SamusMapPosX
     Lx191:
     lda ScrollX
     bne Lx192
-        inc MapPosX
+        inc SamusMapPosX
         jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx194   ; if function returns CF=1, scrolling right is not possible
+        bcs Lx194       ; if function returns CF=1, scrolling right is not possible
     Lx192:
     inc ScrollX
     bne Lx193
@@ -6678,7 +6689,7 @@ ScrollRight:
     clc
     rts
 Lx194:
-    dec MapPosX
+    dec SamusMapPosX
 Lx195:
     sec
 RTS_X196:
@@ -6715,21 +6726,21 @@ LE70C:
 GetRoomNum:
     lda ScrollDir                   ;
     lsr                             ;Branch if scrolling vertical.
-    beq LE733                           ;
+    beq LE733                       ;
 
     rol                             ;Restore value of a
     adc #$FF                        ;A=#$01 if scrolling left, A=#$02 if scrolling right.
     pha                             ;Save A.
     jsr OnNameTable0                ;($EC93)Y=1 if name table=0, Y=0 if name table=3.
     pla                             ;Restore A.
-    and DoorOnNameTable3,y                     ;
+    and DoorOnNameTable3,y          ;
     sec                             ;
-    bne RTS_E76F                       ;Can't load room, a door is in the way. This has the-->
-                                        ;effect of stopping the scrolling until Samus walks-->
-                                        ;through the door(horizontal scrolling only).
+    bne RTS_E76F                    ;Can't load room, a door is in the way. This has the-->
+                                    ;effect of stopping the scrolling until Samus walks-->
+                                    ;through the door(horizontal scrolling only).
 
 LE733:
-    lda MapPosY                     ;Map pos y.
+    lda SamusMapPosY                ;Map pos y.
     jsr Amul16                      ;($C2C5)Multiply by 16.
     sta $00                         ;Store multiplied value in $00.
     lda #$00                        ;
@@ -6738,7 +6749,7 @@ LE733:
     rol                             ;Save carry, if any.
     sta $01                         ;
     lda $00                         ;
-    adc MapPosX                     ;Add map pos X to A.
+    adc SamusMapPosX                ;Add map pos X to A.
     sta $00                         ;Store result.
     lda $01                         ;
     adc #$70                        ;Add #$7000 to result.
@@ -6746,21 +6757,21 @@ LE733:
     ldy #$00                        ;
     lda ($00),y                     ;Load room number.
     cmp #$FF                        ;Is it unused?-->
-    beq RTS_E76F                        ;If so, branch to exit with carry flag set.
+    beq RTS_E76F                    ;If so, branch to exit with carry flag set.
 
     sta RoomNumber                  ;Store room number.
 
     LE758:
-        cmp $95D0,y                     ;Is it a special room?-->
-        beq LE76A                           ;If so, branch to set flag to play item room music.
+        cmp AreaItemRoomNumbers,y       ;Is it a special room?-->
+        beq LE76A                       ;If so, branch to set flag to play item room music.
         iny                             ;
         cpy #$07                        ;
-        bne LE758                           ;Loop until all special room numbers are checked.
+        bne LE758                       ;Loop until all special room numbers are checked.
 
     lda ItemRoomMusicStatus         ;Load item room music status.
-    beq LE76C                          ;Branch if not in special room.
-    lda #$80                        ;Ptop playing item room music after next music start.
-    bne LE76C                          ;Branch always.
+    beq LE76C                       ;Branch if not in special room.
+    lda #$80                        ;Stop playing item room music after next music start.
+    bne LE76C                       ;Branch always.
 
 LE76A:
     lda #$01                        ;Start item room music on next music start.
@@ -6768,7 +6779,7 @@ LE76C:
     sta ItemRoomMusicStatus         ;
     clc                             ;Clear carry flag. was able to get room number.
 RTS_E76F:
-    rts                             ;
+    rts
 
 ;-----------------------------------------------------------------------------------------------------
 
@@ -7532,9 +7543,9 @@ SpawnDoorRoutine:
     pha
     jsr Amul16      ; CF = door side (0=right, 1=left)
     php
-    lda MapPosX
+    lda SamusMapPosX
     clc
-    adc MapPosY
+    adc SamusMapPosY
     plp
     rol
     and #$03
@@ -7552,7 +7563,7 @@ SpawnDoorRoutine:
     beq Lx232
     lda #$0A
     sta $09
-    ldy MapPosX
+    ldy SamusMapPosX
     txa
     jsr Amul16       ; * 16
     bcc Lx231
@@ -7859,8 +7870,8 @@ ScanOneItem:
     sta $01                         ;
     ldy #$00                        ;Index starts at #$00.
     lda ($00),y                     ;Load map Ypos of item.-->
-    cmp MapPosY                     ;Does it equal Samus' Ypos on map?-->
-    beq LEDBE                           ;If yes, check Xpos too.
+    cmp SamusMapPosY                ;Does it equal Samus' Ypos on map?-->
+    beq LEDBE                       ;If yes, check Xpos too.
 
     bcs Exit11                      ;Exit if item Y pos >  Samus Y Pos.
     iny                             ;
@@ -7882,8 +7893,8 @@ LEDBE:
 ScanItemX:
     ldy #$00                        ;
     lda ($00),y                     ;Load map Xpos of object.-->
-    cmp MapPosX                     ;Does it equal Samus' Xpos on map?-->
-    beq LEDD4                           ;If so, then load object.
+    cmp SamusMapPosX                ;Does it equal Samus' Xpos on map?-->
+    beq LEDD4                       ;If so, then load object.
     bcs Exit11                      ;Exit if item pos X > Samus Pos X.
 
     iny                             ;
@@ -7956,11 +7967,10 @@ LEE39:
 
 PrepareItemID:
     sta $09                         ;Store item type.
-    lda MapPosX                     ;
-
+    lda SamusMapPosX
 LEE41:
     sta $07                         ;Store item X coordinate.
-    lda MapPosY                     ;
+    lda SamusMapPosY
     sta $06                         ;Store item Y coordinate.
     jmp CreateItemID                ;($DC67)Get unique item ID.
 
@@ -7997,7 +8007,7 @@ SpawnMellows:
         sbc #$08
         tax
         bpl @loop
-    lda $95E4
+    lda L95E4
     sta EnResetAnimIndex+$F0
     sta EnAnimIndex+$F0
     lda #$01
@@ -9839,24 +9849,25 @@ UpdateEnemyFireball_Active:
     lda EnData0A,x
     and #$FE
     tay
-    lda L97A7,y
+    lda EnemyFireballMovementPtrTable,y
     sta $0A
-    lda L97A7+1,y
+    lda EnemyFireballMovementPtrTable+1,y
     sta $0B
 Lx362:
     ldy EnMovementIndex,x
     lda ($0A),y
-    cmp #$FF ; If FF, restart string
+    ; If #$FF, restart movement string
+    cmp #$FF
     bne Lx363
-    sta EnMovementIndex,x
-    jmp LF987
-
-Lx363:
+        sta EnMovementIndex,x
+        jmp LF987
+    Lx363:
     cmp EnDelay,x ; Move onto the next instruction if EnDelay == array value
     beq Lx361
 
     inc EnDelay,x
     iny
+
     lda ($0A),y
     jsr L8296 ; Get the y velocity from this byte
     ldx PageIndex
@@ -9867,22 +9878,27 @@ Lx363:
     ldx PageIndex
     sta EnSpeedX,x
 
+    ; if bit 0 of EnData0A is set, invert x speed
     tay
     lda EnData0A,x
     lsr
     php
     bcc Lx364
-    tya
-    jsr TwosComplement              ;($C3D4)
-    sta EnSpeedX,x
-Lx364:
+        tya
+        jsr TwosComplement              ;($C3D4)
+        sta EnSpeedX,x
+    Lx364:
+
+    ; branch if this is not the first movement instruction
     plp
     bne Lx365
+    ; branch if y speed is not strictly positive
     lda EnSpeedY,x
     beq Lx365
     bmi Lx365
+    
     ldy EnData0A,x
-    lda $95E0,y
+    lda L95E0,y
     sta EnResetAnimIndex,x
 Lx365:
     jsr LFA1E
@@ -9896,7 +9912,7 @@ Lx365:
     beq Lx366
         iny
     Lx366:
-    lda $95E2,y
+    lda L95E2,y
     jsr LF68D
     jsr LF518
     lda #$0A
@@ -9981,7 +9997,7 @@ LFA7D:
 
 UpdateEnemyFireball_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    lda $95DC
+    lda L95DC
     jsr LF68D
     jmp LF97C
 
@@ -10284,7 +10300,7 @@ UpdateAllMellows:
     stx PageIndex
     ; delete mellow handler enemy if ???
     lda EnResetAnimIndex+$F0
-    cmp $95E4
+    cmp L95E4
     bne RemoveMellowHandlerEnemy
     
     lda #$03

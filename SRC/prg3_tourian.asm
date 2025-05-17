@@ -126,11 +126,12 @@ L95CD:  .byte $40                       ;Tourian music init flag.
 AreaEnemyDamage:  .word $0300                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
-L95D0:  .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
+AreaItemRoomNumbers:
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-L95D7:  .byte $03                       ;Samus start x coord on world map.
-L95D8:  .byte $04                       ;Samus start y coord on world map.
-L95D9:  .byte $6E                       ;Samus start verticle screen position.
+AreaSamusMapPosX:   .byte $03   ;Samus start x coord on world map.
+AreaSamusMapPosY:   .byte $04   ;Samus start y coord on world map.
+AreaSamusY:         .byte $6E   ;Samus start vertical screen position.
 
 L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
 
@@ -232,7 +233,11 @@ L977B:  .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $
 L978B:  .byte $00, $00, $26, $26, $26, $26, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
-L97A7:  .word L97D5, L97D5, L97D8, L97DB
+EnemyFireballMovementPtrTable:
+    .word EnemyFireballMovement0
+    .word EnemyFireballMovement1
+    .word EnemyFireballMovement2
+    .word EnemyFireballMovement3
 
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -293,11 +298,17 @@ EnemyMovement22:
 EnemyMovement23:
     ; nothing
 
-L97D5:  .byte $50, $22, $FF
+EnemyFireballMovement0:
+EnemyFireballMovement1:
+    SignMagSpeed $50,  2,  2
+    .byte $FF
 
-L97D8:  .byte $50, $30, $FF
+EnemyFireballMovement2:
+    SignMagSpeed $50,  0,  3
+    .byte $FF
 
-L97DB:  .byte $FF
+EnemyFireballMovement3:
+    .byte $FF
 
 InvalidEnemy:
     lda #$00
@@ -971,9 +982,9 @@ RTS_9F64:
 L9F65:  .byte $80, $B0, $A0, $90
 
 L9F69:
-    lda MapPosX
+    lda SamusMapPosX
     clc
-    adc MapPosY
+    adc SamusMapPosY
     sec
     rol
     and #$03

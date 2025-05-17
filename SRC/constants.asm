@@ -190,8 +190,8 @@ ItemIndex              = $4C     ;#$00 or #$08. Added to PowerUpType addresses t
 
 SamusDir               = $4D     ;0 = Right, 1 = Left.
 SamusDoorDir           = $4E     ;Direction Samus passed through door.
-MapPosY                = $4F     ;Current y position on world map.
-MapPosX                = $50     ;Current x position on world map.
+SamusMapPosY           = $4F     ;Current y position on world map.
+SamusMapPosX           = $50     ;Current x position on world map.
 SamusScrX              = $51     ;Samus x position on screen.
 SamusScrY              = $52     ;Samus y position on screen.
 WalkSoundDelay         = $53

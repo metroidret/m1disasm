@@ -109,11 +109,12 @@ AreaEnemyDamage:
     .word $0080                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
+AreaItemRoomNumbers:
     .byte $2B, $2C, $28, $0B, $1C, $0A, $1A
 
-    .byte $03                       ;Samus start x coord on world map.
-    .byte $0E                       ;Samus start y coord on world map.
-    .byte $B0                       ;Samus start vertical screen position.
+AreaSamusMapPosX:   .byte $03   ;Samus start x coord on world map.
+AreaSamusMapPosY:   .byte $0E   ;Samus start y coord on world map.
+AreaSamusY:         .byte $B0   ;Samus start vertical screen position.
 
     .byte $01, $00, $03, $43, $00
     .byte $00, $00, $00, $00, $00, $69
@@ -241,7 +242,12 @@ L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
 ; Another movement pointer table?
 ; Referenced using EnData0A
-L97A7:  .word L9965, L9974, L9983, L9992
+EnemyFireballMovementPtrTable:
+    .word EnemyFireballMovement0
+    .word EnemyFireballMovement1
+    .word EnemyFireballMovement2
+    .word EnemyFireballMovement3
+
 ; Referenced by LFE83
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -539,14 +545,46 @@ EnemyMovement23:
 
 ;-------------------------------------------------------------------------------
 
-; Instruction (?) strings of a different type pointed to by L97A7
-L9965:  .byte $04, $B3, $05, $A3, $06, $93, $07, $03, $06, $13, $05, $23, $50, $33, $FF
+; Instruction (?) strings of a different type pointed to by EnemyFireballMovementPtrTable
+EnemyFireballMovement0:
+    SignMagSpeed $04,  3, -3
+    SignMagSpeed $05,  3, -2
+    SignMagSpeed $06,  3, -1
+    SignMagSpeed $07,  3,  0
+    SignMagSpeed $06,  3,  1
+    SignMagSpeed $05,  3,  2
+    SignMagSpeed $50,  3,  3
+    .byte $FF
 
-L9974:  .byte $09, $C2, $08, $A2, $07, $92, $07, $12, $08, $22, $09, $42, $50, $72, $FF
+EnemyFireballMovement1:
+    SignMagSpeed $09,  2, -4
+    SignMagSpeed $08,  2, -2
+    SignMagSpeed $07,  2, -1
+    SignMagSpeed $07,  2,  1
+    SignMagSpeed $08,  2,  2
+    SignMagSpeed $09,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
-L9983:  .byte $07, $C2, $06, $A2, $05, $92, $05, $12, $06, $22, $07, $42, $50, $72, $FF
+EnemyFireballMovement2:
+    SignMagSpeed $07,  2, -4
+    SignMagSpeed $06,  2, -2
+    SignMagSpeed $05,  2, -1
+    SignMagSpeed $05,  2,  1
+    SignMagSpeed $06,  2,  2
+    SignMagSpeed $07,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
-L9992:  .byte $05, $C2, $04, $A2, $03, $92, $03, $12, $04, $22, $05, $42, $50, $72, $FF
+EnemyFireballMovement3:
+    SignMagSpeed $05,  2, -4
+    SignMagSpeed $04,  2, -2
+    SignMagSpeed $03,  2, -1
+    SignMagSpeed $03,  2,  1
+    SignMagSpeed $04,  2,  2
+    SignMagSpeed $05,  2,  4
+    SignMagSpeed $50,  2,  7
+    .byte $FF
 
 ;-------------------------------------------------------------------------------
 
@@ -601,7 +639,7 @@ CommonEnemyJump_00_01_02:
 AreaRoutineStub: ;L9D35
     rts
 
-; More strings pointed to by L97A7
+; More strings pointed to by EnemyFireballMovementPtrTable
 TileBlastFrame00:
     .byte $22, $FF, $FF, $FF, $FF
 

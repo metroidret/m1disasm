@@ -1217,7 +1217,7 @@ L8C1D:
     sta $09
     lda $030C,x
     sta $08
-    ldy MapPosX
+    ldy SamusMapPosX
     txa
     jsr Amul16
     bcc L8C4C
