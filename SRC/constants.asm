@@ -906,6 +906,26 @@ gr_VARIA               = %00100000
 gr_WAVEBEAM            = %01000000
 gr_ICEBEAM             = %10000000
 
+;unique items IIIIII
+ui_BOMBS               = %000000 << 10
+ui_HIGHJUMP            = %000001 << 10
+ui_LONGBEAM            = %000010 << 10 ;(Not considered a unique item).
+ui_SCREWATTACK         = %000011 << 10
+ui_MARUMARI            = %000100 << 10
+ui_VARIA               = %000101 << 10
+ui_WAVEBEAM            = %000110 << 10 ;(Not considered a unique item).
+ui_ICEBEAM             = %000111 << 10 ;(Not considered a unique item).
+ui_ENERGYTANK          = %001000 << 10
+ui_MISSILES            = %001001 << 10
+ui_MISSILEDOOR         = %001010 << 10
+;ui_BOMBS               = %001100 << 10 ; this doesnt seem to be correct
+ui_MOTHERBRAIN         = %001110 << 10
+ui_ZEBETITE1           = %001111 << 10
+ui_ZEBETITE2           = %010000 << 10
+ui_ZEBETITE3           = %010001 << 10
+ui_ZEBETITE4           = %010010 << 10
+ui_ZEBETITE5           = %010011 << 10
+
 ;Samus action handlers.
 sa_Stand               = 0
 sa_Run                 = 1       ;Also run and jump.

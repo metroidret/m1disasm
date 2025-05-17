@@ -4757,7 +4757,7 @@ MissileEnergyTank:
     ora #$09                        ;
     sta Health+1                    ;Set new tank count. Upper health digit set to 9.
     lda #$99                        ;Max out low health digit.
-    sta Health                    ;Health is now FULL!
+    sta Health                      ;Health is now FULL!
     bne LDBE3                       ;Branch always.
 
 ;It is possible for the current nametable in the PPU to not be the actual nametable the special item
@@ -4810,15 +4810,19 @@ MapScrollRoutine:
 AddItemToHistory:
     jsr CreateItemID                ;($DC67)Create an item ID to put into unique item history.
 LDC54:
-    ldy NumberOfUniqueItems         ;Store number of uniqie items in Y.
-    lda $06                         ;
-    sta UniqueItemHistory,y         ;Store item ID in inuque item history.
-    lda $07                         ;
-    sta UniqueItemHistory+1,y       ;
-    iny                             ;Add 2 to Y. 2 bytes ber unique item.
-    iny                             ;
-    sty NumberOfUniqueItems         ;Store new number of unique items.
-    rts                             ;
+    ;Store number of unique items in Y.
+    ldy NumberOfUniqueItems
+    ;Store item ID in unique item history.
+    lda $06
+    sta UniqueItemHistory,y
+    lda $07
+    sta UniqueItemHistory+1,y
+    ;Add 2 to Y. 2 bytes per unique item.
+    iny
+    iny
+    ;Store new number of unique items.
+    sty NumberOfUniqueItems
+    rts
 
 ;------------------------------------------[ Create item ID ]-----------------------------------------
 
@@ -4826,24 +4830,7 @@ LDC54:
 ;of the format of the item ID number is as follows:
 ;
 ;IIIIIIXX XXXYYYYY. I = item type, X = X coordinate on world map, Y = Y coordinate
-;on world map.  The items have the following values of IIIIII:
-;High jump     = 000001
-;Long beam     = 000010 (Not considered a unique item).
-;Screw attack  = 000011
-;Maru Mari     = 000100
-;Varia suit    = 000101
-;Wave beam     = 000110 (Not considered a unique item).
-;Ice beam      = 000111 (Not considered a unique item).
-;Energy tank   = 001000
-;Missiles      = 001001
-;Missile door  = 001010
-;Bombs         = 001100
-;Mother brain  = 001110
-;1st Zebetite = 001111
-;2nd Zebetite = 010000
-;3rd Zebetite = 010001
-;4th Zebetite = 010010
-;5th Zebetite = 010011
+;on world map. See constants.asm for values of IIIIII.
 ;
 ;The results are stored in $06(upper byte) and $07(lower byte).
 
@@ -4874,10 +4861,10 @@ LDC82:
 ;The following table is used to rotate the sprites of both Samus and enemies when they explode.
 
 ExplodeRotationTbl:
-    .byte $00                       ;No sprite flipping.
-    .byte $80                       ;Flip sprite vertically.
-    .byte $C0                       ;Flip sprite vertically and horizontally.
-    .byte $40                       ;Flip sprite horizontally.
+    .byte $00                            ;No sprite flipping.
+    .byte OAMDATA_VFLIP                  ;Flip sprite vertically.
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP  ;Flip sprite vertically and horizontally.
+    .byte OAMDATA_HFLIP                  ;Flip sprite horizontally.
 
 ; UpdateObjAnim
 ; =============
@@ -10543,39 +10530,48 @@ RTS_X410:
     rts
 
 ;-------------------------------------------------------------------------------
-UpdateTourianItems: ; $FDE3
 ; Adds mother brain and zebetite
-    lda EndTimer+1          ; Determine if this is the first frame the end timer is running
-    cmp #$99                ; (it will have a value of 99.99 the first frame)
+UpdateTourianItems: ; $FDE3
+    ; Determine if this is the first frame the end timer is running
+    ; (it will have a value of 99.99 the first frame)
+    lda EndTimer+1
+    cmp #$99
     bne Lx411
     clc
     sbc EndTimer
     bne Lx411                   ; On the first frame of the end timer:
-
-    sta $06	                ;
-    lda #$38                ;
-    sta $07                 ;    Add [mother brain defeated] to item history
-    jsr LDC54               ;
-Lx411:
-    ldx #$20                ; Loop through zebetites (@ x = 20, 18, 10, 8, 0)
+        ; Add [mother brain defeated] to item history
+        ; a is #$00, low byte of ui_MOTHERBRAIN
+        sta $06
+        lda #>ui_MOTHERBRAIN
+        sta $07
+        jsr LDC54
+    Lx411:
+    
+    ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
+    ldx #$20
     Lx412:
-        jsr CheckZebetite       ;     ($FE05) Update one zebetite
-        txa                     ;     (Subtract 8 from x)
+        ; ($FE05) Update one zebetite
+        jsr CheckZebetite
+        ; Subtract 8 from x
+        txa
         sec
         sbc #$08
         tax
         bne Lx412
 
 CheckZebetite: ; $FE05
-    lda $0758,x             ;
+    lda ZebetiteStatus,x
     sec
-    sbc #$02                ;
-    bne RTS_X410                 ; Exit if zebetite state != 2
-    sta $06                 ; Store 0 to $06
-    inc $0758,x             ; Set zebetite state to 3
+    sbc #$02
+    bne RTS_X410 ; Exit if zebetite state != 2
+    ; a is #$00, low byte of ui_ZEBETITE1
+    sta $06
+    ; Set zebetite state to 3
+    inc ZebetiteStatus,x
     txa
     lsr                     ; A =  zebetite index * 4 (10, C, 8, 4, or 0)
-    adc #$3C                ;      + $3C
+    adc #>ui_ZEBETITE1      ;      + $3C
     sta $07
     jmp LDC54               ; Add zebetite to item history
 
