@@ -63,7 +63,7 @@ EnSpeedYTable          = $9753
 EnSpeedXTable          = $9767
 
 L97A7                  = $97A7
-L97AF                  = $97AF
+TileBlastFramePtrTable = $97AF
 
 SoundEngine            = $B3B4
 
@@ -5278,8 +5278,7 @@ LDEDE:
 LDEE3:
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte then exit.
 
-WriteSpriteRAM:
-LDEE6:
+WriteSpriteRAM: ;($DEE6)
     ldy $0F                         ;Load index for placement data.
     jsr YDisplacement               ;($DF6B)Get displacement for y direction.
     adc $10                         ;Add initial Y position.
@@ -5743,25 +5742,33 @@ Xplus4:
 HexToDec:
     ldy #100                        ;Find upper digit.
     sty $0A                         ;
-    jsr GetDigit                    ;($E1AD)Extract hundreds digit.
+    jsr DivideByRepeatedSubtraction ;Extract hundreds digit.
     sty $02                         ;Store upper digit in $02.
+
     ldy #10                         ;Find middle digit.
     sty $0A                         ;
-    jsr GetDigit                    ;($E1AD)Extract tens digit.
+    jsr DivideByRepeatedSubtraction ;Extract tens digit.
     sty $01                         ;Store middle digit in $01.
-    sta $00                         ;Store lower digit in $00
-    rts                             ;
 
-GetDigit:
-    ldy #$00                        ;
-    sec                             ;
+    sta $00                         ;Store lower digit in $00
+    rts
+
+; A is the dividend
+; $0A is the divisor
+; returns quotient in Y and remainder in A
+DivideByRepeatedSubtraction: ;($E1AD)
+    ldy #$00
+    sec
+    ;Loop and subtract value in $0A from A until carry flag is not set.
     LE1B0:
-        iny                             ;
-        sbc $0A                         ;Loop and subtract value in $0A from A until carry flag-->
-        bcs LE1B0                           ;is not set.  The resulting number of loops is the decimal-->
-    dey                             ;number extracted and A is the remainder.
-    adc $0A                         ;
-    rts                             ;
+        iny
+        sbc $0A
+        bcs LE1B0
+    ;the last subtraction made A negative
+    ;undo last subtraction
+    dey
+    adc $0A
+    rts
 
 ;-------------------------------------[ Status bar sprite data ]-------------------------------------
 
@@ -5788,17 +5795,17 @@ DataDisplayTbl:
 BitScan:
     stx $0E                         ;Save X.
     ldx #$00                        ;First bit is bit 0.
-LE1E5:
-    lsr                             ;Transfer bit to carry flag.
-    bcs LE1ED                       ;If the shifted bit was 1, Branch out of loop.
-    inx                             ;Increment X to keep of # of bits checked.
-    cpx #$08                        ;Have all 8 bit been tested?-->
-    bne LE1E5                       ;If not, branch to check the next bit.
-LE1ED:
+    @loop:
+        lsr                             ;Transfer bit to carry flag.
+        bcs @exitLoop                   ;If the shifted bit was 1, Branch out of loop.
+        inx                             ;Increment X to keep of # of bits checked.
+        cpx #$08                        ;Have all 8 bit been tested?-->
+        bne @loop                       ;If not, branch to check the next bit.
+@exitLoop:
     txa                             ;Return which bit number was set.
     ldx $0E                         ;Restore X.
 RTS_E1F0:
-    rts                             ;
+    rts
 
 ;------------------------------------------[ Scroll door ]-------------------------------------------
 
@@ -5834,8 +5841,7 @@ LE20C:
     bne Exit15                      ;Check if need to scroll up to center door.
     jsr ScrollUp                    ;($E4F1)DoorStatus=4, scroll 1 pixel up.
 
-VerticalRoomCentered:
-LE21B:
+VerticalRoomCentered: ; ($E21B)
     ldx ScrollY                     ;Has room been centered on screen?-->
     bne Exit15                      ;If not, branch to exit.
     stx DoorOnNameTable3            ;
@@ -6168,8 +6174,7 @@ LE3D3:
 
 ;----------------------------------------------------------------------------------------------------
 
-HorzAccelerate:
-LE3E5:
+HorzAccelerate: ;($E3E5)
     lda SamusHorzSpeedMax
     jsr Amul16       ; * 16
     sta $00
@@ -6908,10 +6913,10 @@ LE81E:
             beq Lx204
                 lda ObjAction,x
                 eor #$04
-                bne PlaySnd4
+                bne GotoSFX_Metal
                 lda ObjAnimResetIndex,x
                 eor #$91
-                bne PlaySnd4
+                bne GotoSFX_Metal
             Lx204:
             lda TriangleSFXFlag
             ora #$02
@@ -6934,7 +6939,7 @@ ClcExit:
     clc
     rts
 
-PlaySnd4:
+GotoSFX_Metal:
     jmp SFX_Metal
 
 ObjectCheckMoveLeft:
@@ -10594,7 +10599,7 @@ UpdateTileBlast:
         .word UpdateTileBlast_LFE54
         .word UpdateTileBlast_LFE59
         .word UpdateTileBlast_LFE54
-        .word UpdateTileBlast_LFE83
+        .word UpdateTileBlast_Respawn
 
 UpdateTileBlast_Init:
     inc TileBlastRoutine,x
@@ -10646,7 +10651,7 @@ TileBlastAnimIndexTable:
     .byte TileBlastAnim9 - TileBlastAnim
     .byte TileBlastAnim5 - TileBlastAnim
 
-UpdateTileBlast_LFE83:
+UpdateTileBlast_Respawn:
     lda #$00
     sta TileBlastRoutine,x       ; tile = respawned
     lda TileBlastWRAMPtr,x
@@ -10682,21 +10687,20 @@ UpdateTileBlast_LFE83:
     ; deal 5 damage to samus
     lda #$50
     sta HealthChange
-    jmp SubtractHealth              ;($CE92)
+    jmp SubtractHealth
 
-    GetTileFramePtr:
+GetTileBlastFramePtr:
     lda TileBlastAnimFrame,x
     asl
     tay
-    lda L97AF,y
+    lda TileBlastFramePtrTable,y
     sta $02
-    lda L97AF+1,y
+    lda TileBlastFramePtrTable+1,y
     sta $03
 Exit23:
     rts
 
-LFEDC:
-DrawTileBlast:
+DrawTileBlast: ;($FEDC)
     lda PPUStrIndex
     cmp #$1F
     bcs Exit23
@@ -10705,7 +10709,7 @@ DrawTileBlast:
     sta $00
     lda TileBlastWRAMPtr+1,x
     sta $01
-    jsr GetTileFramePtr
+    jsr GetTileBlastFramePtr
     ldy #$00
     sty $11
     lda ($02),y

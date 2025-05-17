@@ -220,9 +220,24 @@ L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
 L97A7:  .word L98C9, L98D8, L98E7, L98F6
 
-L97AF:  .word L9C4A, L9C4F, L9C54, L9C59, L9C5E, L9C63, L9C68, L9C6D
-L97BF:  .word L9C72, L9C77, L9C7C, L9C81, L9C86, L9C86, L9C86, L9C86
-L97CF:  .word L9C86
+TileBlastFramePtrTable:
+    .word TileBlastFrame00
+    .word TileBlastFrame01
+    .word TileBlastFrame02
+    .word TileBlastFrame03
+    .word TileBlastFrame04
+    .word TileBlastFrame05
+    .word TileBlastFrame06
+    .word TileBlastFrame07
+    .word TileBlastFrame08
+    .word TileBlastFrame09
+    .word TileBlastFrame0A
+    .word TileBlastFrame0B
+    .word TileBlastFrame0C
+    .word TileBlastFrame0D
+    .word TileBlastFrame0E
+    .word TileBlastFrame0F
+    .word TileBlastFrame10
 
 L97D1:  .byte $01, $01, $02, $01, $03, $04, $00, $06, $00, $07, $00, $09, $00, $00, $01, $0C
 L97E1:  .byte $0D, $00, $0E, $03, $0F, $10, $11, $0F
@@ -451,29 +466,48 @@ AreaRoutineStub:
     rts
 
 ; What's this table?
-L9C4A:  .byte $22, $FF, $FF, $FF, $FF
+TileBlastFrame00:
+    .byte $22, $FF, $FF, $FF, $FF
 
-L9C4F:  .byte $22, $80, $81, $82, $83
+TileBlastFrame01:
+    .byte $22, $80, $81, $82, $83
 
-L9C54:  .byte $22, $84, $85, $86, $87
+TileBlastFrame02:
+    .byte $22, $84, $85, $86, $87
 
-L9C59:  .byte $22, $88, $89, $8A, $8B
+TileBlastFrame03:
+    .byte $22, $88, $89, $8A, $8B
 
-L9C5E:  .byte $22, $8C, $8D, $8E, $8F
+TileBlastFrame04:
+    .byte $22, $8C, $8D, $8E, $8F
 
-L9C63:  .byte $22, $94, $95, $96, $97
+TileBlastFrame05:
+    .byte $22, $94, $95, $96, $97
 
-L9C68:  .byte $22, $9C, $9D, $9D, $9C
+TileBlastFrame06:
+    .byte $22, $9C, $9D, $9D, $9C
 
-L9C6D:  .byte $22, $9E, $9F, $9F, $9E
+TileBlastFrame07:
+    .byte $22, $9E, $9F, $9F, $9E
 
-L9C72:  .byte $22, $90, $91, $92, $93
+TileBlastFrame08:
+    .byte $22, $90, $91, $92, $93
 
-L9C77:  .byte $22, $70, $71, $72, $73
+TileBlastFrame09:
+    .byte $22, $70, $71, $72, $73
 
-L9C7C:  .byte $22, $74, $75, $76, $77
+TileBlastFrame0A:
+    .byte $22, $74, $75, $76, $77
 
-L9C81:  .byte $22, $78, $79, $7A, $7B
+TileBlastFrame0B:
+    .byte $22, $78, $79, $7A, $7B
+
+TileBlastFrame0C:
+TileBlastFrame0D:
+TileBlastFrame0E:
+TileBlastFrame0F:
+TileBlastFrame10:
+    ;nothing
 
 .include "kraid/enemy_sprite_data.asm"
 

@@ -243,9 +243,24 @@ L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 ; Referenced using EnData0A
 L97A7:  .word L9965, L9974, L9983, L9992
 ; Referenced by LFE83
-L97AF:  .word L9D36, L9D3B, L9D40, L9D45, L9D4A, L9D4F, L9D54, L9D59
-L97BF:  .word L9D5D, L9D63, L9D6A, L9D6A, L9D6A, L9D6A, L9D6A, L9D6A
-L97CF:  .word L9D6A
+TileBlastFramePtrTable:
+    .word TileBlastFrame00
+    .word TileBlastFrame01
+    .word TileBlastFrame02
+    .word TileBlastFrame03
+    .word TileBlastFrame04
+    .word TileBlastFrame05
+    .word TileBlastFrame06
+    .word TileBlastFrame07
+    .word TileBlastFrame08
+    .word TileBlastFrame09
+    .word TileBlastFrame0A
+    .word TileBlastFrame0B
+    .word TileBlastFrame0C
+    .word TileBlastFrame0D
+    .word TileBlastFrame0E
+    .word TileBlastFrame0F
+    .word TileBlastFrame10
 
 ; If I'm reading the code correctly, this table is accessed with this formula:
 ;  EnData08 = L97D1[(L97D1[L96CB[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
@@ -587,16 +602,44 @@ AreaRoutineStub: ;L9D35
     rts
 
 ; More strings pointed to by L97A7
-L9D36:  .byte $22, $FF, $FF, $FF, $FF
-L9D3B:  .byte $22, $80, $81, $82, $83
-L9D40:  .byte $22, $84, $85, $86, $87
-L9D45:  .byte $22, $88, $89, $8A, $8B
-L9D4A:  .byte $22, $8C, $8D, $8E, $8F
-L9D4F:  .byte $22, $94, $95, $96, $97
-L9D54:  .byte $22, $9C, $9D, $9D, $9C
-L9D59:  .byte $22, $9E, $9F, $9F, $9E
-L9D5D:  .byte $22, $90, $91, $92, $93
-L9D63:  .byte $32, $4E, $4E, $4E, $4E, $4E, $4E
+TileBlastFrame00:
+    .byte $22, $FF, $FF, $FF, $FF
+
+TileBlastFrame01:
+    .byte $22, $80, $81, $82, $83
+
+TileBlastFrame02:
+    .byte $22, $84, $85, $86, $87
+
+TileBlastFrame03:
+    .byte $22, $88, $89, $8A, $8B
+
+TileBlastFrame04:
+    .byte $22, $8C, $8D, $8E, $8F
+
+TileBlastFrame05:
+    .byte $22, $94, $95, $96, $97
+
+TileBlastFrame06:
+    .byte $22, $9C, $9D, $9D, $9C
+
+TileBlastFrame07:
+    .byte $22, $9E, $9F, $9F, $9E
+
+TileBlastFrame08:
+    .byte $22, $90, $91, $92, $93
+
+TileBlastFrame09:
+    .byte $32, $4E, $4E, $4E, $4E, $4E, $4E
+
+TileBlastFrame0A:
+TileBlastFrame0B:
+TileBlastFrame0C:
+TileBlastFrame0D:
+TileBlastFrame0E:
+TileBlastFrame0F:
+TileBlastFrame10:
+    ; nothing
 
 .include "brinstar/enemy_sprite_data.asm"
 

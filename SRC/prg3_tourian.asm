@@ -234,9 +234,24 @@ L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
 
 L97A7:  .word L97D5, L97D5, L97D8, L97DB
 
-L97AF:  .word LA32B, LA330, LA337, LA348, LA359, LA36A, LA37B, LA388
-L97BF:  .word LA391, LA3A2, LA3B3, LA3C4, LA3D5, LA3DE, LA3E7, LA3F0
-L97CF:  .word LA3F9
+TileBlastFramePtrTable:
+    .word TileBlastFrame00
+    .word TileBlastFrame01
+    .word TileBlastFrame02
+    .word TileBlastFrame03
+    .word TileBlastFrame04
+    .word TileBlastFrame05
+    .word TileBlastFrame06
+    .word TileBlastFrame07
+    .word TileBlastFrame08
+    .word TileBlastFrame09
+    .word TileBlastFrame0A
+    .word TileBlastFrame0B
+    .word TileBlastFrame0C
+    .word TileBlastFrame0D
+    .word TileBlastFrame0E
+    .word TileBlastFrame0F
+    .word TileBlastFrame10
 
 L97D1:  .byte $00, $00, $00, $01
 
@@ -1513,55 +1528,64 @@ ClearCurrentMetroidLatchAndMetroidOnSamus:
 
 ;-------------------------------------------------------------------------------
 
-LA32B:  .byte $22, $FF, $FF, $FF, $FF
+TileBlastFrame00:
+    .byte $22, $FF, $FF, $FF, $FF
 
-LA330:  .byte $32, $FF, $FF, $FF, $FF, $FF, $FF
+TileBlastFrame01:
+    .byte $32, $FF, $FF, $FF, $FF, $FF, $FF
 
-LA337:
+TileBlastFrame02:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $E0, $DE, $ED, $FF, $E8
     .byte $EE
 
-LA348:
+TileBlastFrame03:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $ED, $FF, $DF, $DA, $EC, $ED, $F4
     .byte $FF
 
-LA359:
+TileBlastFrame04:
     .byte $28, $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF
 
-LA36A:
+TileBlastFrame05:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF
 
-LA37B:  .byte $62, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+TileBlastFrame06:
+    .byte $62, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-LA388:  .byte $42, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+TileBlastFrame07:
+    .byte $42, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-LA391:
+TileBlastFrame08:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE, $FF
     .byte $DB
 
-LA3A2:
+TileBlastFrame09:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $E8, $E6, $DB, $FF, $EC, $DE, $ED
     .byte $FF
 
-LA3B3:
+TileBlastFrame0A:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF
 
-LA3C4:
+TileBlastFrame0B:
     .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF
 
-LA3D5:  .byte $42, $90, $91, $90, $91, $90, $91, $90, $91
+TileBlastFrame0C:
+    .byte $42, $90, $91, $90, $91, $90, $91, $90, $91
 
-LA3DE:  .byte $42, $92, $93, $92, $93, $92, $93, $92, $93
+TileBlastFrame0D:
+    .byte $42, $92, $93, $92, $93, $92, $93, $92, $93
 
-LA3E7:  .byte $42, $94, $95, $94, $95, $94, $95, $94, $95
+TileBlastFrame0E:
+    .byte $42, $94, $95, $94, $95, $94, $95, $94, $95
 
-LA3F0:  .byte $42, $96, $97, $96, $97, $96, $97, $96, $97
+TileBlastFrame0F:
+    .byte $42, $96, $97, $96, $97, $96, $97, $96, $97
 
-LA3F9:  .byte $62, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0
+TileBlastFrame10:
+    .byte $62, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0
 
 .include "tourian/enemy_sprite_data.asm"
 

@@ -216,9 +216,24 @@ L979B:  .byte $08, $F8, $00, $00, $00, $00, $08, $F8, $00, $00, $00, $F8
 
 L97A7:  .word L97F7, L9806, L9815, L9824
 
-L97AF:  .word L9B9E, L9BA3, L9BA8, L9BAD, L9BB2, L9BB7, L9BBC, L9BC1
-L97BF:  .word L9BC6, L9BCB, L9BD0, L9BD5, L9BDA, L9BDA, L9BDA, L9BDA
-L97CF:  .word L9BDA
+TileBlastFramePtrTable:
+    .word TileBlastFrame00
+    .word TileBlastFrame01
+    .word TileBlastFrame02
+    .word TileBlastFrame03
+    .word TileBlastFrame04
+    .word TileBlastFrame05
+    .word TileBlastFrame06
+    .word TileBlastFrame07
+    .word TileBlastFrame08
+    .word TileBlastFrame09
+    .word TileBlastFrame0A
+    .word TileBlastFrame0B
+    .word TileBlastFrame0C
+    .word TileBlastFrame0D
+    .word TileBlastFrame0E
+    .word TileBlastFrame0F
+    .word TileBlastFrame10
 
 L97D1:  .byte $00, $02, $00, $09, $00, $0D, $01, $0E, $0F, $03, $00, $01, $02, $03, $00, $10
 L97E1:  .byte $00, $11, $00, $00, $00, $01
@@ -381,29 +396,48 @@ LoadPositionFromTemp:
 
 ;-------------------------------------------------------------------------------
 
-L9B9E:  .byte $22, $FF, $FF, $FF, $FF
+TileBlastFrame00:
+    .byte $22, $FF, $FF, $FF, $FF
 
-L9BA3:  .byte $22, $80, $81, $82, $83
+TileBlastFrame01:
+    .byte $22, $80, $81, $82, $83
 
-L9BA8:  .byte $22, $84, $85, $86, $87
+TileBlastFrame02:
+    .byte $22, $84, $85, $86, $87
 
-L9BAD:  .byte $22, $88, $89, $8A, $8B
+TileBlastFrame03:
+    .byte $22, $88, $89, $8A, $8B
 
-L9BB2:  .byte $22, $8C, $8D, $8E, $8F
+TileBlastFrame04:
+    .byte $22, $8C, $8D, $8E, $8F
 
-L9BB7:  .byte $22, $94, $95, $96, $97
+TileBlastFrame05:
+    .byte $22, $94, $95, $96, $97
 
-L9BBC:  .byte $22, $9C, $9D, $9D, $9C
+TileBlastFrame06:
+    .byte $22, $9C, $9D, $9D, $9C
 
-L9BC1:  .byte $22, $9E, $9F, $9F, $9E
+TileBlastFrame07:
+    .byte $22, $9E, $9F, $9F, $9E
 
-L9BC6:  .byte $22, $90, $91, $92, $93
+TileBlastFrame08:
+    .byte $22, $90, $91, $92, $93
 
-L9BCB:  .byte $22, $70, $71, $72, $73
+TileBlastFrame09:
+    .byte $22, $70, $71, $72, $73
 
-L9BD0:  .byte $22, $74, $75, $75, $74
+TileBlastFrame0A:
+    .byte $22, $74, $75, $75, $74
 
-L9BD5:  .byte $22, $76, $76, $76, $76
+TileBlastFrame0B:
+    .byte $22, $76, $76, $76, $76
+
+TileBlastFrame0C:
+TileBlastFrame0D:
+TileBlastFrame0E:
+TileBlastFrame0F:
+TileBlastFrame10:
+    ;nothing
 
 .include "norfair/enemy_sprite_data.asm"
 
