@@ -197,7 +197,7 @@ SamusScrY              = $52     ;Samus y position on screen.
 WalkSoundDelay         = $53
 Statues54              = $54
 IsSamus                = $55     ;1=Samus object being accessed, 0=not Samus.
-DoorStatus             = $56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
+DoorEntryStatus        = $56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
                                    ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
                                    ;is 3 or 4, a door was entered while in a vertical shaft and-->
                                    ;the door was not centered on the screen and up or down-->
@@ -445,6 +445,7 @@ SamusHorzSpeedMax      = $0316   ;Used to calc maximum horizontal speed Samus ca
 
 ;Elevator RAM.
 ElevatorStatus         = $0320   ;#$01=Elevator present, #$00=Elevator not present.
+Elevator032F           = $032F   ;bit 7 is up(1) or down(0)
 
 ;Power-up item RAM.
 PowerUpAnimFrame       = $0343   ;*2 = Index into FramePtrTable for current animation.
@@ -457,11 +458,28 @@ StatueStatus           = $0360
 StatueAnimFrame        = $0363
 KraidStatueRaiseState  = $0364   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
 RidleyStatueRaiseState = $0365
+Statue0366             = $0366   ; is this even related to statues?
+; Statue0366+1           = $0367
 StatueHi               = $036C
 StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
 StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
 KraidStatueY           = $036F
 RidleyStatueY          = $0370
+
+;Door RAM
+DoorStatus             = $0300
+DoorAnimResetIndex     = $0305
+DoorAnimIndex          = $0306
+DoorType               = $0307  ;#$00=red door, #$01=blue door, #$02=10-missile door
+                                  ;#$03=blue door that changes the music
+DoorHit                = $030A  ; bit 2 indicates if the door was hit or not
+DoorHi                 = $030C
+DoorX                  = $030E
+DoorHitPoints          = $030F  ;used as re-close delay for blue doors
+
+
+;Samus projectile RAM
+ProjectileDieDelay     = $030F
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 

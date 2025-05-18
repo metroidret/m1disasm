@@ -36,7 +36,7 @@ L85E0                  = $85E0
 ObjFramePtrTable       = $860B
 ObjPlacePtrTable       = $86DF
 SamusEnterDoor         = $8B13
-DisplayDoors           = $8B79
+UpdateAllDoors         = $8B79
 
 PalPntrTbl             = $9560
 AreaPointers           = $9598
@@ -1625,7 +1625,7 @@ MoreInit:
     stx SpareMem75                  ;$75 Not referenced ever again in the game.
     inx                             ;X=0.
     stx AtEnding                    ;Not playing ending scenes.
-    stx DoorStatus                  ;Samus not in door.
+    stx DoorEntryStatus                  ;Samus not in door.
     stx SamusDoorData               ;Samus is not inside a door.
     stx UpdatingProjectile          ;No projectiles need to be updated.
     txa                             ;A=0.
@@ -2160,7 +2160,7 @@ UpdateWorld:
     jsr UpdateAllEnemyFireballs
     jsr UpdateAllSkreeProjectiles       ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
-    jsr DisplayDoors       ; display of doors
+    jsr UpdateAllDoors       ; display of doors
     jsr UpdateAllTileBlasts ; tile de/regeneration
     jsr LF034       ; Samus <--> enemies crash detection
     jsr DisplayBar                  ;($E0C1)Display of status bar.
@@ -3503,7 +3503,7 @@ LD38E:
 ; =========
 
 SamusDoor:
-    lda DoorStatus
+    lda DoorEntryStatus
     cmp #$05
     bcc Lx055
 ; move Samus out of door, how far depends on initial value of DoorDelay
@@ -3513,7 +3513,7 @@ SamusDoor:
     asl
     bcc Lx049
         lsr
-        sta DoorStatus
+        sta DoorEntryStatus
         bne Lx055
     Lx049:
     jsr LD48C
@@ -3544,7 +3544,7 @@ Lx052:
     sta ObjAction
     lda #$00
     sta SamusDoorData
-    sta DoorStatus
+    sta DoorEntryStatus
     jsr StopVertMovement            ;($D147)
 
 MoveOutDoor:
@@ -3584,7 +3584,7 @@ SamusElevator:
         cmp #$08
         bne Lx062
     Lx056:
-    lda $032F
+    lda Elevator032F
     bmi Lx059
         lda ObjY
         sec
@@ -3603,21 +3603,22 @@ SamusElevator:
         sty ObjY
         jmp LD47E
     Lx059:
-    lda ObjY
-    sec
-    sbc ScrollY     ; A = Samus' Y position on the visual screen
-    cmp #$64
-    bcs Lx060      ; if ScreenY >= $64, don't scroll
-        jsr ScrollUp    ; otherwise, attempt to scroll
-    Lx060:
-    ldy ObjY
-    bne Lx061      ; wraparound required? (branch if not)
-        jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
-        ldy #240        ; ObjY will now be 239
-    Lx061:
-    dey
-    sty ObjY
-    jmp LD47E
+        lda ObjY
+        sec
+        sbc ScrollY     ; A = Samus' Y position on the visual screen
+        cmp #$64
+        bcs Lx060      ; if ScreenY >= $64, don't scroll
+            jsr ScrollUp    ; otherwise, attempt to scroll
+        Lx060:
+        ldy ObjY
+        bne Lx061      ; wraparound required? (branch if not)
+            jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
+            ldy #240        ; ObjY will now be 239
+        Lx061:
+        dey
+        sty ObjY
+        jmp LD47E
+
 Lx062:
     ldy #$00
     sty ObjSpeedY
@@ -3688,31 +3689,31 @@ DoOneProjectile:
     lda ObjAction,x
     jsr ChooseRoutine
         .word ExitSub     ;($C45C) rts
-        .word UpdateBullet ; regular beam
+        .word UpdateBullet          ; regular beam
         .word UpdateWaveBullet      ; wave beam
         .word UpdateIceBullet       ; ice beam
-        .word BulletExplode    ; bullet/missile explode
-        .word LD65E       ; lay bomb
-        .word LD670       ; lay bomb
-        .word LD691       ; lay bomb
-        .word LD65E       ; lay bomb
-        .word LD670       ; bomb countdown
-        .word LD691       ; bomb explode
-        .word UpdateBullet  ; missile
+        .word BulletExplode         ; bullet/missile explode
+        .word BombInit              ; lay bomb
+        .word BombCountdown         ; lay bomb
+        .word BombExplode           ; lay bomb
+        .word BombInit              ; lay bomb
+        .word BombCountdown         ; bomb countdown
+        .word BombExplode           ; bomb explode
+        .word UpdateBullet          ; missile
 
 UpdateBullet:
     lda #$01
     sta UpdatingProjectile
-    jsr LD5FC
-    jsr LD5DA
-    jsr LD609
+    jsr UpdateBullet_D5FC
+    jsr UpdateBullet_D5DA
+    jsr UpdateBullet_D609
 CheckBulletStat:
     ldx PageIndex
     bcc Lx068
         lda SamusGear
         and #gr_LONGBEAM
         bne DrawBullet  ; branch if Samus has Long Beam
-        dec $030F,x     ; decrement bullet timer
+        dec ProjectileDieDelay,x     ; decrement bullet timer
         bne DrawBullet
         lda #$00        ; timer hit 0, kill bullet
         sta ObjAction,x
@@ -3739,8 +3740,8 @@ LD522:
 UpdateWaveBullet:
     lda #$01
     sta UpdatingProjectile
-    jsr LD5FC
-    jsr LD5DA
+    jsr UpdateBullet_D5FC
+    jsr UpdateBullet_D5DA
     lda $0502,x
     and #$FE
     tay
@@ -3776,7 +3777,7 @@ Lx071:
         jsr TwosComplement              ;($C3D4)
         sta ObjSpeedX,x
     Lx073:
-    jsr LD609
+    jsr UpdateBullet_D609
     bcs Lx074
         jsr LD624
     Lx074:
@@ -3836,7 +3837,7 @@ UpdateIceBullet:
 BulletExplode:
     lda #$01
     sta UpdatingProjectile
-    lda $0303,x
+    lda ObjAnimFrame,x
     sec
     sbc #$F7
     bne Lx075
@@ -3844,7 +3845,7 @@ BulletExplode:
 Lx075:
     jmp DrawBullet
 
-LD5DA:
+UpdateBullet_D5DA:
     lda SamusHit,x
     beq Exit5
     lda #$00
@@ -3865,19 +3866,20 @@ Lx077:
 Exit5:
     rts
 
-LD5FC:
+UpdateBullet_D5FC:
     lda ObjOnScreen,x
     lsr
     bcs Exit5
 Lx078:
     lda #$00
     beq Lx077   ; branch always
-Lx079:
+
+GotoLE81E:
     jmp LE81E
 
 ; bullet <--> background crash detection
 
-LD609:
+UpdateBullet_D609:
     jsr GetObjCoords
     ldy #$00
     lda ($04),y     ; get tile # that bullet touches
@@ -3885,7 +3887,7 @@ LD609:
     bcs LD624
     jsr GotoLA142
     cmp #$4E
-    beq Lx079
+    beq GotoLE81E
     jsr LD651
     bcc RTS_X081
     clc
@@ -3927,22 +3929,23 @@ LD651:
 RTS_X083:
     rts
 
-LD65E:
+BombInit:
     lda #an_BombTick
     jsr SetProjectileAnim
     lda #$18        ; fuse length :-)
-    sta $030F,x
+    sta ProjectileDieDelay,x
     inc ObjAction,x       ; bomb update handler
     DrawBomb:
-    lda #$03
+    lda #$03 ; move to next bomb animation frame every 3 frames
     jmp AnimDrawObject
 
-LD670:
+BombCountdown:
     lda FrameCount
     lsr
     bcc Lx085    ; only update counter on odd frames
-    dec $030F,x
+    dec ProjectileDieDelay,x
     bne Lx085
+    ; countdown is over, time to explode
     lda #$37
     ldy ObjAction,x
     cpy #$09
@@ -3955,11 +3958,11 @@ LD670:
 Lx085:
     jmp DrawBomb
 
-LD691:
-    inc $030F,x
+BombExplode:
+    inc ProjectileDieDelay,x
     jsr LD6A7
     ldx PageIndex
-    lda $0303,x
+    lda ObjAnimFrame,x
     sec
     sbc #$F7
     bne Lx086
@@ -3974,7 +3977,7 @@ LD6A7:
     lda $05
     sta $0B
     ldx PageIndex
-    ldy $030F,x
+    ldy ProjectileDieDelay,x
     dey
     beq Lx088
     dey
@@ -4150,7 +4153,7 @@ ElevatorIdle:
     lda SamusOnElevator
     beq ShowElevator
     lda #$04
-    bit $032F       ; elevator direction in bit 7 (1 = up)
+    bit Elevator032F       ; elevator direction in bit 7 (1 = up)
     bpl Lx099
         asl             ; BUTTON_UP
     Lx099:
@@ -4336,7 +4339,7 @@ StartMusic:
     lda ElevatorStatus
     cmp #$06
     bne Lx112
-        lda $032F
+        lda Elevator032F
         bmi Lx113
     Lx112:
         lda $95CD                       ;Load proper bit flag for area music.
@@ -4580,7 +4583,7 @@ StatueTileBlastWRAMPtrHiTable:
 LDADA:
     lda Statues54
     bmi Exit0
-    lda DoorStatus
+    lda DoorEntryStatus
     bne Exit0
     lda KraidStatueStatus
     and RidleyStatueStatus
@@ -5042,7 +5045,7 @@ LDD5B:
     Lx140:
     ; we are in tourian
     ; the pickup must have failed to spawn because the max quantity was hit
-    ; (BUG: this assumption is false when skipping the minibosses in NARPASSWORD)
+    ; (BUG! this assumption is false when skipping the minibosses in NARPASSWORD)
     ; therefore, to force the pickup to spawn anyway, reset the quantities
     lda RandomNumber1
     ; set current quantities to 0
@@ -5823,17 +5826,17 @@ RTS_E1F0:
 ;Scrolls the screen if Samus is inside a door.
 
 ScrollDoor:
-    ldx DoorStatus                  ;
+    ldx DoorEntryStatus                  ;
     beq RTS_E1F0                    ;Exit if Samus isn't in a door.
     dex                             ;
     bne LE1FE                           ;Not in right door. branch to check left door.
-        jsr ScrollRight                 ;($E6D2)DoorStatus=1, scroll 1 pixel right.
+        jsr ScrollRight                 ;($E6D2)DoorEntryStatus=1, scroll 1 pixel right.
         jmp LE204                       ;Jump to check if door scroll is finished.
 
     LE1FE:
         dex                             ;Check if in left door.
         bne LE20C                       ;
-        jsr ScrollLeft                  ;($E6A7)DoorStatus=2, scroll 1 pixel left.
+        jsr ScrollLeft                  ;($E6A7)DoorEntryStatus=2, scroll 1 pixel left.
     LE204:
     ldx ScrollX                     ;Has x scroll offset reached 0?-->
     bne Exit15                      ;If not, branch to exit.
@@ -5845,12 +5848,12 @@ ScrollDoor:
 LE20C:
     dex                             ;
     bne LE215                           ;Check if need to scroll down to center door.
-        jsr ScrollDown                  ;($E519)DoorStatus=3, scroll 1 pixel down.
+        jsr ScrollDown                  ;($E519)DoorEntryStatus=3, scroll 1 pixel down.
         jmp VerticalRoomCentered        ;Jump to check y scrolling value.
     LE215:
     dex                             ;
     bne Exit15                      ;Check if need to scroll up to center door.
-    jsr ScrollUp                    ;($E4F1)DoorStatus=4, scroll 1 pixel up.
+    jsr ScrollUp                    ;($E4F1)DoorEntryStatus=4, scroll 1 pixel up.
 
 VerticalRoomCentered: ; ($E21B)
     ldx ScrollY                     ;Has room been centered on screen?-->
@@ -5882,7 +5885,7 @@ DoOneDoorScroll:
         jsr ToggleScroll                ;($E252)Toggle scrolling and mirroring.
     LE244:
     sta MirrorCntrl                 ;Store new mirror control data.
-    stx DoorStatus                  ;DoorStatus=5. Done with door scrolling.
+    stx DoorEntryStatus                  ;DoorEntryStatus=5. Done with door scrolling.
 
 Exit15:
     rts                             ;Exit for several routines above.
@@ -6944,7 +6947,7 @@ LE81E:
     jsr Adiv8       ; / 8
     and #$01
     tax
-    inc $0366,x
+    inc Statue0366,x
 
 ClcExit:
     clc
@@ -7621,7 +7624,7 @@ SpawnElevatorRoutine:
     bne Lx234      ; exit if elevator already present
     iny
     lda ($00),y
-    sta $032F
+    sta Elevator032F
     ldy #$83
     sty ObjY+$20       ; elevator Y coord
     lda #$80

@@ -1049,7 +1049,7 @@ XorEnData05: ; L856B
 ;This function is called once when Samus first enters a door.
 
 SamusEnterDoor:
-    lda DoorStatus                  ;The code determines if Samus has entered a door if the-->
+    lda DoorEntryStatus                  ;The code determines if Samus has entered a door if the-->
     bne RTS_8B6C                    ;door status is 0, but door data information has been-->
     ldy SamusDoorData               ;written. If both conditions are met, Samus has just-->
     beq RTS_8B6C                    ;entered a door.
@@ -1108,15 +1108,15 @@ L8B6D:
     txa                             ;X=#$01 or #$02(depending on which door Samus is in).
 
 SamusInDoor:
-    ora #$80                        ;Set MSB of DoorStatus to indicate Samus has just-->
-    sta DoorStatus                  ;entered a door.
+    ora #$80                        ;Set MSB of DoorEntryStatus to indicate Samus has just-->
+    sta DoorEntryStatus                  ;entered a door.
     rts                             ;
 
 ;----------------------------------------------------------------------------------------------------
-DisplayDoors:
+UpdateAllDoors:
     ldx #$B0
     L8B7B:
-        jsr DoorRoutine
+        jsr UpdateDoor
         lda PageIndex
         sec
         sbc #$10
@@ -1124,98 +1124,130 @@ DisplayDoors:
         bmi L8B7B
     rts
 
-DoorRoutine:
+UpdateDoor:
     stx PageIndex
-    lda ObjAction,x
+    lda DoorStatus,x
     jsr ChooseRoutine               ;($C27C)
-        .word ExitSub
-        .word DoorAction0
-        .word DoorAction1
-        .word DoorAction2
-        .word DoorAction3
-        .word DoorAction4
-        .word DoorAction5
+        .word ExitSub               ; no door
+        .word DoorAction1           ; init
+        .word DoorAction2           ; closed
+        .word DoorAction3           ; open
+        .word DoorAction4           ; letting samus in
+        .word DoorAction5           ; scrolling
+        .word DoorAction6           ; letting samus out
 
-DoorAction0:
-    inc ObjAction,x
+DoorAction1:
+    ; increment door status to "closed"
+    inc DoorStatus,x
+    ; set door animation to closed
     lda #$30
     jsr SetProjectileAnim           ;($D2FA)
+    ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
-    ldy $0307,x ; Unsure if $0307 is semantically comparable to SamusOnElevator
-    lda ObjActionAnimTable,y
-    sta $030F,x
-ObjActionSubRoutine8BB1:
-    lda $0307,x
+    ; init door hit points based on door type
+    ldy DoorType,x
+    lda DoorHitPointTable,y
+    sta DoorHitPoints,x
+DrawDoor:
+    ; load door type into A
+    lda DoorType,x
+    ; blue door that changes the music should be drawn the same as a regular blue door
     cmp #$03
     bne L8BBA
         lda #$01
     L8BBA:
+    ; use door type to write to ObjectCntrl
     ora #$A0
     sta ObjectCntrl
+
     lda #$00
-    sta $030A,x ; SamusHit (DoorHit?)
+    sta DoorHit,x ; SamusHit (DoorHit?)
+    ; use door slot number to determine whether to h-flip the door
     txa
     and #$10
     eor #$10
     ora ObjectCntrl
     sta ObjectCntrl
-    lda #$06
+    ; draw door
+    lda #$06 ; move to next door animation frame every 6 frames
     jmp AnimDrawObject
 
-ObjActionAnimTable:
-    .byte $05, $01, $0A, $01
-
-DoorAction1:
-    lda $030A,x
-    and #$04
-    beq ObjActionSubRoutine8BB1
-    dec $030F,x
-    bne ObjActionSubRoutine8BB1
-    lda #$03
-    cmp $0307,x
-    bne L8BEE
-        ldy EndTimer+1
-        iny
-        bne ObjActionSubRoutine8BB1
-    L8BEE:
-    sta ObjAction,x
-    lda #$50
-    sta $030F,x
-    lda #$2C
-    sta $0305,x
-    sec
-    sbc #$03
-    jmp ObjActionSubRoutine8C7E
+DoorHitPointTable:
+    .byte $05 ; red door
+    .byte $01 ; blue door
+    .byte $0A ; 10-missile door
+    .byte $01 ; blue door that changes the music
 
 DoorAction2:
-    lda DoorStatus
+    ; branch if door was not hit
+    lda DoorHit,x
+    and #$04
+    beq DrawDoor
+    ; door was hit, decrease hp
+    dec DoorHitPoints,x
+    ; branch if door is still alive
+    bne DrawDoor
+
+    ; door has succumbed to its wounds, it will now open
+    ; check if its a blue door that changes music
+    lda #$03
+    cmp DoorType,x
+    bne L8BEE
+        ; it is a blue door that changes music
+        ; branch if escape timer is active (not #$FF)
+        ; this prevents the right door in mother brain's room from opening during the escape
+        ldy EndTimer+1
+        iny
+        bne DrawDoor
+    L8BEE:
+    ; increment door status to "open"
+    ; a is #$03 here
+    sta DoorStatus,x
+    ; set re-close delay to 80 * 2 frames
+    lda #$50
+    sta DoorHitPoints,x
+    ; set door animation to opening the door
+    ; and play sound effect
+    ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
+    lda #$2C
+    sta DoorAnimResetIndex,x
+    sec
+    sbc #$03
+    jmp DoorSubRoutine8C7E
+
+DoorAction3:
+    ; branch if samus is not entering a door
+    lda DoorEntryStatus
     beq L8C1D
-    lda $030C ; ObjNametable
-    eor $030C,x
+    ; branch if samus is not in the same nametable as the door
+    lda ObjHi
+    eor DoorHi,x
     lsr
     bcs L8C1D
-    lda $030E
-    eor $030E,x
+    ; branch if samus is not in the same half of the nametable as the door
+    lda ObjX
+    eor DoorX,x
     bmi L8C1D
+    ; increment door status to "letting samus in"
     lda #$04
-    sta ObjAction,x
-    bne L8C73
+    sta DoorStatus,x
+    bne GotoDrawDoor
 L8C1D:
-    lda $0306,x
-    cmp $0305,x
-    bcc L8C73
-    lda $030F,x
+    lda DoorAnimIndex,x
+    cmp DoorAnimResetIndex,x
+    bcc GotoDrawDoor
+    lda DoorHitPoints,x
     cmp #$50
     bne L8C57
     jsr WriteDoorBGTiles_Air
-    lda $0307,x
+    lda DoorType,x
     cmp #$01
     beq L8C57
     cmp #$03
     beq L8C57
     lda #$0A
     sta $09
-    lda $030C,x
+    lda DoorHi,x
     sta $08
     ldy SamusMapPosX
     txa
@@ -1226,41 +1258,41 @@ L8C1D:
     tya
     jsr MapScrollRoutine
     lda #$00
-    sta ObjAction,x
-    beq L8C73
+    sta DoorStatus,x
+    beq GotoDrawDoor
 L8C57:
-    lda $2D
+    lda FrameCount
     lsr
-    bcs L8C73
-    dec $030F,x
-    bne L8C73
-ObjActionSubRoutine8C61:
+    bcs GotoDrawDoor
+    dec DoorHitPoints,x
+    bne GotoDrawDoor
+DoorSubRoutine8C61:
     lda #$01
-    sta $030F,x
+    sta DoorHitPoints,x
     jsr WriteDoorBGTiles_Solid
     lda #$02
-    sta ObjAction,x
-    jsr ObjActionSubRoutine8C76
-ObjActionSubRoutine8C71:
+    sta DoorStatus,x
+    jsr DoorSubRoutine8C76
+DoorSubRoutine8C71:
     ldx PageIndex
-L8C73:
-    jmp ObjActionSubRoutine8BB1
+GotoDrawDoor:
+    jmp DrawDoor
 
-ObjActionSubRoutine8C76:
+DoorSubRoutine8C76:
     lda #$30
-    sta $0305,x
+    sta DoorAnimResetIndex,x
     sec
     sbc #$02
-ObjActionSubRoutine8C7E:
+DoorSubRoutine8C7E:
     jsr SetProjectileAnim2
     jmp SFX_Door
 
-DoorAction3:
-    lda DoorStatus
+DoorAction4:
+    lda DoorEntryStatus
     cmp #$05
     bcs L8CC3
     jsr WriteDoorBGTiles_Solid
-    jsr ObjActionSubRoutine8C76
+    jsr DoorSubRoutine8C76
     ldx PageIndex
     lda $91
     beq L8CA7
@@ -1274,10 +1306,10 @@ DoorAction3:
     sta $76
     sta $1C
 L8CA7:
-    inc ObjAction,x
+    inc DoorStatus,x
     lda #$00
     sta $91
-    lda $0307,x
+    lda DoorType,x
     cmp #$03
     bne L8CC3
     txa
@@ -1288,19 +1320,19 @@ L8CA7:
     L8CC0:
     jsr MotherBrainMusic
 L8CC3:
-    jmp ObjActionSubRoutine8C71
+    jmp DoorSubRoutine8C71
 
-DoorAction4:
-    lda DoorStatus
+DoorAction5:
+    lda DoorEntryStatus
     cmp #$05
     bne L8CED
     txa
     eor #$10
     tax
     lda #$06
-    sta ObjAction,x
+    sta DoorStatus,x
     lda #$2C
-    sta $0305,x
+    sta DoorAnimResetIndex,x
     sec
     sbc #$03
     jsr SetProjectileAnim2
@@ -1308,14 +1340,14 @@ DoorAction4:
     jsr SelectSamusPal
     ldx PageIndex
     lda #$02
-    sta ObjAction,x
+    sta DoorStatus,x
 L8CED:
-    jmp ObjActionSubRoutine8BB1
+    jmp DrawDoor
 
-DoorAction5:
-    lda DoorStatus
+DoorAction6:
+    lda DoorEntryStatus
     bne L8CED
-    jmp ObjActionSubRoutine8C61
+    jmp DoorSubRoutine8C61
 
 WriteDoorBGTiles_Air:
     lda #$FF ; air blank tile
