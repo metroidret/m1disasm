@@ -1127,20 +1127,20 @@ UpdateAllDoors:
 UpdateDoor:
     stx PageIndex
     lda DoorStatus,x
-    jsr ChooseRoutine               ;($C27C)
-        .word ExitSub               ; no door
-        .word DoorAction1           ; init
-        .word DoorAction2           ; closed
-        .word DoorAction3           ; open
-        .word DoorAction4           ; letting samus in
-        .word DoorAction5           ; scrolling
-        .word DoorAction6           ; letting samus out
+    jsr ChooseRoutine
+        .word ExitSub                   ; no door
+        .word UpdateDoor_Init           ; init
+        .word UpdateDoor_Closed         ; closed
+        .word UpdateDoor_Open           ; open
+        .word UpdateDoor_LetSamusIn     ; letting samus in
+        .word UpdateDoor_Scroll         ; scrolling
+        .word UpdateDoor_LetSamusOut    ; letting samus out
 
-DoorAction1:
+UpdateDoor_Init:
     ; increment door status to "closed"
     inc DoorStatus,x
     ; set door animation to closed
-    lda #$30
+    lda #L85A0-ObjectAnimIndexTbl+$02
     jsr SetProjectileAnim           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
@@ -1178,7 +1178,7 @@ DoorHitPointTable:
     .byte $0A ; 10-missile door
     .byte $01 ; blue door that changes the music
 
-DoorAction2:
+UpdateDoor_Closed:
     ; branch if door was not hit
     lda DoorHit,x
     and #$04
@@ -1209,13 +1209,13 @@ DoorAction2:
     ; set door animation to opening the door
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
-    lda #$2C
+    lda #L859B-ObjectAnimIndexTbl+$03
     sta DoorAnimResetIndex,x
     sec
     sbc #$03
     jmp DoorSubRoutine8C7E
 
-DoorAction3:
+UpdateDoor_Open:
     ; branch if samus is not entering a door
     lda DoorEntryStatus
     beq L8C1D
@@ -1224,7 +1224,7 @@ DoorAction3:
     eor DoorHi,x
     lsr
     bcs L8C1D
-    ; branch if samus is not in the same half of the nametable as the door
+    ; branch if samus is not in the same left/right half of the nametable as the door
     lda ObjX
     eor DoorX,x
     bmi L8C1D
@@ -1233,18 +1233,25 @@ DoorAction3:
     sta DoorStatus,x
     bne GotoDrawDoor
 L8C1D:
+    ; branch if animation of opening the door has not completed
     lda DoorAnimIndex,x
     cmp DoorAnimResetIndex,x
     bcc GotoDrawDoor
+    ; branch if this is not the first frame the door is fully open
     lda DoorHitPoints,x
     cmp #$50
     bne L8C57
+    ; this is the first frame the door is fully open
+    ; write air tiles to allow samus to go through the door
     jsr WriteDoorBGTiles_Air
+    ; branch if door is a blue door
     lda DoorType,x
     cmp #$01
     beq L8C57
     cmp #$03
     beq L8C57
+    ; door is not a blue door, so it is a missile door
+    ; save that the missile door was opened in the UniqueItemHistory
     lda #$0A
     sta $09
     lda DoorHi,x
@@ -1257,21 +1264,30 @@ L8C1D:
     L8C4C:
     tya
     jsr MapScrollRoutine
+    ; remove door completely (cannot close again)
     lda #$00
     sta DoorStatus,x
     beq GotoDrawDoor
 L8C57:
+    ; door is a blue door
+    ; decrement re-close delay every 2 frames
     lda FrameCount
     lsr
     bcs GotoDrawDoor
     dec DoorHitPoints,x
+    ; branch if delay is not zero
     bne GotoDrawDoor
 DoorSubRoutine8C61:
+    ; re-close delay is zero, time to close the door
+    ; set door hit points to 1
     lda #$01
     sta DoorHitPoints,x
+    ; write solid collision so that samus cannot go through the door anymore
     jsr WriteDoorBGTiles_Solid
+    ; set door status back to "closed"
     lda #$02
     sta DoorStatus,x
+    ; set door animation to closing the door
     jsr DoorSubRoutine8C76
 DoorSubRoutine8C71:
     ldx PageIndex
@@ -1279,7 +1295,7 @@ GotoDrawDoor:
     jmp DrawDoor
 
 DoorSubRoutine8C76:
-    lda #$30
+    lda #L85A0-ObjectAnimIndexTbl+$02
     sta DoorAnimResetIndex,x
     sec
     sbc #$02
@@ -1287,71 +1303,98 @@ DoorSubRoutine8C7E:
     jsr SetProjectileAnim2
     jmp SFX_Door
 
-DoorAction4:
+UpdateDoor_LetSamusIn:
+    ; branch if scrolling has not started
     lda DoorEntryStatus
     cmp #$05
     bcs L8CC3
+    ; scrolling has started
+    ; write solid collision
     jsr WriteDoorBGTiles_Solid
+    ; set door animation to closing the door
     jsr DoorSubRoutine8C76
+    ; branch if we are not in a palette change room
     ldx PageIndex
-    lda $91
+    lda DoorPalChangeDir
     beq L8CA7
+    ; branch if door is on the same wall as the one you entered the room with
     txa
     jsr Adiv16
-    eor $91
+    eor DoorPalChangeDir
     lsr
     bcc L8CA7
-    lda $76
+    ; change the palette
+    lda PalToggle
     eor #$07
-    sta $76
-    sta $1C
+    sta PalToggle
+    sta PalDataPending
 L8CA7:
+    ; increment door status to "scroll"
     inc DoorStatus,x
+    ; clear DoorPalChangeDir
     lda #$00
-    sta $91
+    sta DoorPalChangeDir
+    ; branch if door isnt a blue door that changes the music
     lda DoorType,x
     cmp #$03
     bne L8CC3
+    ; change to a specific music track depending on the direction the door faces
     txa
     jsr Amul16
     bcs L8CC0
+        ; the door leads to a room to the right
+        ; play tourian music
         jsr TourianMusic
-        bne L8CC3
+        bne L8CC3 ; branch always
     L8CC0:
-    jsr MotherBrainMusic
+        ; the door leads to a room to the left
+        ; play mother brain music
+        jsr MotherBrainMusic
 L8CC3:
+    ; draw door
     jmp DoorSubRoutine8C71
 
-DoorAction5:
+UpdateDoor_Scroll:
+    ; branch if scrolling has not ended
     lda DoorEntryStatus
     cmp #$05
-    bne L8CED
+    bne Goto2DrawDoor
+    ; scrolling has ended
+    ; get door slot of the door attached to this one
     txa
     eor #$10
     tax
+    ; set that door's status to "letting samus out"
     lda #$06
     sta DoorStatus,x
-    lda #$2C
+    ; set that door's animation to opening the door
+    lda #L859B-ObjectAnimIndexTbl+$03
     sta DoorAnimResetIndex,x
     sec
     sbc #$03
     jsr SetProjectileAnim2
+    ; play door sfx
     jsr SFX_Door
+    ; update samus's palette (probably so that she doesn't remain blue when going in a door with a metroid on her head)
     jsr SelectSamusPal
+    ; set the current door's status to "closed"
     ldx PageIndex
     lda #$02
     sta DoorStatus,x
-L8CED:
+Goto2DrawDoor:
     jmp DrawDoor
 
-DoorAction6:
+UpdateDoor_LetSamusOut:
+    ; branch if samus didnt finish exiting the door
     lda DoorEntryStatus
-    bne L8CED
+    bne Goto2DrawDoor
+    ; samus finished exiting
+    ; close the door
     jmp DoorSubRoutine8C61
 
 WriteDoorBGTiles_Air:
     lda #$FF ; air blank tile
-    bne WriteDoorBGTiles_Common
+    bne WriteDoorBGTiles_Common ; branch always
 WriteDoorBGTiles_Solid:
     lda #$4E ; solid blank tile
 WriteDoorBGTiles_Common:
@@ -1397,7 +1440,7 @@ WriteDoorBGTiles_Common:
     sta DoorCartRAMPtr+1,y
     rts
 
-; x coordinate of door in pixels
+; x coordinate of door's background tiles in pixels
 DoorXTable:
     .byte $E8, $10
 

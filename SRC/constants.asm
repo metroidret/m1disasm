@@ -294,6 +294,10 @@ EnemyLFB88_85          = $85
 
 Mellow8A               = $8A
 
+DoorPalChangeDir       = $91    ;When Samus enters a palette change room, this stores the ScrollDir
+                                  ;she entered with, so that if the next door she enters is also
+                                  ;in that direction, we can change the palette.
+
 MetroidOnSamus         = $92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
 MissilePickupQtyMax    = $93     ;Maximum missile drops that can be picked up. Randomly-->

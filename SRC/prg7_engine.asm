@@ -1696,7 +1696,7 @@ MoreInit:
         dex
         bne Lx001
 
-    stx $91
+    stx DoorPalChangeDir
     inx          ; X = 1
     stx PalDataPending
     stx SpareMem30                  ;Not accessed by game.
@@ -8091,7 +8091,7 @@ SpawnDoor:
 
 SpawnPalette:
     lda ScrollDir
-    sta $91
+    sta DoorPalChangeDir
     bne SpawnMotherBrain_exit
 
 AnotherItem:
