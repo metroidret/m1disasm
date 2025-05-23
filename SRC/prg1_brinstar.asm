@@ -103,7 +103,7 @@ TwosComplement_:
 
 ; area init data
     .byte $FF                       ;Not used.
-
+AreaMusicFlag:
     .byte $01                       ;Brinstar music init flag.
 AreaEnemyDamage:
     .word $0080                     ;Base damage caused by area enemies.
@@ -112,12 +112,29 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $2B, $2C, $28, $0B, $1C, $0A, $1A
 
-AreaSamusMapPosX:   .byte $03   ;Samus start x coord on world map.
-AreaSamusMapPosY:   .byte $0E   ;Samus start y coord on world map.
-AreaSamusY:         .byte $B0   ;Samus start vertical screen position.
+AreaSamusMapPosX:
+    .byte $03   ;Samus start x coord on world map.
+AreaSamusMapPosY:
+    .byte $0E   ;Samus start y coord on world map.
+AreaSamusY:
+    .byte $B0   ;Samus start vertical screen position.
 
-    .byte $01, $00, $03, $43, $00
-    .byte $00, $00, $00, $00, $00, $69
+AreaPalToggle:
+    .byte $01
+
+    .byte $00
+AreaFireballAnimIndex:
+    .byte EnemyAnim_9D6D - EnemyAnimIndexTbl
+AreaExplosionAnimIndex:
+    .byte EnemyAnim_9DAD - EnemyAnimIndexTbl
+
+    .byte $00, $00
+
+    .byte $00, $00
+
+    .byte $00, $00
+AreaMellowAnimIndex:
+    .byte EnemyAnim_9DD3 - EnemyAnimIndexTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -641,34 +658,55 @@ AreaRoutineStub: ;L9D35
 
 ; More strings pointed to by EnemyFireballMovementPtrTable
 TileBlastFrame00:
-    .byte $22, $FF, $FF, $FF, $FF
+    .byte $22
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame01:
-    .byte $22, $80, $81, $82, $83
+    .byte $22
+    .byte $80, $81
+    .byte $82, $83
 
 TileBlastFrame02:
-    .byte $22, $84, $85, $86, $87
+    .byte $22
+    .byte $84, $85
+    .byte $86, $87
 
 TileBlastFrame03:
-    .byte $22, $88, $89, $8A, $8B
+    .byte $22
+    .byte $88, $89
+    .byte $8A, $8B
 
 TileBlastFrame04:
-    .byte $22, $8C, $8D, $8E, $8F
+    .byte $22
+    .byte $8C, $8D
+    .byte $8E, $8F
 
 TileBlastFrame05:
-    .byte $22, $94, $95, $96, $97
+    .byte $22
+    .byte $94, $95
+    .byte $96, $97
 
 TileBlastFrame06:
-    .byte $22, $9C, $9D, $9D, $9C
+    .byte $22
+    .byte $9C, $9D
+    .byte $9D, $9C
 
 TileBlastFrame07:
-    .byte $22, $9E, $9F, $9F, $9E
+    .byte $22
+    .byte $9E, $9F
+    .byte $9F, $9E
 
 TileBlastFrame08:
-    .byte $22, $90, $91, $92, $93
+    .byte $22
+    .byte $90, $91
+    .byte $92, $93
 
 TileBlastFrame09:
-    .byte $32, $4E, $4E, $4E, $4E, $4E, $4E
+    .byte $32
+    .byte $4E, $4E
+    .byte $4E, $4E
+    .byte $4E, $4E
 
 TileBlastFrame0A:
 TileBlastFrame0B:

@@ -119,21 +119,40 @@ TwosComplement_:
 Exit__:
     rts
 
-L95CC:  .byte $FF                       ;Not used.
-
-L95CD:  .byte $40                       ;Tourian music init flag.
-
-AreaEnemyDamage:  .word $0300                     ;Base damage caused by area enemies.
+L95CC:
+    .byte $FF                       ;Not used.
+AreaMusicFlag:
+    .byte $40                       ;Tourian music init flag.
+AreaEnemyDamage:
+    .word $0300                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
 AreaItemRoomNumbers:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:   .byte $03   ;Samus start x coord on world map.
-AreaSamusMapPosY:   .byte $04   ;Samus start y coord on world map.
-AreaSamusY:         .byte $6E   ;Samus start vertical screen position.
+AreaSamusMapPosX:
+    .byte $03   ;Samus start x coord on world map.
+AreaSamusMapPosY:
+    .byte $04   ;Samus start y coord on world map.
+AreaSamusY:
+    .byte $6E   ;Samus start vertical screen position.
 
-L95DA:  .byte $06, $00, $03, $21, $00, $00, $00, $00, $00, $10, $00
+AreaPalToggle:
+    .byte $06
+
+    .byte $00
+AreaFireballAnimIndex:
+    .byte EnemyAnim_A409 - EnemyAnimIndexTbl
+AreaExplosionAnimIndex:
+    .byte EnemyAnim_A427 - EnemyAnimIndexTbl
+
+    .byte $00, $00
+
+    .byte $00, $00
+
+    .byte $00, $10
+AreaMellowAnimIndex:
+    .byte $00
 
 ; Enemy AI Jump Table
 ChooseEnemyAIRoutine:
@@ -157,31 +176,38 @@ ChooseEnemyAIRoutine:
         .word InvalidEnemy ; 0F - same as 3
 
 
-L960B:  .byte $08, $08, $08, $08, $16, $16, $18, $18, $1F, $1F, $00, $00, $00, $00, $00, $00
+L960B:
+    .byte $08, $08, $08, $08, $16, $16, $18, $18, $1F, $1F, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L961B:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyHitPointTbl:
+    .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L962B:  .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L963B:
+    .byte $05, $05, $05, $05, $16, $16, $18, $18, $1B, $1B, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L963B:  .byte $05, $05, $05, $05, $16, $16, $18, $18, $1B, $1B, $00, $00, $00, $00, $00, $00
+L965B:
+    .byte $05, $05, $05, $05, $16, $16, $18, $18, $1D, $1D, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L964B:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L967B:
+    .byte $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L965B:  .byte $05, $05, $05, $05, $16, $16, $18, $18, $1D, $1D, $00, $00, $00, $00, $00, $00
+L968B:
+    .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L966B:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L969B:
+    .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L967B:  .byte $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L96AB:
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L968B:  .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyInitDelayTbl:
+    .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L969B:  .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-L96AB:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-L96BB:  .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-L96CB:  .byte $00, $02, $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L96CB:
+    .byte $00, $02, $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementPtrs:
     .word EnemyMovement00
@@ -1540,63 +1566,108 @@ ClearCurrentMetroidLatchAndMetroidOnSamus:
 ;-------------------------------------------------------------------------------
 
 TileBlastFrame00:
-    .byte $22, $FF, $FF, $FF, $FF
+    .byte $22
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame01:
-    .byte $32, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $32
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame02:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $E0, $DE, $ED, $FF, $E8
-    .byte $EE
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $E0, $DE, $ED, $FF, $E8, $EE
 
 TileBlastFrame03:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $ED, $FF, $DF, $DA, $EC, $ED, $F4
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $ED, $FF, $DF, $DA, $EC, $ED, $F4, $FF
 
 TileBlastFrame04:
-    .byte $28, $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
 TileBlastFrame05:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
 TileBlastFrame06:
-    .byte $62, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $62
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame07:
-    .byte $42, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $42
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame08:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE, $FF
-    .byte $DB
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $ED, $E2, $E6, $DE, $FF, $DB
 
 TileBlastFrame09:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $E8, $E6, $DB, $FF, $EC, $DE, $ED
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $E8, $E6, $DB, $FF, $EC, $DE, $ED, $FF
 
 TileBlastFrame0A:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
 TileBlastFrame0B:
-    .byte $28, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF
+    .byte $28
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
 TileBlastFrame0C:
-    .byte $42, $90, $91, $90, $91, $90, $91, $90, $91
+    .byte $42
+    .byte $90, $91
+    .byte $90, $91
+    .byte $90, $91
+    .byte $90, $91
 
 TileBlastFrame0D:
-    .byte $42, $92, $93, $92, $93, $92, $93, $92, $93
+    .byte $42
+    .byte $92, $93
+    .byte $92, $93
+    .byte $92, $93
+    .byte $92, $93
 
 TileBlastFrame0E:
-    .byte $42, $94, $95, $94, $95, $94, $95, $94, $95
+    .byte $42
+    .byte $94, $95
+    .byte $94, $95
+    .byte $94, $95
+    .byte $94, $95
 
 TileBlastFrame0F:
-    .byte $42, $96, $97, $96, $97, $96, $97, $96, $97
+    .byte $42
+    .byte $96, $97
+    .byte $96, $97
+    .byte $96, $97
+    .byte $96, $97
 
 TileBlastFrame10:
-    .byte $62, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0, $A0
+    .byte $62
+    .byte $A0, $A0
+    .byte $A0, $A0
+    .byte $A0, $A0
+    .byte $A0, $A0
+    .byte $A0, $A0
+    .byte $A0, $A0
 
 .include "tourian/enemy_sprite_data.asm"
 

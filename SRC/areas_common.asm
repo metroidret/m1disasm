@@ -51,7 +51,7 @@
 .import LF410
 .import LF416
 .import LF438
-.import LF68D
+.import InitEnAnimIndex
 .import LF83E
 .import LF852
 .import LF85A
@@ -77,8 +77,8 @@ CommonJump_03: ;$8009
     jmp LF852
 CommonJump_UpdateEnemyAnim: ;$800C
     jmp UpdateEnemyAnim             ;($E094)
-CommonJump_05: ;$800F
-    jmp LF68D
+CommonJump_InitEnAnimIndex: ;$800F
+    jmp InitEnAnimIndex
 CommonJump_06: ;$8012
     jmp LF83E
 CommonJump_07: ;$8015
@@ -104,9 +104,9 @@ CommonJump_EnemyGetDeltaX: ;$8030
 CommonJump_11: ;$8033
     jmp LFA1E
 CommonJump_12: ;$8036
-    jmp L833F
+    jmp EnemyGetDeltaY_Negative977B
 CommonJump_13: ;$8039
-    jmp L8395
+    jmp EnemyGetDeltaX_Negative977B
 CommonJump_14: ;$803C
     jmp LDD8B
 CommonJump_DrawTileBlast: ;$803F
@@ -482,7 +482,7 @@ LoadEnemyMovementPtr:
 EnemyGetDeltaY:
     jsr LoadTableAt977B
     bpl L824C
-        jmp L833F
+        jmp EnemyGetDeltaY_Negative977B
 
     L824C:
     lda EnData05,x
@@ -673,10 +673,10 @@ EnemyGetDeltaY_CaseFA:
 EnemyGetDeltaX:
     jsr LoadTableAt977B
     bpl L8320
-    jmp L8395
+        jmp EnemyGetDeltaX_Negative977B
 
-; If bit 5 of EnData05 is clear, don't move horizontally
-L8320:
+    ; If bit 5 of EnData05 is clear, don't move horizontally
+    L8320:
     lda EnData05,x
     and #$20
     eor #$20
@@ -705,7 +705,7 @@ L833C:
 ;-------------------------------------------------------------------------------
 ; Nonsense with counters and velocity to substitute for a lack of subpixels?
 ; Vertical case?
-L833F:
+EnemyGetDeltaY_Negative977B:
     ldy #$0E
     lda EnAccelY,x
     bmi L835E
@@ -751,7 +751,7 @@ L8376:
 ;-------------------------------------------------------------------------------
 ; Nonsense with counters and velocity to substitute for a lack of subpixels?
 ; Horizontal case?
-L8395:
+EnemyGetDeltaX_Negative977B:
     lda #$00
     sta $00
     sta $02

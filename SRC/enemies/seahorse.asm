@@ -37,7 +37,7 @@ SeahorseAIRoutine:
         and #$01
         tay
         lda $83,y
-        jsr CommonJump_05
+        jsr CommonJump_InitEnAnimIndex
         beq L9B59
     L9B3C:
     cmp #$0F
@@ -46,7 +46,7 @@ SeahorseAIRoutine:
     and #$01
     tay
     lda SeahorseTable,y
-    jsr CommonJump_05
+    jsr CommonJump_InitEnAnimIndex
     jmp L9B59
 
 L9B4F:

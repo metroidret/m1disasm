@@ -42,17 +42,18 @@ PalPntrTbl             = $9560
 AreaPointers           = $9598
 SpecItmsTable          = $9598
 AreaRoutine            = $95C3
+AreaMusicFlag          = $95CD
 AreaEnemyDamage        = $95CE
 AreaItemRoomNumbers    = $95D0
 AreaSamusMapPosX       = $95D7
 AreaSamusMapPosY       = $95D8
 AreaSamusY             = $95D9
-L95DA                  = $95DA
-L95DC                  = $95DC
-L95DD                  = $95DD
+AreaPalToggle          = $95DA
+AreaFireballAnimIndex  = $95DC
+AreaExplosionAnimIndex = $95DD
 L95E0                  = $95E0
 L95E2                  = $95E2
-L95E4                  = $95E4
+AreaMellowAnimIndex    = $95E4
 ChooseEnemyAIRoutine   = $95E5
 
 L960B                  = $960B
@@ -139,7 +140,7 @@ SoundEngine            = $B3B4
 .export LF410
 .export LF416
 .export LF438
-.export LF68D
+.export InitEnAnimIndex
 .export LF83E
 .export LF852
 .export LF85A
@@ -1658,7 +1659,7 @@ MoreInit:
     lda AreaSamusMapPosY            ;Get Samus start y pos on map.
     sta SamusMapPosY                ;
 
-    lda L95DA       ; Get ??? Something to do with palette switch
+    lda AreaPalToggle               ; Get ??? Something to do with palette switch
     sta PalToggle
     lda #$FF
     sta RoomNumber                  ;Room number = $FF(undefined room).
@@ -4342,7 +4343,7 @@ StartMusic:
         lda Elevator032F
         bmi Lx113
     Lx112:
-        lda $95CD                       ;Load proper bit flag for area music.
+        lda AreaMusicFlag                       ;Load proper bit flag for area music.
         ldy ItemRoomMusicStatus
         bmi Lx114
         beq Lx114
@@ -8010,7 +8011,7 @@ SpawnMellows:
         sbc #$08
         tax
         bpl @loop
-    lda L95E4
+    lda AreaMellowAnimIndex
     sta EnResetAnimIndex+$F0
     sta EnAnimIndex+$F0
     lda #$01
@@ -9331,7 +9332,7 @@ ExplodeEnemy:
 Lx327:
     jsr LF844
     lda L960B,y
-    jsr LF68D
+    jsr InitEnAnimIndex
     sta EnSpeedSubPixelY,x
     ; find first open enemy explosion slot
     ldx #$C0
@@ -9349,8 +9350,8 @@ Lx327:
 Lx329:
     ; open enemy explosion slot found
     ; initialize explosion based on current enemy's coordinates
-    lda L95DD
-    jsr LF68D
+    lda AreaExplosionAnimIndex
+    jsr InitEnAnimIndex
     lda #$0A
     sta EnExplosionAnimDelay,x
     inc EnExplosionStatus,x
@@ -9385,11 +9386,11 @@ LF682:
     lda L963B,y
     cmp EnResetAnimIndex,x
     beq RTS_X331
-LF68D:
+InitEnAnimIndex:
     sta EnResetAnimIndex,x
-LF690:
+SetEnAnimIndex:
     sta EnAnimIndex,x
-LF693:
+ClearEnAnimDelay:
     lda #$00
     sta EnAnimDelay,x
 RTS_X331:
@@ -9400,7 +9401,7 @@ LF699:
     lda L965B,y
     cmp EnResetAnimIndex,x
     beq Exit12
-    jsr LF68D
+    jsr InitEnAnimIndex
     ldy EnType,x
     lda L967B,y
     and #$7F
@@ -9710,7 +9711,7 @@ LF870:
     tya
     tax
     pla
-    jsr LF68D
+    jsr InitEnAnimIndex
     ldx PageIndex
     lda #enemyStatus_Resting
     sta EnStatus,y
@@ -9741,7 +9742,7 @@ LF870:
     and #$01
     tay
     lda $0083,y
-    jmp LF690
+    jmp SetEnAnimIndex
 
 LF8E8:
     ldy #$60
@@ -9916,7 +9917,7 @@ Lx365:
         iny
     Lx366:
     lda L95E2,y
-    jsr LF68D
+    jsr InitEnAnimIndex
     jsr LF518
     lda #$0A
     sta EnDelay,x
@@ -10000,8 +10001,8 @@ LFA7D:
 
 UpdateEnemyFireball_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    lda L95DC
-    jsr LF68D
+    lda AreaFireballAnimIndex
+    jsr InitEnAnimIndex
     jmp LF97C
 
 ;-------------------------------------------------------------------------------
@@ -10170,12 +10171,12 @@ LFB88:
         dec EnAnimIndex,x
     LFBB9:
         sta EnResetAnimIndex,x
-        jmp LF693
+        jmp ClearEnAnimDelay
     Lx384:
     lda L963B,y
     cmp EnResetAnimIndex,x
     beq Exit13
-    jmp LF68D
+    jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
 
 LFBCA:
@@ -10185,7 +10186,7 @@ LFBCA:
     cmp EnResetAnimIndex,x
     beq Exit13
     sta EnResetAnimIndex,x
-    jmp LF690
+    jmp SetEnAnimIndex
 
 UpdateAllSkreeProjectiles:
     lda #$40
@@ -10303,7 +10304,7 @@ UpdateAllMellows:
     stx PageIndex
     ; delete mellow handler enemy if ???
     lda EnResetAnimIndex+$F0
-    cmp L95E4
+    cmp AreaMellowAnimIndex
     bne RemoveMellowHandlerEnemy
     
     lda #$03

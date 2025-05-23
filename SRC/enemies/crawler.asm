@@ -29,12 +29,12 @@ CrawlerAIRoutine:
         cpy #$EB
     .endif
     bne Crawler01
-    jsr Crawler07
+    jsr Crawler06_else
     lda #$03
     sta EnData0A,x
     bne Crawler02
 Crawler01:
-    jsr JumpByRTS
+    jsr JumpByRTSToMovementRoutine
     jsr Crawler06
 Crawler02:
     jsr Crawler09
@@ -56,45 +56,44 @@ Crawler04:
     and #$03
     rol
     tay
-    lda Crawler05,y
-    jmp CommonJump_05
+    lda CrawlerAnimIndexTable,y
+    jmp CommonJump_InitEnAnimIndex
 
 .if BANK = 1 || BANK = 4
-    Crawler05:  .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E
+    CrawlerAnimIndexTable:  .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E
 .elseif BANK = 2
-    Crawler05:  .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
+    CrawlerAnimIndexTable:  .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
 .elseif BANK = 5
-    Crawler05:  .byte $4A, $4A, $53, $4D, $50, $50, $4D, $53
+    CrawlerAnimIndexTable:  .byte $4A, $4A, $53, $4D, $50, $50, $4D, $53
 .endif
 
 Crawler06:
     ldx PageIndex
-    bcs Crawler08
+    bcs RTS_Crawler06
     lda $00
-    bne Crawler07
-    ldy EnData0A,x
-    dey
-    tya
-    and #$03
-    sta EnData0A,x
-    jmp Crawler04
-
-Crawler07:
-    lda EnData05,x
-    eor #$01
-    sta EnData05,x
-Crawler08:
-    rts
+    bne Crawler06_else
+        ldy EnData0A,x
+        dey
+        tya
+        and #$03
+        sta EnData0A,x
+        jmp Crawler04
+    Crawler06_else:
+        lda EnData05,x
+        eor #$01
+        sta EnData05,x
+    RTS_Crawler06:
+        rts
 
 Crawler09:
     jsr Crawler11
-    jsr JumpByRTS
+    jsr JumpByRTSToMovementRoutine
     ldx PageIndex
-    bcc Crawler10
-    jsr Crawler11
-    sta EnData0A,x
-    jsr Crawler04
-Crawler10:
+    bcc RTS_Crawler09
+        jsr Crawler11
+        sta EnData0A,x
+        jsr Crawler04
+    RTS_Crawler09:
     rts
 
 Crawler11:
@@ -104,7 +103,7 @@ Crawler11:
     and #$03
     rts
 
-JumpByRTS:
+JumpByRTSToMovementRoutine:
     ldy EnData05,x
     sty $00
     lsr $00

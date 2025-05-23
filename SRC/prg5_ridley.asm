@@ -115,21 +115,40 @@ TwosComplement_:
     adc #$01
     rts
 
-L95CC:  .byte $12                       ;Ridley's room.
-
-L95CD:  .byte $80                       ;Ridley hideout music init flag.
-
-AreaEnemyDamage:  .word $0240                     ;Base damage caused by area enemies.
+L95CC:
+    .byte $12                       ;Ridley's room.
+AreaMusicFlag:
+    .byte $80                       ;Ridley hideout music init flag.
+AreaEnemyDamage:
+    .word $0240                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
 AreaItemRoomNumbers:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:   .byte $19   ;Samus start x coord on world map.
-AreaSamusMapPosY:   .byte $18   ;Samus start y coord on world map.
-AreaSamusY:         .byte $6E   ;Samus start vertical screen position.
+AreaSamusMapPosX:
+    .byte $19   ;Samus start x coord on world map.
+AreaSamusMapPosY:
+    .byte $18   ;Samus start y coord on world map.
+AreaSamusY:
+    .byte $6E   ;Samus start vertical screen position.
 
-L95DA:  .byte $06, $00, $03, $58, $44, $4A, $48, $4A, $4A, $36, $25
+AreaPalToggle:
+    .byte $06
+
+    .byte $00
+AreaFireballAnimIndex:
+    .byte EnemyAnim_9B88 - EnemyAnimIndexTbl
+AreaExplosionAnimIndex:
+    .byte EnemyAnim_9BDD - EnemyAnimIndexTbl
+
+    .byte $44, $4A
+
+    .byte $48, $4A
+
+    .byte $4A, $36
+AreaMellowAnimIndex:
+    .byte EnemyAnim_9BAA - EnemyAnimIndexTbl
 
 ChooseEnemyAIRoutine:
     lda EnType,x
@@ -151,31 +170,38 @@ ChooseEnemyAIRoutine:
         .word PolypAIRoutine ; 0E - ???
         .word InvalidEnemy ; 0F - same as 4
 
-L960B:  .byte $23, $23, $23, $23, $3A, $3A, $3C, $3C, $00, $00, $00, $00, $56, $56, $65, $63
+L960B:
+    .byte $23, $23, $23, $23, $3A, $3A, $3C, $3C, $00, $00, $00, $00, $56, $56, $65, $63
+    .byte $00, $00, $11, $11, $13, $18, $28, $28, $32, $32, $34, $34, $00, $00, $00, $00
 
-L961B:  .byte $00, $00, $11, $11, $13, $18, $28, $28, $32, $32, $34, $34, $00, $00, $00, $00
+EnemyHitPointTbl:
+    .byte $08, $08, $08, $08, $01, $01, $02, $01, $01, $8C, $FF, $FF, $08, $06, $FF, $00
 
-L962B:  .byte $08, $08, $08, $08, $01, $01, $02, $01, $01, $8C, $FF, $FF, $08, $06, $FF, $00
+L963B:
+    .byte $1D, $1D, $1D, $1D, $3E, $3E, $44, $44, $00, $00, $00, $00, $4A, $4A, $69, $67
+    .byte $00, $00, $05, $08, $13, $18, $1D, $1D, $2D, $28, $34, $34, $00, $00, $00, $00
 
-L963B:  .byte $1D, $1D, $1D, $1D, $3E, $3E, $44, $44, $00, $00, $00, $00, $4A, $4A, $69, $67
+L965B:
+    .byte $20, $20, $20, $20, $3E, $3E, $44, $44, $00, $00, $00, $00, $4A, $4A, $60, $5D
+    .byte $00, $00, $05, $08, $13, $18, $1D, $1D, $2D, $28, $34, $34, $00, $00, $00, $00
 
-L964B:  .byte $00, $00, $05, $08, $13, $18, $1D, $1D, $2D, $28, $34, $34, $00, $00, $00, $00
+L967B:
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $00, $82, $00, $00, $00
 
-L965B:  .byte $20, $20, $20, $20, $3E, $3E, $44, $44, $00, $00, $00, $00, $4A, $4A, $60, $5D
+L968B:
+    .byte $89, $89, $89, $89, $00, $00, $04, $80, $80, $81, $00, $00, $05, $89, $00, $00
 
-L966B:  .byte $00, $00, $05, $08, $13, $18, $1D, $1D, $2D, $28, $34, $34, $00, $00, $00, $00
+L969B:
+    .byte $01, $01, $01, $01, $01, $01, $01, $01, $28, $10, $00, $00, $00, $01, $00, $00
 
-L967B:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $00, $82, $00, $00, $00
+L96AB:
+    .byte $05, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $86, $00, $00
 
-L968B:  .byte $89, $89, $89, $89, $00, $00, $04, $80, $80, $81, $00, $00, $05, $89, $00, $00
+EnemyInitDelayTbl:
+    .byte $10, $01, $03, $03, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
 
-L969B:  .byte $01, $01, $01, $01, $01, $01, $01, $01, $28, $10, $00, $00, $00, $01, $00, $00
-
-L96AB:  .byte $05, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $86, $00, $00
-
-L96BB:  .byte $10, $01, $03, $03, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
-
-L96CB:  .byte $18, $1A, $00, $03, $00, $00, $08, $08, $00, $0A, $0C, $0F, $14, $16, $18, $00
+L96CB:
+    .byte $18, $1A, $00, $03, $00, $00, $08, $08, $00, $0A, $0C, $0F, $14, $16, $18, $00
 
 EnemyMovementPtrs:
     .word EnemyMovement00
@@ -406,40 +432,64 @@ LoadPositionFromTemp:
 ;-------------------------------------------------------------------------------
 
 TileBlastFrame00:
-    .byte $22, $FF, $FF, $FF, $FF
+    .byte $22
+    .byte $FF, $FF
+    .byte $FF, $FF
 
 TileBlastFrame01:
-    .byte $22, $80, $81, $82, $83
+    .byte $22
+    .byte $80, $81
+    .byte $82, $83
 
 TileBlastFrame02:
-    .byte $22, $84, $85, $86, $87
+    .byte $22
+    .byte $84, $85
+    .byte $86, $87
 
 TileBlastFrame03:
-    .byte $22, $88, $89, $8A, $8B
+    .byte $22
+    .byte $88, $89
+    .byte $8A, $8B
 
 TileBlastFrame04:
-    .byte $22, $8C, $8D, $8E, $8F
+    .byte $22
+    .byte $8C, $8D
+    .byte $8E, $8F
 
 TileBlastFrame05:
-    .byte $22, $94, $95, $96, $97
+    .byte $22
+    .byte $94, $95
+    .byte $96, $97
 
 TileBlastFrame06:
-    .byte $22, $9C, $9D, $9D, $9C
+    .byte $22
+    .byte $9C, $9D
+    .byte $9D, $9C
 
 TileBlastFrame07:
-    .byte $22, $9E, $9F, $9F, $9E
+    .byte $22
+    .byte $9E, $9F
+    .byte $9F, $9E
 
 TileBlastFrame08:
-    .byte $22, $90, $91, $92, $93
+    .byte $22
+    .byte $90, $91
+    .byte $92, $93
 
 TileBlastFrame09:
-    .byte $22, $70, $71, $72, $73
+    .byte $22
+    .byte $70, $71
+    .byte $72, $73
 
 TileBlastFrame0A:
-    .byte $22, $74, $75, $76, $77
+    .byte $22
+    .byte $74, $75
+    .byte $76, $77
 
 TileBlastFrame0B:
-    .byte $22, $78, $79, $7A, $7B
+    .byte $22
+    .byte $78, $79
+    .byte $7A, $7B
 
 TileBlastFrame0C:
 TileBlastFrame0D:
