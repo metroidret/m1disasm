@@ -292,6 +292,12 @@ WaveSpriteCounter      = $84     ;Stores length of wave sprite data (#$10).
 ; 2 bytes ($85-$86)
 EnemyLFB88_85          = $85
 
+SpawnFireball_83       = $83     ;right facing anim index for enemy that shoots the fireball
+; SpawnFireball_83+1     = $84     ;left facing anim index for enemy that shoots the fireball
+SpawnFireball_AnimTableIndex = $85     ;index into EnemyFireballRisingAnimIndexTable
+SpawnFireball_87       = $87     ;fireball status?
+SpawnFireball_EnData0A = $88
+
 Mellow8A               = $8A
 
 DoorPalChangeDir       = $91    ;When Samus enters a palette change room, this stores the ScrollDir
@@ -506,7 +512,8 @@ EnX                    = $0401   ;Enemy x position in room.(not actual screen po
 EnSpeedY               = $0402   ; unknown - y speed?
 EnSpeedX               = $0403   ; unknown - x speed?
 EnData04               = $0404   ; unknown - hurt flag?
-EnData05               = $0405   ; L/R facing in LSB ?
+EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
+                                   ;bit6: toggles every frame for some enemy routines to run at 30FPS
 ; EnCounter              = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelY       = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter

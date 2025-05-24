@@ -16,7 +16,7 @@ PolypAIRoutine:
     lsr
     lsr
     lsr
-    adc $2D
+    adc FrameCount
     .if BANK = 2
         adc $00
         and #$47
@@ -26,16 +26,16 @@ PolypAIRoutine:
     bne RTS_Polyp
     lsr EnData05,x
     lda #$03
-    sta $87
+    sta SpawnFireball_87
     lda RandomNumber1
     lsr
     rol EnData05,x
     and #$03
     beq RTS_Polyp
-    sta $88
+    sta SpawnFireball_EnData0A
     lda #$02
-    sta $85
-    jmp CommonJump_0B
+    sta SpawnFireball_AnimTableIndex
+    jmp CommonJump_SpawnFireball
 
 RTS_Polyp:
     rts

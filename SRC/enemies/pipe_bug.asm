@@ -48,7 +48,7 @@ PipeBugBranchA:
     pla
     sta $04
     jsr StorePositionToTemp
-    jsr CommonJump_0D ; Check if onscreen?
+    jsr CommonJump_ApplySpeedToPosition ; Check if onscreen?
     bcc PipeBugDelete
     jsr LoadPositionFromTemp
 

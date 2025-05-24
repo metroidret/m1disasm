@@ -1,31 +1,47 @@
 ;-----------------------------------[ Enemy animation data tables ]----------------------------------
 
-EnemyAnimIndexTbl:
-EnemyAnim_A406:  .byte _id_EnFrame00, _id_EnFrame01, $FF
+EnAnimTbl:
+EnAnim_A406:
+    .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnemyAnim_A409:  .byte _id_EnFrame02, $FF
+EnAnim_A409:
+    .byte _id_EnFrame02, $FF
 
-EnemyAnim_A40B:  .byte _id_EnFrame03, _id_EnFrame04, $FF
+EnAnim_A40B:
+    .byte _id_EnFrame03, _id_EnFrame04, $FF
 
-EnemyAnim_A40E:  .byte _id_EnFrame05, $FF
+EnAnim_A40E:
+    .byte _id_EnFrame05, $FF
 
-EnemyAnim_A410:  .byte _id_EnFrame0E, $FF
+EnAnim_A410:
+    .byte _id_EnFrame0E, $FF
 
-EnemyAnim_A412:  .byte _id_EnFrame0F, $FF
+EnAnim_A412:
+    .byte _id_EnFrame0F, $FF
 
-EnemyAnim_A414:  .byte _id_EnFrame10, $FF
+EnAnim_A414:
+    .byte _id_EnFrame10, $FF
 
-EnemyAnim_A416:  .byte _id_EnFrame11, _id_EnFrame11, _id_EnFrame12, _id_EnFrame12, $F7, $FF
+EnAnim_A416:
+    .byte _id_EnFrame11, _id_EnFrame11, _id_EnFrame12, _id_EnFrame12, $F7, $FF
 
-EnemyAnim_A41C:  .byte _id_EnFrame18, $FF
+EnAnim_A41C:
+    .byte _id_EnFrame18, $FF
 
-EnemyAnim_A41E:  .byte _id_EnFrame19, $F7, $FF
+EnAnim_A41E:
+    .byte _id_EnFrame19, $F7, $FF
 
-EnemyAnim_A421:  .byte _id_EnFrame1B, _id_EnFrame1C, _id_EnFrame1D, $FF
+EnAnim_A421:
+    .byte _id_EnFrame1B, _id_EnFrame1C, _id_EnFrame1D, $FF
 
-EnemyAnim_A425:  .byte _id_EnFrame1E, $FF
+EnAnim_A425:
+    .byte _id_EnFrame1E, $FF
 
-EnemyAnim_A427:  .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
+EnAnim_A427:
+    .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
+
+EnAnim_A42C:
+    ;nothing
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 

@@ -27,7 +27,9 @@ BANK .set 7
 
 CommonEnemyAI          = $8058
 LoadTableAt977B        = $80B0
+L81D1                  = $81D1
 L81DA                  = $81DA
+L8206                  = $8206
 L820F                  = $820F
 L8296                  = $8296
 L832F                  = $832F
@@ -49,10 +51,10 @@ AreaSamusMapPosX       = $95D7
 AreaSamusMapPosY       = $95D8
 AreaSamusY             = $95D9
 AreaPalToggle          = $95DA
-AreaFireballAnimIndex  = $95DC
+AreaFireballKilledAnimIndex = $95DC
 AreaExplosionAnimIndex = $95DD
-L95E0                  = $95E0
-L95E2                  = $95E2
+AreaFireballFallingAnimIndex = $95E0
+AreaFireballSplatterAnimIndex = $95E2
 AreaMellowAnimIndex    = $95E4
 ChooseEnemyAIRoutine   = $95E5
 
@@ -62,7 +64,7 @@ L963B                  = $963B
 L965B                  = $965B
 L967B                  = $967B
 L968B                  = $968B
-L969B                  = $969B
+EnemyData0DTbl         = $969B
 L96AB                  = $96AB
 EnemyInitDelayTbl      = $96BB
 L96CB                  = $96CB
@@ -72,8 +74,14 @@ EnAccelXTable          = $973F
 EnSpeedYTable          = $9753
 EnSpeedXTable          = $9767
 
+EnemyFireballRisingAnimIndexTable = $978B
+EnemyFireballPosOffsetX = $979B
+EnemyFireballPosOffsetY = $97A3
+
 EnemyFireballMovementPtrTable = $97A7
 TileBlastFramePtrTable = $97AF
+
+L97D1                  = $97D1
 
 SoundEngine            = $B3B4
 
@@ -144,13 +152,13 @@ SoundEngine            = $B3B4
 .export LF83E
 .export LF852
 .export LF85A
-.export LF870
+.export SpawnFireball
 .export LFA1E
 .export LFB70
 .export LFB88
 .export LFBB9
 .export LFBCA
-.export LFD8F
+.export ApplySpeedToPosition
 .export DrawTileBlast
 
 
@@ -3118,7 +3126,7 @@ SamusRoll:
         stx $05
         lda #$F5
         sta $04
-        jsr LFD8F
+        jsr ApplySpeedToPosition
         jsr LD638
         jsr StopHorzMovement
         dec ObjAnimIndex
@@ -3416,7 +3424,7 @@ LD306:
     jsr StoreObjectPositionToTemp
     tya
     tax
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     txa
     tay
     jmp LD638
@@ -3901,7 +3909,7 @@ LD624:
     lda ObjSpeedY,x
     sta $04
     jsr StoreObjectPositionToTemp
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     bcc Lx078
 LD638:
     lda $08
@@ -5471,11 +5479,11 @@ ExplodeXDisplace:
 ;---------------------------------[ Check if object is on screen ]----------------------------------
 
 ;The following set of functions determine if an object is visible on the screen.  If the object
-;is visible, X-1 when the function returns, X=0 if the object is not within the boundaries of the
+;is visible, X=1 when the function returns, X=0 if the object is not within the boundaries of the
 ;current screen.  The function needs to know what nametable is currently in the PPU, what nametable
 ;the object is on and what the scroll offsets are.
 
-IsObjectVisible:
+IsObjectVisible: ;($DFDF)
     ldx #$01                        ;Assume object is visible on screen.
     lda $0A                         ;Object Y position in room.
     tay                             ;
@@ -5493,10 +5501,10 @@ IsObjectVisible:
 VertScrollCheck:
     cpy ScrollY                     ;If object room pos is >= scrollY, set carry.
     lda $06                         ;Check if object is on different name table as current-->
-    eor PPUCTRL_ZP                   ;name table active in PPU.-->
+    eor PPUCTRL_ZP                  ;name table active in PPU.-->
     and #$01                        ;If not, branch.
-    beq LE012                           ;
-    bcs LE01A                          ;If carry is still set, sprite is not in screen boundaries.
+    beq LE012                       ;
+    bcs LE01A                       ;If carry is still set, sprite is not in screen boundaries.
     lda $10                         ;
     sbc #$0F                        ;Move sprite y position up 15 pixels.
     sta $10                         ;
@@ -5504,38 +5512,38 @@ VertScrollCheck:
     clc                             ;If a portion of the object is outside the sceen-->
     adc $10                         ;boundaries, treat object as if the whole thing is-->
     cmp #$F0                        ;not visible.
-    bcc RTS_E01B                         ;
+    bcc RTS_E01B                    ;
     clc                             ;Causes next statement to branch always.
 LE012:
-    bcc LE01A                           ;
+    bcc LE01A                       ;
     lda $09                         ;If object is on same name table as the current one in-->
     cmp $10                         ;the PPU, check if part of object is out of screen-->
-    bcc RTS_E01B                          ;boundaries.  If so, branch.
+    bcc RTS_E01B                    ;boundaries.  If so, branch.
 LE01A:
     dex                             ;Sprite is not within screen boundaries. Decrement X.
 RTS_E01B:
-    rts                             ;
+    rts
 
 HorzScrollCheck:
     lda $06                         ;
-    eor PPUCTRL_ZP                   ;Check if object is on different name table as current-->
+    eor PPUCTRL_ZP                  ;Check if object is on different name table as current-->
     and #$01                        ;name table active in PPU.-->
-    beq LE02E                           ;If not, branch.
-        bcs LE036                          ;If carry is still set, sprite is not in screen boundaries.
-        lda $09                         ;
-        clc                             ;If a portion of the object is outside the sceen-->
-        adc $0E                         ;boundaries, treat object as if the whole thing is-->
-        bcc RTS_E037                         ;not visible.
-        clc                             ;Causes next statement to branch always.
+    beq LE02E                       ;If not, branch.
+        bcs LE036                   ;If carry is still set, sprite is not in screen boundaries.
+        lda $09                     ;
+        clc                         ;If a portion of the object is outside the sceen-->
+        adc $0E                     ;boundaries, treat object as if the whole thing is-->
+        bcc RTS_E037                ;not visible.
+        clc                         ;Causes next statement to branch always.
     LE02E:
-    bcc LE036                           ;
+    bcc LE036                       ;
     lda $09                         ;If object is on same name table as the current one in-->
     cmp $0E                         ;the PPU, check if part of object is out of screen-->
-    bcc RTS_E037                          ;boundaries.  If so, branch.
+    bcc RTS_E037                    ;boundaries.  If so, branch.
 LE036:
     dex                             ;Sprite is not within screen boundaries. Decrement X.
 RTS_E037:
-    rts                             ;
+    rts
 
 ;------------------------[ Override sprite flip bits with object flip bits ]-------------------------
 
@@ -8848,9 +8856,9 @@ DoOneEnemy: ;LF351
         cpy #enemyStatus_Active+1
         bcs @endIf
             ; enemy status is enemyStatus_Resting or enemyStatus_Active here
-            jsr DoOneEnemyF37F
+            jsr DoOneEnemy_CheckIfVisible
     @endIf:
-    jsr DoOneEnemyF3AA
+    jsr DoOneEnemy_UpdateEnData05Bit6
     lda EnStatus,x
     sta EnemyStatus81
     cmp #enemyStatus_Hurt+1
@@ -8868,44 +8876,52 @@ DoOneEnemy: ;LF351
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 ;-------------------------------------------------------------------------------
-DoOneEnemyF37F:
+DoOneEnemy_CheckIfVisible:
     lda EnData05,x
     and #$02
-    bne Lx298
-    ; Store Enemy Position/Hitbox to Temp
-    lda EnY,x     ; Y coord
-    sta $0A
-    lda EnX,x     ; X coord
-    sta $0B
-    lda EnHi,x     ; hi coord
-    sta $06
-    lda EnRadY,x
-    sta $08
-    lda EnRadX,x
-    sta $09
-    jsr IsObjectVisible             ;($DFDF)Determine if object is within the screen boundaries.
-    txa
-    bne Lx298
-    pla
-    pla
-Lx298:
+    bne @exit
+        ; Store Enemy Position/Hitbox to Temp
+        lda EnY,x     ; Y coord
+        sta $0A
+        lda EnX,x     ; X coord
+        sta $0B
+        lda EnHi,x     ; hi coord
+        sta $06
+        lda EnRadY,x
+        sta $08
+        lda EnRadX,x
+        sta $09
+        ;Determine if object is within the screen boundaries.
+        jsr IsObjectVisible
+        txa
+        bne @exit
+            ; enemy is not visible
+            ; double return, returns from DoOneEnemy entirely
+            pla
+            pla
+    @exit:
     ldx PageIndex
     rts
 
-DoOneEnemyF3AA:
-    lda EnData05,x
-    asl
-    rol
+; toggle bit 6 of EnData05
+DoOneEnemy_UpdateEnData05Bit6:
+    ; shift bit 6 of EnData05 into carry
+    lda EnData05,x ;76543210
+    asl ;6543210-
+    rol ;543210-7
     tay
+    ; put (slot id xor FrameCount)'s bit 0 into carry
     txa
     jsr Adiv16                      ;($C2BF)/16.
     eor FrameCount
     lsr
-    tya
-    ror
-    ror
+    ; shift carry into bit 6 of EnData05
+    tya ;543210-7
+    ror ;X543210-
+    ror ;7X543210
     sta EnData05,x
     rts
+
 ;---------------------------------------------
 DoRestingEnemy:
 LF3BE:
@@ -9009,7 +9025,7 @@ DoFrozenEnemy: ; ($F43E)
                 lda EnPrevStatus,x
                 sta EnStatus,x
                 ldy EnType,x
-                lda L969B,y
+                lda EnemyData0DTbl,y
                 sta EnData0D,x
     Lx303:
     lda EnData0D,x
@@ -9440,7 +9456,7 @@ LF6B9:
 
     pha
     ldy EnType,x
-    lda L969B,y
+    lda EnemyData0DTbl,y
     sta EnData0D,x
     pla
     bpl Lx337
@@ -9602,10 +9618,10 @@ Lx348:
     ldy EnType,x
     lda L96CB,y
     clc
-    adc #$D1
+    adc #<L97D1
     sta $00
     lda #$00
-    adc #$97
+    adc #>L97D1
     sta $01
     lda FrameCount
     eor RandomNumber1
@@ -9636,12 +9652,12 @@ Lx348:
     bmi Lx350
         lsr
         bcc Lx351
-        jsr $81D1
+        jsr L81D1
         jmp Lx351
     Lx350:
     and #$04
     beq Lx351
-    jsr $8206
+    jsr L8206
 Lx351:
     lda #$DF
     jmp LF7B3
@@ -9673,7 +9689,7 @@ LF852: ; accessed from CommonJump_03
 
 LF85A:
     ldy EnType,x
-    lda L969B,y
+    lda EnemyData0DTbl,y
     sta EnData0D,x
     lda EnemyHitPointTbl,y          ;($962B)
     ldy EnSpecialAttribs,x
@@ -9684,119 +9700,154 @@ LF85A:
 RTS_X354:
     rts
 
-LF870:
+
+SpawnFireball:
+    ; exit if bit 4 of EnData05 is set (what does this bit represent?)
     lda EnData05,x
     and #$10
     beq RTS_X354
-    lda $87
+    ; exit if ??? (something about status?)
+    lda SpawnFireball_87
     and EnStatus,x
     beq RTS_X354
-    lda $87
+    
+    ; branch if bit 7 of SpawnFireball_87 is unset
+    lda SpawnFireball_87
     bpl Lx355
+        ; exit if EnData1D is zero
         ldy EnData1D,x
         bne RTS_X354
     Lx355:
-    jsr LF8E8
-    bcs RTS_X357
+    
+    ; attempt to find open enemy fireball slot
+    jsr SpawnFireball_FindSlot
+    ; exit if all slots are occupied
+    bcs RTS_SpawnFireball_FindSlot
+    
+    ; a is #$00 here
     sta EnData04,y
-    jsr LF92C
+    jsr SpawnFireball_F92C
+    ; rotate horizontal facing dir flag into carry
     lda EnData05,x
     lsr
-    lda $85
+    ; push SpawnFireball_AnimTableIndex to stack for later
+    lda SpawnFireball_AnimTableIndex
     pha
+    ; SpawnFireball_AnimTableIndex*2 + horizontal facing dir
     rol
+    ; get anim index from table
     tax
-    lda $978B,x
+    lda EnemyFireballRisingAnimIndexTable,x
     pha
+    ; init anim index for fireball
     tya
     tax
     pla
     jsr InitEnAnimIndex
+    
+    ; set fireball status to resting
     ldx PageIndex
-    lda #enemyStatus_Resting
+    lda #enemyStatus_Resting ;#$01
     sta EnStatus,y
+    ; use horizontal facing dir flag to set fireball x speed
     and EnData05,x
     tax
     lda EnSpeedX_Table15,x
     sta EnSpeedX,y
+    ; y speed
     lda #$00
     sta EnSpeedY,y
+    
     ldx PageIndex
-    jsr LF8F8
+    jsr SpawnFireball_F8F8
+    
+    ; get and apply x and y offsets to enemy position to make fireball position
+    ; put horizontal facing dir flag into carry
     lda EnData05,x
     lsr
-    pla
+    pla ; SpawnFireball_AnimTableIndex
     tax
-    lda $97A3,x
+    lda EnemyFireballPosOffsetY,x
     sta $04
     txa
     rol
     tax
-    lda $979B,x
+    lda EnemyFireballPosOffsetX,x
     sta $05
-    jsr LF91D
+    jsr SpawnFireball_SetFireballPosition
+    
+    ; exit if bit 6 of SpawnFireball_87 is unset
     ldx PageIndex
-    bit $87
-    bvc RTS_X357
+    bit SpawnFireball_87
+    bvc RTS_SpawnFireball_FindSlot
+    ; set animation for enemy that shot the fireball depending on the direction its facing
     lda EnData05,x
     and #$01
     tay
-    lda $0083,y
+    lda SpawnFireball_83,y
     jmp SetEnAnimIndex
 
-LF8E8:
+SpawnFireball_FindSlot:
     ldy #$60
     clc
-Lx356:
-    lda EnStatus,y
-    beq RTS_X357
-    jsr Yplus16
-    cmp #$C0
-    bne Lx356
-RTS_X357:
+    @loop:
+        lda EnStatus,y
+        beq RTS_SpawnFireball_FindSlot
+        jsr Yplus16
+        cmp #$C0
+        bne @loop
+RTS_SpawnFireball_FindSlot:
     rts
 
-LF8F8:
-    lda $85
+SpawnFireball_F8F8:
+    ; exit if anim table index is 0 or 1 (does this ever happen?)
+    lda SpawnFireball_AnimTableIndex
     cmp #$02
-    bcc RTS_X358
-    ldx PageIndex
+    bcc @RTS
+    ; shift horizontal facing dir flag into carry
+    ldx PageIndex ; redundant instruction
     lda EnData05,x
     lsr
-    lda $88
+    ; SpawnFireball_EnData0A*2 + horizontal facing dir
+    lda SpawnFireball_EnData0A
     rol
     and #$07
     sta EnData0A,y
+    ; set fireball status to active
     lda #enemyStatus_Active
     sta EnStatus,y
+    ; clear fireball anim delay and movement
     lda #$00
     sta EnDelay,y
     sta EnAnimDelay,y
     sta EnMovementIndex,y
-RTS_X358:
+@RTS:
     rts
 
-LF91D:
+SpawnFireball_SetFireballPosition:
     ldx PageIndex
+    ; loads position of enemy that shot the fireball into temp
     jsr StoreEnemyPositionToTemp
     tya
     tax
-    jsr LFD8F
+    ; apply offsets to that position
+    jsr ApplySpeedToPosition
+    ; save as position of fireball
     jmp LoadEnemyPositionFromTemp
 
 ; Table used by above subroutine
-
 EnSpeedX_Table15:
     .byte $02
     .byte $FE
 
-LF92C:
+SpawnFireball_F92C:
     lda #$02
     sta EnRadY,y
     sta EnRadX,y
     ora EnData05,y
     sta EnData05,y
     rts
+
 
 UpdateAllEnemyFireballs:
     ldx #$B0
@@ -9902,7 +9953,7 @@ Lx362:
     bmi Lx365
     
     ldy EnData0A,x
-    lda L95E0,y
+    lda AreaFireballFallingAnimIndex,y
     sta EnResetAnimIndex,x
 Lx365:
     jsr LFA1E
@@ -9916,7 +9967,7 @@ Lx365:
     beq Lx366
         iny
     Lx366:
-    lda L95E2,y
+    lda AreaFireballSplatterAnimIndex,y
     jsr InitEnAnimIndex
     jsr LF518
     lda #$0A
@@ -9953,7 +10004,7 @@ LFA1E:
     sta $04
 LFA41:
     jsr StoreEnemyPositionToTemp
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     bcc RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 LoadEnemyPositionFromTemp:
@@ -10001,7 +10052,7 @@ LFA7D:
 
 UpdateEnemyFireball_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    lda AreaFireballAnimIndex
+    lda AreaFireballKilledAnimIndex
     jsr InitEnAnimIndex
     jmp LF97C
 
@@ -10210,7 +10261,7 @@ UpdateSkreeProjectile:
     lsr
     tay
     
-    ; prepare parameters to LFD8F
+    ; prepare parameters to ApplySpeedToPosition
     ; y speed
     lda SkreeProjectileSpeedTable,y
     sta $04
@@ -10228,7 +10279,7 @@ UpdateSkreeProjectile:
     sta $0B
     
     ; apply speed to position in parameters
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     ; kill projectile if ???
     bcc KillSkreeProjectile
     
@@ -10380,7 +10431,7 @@ Lx392:
     Lx394:
     sty $04
     inc MellowAttackTimer,x
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     bcs Lx395
         lda MellowAttackState,x
         ora #$02
@@ -10445,7 +10496,7 @@ UpdateMellow_FD25:
 Lx400:
     sta $04
 Lx401:
-    jsr LFD8F
+    jsr ApplySpeedToPosition
     jmp UpdateMellow_LoadPositionFromTemp
 
 ; Table used by above subroutine
@@ -10492,64 +10543,95 @@ UpdateMellow_FD84:
 ; $02 is tempScrollDir
 ; $04 is tempYvel?
 ; $05 is tempXvel?
-
 ; $08 is tempY
 ; $09 is tempX
 ; $0B is tempNametable
-LFD8F:
+
+; params are $04, $05, $08, $09, $0B
+; returns are $02, $08, $09, $0B, carry
+; return carry set if movement was successful, and carry unset if movement failed
+ApplySpeedToPosition:
+    ; save vertical or horizontal scroll flag to $02
     lda ScrollDir
     and #$02
     sta $02
+    
+    ; apply y speed to y position
     lda $04
     clc
     bmi Lx405
+        ; dont apply y speed if it is zero
         beq LFDBF
+        ; positive y speed
         adc $08
         bcs Lx403
             cmp #$F0
             bcc Lx404
         Lx403:
-            adc #$0F
+            ; position is greater or equal to 240px, we must wrap around
+            adc #$0F ; carry is set, so this adds #$10
+            ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
             ldy $02
             bne ClcExit2
+            ; screen scrolls vertically, update high byte
             inc $0B
         Lx404:
+        ; save new y position
         sta $08
         jmp LFDBF
     Lx405:
-    adc $08
-    bcs Lx406
-        sbc #$0F
-        ldy $02
-        bne ClcExit2
-        inc $0B
-    Lx406:
-    sta $08
-LFDBF:
+        ; negative y speed
+        adc $08
+        bcs Lx406
+            ; position is lesser than 0px, we must wrap around
+            sbc #$0F ; carry is set, so this subtracts #$10
+            ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
+            ldy $02
+            bne ClcExit2
+            ; screen scrolls vertically, update high byte
+            inc $0B
+        Lx406:
+        ; save new y position
+        sta $08
+    LFDBF:
+    
+    ; apply x speed to x position
     lda $05
     clc
     bmi Lx408
+        ; dont apply x speed if it is zero
         beq SecExit
+        ; positive x speed
         adc $09
         bcc Lx407
+            ; position is greater or equal to 256px, we must wrap around
+            ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
             ldy $02
             beq ClcExit2
+            ; screen scrolls horizontally, update high byte
             inc $0B
         Lx407:
+        ; save new x position
         jmp Lx409
     Lx408:
-    adc $09
-    bcs Lx409
-    ldy $02
-    beq ClcExit2
-    inc $0B
-Lx409:
-    sta $09
+        adc $09
+        bcs Lx409
+            ; position is lesser than 0px, we must wrap around
+            ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
+            ldy $02
+            beq ClcExit2
+            ; screen scrolls horizontally, update high byte
+            inc $0B
+        Lx409:
+        ; save new x position
+        sta $09
 
 SecExit:
+    ; movement was successful, set carry
     sec
     rts
 ClcExit2:
+    ; movement has failed, clear carry
     clc
 RTS_X410:
     rts

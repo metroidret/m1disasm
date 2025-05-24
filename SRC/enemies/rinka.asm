@@ -96,7 +96,7 @@ L9AB0:
         sta $09
         lda EnHi,x
         sta $0B
-        jsr CommonJump_0D
+        jsr CommonJump_ApplySpeedToPosition
         bcs L9AF1
             lda #$00
             sta EnStatus,x

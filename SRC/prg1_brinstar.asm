@@ -77,7 +77,7 @@ AreaPointers:
     .word EnFramePtrTable1          ;($9DE0)Pointer table into enemy animation data. Two-->
     .word EnFramePtrTable2          ;($9EE0)tables needed to accommodate all entries.
     .word EnPlacePtrTable           ;($9F0E)Pointers to enemy frame placement data.
-    .word EnemyAnimIndexTbl         ;($9D6A)index to values in addr tables for enemy animations.
+    .word EnAnimTbl                 ;($9D6A)index to values in addr tables for enemy animations.
 
 ; Tourian-specific jump table (dummied out in other banks)
 ;  Each line is RTS, NOP, NOP in this bank
@@ -123,18 +123,18 @@ AreaPalToggle:
     .byte $01
 
     .byte $00
-AreaFireballAnimIndex:
-    .byte EnemyAnim_9D6D - EnemyAnimIndexTbl
+AreaFireballKilledAnimIndex:
+    .byte EnAnim_9D6D - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnemyAnim_9DAD - EnemyAnimIndexTbl
+    .byte EnAnim_9DAD - EnAnimTbl
 
     .byte $00, $00
-
+AreaFireballFallingAnimIndex:
     .byte $00, $00
-
+AreaFireballSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnemyAnim_9DD3 - EnemyAnimIndexTbl
+    .byte EnAnim_9DD3 - EnAnimTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -185,7 +185,7 @@ L968B:
     .byte $01, $01, $01, $00, $86, $04, $89, $80, $81, $00, $00, $00, $82, $00, $00, $00
 
 ; EnData0D table (set upon load, and a couple other times)
-L969B:
+EnemyData0DTbl:
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $20, $01, $01, $01, $40, $00, $00, $00
 
 ; Some table referenced when loading an enemy
@@ -254,8 +254,25 @@ EnSpeedXTable:  .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02
 L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 
 ; Enemy animation related table?
-L978B:  .byte $00, $00, $64, $67, $69, $69, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
+EnemyFireballRisingAnimIndexTable:
+    .byte $00, $00
+    .byte EnAnim_9DCE - EnAnimTbl, EnAnim_9DD1 - EnAnimTbl
+    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+EnemyFireballPosOffsetX:
+    .byte $0C, $F4
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+EnemyFireballPosOffsetY:
+    .byte $F4
+    .byte $00
+    .byte $00
+    .byte $00
 
 ; Another movement pointer table?
 ; Referenced using EnData0A

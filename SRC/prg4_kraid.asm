@@ -79,10 +79,10 @@ AreaPointers:
     .word RmPtrTbl                  ;($A1D5)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A21F)Beginning of structure pointer table.
     .word MacroDefs                 ;($AC32)Beginning of macro definitions.
-    .word EnFramePtrTable1         ;($9CF7)Address table into enemy animation data. Two-->
-    .word EnFramePtrTable2         ;($9DF7)tables needed to accommodate all entries.
-    .word EnPlacePtrTable          ;($9E25)Pointers to enemy frame placement data.
-    .word EnemyAnimIndexTbl         ;($9C86)Index to values in addr tables for enemy animations.
+    .word EnFramePtrTable1          ;($9CF7)Address table into enemy animation data. Two-->
+    .word EnFramePtrTable2          ;($9DF7)tables needed to accommodate all entries.
+    .word EnPlacePtrTable           ;($9E25)Pointers to enemy frame placement data.
+    .word EnAnimTbl                 ;($9C86)Index to values in addr tables for enemy animations.
 
 ; Tourian-specific jump table (dummied out in other banks)
 ;  Each line is RTS, NOP, NOP in this bank
@@ -130,17 +130,17 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballAnimIndex:
-    .byte EnemyAnim_9C89 - EnemyAnimIndexTbl
+    .byte EnAnim_9C89 - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnemyAnim_9CC9 - EnemyAnimIndexTbl
+    .byte EnAnim_9CC9 - EnAnimTbl
 
     .byte $00, $00
-
+AreaFireballFallingAnimIndex:
     .byte $00, $00
-
+AreaFireballSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnemyAnim_9CEA - EnemyAnimIndexTbl
+    .byte EnAnim_9CEA - EnAnimTbl
 
 ChooseEnemyAIRoutine:
     lda EnType,x
@@ -183,7 +183,7 @@ L967B:
 L968B:
     .byte $89, $89, $09, $00, $86, $04, $89, $80, $83, $00, $00, $00, $82, $00, $00, $00
 
-L969B:
+EnemyData0DTbl:
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $40, $00, $00, $00
 
 L96AB:
@@ -242,8 +242,25 @@ L9773:  .byte $00, $00, $00, $00, $00, $00, $00, $00
 
 L977B:  .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 
-L978B:  .byte $00, $00, $5F, $62, $64, $64, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-L979B:  .byte $0C, $F4, $00, $00, $00, $00, $00, $00, $F4, $00, $00, $00
+EnemyFireballRisingAnimIndexTable:
+    .byte $00, $00
+    .byte EnAnim_9CE5 - EnAnimTbl, EnAnim_9CE8 - EnAnimTbl
+    .byte EnAnim_9CEA - EnAnimTbl, EnAnim_9CEA - EnAnimTbl
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+EnemyFireballPosOffsetX:
+    .byte $0C, $F4
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+EnemyFireballPosOffsetY:
+    .byte $F4
+    .byte $00
+    .byte $00
+    .byte $00
 
 EnemyFireballMovementPtrTable:
     .word EnemyFireballMovement0

@@ -166,7 +166,7 @@ KraidUpdateProjectile_BranchC:
     tax
 .ENDIF
 
-    jsr CommonJump_0D
+    jsr CommonJump_ApplySpeedToPosition
 
 .IF BANK = 1
     ldx PageIndex

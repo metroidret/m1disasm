@@ -220,7 +220,7 @@ L98A9:
     sta $05
     ; set metroid position to Samus position
     jsr StoreSamusPositionToTemp
-    jsr CommonJump_0D ; scroll enemy position and update enemy speed?
+    jsr CommonJump_ApplySpeedToPosition ; scroll enemy position and update enemy speed?
     jsr LoadPositionFromTemp
     jmp L9967
 
@@ -303,7 +303,7 @@ Table99D8:
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
 
 StoreSamusPositionToTemp:
-    ; put Samus position as parameters to CommonJump_0D
+    ; put Samus position as parameters to CommonJump_ApplySpeedToPosition
     lda ObjX
     sta $09
     lda ObjY

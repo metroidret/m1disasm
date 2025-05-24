@@ -55,13 +55,13 @@
 .import LF83E
 .import LF852
 .import LF85A
-.import LF870
+.import SpawnFireball
 .import LFA1E
 .import LFB70
 .import LFB88
 .import LFBB9
 .import LFBCA
-.import LFD8F
+.import ApplySpeedToPosition
 .import DrawTileBlast
 
 ;-----------------------------------------[ Start of code ]------------------------------------------
@@ -89,12 +89,12 @@ CommonJump_09: ;$801B
     jmp LFB88
 CommonJump_0A: ;$801E
     jmp LFBCA
-CommonJump_0B: ;$8021
-    jmp LF870
+CommonJump_SpawnFireball: ;$8021
+    jmp SpawnFireball
 CommonJump_ChooseRoutine: ;$8024
     jmp ChooseRoutine               ;($C27C)
-CommonJump_0D: ;$8027
-    jmp LFD8F
+CommonJump_ApplySpeedToPosition: ;$8027
+    jmp ApplySpeedToPosition
 CommonJump_0E: ;$802A
     jmp LEB6E
 CommonJump_EnemyGetDeltaY: ;$802D

@@ -36,7 +36,7 @@ L9A88:
     L9AAC:
     sta EnResetAnimIndex,x
     jsr StorePositionToTemp
-    jsr CommonJump_0D
+    jsr CommonJump_ApplySpeedToPosition
     lda #$E8
     bcc L9ABD
         cmp $08

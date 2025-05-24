@@ -108,7 +108,7 @@ L9AAA:
     sta $05
     lda #$F8
     sta $04
-    jsr CommonJump_0D
+    jsr CommonJump_ApplySpeedToPosition
     bcc L9AA9
     lda #$00
     sta EnSpecialAttribs,x

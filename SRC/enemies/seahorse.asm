@@ -19,24 +19,25 @@ SeahorseAIRoutine:
         lda RandomNumber1
         and #$03
         beq L9B59
+        
         lda #$02
-        sta $87
+        sta SpawnFireball_87
         lda #$00
-        sta $88
-        lda #$43
-        sta $83
-        lda #$47
-        sta $84
+        sta SpawnFireball_EnData0A
+        lda #EnAnim_9C1D - EnAnimTbl
+        sta SpawnFireball_83
+        lda #EnAnim_9C21 - EnAnimTbl
+        sta SpawnFireball_83+1
         lda #$03
-        sta $85
-        jsr CommonJump_0B
+        sta SpawnFireball_AnimTableIndex
+        jsr CommonJump_SpawnFireball
         lda NoiseSFXFlag
         ora #$04
         sta NoiseSFXFlag
         lda EnData05,x
         and #$01
         tay
-        lda $83,y
+        lda SpawnFireball_83,y
         jsr CommonJump_InitEnAnimIndex
         beq L9B59
     L9B3C:
@@ -60,6 +61,5 @@ L9B59:
     sta $01
     jmp CommonEnemyJump_00_01_02
 
-; probably animation frame id table
 SeahorseTable:
-    .byte $45, $49
+    .byte EnAnim_9C1F - EnAnimTbl, EnAnim_9C23 - EnAnimTbl
