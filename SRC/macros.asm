@@ -25,14 +25,23 @@
 
 .macro PPUString ppuAddress, ppuString
     .byte .hibyte(ppuAddress), .lobyte(ppuAddress)
-    ; maybe this could be recursive to support multiple ppuString parameters for byte values
-    .if .match(ppuString, "")
-        ppuStringLen .set .strlen(ppuString)
-        .byte ppuStringLen
-        .byte ppuString
-    .else
-        .error "ppuString must be a string"
-    .endif
+    
+    ppuStringLen .set 0
+    .repeat .tcount(ppuString), tokenID
+        .if .match({.mid(tokenID, 1, ppuString)}, "")
+            ppuStringLen .set ppuStringLen+.strlen(.mid(tokenID, 1, ppuString))
+        .elseif .match({.mid(tokenID, 1, ppuString)}, $00)
+            ; assume the number is a byte
+            ppuStringLen .set ppuStringLen+1
+        .elseif .match({.mid(tokenID, 1, ppuString)}, {,})
+            ; ignore comma token
+        .else
+            .error "all elements in ppuString must be strings or bytes"
+        .endif
+    .endrep
+    
+    .byte ppuStringLen
+    .byte ppuString
 .endmacro
 
 .macro PPUStringRepeat ppuAddress, ppuByte, repetitions

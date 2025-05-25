@@ -19,129 +19,71 @@
 ;Kraid Palette Data
 
 Palette00:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-;The following values are written to the background palette:
-    .byte $0F, $20, $10, $00, $0F, $28, $19, $1A, $0F, $28, $16, $04, $0F, $23, $11, $02
-;The following values are written to the sprite palette:
-    .byte $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $27, $1B, $36, $0F, $17, $22, $31
+    PPUString $3F00, {$0F, $20, $10, $00, $0F, $28, $19, $1A, $0F, $28, $16, $04, $0F, $23, $11, $02, $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $27, $1B, $36, $0F, $17, $22, $31}
 
     .byte $00                       ;End Palette00 info.
 
 Palette01:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $12                       ;Lower byte of PPU palette adress.
-    .byte $02                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $19, $27
+    PPUString $3F12, {$19, $27}
 
     .byte $00                       ;End Palette01 info.
 
 Palette03:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $12                       ;Lower byte of PPU palette adress.
-    .byte $02                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $2C, $27
+    PPUString $3F12, {$2C, $27}
 
     .byte $00                       ;End Palette03 info.
 
 Palette02:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $12                       ;Lower byte of PPU palette adress.
-    .byte $02                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $19, $35
+    PPUString $3F12, {$19, $35}
 
     .byte $00                       ;End Palette02 info.
 
 Palette04:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $12                       ;Lower byte of PPU palette adress.
-    .byte $02                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $2C, $24
+    PPUString $3F12, {$2C, $24}
 
     .byte $00                       ;End Palette04 info.
 
 Palette05:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $11                       ;Lower byte of PPU palette adress.
-    .byte $03                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $04, $09, $07
+    PPUString $3F11, {$04, $09, $07}
 
     .byte $00                       ;End Palette05 info.
 
 Palette06:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $11                       ;Lower byte of PPU palette adress.
-    .byte $03                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $05, $09, $17
+    PPUString $3F11, {$05, $09, $17}
 
     .byte $00                       ;End Palette06 info.
 
 Palette07:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $11                       ;Lower byte of PPU palette adress.
-    .byte $03                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $06, $0A, $26
+    PPUString $3F11, {$06, $0A, $26}
 
     .byte $00                       ;End Palette07 info.
 
 Palette08:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $11                       ;Lower byte of PPU palette adress.
-    .byte $03                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $16, $19, $27
+    PPUString $3F11, {$16, $19, $27}
 
     .byte $00                       ;End Palette08 info.
 
 Palette09:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-;The following values are written to the background palette:
-    .byte $0F, $30, $30, $21
+    PPUString $3F00, {$0F, $30, $30, $21}
 
     .byte $00                       ;End Palette09 info.
 
 Palette0A:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $10                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $0F, $15, $34, $17
+    PPUString $3F10, {$0F, $15, $34, $17}
 
     .byte $00                       ;End Palette0A info.
 
 Palette0B:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $10                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $0F, $15, $34, $19
+    PPUString $3F10, {$0F, $15, $34, $19}
 
     .byte $00                       ;End Palette0B info.
 
 Palette0C:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $10                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $0F, $15, $34, $28
+    PPUString $3F10, {$0F, $15, $34, $28}
 
     .byte $00                       ;End Palette0C info.
 
 Palette0D:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $10                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-;The following values are written to the sprite palette:
-    .byte $0F, $15, $34, $29
+    PPUString $3F10, {$0F, $15, $34, $29}
 
     .byte $00                       ;End Palette0D info.

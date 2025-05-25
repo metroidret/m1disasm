@@ -534,102 +534,54 @@ TitleRoutineReturn:
 ;The following data fills name table 0 with the intro screen background graphics.
 L82F4:
     ;Information to be stored in attribute table 0.
-    .byte $23,$C0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    PPUString $23C0, {$00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF}
 
-    .byte $23,$E0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUString $23E0, {$FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00}
 
     ;Writes row $22E0 (24th row from top).
-    .byte $22,$E0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    PPUString $22E0, {$FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF}
 
     ;Writes row $2300 (25th row from top).
-    .byte $23,$00                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
-    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    PPUString $2300, {$80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81}
 
     ;Writes row $2320 (26th row from top).
-    .byte $23,$20                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
-    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    PPUString $2320, {$82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83}
 
     ;Writes row $2340 (27th row from top).
-    .byte $23,$40                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
-    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    PPUString $2340, {$84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85}
 
     ;Writes row $2360 (28th row from top).
-    .byte $23,$60                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
-    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    PPUString $2360, {$86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87}
 
     ;Writes row $2380 (29th row from top).
-    .byte $23,$80                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
-    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    PPUString $2380, {$88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89}
 
     ;Writes row $23A0 (Bottom row).
-    .byte $23,$A0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
-    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    PPUString $23A0, {$8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B}
 
     ;Writes some blank spaces in row $20A0 (6th row from top).
     PPUStringRepeat $20A8, ' ', $0F
 
     ;Writes METROID graphics in row $2100 (9th row from top).
-    .byte $21,$03                   ;PPU address high and low byte.
-    .byte $1C                       ;PPU string length.
-    .byte $40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63
-    .byte $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16
+    PPUString $2103, {$40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63, $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16}
 
     ;Writes METROID graphics in row $2120 (10th row from top).
-    .byte $21,$23                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47
-    .byte $44, $57, $69, $47, $44, $47, $44, $68, $69, $47
+    PPUString $2123, {$44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47, $44, $57, $69, $47, $44, $47, $44, $68, $69, $47}
 
     ;Writes METROID graphics in row $2140 (11th row from top).
-    .byte $21,$43                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70
-    .byte $44, $73, $72, $47, $44, $47, $44, $73, $72, $47
+    PPUString $2143, {$44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70, $44, $73, $72, $47, $44, $47, $44, $73, $72, $47}
 
     ;Writes METROID graphics in row $2160 (12th row from top).
-    .byte $21,$63                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71
-    .byte $44, $45, $46, $47, $44, $47, $44, $45, $46, $47
+    PPUString $2163, {$44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71, $44, $45, $46, $47, $44, $47, $44, $45, $46, $47}
 
     ;Writes METROID graphics in row $2180 (13th row from top).
-    .byte $21,$83                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47
-    .byte $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47
+    PPUString $2183, {$44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47, $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47}
 
     ;Writes METROID graphics in row $21A0 (14th row from top).
-    .byte $21,$A3                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F
-    .byte $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64
+    PPUString $21A3, {$4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F, $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64}
 
     ;Writes METROID graphics in row $21C0 (15th row from top).
-    .byte $21,$C3                   ;PPU address high and low byte.
-    .byte $1A                       ;PPU string length.
-    .byte $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52
-    .byte $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
+    PPUString $21C3, {$51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52, $67, $61, $61, $65, $51, $52, $51, $61, $61, $65}
 
     ;Writes PUSH START BUTTON in row $2220 (18th row from top).
     PPUString $2227, " PUSH START BUTTON   "
@@ -640,58 +592,31 @@ L82F4:
 ;The following data fills name table 1 with the intro screen background graphics.
 
     ;Information to be stored in attribute table 1.
-    .byte $27,$C0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    PPUString $27C0, {$00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF}
 
     ;Writes row $27E0 (24th row from top).
-    .byte $27,$E0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUString $27E0, {$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00}
 
     ;Writes row $26E0 (24th row from top).
-    .byte $26,$E0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
+    PPUString $26E0, {$FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF}
 
     ;Writes row $2700 (25th row from top).
-    .byte $27,$00                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
-    .byte $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
+    PPUString $2700, {$80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81}
 
     ;Writes row $2720 (26th row from top).
-    .byte $27,$20                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
-    .byte $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
+    PPUString $2720, {$82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83}
 
     ;Writes row $2740 (27th row from top).
-    .byte $27,$40                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
-    .byte $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
+    PPUString $2740, {$84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85}
 
     ;Writes row $2760 (28th row from top).
-    .byte $27,$60                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
-    .byte $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
+    PPUString $2760, {$86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87}
 
     ;Writes row $2780 (29th row from top).
-    .byte $27,$80                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
-    .byte $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
+    PPUString $2780, {$88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89}
 
     ;Writes row $27A0 (bottom row).
-    .byte $27,$A0                   ;PPU address high and low byte.
-    .byte $20                       ;PPU string length.
-    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
-    .byte $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
+    PPUString $27A0, {$8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B}
 
     ;Writes row $2480 (5th row from top).
     PPUString $2488, "EMERGENCY ORDER"
@@ -2704,216 +2629,102 @@ PalPntrTbl:
     .word Palette12                 ;($97F2)
 
 Palette00:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette01 info.
 
 Palette01:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette02 info.
 
 Palette02:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette03 info.
 
 Palette03:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette04 info.
 
 Palette04:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette05 info.
 
 Palette05:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette06 info.
 
 Palette06:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette07 info.
 
 Palette07:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette08 info.
 
 Palette08:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette09 info.
 
 Palette09:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette0A info.
 
 Palette0A:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette0B info.
 
 Palette0B:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette0C info.
 
 Palette0C:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38}
 
     .byte $00                       ;End Palette0D info.
 
 Palette0D:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette0E info.
 
 Palette0E:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette0F info.
 
 Palette0F:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+    PPUString $3F00, {$0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12}
 
     .byte $00                       ;End Palette10 info.
 
 Palette10:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $20                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30
-    ;The following values are written to the sprite palette:
-    .byte $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
+    PPUString $3F00, {$30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12}
 
     .byte $00                       ;End Palette11 info.
 
 Palette11:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $04                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $30, $30, $21
+    PPUString $3F00, {$0F, $30, $30, $21}
 
     .byte $00                       ;End Palette12 info.
 
 Palette12:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $10                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
+    PPUString $3F00, {$0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21}
 
     .byte $00                       ;End Palette13 data.
 
 EndGamePal0B:
-    .byte $3F                       ;Upper byte of PPU palette adress.
-    .byte $00                       ;Lower byte of PPU palette adress.
-    .byte $10                       ;Palette data length.
-    ;The following values are written to the background palette:
-    .byte $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
+    PPUString $3F00, {$0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C}
 
 EndGamePal0C:
     PPUStringRepeat $3F10, $0F, $10
@@ -3819,106 +3630,54 @@ EndGamePalPntrTbl:
     .word EndGamePal0B              ;($9806)
 
 EndGamePal00:
-    .byte $3F                       ;PPU address high byte.
-    .byte $00                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    ;The following values are written to the background palette:
-    .byte $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08
-    ;The following values are written to the sprite palette:
-    .byte $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
+    PPUString $3F00, {$0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16}
 
     .byte $00                       ;End EndGamePal00 data.
 
 EndGamePal01:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $10, $20, $30, $0F, $0F, $0F, $0F
+    PPUString $3F18, {$0F, $10, $20, $30, $0F, $0F, $0F, $0F}
 
     .byte $00                       ;End EndGamePal01 data.
 
 EndGamePal02:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $12, $22, $32, $0F, $0B, $1B, $2B
+    PPUString $3F18, {$0F, $12, $22, $32, $0F, $0B, $1B, $2B}
 
     .byte $00                       ;End EndGamePal02 data.
 
 EndGamePal03:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $14, $24, $34, $0F, $09, $19, $29
+    PPUString $3F18, {$0F, $14, $24, $34, $0F, $09, $19, $29}
 
     .byte $00                       ;End EndGamePal03 data.
 
 EndGamePal04:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $16, $26, $36, $0F, $07, $17, $27
+    PPUString $3F18, {$0F, $16, $26, $36, $0F, $07, $17, $27}
 
     .byte $00                       ;End EndGamePal04 data.
 
 EndGamePal05:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $18, $28, $38, $0F, $05, $15, $25
+    PPUString $3F18, {$0F, $18, $28, $38, $0F, $05, $15, $25}
 
     .byte $00                       ;End EndGamePal05 data.
 
 EndGamePal06:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $1A, $2A, $3A, $0F, $03, $13, $13
+    PPUString $3F18, {$0F, $1A, $2A, $3A, $0F, $03, $13, $13}
 
     .byte $00                       ;End EndGamePal06 data.
 
 EndGamePal07:
-    .byte $3F                       ;PPU address high byte.
-    .byte $18                       ;PPU address low byte.
-    .byte $08                       ;PPU string length.
-    ;The following values are written to the sprite palette starting at $3F18:
-    .byte $0F, $1C, $2C, $3C, $0F, $01, $11, $21
+    PPUString $3F18, {$0F, $1C, $2C, $3C, $0F, $01, $11, $21}
 
     .byte $00                       ;End EndGamePal07 data.
 
 EndGamePal08:
-    .byte $3F                       ;PPU address high byte.
-    .byte $0C                       ;PPU address low byte.
-    .byte $04                       ;PPU string length.
-    ;The following values are written to the background palette starting at $3F0C:
-    .byte $0F, $18, $08, $07
-
-    .byte $3F                       ;PPU address high byte.
-    .byte $10                       ;PPU address low byte.
-    .byte $10                       ;PPU string length.
-    ;The following values are written to the sprite palette:
-    .byte $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
+    PPUString $3F0C, {$0F, $18, $08, $07}
+    PPUString $3F10, {$0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C}
 
     .byte $00                       ;End EndGamePal08 data.
 
 EndGamePal09:
-    .byte $3F                       ;PPU address high byte.
-    .byte $0C                       ;PPU address low byte.
-    .byte $04                       ;PPU string length.
-    ;The following values are written to the background palette starting at $3F0C:
-    .byte $0F, $08, $07, $0F
-
-    .byte $3F                       ;PPU address high byte.
-    .byte $10                       ;PPU address low byte.
-    .byte $10                       ;PPU string length.
-    ;The following values are written to the sprite palette:
-    .byte $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
+    PPUString $3F0C, {$0F, $08, $07, $0F}
+    PPUString $3F10, {$0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F}
 
     .byte $00                       ;End EndGamePal09 data.
 
@@ -3932,46 +3691,22 @@ EndGamePal0A:
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
 LA052:
-    .byte $23                       ;PPU address high byte.
-    .byte $00                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
-    .byte $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
+    PPUString $2300, {$30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31}
 
     ;Writes ground graphics on name table 0 in row $2320 (26th row from top).
-    .byte $23                       ;PPU address high byte.
-    .byte $20                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
-    .byte $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
+    PPUString $2320, {$32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33}
 
     ;Writes ground graphics on name table 0 in row $2340 (27th row from top).
-    .byte $23                       ;PPU address high byte.
-    .byte $40                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
-    .byte $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
+    PPUString $2340, {$34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35}
 
     ;Writes ground graphics on name table 0 in row $2360 (28th row from top).
-    .byte $23                       ;PPU address high byte.
-    .byte $60                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
-    .byte $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
+    PPUString $2360, {$36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37}
 
     ;Writes ground graphics on name table 0 in row $2380 (29th row from top).
-    .byte $23                       ;PPU address high byte.
-    .byte $80                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
-    .byte $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
+    PPUString $2380, {$38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39}
 
     ;Writes ground graphics on name table 0 in row $23A0 (bottom row).
-    .byte $23                       ;PPU address high byte.
-    .byte $A0                       ;PPU address low byte.
-    .byte $20                       ;PPU string length.
-    .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
-    .byte $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
+    PPUString $23A0, {$3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B}
 
     ;Sets all color bits in attribute table 0 starting at $23F0.
     PPUStringRepeat $23F0, $FF, $10
@@ -4346,17 +4081,13 @@ LA4EF:
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
 LA4F0:
-    .byte $20,$26                   ;PPU address high and low byte.
-    .byte $14                       ;PPU string length.
-    .byte "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
+    PPUString $2026, {"     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "}
 
     .byte $00                       ;End PPU string write.
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
 LA508:
-    .byte $20,$4B                   ;PPU address high and low byte.
-    .byte $0A                       ;PPU string length.
-    .byte $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
+    PPUString $204B, {$28, $29, $2A, $2B, "  ", $02, $03, $04, $05}
 
 LA515:
     ;Writes credits on name table 0 in row $2060 (4th row from top).
