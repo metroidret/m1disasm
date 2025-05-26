@@ -513,6 +513,7 @@ EnSpeedY               = $0402   ; unknown - y speed?
 EnSpeedX               = $0403   ; unknown - x speed?
 EnData04               = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
+                                   ;bit1: IsObjectVisible
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
 ; EnCounter              = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelY       = $0406   ;Counts such things as explosion time. - y counter?

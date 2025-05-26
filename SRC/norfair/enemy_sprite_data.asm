@@ -270,7 +270,6 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame7D
     PtrTableEntry EnFramePtrTable1, EnFrame7E
     PtrTableEntry EnFramePtrTable1, EnFrame7F
-
 EnFramePtrTable2:
     PtrTableEntry EnFramePtrTable1, EnFrame80
     PtrTableEntry EnFramePtrTable1, EnFrame81
@@ -304,11 +303,15 @@ EnPlacePtrTable:
 EnPlace0:
     .byte $FC, $FC
 
+;Enemy explode.
 EnPlace1:
     .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
     .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
+;Miniboss
 EnPlace2:
+    ;nothing
+
 EnPlace3:
     .byte $F4, $F4, $F4, $04
 

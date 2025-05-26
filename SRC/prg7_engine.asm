@@ -817,15 +817,14 @@ PPUWrite:
     tax                             ;
     bcc PPUWriteLoop                ;If Carry Flag not set, the data is not RLE.
     iny                             ;Data is RLE, advance to data byte.
-
-PPUWriteLoop:
-    bcs LC300                           ;
-        iny                             ;Only inc Y if data is not RLE.
-    LC300:
-    lda ($00),y                     ;Get data byte.
-    sta PPUDATA                     ;Write to PPU.
-    dex                             ;Decrease loop counter.
-    bne PPUWriteLoop                ;Keep going until X=0.
+    PPUWriteLoop:
+        bcs LC300                           ;
+            iny                             ;Only inc Y if data is not RLE.
+        LC300:
+        lda ($00),y                     ;Get data byte.
+        sta PPUDATA                     ;Write to PPU.
+        dex                             ;Decrease loop counter.
+        bne PPUWriteLoop                ;Keep going until X=0.
     iny                             ;
     jsr AddYToPtr00                 ;($C2A8)Point to next data chunk.
 
@@ -1319,7 +1318,7 @@ InitBank3:
     ldy #$0D                        ;
     LC599:
         lda MetroidData,y               ;Load info from table below into-->
-        sta $77F0,y                     ;$77F0 thru $77FD.
+        sta MetroidRepelSpeed,y                     ;$77F0 thru $77FD.
         dey                             ;
         bpl LC599                       ;
     jsr InitTourianGFX              ;($C645)Load Tourian GFX.
@@ -4886,7 +4885,7 @@ LDC82:
 ExplodeRotationTbl:
     .byte $00                            ;No sprite flipping.
     .byte OAMDATA_VFLIP                  ;Flip sprite vertically.
-    .byte OAMDATA_VFLIP + OAMDATA_HFLIP  ;Flip sprite vertically and horizontally.
+    .byte OAMDATA_VFLIP | OAMDATA_HFLIP  ;Flip sprite vertically and horizontally.
     .byte OAMDATA_HFLIP                  ;Flip sprite horizontally.
 
 ; UpdateObjAnim
@@ -4936,35 +4935,48 @@ Lx133:
 ;in the PlacePtrTbl used to place the sprite on the screen.
 
 GetSpriteCntrlData:
-    ldy #$00                        ;
-    sty $0F                         ;Clear index into placement data.
-    lda ($00),y                     ;Load control byte from frame pointer data.
-    sta $04                         ;Store value in $04 for processing below.
-    tax                             ;Keep a copy of the value in x as well.
+    ;Clear index into placement data.
+    ldy #$00
+    sty $0F
+    
+    ;Load control byte from frame pointer data.
+    lda ($00),y
+    sta $04 ;Store value in $04 for processing below.
+    tax ;Keep a copy of the value in x as well.
+    
+    ;Transfer bits 4 and 5 of the control byte into $05 bits 0 and 1(sprite color bits).
     jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
-    and #$03                        ;
-    sta $05                         ;The following lines take the upper 4 bits in the-->
-    txa                             ;control byte and transfer bits 4 and 5 into $05 bits 0-->
-    and #OAMDATA_HFLIP | OAMDATA_VFLIP ;and 1(sprite color bits).  Bits 6 and 7 are-->
-    ora #OAMDATA_PRIORITY           ;transferred into $05 bits 6 and 7(sprite flip bits).-->
-    ora $05                         ;bit 5 is then set(sprite always drawn behind background).
-    sta $05                         ;
-    lda ObjectCntrl                 ;Extract bit from control byte that controls the
-    and #$10                        ;object mirroring.
-    asl                             ;
-    asl                             ;
-    eor $04                         ;Move it to the bit 6 position and use it to flip the-->
-    sta $04                         ;horizontal mirroring of the sprite if set.
-    lda ObjectCntrl                 ;
-    bpl LDCEF                       ;If MSB is set in ObjectCntrl, use its flip bits(6 and 7).
-        asl ObjectCntrl                 ;
-        jsr SpriteFlipBitsOveride       ;($E038)Use object flip bits as priority over sprite flip bits.
+    and #$03
+    sta $05
+    ;Bits 6 and 7 are transferred into $05 bits 6 and 7(sprite flip bits).
+    ;bit 5 is then set(sprite always drawn behind background).
+    txa
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP 
+    ora #OAMDATA_PRIORITY
+    ora $05
+    sta $05
+    
+    ;Extract bit from control byte that controls the object mirroring.
+    lda ObjectCntrl
+    and #$10
+    ;Move it to the bit 6 position and use it to flip the horizontal mirroring of the sprite if set.
+    asl
+    asl
+    eor $04
+    sta $04
+    ;If MSB is set in ObjectCntrl, use its flip bits(6 and 7).
+    lda ObjectCntrl
+    bpl LDCEF
+        asl ObjectCntrl
+        jsr SpriteFlipBitsOverride       ;($E038)Use object flip bits as priority over sprite flip bits.
     LDCEF:
-    txa                             ;Discard upper nibble so only entry number into-->
-    and #$0F                        ;PlacePtrTbl remains.
-    asl                             ;*2. pointers in PlacePntrTbl are 2 bytes in size.
-    tax                             ;Transfer to X to use as an index to find proper-->
-    rts                             ;placement data segment.
+    ;Discard upper nibble so only entry number into PlacePtrTbl remains.
+    txa
+    and #$0F
+    asl ;*2. pointers in PlacePntrTbl are 2 bytes in size.
+    ;Transfer to X to use as an index to find proper placement data segment.
+    tax
+    rts
 
 ;-----------------------------------------------------------------------------------------------------
 
@@ -5086,10 +5098,12 @@ LDD75:
     bne LDD5B
 
 LDD8B:
+    ; branch if enemy frame is not blank
     ldx PageIndex
     lda EnAnimFrame,x
     cmp #$F7
-    bne Lx143
+    bne LDD8B_Lx143
+    ; enemy frame is blank
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
 
 ; AddToMaxMissiles
@@ -5113,64 +5127,89 @@ AddToMaxMissiles:
     RTS_X142:  sta MaxMissiles
     rts
 
-Lx143:
+LDD8B_Lx143:
+    ; Y coord
     lda EnY,x
-    sta $0A  ; Y coord
+    sta $0A
+    ; X coord
     lda EnX,x
-    sta $0B  ; X coord
+    sta $0B
+    ; hi coord
     lda EnHi,x
-    sta $06  ; hi coord
+    sta $06
+    
+    ; load pointer to enemy frame data into $00-$01
     lda EnAnimFrame,x
     asl
     tay
-    lda ($41),y
+    lda (EnmyFrameTbl1Ptr),y
     bcc Lx144
-        lda ($43),y
+        lda (EnmyFrameTbl2Ptr),y
     Lx144:
     sta $00
     iny
-    lda ($41),y
+    lda (EnmyFrameTbl1Ptr),y
     bcc Lx145
-        lda ($43),y
+        lda (EnmyFrameTbl2Ptr),y
     Lx145:
     sta $01
+    
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
+    ; load pointer to enemy place data into $02-$03
     tay
-    lda ($45),y
+    lda (EnmyPlaceTblPtr),y
     sta $02
     iny
-    lda ($45),y
+    lda (EnmyPlaceTblPtr),y
     sta $03
+    ; branch if place is not EnPlace2
     ldy #$00
     cpx #$02
     bne Lx146
+        ; place is EnPlace2
+        ; therefore, this enemy is a miniboss or fake miniboss
+        
+        ; increment explosion timer
+        ldx PageIndex
+        inc EnSpeedSubPixelY,x
+        lda EnSpeedSubPixelY,x
+        pha
+        ; update h-flip and v-flip of the blown up chunks of the enemy
+        and #$03
+        tax
+        lda $05
+        and #~(OAMDATA_VFLIP | OAMDATA_HFLIP)
+        ora ExplodeRotationTbl,x
+        sta $05
+        pla
+        ; if explosion timer reaches #$19, the enemy has finished exploding
+        cmp #$19
+        bne Lx146
+            ; complete enemy's death
+            jmp LDCF5
+    Lx146:
+    
     ldx PageIndex
-    inc EnSpeedSubPixelY,x
-    lda EnSpeedSubPixelY,x
-    pha
-    and #$03
-    tax
-    lda $05
-    and #$3F
-    ora ExplodeRotationTbl,x
-    sta $05
-    pla
-    cmp #$19
-    bne Lx146
-    jmp LDCF5
-Lx146:
-    ldx PageIndex
-    iny
+    ; write y radius to EnRadY
+    iny ; y = #$01
     lda ($00),y
     sta EnRadY,x
-    jsr ReduceYRadius               ;($DE3D)Reduce temp y radius by #$10.
+    ; write y radius - #$10 to temp $08
+    jsr ReduceYRadius
+    ; write x radius
     iny
     lda ($00),y
     sta EnRadX,x
+    ; write x radius to temp $09
     sta $09
+    
+    ; save y to $11
     iny
     sty $11
-    jsr IsObjectVisible             ;($DFDF)Determine if object is within screen boundaries.
+    ;Determine if object is within screen boundaries.
+    ;x=1 object on screen, x=0 object not on screen
+    jsr IsObjectVisible
+    ; write this flag in bit 1 of EnData05
     txa
     asl
     sta $08
@@ -5179,13 +5218,15 @@ Lx146:
     and #$FD
     ora $08
     sta EnData05,x
+    ; draw enemy if it is on screen
     lda $08
-    beq LDE53
+    beq GotoClearObjectCntrl
     jmp LDEDE
 
 ;----------------------------------------[ Item drop table ]-----------------------------------------
 
 ;The following table determines what, if any, items an enemy will drop when it is killed.
+;This is the EnFrame of the drop.
 
 ItemDropTbl:
     .byte $80                       ;Missile.
@@ -5219,7 +5260,7 @@ ObjDrawFrame:
     lda ObjAnimFrame,x              ;
     cmp #$F7                        ;Is the frame valid?-->
     bne LDE56                          ;Branch if yes.
-    LDE53:
+    GotoClearObjectCntrl:
         jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
     LDE56:
         cmp #$07                        ;Is the animation of Samus facing forward?-->
@@ -5297,7 +5338,6 @@ LDEBC:
 LDEDE:
     ldx SpritePagePos               ;Load index into next unused sprite RAM segment.
     jmp DrawSpriteObject            ;($DF19)Start drawing object.
-
 LDEE3:
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte then exit.
 
@@ -5359,7 +5399,7 @@ LDF3B:
     iny                             ;Increment index to next byte of frame data.
     asl ObjectCntrl                 ;If MSB of ObjectCntrl is not set, no overriding of-->
     bcc LDF45                           ;flip bits needs to be performed.
-        jsr SpriteFlipBitsOveride       ;($E038)Use object flip bits as priority over sprite flip bits.
+        jsr SpriteFlipBitsOverride       ;($E038)Use object flip bits as priority over sprite flip bits.
         bne LDF4B                          ;Branch always.
     LDF45:
         lsr ObjectCntrl                 ;Restore MSB of ObjectCntrl.
@@ -5483,6 +5523,7 @@ ExplodeXDisplace:
 ;current screen.  The function needs to know what nametable is currently in the PPU, what nametable
 ;the object is on and what the scroll offsets are.
 
+;why is $09 (radius x) used, but not $08 (radius y)?
 IsObjectVisible: ;($DFDF)
     ldx #$01                        ;Assume object is visible on screen.
     lda $0A                         ;Object Y position in room.
@@ -5551,16 +5592,21 @@ RTS_E037:
 ;over the sprite control bits.  This function modifies the sprite control byte with any flipping
 ;bits found in ObjectCntrl.
 
-SpriteFlipBitsOveride:
-    lsr ObjectCntrl                 ;Restore MSB.
-    lda ($00),y                     ;Reload frame data control byte into A.
-    and #$C0                        ;Extract the two sprite flip bytes from theoriginal-->
-    ora ObjectCntrl                 ;control byte and set any additional bits from ObjectCntrl.
-    sta $05                         ;Store modified byte to load in sprite control byte later.
-    lda ObjectCntrl                 ;
-    ora #$80                        ;
-    sta ObjectCntrl                 ;Ensure MSB of object control byte remains set.
-    rts                             ;
+SpriteFlipBitsOverride: ;($E038)
+    ;Restore MSB.
+    lsr ObjectCntrl
+    ;Reload frame data control byte into A.
+    lda ($00),y
+    ;Extract the two sprite flip bytes from the original control byte and set any additional bits from ObjectCntrl.
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP
+    ora ObjectCntrl
+    ;Store modified byte to load in sprite control byte later.
+    sta $05
+    ;Ensure MSB of object control byte remains set.
+    lda ObjectCntrl
+    ora #$80
+    sta ObjectCntrl
+    rts
 
 ;--------------------------------[ Explosion placement data ]---------------------------------------
 

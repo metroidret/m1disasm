@@ -40,6 +40,8 @@
         .endif
     .endrep
     
+    .assert ppuStringLen >= 1 && ppuStringLen <= 256, error, "ppuStringLen must be from 1 to 256 inclusive"
+    
     .byte ppuStringLen
     .byte ppuString
 .endmacro
