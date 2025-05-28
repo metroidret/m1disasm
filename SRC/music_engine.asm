@@ -100,7 +100,7 @@ DoorSFXData:
 ;are the address of the pointer table used for handling SFX and music  routines for set flags.
 ;The second pair of bytes is the address of the routine to next jump to if no SFX or music
 ;flags were found.  The final byte represents what type of channel is currently being
-;processed: 0=Noise, 1=SQ1, 3=Triangle, 4=Multiple channels.
+;processed: 0=Noise, 1=SQ1, 3=Tri, 4=Multiple channels.
 
 NoiseSFXInitPointers:
     .word NoiseSFXInitRoutineTbl, LoadNoiseSFXContFlags              ;Noise init SFX         (1st).
@@ -118,12 +118,12 @@ SQ1SFXContPointers:
     .word SQ1SFXContRoutineTbl, RTS_B4EE              ;SQ2 continue SFX       (6th).
     .byte $01
 
-TriangleSFXInitPointers:
-    .word TriangleSFXInitRoutineTbl, LoadTriangleSFXContFlags              ;Triangle init SFX      (7th).
+TriSFXInitPointers:
+    .word TriSFXInitRoutineTbl, LoadTriSFXContFlags              ;Triangle init SFX      (7th).
     .byte $03
 
-TriangleSFXContPointers:
-    .word TriangleSFXContRoutineTbl, RTS_B4EE              ;Triangle continue SFX  (8th).
+TriSFXContPointers:
+    .word TriSFXContRoutineTbl, RTS_B4EE              ;Triangle continue SFX  (8th).
     .byte $03
 
 MultiSFXInitPointers:
@@ -189,7 +189,7 @@ SQ1SFXContRoutineTbl:
     .word WaveBeamSFXContinue                     ;Wave beam continue SFX.
 
 ;Triangle init handling routine addresses:
-TriangleSFXInitRoutineTbl:
+TriSFXInitRoutineTbl:
     .word SamusDieSFXStart                     ;Samus die init SFX.
     .word DoorOpenCloseSFXStart                     ;Door open close init SFX.
     .word MetroidHitSFXStart                     ;Metroid hit init SFX.
@@ -200,7 +200,7 @@ TriangleSFXInitRoutineTbl:
     .word BombLaunchSFXStart                     ;Bomb launch init SFX.
 
 ;Triangle continue handling routine addresses:
-TriangleSFXContRoutineTbl:
+TriSFXContRoutineTbl:
     .word SamusDieSFXContinue                     ;Samus die continue SFX.
     .word DoorOpenCloseSFXContinue                     ;Door open close continue SFX.
     .word MetroidHitSFXContinue                     ;Metroid hit continue SFX.
@@ -232,16 +232,17 @@ LoadSQ1SFXContFlags:
 
 GotoSFXCheckFlags:
     jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX flags set.
-    jmp ($00E2)                     ;if no flag found, Jump to next SFX cycle,-->
+    jmp (SoundE2)                     ;if no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling routine.
-LoadSTriangleSFXInitFlags:
-    lda TriangleSFXFlag             ;Load A with Triangle init flags, (7th SFX cycle).
-    ldx #.lobyte(TriangleSFXInitPointers) ;Lower address byte in ChooseNextSFXRoutineTbl.
+
+LoadTriSFXInitFlags:
+    lda TriSFXFlag             ;Load A with Triangle init flags, (7th SFX cycle).
+    ldx #.lobyte(TriSFXInitPointers) ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags           ;Branch always.
 
-LoadTriangleSFXContFlags:
-    lda TriangleContSFX             ;Load A with Triangle continue flags, (8th SFX cycle).
-    ldx #.lobyte(TriangleSFXContPointers) ;Lower address byte in ChooseNextSFXRoutineTbl.
+LoadTriSFXContFlags:
+    lda TriContSFX             ;Load A with Triangle continue flags, (8th SFX cycle).
+    ldx #.lobyte(TriSFXContPointers) ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags           ;Branch always.
 
 LoadMultiSFXInitFlags:
@@ -250,7 +251,7 @@ LoadMultiSFXInitFlags:
     jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX or music flags set.
     jsr FindMusicInitIndex          ;($BC53)Find bit containing music init flag.
     jsr Add8                        ;($BC64)Add 8 to MusicInitIndex.
-    jmp ($00E2)                     ;If no flag found, Jump to next SFX cycle,-->
+    jmp (SoundE2)                     ;If no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling subroutine.
 LoadMultiSFXContFlags:
     lda MultiContSFX                ;Load A with $68C flags (4th SFX cycle).
@@ -265,7 +266,7 @@ LoadSQ1ChannelSFX:                      ;Used to determine which sound registers
     lda #$00                        ;($4000 - $4003) - SQ1.
     beq LoadSFXData                       ;Branch always.
 
-LoadTriangleChannelSFX:                 ;Used to determine which sound registers to change-->
+LoadTriChannelSFX:                 ;Used to determine which sound registers to change-->
     lda #$08                        ;($4008 - $400B) - Triangle.
     bne LoadSFXData                       ;Branch always.
 
@@ -278,17 +279,17 @@ LoadSQ2ChannelSFX:                      ;Used to determine which sound registers
     ; fallthrough
 
 LoadSFXData:
-    sta $E0                         ;Lower address byte of desired APU control register.
+    sta SoundE0                     ;Lower address byte of desired APU control register.
     lda #$40                        ;
-    sta $E0+1                       ;Upper address byte of desired APU control register.
-    sty $E2                         ;Lower address byte of data to load into sound channel.
+    sta SoundE0+1                   ;Upper address byte of desired APU control register.
+    sty SoundE2                     ;Lower address byte of data to load into sound channel.
     lda #.hibyte(SFXData)           ;
-    sta $E2+1                       ;Upper address byte of data to load into sound channel.
+    sta SoundE2+1                   ;Upper address byte of data to load into sound channel.
     ldy #$00                        ;Starting index for loading four byte sound data.
 
 LoadSFXRegisters:
-    lda ($E2),y                     ;Load A with SFX data byte.
-    sta ($E0),y                     ;Store A in SFX register.
+    lda (SoundE2),y                 ;Load A with SFX data byte.
+    sta (SoundE0),y                 ;Store A in SFX register.
     iny                             ;
     tya                             ;The four registers associated with each sound-->
     cmp #$04                        ;channel are loaded one after the other (the loop-->
@@ -328,23 +329,29 @@ RTS_B3B3:
 ;The sound channels are assigned SFX numbers.  Those SFX numbers are:
 ;Noise=0, sq1=1, sq2=2, triangle=3, Multi=4
 ;The sound channels are assigned music numbers.  Those music numbers are:
-;SQ1=0, SQ2=1, Triangle=2, Noise=3
+;SQ1=0, SQ2=1, Tri=2, Noise=3
 
 SoundEngine:
-    lda #$C0                        ;Set APU to 5 frame cycle, disable frame interrupt.
-    sta JOY2             ;
-    lda NoiseSFXFlag                ;is bit zero is set in NoiseSFXFlag(Silence-->
-    lsr                             ;music)?  If yes, branch.
-    bcs LB3EB                       ;
-    lda MainRoutine                 ;
-    cmp #$05                        ;Is game paused?  If yes, branch.
-    beq LB399                       ;
-    lda #$00                        ;Clear SFXPaused when game is running.
-    sta SFXPaused                   ;
+    ;Set APU to 5 frame cycle, disable frame interrupt.
+    ;This syncs the APU's frame counter with the PPU.
+    lda #APU_5STEP | APU_IRQDISABLE
+    sta JOY2
+    ;is bit zero is set in NoiseSFXFlag(Silence music)?  If yes, branch.
+    lda NoiseSFXFlag
+    lsr
+    bcs LB3EB
+    ;Is game paused?  If yes, branch.
+    lda MainRoutine
+    cmp #$05
+    beq LB399
+    ;Clear SFXPaused when game is running.
+    lda #$00
+    sta SFXPaused
     jsr LoadNoiseSFXInitFlags       ;($B31B)Check noise SFX flags.
     jsr LoadMultiSFXInitFlags       ;($B34B)Check multichannel SFX flags.
-    jsr LoadSTriangleSFXInitFlags   ;($B33D)Check triangle SFX flags.
+    jsr LoadTriSFXInitFlags         ;($B33D)Check triangle SFX flags.
     jsr LoadMusicTempFlags          ;($BC36)Check music flags.
+    ; fallthrough
 
 ;Clear all SFX flags.
 ClearSFXFlags:
@@ -352,7 +359,7 @@ ClearSFXFlags:
     sta NoiseSFXFlag
     sta SQ1SFXFlag
     sta SQ2SFXFlag
-    sta TriangleSFXFlag
+    sta TriSFXFlag
     sta MultiSFXFlag
     sta MusicInitFlag
     rts
@@ -384,7 +391,7 @@ LB40A:
 ;Clears addresses used for repeating music, pausing music and controlling triangle length.
 ClearSpecialAddresses: ;($B40E)
     lda #$00
-    sta TriangleCounterCntrl
+    sta TriCounterCntrl
     sta SFXPaused
     sta CurrentMusicRepeat
     sta MusicRepeat
@@ -395,12 +402,12 @@ ClearMusicAndSFXAddresses: ;($B41D)
     lda #$00
     sta SQ1InUse
     sta SQ2InUse
-    sta TriangleInUse
+    sta TriInUse
     sta WriteMultiChannelData
     sta NoiseContSFX
     sta SQ1ContSFX
     sta SQ2ContSFX
-    sta TriangleContSFX
+    sta TriContSFX
     sta MultiContSFX
     sta CurrentMusic
     rts
@@ -426,7 +433,7 @@ SelectSFXRoutine:
     cmp #$02                        ;
     beq SelectSFXRoutine_SQ2        ;Branch if SFX uses SQ2 channel.
     cmp #$03                        ;
-    beq SelectSFXRoutine_Triangle   ;Branch if SFX uses triangle wave.
+    beq SelectSFXRoutine_Tri        ;Branch if SFX uses triangle wave.
     rts                             ;Exit if SFX routine uses no channels.
 
 SelectSFXRoutine_SQ1:
@@ -435,8 +442,8 @@ SelectSFXRoutine_SQ1:
 SelectSFXRoutine_SQ2:
     jsr LoadSQ2ChannelSFX           ;($B374)Prepare to load SQ2 channel with data.
     beq SelectSFXRoutine_Common     ;Branch always.
-SelectSFXRoutine_Triangle:
-    jsr LoadTriangleChannelSFX      ;($B36C)Prepare to load triangle channel with data.
+SelectSFXRoutine_Tri:
+    jsr LoadTriChannelSFX      ;($B36C)Prepare to load triangle channel with data.
     beq SelectSFXRoutine_Common     ;Branch always.
 SelectSFXRoutine_Noise:
     jsr LoadNoiseChannelSFX         ;($B370)Prepare to load noise channel with data.
@@ -488,57 +495,58 @@ IncrementSFXFrame:
     RTS_B4BC:
     rts
 
-;The CheckSFXFlag routine loads E0 thru E3 with the below values:
-;1st  SFX cycle $E0=#$BB, $E1=#$B2, $E2=#$22, $E3=#$B3.  Base address=$B289
-;2nd  SFX cycle $E0=#$CB, $E1=#$B2, $E2=#$EE, $E3=#$B4.  Base address=$B28E
-;3rd  SFX cycle $E0=#$06, $E1=#$BC, $E2=#$5C, $E3=#$B3.  Base address=$B2A7
-;4th  SFX cycle $E0=#$16, $E1=#$BC, $E2=#$64, $E3=#$B3.  Base address=$B2AC
-;5th  SFX cycle $E0=#$DB, $E1=#$B2, $E2=#$30, $E3=#$B3.  Base address=$B293
-;6th  SFX cycle $E0=#$EB, $E1=#$B2, $E2=#$EE, $E3=#$B4.  Base address=$B298
-;7th  SFX cycle $E0=#$FB, $E1=#$B2, $E2=#$44, $E3=#$B3.  Base address=$B29D
-;8th  SFX cycle $E0=#$0B, $E1=#$B3, $E2=#$EE, $E3=#$B4.  Base address=$B2A2
-;9th  SFX cycle $E0=#$26, $E1=#$BC, $E2=#$3D, $E3=#$BC.  Base address=$B2B6
-;10th SFX cycle $E0=#$26, $E1=#$BC, $E2=#$4B, $E3=#$BC.  Base address=$B2B1
 
 CheckSFXFlag:
-    sta CurrentSFXFlags             ;Store any set flags in $064D.
-    stx $E4                         ;
-    ldy #.hibyte(SFXData)           ;
-    sty $E4+1                       ;
-    ldy #$00                        ;Y=0 for counting loop ahead.
+    ;Store any set flags in $064D.
+    sta CurrentSFXFlags
+    ;Prepare pointer to SFX data
+    stx SoundE4
+    ldy #.hibyte(NoiseSFXInitPointers)
+    sty SoundE4+1
+    ;Y=0 for counting loop ahead.
+    ldy #$00
     LB4C8:
-        lda ($E4),y                     ;
-        sta $00E0,y                     ;See table above for values loaded into $E0-->
-        iny                             ;thru $E3 during this loop.
-        tya                             ;
-        cmp #$04                        ;Loop repeats four times to load the values.
-        bne LB4C8                       ;
-    lda ($E4),y                     ;
+        ;Loads either SFXInitPointers or SFXContPointers into $E0-$E3
+        lda (SoundE4),y
+        sta SoundE0,y
+        iny
+        tya
+        ;Loop repeats four times to load the values.
+        cmp #$04
+        bne LB4C8
+    lda (SoundE4),y
     sta ChannelType                 ;#$00=SQ1,#$01=SQ2,#$02=Triangle,#$03=Noise
-    ldy #$00                        ;Set y to 0 for counting loop ahead.
-    lda CurrentSFXFlags             ;
-    pha                             ;Push current SFX flags on stack.
+    ;Set y to 0 for counting loop ahead.
+    ldy #$00
+    ;Push current SFX flags on stack.
+    lda CurrentSFXFlags
+    pha
     LB4DE:
-        asl CurrentSFXFlags             ;
-        bcs SFXFlagFound                       ;This portion of the routine loops a maximum of-->
-        iny                             ;eight times looking for any SFX flags that have-->
-        iny                             ;been set in the current SFX cycle.  If a flag-->
-        tya                             ;is found, Branch to SFXFlagFound for further-->
-        cmp #$10                        ;processing, if no flags are set, continue to-->
-        bne LB4DE                       ;next SFX cycle.
+        ;This portion of the routine loops a maximum of eight times looking for
+        ;any SFX flags that have been set in the current SFX cycle.
+        asl CurrentSFXFlags
+        ;If a flag is found, Branch to SFXFlagFound for further processing
+        bcs SFXFlagFound
+        ;no flags are set, continue to next SFX cycle.
+        iny
+        iny
+        tya
+        cmp #$10
+        bne LB4DE
 
+;Restore original data in CurrentSFXFlags.
 RestoreSFXFlags:
-    pla                             ;
-    sta CurrentSFXFlags             ;Restore original data in CurrentSFXFlags.
+    pla
+    sta CurrentSFXFlags
 RTS_B4EE:
     rts
 
-SFXFlagFound:                           ;
-    lda ($E0),y                     ;This routine stores the starting address of the-->
-    sta $E2                         ;specific SFX handling routine for the SFX flag-->
+SFXFlagFound:
+    lda (SoundE0),y                 ;This routine stores the starting address of the-->
+    sta SoundE2                     ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
-    lda ($E0),y                     ;$E2 and $E3.
-    sta $E2+1                       ;
+    lda (SoundE0),y                 ;$E2 and $E3.
+    sta SoundE2+1                   ;
     jmp RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
 
 ;-----------------------------------[ SFX Handling Routines ]---------------------------------------
@@ -560,8 +568,8 @@ SpitFlameSFXContinue:
         jmp EndNoiseSFX                 ;($B58F)End SFX.
     LB51E:
     ldy NoiseSFXData                ;
-    lda $B4FB,y                     ;Load data from table above and store in NOISE_VOL.
-    sta NOISE_VOL                 ;
+    lda SpitFlamesTbl,y             ;Load data from table above and store in NOISE_VOL.
+    sta NOISE_VOL                   ;
     inc NoiseSFXData                ;Increment to next entry in data table.
     rts
 
@@ -579,7 +587,7 @@ ScrewAttackSFXContinue:
     cmp #$02                        ;after the tenth frame of the SFX.
     beq LB549                       ;Branch if not ready to increment.
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne RTS_B538                       ;
+    bne RTS_B538                    ;
     inc ScrewAttackSFXData          ;Increment every fifth frame.
     rts
 
@@ -946,14 +954,14 @@ WaveBeamSFXDisLngthTbl:
 
 DoorOpenCloseSFXStart:
     lda DoorSFXData+2               ;#$30.
-    sta TrianglePeriodLow           ;Set triangle period low data byte.
+    sta TriPeriodLow                ;Set triangle period low data byte.
     lda DoorSFXData+3               ;#$B2.
     and #$07                        ;Set triangle period high data byte.
-    sta TrianglePeriodHigh          ;#$B7.
+    sta TriPeriodHigh               ;#$B7.
     lda #$0F                        ;
-    sta TriangleChangeLow           ;Change triangle channel period low every frame by #$0F.
+    sta TriChangeLow                ;Change triangle channel period low every frame by #$0F.
     lda #$00                        ;
-    sta TriangleChangeHigh          ;No change in triangle channel period high.
+    sta TriChangeHigh               ;No change in triangle channel period high.
     lda #$1F                        ;Number of frames to play sound before a change.
     ldy #.lobyte(DoorSFXData)       ;Lower byte of sound data start address(base=$B200).
     jmp SelectSFXRoutine            ;($B452)Setup registers for SFX.
@@ -961,13 +969,13 @@ DoorOpenCloseSFXStart:
 DoorOpenCloseSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB7D3                       ;
-        jmp EndTriangleSFX              ;($B896)End SFX.
+        jmp EndTriSFX               ;($B896)End SFX.
     LB7D3:
-    jsr DecreaseTrianglePeriods     ;($B98C)Decrease periods.
-    jmp WriteTrianglePeriods        ;($B869)Save new periods.
+    jsr DecreaseTriPeriods     ;($B98C)Decrease periods.
+    jmp WriteTriPeriods        ;($B869)Save new periods.
 
 BeepSFXStart:
-    lda TriangleContSFX             ;If BombLaunchSFX is already playing, branch-->
+    lda TriContSFX             ;If BombLaunchSFX is already playing, branch-->
     and #$80                        ;without playing BeepSFX.
     bne RTS_MusicBranch10               ;
     lda #$03                        ;Number of frames to play sound before a change.
@@ -977,18 +985,18 @@ BeepSFXStart:
 BeepSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne RTS_MusicBranch10               ;If more frames to process, branch to exit.
-    jmp EndTriangleSFX              ;($B896)End SFX.
+    jmp EndTriSFX              ;($B896)End SFX.
 
 BigEnemyHitSFXStart:
     lda #$12                        ;Increase triangle low period by #$12 every frame.
-    sta TriangleChangeLow           ;
+    sta TriChangeLow                ;
     lda #$00                        ;
-    sta TriangleChangeHigh          ;Does not change triangle period high.
+    sta TriChangeHigh               ;Does not change triangle period high.
     lda BigEnemyHitSFXData+2        ;#$42.
-    sta TrianglePeriodLow           ;Save new triangle period low data.
+    sta TriPeriodLow                ;Save new triangle period low data.
     lda BigEnemyHitSFXData+3        ;#$18.
     and #$07                        ;#$1F.
-    sta TrianglePeriodHigh          ;Save new triangle period high data.
+    sta TriPeriodHigh               ;Save new triangle period high data.
     lda #$0A                        ;Number of frames to play sound before a change.
     ldy #.lobyte(BigEnemyHitSFXData) ;Lower byte of sound data start address(base=$B200).
     jmp SelectSFXRoutine            ;($B452)Setup registers for SFX.
@@ -996,19 +1004,19 @@ BigEnemyHitSFXStart:
 BigEnemyHitSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @+                          ;If more frames to process, branch
-        jmp EndTriangleSFX              ;($B896)End SFX
-@:
-    jsr IncreaseTrianglePeriods     ;($B978)Increase periods.
+        jmp EndTriSFX              ;($B896)End SFX
+    @:
+    jsr IncreaseTriPeriods          ;($B978)Increase periods.
     lda RandomNumber1               ;
     and #$3C                        ;
-    sta TriangleSFXData             ;
-    lda TrianglePeriodLow           ;Randomly set or clear bits 2, 3, 4 and 5 in-->
+    sta TriSFXData                  ;
+    lda TriPeriodLow                ;Randomly set or clear bits 2, 3, 4 and 5 in-->
     and #$C3                        ;triangle channel period low.
-    ora TriangleSFXData             ;
-    sta TRI_LO              ;
-    lda TrianglePeriodHigh          ;
+    ora TriSFXData                  ;
+    sta TRI_LO                      ;
+    lda TriPeriodHigh               ;
     ora #$40                        ;Set 4th bit in triangle channel period high.
-    sta TRI_HI              ;
+    sta TRI_HI                      ;
     rts
 
 SamusToBallSFXStart:
@@ -1018,30 +1026,32 @@ SamusToBallSFXStart:
     lda #$05                        ;
     sta PercentDifference           ;Stores percent difference. In this case 5 = 1/5 = 20%.
     lda SamusToBallSFXData+2        ;#$DD.
-    sta TrianglePeriodLow           ;Save new triangle period low data.
+    sta TriPeriodLow                ;Save new triangle period low data.
     lda SamusToBallSFXData+3        ;#$3B.
     and #$07                        ;#$02.
-    sta TrianglePeriodHigh          ;Save new triangle period high data.
+    sta TriPeriodHigh               ;Save new triangle period high data.
     rts
 
 SamusToBallSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB857                       ;If more frames to process, branch.
-    jmp EndTriangleSFX              ;($B896)End SFX.
+    jmp EndTriSFX                  ;($B896)End SFX.
 LB857:
-    jsr DivideTrianglePeriods       ;($B9A0)reduces triangle period low by 20% each frame.
-    lda TriangleLowPercentage       ;
-    sta TriangleChangeLow           ;Store new values to change triangle periods.
-    lda TriangleHighPercentage      ;
-    sta TriangleChangeHigh          ;
-    jsr DecreaseTrianglePeriods     ;($B98C)Decrease periods.
+    jsr DivideTriPeriods            ;($B9A0)reduces triangle period low by 20% each frame.
+    lda TriLowPercentage            ;
+    sta TriChangeLow                ;Store new values to change triangle periods.
+    lda TriHighPercentage           ;
+    sta TriChangeHigh               ;
+    jsr DecreaseTriPeriods          ;($B98C)Decrease periods.
 
-WriteTrianglePeriods:
-    lda TrianglePeriodLow           ;Write TrianglePeriodLow to triangle channel.
-    sta TRI_LO              ;
-    lda TrianglePeriodHigh          ;
-    ora #$08                        ;Write TrianglePeriodHigh to triangle channel.
-    sta TRI_HI              ;
+WriteTriPeriods:
+    ;Write TriPeriodLow to triangle channel.
+    lda TriPeriodLow
+    sta TRI_LO
+    ;Write TriPeriodHigh to triangle channel.
+    lda TriPeriodHigh
+    ora #$08
+    sta TRI_HI
     rts
 
 BombLaunchSFXStart:
@@ -1051,22 +1061,22 @@ BombLaunchSFXStart:
 
 BombLaunchSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne RTS_MusicBranch04               ;If more frames to process, branch to exit.
-    inc TriangleSFXData             ;
-    lda TriangleSFXData             ;After four frames, load second part of SFX.
+    bne RTS_MusicBranch04           ;If more frames to process, branch to exit.
+    inc TriSFXData                  ;
+    lda TriSFXData                  ;After four frames, load second part of SFX.
     cmp #$02                        ;
     bne LB891                       ;
-    jmp EndTriangleSFX              ;($B896)End SFX.
+    jmp EndTriSFX                   ;($B896)End SFX.
 LB891:
     ldy #.lobyte(BombLaunch2SFXData) ;Lower byte of sound data start address(base=$B200).
-    jmp LoadTriangleChannelSFX      ;($B36C)Prepare to load triangle channel with data.
+    jmp LoadTriChannelSFX           ;($B36C)Prepare to load triangle channel with data.
 
-EndTriangleSFX:
+EndTriSFX:
     lda #$00                        ;
-    sta TRI_LINEAR              ;clear TriangleCntr0(sound off).
-    sta TriangleInUse               ;Allows music to use triangle channel.
+    sta TRI_LINEAR                  ;clear TriCntr0(sound off).
+    sta TriInUse                    ;Allows music to use triangle channel.
     lda #$18                        ;
-    sta TRI_HI              ;Set length index to #$03.
+    sta TRI_HI                      ;Set length index to #$03.
     jsr ClearCurrentSFXFlags        ;($B4A2)Clear all SFX flags.
 
 RTS_MusicBranch04:
@@ -1076,24 +1086,24 @@ MetroidHitSFXStart:
     lda #$03                        ;Number of frames to play sound before a change.
     ldy #.lobyte(MetroidHitSFXData) ;Lower byte of sound data start address(base=$B200).
     jsr SelectSFXRoutine            ;($B452)Setup registers for SFX.
-    jmp RndTrianglePeriods          ;($B8C3)MetroidHit SFX has several different sounds.
+    jmp RndTriPeriods               ;($B8C3)MetroidHit SFX has several different sounds.
 
 MetroidHitSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    beq RndTrianglePeriods          ;
-    inc TriangleSFXData             ;
-    lda TriangleSFXData             ;Randomize triangle periods nine times throughout-->
+    beq RndTriPeriods               ;
+    inc TriSFXData                  ;
+    lda TriSFXData                  ;Randomize triangle periods nine times throughout-->
     cmp #$09                        ;the course of the SFX.
-    bne RTS_MusicBranch04               ;If SFX not done, branch.
-    jmp EndTriangleSFX              ;($B896)End SFX.
+    bne RTS_MusicBranch04           ;If SFX not done, branch.
+    jmp EndTriSFX                   ;($B896)End SFX.
 
-RndTrianglePeriods:
+RndTriPeriods:
     lda RandomNumber1               ;Randomly set or reset bits 7, 4, 2 and 1 of-->
     ora #$6C                        ;triangle channel period low.
-    sta TRI_LO              ;
+    sta TRI_LO                      ;
     and #$01                        ;
     ora #$F8                        ;Randomly set or reset last bit of triangle-->
-    sta TRI_HI              ;channel period high.
+    sta TRI_HI                      ;channel period high.
     rts
 
 SamusDieSFXStart:
@@ -1104,9 +1114,9 @@ SamusDieSFXStart:
     lda #$15                        ;Decrease triangle SFX periods by 4.8% every frame.
     sta PercentDifference           ;
     lda SamusDieSFXData+2           ;#$40.
-    sta TrianglePeriodLow           ;
+    sta TriPeriodLow           ;
     lda #$00                        ;Initial values of triangle periods.
-    sta TrianglePeriodHigh          ;
+    sta TriPeriodHigh          ;
 RTS_B8EC:
     rts
 
@@ -1114,34 +1124,34 @@ SamusDieSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB90C                       ;
         lda #$20                        ;Store change in triangle period low.
-        sta TriangleChangeLow           ;
+        sta TriChangeLow                ;
         lda #$00                        ;
-        sta TriangleChangeHigh          ;No change in triangle period high.
-        jsr DecreaseTrianglePeriods     ;($B98C)Decrease periods.
-        inc TriangleSFXData             ;
-        lda TriangleSFXData             ;
+        sta TriChangeHigh               ;No change in triangle period high.
+        jsr DecreaseTriPeriods          ;($B98C)Decrease periods.
+        inc TriSFXData                  ;
+        lda TriSFXData                  ;
         cmp #$06                        ;
-        bne RTS_B8EC                       ;If more frames to process, branch to exit.
-        jmp EndTriangleSFX              ;($B896)End SFX.
+        bne RTS_B8EC                    ;If more frames to process, branch to exit.
+        jmp EndTriSFX                   ;($B896)End SFX.
     LB90C:
-    jsr DivideTrianglePeriods       ;($B9A0)reduces triangle period low.
-    lda TriangleLowPercentage       ;
-    sta TriangleChangeLow           ;Update triangle periods.
-    lda TriangleHighPercentage      ;
-    sta TriangleChangeHigh          ;
-    jsr IncreaseTrianglePeriods     ;($B978)Increase periods.
-    jmp WriteTrianglePeriods        ;($B869)Save new periods.
+    jsr DivideTriPeriods            ;($B9A0)reduces triangle period low.
+    lda TriLowPercentage            ;
+    sta TriChangeLow                ;Update triangle periods.
+    lda TriHighPercentage           ;
+    sta TriChangeHigh               ;
+    jsr IncreaseTriPeriods          ;($B978)Increase periods.
+    jmp WriteTriPeriods             ;($B869)Save new periods.
 
 StatueRaiseSFXStart:
     lda StatueRaiseSFXData+2        ;#$11.
-    sta TrianglePeriodLow           ;Save period low data.
+    sta TriPeriodLow           ;Save period low data.
     lda StatueRaiseSFXData+3        ;#$09.
     and #$07                        ;
-    sta TrianglePeriodHigh          ;Store last three bits in $B284.
+    sta TriPeriodHigh          ;Store last three bits in $B284.
     lda #$00                        ;
-    sta TriangleChangeHigh          ;No change in Triangle period high.
+    sta TriChangeHigh          ;No change in Triangle period high.
     lda #$0B                        ;
-    sta TriangleChangeLow           ;
+    sta TriChangeLow           ;
     lda #$06                        ;Number of frames to play sound before a change.
     ldy #.lobyte(StatueRaiseSFXData) ;Lower byte of sound data start address(base=$B200).
     jmp SelectSFXRoutine            ;($B452)Setup registers for SFX.
@@ -1149,60 +1159,60 @@ StatueRaiseSFXStart:
 StatueRaiseSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB972                       ;
-        inc TriangleSFXData             ;Increment TriangleSFXData every 6 frames.
-        lda TriangleSFXData             ;
-        cmp #$09                        ;When TriangleSFXData = #$09, end SFX.
+        inc TriSFXData             ;Increment TriSFXData every 6 frames.
+        lda TriSFXData             ;
+        cmp #$09                        ;When TriSFXData = #$09, end SFX.
         bne LB952                       ;
-            jmp EndTriangleSFX              ;($B896)End SFX.
+            jmp EndTriSFX              ;($B896)End SFX.
         LB952:
-        lda TriangleChangeLow           ;
+        lda TriChangeLow           ;
         pha                             ;Save triangle periods.
-        lda TriangleChangeHigh          ;
+        lda TriChangeHigh          ;
         pha                             ;
         lda #$25                        ;
-        sta TriangleChangeLow           ;
+        sta TriChangeLow           ;
         lda #$00                        ;No change in triangle period high.
-        sta TriangleChangeHigh          ;
-        jsr IncreaseTrianglePeriods     ;($B978)Increase periods.
+        sta TriChangeHigh          ;
+        jsr IncreaseTriPeriods     ;($B978)Increase periods.
         pla                             ;
-        sta TriangleChangeHigh          ;Restore triangle periods.
+        sta TriChangeHigh          ;Restore triangle periods.
         pla                             ;
-        sta TriangleChangeLow           ;
-        jmp WriteTrianglePeriods        ;($B869)Save new periods.
+        sta TriChangeLow           ;
+        jmp WriteTriPeriods        ;($B869)Save new periods.
     LB972:
-    jsr DecreaseTrianglePeriods     ;($B98C)Decrease periods.
-    jmp WriteTrianglePeriods        ;($B869)Save new periods.
+    jsr DecreaseTriPeriods     ;($B98C)Decrease periods.
+    jmp WriteTriPeriods        ;($B869)Save new periods.
 
-IncreaseTrianglePeriods:
+IncreaseTriPeriods:
     clc
-    lda TrianglePeriodLow           ;
-    adc TriangleChangeLow           ;Calculate new TrianglePeriodLow.
-    sta TrianglePeriodLow           ;
-    lda TrianglePeriodHigh          ;
-    adc TriangleChangeHigh          ;Calculate new TrianglePeriodHigh.
-    sta TrianglePeriodHigh          ;
+    lda TriPeriodLow           ;
+    adc TriChangeLow           ;Calculate new TriPeriodLow.
+    sta TriPeriodLow           ;
+    lda TriPeriodHigh          ;
+    adc TriChangeHigh          ;Calculate new TriPeriodHigh.
+    sta TriPeriodHigh          ;
     rts
 
-DecreaseTrianglePeriods:
+DecreaseTriPeriods:
     sec
-    lda TrianglePeriodLow           ;
-    sbc TriangleChangeLow           ;Calculate new TrianglePeriodLow.
-    sta TrianglePeriodLow           ;
-    lda TrianglePeriodHigh          ;
-    sbc TriangleChangeHigh          ;Calculate new TrianglePeriodHigh.
-    sta TrianglePeriodHigh          ;
+    lda TriPeriodLow           ;
+    sbc TriChangeLow           ;Calculate new TriPeriodLow.
+    sta TriPeriodLow           ;
+    lda TriPeriodHigh          ;
+    sbc TriChangeHigh          ;Calculate new TriPeriodHigh.
+    sta TriPeriodHigh          ;
     rts
 
-DivideTrianglePeriods:
-    lda TrianglePeriodLow           ;
-    pha                             ;Store TrianglePeriodLow and TrianglePeriodHigh.
-    lda TrianglePeriodHigh          ;
+DivideTriPeriods:
+    lda TriPeriodLow           ;
+    pha                             ;Store TriPeriodLow and TriPeriodHigh.
+    lda TriPeriodHigh          ;
     pha                             ;
     lda #$00                        ;
     sta DivideData                  ;
     ldx #$10                        ;
-    rol TrianglePeriodLow           ;
-    rol TrianglePeriodHigh          ;
+    rol TriPeriodLow           ;
+    rol TriPeriodHigh          ;
     LB9B5:
         rol DivideData                  ;The following routine takes the triangle period-->
         lda DivideData                  ;high and triangle period low values and reduces-->
@@ -1211,18 +1221,18 @@ DivideTrianglePeriods:
             sbc PercentDifference           ;PercentDifference.  If PercentDifference=#$05,-->
             sta DivideData                  ;then the values will be reduced by 20%(1/5).-->
         LB9C6:
-        rol TrianglePeriodLow           ;If PercentDifference=#$0A,Then the value will-->
-        rol TrianglePeriodHigh          ;be reduced by 10%(1/10), etc. This function is-->
+        rol TriPeriodLow           ;If PercentDifference=#$0A,Then the value will-->
+        rol TriPeriodHigh          ;be reduced by 10%(1/10), etc. This function is-->
         dex                             ;basically a software emulation of a sweep function.
         bne LB9B5                       ;
-    lda TrianglePeriodLow           ;
-    sta TriangleLowPercentage       ;
-    lda TrianglePeriodHigh          ;
-    sta TriangleHighPercentage      ;
+    lda TriPeriodLow           ;
+    sta TriLowPercentage       ;
+    lda TriPeriodHigh          ;
+    sta TriHighPercentage      ;
     pla                             ;
-    sta TrianglePeriodHigh          ;Restore TrianglePerodLow and TrianglePeriodHigh.
+    sta TriPeriodHigh          ;Restore TriPerodLow and TriPeriodHigh.
     pla                             ;
-    sta TrianglePeriodLow           ;
+    sta TriPeriodLow           ;
     rts
 
 ;--------------------------------------[ End SFX routines ]-------------------------------------
@@ -1276,51 +1286,75 @@ LoadSQ1SQ2Channels:
     rts
 
 WriteSQCntrl0:
-    lda SQ1VolumeCntrl,x            ;Load SQ channel volume data. If zero, branch to exit.
-    beq RTS_BA8B                       ;
-    sta VolumeCntrlAddress          ;
+    ;Load SQ channel volume data. If zero, branch to exit.
+    lda SQ1VolumeEnvelopeIndex,x
+    beq RTS_BA8B
+    
+    sta VolumeEnvelopeIndex
     jsr LoadSQ1SQ2Periods           ;($BA08)Load SQ1 and SQ2 control information.
-    lda SQ1VolumeData,x             ;
-    cmp #$10                        ;If sound channel is not currently-->
-    beq LBA99                       ;playing sound, branch.
-    ldy #$00                        ;
+    ;If sound channel is not currently playing sound, branch.
+    lda SQ1VolumeData,x
+    cmp #$10
+    beq LBA99
+    
+    ; Store (VolumeEnvelopeIndex-1)*2 into y
+    ldy #$00
     LBA54:
-        dec VolumeCntrlAddress          ;Desired entry in VolumeCntrlAdressTbl.
-        beq LBA5C                       ;
-        iny                             ;*2(2 byte address to find voulume control data).
-        iny                             ;
-        bne LBA54                       ;Keep decrementing until desired address is found.
+        ;Desired entry in VolumeEnvelopePtrTable.
+        dec VolumeEnvelopeIndex
+        beq LBA5C
+        ;*2(2 byte address to find volume control data).
+        iny
+        iny
+        ;Keep decrementing until desired address is found.
+        bne LBA54
 LBA5C:
-    lda VolumeCntrlAddressTbl,y     ;Base is $BCB0.
-    sta $EC                         ;Volume data address low byte.
-    lda VolumeCntrlAddressTbl+1,y   ;Base is $BCB1.
-    sta $ED                         ;Volume data address high byte.
-    ldy SQ1VolumeIndex,x            ;Index to desired volume data.
-    lda ($EC),y                     ;Load desired volume for current channel into-->
-    sta Cntrl0Data                  ;Cntrl0Data.
-    cmp #$FF                        ;If last entry in volume table is #$FF, restore-->
-    beq MusicBranch05               ;volume to its original level after done reading-->
-    cmp #$F0                        ;Volume data.  If #$F0 is last entry, turn sound-->
-    beq MusicBranch06               ;off on current channel until next note.
-    lda SQ1DutyEnvelope,x           ;Remove duty cycle data For current channel and-->
-    and #$F0                        ;add this frame of volume data and store results-->
-    ora Cntrl0Data                  ;in Cntrl0Data.
-    tay                             ;
+    ;Load volume data address into VolumeEnvelopePtr
+    lda VolumeEnvelopePtrTable,y
+    sta VolumeEnvelopePtr
+    lda VolumeEnvelopePtrTable+1,y
+    sta VolumeEnvelopePtr+1
+    ;Index to desired volume data.
+    ldy SQ1VolumeIndex,x
+    ;Load desired volume for current channel into Cntrl0Data.
+    lda (VolumeEnvelopePtr),y
+    sta Cntrl0Data
+    
+    ;If last entry in volume table is #$FF, restore-->
+    ;volume to its original level after done reading Volume data.
+    cmp #$FF
+    beq MusicBranch05
+    ;If #$F0 is last entry, turn sound off on current channel until next note.
+    cmp #$F0
+    beq MusicBranch06
+    
+    ;Remove duty cycle data For current channel and-->
+    ;add this frame of volume data and store results in Cntrl0Data.
+    lda SQ1DutyEnvelope,x
+    and #$F0
+    ora Cntrl0Data
+    tay
 LBA7D:
-    inc SQ1VolumeIndex,x            ;Increment Index to volume data.
+    ;Increment Index to volume data.
+    inc SQ1VolumeIndex,x
 LBA80:
-    lda SQ1InUse,x                  ;If SQ1 or SQ2(depends on loop iteration) in use,-->
-    bne RTS_BA8B                       ;branch to exit, else write SQ(1 or 2)Cntrl0.
-    txa                             ;
-    beq WriteSQ1_VOL              ;If currently on SQ1, branch to write SQ1 data.
+    ;If SQ1 or SQ2(depends on loop iteration) in use, branch to exit
+    lda SQ1InUse,x
+    bne RTS_BA8B
+    ;else write SQ(1 or 2)Cntrl0.
+    txa
+    ;If currently on SQ1, branch to write SQ1 data.
+    beq WriteSQ1_VOL
 
+;Write SQ2_VOL data.
 WriteSQ2_VOL:
-    sty SQ2_VOL                   ;Write SQ2_VOL data.
+    sty SQ2_VOL
 RTS_BA8B:
     rts
 
+;Write SQ1_VOL data.
 WriteSQ1_VOL:
-    sty SQ1_VOL                   ;Write SQ1_VOL data.
+    sty SQ1_VOL
     rts
 
 MusicBranch05:
@@ -1330,6 +1364,7 @@ MusicBranch05:
 MusicBranch06:
     ldy #$10                        ;Disable envelope generator and set volume to 0.
     bne LBA80                       ;Branch always.
+
 LBA99:
     ldy #$10                        ;Disable envelope generator and set volume to 0.
     bne LBA7D                       ;Branch always.
@@ -1393,11 +1428,11 @@ LoadNextChannelIndexData:
 
 RepeatMusicLoop:
     lda SQ1RepeatCounter,x          ;If loop counter has reached zero, branch to exit.
-    beq LBB13                       ;
+    beq GotoLoadNextChannelIndexData                       ;
     dec SQ1RepeatCounter,x          ;Decrement loop counter.
     lda SQ1LoopIndex,x              ;Load loop index for proper channel and store it in-->
     sta SQ1MusicIndexIndex,x        ;music index index address.
-    bne LBB13                       ;Branch unless music has reached the end.
+    bne GotoLoadNextChannelIndexData                       ;Branch unless music has reached the end.
 
 StartNewMusicLoop:
     tya                             ;
@@ -1406,13 +1441,13 @@ StartNewMusicLoop:
     dec SQ1RepeatCounter,x          ;Decrement loop counter.
     lda SQ1MusicIndexIndex,x        ;Store location of loop start in loop index address.
     sta SQ1LoopIndex,x              ;
-LBB13:
+GotoLoadNextChannelIndexData:
     jmp LoadNextChannelIndexData    ;($BADC)Load next channel index data.
 
-LBB16:
+GotoLoadNoiseChannelMusic:
     jmp LoadNoiseChannelMusic       ;($BBDE)Load data for noise channel music.
 
-LBB19:
+GotoLoadTRI_LINEAR:
     jmp LoadTRI_LINEAR          ;($BBB7)Load Cntrl0 byte of triangle channel.
 
 LoadMusicChannel:
@@ -1430,26 +1465,26 @@ LoadMusicChannel:
     tay                             ;Y now contains note length.
     txa                             ;
     cmp #$02                        ;If loading Triangle channel data, branch.
-    beq LBB19                       ;
+    beq GotoLoadTRI_LINEAR
 
 LoadSoundDataIndexIndex:
     ldy SQ1MusicIndexIndex,x        ;Load current index to sound data index.
     inc SQ1MusicIndexIndex,x        ;Increment music index index address.
-    lda (SoundChannelBase),y                     ;Load index to sound channel music data.
-    tay                             ;
+    lda (SoundChannelBase),y        ;Load index to sound channel music data.
+    tay 
 LBB40:
     txa                             ;
     cmp #$03                        ;If loading Noise channel data, branch.
-    beq LBB16                       ;
+    beq GotoLoadNoiseChannelMusic
     pha                             ;Push music channel number on stack(0, 1 or 2).
     ldx ThisSoundChannel            ;
     lda MusicNotesTbl+1,y           ;(Base=$BE78)Load A with music channel period low data.
     beq LBB59                       ;If data is #$00, skip period high and low loading.
-    sta MusicSQ1PeriodLow,x         ;Store period low data in proper period low address.
-    lda MusicNotesTbl,y             ;(Base=$BE77)Load A with music channel period high data.
-    ora #$08                        ;Ensure minimum index length of 1.
-    sta MusicSQ1PeriodHigh,x        ;Store period high data in proper period high address.
-LBB59:
+        sta MusicSQ1PeriodLow,x         ;Store period low data in proper period low address.
+        lda MusicNotesTbl,y             ;(Base=$BE77)Load A with music channel period high data.
+        ora #$08                        ;Ensure minimum index length of 1.
+        sta MusicSQ1PeriodHigh,x        ;Store period high data in proper period high address.
+    LBB59:
     tay                             ;
     pla                             ;Pull stack and restore channel number to X.
     tax                             ;
@@ -1477,7 +1512,7 @@ LBB59:
     txa                             ;
     cmp #$02                        ;If loading triangle channel data, branch.
     beq LBB8C                       ;
-    lda SQ1VolumeCntrl,x            ;If $062E or $062F has volume data, skip writing-->
+    lda SQ1VolumeEnvelopeIndex,x            ;If $062E or $062F has volume data, skip writing-->
     bne LBB91                       ;Cntrl0Data to SQ1 or SQ2.
 LBB8C:
     lda Cntrl0Data                  ;
@@ -1502,19 +1537,19 @@ SQ1SQ2InUse:
     jmp LoadNewMusicFrameCount      ;($BBA8)Load new music frame count.
 
 LoadTRI_LINEAR:
-    lda TriangleCounterCntrl        ;
+    lda TriCounterCntrl             ;
     and #$0F                        ;If lower bits set, branch to play shorter note.
     bne LBBD8                       ;
-    lda TriangleCounterCntrl        ;
+    lda TriCounterCntrl             ;
     and #$F0                        ;If upper bits are set, branch to play longer note.
     bne LBBC9                       ;
-    tya                             ;
-    jmp AddTriangleLength           ;($BBCD)Calculate length to play note.
-LBBC9:
+        tya                             ;
+        jmp AddTriLength                ;($BBCD)Calculate length to play note.
+    LBBC9:
     lda #$FF                        ;Disable length cntr(play until triangle data changes).
     bne LBBD8                       ;Branch always.
 
-AddTriangleLength:
+AddTriLength:
     clc                             ;
     adc #$FF                        ;Add #$FF(Effectively subtracts 1 from A).
     asl                             ;*2.
@@ -1606,7 +1641,7 @@ LoadMusicInitFlags:
 LBC42:
     jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX or music flags set.
     jsr FindMusicInitIndex          ;($BC53)Find bit containing music init flag.
-    jmp ($00E2)                     ;If no flag found, Jump to next SFX cycle,-->
+    jmp (SoundE2)                     ;If no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling subroutine.
 
 ContinueMusic:                          ;11th and last SFX cycle.
@@ -1707,24 +1742,24 @@ Music00Init:
     bne LBC8D                       ;Branch always
 
 ;The following address table provides starting addresses of the volume data tables below:
-VolumeCntrlAddressTbl:
-    .word VolumeDataTbl1, VolumeDataTbl2, VolumeDataTbl3, VolumeDataTbl4, VolumeDataTbl5
+VolumeEnvelopePtrTable:
+    .word VolumeEnvelope1, VolumeEnvelope2, VolumeEnvelope3, VolumeEnvelope4, VolumeEnvelope5
 
-VolumeDataTbl1:
+VolumeEnvelope1:
     .byte $01, $02, $02, $03, $03, $04, $05, $06, $07, $08, $FF
 
-VolumeDataTbl2:
+VolumeEnvelope2:
     .byte $02, $04, $05, $06, $07, $08, $07, $06, $05, $FF
 
-VolumeDataTbl3:
+VolumeEnvelope3:
     .byte $00, $0D, $09, $07, $06, $05, $05, $05, $04, $04, $FF
 
-VolumeDataTbl4:
+VolumeEnvelope4:
     .byte $02, $06, $07, $07, $07, $06, $06, $06, $06, $05, $05, $05, $04, $04, $04, $03
     .byte $03, $03, $03, $02, $03, $03, $03, $03, $03, $02, $02, $02, $02, $02, $02, $02
     .byte $02, $02, $02, $01, $01, $01, $01, $01, $F0
 
-VolumeDataTbl5:
+VolumeEnvelope5:
     .byte $0A, $0A, $09, $08, $07, $06, $05, $04, $03, $02, $07, $07, $06, $05, $04, $04
     .byte $03, $02, $02, $02, $05, $05, $05, $04, $03, $02, $02, $02, $01, $01, $04, $04
     .byte $03, $02, $01, $02, $02, $01, $01, $01, $02, $02, $02, $01, $01, $F0
@@ -2005,7 +2040,7 @@ InitializeMusic:
     lda #$01
     sta SQ1MusicFrameCount
     sta SQ2MusicFrameCount
-    sta TriangleMusicFrameCount;
+    sta TriMusicFrameCount
     sta NoiseMusicFrameCount
     
     ;Resets addresses $0638 thru $063B to #$00.-->
@@ -2013,7 +2048,7 @@ InitializeMusic:
     lda #$00
     sta SQ1MusicIndexIndex
     sta SQ2MusicIndexIndex
-    sta TriangleMusicIndexIndex
+    sta TriMusicIndexIndex
     sta NoiseMusicIndexIndex
     rts
 

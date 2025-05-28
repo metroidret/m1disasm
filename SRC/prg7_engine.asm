@@ -1897,7 +1897,7 @@ GoPassword:
     lda #$01                        ;
     sta SwitchPending               ;Prepare to switch to intro memory page.
     lda NoiseSFXFlag                ;
-    ora #$01                        ;Silence music.
+    ora #sfxNoise_SilenceMusic      ;Silence music.
     sta NoiseSFXFlag                ;
     jmp ScreenOff                   ;($C439)Turn off screen.
 
@@ -2221,138 +2221,138 @@ SelectSamusPal: ;$CB73
 
 ;Initiate sound effects.
 
-SilenceMusic:                           ;The sound flags are stored in memory-->
-    lda #$01                        ;starting at $0680. The following is a-->
-    bne SFX_SetX0                   ;list of sound effects played when the-->
-                                        ;flags are set:
-PauseMusic:                             ;
-    lda #$02                        ;$0680: These SFX use noise channel.
-    bne SFX_SetX0                   ;Bit 7 - No sound.
-                                        ;Bit 6 - ScrewAttack.
-SFX_SamusWalk:                          ;Bit 5 - MissileLaunch.
-    lda #$08                        ;Bit 4 - BombExplode.
-    bne SFX_SetX0                   ;Bit 3 - SamusWalk.
-                                        ;Bit 2 - SpitFlame.
-SFX_BombExplode:                        ;Bit 1 - No sound.
-    lda #$10                        ;Bit 0 - No sound.
-    bne SFX_SetX0                   ;
-                                        ;$0681: These SFX use sq1 channel.
-SFX_MissileLaunch:                      ;Bit 7 - MissilePickup.
-    lda #$20                        ;Bit 6 - EnergyPickup.
-                                        ;Bit 5 - Metal.
-SFX_SetX0:                              ;Bit 4 - BulletFire.
-    ldx #$00                        ;Bit 3 - OutOfHole.
-    beq SFX_SetSoundFlag            ;Bit 2 - EnemyHit.
-                                        ;Bit 1 - SamusJump.
-SFX_OutOfHole:                          ;Bit 0 - WaveFire.
-    lda #$08                        ;
-    bne SFX_SetX1                   ;$0682: Not used.
-                                        ;
-SFX_BombLaunch:                         ;$0683: These SFX use tri channel.
-    lda #$01                        ;Bit 7 - SamusDie.
-    bne SFX_SetX3                   ;Bit 6 - DoorOpenClose.
-                                        ;Bit 5 - MetroidHit.
-SFX_SamusJump:                          ;Bit 4 - StatueRaise.
-    lda #$02                        ;Bit 3 - Beep.
-    bne SFX_SetX1                   ;Bit 2 - BigEnemyHit.
-                                        ;Bit 1 - SamusBall.
-SFX_EnemyHit:                           ;Bit 0 - BombLaunch.
-    lda #$04                        ;
-    bne SFX_SetX1                   ;$0684: These SFX use multi channels.
-                                        ;Bit 7 - FadeInMusic            (music).
-SFX_BulletFire:                         ;Bit 6 - PowerUpMusic           (music).
-    lda #$10                        ;Bit 5 - EndMusic  (Page 0 only)(music).
-    bne SFX_SetX1                   ;Bit 4 - IntroMusic(Page 0 only)(music).
-                                        ;Bit 3 - not used               (SFX).
-SFX_Metal:                              ;Bit 2 - SamusHit               (SFX).
-    lda #$20                        ;Bit 1 - BossHit                (SFX).
-    bne SFX_SetX1                   ;Bit 0 - IncorrectPassword      (SFX).
-                                        ;
-SFX_EnergyPickup:                       ;$0685: Music flags. The music flags start different-->
-    lda #$40                        ;music depending on what memory page is loaded. The-->
-    bne SFX_SetX1                   ;following lists what bits start what music for each-->
-                                        ;memory page.
-SFX_MissilePickup:                      ;
-    lda #$80                        ;Page 0: Intro/ending.
-                                        ;Bit 7 - Not used.
-SFX_SetX1:                              ;Bit 6 - TourianMusic.
-    ldx #$01                        ;Bit 5 - ItemRoomMusic.
-    bne SFX_SetSoundFlag            ;Bit 4 - Not used.
-                                        ;Bit 3 - Not used.
-SFX_WaveFire:                           ;Bit 2 - Not used.
-    lda #$01                        ;Bit 1 - Not used.
-    bne SFX_SetX1                   ;Bit 0 - Not used.
-                                        ;
-SFX_ScrewAttack:                        ;Page 1: Brinstar.
-    lda #$40                        ;Bit 7 - Not used.
-    bne SFX_SetX0                   ;Bit 6 - TourianMusic.
-                                        ;Bit 5 - ItemRoomMusic.
-SFX_BigEnemyHit:                        ;Bit 4 - Not used.
-    lda #$04                        ;Bit 3 - Not used.
-    bne SFX_SetX3                   ;Bit 2 - Not used.
-                                        ;Bit 1 - Not used.
-SFX_MetroidHit:                         ;Bit 0 - BrinstarMusic.
-    lda #$20                        ;
-    bne SFX_SetX3                   ;Page 2: Norfair.
-                                        ;Bit 7 - Not used.
-SFX_BossHit:                            ;Bit 6 - TourianMusic.
-    lda #$02                        ;Bit 5 - ItemRoomMusic.
-    bne SFX_SetX4                   ;Bit 4 - Not used.
-                                        ;Bit 3 - NorfairMusic.
-SFX_Door:                               ;Bit 2 - Not used.
-    lda #$40                        ;Bit 1 - Not used.
-    bne SFX_SetX3                   ;Bit 0 - Not used.
-                                        ;
-SFX_SamusHit:                           ;Page 3: Tourian.
-    lda #$04                        ;Bit 7 - Not used.
-    bne SFX_SetX4                   ;Bit 6 - TourianMusic
-                                        ;Bit 5 - ItemRoomMusic.
-SFX_SamusDie:                           ;Bit 4 - Not used.
-    lda #$80                        ;Bit 3 - Not used.
-    bne SFX_SetX3                   ;Bit 2 - EscapeMusic.
-                                        ;Bit 1 - MotherBrainMusic
-SFX_SetX2:                              ;Bit 0 - Not used.
-    ldx #$02                        ;
-                                        ;Page 4: Kraid.
-SFX_SetSoundFlag:                       ;Bit 7 - RidleyAreaMusic.
-    ora NoiseSFXFlag,x                     ;Bit 6 - TourianMusic.
-    sta NoiseSFXFlag,x                     ;Bit 5 - ItemRoomMusic.
-    rts                             ;Bit 4 - KraidAreaMusic.
-                                        ;Bit 3 - Not used.
-SFX_SamusBall:                          ;Bit 2 - Not used.
-    lda #$02                        ;Bit 1 - Not used.
-    bne SFX_SetX3                   ;Bit 0 - Not used.
-                                        ;
-SFX_Beep:                               ;Page 5: Ridley.
-    lda #$08                        ;Bit 7 - RidleyAreaMusic.
-                                        ;Bit 6 - TourianMusic.
-SFX_SetX3:                              ;Bit 5 - ItemRoomMusic.
-    ldx #$03                        ;Bit 4 - KraidAreaMusic.
-    bne SFX_SetSoundFlag            ;Bit 3 - Not used.
-                                        ;Bit 2 - Not used.
-;Initiate music                         ;Bit 1 - Not used.
-                                        ;Bit 0 - Not used.
-PowerUpMusic:                           ;
-    lda #$40                        ;
-    bne SFX_SetX4                   ;
-                                        ;
-IntroMusic:                             ;
-    lda #$80                        ;
-                                        ;
-SFX_SetX4:                              ;
-    ldx #$04                        ;
-    bne SFX_SetSoundFlag            ;
-                                        ;
-MotherBrainMusic:                       ;
-    lda #$02                        ;
-    bne SFX_SetX5                   ;
-                                        ;
-TourianMusic:                           ;
-    lda #$40                        ;
-                                        ;
-SFX_SetX5:                              ;
-    ldx #$05                        ;
-    bne SFX_SetSoundFlag            ;
+SilenceMusic:
+    lda #sfxNoise_SilenceMusic
+    bne SFX_SetNoiseSFXFlag
+
+PauseMusic:
+    lda #sfxNoise_PauseMusic
+    bne SFX_SetNoiseSFXFlag
+
+SFX_SamusWalk:
+    lda #sfxNoise_SamusWalk
+    bne SFX_SetNoiseSFXFlag
+
+SFX_BombExplode:
+    lda #sfxNoise_BombExplode
+    bne SFX_SetNoiseSFXFlag
+
+SFX_MissileLaunch:
+    lda #sfxNoise_MissileLaunch
+
+SFX_SetNoiseSFXFlag:
+    ldx #NoiseSFXFlag - NoiseSFXFlag
+    beq SFX_SetSoundFlag
+
+SFX_OutOfHole:
+    lda #sfxSQ1_OutOfHole
+    bne SFX_SetSQ1SFXFlag
+
+SFX_BombLaunch:
+    lda #sfxTri_BombLaunch
+    bne SFX_SetTriSFXFlag
+
+SFX_SamusJump:
+    lda #sfxSQ1_SamusJump
+    bne SFX_SetSQ1SFXFlag
+
+SFX_EnemyHit:
+    lda #sfxSQ1_EnemyHit
+    bne SFX_SetSQ1SFXFlag
+
+SFX_BulletFire:
+    lda #sfxSQ1_BulletFire
+    bne SFX_SetSQ1SFXFlag
+
+SFX_Metal:
+    lda #sfxSQ1_Metal
+    bne SFX_SetSQ1SFXFlag
+
+SFX_EnergyPickup:
+    lda #sfxSQ1_EnergyPickup
+    bne SFX_SetSQ1SFXFlag
+
+SFX_MissilePickup:
+    lda #sfxSQ1_MissilePickup
+
+SFX_SetSQ1SFXFlag:
+    ldx #SQ1SFXFlag - NoiseSFXFlag
+    bne SFX_SetSoundFlag
+
+SFX_WaveFire:
+    lda #sfxSQ1_WaveFire
+    bne SFX_SetSQ1SFXFlag
+
+SFX_ScrewAttack:
+    lda #sfxNoise_ScrewAttack
+    bne SFX_SetNoiseSFXFlag
+
+SFX_BigEnemyHit:
+    lda #sfxTri_BigEnemyHit
+    bne SFX_SetTriSFXFlag
+
+SFX_MetroidHit:
+    lda #sfxTri_MetroidHit
+    bne SFX_SetTriSFXFlag
+
+SFX_BossHit:
+    lda #sfxMulti_BossHit
+    bne SFX_SetMultiSFXFlag
+
+SFX_Door:
+    lda #sfxTri_Door
+    bne SFX_SetTriSFXFlag
+
+SFX_SamusHit:
+    lda #sfxMulti_SamusHit
+    bne SFX_SetMultiSFXFlag
+
+SFX_SamusDie:
+    lda #sfxTri_SamusDie
+    bne SFX_SetTriSFXFlag
+
+SFX_SetSQ2SFXFlag:
+    ldx #SQ2SFXFlag - NoiseSFXFlag
+
+SFX_SetSoundFlag:
+    ora NoiseSFXFlag,x
+    sta NoiseSFXFlag,x
+    rts
+
+SFX_SamusBall:
+    lda #sfxTri_SamusBall
+    bne SFX_SetTriSFXFlag
+
+SFX_Beep:
+    lda #sfxTri_Beep
+
+SFX_SetTriSFXFlag:
+    ldx #TriSFXFlag - NoiseSFXFlag
+    bne SFX_SetSoundFlag
+
+;Initiate music
+
+PowerUpMusic:
+    lda #sfxMulti_PowerUp
+    bne SFX_SetMultiSFXFlag
+
+IntroMusic:
+    lda #sfxMulti_Intro
+
+SFX_SetMultiSFXFlag:
+    ldx #MultiSFXFlag - NoiseSFXFlag
+    bne SFX_SetSoundFlag
+
+MotherBrainMusic:
+    lda #music_MotherBrain
+    bne SFX_SetMusicInitFlag
+
+TourianMusic:
+    lda #music_Tourian
+
+SFX_SetMusicInitFlag:
+    ldx #MusicInitFlag - NoiseSFXFlag
+    bne SFX_SetSoundFlag
 
 ;--------------------------------------[ Update Samus ]----------------------------------------------
 
@@ -2363,7 +2363,7 @@ UpdateSamus:
     stx IsSamus                     ;Indicate Samus is the object being updated.
     jsr GoSamusHandler              ;($CC1A)Find proper Samus handler routine.
     dec IsSamus                     ;Update of Samus complete.
-    rts                             ;
+    rts
 
 GoSamusHandler:
     lda ObjAction                   ;
@@ -4357,7 +4357,7 @@ StartMusic:
     Lx113:
     lda #$81
     sta ItemRoomMusicStatus
-    lda #$20                        ;Set flag to play item room music.
+    lda #music_ItemRoom             ;Set flag to play item room music.
 Lx114:
     ora MusicInitFlag               ;
     sta MusicInitFlag               ;Store music flag info.
@@ -4551,9 +4551,9 @@ LDA7C:
     lda ObjAnimIndex,x
     beq Lx128
     dec KraidStatueY-$60,x
-    lda TriangleSFXFlag
-    ora #$10
-    sta TriangleSFXFlag
+    lda TriSFXFlag
+    ora #sfxTri_StatueRaise
+    sta TriSFXFlag
 Lx128:
     lda #$00
     sta ObjAnimIndex,x
@@ -6985,9 +6985,9 @@ LE81E:
                 eor #$91
                 bne GotoSFX_Metal
             Lx204:
-            lda TriangleSFXFlag
-            ora #$02
-            sta TriangleSFXFlag
+            lda TriSFXFlag
+            ora #sfxTri_SamusBall
+            sta TriSFXFlag
         Lx205:
         lda #$04
         sta SamusHit,y

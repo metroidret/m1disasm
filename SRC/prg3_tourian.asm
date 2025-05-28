@@ -122,7 +122,7 @@ Exit__:
 L95CC:
     .byte $FF                       ;Not used.
 AreaMusicFlag:
-    .byte $40                       ;Tourian music init flag.
+    .byte music_Tourian             ;Tourian music init flag.
 AreaEnemyDamage:
     .word $0300                     ;Base damage caused by area enemies.
 
@@ -931,14 +931,14 @@ L9E52:
     lda #$28
     sta MotherBrain9F
     lda NoiseSFXFlag
-    ora #$01
+    ora #sfxNoise_SilenceMusic
     sta NoiseSFXFlag
 L9E83:
     jmp L9E2E
 
 ;-------------------------------------------------------------------------------
 L9E86:
-    lda #$10
+    lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
     sta NoiseSFXFlag
     jsr LA072
@@ -983,7 +983,7 @@ RTS_9ED5:
 
 L9ED6:
     lda MusicInitFlag
-    ora #$04
+    ora #music_Escape
     sta MusicInitFlag
     lda #$05
     sta MotherBrainStatus
@@ -1109,7 +1109,7 @@ L9F69:
 
 ;-------------------------------------------------------------------------------
 L9FC0:
-    lda #$10
+    lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
     sta NoiseSFXFlag
     lda Timer3
@@ -1141,7 +1141,7 @@ L9FED:
     lda MotherBrain9E
     beq RTS_A01A
     lda MultiSFXFlag
-    ora #$02
+    ora #sfxMulti_BossHit
     sta MultiSFXFlag
     inc MotherBrainHits
     lda MotherBrainHits
@@ -1446,7 +1446,7 @@ LA1E7:
     and #$1F
     bne LA216
         lda SQ1SFXFlag
-        ora #$08
+        ora #sfxSQ1_OutOfHole
         sta SQ1SFXFlag
     LA216:
     lda EndTimer
@@ -1457,7 +1457,7 @@ LA1E7:
     lda #$07
     sta MotherBrainStatus
     lda NoiseSFXFlag
-    ora #$01
+    ora #sfxNoise_SilenceMusic
     sta NoiseSFXFlag
     lda #$0C
     sta Timer3

@@ -381,11 +381,23 @@ SpareMemD3             = $D3     ;Written to in title routine, but never accesse
 SpareMemD7             = $D7     ;Written to in title routine, but never accessed.
 IntroMusicRestart      = $D8     ;After all title routines run twice, restarts intro music.
 
+SoundE0               = $E0
+; SoundE0+1             = $E1
+
+SoundE2               = $E2
+; SoundE2+1             = $E3
+
+SoundE4               = $E4
+; SoundE4+1             = $E5
+
 SoundChannelBase       = $E6
 ; SoundChannelBase+1     = $E7
 
 Cntrl0Data             = $EA     ;Temp storage for data of first address sound channel
-VolumeCntrlAddress     = $EB     ;Desired address number in VolumeCntrlAdressTbl
+VolumeEnvelopeIndex     = $EB     ;Desired address number in VolumeCntrlAdressTbl
+
+VolumeEnvelopePtr      = $EC
+; VolumeEnvelopePtr+1    = $ED
 
 ABStatus               = $F0     ;Stores A and B button status in AreaInit. Never used.
 ;                             = $F7
@@ -567,15 +579,15 @@ WriteMultiChannelData  = $0607   ;1=data needs to be written, 0=no data to write
 MusicTriPeriodLow      = $0608   ;Loaded into TRI_LO when playing music
 MisicTriPeriodHigh     = $0609   ;Loaded into TRI_HI when playing music
 
-TrianglePeriodLow      = $0610   ;Stores triangle SFX period low for processing
-TrianglePeriodHigh     = $0611   ;Stroes triangle SFX period high for processing
-TriangleChangeLow      = $0612   ;Stores triangle SFX change in period low
-TriangleChangeHigh     = $0613   ;Stores triangle SFX change in period high
+TriPeriodLow           = $0610   ;Stores triangle SFX period low for processing
+TriPeriodHigh          = $0611   ;Stroes triangle SFX period high for processing
+TriChangeLow           = $0612   ;Stores triangle SFX change in period low
+TriChangeHigh          = $0613   ;Stores triangle SFX change in period high
 
-TriangleLowPercentage  = $0614   ;Stores percent to change period low by each frame
-TriangleHighPercentage = $0615   ;Stores percent to change period high by each frame
+TriLowPercentage       = $0614   ;Stores percent to change period low by each frame
+TriHighPercentage      = $0615   ;Stores percent to change period high by each frame
 PercentDifference      = $0616   ;if=5, percent=1/5(20%), if=0A, percent=1/10(10%), etc
-DivideData             = $0617   ;Used in DivideTrianglePeriods
+DivideData             = $0617   ;Used in DivideTriPeriods
 
 HasBeamSFX             = $061F   ;Bit 7 set=has long beam, bit 0 set=has ice beam
 
@@ -584,12 +596,12 @@ HasBeamSFX             = $061F   ;Bit 7 set=has long beam, bit 0 set=has ice bea
 
 SQ1FrameCountInit      = $0620   ;Holds number of frames to play SQ1 channel data
 SQ2FrameCountInit      = $0621   ;Holds number of frames to play SQ2 channel data
-TriangleFrameCountInit = $0622   ;Holds number of frames to play Triangle channel data
+TriFrameCountInit      = $0622   ;Holds number of frames to play Triangle channel data
 NoiseFrameCountInit    = $0623   ;Holds number of frames to play Noise channel data
 
 SQ1RepeatCounter       = $0624   ;Number of times to repeat SQ1 music loop
 SQ2RepeatCounter       = $0625   ;Number of times to repeat SQ2 music loop
-TriangleRepeatCounter  = $0626   ;Number of times to repeat Triangle music loop
+TriRepeatCounter       = $0626   ;Number of times to repeat Triangle music loop
 NoiseRepeatCounter     = $0627   ;Number of times to repeat Noise music loop
 
 SQ1DutyEnvelope        = $0628   ;Loaded into SQ1_VOL when playing music
@@ -598,36 +610,36 @@ TriLinearCount         = $062A   ;disable\enable counter, linear count length
 
 NoteLengthTblOffset    = $062B   ;Stores the offset to find proper note length table
 MusicRepeat            = $062C   ;0=Music does not repeat, Nonzero=music repeats
-TriangleCounterCntrl   = $062D   ;$F0=disable length cntr, $00=long note, $0F=short note
-SQ1VolumeCntrl         = $062E   ;Entry number in VolumeCntrlAddressTbl for SQ1
-SQ2VolumeCntrl         = $062F   ;Entry number in VolumeCntrlAddressTbl for SQ2
+TriCounterCntrl        = $062D   ;$F0=disable length cntr, $00=long note, $0F=short note
+SQ1VolumeEnvelopeIndex = $062E   ;Entry number in VolumeEnvelopePtrTable for SQ1
+SQ2VolumeEnvelopeIndex = $062F   ;Entry number in VolumeEnvelopePtrTable for SQ2
 SQ1Base                = $0630   ;Low byte of base address for SQ1 music data
 ; SQ1Base+1              = $0631   ;High byte of base address for SQ1 music data
 SQ2Base                = $0632   ;Low byte of base address for SQ2 music data
 ; SQ2Base+1              = $0633   ;High byte of base address for SQ2 music data
-TriangleBase           = $0634   ;Low byte of base address for Triangle music data
-; TriangleBase+1         = $0635   ;High byte of base address for Triangle music data
+TriBase                = $0634   ;Low byte of base address for Triangle music data
+; TriBase+1              = $0635   ;High byte of base address for Triangle music data
 NoiseBase              = $0636   ;Low byte of base address for Noise music data
 ; NoiseBase+1            = $0637   ;High byte of base address for Noise music data
 
 SQ1MusicIndexIndex     = $0638   ;Index to find SQ1 sound data index. Base=$630,$631
 SQ2MusicIndexIndex     = $0639   ;Index to find SQ2 sound data index. Base=$632,$633
-TriangleMusicIndexIndex= $063A   ;Index to find Tri sound data index. Base=$634,$635
+TriMusicIndexIndex     = $063A   ;Index to find Tri sound data index. Base=$634,$635
 NoiseMusicIndexIndex   = $063B   ;Index to find Noise sound data index. Base=$636,$637
 
 SQ1LoopIndex           = $063C   ;SQ1 Loop start index
 SQ2LoopIndex           = $063D   ;SQ2 loop start index
-TriangleLoopIndex      = $063E   ;Triangle loop start index
+TriLoopIndex           = $063E   ;Triangle loop start index
 NoiseLoopIndex         = $063F   ;Noise loop start index
 
 SQ1MusicFrameCount     = $0640   ;Decrements every sq1 frame. When 0, load new data
 SQ2MusicFrameCount     = $0641   ;Decrements every sq2 frame. when 0, load new data
-TriangleMusicFrameCount= $0642   ;Decrements every triangle frame. When 0, load new data
+TriMusicFrameCount     = $0642   ;Decrements every triangle frame. When 0, load new data
 NoiseMusicFrameCount   = $0643   ;Decrements every noise frame. When 0, load new data
 
 MusicSQ1Sweep          = $0648   ;Value is loaded into SQ1_SWEEP when playing music
 MusicSQ2Sweep          = $0649   ;Value is loaded into SQ2_SWEEP when playing music
-TriangleSweep          = $064A   ;Loaded into TRI_UNUSED(not used)
+TriSweep               = $064A   ;Loaded into TRI_UNUSED(not used)
 
 ThisSoundChannel       = $064B   ;Least sig. byte of current channel(00,04,08 or 0C)
 
@@ -636,7 +648,7 @@ CurrentSFXFlags        = $064D   ;Stores flags of SFX currently being processed.
 NoiseInUse             = $0652   ;Noise in use? (Not used)
 SQ1InUse               = $0653   ;1=SQ1 channel being used by SFX, 0=not in use
 SQ2InUse               = $0654   ;2=SQ2 channel being used by SFX, 0=not in use
-TriangleInUse          = $0655   ;3=Triangle channel being used by SFX, 0=not in use
+TriInUse               = $0655   ;3=Triangle channel being used by SFX, 0=not in use
 
 ChannelType            = $065C   ;Stores channel type being processed(0,1,2,3 or 4)
 CurrentMusicRepeat     = $065D   ;Stores flags of music to repeat
@@ -645,13 +657,13 @@ MusicInitIndex         = $065E   ;index for loading $62B thru $637(base=$BD31).
 NoiseSFXLength         = $0660   ;Stores number of frames to play Noise SFX
 SQ1SFXLength           = $0661   ;Stores number of frames to play SQ1 SFX
 SQ2SFXLngth            = $0662   ;Stores number of frames to play SQ2 SFX
-TriangleSFXLength      = $0663   ;Stores number of frames to play Triangle SFX
+TriSFXLength           = $0663   ;Stores number of frames to play Triangle SFX
 MultiSFXLength         = $0664   ;Stores number of frames to play Multi SFX
 
 ThisNoiseFrame         = $0665   ;Stores current frame number for noise SFX
 ThisSQ1Frame           = $0666   ;Stores current frame number for sq1 SFX
 ThisSQ2Frame           = $0667   ;Stores current frame number for SQ2 SFX
-ThisTriangleFrame      = $0668   ;Stores current frame number for triangle SFX
+ThisTriFrame           = $0668   ;Stores current frame number for triangle SFX
 ThisMultiFrame         = $0669   ;Stores current frame number for Multi SFX
 
 SQ1VolumeIndex         = $066A   ;Stores index to SQ1 volume data in a volume data tbl
@@ -663,7 +675,7 @@ SQ2VolumeData          = $066D   ;Stores duty cycle and this frame volume data o
 NoiseSFXData           = $0670   ;Stores additional info for Noise SFX
 SQ1SFXData             = $0671   ;Stores additional info for SQ1 SFX
 SQ2SFXData             = $0672   ;Stores additional info for SQ2 SFX
-TriangleSFXData        = $0673   ;Stores additional info for triangle SFX
+TriSFXData             = $0673   ;Stores additional info for triangle SFX
 MultiSFXData           = $0674   ;Stores additional info for Multi SFX
 SQ1SQ2SFXData          = $0675   ;Stores additional info for SQ1 and SQ2 SFX
 
@@ -673,7 +685,7 @@ SQ1SFXPeriodLow        = $0679   ;Period low data for processing multi SFX routi
 NoiseSFXFlag           = $0680   ;Initialization flags for noise SFX
 SQ1SFXFlag             = $0681   ;Initialization flags for SQ1 SFX
 SQ2SFXFlag             = $0682   ;Initialization flags for SQ2 SFX(never used)
-TriangleSFXFlag        = $0683   ;Initialization flags for triangle SFX
+TriSFXFlag             = $0683   ;Initialization flags for triangle SFX
 MultiSFXFlag           = $0684   ;Initialization Flags for SFX and some music
 
 MusicInitFlag          = $0685   ;Music init flags
@@ -683,7 +695,7 @@ ScrewAttack0686        = $0686
 NoiseContSFX           = $0688   ;Continuation flags for noise SFX
 SQ1ContSFX             = $0689   ;Continuation flags for SQ1 SFX
 SQ2ContSFX             = $068A   ;Continuation flags for SQ2 SFX (never used)
-TriangleContSFX        = $068B   ;Continuation flags for Triangle SFX
+TriContSFX             = $068B   ;Continuation flags for Triangle SFX
 MultiContSFX           = $068C   ;Continuation flags for Multi SFX
 
 CurrentMusic           = $068D   ;Stores the flag of the current music being played
@@ -1017,4 +1029,50 @@ enemyStatus_Frozen     = 4
 enemyStatus_Pickup     = 5
 enemyStatus_Hurt       = 6
 ; greater than 6 is the same as no enemy
+
+;Sound flags
+;sfxNoise_80            = %10000000
+sfxNoise_ScrewAttack   = %01000000
+sfxNoise_MissileLaunch = %00100000
+sfxNoise_BombExplode   = %00010000
+sfxNoise_SamusWalk     = %00001000
+sfxNoise_SpitFlame     = %00000100
+sfxNoise_PauseMusic    = %00000010
+sfxNoise_SilenceMusic  = %00000001
+
+sfxSQ1_MissilePickup   = %10000000
+sfxSQ1_EnergyPickup    = %01000000
+sfxSQ1_Metal           = %00100000
+sfxSQ1_BulletFire      = %00010000
+sfxSQ1_OutOfHole       = %00001000
+sfxSQ1_EnemyHit        = %00000100
+sfxSQ1_SamusJump       = %00000010
+sfxSQ1_WaveFire        = %00000001
+
+sfxTri_SamusDie        = %10000000
+sfxTri_Door            = %01000000
+sfxTri_MetroidHit      = %00100000
+sfxTri_StatueRaise     = %00010000
+sfxTri_Beep            = %00001000
+sfxTri_BigEnemyHit     = %00000100
+sfxTri_SamusBall       = %00000010
+sfxTri_BombLaunch      = %00000001
+
+sfxMulti_Intro         = %10000000
+sfxMulti_PowerUp       = %01000000
+sfxMulti_EndMusic      = %00100000
+sfxMulti_IntroMusic    = %00010000
+;sfxMulti_08            = %00001000
+sfxMulti_SamusHit      = %00000100
+sfxMulti_BossHit       = %00000010
+sfxMulti_IncorrectPassword = %00000001
+
+music_RidleyArea       = %10000000
+music_Tourian          = %01000000
+music_ItemRoom         = %00100000
+music_KraidArea        = %00010000
+music_Norfair          = %00001000
+music_Escape           = %00000100
+music_MotherBrain      = %00000010
+music_Brinstar         = %00000001
 

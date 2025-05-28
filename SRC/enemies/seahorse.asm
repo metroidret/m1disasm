@@ -32,7 +32,7 @@ SeahorseAIRoutine:
         sta SpawnFireball_AnimTableIndex
         jsr CommonJump_SpawnFireball
         lda NoiseSFXFlag
-        ora #$04
+        ora #sfxNoise_SpitFlame
         sta NoiseSFXFlag
         lda EnData05,x
         and #$01

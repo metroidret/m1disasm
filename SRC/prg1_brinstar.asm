@@ -104,7 +104,7 @@ TwosComplement_:
 ; area init data
     .byte $FF                       ;Not used.
 AreaMusicFlag:
-    .byte $01                       ;Brinstar music init flag.
+    .byte music_Brinstar            ;Brinstar music init flag.
 AreaEnemyDamage:
     .word $0080                     ;Base damage caused by area enemies.
 

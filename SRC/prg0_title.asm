@@ -195,7 +195,7 @@ RamValueTbl: ;$80C8
     .byte $00, $00, $00, $00, $00, $00, $C0, $C4
 
 DrawIntroBackground:
-    lda #$10                        ;Intro music flag.
+    lda #sfxMulti_IntroMusic        ;Intro music flag.
     sta ABStatus                    ;Never accessed by game.
     sta MultiSFXFlag                ;Initiates intro music.
     jsr ScreenOff                   ;($C439)Turn screen off.
@@ -512,7 +512,7 @@ L82AF:
     sty TitleRoutine                ;Next routine sets up METROID fade in delay.
     lda IntroMusicRestart           ;Check to see if intro music needs to be restarted.-->
     bne L82EA                       ;Branch if not.
-    lda #$10                        ;
+    lda #sfxMulti_IntroMusic        ;
     sta MultiSFXFlag                ;Restart intro music.
     lda #$02                        ;Set restart of intro music after another two cycles-->
     sta IntroMusicRestart           ;of the title routines.
@@ -1443,16 +1443,20 @@ SamusHasItem:
 CheckPassword:
     jsr ConsolidatePassword         ;($8F60)Convert password characters to password bytes.
     jsr ValidatePassword            ;($8DDE)Verify password is correct.
-    bcs L8C69                       ;Branch if incorrect password.
+    ;Branch if incorrect password.
+    bcs L8C69
         jmp InitializeGame              ;($92D4)Preliminary housekeeping before game starts.
     L8C69:
-    lda MultiSFXFlag                ;
-    ora #$01                        ;Set IncorrectPassword SFX flag.
-    sta MultiSFXFlag                ;
-    lda #$0C                        ;
-    sta Timer3                      ;Set Timer3 time for 120 frames (2 seconds).
-    lda #$18                        ;
-    sta TitleRoutine                ;Run EnterPassword routine.
+    ;Set IncorrectPassword SFX flag.
+    lda MultiSFXFlag
+    ora #sfxMulti_IncorrectPassword 
+    sta MultiSFXFlag
+    ;Set Timer3 time for 120 frames (2 seconds).
+    lda #$0C
+    sta Timer3
+    ;Run EnterPassword routine.
+    lda #$18
+    sta TitleRoutine
     rts
 
 CalculatePassword:
@@ -1964,9 +1968,9 @@ L90EB:
     lda StartContinue               ;
     eor #$01                        ;Chooses between START and CONTINUE-->
     sta StartContinue               ;on game select screen.
-    lda TriangleSFXFlag             ;
-    ora #$08                        ;Set SFX flag for select being pressed.-->
-    sta TriangleSFXFlag             ;Uses triangle channel.
+    lda TriSFXFlag                  ;
+    ora #sfxTri_Beep                ;Set SFX flag for select being pressed.-->
+    sta TriSFXFlag                  ;Uses triangle channel.
 L90FF:
     ldy StartContinue               ;
     lda StartContTbl,y              ;Get y pos of selection sprite.
@@ -2045,9 +2049,9 @@ EnterPassword:
     jmp CheckBackspace              ;($91FB)Check if backspace pressed.
 
 L9193:
-    lda TriangleSFXFlag             ;Initiate BombLaunch SFX if a character-->
-    ora #$01                        ;has been written to the screen.
-    sta TriangleSFXFlag             ;
+    lda TriSFXFlag                  ;Initiate BombLaunch SFX if a character-->
+    ora #sfxTri_BombLaunch          ;has been written to the screen.
+    sta TriSFXFlag                  ;
     lda PasswordCursor              ;
     cmp #$12                        ;Check to see if password cursor is on-->
     bcc L91A8                       ;character 19 thru 24.  If not, branch.
@@ -2145,9 +2149,9 @@ CheckBackspace:
     and #$0F                        ;If no directional buttons are in-->
     beq L9297                       ;retrigger mode, branch.
     pha                             ;Temp storage of A.
-    lda TriangleSFXFlag             ;Initiate BeepSFX when the player pushes-->
-    ora #$08                        ;a button on the directional pad.
-    sta TriangleSFXFlag             ;
+    lda TriSFXFlag                  ;Initiate BeepSFX when the player pushes-->
+    ora #sfxTri_Beep                ;a button on the directional pad.
+    sta TriSFXFlag                  ;
     pla                             ;Restore A.
     lsr                             ;Put status of right directional button in carry bit.
     bcc L926C                       ;Branch if right button has not been pressed.
@@ -3031,7 +3035,7 @@ L9AE4:
     ldy #.hibyte(LA052)                        ;the surface of the planet in end of game.
     jsr PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
-    lda #$20                        ;Initiate end game music.
+    lda #sfxMulti_EndMusic          ;Initiate end game music.
     sta MultiSFXFlag                ;
     lda #$60                        ;Loads Timer3 with a delay of 960 frames-->
     sta Timer3                      ;(16 seconds).

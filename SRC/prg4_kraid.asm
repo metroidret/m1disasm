@@ -110,7 +110,7 @@ RTS_95CB:
 L95CC:
     .byte $1D                       ;Kraid's room.
 AreaMusicFlag:
-    .byte $10                       ;Kraid's hideout music init flag.
+    .byte music_KraidArea           ;Kraid's hideout music init flag.
 AreaEnemyDamage:
     .word $0200                     ;Base damage caused by area enemies.
 

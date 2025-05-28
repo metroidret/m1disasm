@@ -107,7 +107,7 @@ TwosComplement_:
 L95CC:
     .byte $FF                       ;Not used.
 AreaMusicFlag:
-    .byte $08                       ;Norfair music init flag.
+    .byte music_Norfair             ;Norfair music init flag.
 AreaEnemyDamage:
     .word $0100                     ;Base damage caused by area enemies.
 

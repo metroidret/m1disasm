@@ -118,7 +118,7 @@ TwosComplement_:
 L95CC:
     .byte $12                       ;Ridley's room.
 AreaMusicFlag:
-    .byte $80                       ;Ridley hideout music init flag.
+    .byte music_RidleyArea          ;Ridley hideout music init flag.
 AreaEnemyDamage:
     .word $0240                     ;Base damage caused by area enemies.
 

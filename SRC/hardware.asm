@@ -92,6 +92,11 @@ JOY2                   = $4017   ;Joypad2/APU common control 2 register.
     BUTTONBIT_SELECT      = 5
     BUTTONBIT_B           = 6
     BUTTONBIT_A           = 7
+    
+    APU_4STEP             = %00000000
+    APU_5STEP             = %10000000
+    APU_IRQENABLE         = %00000000
+    APU_IRQDISABLE        = %01000000
 
 ;----------------------------------------------------------------------------------------------------
 
