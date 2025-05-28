@@ -56,7 +56,10 @@ EnAnim_9BBB:
     .byte _id_EnFrame43, _id_EnFrame44, $F7, $FF
 
 EnAnim_9BBF:
-    .byte _id_EnFrame37, $FF, _id_EnFrame38, $FF
+    .byte _id_EnFrame37, $FF
+
+EnAnim_9BC1:
+    .byte _id_EnFrame38, $FF
 
 EnAnim_9BC3:
     .byte _id_EnFrame30, _id_EnFrame31, $FF

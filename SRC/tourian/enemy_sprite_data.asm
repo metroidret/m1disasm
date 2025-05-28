@@ -32,7 +32,9 @@ EnAnim_A41E:
     .byte _id_EnFrame19, $F7, $FF
 
 EnAnim_A421:
-    .byte _id_EnFrame1B, _id_EnFrame1C, _id_EnFrame1D, $FF
+    .byte _id_EnFrame1B, _id_EnFrame1C
+EnAnim_A423:
+    .byte _id_EnFrame1D, $FF
 
 EnAnim_A425:
     .byte _id_EnFrame1E, $FF

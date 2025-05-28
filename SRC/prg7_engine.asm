@@ -58,10 +58,10 @@ AreaFireballSplatterAnimIndex = $95E2
 AreaMellowAnimIndex    = $95E4
 ChooseEnemyAIRoutine   = $95E5
 
-L960B                  = $960B
+EnemyDeathAnimIndex    = $960B
 EnemyHitPointTbl       = $962B
-L963B                  = $963B
-L965B                  = $965B
+EnemyAnimIndex_963B    = $963B
+EnemyAnimIndex_965B    = $965B
 L967B                  = $967B
 L968B                  = $968B
 EnemyData0DTbl         = $969B
@@ -5387,15 +5387,13 @@ ClearObjectCntrl:
     sta ObjectCntrl                 ;Clear object control byte.
     rts                             ;
 
-SkipPlacementData:
-LDF32:
+SkipPlacementData: ;($DF32)
     inc $0F                         ;Skip next y and x placement data bytes.
     inc $0F                         ;
     inc $11                         ;Increment to next data item in frame data.
     jmp DrawSpriteObject            ;($DF19)Draw next sprite.
 
-GetNewControlByte:
-LDF3B:
+GetNewControlByte: ;($DF3B)
     iny                             ;Increment index to next byte of frame data.
     asl ObjectCntrl                 ;If MSB of ObjectCntrl is not set, no overriding of-->
     bcc LDF45                           ;flip bits needs to be performed.
@@ -9393,7 +9391,7 @@ ExplodeEnemy:
     ldx PageIndex
 Lx327:
     jsr LF844
-    lda L960B,y
+    lda EnemyDeathAnimIndex,y
     jsr InitEnAnimIndex
     sta EnSpeedSubPixelY,x
     ; find first open enemy explosion slot
@@ -9445,7 +9443,7 @@ LF676:
 
 LF682:
     jsr LF844
-    lda L963B,y
+    lda EnemyAnimIndex_963B,y
     cmp EnResetAnimIndex,x
     beq RTS_X331
 InitEnAnimIndex:
@@ -9460,7 +9458,7 @@ RTS_X331:
 
 LF699:
     jsr LF844
-    lda L965B,y
+    lda EnemyAnimIndex_965B,y
     cmp EnResetAnimIndex,x
     beq Exit12
     jsr InitEnAnimIndex
@@ -10270,7 +10268,7 @@ LFB88:
         sta EnResetAnimIndex,x
         jmp ClearEnAnimDelay
     Lx384:
-    lda L963B,y
+    lda EnemyAnimIndex_963B,y
     cmp EnResetAnimIndex,x
     beq Exit13
     jmp InitEnAnimIndex
@@ -10279,7 +10277,7 @@ LFB88:
 LFBCA:
     ldx PageIndex
     jsr LF844
-    lda L965B,y
+    lda EnemyAnimIndex_965B,y
     cmp EnResetAnimIndex,x
     beq Exit13
     sta EnResetAnimIndex,x

@@ -176,20 +176,62 @@ ChooseEnemyAIRoutine:
         .word InvalidEnemy ; 0F - same as 3
 
 
-L960B:
-    .byte $08, $08, $08, $08, $16, $16, $18, $18, $1F, $1F, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyDeathAnimIndex:
+    .byte EnAnim_A40E - EnAnimTbl, EnAnim_A40E - EnAnimTbl
+    .byte EnAnim_A40E - EnAnimTbl, EnAnim_A40E - EnAnimTbl
+    .byte EnAnim_A41C - EnAnimTbl, EnAnim_A41C - EnAnimTbl
+    .byte EnAnim_A41E - EnAnimTbl, EnAnim_A41E - EnAnimTbl
+    .byte EnAnim_A425 - EnAnimTbl, EnAnim_A425 - EnAnimTbl
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
 
 EnemyHitPointTbl:
     .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L963B:
-    .byte $05, $05, $05, $05, $16, $16, $18, $18, $1B, $1B, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyAnimIndex_963B:
+    .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
+    .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
+    .byte EnAnim_A41C - EnAnimTbl, EnAnim_A41C - EnAnimTbl
+    .byte EnAnim_A41E - EnAnimTbl, EnAnim_A41E - EnAnimTbl
+    .byte EnAnim_A421 - EnAnimTbl, EnAnim_A421 - EnAnimTbl
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
 
-L965B:
-    .byte $05, $05, $05, $05, $16, $16, $18, $18, $1D, $1D, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyAnimIndex_965B:
+    .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
+    .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
+    .byte EnAnim_A41C - EnAnimTbl, EnAnim_A41C - EnAnimTbl
+    .byte EnAnim_A41E - EnAnimTbl, EnAnim_A41E - EnAnimTbl
+    .byte EnAnim_A423 - EnAnimTbl, EnAnim_A423 - EnAnimTbl
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
 
 L967B:
     .byte $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00

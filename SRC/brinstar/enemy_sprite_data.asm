@@ -20,10 +20,14 @@ EnAnim_9D78:
     .byte _id_EnFrame1D, _id_EnFrame1E, $FF
 
 EnAnim_9D7B:
-    .byte _id_EnFrame22, _id_EnFrame23, _id_EnFrame24, $FF
+    .byte _id_EnFrame22, _id_EnFrame23
+EnAnim_9D7D:
+    .byte _id_EnFrame24, $FF
 
 EnAnim_9D7F:
-    .byte _id_EnFrame1F, _id_EnFrame20, _id_EnFrame21, $FF
+    .byte _id_EnFrame1F, _id_EnFrame20
+EnAnim_9D81:
+    .byte _id_EnFrame21, $FF
 
 EnAnim_9D83:
     .byte _id_EnFrame22, $FF
@@ -110,7 +114,9 @@ EnAnim_9DC7:
     .byte _id_EnFrame6D, $FF
 
 EnAnim_9DC9:
-    .byte _id_EnFrame6F, _id_EnFrame70, _id_EnFrame71, _id_EnFrame6E, $FF
+    .byte _id_EnFrame6F, _id_EnFrame70, _id_EnFrame71
+EnAnim_9DCC:
+    .byte _id_EnFrame6E, $FF
 
 EnAnim_9DCE:
     .byte _id_EnFrame73, _id_EnFrame74, _id_EnFrame75
