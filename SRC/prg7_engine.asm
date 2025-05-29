@@ -1002,7 +1002,7 @@ LC3F6:
     bcs LC3F2                       ;Branch to add #$60 to create valid result.
     rts                             ;
 
-Base10Subtract:
+Base10Subtract: ;($C3FB)
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
     sbc $01                         ;Subtract lower nibble from number.
     sta $01                         ;
@@ -1550,60 +1550,78 @@ GFXInfo:
 ;Y contains the GFX header to fetch from the table above, GFXInfo.
 
 LoadGFX:
-    lda #$FF                        ;
+    ; Set a to (7 * y + 6), offset pointing to the last byte of the GFXInfo entry.
+    lda #$FF
     LC7AD:
-        clc                             ;Every time y decrements, the entry into the table-->
-        adc #$07                        ;is increased by 7.  When y is less than 0, A points-->
-        dey                             ;to the last byte of the entry in the table.
-        bpl LC7AD                       ;
-    tay                             ;Transfer offset into table to Y.
+        clc
+        adc #$07
+        dey
+        bpl LC7AD
+    ;Transfer offset into table to Y.
+    tay
 
-    ldx #$06                        ;
+    ;Copy entries from GFXInfo to $00-$06.
+    ldx #$06
     LC7B6:
-        lda GFXInfo,y                   ;
-        sta $00,x                       ;Copy entries from GFXInfo to $00-$06.
-        dey                             ;
-        dex                             ;
-        bpl LC7B6                       ;
+        lda GFXInfo,y
+        sta $00,x
+        dey
+        dex
+        bpl LC7B6
 
-    ldy $00                         ;ROM bank containing the GFX data.
-    jsr ROMSwitch                   ;($C4EF)Switch to that bank.
-    lda PPUCTRL_ZP                   ;
-    and #$FB                        ;
-    sta PPUCTRL_ZP                   ;Set the PPU to increment by 1.
-    sta PPUCTRL                 ;
+    ;Switch to ROM bank containing the GFX data.
+    ldy $00
+    jsr ROMSwitch
+    
+    ;Set the PPU to increment by 1.
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_INCR_DOWN
+    sta PPUCTRL_ZP
+    sta PPUCTRL
+    
     jsr CopyGFXBlock                ;($C7D5)Copy graphics into pattern tables.
-    ldy CurrentBank                 ;
-    jmp ROMSwitch                   ;($C4FE)Switch back to the "old" bank.
+    
+    ;Switch back to the previous bank.
+    ldy CurrentBank
+    jmp ROMSwitch
 
-;Writes tile data from ROM to VRAM, according to the gfx header data
-;contained in $00-$06.
 
+;Writes tile data from ROM to VRAM, according to the gfx header data contained in $00-$06.
 CopyGFXBlock:
-    lda $05                         ;
-    bne GFXCopyLoop                 ;If $05 is #$00, decrement $06 before beginning.
-    dec $06                         ;
-
-GFXCopyLoop:
-    lda $04                         ;
-    sta PPUADDR                  ;Set PPU to proper address for GFX block write.
-    lda $03                         ;
-    sta PPUADDR                  ;
-    ldy #$00                        ;Set offset for GFX data to 0.
-    LC7E7:
-        lda ($01),y                     ;
-        sta PPUDATA                    ;Copy GFX data byte from ROM to Pattern table.
-        dec $05                         ;Decrement low byte of data length.
-        bne LC7F6                           ;Branch if high byte does not need decrementing.
-            lda $06                         ;
-            beq RTS_C800                       ;If copying complete, branch to exit.
-            dec $06                         ;Decrement when low byte has reached 0.
-        LC7F6:
-        iny                             ;Increment to next byte to copy.
-        bne LC7E7                       ;
-    inc $02                         ;After 256 bytes loaded, increment upper bits of-->
-    inc $04                         ;Source and destination addresses.
-    jmp GFXCopyLoop                 ;(&C7DB)Repeat copy routine.
+    ;If data length low byte is #$00, decrement data length high byte before beginning.
+    lda $05
+    bne @loop
+    dec $06
+@loop:
+    ;Set PPU to destination address for GFX block write.
+    lda $04
+    sta PPUADDR
+    lda $03
+    sta PPUADDR
+    ;Set offset for GFX data to 0.
+    ldy #$00
+    @lowLoop:
+        ;Copy GFX data byte from ROM to Pattern table.
+        lda ($01),y
+        sta PPUDATA
+        ;Decrement low byte of data length.
+        dec $05                         
+        ;Branch if high byte does not need decrementing.
+        bne @endIf
+            ;Low byte has reached 0. High byte needs decrementing.
+            lda $06
+            ;If copying complete, branch to exit.
+            beq RTS_C800
+            ;Decrement high byte
+            dec $06
+        @endIf:
+        ;Increment to next byte to copy.
+        iny
+        bne @lowLoop
+    ;After 256 bytes loaded, increment upper bits of source and destination addresses.
+    inc $02
+    inc $04
+    jmp @loop
 RTS_C800:
     rts
 
@@ -1790,7 +1808,7 @@ SamusInit:
     lda #$03                        ;set to 30 units.
     sta Health+1                    ;
 RTS_C92A:
-    rts                             ;
+    rts
 
 ;------------------------------------[ Main game engine ]--------------------------------------------
 
@@ -1832,7 +1850,7 @@ GameEngine:
         jmp SetTimer                    ;($C4AA)Set delay timer and run game over routine.
     LC97B:
     inc MainRoutine                 ;Next routine to run is GameOver.
-    rts                             ;
+    rts
 
 ;----------------------------------------[ Update age ]----------------------------------------------
 
@@ -1842,34 +1860,48 @@ GameEngine:
 ;overflows at $D0.)
 
 UpdateAge:
-    lda GameMode                    ;
-    bne RTS_C9A5                       ;Exit if at title/password screen.
-    lda MainRoutine                 ;
-    cmp #$03                        ;Is game engine running?
-    bne RTS_C9A5                       ;If not, don't update age.
-    ldx FrameCount                  ;Only update age when FrameCount is zero-->
-    bne RTS_C9A5                       ;(which is approx. every 4.266666666667 seconds).
-    inc SamusAge,x                  ;Minor Age = Minor Age + 1.
-    lda SamusAge                    ;
-    cmp #$D0                        ;Has Minor Age reached $D0?-->
-    bcc RTS_C9A5                       ;If not, we're done.-->
-    lda #$00                        ;Else reset minor age.
-    sta SamusAge                    ;
+    ;Exit if at title/password screen.
+    lda GameMode
+    bne RTS_C9A5
+    
+    ;Is game engine running?
+    lda MainRoutine
+    cmp #$03
+    ;If not, don't update age.
+    bne RTS_C9A5
+    
+    ;Only update age when FrameCount is zero-->
+    ;(which is approx. every 4.266666666667 seconds).
+    ldx FrameCount
+    bne RTS_C9A5
+    
+    ;Minor Age = Minor Age + 1.
+    inc SamusAge,x
+    ;Has Minor Age reached $D0?-->
+    lda SamusAge
+    cmp #$D0
+    ;If not, we're done.-->
+    bcc RTS_C9A5
+    ;Else reset minor age.
+    lda #$00
+    sta SamusAge
+    ;Loop to update middle age and possibly major age.
     LC99B:
-        cpx #$03                        ;
-        bcs RTS_C9A5                           ;Loop to update middle age and possibly major age.
-        inx                             ;
-        inc SamusAge,x                  ;
-        beq LC99B                       ;Branch if middle age overflowed, need to increment-->
+        cpx #$03
+        bcs RTS_C9A5
+        inx
+        inc SamusAge,x
+        ;Branch if middle age overflowed, need to increment major age too. Else exit.
+        beq LC99B
 RTS_C9A5:
-    rts                             ;major age too. Else exit.
+    rts
 
 ;-------------------------------------------[ Game over ]--------------------------------------------
 
 PrepareGameOver:
     lda #$1C                        ;GameOver is the next routine to run.
     sta TitleRoutine                ;
-    lda #$01                        ;
+    lda #$00+1                        ;
     sta SwitchPending               ;Prepare to switch to title memory page.
     jmp ScreenOff                   ;($C439)Turn screen off.
 
@@ -1894,7 +1926,7 @@ Exit14:
 GoPassword:
     lda #$19                        ;DisplayPassword is next routine to run.
     sta TitleRoutine                ;
-    lda #$01                        ;
+    lda #$00+1                        ;
     sta SwitchPending               ;Prepare to switch to intro memory page.
     lda NoiseSFXFlag                ;
     ora #sfxNoise_SilenceMusic      ;Silence music.
@@ -1968,11 +2000,11 @@ SwitchBank:
 ;Each value is the area bank number plus one.
 
 BankTable:
-    .byte $02                       ;Brinstar.
-    .byte $03                       ;Norfair.
-    .byte $05                       ;Kraid hideout.
-    .byte $04                       ;Tourian.
-    .byte $06                       ;Ridley hideout.
+    .byte $01+1                       ;Brinstar.
+    .byte $02+1                       ;Norfair.
+    .byte $04+1                       ;Kraid hideout.
+    .byte $03+1                       ;Tourian.
+    .byte $05+1                       ;Ridley hideout.
 
 ;----------------------------------[ Saved game routines (not used) ]--------------------------------
 
@@ -1986,54 +2018,68 @@ AccessSavedGame:
         sta EraseGame                   ;Clear MSB so saved game data is not erased again.
         jsr EraseAllGameData            ;($CAA1)Erase selected saved game data.
         lda #$01                        ;Indicate this saved game has been erased.-->
-        sta $7800,y                     ;Saved game 0=$780C, saved game 1=$781C, saved game 2=$782C.
+        sta SamusData02,y                     ;Saved game 0=$780C, saved game 1=$781C, saved game 2=$782C.
     LCA4C:
     lda MainRoutine                 ;
     cmp #$01                        ;If initializing the area at the start of the game, branch-->
     beq LoadGameData                ;to load Samus' saved game info.
 
 SaveGameData:
-    lda InArea                      ;Save game based on current area Samus is in. Don't know why.
+    ;Save game based on current area Samus is in. Don't know why.
+    lda InArea
     jsr SavedDataBaseAddr           ;($CAC6)Find index to unique item history for this saved game.
-    ldy #$3F                        ;Prepare to save unique item history which is 64 bytes-->
+    ;Prepare to save unique item history which is 64 bytes in length.
+    ldy #$3F
     LCA59:
-        lda NumberOfUniqueItems,y       ;in length.
-        sta ($00),y                     ;Save unique item history in appropriate saved game slot.
-        dey                             ;
-        bpl LCA59                       ;Loop until unique item history transfer complete.
-    ldy SamusDataIndex              ;Prepare to save Samus' data.
-    ldx #$00                        ;
+        ;Save unique item history in appropriate saved game slot.
+        lda NumberOfUniqueItems,y
+        sta ($00),y
+        dey
+        ;Loop until unique item history transfer complete.
+        bpl LCA59
+    ;Prepare to save Samus' data.
+    ldy SamusDataIndex
+    ldx #$00
     LCA66:
-        lda SamusStat00,x               ;
-        sta SamusData,y                 ;Save Samus' data in appropriate saved game slot.
-        iny                             ;
-        inx                             ;
-        cpx #$10                        ;
-        bne LCA66                       ;Loop until Samus' data transfer complete.
+        ;Save Samus' data in appropriate saved game slot.
+        lda SamusStat00,x
+        sta SamusData00,y
+        iny
+        inx
+        cpx #$10
+        ;Loop until Samus' data transfer complete.
+        bne LCA66
+    ;fallthrough
 
 LoadGameData:
-    pla                             ;Restore A to find appropriate saved game to load.
+    ;Restore A to find appropriate saved game to load.
+    pla
     jsr SavedDataBaseAddr           ;($CAC6)Find index to unique item history for this saved game.
-    ldy #$3F                        ;Prepare to load unique item history which is 64 bytes-->
+    ;Prepare to load unique item history which is 64 bytes in length.
+    ldy #$3F
     LCA78:
-        lda ($00),y                     ;in length.
+        lda ($00),y                     ;
         sta NumberOfUniqueItems,y       ;Loop until unique item history is loaded.
         dey                             ;
         bpl LCA78                       ;
-    bmi LCA83                           ;Branch always.
-        pha                             ;
+    ;Branch always.
+    bmi LCA83
+        pha ; unused instruction
     LCA83:
-    ldy SamusDataIndex              ;Prepare to load Samus' data.
-    ldx #$00                        ;
+    ;Prepare to load Samus' data.
+    ldy SamusDataIndex
+    ldx #$00
     LCA88:
-        lda SamusData,y                 ;
-        sta SamusStat00,x               ;Load Samus' data from appropriate saved game slot.
-        iny                             ;
-        inx                             ;
-        cpx #$10                        ;
-        bne LCA88                       ;Loop until Samus' data transfer complete.
-    pla                             ;
-    rts                             ;
+        ;Load Samus' data from appropriate saved game slot.
+        lda SamusData00,y
+        sta SamusStat00,x
+        iny
+        inx
+        cpx #$10
+        ;Loop until Samus' data transfer complete.
+        bne LCA88
+    pla
+    rts
 
 GetGameDataIndex:
     lda DataSlot                    ;
@@ -2062,7 +2108,7 @@ EraseAllGameData:
     ldx #$00                        ;
     txa                             ;
     LCABC:
-        sta SamusData,y                 ;Erase Samus' data.
+        sta SamusData00,y               ;Erase Samus' data.
         iny                             ;
         inx                             ;
         cpx #$0C                        ;
@@ -2099,7 +2145,7 @@ SavedDataBaseAddr:
         dex                             ;
         bne LCAE0                       ;
 RTS_CAEE:
-    rts                             ;
+    rts
 
 ;Table used by above subroutine to find base address to load saved game data from. The slot 0
 ;starts at $69B4, slot 1 starts at $69F4 and slot 2 starts at $6A34.
@@ -2131,14 +2177,14 @@ LCB09:
         lda #$01                        ;
     LCB14:
     sta JustInBailey                ;Suit OFF, baby!
-    rts                             ;
+    rts
 
 ;Table used by above subroutine to determine ending type.
 AgeTable:
-.byte $7A                       ;Max. 37 hours
-.byte $16                       ;Max. 6.7 hours
-.byte $0A                       ;Max. 3.0 hours
-.byte $04                       ;Best ending. Max. 1.2 hours
+    .byte $7A                       ;Max. 37 hours
+    .byte $16                       ;Max. 6.7 hours
+    .byte $0A                       ;Max. 3.0 hours
+    .byte $04                       ;Best ending. Max. 1.2 hours
 
 ;--------------------------------[ Clear screen data (not used) ]------------------------------------
 
@@ -2357,15 +2403,19 @@ SFX_SetMusicInitFlag:
 ;--------------------------------------[ Update Samus ]----------------------------------------------
 
 UpdateSamus:
-    ldx #$00                        ;Samus data is located at index #$00.
-    stx PageIndex                   ;
-    inx                             ;x=1.
-    stx IsSamus                     ;Indicate Samus is the object being updated.
-    jsr GoSamusHandler              ;($CC1A)Find proper Samus handler routine.
-    dec IsSamus                     ;Update of Samus complete.
+    ;Samus data is located at index #$00.
+    ldx #$00
+    stx PageIndex
+    ;Indicate Samus is the object being updated.
+    inx ;x=1.
+    stx IsSamus
+    jsr GoSamusHandler
+    ;Update of Samus complete.
+    dec IsSamus
     rts
 
-GoSamusHandler:
+;Find proper Samus handler routine.
+GoSamusHandler: ;($CC1A)
     lda ObjAction                   ;
     bmi SamusStand                  ;Branch if Samus is standing.
     jsr ChooseRoutine               ;($C27C)Goto proper Samus handler routine.
@@ -2436,11 +2486,14 @@ ActionTable:
 
 ;----------------------------------------------------------------------------------------------------
 
-SetSamusExplode:
+SetSamusExplode: ;($CC8B)
+    ; this write doesn't serve any purpose
     lda #$50
     sta SamusJumpDsplcmnt
+    ; set samus animation to explode
     lda #an_Explode
     jsr SetSamusAnim
+    ; a is #$00 here
     sta ObjectCounter
 RTS_CC9X:
     rts
@@ -2467,12 +2520,12 @@ LCCB7:
     rts
 
 RunAnimationTbl:
-LCCBE:  .byte an_SamusRun
-        .byte an_SamusRunPntUp
+    .byte an_SamusRun
+    .byte an_SamusRunPntUp
 
 RunAccelerationTbl:
-LCCC0:  .byte $30                       ;Accelerate right.
-        .byte $D0                       ;Accelerate left.
+    .byte $30                       ;Accelerate right.
+    .byte $D0                       ;Accelerate left.
 
 ; SamusRun
 ; ========
@@ -2600,7 +2653,7 @@ SetMirrorCntrlBit:
     jsr Amul16                      ;($C2C5)*16. Move bit 0 to bit 4 position.
     ora ObjectCntrl                 ;
     sta ObjectCntrl                 ;Use SamusDir bit to set mirror bit.
-    rts                             ;
+    rts
 
 ;------------------------------[ Check if screw attack is active ]-----------------------------------
 
@@ -2634,7 +2687,7 @@ LCDBF:
     lsr
     lsr
     tax
-    lda LCCBE,x
+    lda RunAnimationTbl,x
     cmp ObjAnimResetIndex
     beq RTS_CDBE
     jsr SetSamusAnim
@@ -2661,50 +2714,61 @@ LCDD7:
     jmp SetSamusNextAnim
 
 ; Table used by above subroutine
-
 Table05:
     .byte $3F
     .byte $3B
     .byte $3D
     .byte $3F
 
-CheckHealthStatus:
-LCDFA:
-    lda SamusHit                    ;
-    and #$20                        ;Has Samus been hit?-->
-    beq Lx006                       ;If not, branch to check if still blinking from recent hit.
-        lda #$32                        ;
-        sta SamusBlink                  ;Samus has been hit. Set blink for 32 frames.
+CheckHealthStatus: ;($CDFA)
+    ;Has Samus been hit?
+    lda SamusHit
+    and #$20
+    ;If not, branch to check if still blinking from recent hit.
+    beq Lx006
+        ;Samus has been hit. Set blink for 32 frames.
+        lda #$32
+        sta SamusBlink
+        ; default to no knockback
         lda #$FF
-        sta DamagePushDirection
-        lda $73
-        sta $77
+        sta SamusKnockbackDir
+        lda SamusKnockbackIsBomb
+        sta SamusKnockbackIsBomb77
         beq Lx005
+            ; play hurt sfx if 
             bpl Lx004
                 jsr SFX_SamusHit
             Lx004:
+            ; write bit 3 of SamusHit (direction samus got hit) in SamusKnockbackDir
             lda SamusHit
             and #$08
             lsr
             lsr
             lsr
-            sta DamagePushDirection
+            sta SamusKnockbackDir
         Lx005:
+        ; set samus hit y speed
         lda #$FD
         sta ObjSpeedY
-        lda #$38                        ;Samus is hit. Store Samus hit gravity.
-        sta SamusAccelY                ;
+        ; set Samus hit gravity.
+        lda #$38
+        sta SamusAccelY
+        ; branch if samus is not dead
         jsr IsSamusDead
         bne Lx006
-        jmp CheckHealthBeep
-
+            ; samus is dead, exit
+            jmp CheckHealthBeep
     Lx006:
+    ; exit if samus has no i-frames
     lda SamusBlink
     beq CheckHealthBeep
+    ; samus has i-frames, decrement them
     dec SamusBlink
-    ldx DamagePushDirection
+    ; branch if direction is nothing
+    ldx SamusKnockbackDir
     inx
     beq Lx009
+    ; 
     jsr Adiv16       ; / 16
     cmp #$03
     bcs Lx007
@@ -2718,17 +2782,23 @@ LCDFA:
     Lx008:
     sta ObjSpeedX
 Lx009:
-    lda $77
+    ; check if samus should become invisible for her i-frames blinking
+    ; exit if samus was hit by a bomb
+    lda SamusKnockbackIsBomb77
     bpl CheckHealthBeep
+    ; exit on odd frames
     lda FrameCount
     and #$01
     bne CheckHealthBeep
+    
+    ; make samus invisible
     tay
     sty ObjAnimDelay
     ldy #$F7
     sty ObjAnimFrame
 
 CheckHealthBeep:
+    ; beep if health < 17
     ldy Health+1
     dey
     bmi Lx010
@@ -2736,13 +2806,14 @@ CheckHealthBeep:
     lda Health
     cmp #$70
     bcs Lx011
-; health < 17
 Lx010:
+    ;Only beep every 16th frame.
     lda FrameCount
     and #$0F
-    bne Lx011                           ;Only beep every 16th frame.
-    jsr SFX_Beep
-Lx011:
+    bne Lx011
+        jsr SFX_Beep
+    Lx011:
+    ; clear SamusHit
     lda #$00
     sta SamusHit
 RTS_CE83:
@@ -2751,71 +2822,95 @@ RTS_CE83:
 ;----------------------------------------[ Is Samus dead ]-------------------------------------------
 
 IsSamusDead:
-    lda ObjAction                   ;
-    cmp #sa_Dead                    ;
-    beq Exit3                       ;Samus is dead. Zero flag is set.
-    cmp #sa_Dead2                   ;
-    beq Exit3                       ;
-    cmp #$FF                        ;Samus not dead. Clear zero flag.
-
+    ;Samus is dead. Zero flag is set.
+    lda ObjAction
+    cmp #sa_Dead
+    beq Exit3
+    cmp #sa_Dead2
+    beq Exit3
+    ;Samus not dead. Clear zero flag.
+    cmp #$FF
 Exit3:
     rts                             ;Exit for routines above and below.
 
 ;----------------------------------------[ Subtract health ]-----------------------------------------
 
 SubtractHealth:
-    lda HealthChange              ;Check to see if health needs to be changed.-->
-    ora HealthChange+1              ;If not, branch to exit.
-    beq Exit3                       ;
-    jsr IsSamusDead                 ;($CE84)Check if Samus is already dead.
-    beq ClearDamage                 ;Samus is dead. Branch to clear damage values.
-    ldy EndTimer+1                  ;If end escape timer is running, Samus cannot be hurt.
-    iny                             ;
-    beq LCEA6                           ;Branch if end escape timer not active.
-    ClearDamage:
+    ;Check to see if health needs to be changed. If not, branch to exit.
+    lda HealthChange
+    ora HealthChange+1
+    beq Exit3
+    ;Samus cannot be hurt while she is dead
+    jsr IsSamusDead
+    beq GotoClearHealthChange
+    ;If end escape timer is running, Samus cannot be hurt.
+    ldy EndTimer+1
+    iny
+    beq LCEA6 ;Branch if end escape timer not active.
+    GotoClearHealthChange:
         jmp ClearHealthChange           ;($F323)Clear health change values.
     LCEA6:
-    lda MotherBrainStatus           ;If mother brain is in the process of dying, receive-->
-    cmp #$03                        ;no damage.
-    bcs ClearDamage                 ;
+    ;If mother brain is in the process of dying, receive no damage.
+    lda MotherBrainStatus
+    cmp #$03
+    bcs GotoClearHealthChange
 
-    lda SamusGear                   ;
-    and #gr_VARIA                   ;Check is Samus has Varia.
-    beq LCEBF                           ;
-    lsr HealthChange              ;If Samus has Varia, divide damage by 2.
-    lsr HealthChange+1              ;
-    bcc LCEBF                           ;If Health+1 moved a bit into the carry flag while-->
-    lda #$4F                        ;dividing, add #$4F to Health for proper-->
-    adc HealthChange              ;division results.
-    sta HealthChange              ;
+    ;Branch if Samus doesn't have Varia.
+    lda SamusGear
+    and #gr_VARIA
+    beq LCEBF
+    ;Samus has Varia, divide damage by 2.
+    lsr HealthChange
+    lsr HealthChange+1
+    ;If Health+1 moved a bit into the carry flag while--> 
+    ;dividing, add #$4F to Health for proper division results.
+    bcc LCEBF
+    lda #$4F
+    adc HealthChange
+    sta HealthChange
 
 LCEBF:
-    lda Health                    ;Prepare to subtract from Health.
-    sta $03                         ;
-    lda HealthChange              ;Amount to subtract from Health.
-    sec                             ;
-    jsr Base10Subtract              ;($C3FB)Perform base 10 subtraction.
-    sta Health                    ;Save results.
+    ;Prepare to subtract from Health.
+    lda Health
+    sta $03
+    ;Amount to subtract from Health.
+    lda HealthChange
+    sec
+    ;($C3FB)Perform base 10 subtraction.
+    jsr Base10Subtract
+    ;Save results.
+    sta Health
 
-    lda Health+1                   ;Prepare to subtract from Health+1.
-    sta $03                         ;
-    lda HealthChange+1              ;Amount to subtract from Health+1.
-    jsr Base10Subtract              ;($C3FB)Perform base 10 subtraction.
-    sta Health+1                    ;Save Results.
+    ;Prepare to subtract from Health+1.
+    lda Health+1
+    sta $03
+    ;Amount to subtract from Health+1.
+    lda HealthChange+1
+    ;($C3FB)Perform base 10 subtraction.
+    jsr Base10Subtract
+    ;Save Results.
+    sta Health+1
 
-    lda Health                    ;
-    and #$F0                        ;Is Samus health at 0?  If so, branch to-->
-    ora Health+1                    ;begin death routine.
-    beq LCEE6                           ;
-        bcs LCF2B                       ;Samus not dead. Branch to exit.
+    ;Is Samus health at 0?  If so, branch to begin death routine.
+    lda Health
+    and #$F0
+    ora Health+1
+    beq LCEE6
+        ;Samus not dead. Branch to exit.
+        bcs LCF2B
     LCEE6:
-    lda #$00                        ;Samus is dead.
-    sta Health                    ;
-    sta Health+1                    ;Set health to #$00.
-    lda #sa_Dead                    ;
-    sta ObjAction                   ;Death handler.
-    jsr SFX_SamusDie                ;($CBE2)Start Samus die SFX.
-    jmp SetSamusExplode             ;($CC8B)Set Samus exlpode routine.
+    ;Samus is dead.
+    ;Set health to #$00.
+    lda #$00
+    sta Health
+    sta Health+1
+    ;Death handler.
+    lda #sa_Dead
+    sta ObjAction
+    ;($CBE2)Start Samus die SFX.
+    jsr SFX_SamusDie
+    ;($CC8B)Set Samus exlpode routine.
+    jmp SetSamusExplode
 
 ;----------------------------------------[ Add health ]----------------------------------------------
 
@@ -3089,7 +3184,7 @@ SetSamusRoll:
     sta ObjAnimResetIndex
     lda #an_SamusRunJump
     sta ObjAnimIndex
-    lda LCCC0,x
+    lda RunAccelerationTbl,x
     sta SamusAccelX
     lda #$01
     sta ScrewAttack0686
@@ -3292,7 +3387,7 @@ LD210:
     jsr LD359
     jsr LD38E
     lda #$0C
-    sta $030F,y
+    sta ProjectileDieDelay,y
     ldx SamusDir
     lda Table99,x   ; get bullet speed
     sta ObjSpeedX,y     ; -4 or 4, depending on Samus' direction
@@ -3317,8 +3412,8 @@ LD210:
     lsr
     lsr
     ror
-    ora $061F
-    sta $061F
+    ora HasBeamSFX
+    sta HasBeamSFX
     ldx ObjAction,y
     dex
     bne LD269
@@ -3347,7 +3442,7 @@ LD275:
     jsr LD38A
     jsr LD38E
     lda #$0C
-    sta $030F,y
+    sta ProjectileDieDelay,y
     lda #$FC
     sta ObjSpeedY,y
     lda #$00
@@ -3370,8 +3465,8 @@ LD275:
     lsr
     lsr
     ror
-    ora $061F
-    sta $061F
+    ora HasBeamSFX
+    sta HasBeamSFX
     lda ObjAction,y
     cmp #$01
     bne Lx044
@@ -3441,7 +3536,7 @@ Lx047:
     lda #wa_Missile ; missile handler
     sta ObjAction,y
     lda #$FF
-    sta $030F,y     ; # of frames projectile should last
+    sta ProjectileDieDelay,y     ; # of frames projectile should last
     dec MissileCount
     bne Exit4       ; exit if not the last missile
 ; Samus has no more missiles left
@@ -3502,9 +3597,9 @@ LD38E:
     bpl Exit4       ; branch if Samus doesn't have Ice Beam
     lda #wa_IceBeam
     sta ObjAction,y
-    lda $061F
+    lda HasBeamSFX
     ora #$01
-    sta $061F
+    sta HasBeamSFX
     jmp SFX_BulletFire
 
 ; SamusDoor
@@ -6000,7 +6095,7 @@ LavaAndMoveCheck:
     bcs LE2A6                        ;Samus not in lava so branch.
 
 ;Samus is in lava.
-    sty DamagePushDirection         ;Don't push Samus from lava damage.
+    sty SamusKnockbackDir         ;Don't push Samus from lava damage.
     jsr ClearHealthChange           ;($F323)Clear any pending health changes to Samus.
     lda #$32                        ;
     sta SamusBlink                  ;Make Samus blink.
@@ -8403,7 +8498,7 @@ FillRoomRAM:
 
 LF034:
     lda #$FF
-    sta $73
+    sta SamusKnockbackIsBomb
     sta SamusHurt010F
 ; check for crash with Mellows
     ldx #$18
@@ -8854,7 +8949,7 @@ SamusHurtF311:
     beq Lx295
     lda #$01
 Lx295:
-    sta SamusHurt73
+    sta SamusKnockbackIsBomb
 
 ClearHealthChange:
     lda #$00
@@ -8864,22 +8959,26 @@ ClearHealthChange:
 Exit22:
     rts                             ;Return for routine above and below.
 
-LF32A:  bcs Exit22
-        jsr LF279
-        jmp LF2BF
+LF32A:
+    bcs Exit22
+    jsr LF279
+    jmp LF2BF
 
-LF332:  jsr LF340
-        jmp Amul8       ; * 8
+LF332:
+    jsr LF340
+    jmp Amul8       ; * 8
 
-LF338:  lda $10
-        asl
-        asl
-        asl
-        jmp LF27B
+LF338:
+    lda $10
+    asl
+    asl
+    asl
+    jmp LF27B
 
-LF340:  lda $10
-        eor #$03
-        rts
+LF340:
+    lda $10
+    eor #$03
+    rts
 
 ;-------------------------------------------------------------------------------
 UpdateEnemies: ; LF345

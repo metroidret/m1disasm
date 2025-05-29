@@ -248,13 +248,14 @@ HealthChange           = $6E     ;Amount to add/subtract from Health.
 
 SamusBlink             = $70     ;Samus's invincibility frames delay counter.
 UpdatingProjectile     = $71     ;#$01=Projectile update in process. #$00=not in process.
-DamagePushDirection    = $72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
-SamusHurt73            = $73
+SamusKnockbackDir      = $72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
+SamusKnockbackIsBomb   = $73     ;bit 7: 0=samus was hurt, 1=samus was bombed
 InArea                 = $74     ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12=Kraid hideout,-->
                                    ;#$13=Tourian, #$14=Ridley hideout.
 
 SpareMem75             = $75     ;Initialized to #$FF in AreaInit. Not used.
 PalToggle              = $76
+SamusKnockbackIsBomb77 = $77     ;set to SamusKnockbackIsBomb
 
 ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing.
                                    ;#$01=Play item room music.
@@ -451,7 +452,7 @@ ObjAnimIndex           = $0306   ;Current index into ObjectAnimIndexTbl.
 SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
 ObjSpeedY              = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
 ObjSpeedX              = $0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
-SamusHit               = $030A   ;Samus hit by enemy.
+SamusHit               = $030A   ;Samus hit by enemy. bit 3: direction samus is hit
 ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
 ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
 ObjY                   = $030D   ;Object y position in room(not actual screen position).
@@ -774,9 +775,9 @@ RidleyStatueStatus     = $687C   ;bit 7 set, statues are up.
 SamusAge               = $687D   ;Low byte of Samus' age.
 ; SamusAge+1             = $687E   ;Mid byte of Samus' age.
 ; SamusAge+2             = $687F   ;High byte of Samus' age.
-SamusStat01            = $6880   ;Unused memory address for storing Samus info.
-SamusStat02            = $6881   ;SamusStat02 and 03 keep track of how many times Samus has-->
-SamusStat03            = $6882   ;died, but this info is never accessed anywhere in the game.
+SamusStat0A            = $6880   ;Unused memory address for storing Samus info.
+SamusStat0B            = $6881   ;SamusStat0B keeps track of how many times Samus has-->
+; SamusStat0B+1          = $6882   ;died, but this info is never accessed anywhere in the game.
 
 AtEnding               = $6883   ;1=End scenes playing, 0=Not at ending.
 
@@ -908,7 +909,24 @@ MetroidLatch0430       = $77FB
 MetroidLatch0440       = $77FC
 MetroidLatch0450       = $77FD
 
-SamusData              = $77FE   ;Thru $782D. Samus saved game data (not used).
+; 3 slots of 16 bytes each ($77FE-$782D)
+;Samus saved game data (not used).
+SamusData00            = $77FE
+SamusData01            = $77FF
+SamusData02            = $7800
+SamusData03            = $7801
+SamusData04            = $7802
+SamusData05            = $7803
+SamusData06            = $7804
+SamusData07            = $7805
+SamusData08            = $7806
+SamusData09            = $7807
+SamusData0A            = $7808
+SamusData0B            = $7809
+SamusData0C            = $780A
+SamusData0D            = $780B
+SamusData0E            = $780C
+SamusData0F            = $780D
 
 ;------------------------------------------[ Misc. defines ]-----------------------------------------
 

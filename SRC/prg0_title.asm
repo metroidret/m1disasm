@@ -2249,17 +2249,24 @@ InitializeGame:
     lda InArea                      ;Load starting area.
     and #$0F                        ;
     bne L92F9                       ;If in area other than Brinstar, get second item in tables.
-        dex                             ;Starting in Brinstar. Get forst item in each table.
+        dex                             ;Starting in Brinstar. Get first item in each table.
     L92F9:
-    lda RestartYPosTbl,x            ;
-    sta ObjY                        ;Set Samus restart y position on screen.
-    lda RestartXPosTbl,x            ;
-    sta ObjX                        ;Set Samus restart x position on screen.
-    inc SamusStat02                 ;The combination of SamusStat02 and 03 keep track of how-->
-    bne L930D                       ;many times Samus has died and beaten the game as they are-->
-        inc SamusStat03                 ;incremented every time this routine is run, but they are-->
+    
+    ;Set Samus restart position on screen.
+    lda RestartYPosTbl,x
+    sta ObjY
+    lda RestartXPosTbl,x
+    sta ObjX
+    
+    ;SamusStat0B's low and high bytes keep track of how many times Samus has-->
+    ;died or beaten the game as they are incremented every time this routine-->
+    ;is run, but they are not accessed anywhere else.
+    inc SamusStat0B
+    bne L930D
+        inc SamusStat0B+1
     L930D:
-    lda #$01                        ;not accessed anywhere else.
+    
+    lda #$01                        ;
     sta MainRoutine                 ;Initialize starting area.
     jsr ScreenNmiOff                ;($C45D)Turn off screen.
     jsr LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
@@ -2286,23 +2293,25 @@ RestartXPosTbl:
     .byte $5C                       ;Not used.
 
 InitializeStats:
-    lda #$00                        ;
-    sta SamusStat00                 ;
-    sta TankCount                   ;
-    sta SamusGear                   ;
-    sta MissileCount                ;
-    sta MaxMissiles                 ;
-    sta KraidStatueStatus           ;Set all of Samus' stats to 0 when starting new game.
-    sta RidleyStatueStatus          ;
-    sta SamusAge                    ;
-    sta SamusAge+1                  ;
-    sta SamusAge+2                  ;
-    sta SamusStat01                 ;
-    sta AtEnding                    ;
-    sta JustInBailey                ;
-    lda #$02                        ;
-    sta SwitchPending               ;Prepare to switch to Brinstar memory page.
-    rts                             ;
+    ;Set all of Samus' stats to 0 when starting new game.
+    lda #$00
+    sta SamusStat00
+    sta TankCount
+    sta SamusGear
+    sta MissileCount
+    sta MaxMissiles
+    sta KraidStatueStatus
+    sta RidleyStatueStatus
+    sta SamusAge
+    sta SamusAge+1
+    sta SamusAge+2
+    sta SamusStat0A
+    sta AtEnding
+    sta JustInBailey
+    ;Prepare to switch to Brinstar memory page.
+    lda #$02
+    sta SwitchPending
+    rts
 
 DisplayPassword:
     lda Timer3                      ;Wait for "GAME OVER" to be displayed-->
