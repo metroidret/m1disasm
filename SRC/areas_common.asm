@@ -46,7 +46,7 @@
 .import SelectSamusPal
 .import MakeCartRAMPtr
 .import LDD8B
-.import LE449
+.import NegateTemp00Temp01
 .import LEB6E
 .import LF410
 .import LF416
@@ -779,7 +779,7 @@ EnemyGetDeltaX_Negative977B:
         lda #$00
         sbc EnSpeedX,x
         tay
-        jsr LE449
+        jsr NegateTemp00Temp01
     L83D0:
     lda $04
     cmp $02
@@ -1099,7 +1099,7 @@ SetDoorEntryInfo:
     lda #$05                        ;
     sta ObjAction                   ;Indicate Samus is in a door.
 RTS_8B6C:
-    rts                             ;
+    rts
 
 L8B6D:
     jsr SetDoorEntryInfo            ;($8B53)Save Samus action and set door entry timer.
@@ -1110,7 +1110,7 @@ L8B6D:
 SamusInDoor:
     ora #$80                        ;Set MSB of DoorEntryStatus to indicate Samus has just-->
     sta DoorEntryStatus                  ;entered a door.
-    rts                             ;
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 UpdateAllDoors:

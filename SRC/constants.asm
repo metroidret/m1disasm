@@ -96,6 +96,24 @@
 
 ;-------------------------------------------[ Defines ]----------------------------------------------
 
+; entity to entity collsion detection
+Temp04_ObjEn1RadY      = $04
+Temp05_ObjEn1RadX      = $05
+Temp06_ObjEn1Y         = $06
+Temp07_ObjEn0Y         = $07
+Temp08_ObjEn1X         = $08
+Temp09_ObjEn0X         = $09
+Temp0A_ObjEn1Hi        = $0A
+Temp0B_ObjEn0Hi        = $0B
+
+; LoadPositionFromTemp/StorePositionToTemp/ApplySpeedToPosition
+Temp02_ScrollDir       = $02 ; #$00=vertical room, #$02=horizontal room
+Temp04_SpeedY          = $04
+Temp05_SpeedX          = $05
+Temp08_PositionY       = $08
+Temp09_PositionX       = $09
+Temp0B_PositionHi      = $0B
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
@@ -528,6 +546,7 @@ EnData04               = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
+                                   ;bit7: when this is set, use bit2 as facing direction instead of bit0?
 ; EnCounter              = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelY       = $0406   ;Counts such things as explosion time. - y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter

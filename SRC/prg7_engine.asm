@@ -143,7 +143,7 @@ SoundEngine            = $B3B4
 .export SelectSamusPal
 .export MakeCartRAMPtr
 .export LDD8B
-.export LE449
+.export NegateTemp00Temp01
 .export LEB6E
 .export LF410
 .export LF416
@@ -2209,14 +2209,14 @@ UpdateWorld:
     jsr AreaRoutine                 ;($95C3)Area specific routine.
     jsr UpdateElevator              ;($D7B3)Display of elevators.
     jsr UpdateStatues               ;($D9D4)Display of Ridley & Kraid statues.
-    jsr UpdateAllEnemyExplosions       ; destruction of enemies
-    jsr UpdateAllMellows       ; update of Mellow/Memu enemies
+    jsr UpdateAllEnemyExplosions    ; destruction of enemies
+    jsr UpdateAllMellows            ; update of Mellow/Memu enemies
     jsr UpdateAllEnemyFireballs
-    jsr UpdateAllSkreeProjectiles       ; destruction of green spinners
+    jsr UpdateAllSkreeProjectiles   ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
-    jsr UpdateAllDoors       ; display of doors
-    jsr UpdateAllTileBlasts ; tile de/regeneration
-    jsr LF034       ; Samus <--> enemies crash detection
+    jsr UpdateAllDoors              ; display of doors
+    jsr UpdateAllTileBlasts         ; tile de/regeneration
+    jsr CollisionDetection          ; collision detection between entities.
     jsr DisplayBar                  ;($E0C1)Display of status bar.
     jsr LFAF2
     jsr CheckMissileToggle
@@ -3217,9 +3217,9 @@ SamusRoll:
         bcc Lx032     ; branch if not possible to stand up
         ldx #$00
         jsr StoreObjectPositionToTemp
-        stx $05
+        stx Temp05_SpeedX
         lda #$F5
-        sta $04
+        sta Temp04_SpeedY
         jsr ApplySpeedToPosition
         jsr LD638
         jsr StopHorzMovement
@@ -3999,20 +3999,20 @@ UpdateBullet_D609:
 LD624:
     ldx PageIndex
     lda ObjSpeedX,x
-    sta $05
+    sta Temp05_SpeedX
     lda ObjSpeedY,x
-    sta $04
+    sta Temp04_SpeedY
     jsr StoreObjectPositionToTemp
     jsr ApplySpeedToPosition
     bcc Lx078
 LD638:
-    lda $08
+    lda Temp08_PositionY
     sta ObjY,x
-    lda $09
+    lda Temp09_PositionX
     sta ObjX,x
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
-    bpl Lx080      ; branch always
+    bpl Lx080 ; branch always
 ToggleObjHi:
         lda ObjHi,x
         eor #$01
@@ -5751,7 +5751,7 @@ LE0AD:
     tya                             ;
     sta EnAnimIndex,x               ;Save new animation index.
 RTS_E0BB:
-    rts                             ;
+    rts
 
 LE0BC:
     ldy EnResetAnimIndex,x          ;reset animation index.
@@ -5859,7 +5859,7 @@ AddTanks:
 
     stx SpritePagePos               ;Store new sprite page position.
 RTS_E172:
-    rts                             ;
+    rts
 
 ;----------------------------------------[Sprite write digit ]---------------------------------------
 
@@ -6332,7 +6332,7 @@ LE3D3:
     lda #$00                        ;cause Samus to reach maximum speed first in most-->
     adc ObjSpeedY                ;situations before the linear counter.
     sta $00                         ;$00 stores temp copy of current vertical speed.
-    rts                             ;
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -6369,7 +6369,7 @@ HorzAccelerate: ;($E3E5)
         lda #$00
         sbc ObjSpeedX
         tay
-        jsr LE449
+        jsr NegateTemp00Temp01
     Lx148:
     cpx $02
     tya
@@ -6387,9 +6387,9 @@ HorzAccelerate: ;($E3E5)
     lda #$00
     adc ObjSpeedX
     sta $00                         ;$00 stores temp copy of current horizontal speed.
-    rts                             ;
+    rts
 
-LE449:
+NegateTemp00Temp01:
     lda #$00
     sec
     sbc $00
@@ -6990,7 +6990,7 @@ LE7BD:
     sta $03
     tay
     ldx #$00
-    lda $09
+    lda Temp09_PositionX
     sec
     sbc $03
     and #$07
@@ -7130,7 +7130,7 @@ CheckMoveVertical:
     Lx208:
     sty $02
     ldx #$00
-    lda $08
+    lda Temp08_PositionY
     sec
     sbc $02
     and #$07
@@ -7147,11 +7147,11 @@ CheckMoveVertical:
 
 StoreObjectPositionToTemp:
     lda ObjHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     lda ObjY,x
-    sta $08
+    sta Temp08_PositionY
     lda ObjX,x
-    sta $09
+    sta Temp09_PositionX
     rts
 
 ;--------------------------------------------------------
@@ -8267,7 +8267,7 @@ AddToPtr00:
 
 DrawStructRow:
     and #$0F                        ;Row length(in macros). Range #$00 thru #$0F.
-    bne LEF19                           ;
+    bne LEF19                       ;
     lda #$10                        ;#$00 in row length=16.
 LEF19:
     sta $0E                         ;Store horizontal macro count.
@@ -8283,16 +8283,16 @@ LEF19:
 DrawMacro:
     lda $01                         ;High byte of current location in room RAM.
     cmp #$63                        ;Check high byte of room RAM address for both room RAMs-->
-    beq LEF38                           ;to see if the attribute table data for the room RAM has-->
+    beq LEF38                       ;to see if the attribute table data for the room RAM has-->
     cmp #$67                        ;been reached.  If so, branch to check lower byte as well.
-    bcc LEF3F                          ;If not at end of room RAM, branch to draw macro.
-    beq LEF38                           ;
+    bcc LEF3F                       ;If not at end of room RAM, branch to draw macro.
+    beq LEF38                       ;
     rts                             ;Return if have gone past room RAM(should never happen).
 
 LEF38:
     lda $00                         ;Low byte of current nametable address.
     cmp #$A0                        ;Reached attrib table?-->
-    bcc LEF3F                           ;If not, branch to draw the macro.
+    bcc LEF3F                       ;If not, branch to draw the macro.
     rts                             ;Can't draw any more of the structure, exit.
 
 LEF3F:
@@ -8310,13 +8310,13 @@ LEF4B:
     ldy TilePosTable,x              ;get tile position in macro.
     sta ($00),y                     ;Write tile number to room RAM.
     dex                             ;Done four tiles yet?-->
-    bpl LEF4B                           ;If not, loop to do another.
+    bpl LEF4B                       ;If not, loop to do another.
     jsr UpdateAttrib                ;($EF9E)Update attribute table if necessary
     ldy #$02                        ;Macro width(in tiles).
     jsr AddYToPtr00                 ;($C2A8)Add 2 to pointer to move to next macro.
     lda $00                         ;Low byte of current room RAM work pointer.
     and #$1F                        ;Still room left in current row?-->
-    bne LEF72                           ;If yes, branch to do another macro.
+    bne LEF72                       ;If yes, branch to do another macro.
 
 ;End structure row early to prevent it from wrapping on to the next row..
     lda $10                         ;Struct index.
@@ -8350,10 +8350,10 @@ DrawStruct:
     sty $10                         ;
     lda (StructPtr),y               ;Load data byte.
     cmp #$FF                        ;End-of-struct?-->
-    beq RTS_EF99                           ;If so, branch to exit.
+    beq RTS_EF99                    ;If so, branch to exit.
     jmp DrawStructRow               ;($EF13)Draw a row of macros.
 RTS_EF99:
-    rts                             ;
+    rts
 
 ;The following table is used to draw macros in room RAM. Each macro is 2 x 2 tiles.
 ;The following table contains the offsets required to place the tiles in each macro.
@@ -8426,15 +8426,15 @@ LEFD5:
     lda ObjectPal                   ;Load new attribute table data(#$00 thru #$03).
     LEFE8:
         dex                             ;
-        bmi LEFEF                           ;
+        bmi LEFEF                       ;
         asl                             ;
         asl                             ;Attribute table bits shifted one step left
-        bcc LEFE8                           ;Loop until attribute table bits are in the proper location.
+        bcc LEFE8                       ;Loop until attribute table bits are in the proper location.
 LEFEF:
     ora ($02),y                     ;
     sta ($02),y                     ;Set attribute table bits.
 RTS_EFF3:
-    rts                             ;
+    rts
 
 AttribMaskTable:
     .byte %11111100                 ;Upper left macro.
@@ -8463,14 +8463,15 @@ InitTables:
     LF012:
         sta ($00),y                     ;Fill attribute table.
         iny                             ;
-        bne LF012                           ;Loop until entire attribute table is filled.
-    rts                             ;
+        bne LF012                       ;Loop until entire attribute table is filled.
+    rts
 
+;Data to fill attribute tables with.
 ATDataTable:
-    .byte %00000000                 ;
-    .byte %01010101                 ;Data to fill attribute tables with.
-    .byte %10101010                 ;
-    .byte %11111111                 ;
+    .byte %00000000
+    .byte %01010101
+    .byte %10101010
+    .byte %11111111
 
 FillRoomRAM:
     pha                             ;Temporarily store A.
@@ -8485,221 +8486,252 @@ FillRoomRAM:
     LF029:
         sta ($00),y                     ;
         dey                             ;
-        bne LF029                           ;
+        bne LF029                       ;
         dec $01                         ;Loop until all the room RAM is filled with #$FF(black).
         inx                             ;
-        bne LF029                           ;
-    rts                             ;
+        bne LF029                       ;
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
 ; Crash detection
 ; ===============
 
-LF034:
+CollisionDetection:
     lda #$FF
     sta SamusKnockbackIsBomb
     sta SamusHurt010F
-; check for crash with Mellows
+
+; mellow <--> bullet/missile/bomb detection
     ldx #$18
-Lx261:
-    lda MellowStatus,x
-    beq Lx266           ; branch if no Mellow in slot
-    cmp #$03
-    beq Lx266
-    jsr LF19A
-    jsr IsSamusDead
-    beq Lx262
-    lda SamusBlink
-    bne Lx262
-    ldy #$00
-    jsr LF149
-    jsr LF2B4
-; check for crash with bullets
-Lx262:
-    ldy #$D0
-Lx263:
-    lda ObjAction,y       ; projectile active?
-    beq Lx265            ; try next one if not
-    cmp #wa_BulletExplode
-    bcc Lx264
-    cmp #wa_Unknown7
-    beq Lx264
-    cmp #wa_BombExplode
-    beq Lx264
-    cmp #wa_Missile
-    bne Lx265
-Lx264:
-    jsr LF149
-    jsr LF32A
-Lx265:
-    jsr Yplus16
-    bne Lx263
-Lx266:
-    txa
-    sec
-    sbc #$08                ; each Mellow occupies 8 bytes
-    tax
-    bpl Lx261
+    Lx261:
+        ; branch if no Mellow in slot
+        lda MellowStatus,x
+        beq Lx266
+        cmp #$03
+        beq Lx266
+        jsr LF19A
+        jsr IsSamusDead
+        beq Lx262
+        lda SamusBlink
+        bne Lx262
+        ldy #$00
+        jsr CollisionDetectionMellow_F149
+        jsr CollisionDetectionMellow_F2B4
+    ; check for crash with samus's projectiles
+    Lx262:
+        ldy #$D0
+        Lx263:
+            ; try next projectile if this one is not active
+            lda ObjAction,y
+            beq Lx265
+            ; try next projectile if it is not a bullet, unknown7, bomb or missile
+            cmp #wa_BulletExplode
+            bcc Lx264
+            cmp #wa_Unknown7
+            beq Lx264
+            cmp #wa_BombExplode
+            beq Lx264
+            cmp #wa_Missile
+            bne Lx265
+        Lx264:
+            ; projectile is of the right type
+            ; hit mellow
+            jsr CollisionDetectionMellow_F149
+            jsr CollisionDetectionMellow_F32A
+        Lx265:
+            jsr Yplus16
+            bne Lx263
+    Lx266:
+        ; each Mellow occupies 8 bytes
+        txa
+        sec
+        sbc #$08
+        tax
+        bpl Lx261
 
+; doors <--> bullet/missile/bomb detection
     ldx #$B0
-Lx267:
-    lda ObjAction,x
-    cmp #$02
-    bne Lx268
-    ldy #$00
-    jsr IsSamusDead
-    beq Lx269
-    jsr AreObjectsTouching          ;($DC7F)
-    jsr LF277
-Lx268:
-    jsr Xminus16
-    bmi Lx267
+    Lx267:
+        ; check next door if this door is not closed
+        lda ObjAction,x
+        cmp #$02
+        bne Lx268
+        ; dont check doors if samus is dead
+        ldy #$00
+        jsr IsSamusDead
+        beq Lx269
+        
+        jsr AreObjectsTouching          ;($DC7F)
+        jsr CollisionDetectionDoor_F277
+    Lx268:
+        jsr Xminus16
+        bmi Lx267
 
-; enemy <--> bullet/missile/bomb detection
+; enemy <--> bullet/missile/bomb detection and enemy <--> samus detection
 Lx269:
-    ldx #$50                ; start with enemy slot #5
-LF09F:
-    lda EnStatus,x       ; slot active?
-    beq Lx270              ; branch if not
-    cmp #$03
-Lx270:
-    beq NextEnemy      ; next slot
-    jsr Object0_F152
-    lda EnStatus,x
-    cmp #$05
-    beq Lx274
-    ldy #$D0                ; first projectile slot
-Lx271:
-    lda ObjAction,y  ; is it active?
-    beq Lx273            ; branch if not
-    cmp #wa_BulletExplode
-    bcc Lx272
-    cmp #wa_Unknown7
-    beq Lx272
-    cmp #wa_BombExplode
-    beq Lx272
-    cmp #wa_Missile
-    bne Lx273
-; check if enemy is actually hit
-Lx272:
-    jsr LF140
-    jsr LF2CA
-Lx273:
-    jsr Yplus16          ; next projectile slot
-    bne Lx271
-Lx274:
-    ldy #$00
-    lda SamusBlink
-    bne NextEnemy
-    jsr IsSamusDead
-    beq NextEnemy
-    jsr LF140
-    jsr LF282
-    NextEnemy:
-    jsr Xminus16
-    bmi Lx275
-    jmp LF09F
+    ; start with enemy slot #5
+    ldx #$50
+    LF09F:
+        ; check next enemy if enemy slot is empty
+        lda EnStatus,x
+        beq Lx270
+            ; check next enemy if enemy is currently exploding
+            cmp #enemyStatus_Explode
+        Lx270:
+        beq NextEnemy      ; next slot
+        
+        ; skip projectile collision if enemy is a pickup
+        jsr Object0_F152
+        lda EnStatus,x
+        cmp #enemyStatus_Pickup
+        beq Lx274
+        
+        ; first projectile slot
+        ldy #$D0
+        Lx271:
+            lda ObjAction,y  ; is it active?
+            beq Lx273            ; branch if not
+            cmp #wa_BulletExplode
+            bcc Lx272
+            cmp #wa_Unknown7
+            beq Lx272
+            cmp #wa_BombExplode
+            beq Lx272
+            cmp #wa_Missile
+            bne Lx273
+        ; check if enemy is actually hit
+        Lx272:
+            jsr CollisionDetectionEnemy_F140
+            jsr CollisionDetectionEnemy_F2CA
+        Lx273:
+            jsr Yplus16          ; next projectile slot
+            bne Lx271
+    Lx274:
+        ; check next enemy if samus has i-frames
+        ldy #$00
+        lda SamusBlink
+        bne NextEnemy
+        ; check next enemy if samus is dead
+        jsr IsSamusDead
+        beq NextEnemy
+        ; enemy collide with samus
+        jsr CollisionDetectionEnemy_F140
+        jsr CollisionDetectionEnemy_F282
+        NextEnemy:
+        jsr Xminus16
+        bmi Lx275
+            jmp LF09F
+
+; enemy fireball <--> samus detection
 Lx275:
     ; get samus coord data
     ldx #$00
     jsr GetObject0CoordData
     ldy #$60
-Lx276:
-    lda EnStatus,y
-    beq Lx277
-    cmp #$05
-    beq Lx277
-    lda SamusBlink
-    bne Lx277
-    jsr IsSamusDead
-    beq Lx277
-    jsr DistFromObj0ToEn1
-    jsr Object1_F162
-    jsr LF1FA
-    jsr LF2ED
-Lx277:
-    jsr Yplus16
-    cmp #$C0
-    bne Lx276
+    Lx276:
+        lda EnStatus,y
+        beq Lx277
+        cmp #$05
+        beq Lx277
+        ; check next fireball if samus has i-frames
+        lda SamusBlink
+        bne Lx277
+        ; check next fireball if samus is dead
+        jsr IsSamusDead
+        beq Lx277
+        
+        jsr DistFromObj0ToEn1
+        jsr Object1_F162
+        jsr LF1FA
+        jsr CollisionDetectionFireball_F2ED
+    Lx277:
+        jsr Yplus16
+        cmp #$C0
+        bne Lx276
+
+; bomb <--> samus detection
+    ; skip this if samus is dead
     ldy #$00
     jsr IsSamusDead
-    beq Lx281
+    beq GotoSubtractHealth
     jsr GetObject1CoordData
     ldx #$F0
-Lx278:
-    lda ObjAction,x
-    cmp #$07
-    beq Lx279
-    cmp #$0A
-    bne Lx280
-Lx279:
-    jsr LDC82
-    jsr SamusHurtF311
-Lx280:
-    jsr Xminus16
-    cmp #$C0
-    bne Lx278
-Lx281:
+    Lx278:
+        lda ObjAction,x
+        cmp #wa_Unknown7
+        beq Lx279
+        cmp #wa_BombExplode
+        bne Lx280
+    Lx279:
+        jsr LDC82
+        jsr SamusHurtF311
+    Lx280:
+        jsr Xminus16
+        cmp #$C0
+        bne Lx278
+
+GotoSubtractHealth:
     jmp SubtractHealth              ;($CE92)
 
-LF140:
+
+CollisionDetectionEnemy_F140:
     jsr DistFromEn0ToObj1
     jsr GetObject1CoordData
     jmp LF1FA
 
-LF149:
+CollisionDetectionMellow_F149:
     jsr GetObject1CoordData
-    jsr LF1D2
+    jsr AddObject1YRadiusOf4AndXRadiusOf8
     jmp LF1FA
 
 Object0_F152:
     lda EnY,x
-    sta $07  ; Y coord
+    sta Temp07_ObjEn0Y  ; Y coord
     lda EnX,x
-    sta $09  ; X coord
+    sta Temp09_ObjEn0X  ; X coord
     lda EnHi,x     ; hi coord
     jmp Object0_F17F
 
 Object1_F162:
     lda EnY,y     ; Y coord
-    sta $06
+    sta Temp06_ObjEn1Y
     lda EnX,y     ; X coord
-    sta $08
+    sta Temp08_ObjEn1X
     lda EnHi,y     ; hi coord
     jmp Object1_F193
 
 GetObject0CoordData:
     lda ObjY,x
-    sta $07
+    sta Temp07_ObjEn0Y
     lda ObjX,x
-    sta $09
+    sta Temp09_ObjEn0X
     lda ObjHi,x
 
 Object0_F17F:
     eor PPUCTRL_ZP
     and #$01
-    sta $0B
+    sta Temp0B_ObjEn0Hi
     rts
 
 GetObject1CoordData:
     lda ObjY,y
-    sta $06
+    sta Temp06_ObjEn1Y
     lda ObjX,y
-    sta $08
+    sta Temp08_ObjEn1X
     lda ObjHi,y
 
 Object1_F193:
     eor PPUCTRL_ZP
     and #$01
-    sta $0A
+    sta Temp0A_ObjEn1Hi
     rts
 
 LF19A:
     lda MellowY,x
-    sta $07
+    sta Temp07_ObjEn0Y
     lda MellowX,x
-    sta $09
+    sta Temp09_ObjEn0X
     lda MellowHi,x
     jmp Object0_F17F
 
@@ -8724,10 +8756,10 @@ DistFromEn0ToObj1:
 AddEnemy1XRadius:
     clc
     adc EnRadX,y
-    sta $05
+    sta Temp05_ObjEn1RadX
     rts
 
-LF1D2:
+AddObject1YRadiusOf4AndXRadiusOf8:
     lda #$04
     jsr AddObject1YRadius
     lda #$08
@@ -8735,23 +8767,22 @@ LF1D2:
 AddObject1XRadius:
     clc
     adc ObjRadX,y
-    sta $05
+    sta Temp05_ObjEn1RadX
     rts
 
 AddObject1YRadius:
     clc
     adc ObjRadY,y
-    sta $04
+    sta Temp04_ObjEn1RadY
     rts
 
 LF1E7:
     clc
     adc EnRadY,y
-    sta $04
+    sta Temp04_ObjEn1RadY
     rts
 
 ; Y = Y + 16
-
 Yplus16:
     tya
     clc
@@ -8760,7 +8791,6 @@ Yplus16:
     rts
 
 ; X = X - 16
-
 Xminus16:
     txa
     sec
@@ -8769,50 +8799,62 @@ Xminus16:
     rts
 
 LF1FA:
+    ; difference high byte in $10
     lda #$02
     sta $10
+    ; put horizontal/vertical room flag in $03
     and ScrollDir
     sta $03
-    lda $07                         ;Load object 0 y coord.
-    sec                             ;
-    sbc $06                         ;Subtract object 1 y coord.
-    sta $00                         ;Store difference in $00.
+    
+    ;Load object 0 y coord.
+    lda Temp07_ObjEn0Y
+    ;Subtract object 1 y coord.
+    sec
+    sbc Temp06_ObjEn1Y
+    ;Store difference in $00.
+    sta $00
+    
+    ; branch if room is horizontal
     lda $03
     bne Lx283
-    lda $0B
-    eor $0A
+    ; room is vertical
+    ; branch if high bytes are equal
+    lda Temp0B_ObjEn0Hi
+    eor Temp0A_ObjEn1Hi
     beq Lx283
-    jsr LF262
-    lda $00
-    sec
-    sbc #$10
-    sta $00
-    bcs Lx282
-        dec $01
-    Lx282:
-    jmp LF22B
-Lx283:
-    lda #$00
-    sbc #$00
-    jsr LF266
-
+        ; high bytes are not equal
+        ; this must be reflected in the difference
+        jsr LF262
+        lda $00
+        sec
+        sbc #$10
+        sta $00
+        bcs Lx282
+            dec $01
+        Lx282:
+        jmp LF22B
+    Lx283:
+        ; high bytes are equal
+        lda #$00
+        sbc #$00
+        jsr LF266
 LF22B:
     sec
     lda $01
     bne RTS_X285
     lda $00
     sta $11
-    cmp $04
+    cmp Temp04_ObjEn1RadY
     bcs RTS_X285
     asl $10
-    lda $09
+    lda Temp09_ObjEn0X
     sec
-    sbc $08
+    sbc Temp08_ObjEn1X
     sta $00
     lda $03
     beq Lx284
-    lda $0B
-    eor $0A
+    lda Temp0B_ObjEn0Hi
+    eor Temp0A_ObjEn1Hi
     beq Lx284
     jsr LF262
     jmp LF256
@@ -8830,13 +8872,12 @@ RTS_X285:
     rts
 
 LF262:
-    lda $0B
-    sbc $0A
-
+    lda Temp0B_ObjEn0Hi
+    sbc Temp0A_ObjEn1Hi
 LF266:
     sta $01
     bpl RTS_X286
-    jsr LE449
+    jsr NegateTemp00Temp01
     inc $10
 RTS_X286:
     rts
@@ -8846,7 +8887,7 @@ LF270:
     sta SamusHit,x
     rts
 
-LF277:
+CollisionDetectionDoor_F277:
     bcs Exit17
 LF279:
     lda $10
@@ -8856,7 +8897,7 @@ LF27B:
     Exit17:
     rts
 
-LF282:
+CollisionDetectionEnemy_F282:
     bcs Exit17
     jsr LF2E8
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
@@ -8880,8 +8921,9 @@ Lx287:
 Lx289:
     lda #wa_ScrewAttack
     sta EnWeaponAction,x
-    bne Lx291
-LF2B4:
+    bne Lx291 ; branch always
+
+CollisionDetectionMellow_F2B4:
     bcs RTS_X290
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
     ldy #$00
@@ -8896,7 +8938,7 @@ LF2BF:
 RTS_X290:
     rts
 
-LF2CA:
+CollisionDetectionEnemy_F2CA:
     bcs Lx293
     lda ObjAction,y
     sta EnWeaponAction,x
@@ -8918,7 +8960,7 @@ LF2DF:
 LF2E8:
     jsr LF340
     bne Lx292
-LF2ED:
+CollisionDetectionFireball_F2ED:
     bcs RTS_X294
     jsr LF2DF
     tya
@@ -8959,7 +9001,7 @@ ClearHealthChange:
 Exit22:
     rts                             ;Return for routine above and below.
 
-LF32A:
+CollisionDetectionMellow_F32A:
     bcs Exit22
     jsr LF279
     jmp LF2BF
@@ -10407,36 +10449,36 @@ UpdateSkreeProjectile:
     ; prepare parameters to ApplySpeedToPosition
     ; y speed
     lda SkreeProjectileSpeedTable,y
-    sta $04
+    sta Temp04_SpeedY
     ; x speed
     lda SkreeProjectileSpeedTable+1,y
-    sta $05
+    sta Temp05_SpeedX
     ; y pos
     lda SkreeProjectileY,x
-    sta $08
+    sta Temp08_PositionY
     ; x pos
     lda SkreeProjectileX,x
-    sta $09
+    sta Temp09_PositionX
     ; nametable
     lda SkreeProjectileHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     
     ; apply speed to position in parameters
     jsr ApplySpeedToPosition
-    ; kill projectile if ???
+    ; kill projectile if the projectile moved outside the bounds of the room
     bcc KillSkreeProjectile
     
     ; save the new position from parameters to skree projectile variables
     ; y pos
-    lda $08
+    lda Temp08_PositionY
     sta SkreeProjectileY,x
     sta PowerUpY
     ; x pos
-    lda $09
+    lda Temp09_PositionX
     sta SkreeProjectileX,x
     sta PowerUpX
     ; nametable
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta SkreeProjectileHi,x
     sta PowerUpHi
@@ -10553,7 +10595,7 @@ UpdateMellow_RunAI:
     lda MellowAttackState,x
     cmp #$02
     bcs Lx392
-    ldy $08
+    ldy Temp08_PositionY
     cpy ObjY
     bcc Lx392
     ora #$02
@@ -10565,14 +10607,14 @@ Lx392:
     bcc Lx393
         ldy #$FF
     Lx393:
-    sty $05
+    sty Temp05_SpeedX
     ldy #$04
     lsr
     lda MellowAttackTimer,x
     bcc Lx394
         ldy #$FD
     Lx394:
-    sty $04
+    sty Temp04_SpeedY
     inc MellowAttackTimer,x
     jsr ApplySpeedToPosition
     bcs Lx395
@@ -10622,11 +10664,11 @@ UpdateMellow_FD25:
     and #$03
     tay
     lda Table18,y
-    sta $04
+    sta Temp04_SpeedY
     lda Table18+1,y
-    sta $05
+    sta Temp05_SpeedX
     jsr UpdateMellow_StorePositionToTemp
-    lda $08
+    lda Temp08_PositionY
     sec
     sbc ScrollY
     tay
@@ -10637,7 +10679,7 @@ UpdateMellow_FD25:
     cpy #$80
     bcc Lx401
 Lx400:
-    sta $04
+    sta Temp04_SpeedY
 Lx401:
     jsr ApplySpeedToPosition
     jmp UpdateMellow_LoadPositionFromTemp
@@ -10653,21 +10695,21 @@ Table18:
 
 UpdateMellow_StorePositionToTemp:
     lda MellowHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     lda MellowY,x
-    sta $08
+    sta Temp08_PositionY
     lda MellowX,x
-    sta $09
+    sta Temp09_PositionX
     rts
 
 UpdateMellow_LoadPositionFromTemp:
-    lda $08
+    lda Temp08_PositionY
     sta MellowY,x
     sta EnY+$F0
-    lda $09
+    lda Temp09_PositionX
     sta MellowX,x
     sta EnX+$F0
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta MellowHi,x
     sta EnHi+$F0
@@ -10697,16 +10739,16 @@ ApplySpeedToPosition:
     ; save vertical or horizontal scroll flag to $02
     lda ScrollDir
     and #$02
-    sta $02
+    sta Temp02_ScrollDir
     
     ; apply y speed to y position
-    lda $04
+    lda Temp04_SpeedY
     clc
     bmi Lx405
         ; dont apply y speed if it is zero
         beq LFDBF
         ; positive y speed
-        adc $08
+        adc Temp08_PositionY
         bcs Lx403
             cmp #$F0
             bcc Lx404
@@ -10714,60 +10756,60 @@ ApplySpeedToPosition:
             ; position is greater or equal to 240px, we must wrap around
             adc #$0F ; carry is set, so this adds #$10
             ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
-            ldy $02
+            ldy Temp02_ScrollDir
             bne ClcExit2
             ; screen scrolls vertically, update high byte
-            inc $0B
+            inc Temp0B_PositionHi
         Lx404:
         ; save new y position
-        sta $08
+        sta Temp08_PositionY
         jmp LFDBF
     Lx405:
         ; negative y speed
-        adc $08
+        adc Temp08_PositionY
         bcs Lx406
             ; position is lesser than 0px, we must wrap around
             sbc #$0F ; carry is set, so this subtracts #$10
             ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
-            ldy $02
+            ldy Temp02_ScrollDir
             bne ClcExit2
             ; screen scrolls vertically, update high byte
-            inc $0B
+            inc Temp0B_PositionHi
         Lx406:
         ; save new y position
-        sta $08
+        sta Temp08_PositionY
     LFDBF:
     
     ; apply x speed to x position
-    lda $05
+    lda Temp05_SpeedX
     clc
     bmi Lx408
         ; dont apply x speed if it is zero
         beq SecExit
         ; positive x speed
-        adc $09
+        adc Temp09_PositionX
         bcc Lx407
             ; position is greater or equal to 256px, we must wrap around
             ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
-            ldy $02
+            ldy Temp02_ScrollDir
             beq ClcExit2
             ; screen scrolls horizontally, update high byte
-            inc $0B
+            inc Temp0B_PositionHi
         Lx407:
         ; save new x position
         jmp Lx409
     Lx408:
-        adc $09
+        adc Temp09_PositionX
         bcs Lx409
             ; position is lesser than 0px, we must wrap around
             ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
-            ldy $02
+            ldy Temp02_ScrollDir
             beq ClcExit2
             ; screen scrolls horizontally, update high byte
-            inc $0B
+            inc Temp0B_PositionHi
         Lx409:
         ; save new x position
-        sta $09
+        sta Temp09_PositionX
 
 SecExit:
     ; movement was successful, set carry

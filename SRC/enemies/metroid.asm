@@ -177,7 +177,7 @@ L98A9:
     jsr LoadEnemySlotIDIntoY
     lda MetroidLatch0400,y
     bne L9932
-        ; not latched
+        ; metroid is not latched
         ; check if metroid is touching Samus
         lda EnData04,x
         and #$04
@@ -196,31 +196,41 @@ L98A9:
         txa
         tay
     L9932:
+    ; metroid is latched
+    ; push metroid latch to stack
     tya
     tax
     lda MetroidLatch0400,x
     php
+    ; if metroid is not fully latched, increase latch frame counter
     and #$0F
     cmp #$0C
     beq L9941
         inc MetroidLatch0400,x
     L9941:
+    ; prepare metroid offset relative to Samus's position
+    ; load y offset from table
     tay
-    lda Table99D8-1,y
-    sta $04
-    sty $05
+    lda MetroidLatchOffsetY-1,y
+    sta Temp04_SpeedY
+    ; calculate x offset based on latch frame counter
+    ; #$0C - frame counter
+    sty Temp05_SpeedX
     lda #$0C
     sec
-    sbc $05
+    sbc Temp05_SpeedX
     ldx PageIndex
+    ; negate offset if latch's sign of x speed is positive
     plp
     bmi L9956
         jsr TwosComplement_
     L9956:
-    sta $05
-    ; set metroid position to Samus position
+    sta Temp05_SpeedX
+    ; load Samus position
     jsr StoreSamusPositionToTemp
-    jsr CommonJump_ApplySpeedToPosition ; scroll enemy position and update enemy speed?
+    ; add offset to Samus position
+    jsr CommonJump_ApplySpeedToPosition
+    ; set as metroid position
     jsr LoadPositionFromTemp
     jmp L9967
 
@@ -299,26 +309,26 @@ ClearRinkaSomething: ; referenced in rinka.asm
     sta EnAccelY,x
     rts
 
-Table99D8:
+MetroidLatchOffsetY:
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
 
 StoreSamusPositionToTemp:
     ; put Samus position as parameters to CommonJump_ApplySpeedToPosition
     lda ObjX
-    sta $09
+    sta Temp09_PositionX
     lda ObjY
-    sta $08
+    sta Temp08_PositionY
     lda ObjHi
-    sta $0B
+    sta Temp0B_PositionHi
     rts
 
 LoadPositionFromTemp:
     ; save function result as enemy position
-    lda $09
+    lda Temp09_PositionX
     sta EnX,x
-    lda $08
+    lda Temp08_PositionY
     sta EnY,x
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta EnHi,x
     rts
