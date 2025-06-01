@@ -183,7 +183,7 @@ EnemyDeathAnimIndex:
 EnemyHitPointTbl:
     .byte $08, $08, $00, $FF, $02, $02, $00, $01, $60, $FF, $FF, $00, $00, $00, $00, $00
 
-EnemyAnimIndex_963B:
+EnemyRestingAnimIndex:
     .byte EnAnim_9C8B - EnAnimTbl, EnAnim_9C8B - EnAnimTbl
     .byte EnAnim_9C91 - EnAnimTbl, EnAnim_9C91 - EnAnimTbl
     .byte EnAnim_9C9D - EnAnimTbl, EnAnim_9C99 - EnAnimTbl
@@ -201,7 +201,7 @@ EnemyAnimIndex_963B:
     .byte $00, $00
     .byte $00, $00
 
-EnemyAnimIndex_965B:
+EnemyActiveAnimIndex:
     .byte EnAnim_9C8B - EnAnimTbl, EnAnim_9C8B - EnAnimTbl
     .byte EnAnim_9C91 - EnAnimTbl, EnAnim_9C91 - EnAnimTbl
     .byte EnAnim_9C9D - EnAnimTbl, EnAnim_9C99 - EnAnimTbl
@@ -220,7 +220,22 @@ EnemyAnimIndex_965B:
     .byte $00, $00
 
 L967B:
-    .byte $00, $00, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00 | $80
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00 | $80
+    .byte $00
+    .byte $00
+    .byte $00
 
 L968B:
     .byte $89, $89, $09, $00, $86, $04, $89, $80, $83, $00, $00, $00, $82, $00, $00, $00
@@ -234,46 +249,43 @@ L96AB:
 EnemyInitDelayTbl:
     .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $00, $00, $00
 
-L96CB:
-    .byte $00, $03, $00, $06, $08, $0C, $00, $0A, $0E, $11, $13, $00, $00, $00, $00, $00
+EnemyMovementChoiceOffset:
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte $00
+    .byte EnemyMovementChoice02 - EnemyMovementChoices
+    .byte EnemyMovementChoice03 - EnemyMovementChoices
+    .byte EnemyMovementChoice05 - EnemyMovementChoices
+    .byte $00
+    .byte EnemyMovementChoice04 - EnemyMovementChoices
+    .byte EnemyMovementChoice06 - EnemyMovementChoices
+    .byte EnemyMovementChoice07 - EnemyMovementChoices
+    .byte EnemyMovementChoice08 - EnemyMovementChoices
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
 
 EnemyMovementPtrs:
-    .word EnemyMovement00
-    .word EnemyMovement01
-    .word EnemyMovement02
-    .word EnemyMovement03
-    .word EnemyMovement04
-    .word EnemyMovement05
-    .word EnemyMovement06
-    .word EnemyMovement07
-    .word EnemyMovement08
-    .word EnemyMovement09
-    .word EnemyMovement0A
-    .word EnemyMovement0B
-    .word EnemyMovement0C
-    .word EnemyMovement0D
-    .word EnemyMovement0E
-    .word EnemyMovement0F
-    .word EnemyMovement10
-    .word EnemyMovement11
-    .word EnemyMovement12
-    .word EnemyMovement13
-    .word EnemyMovement14
-    .word EnemyMovement15
-    .word EnemyMovement16
-    .word EnemyMovement17
-    .word EnemyMovement18
-    .word EnemyMovement19
-    .word EnemyMovement1A
-    .word EnemyMovement1B
-    .word EnemyMovement1C
-    .word EnemyMovement1D
-    .word EnemyMovement1E
-    .word EnemyMovement1F
-    .word EnemyMovement20
-    .word EnemyMovement21
-    .word EnemyMovement22
-    .word EnemyMovement23
+    .word EnemyMovement00_R, EnemyMovement00_L
+    .word EnemyMovement01_R, EnemyMovement01_L
+    .word EnemyMovement02_R, EnemyMovement02_L
+    .word EnemyMovement03_R, EnemyMovement03_L
+    .word EnemyMovement04_R, EnemyMovement04_L
+    .word EnemyMovement05_R, EnemyMovement05_L
+    .word EnemyMovement06_R, EnemyMovement06_L
+    .word EnemyMovement07_R, EnemyMovement07_L
+    .word EnemyMovement08_R, EnemyMovement08_L
+    .word EnemyMovement09_R, EnemyMovement09_L
+    .word EnemyMovement0A_R, EnemyMovement0A_L
+    .word EnemyMovement0B_R, EnemyMovement0B_L
+    .word EnemyMovement0C_R, EnemyMovement0C_L
+    .word EnemyMovement0D_R, EnemyMovement0D_L
+    .word EnemyMovement0E_R, EnemyMovement0E_L
+    .word EnemyMovement0F_R, EnemyMovement0F_L
+    .word EnemyMovement10_R, EnemyMovement10_L
+    .word EnemyMovement11_R, EnemyMovement11_L
 
 L9723:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $7F, $70, $70, $90, $90, $00, $00, $7F
 L9733:  .byte $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -329,36 +341,53 @@ TileBlastFramePtrTable:
     .word TileBlastFrame0F
     .word TileBlastFrame10
 
-L97D1:  .byte $01, $01, $02, $01, $03, $04, $00, $06, $00, $07, $00, $09, $00, $00, $01, $0C
-L97E1:  .byte $0D, $00, $0E, $03, $0F, $10, $11, $0F
+EnemyMovementChoices:
+EnemyMovementChoice00:
+    EnemyMovementChoiceEntry {$01, $02}
+EnemyMovementChoice01:
+    EnemyMovementChoiceEntry {$03, $04}
+EnemyMovementChoice02:
+    EnemyMovementChoiceEntry {$06}
+EnemyMovementChoice03:
+    EnemyMovementChoiceEntry {$07}
+EnemyMovementChoice04:
+    EnemyMovementChoiceEntry {$09}
+EnemyMovementChoice05:
+    EnemyMovementChoiceEntry {$00}
+EnemyMovementChoice06:
+    EnemyMovementChoiceEntry {$0C, $0D}
+EnemyMovementChoice07:
+    EnemyMovementChoiceEntry {$0E}
+EnemyMovementChoice08:
+    EnemyMovementChoiceEntry {$0F, $10, $11, $0F}
 
-EnemyMovement00:
+EnemyMovement00_R:
     SignMagSpeed $20,  2,  2
     .byte $FE
 
-EnemyMovement01:
+EnemyMovement00_L:
     SignMagSpeed $20, -2,  2
     .byte $FE
 
-EnemyMovement02:
-EnemyMovement03:
-EnemyMovement04:
-EnemyMovement05:
-EnemyMovement06:
-EnemyMovement07:
-EnemyMovement08:
-EnemyMovement09:
-EnemyMovement0A:
-EnemyMovement0B:
-EnemyMovement0C:
+EnemyMovement01_R:
+EnemyMovement01_L:
+EnemyMovement02_R:
+EnemyMovement02_L:
+EnemyMovement03_R:
+EnemyMovement03_L:
+EnemyMovement04_R:
+EnemyMovement04_L:
+EnemyMovement05_R:
+EnemyMovement05_L:
+EnemyMovement06_R:
     SignMagSpeed $01,  1,  0
     .byte $FF
 
-EnemyMovement0D:
+EnemyMovement06_L:
     SignMagSpeed $01, -1,  0
     .byte $FF
 
-EnemyMovement0E:
+EnemyMovement07_R:
     SignMagSpeed $04,  2,  2
     SignMagSpeed $01,  2,  4
     SignMagSpeed $01,  2,  2
@@ -368,7 +397,7 @@ EnemyMovement0E:
     SignMagSpeed $04,  2,  6
     .byte $FC, $01, $00, $64, $00, $FB
 
-EnemyMovement0F:
+EnemyMovement07_L:
     SignMagSpeed $04, -2,  2
     SignMagSpeed $01, -2,  4
     SignMagSpeed $01, -2,  2
@@ -378,47 +407,47 @@ EnemyMovement0F:
     SignMagSpeed $04, -2,  6
     .byte $FC, $01, $00, $64, $00, $FB
 
-EnemyMovement10:
-EnemyMovement11:
-EnemyMovement12:
-EnemyMovement13:
-EnemyMovement14:
-EnemyMovement15:
-EnemyMovement16:
-EnemyMovement17:
-EnemyMovement18:
+EnemyMovement08_R:
+EnemyMovement08_L:
+EnemyMovement09_R:
+EnemyMovement09_L:
+EnemyMovement0A_R:
+EnemyMovement0A_L:
+EnemyMovement0B_R:
+EnemyMovement0B_L:
+EnemyMovement0C_R:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
     .byte $FE
 
-EnemyMovement19:
+EnemyMovement0C_L:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
     .byte $FE
 
-EnemyMovement1A:
+EnemyMovement0D_R:
     SignMagSpeed $32,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32, -1,  1
     .byte $FE
 
-EnemyMovement1B:
+EnemyMovement0D_L:
     SignMagSpeed $32, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32,  1,  1
     .byte $FE
 
-EnemyMovement1C:
+EnemyMovement0E_R:
     SignMagSpeed $50,  4,  0
     .byte $FF
 
-EnemyMovement1D:
+EnemyMovement0E_L:
     SignMagSpeed $50, -4,  0
     .byte $FF
 
-EnemyMovement1E:
+EnemyMovement0F_R:
     SignMagSpeed $02,  3, -7
     SignMagSpeed $04,  3, -6
     SignMagSpeed $04,  3, -5
@@ -432,7 +461,7 @@ EnemyMovement1E:
     SignMagSpeed $50,  3,  7
     .byte $FF
 
-EnemyMovement1F:
+EnemyMovement0F_L:
     SignMagSpeed $02, -3, -7
     SignMagSpeed $04, -3, -6
     SignMagSpeed $04, -3, -5
@@ -446,7 +475,7 @@ EnemyMovement1F:
     SignMagSpeed $50, -3,  7
     .byte $FF
 
-EnemyMovement20:
+EnemyMovement10_R:
     SignMagSpeed $02,  4, -7
     SignMagSpeed $04,  4, -6
     SignMagSpeed $04,  4, -5
@@ -460,7 +489,7 @@ EnemyMovement20:
     SignMagSpeed $50,  4,  7
     .byte $FF
 
-EnemyMovement21:
+EnemyMovement10_L:
     SignMagSpeed $02, -4, -7
     SignMagSpeed $04, -4, -6
     SignMagSpeed $04, -4, -5
@@ -474,7 +503,7 @@ EnemyMovement21:
     SignMagSpeed $50, -4,  7
     .byte $FF
 
-EnemyMovement22:
+EnemyMovement11_R:
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
     SignMagSpeed $04,  2, -5
@@ -488,7 +517,7 @@ EnemyMovement22:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnemyMovement23:
+EnemyMovement11_L:
     SignMagSpeed $02, -2, -7
     SignMagSpeed $04, -2, -6
     SignMagSpeed $04, -2, -5

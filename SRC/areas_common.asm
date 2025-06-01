@@ -52,11 +52,11 @@
 .import LF416
 .import LF438
 .import InitEnAnimIndex
-.import LF83E
+.import GetEnemyTypeTimes2PlusFacingDirectionBit0
 .import LF852
 .import LF85A
 .import SpawnFireball
-.import LFA1E
+.import EnemyBGCollideOrApplySpeed
 .import LFB70
 .import LFB88
 .import LFBB9
@@ -79,8 +79,8 @@ CommonJump_UpdateEnemyAnim: ;$800C
     jmp UpdateEnemyAnim             ;($E094)
 CommonJump_InitEnAnimIndex: ;$800F
     jmp InitEnAnimIndex
-CommonJump_06: ;$8012
-    jmp LF83E
+CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
+    jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
 CommonJump_07: ;$8015
     jmp LF85A
 CommonJump_08: ;$8018
@@ -101,8 +101,8 @@ CommonJump_EnemyGetDeltaY: ;$802D
     jmp EnemyGetDeltaY
 CommonJump_EnemyGetDeltaX: ;$8030
     jmp EnemyGetDeltaX
-CommonJump_11: ;$8033
-    jmp LFA1E
+CommonJump_EnemyBGCollideOrApplySpeed: ;$8033
+    jmp EnemyBGCollideOrApplySpeed
 CommonJump_12: ;$8036
     jmp EnemyGetDeltaY_Negative977B
 CommonJump_13: ;$8039
@@ -320,7 +320,7 @@ L8159:
     jsr SetBit5OfEnData05_AndClearEnAccelX
     beq L8169
 L815E:
-    lda $977B,y
+    lda L977B,y
     lsr
     bcc L8169
     lda #$01
@@ -401,6 +401,7 @@ EnemyIfMoveFailedHorizontal81FC:
     bne RTS_81F5
     lda #$01
     jsr XorEnData05
+L81D1: ;referenced in bank 7
     lda EnAccelX,x
     jsr TwosComplement
     sta EnAccelX,x
@@ -437,6 +438,7 @@ EnemyIfMoveFailedVertical81FC:
     bne RTS_81F5 ; Exit if bit 5 is set
     lda #$04
     jsr XorEnData05
+L8206: ;referenced in bank 7
     lda EnAccelY,x
     jsr TwosComplement
     sta EnAccelY,x
@@ -1140,7 +1142,7 @@ UpdateDoor_Init:
     ; increment door status to "closed"
     inc DoorStatus,x
     ; set door animation to closed
-    lda #L85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
     jsr SetProjectileAnim           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
@@ -1209,7 +1211,7 @@ UpdateDoor_Closed:
     ; set door animation to opening the door
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
-    lda #L859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
     sta DoorAnimResetIndex,x
     sec
     sbc #$03
@@ -1295,7 +1297,7 @@ GotoDrawDoor:
     jmp DrawDoor
 
 DoorSubRoutine8C76:
-    lda #L85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
     sta DoorAnimResetIndex,x
     sec
     sbc #$02
@@ -1368,7 +1370,7 @@ UpdateDoor_Scroll:
     lda #$06
     sta DoorStatus,x
     ; set that door's animation to opening the door
-    lda #L859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
     sta DoorAnimResetIndex,x
     sec
     sbc #$03

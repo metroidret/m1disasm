@@ -60,14 +60,14 @@ ChooseEnemyAIRoutine   = $95E5
 
 EnemyDeathAnimIndex    = $960B
 EnemyHitPointTbl       = $962B
-EnemyAnimIndex_963B    = $963B
-EnemyAnimIndex_965B    = $965B
+EnemyRestingAnimIndex    = $963B
+EnemyActiveAnimIndex    = $965B
 L967B                  = $967B
 L968B                  = $968B
 EnemyData0DTbl         = $969B
 L96AB                  = $96AB
 EnemyInitDelayTbl      = $96BB
-L96CB                  = $96CB
+EnemyMovementChoiceOffset                  = $96CB
 
 EnAccelYTable          = $972B
 EnAccelXTable          = $973F
@@ -81,7 +81,7 @@ EnemyFireballPosOffsetY = $97A3
 EnemyFireballMovementPtrTable = $97A7
 TileBlastFramePtrTable = $97AF
 
-L97D1                  = $97D1
+EnemyMovementChoices                  = $97D1
 
 SoundEngine            = $B3B4
 
@@ -149,11 +149,11 @@ SoundEngine            = $B3B4
 .export LF416
 .export LF438
 .export InitEnAnimIndex
-.export LF83E
+.export GetEnemyTypeTimes2PlusFacingDirectionBit0
 .export LF852
 .export LF85A
 .export SpawnFireball
-.export LFA1E
+.export EnemyBGCollideOrApplySpeed
 .export LFB70
 .export LFB88
 .export LFBB9
@@ -4225,14 +4225,19 @@ RTS_X098:
 ;-------------------------------------[ Get object coordinates ]------------------------------------
 
 GetObjCoords:
-    ldx PageIndex                   ;Load index into object RAM to find proper object.
-    lda ObjY,x                      ;
-    sta $02                         ;Load and save temp copy of object y coord.
-    lda ObjX,x                      ;
-    sta $03                         ;Load and save temp copy of object x coord.
-    lda ObjHi,x                     ;
-    sta $0B                         ;Load and save temp copy of object nametable.
-    jmp MakeCartRAMPtr              ;($E96A)Find object position in room RAM.
+    ;Load index into object RAM to find proper object.
+    ldx PageIndex
+    ;Load and save temp copy of object y coord.
+    lda ObjY,x
+    sta Temp02_PositionY
+    ;Load and save temp copy of object x coord.
+    lda ObjX,x
+    sta Temp03_PositionX
+    ;Load and save temp copy of object nametable.
+    lda ObjHi,x
+    sta Temp0B_PositionHi
+    ;($E96A)Find object position in room RAM.
+    jmp MakeCartRAMPtr
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -7272,28 +7277,41 @@ LE95F:
 ;In: $02 = ObjY, $03 = ObjX, $0B = ObjHi. Out: $04 = cart RAM pointer.
 
 MakeCartRAMPtr:
-    lda #$18                        ;Set pointer to $6xxx(cart RAM).
-    sta $05                         ;
-    lda $02                         ;Object Y room position.
-    and #$F8                        ;Drop 3 LSBs. Only use multiples of 8.
-    asl                             ;
-    rol $05                         ;
-    asl                             ;Move upper 2 bits to lower 2 bits of $05 and move y bits-->
-    rol $05                         ;3, 4, 5 to upper 3 bits of $04.
-    sta $04                         ;
-    lda $03                         ;Object X room position.
-    lsr                             ;
-    lsr                             ;
-    lsr                             ;A=ObjX/8.
-    ora $04                         ;
-    sta $04                         ;Put bits 0 thru 4 into $04.
-    lda $0B                         ;Object nametable.
-    asl                             ;
-    asl                             ; A=ObjHi*4.
-    and #$04                        ;Set bit 2 if object is on nametable 3.
-    ora $05                         ;
-    sta $05                         ;Include nametable bit in $05.
-    rts                             ;Return pointer in $04 = 01100HYY YYYXXXXX.
+    ;Set pointer to $6xxx(cart RAM).
+    lda #RoomRAMA >> 10
+    sta Temp04_CartRAMPtr+1
+    ;Object Y room position.
+    lda Temp02_PositionY
+    ;Drop 3 LSBs. Only use multiples of 8.
+    and #$F8
+    ;Move upper 2 bits to lower 2 bits of $05
+    asl
+    rol Temp04_CartRAMPtr+1
+    asl
+    rol Temp04_CartRAMPtr+1
+    ;move bits 3, 4, 5 to upper 3 bits of $04.
+    sta Temp04_CartRAMPtr
+    ;Object X room position.
+    lda Temp03_PositionX
+    ;A=ObjX/8.
+    lsr
+    lsr
+    lsr
+    ;Put bits 0 thru 4 into $04.
+    ora Temp04_CartRAMPtr
+    sta Temp04_CartRAMPtr
+    ;Object nametable.
+    lda Temp0B_PositionHi
+    ; A=ObjHi*4.
+    asl
+    asl
+    ;Set bit 2 if object is on nametable 3.
+    and #$04
+    ;Include nametable bit in $05.
+    ora Temp04_CartRAMPtr+1
+    sta Temp04_CartRAMPtr+1
+    ;Return pointer in $04 = 01100HYY YYYXXXXX.
+    rts
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -9108,8 +9126,7 @@ DoOneEnemy_UpdateEnData05Bit6:
     rts
 
 ;---------------------------------------------
-DoRestingEnemy:
-LF3BE:
+DoRestingEnemy: ;($F3BE)
     lda EnData05,x
     asl
     bmi Lx299
@@ -9119,11 +9136,11 @@ LF3BE:
     sta EnData0A,x
     jsr LF6B9
     jsr LF75B
-    jsr LF682
+    jsr InitEnRestingAnimIndex
     jsr LF676
     lda EnDelay,x
     beq Lx299
-    jsr LF7BA
+    jsr DoRestingEnemy_TryBecomingActive
 Lx299:
     jmp DoActiveEnemy_BranchB
 ;------------------------------------------
@@ -9531,7 +9548,7 @@ ExplodeEnemy:
     jsr LDCFC
     ldx PageIndex
 Lx327:
-    jsr LF844
+    jsr GetEnemyTypeTimes2PlusFacingDirection
     lda EnemyDeathAnimIndex,y
     jsr InitEnAnimIndex
     sta EnSpeedSubPixelY,x
@@ -9582,9 +9599,9 @@ LF676:
     sta EnData1F,x
     rts
 
-LF682:
-    jsr LF844
-    lda EnemyAnimIndex_963B,y
+InitEnRestingAnimIndex:
+    jsr GetEnemyTypeTimes2PlusFacingDirection
+    lda EnemyRestingAnimIndex,y
     cmp EnResetAnimIndex,x
     beq RTS_X331
 InitEnAnimIndex:
@@ -9597,16 +9614,20 @@ ClearEnAnimDelay:
 RTS_X331:
     rts
 
-LF699:
-    jsr LF844
-    lda EnemyAnimIndex_965B,y
+InitEnActiveAnimIndex:
+    ; exit if enemy anim is already the same as from EnemyActiveAnimIndex
+    jsr GetEnemyTypeTimes2PlusFacingDirection
+    lda EnemyActiveAnimIndex,y
     cmp EnResetAnimIndex,x
     beq Exit12
+    ; set anim to the one from the table
     jsr InitEnAnimIndex
+    ; exit if L967B entry and #$7F is zero
     ldy EnType,x
     lda L967B,y
     and #$7F
     beq Exit12
+    ; decrease EnAnimIndex by that non-zero amount
     tay
     Lx332:
         dec EnAnimIndex,x
@@ -9620,6 +9641,7 @@ LF6B9:
     ; clear $82
     lda #$00
     sta Enemy82
+
     jsr ReadTableAt968B
     tay
 
@@ -9627,14 +9649,12 @@ LF6B9:
     lda EnStatus,x
     cmp #enemyStatus_Active
     bne Lx333
-
         ; if bit 1 of L968B[EnType] is not set, exit
         tya
         and #$02
         beq Exit12
-
-    ; If enemy is not active or if bit 1 of L968B[EnType] is set
     Lx333:
+    ; enemy is not active or bit 1 of L968B[EnType] is set
     tya
     dec EnData0D,x
     bne Exit12
@@ -9646,25 +9666,28 @@ LF6B9:
     pla
     bpl Lx337
 
-    lda #$FE
+    ; clear bit 0 of EnData05
+    lda #~$01
     jsr LF7B3
+
     lda ScrollDir
     cmp #$02
     bcc Lx334
 
     jsr LF752
     bcc Lx334
+
     tya
     eor PPUCTRL_ZP
     bcs Lx336
-Lx334:
-    lda EnX,x
-    cmp ObjX
-    bne Lx335
-        inc Enemy82
-    Lx335:
-    rol
-Lx336:
+    Lx334:
+        lda EnX,x
+        cmp ObjX
+        bne Lx335
+            inc Enemy82
+        Lx335:
+        rol
+    Lx336:
     and #$01
     jsr OrEnData05
     lsr
@@ -9673,13 +9696,17 @@ Lx336:
     bpl Lx337
     jsr L81DA
 Lx337:
-    lda #$FB
+    ; clear bit 2 of EnData05
+    lda #~$04
     jsr LF7B3
+
     lda ScrollDir
     cmp #$02
     bcs Lx338
+
     jsr LF752
     bcc Lx338
+
     tya
     eor PPUCTRL_ZP
     bcs Lx340
@@ -9782,76 +9809,109 @@ LF7B3:
 RTS_X346:
     rts
 
-LF7BA:
+DoRestingEnemy_TryBecomingActive:
+    ; decrement delay until next action
     dec EnDelay,x
-    bne RTS_X347
+    ; exit if delay is not zero
+    bne @RTS
+    ; delay is zero
+    ; branch if bit 3 of EnData05 is set
     lda EnData05,x
     and #$08
-    bne Lx348
+    bne @becomeActive
+    ; bit 3 of EnData05 is not set
+    ; undo decrement delay and exit
     inc EnDelay,x
-RTS_X347:
+@RTS:
     rts
-Lx348:
+@becomeActive:
+    ; bit 3 of EnData05 is set
+    ; branch if enemy is not a pipe bug
     lda EnType,x
     cmp #$07
     bne Lx349
+        ; enemy is a pipe bug, play pipe bug sfx
         jsr SFX_OutOfHole
         ldx PageIndex
     Lx349:
+    ; increment enemy status to active
     inc EnStatus,x
-    jsr LF699
+    ; initialize animation for active enemy
+    jsr InitEnActiveAnimIndex
+    ; load enemy's EnemyMovementChoices offset
     ldy EnType,x
-    lda L96CB,y
+    lda EnemyMovementChoiceOffset,y
+    ; make pointer to enemy's EnemyMovementChoice in $00-$01
     clc
-    adc #<L97D1
+    adc #<EnemyMovementChoices
     sta $00
     lda #$00
-    adc #>L97D1
+    adc #>EnemyMovementChoices
     sta $01
+    ; create randomly generated offset
     lda FrameCount
     eor RandomNumber1
+    ; and this with enemy's EnemyMovementChoice possibility bitflag
+    ; for example, if there are 4 possible EnemyMovement indexes in the -->
+    ; EnemyMovementChoice, the bitflag will be #$03, because 2 bits is 4 possibilities.
     ldy #$00
     and ($00),y
+    ; add one to point to the first EnemyMovement index and save in y
     tay
     iny
+    ; get movement index at that randomly generated offset
     lda ($00),y
+    ; save movement index
     sta EnMovementIndex,x
+
+    ; branch if the enemy doesn't use acceleration and speed and subpixels
     jsr LoadTableAt977B
     bpl Lx351
-    lda #$00
-    sta EnSpeedSubPixelY,x
-    sta EnSpeedSubPixelX,x
-    ldy EnMovementIndex,x
+        ; the enemy uses acceleration and speed and subpixels
+        ; initialize those to what they should be
+        lda #$00
+        sta EnSpeedSubPixelY,x
+        sta EnSpeedSubPixelX,x
+        ldy EnMovementIndex,x
 
-    lda EnAccelYTable,y
-    sta EnAccelY,x
-    lda EnAccelXTable,y
-    sta EnAccelX,x
+        lda EnAccelYTable,y
+        sta EnAccelY,x
+        lda EnAccelXTable,y
+        sta EnAccelX,x
 
-    lda EnSpeedYTable,y
-    sta EnSpeedY,x
-    lda EnSpeedXTable,y
-    sta EnSpeedX,x
-    
-    lda EnData05,x
-    bmi Lx350
-        lsr
-        bcc Lx351
-        jsr L81D1
-        jmp Lx351
-    Lx350:
-    and #$04
-    beq Lx351
-    jsr L8206
-Lx351:
-    lda #$DF
+        lda EnSpeedYTable,y
+        sta EnSpeedY,x
+        lda EnSpeedXTable,y
+        sta EnSpeedX,x
+        
+        lda EnData05,x
+        bmi Lx350
+            ; bit 7 of EnData05 is not set
+            ; use bit 0 of EnData05 as facing direction
+            lsr
+            ; branch if facing right
+            bcc Lx351
+            ; enemy is facing left, call L81D1
+            jsr L81D1
+            jmp Lx351
+        Lx350:
+            ; bit 7 of EnData05 is set
+            ; use bit 2 of EnData05 as facing direction instead of bit 0
+            and #$04
+            ; branch if facing up
+            beq Lx351
+            ; enemy is facing down, call L8206
+            jsr L8206
+    Lx351:
+    ; clear bit 5 of EnData05
+    lda #~$20
     jmp LF7B3
 
-LF83E:
+GetEnemyTypeTimes2PlusFacingDirectionBit0:
     lda EnData05,x
     jmp Lx352
 
-LF844:
+GetEnemyTypeTimes2PlusFacingDirection:
     lda EnData05,x
     bpl Lx352
     lsr
@@ -10065,7 +10125,7 @@ Exit19:
 
 UpdateEnemyFireball_Resting:
     jsr LFA5B
-    jsr LFA1E
+    jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
     bcs LF97C
     lda EnStatus,x
@@ -10141,7 +10201,7 @@ Lx362:
     lda AreaFireballFallingAnimIndex,y
     sta EnResetAnimIndex,x
 Lx365:
-    jsr LFA1E
+    jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
     bcs Lx367
     lda EnStatus,x
@@ -10167,37 +10227,46 @@ RemoveEnemy:
     rts
 
 ; enemy<-->background crash detection
-
-LFA1E:
+; return carry clear if enemy collided or was removed
+;        carry set if apply speed
+EnemyBGCollideOrApplySpeed:
+    ; branch if not in norfair
     lda InArea
     cmp #$11
     bne Lx368
+        ; we are in norfair
+        ; branch if enemy is active, frozen or hurt
         lda EnStatus,x
         lsr
         bcc Lx369
     Lx368:
-        jsr LFA7D
+        ; get tile id at enemy's position
+        jsr GetEnemyCartRAMPtr
         ldy #$00
-        lda ($04),y
+        lda (Temp04_CartRAMPtr),y
+        ; return carry clear if tile is solid
         cmp #$A0
         bcc RTS_X370
         ldx PageIndex
     Lx369:
+    ; apply enemy speed
     lda EnSpeedX,x
-    sta $05
+    sta Temp05_SpeedX
     lda EnSpeedY,x
-    sta $04
+    sta Temp04_SpeedY
 LFA41:
     jsr StoreEnemyPositionToTemp
     jsr ApplySpeedToPosition
-    bcc RemoveEnemy                  ;($FA18)Free enemy data slot.
+    ; remove enemy if enemy left room's bounds
+    bcc RemoveEnemy
+    ; fallthrough
 
 LoadEnemyPositionFromTemp:
-    lda $08
+    lda Temp08_PositionY
     sta EnY,x
-    lda $09
+    lda Temp09_PositionX
     sta EnX,x
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta EnHi,x
 RTS_X370:
@@ -10225,14 +10294,14 @@ UpdateEnemyFireball_Frozen:
     Lx372:
     jmp LF97C
 
-LFA7D:
+GetEnemyCartRAMPtr:
     ldx PageIndex
     lda EnY,x
-    sta $02
+    sta Temp02_PositionY
     lda EnX,x
-    sta $03
+    sta Temp03_PositionX
     lda EnHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     jmp MakeCartRAMPtr              ;($E96A)Find enemy position in room RAM.
 
 UpdateEnemyFireball_Pickup:
@@ -10382,7 +10451,7 @@ Exit13:
 ; Wavers, too?
 LFB88:
     ldx PageIndex
-    jsr LF844
+    jsr GetEnemyTypeTimes2PlusFacingDirection
     lda EnData1D,x
     inc EnData1F,x
     dec EnData1F,x
@@ -10409,7 +10478,7 @@ LFB88:
         sta EnResetAnimIndex,x
         jmp ClearEnAnimDelay
     Lx384:
-    lda EnemyAnimIndex_963B,y
+    lda EnemyRestingAnimIndex,y
     cmp EnResetAnimIndex,x
     beq Exit13
     jmp InitEnAnimIndex
@@ -10417,8 +10486,8 @@ LFB88:
 
 LFBCA:
     ldx PageIndex
-    jsr LF844
-    lda EnemyAnimIndex_965B,y
+    jsr GetEnemyTypeTimes2PlusFacingDirection
+    lda EnemyActiveAnimIndex,y
     cmp EnResetAnimIndex,x
     beq Exit13
     sta EnResetAnimIndex,x

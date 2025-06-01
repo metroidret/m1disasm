@@ -114,6 +114,13 @@ Temp08_PositionY       = $08
 Temp09_PositionX       = $09
 Temp0B_PositionHi      = $0B
 
+; MakeCartRAMPtr
+Temp02_PositionY       = $02
+Temp03_PositionX       = $03
+Temp04_CartRAMPtr      = $04
+; Temp04_CartRAMPtr+1    = $05
+;Temp0B_PositionHi      = $0B
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
@@ -545,10 +552,12 @@ EnSpeedX               = $0403   ; unknown - x speed?
 EnData04               = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
+                                   ;bit2: 0=facing up, 1=facing down (used by multiviola)
+                                   ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
-                                   ;bit7: when this is set, use bit2 as facing direction instead of bit0?
-; EnCounter              = $0406   ;Counts such things as explosion time. - y counter?
-EnSpeedSubPixelY       = $0406   ;Counts such things as explosion time. - y counter?
+                                   ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
+; EnCounter              = $0406   ;Counts such things as explosion time.
+EnSpeedSubPixelY       = $0406   ;- y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter
 EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.
 EnDelay                = $0409   ;Delay counter between enemy actions.

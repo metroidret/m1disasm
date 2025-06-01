@@ -10,115 +10,145 @@
 ObjectAnimIndexTbl:
 
 ;Samus run animation.
-L8572:  .byte _id_ObjFrame03, _id_ObjFrame04, _id_ObjFrame05, $FF
+ObjAnim_8572:
+    .byte _id_ObjFrame03, _id_ObjFrame04, _id_ObjFrame05, $FF
 
 ;Samus front animation.
-L8576:  .byte _id_ObjFrame07, $FF
+ObjAnim_8576:
+    .byte _id_ObjFrame07, $FF
 
 ;Samus jump out of ball animation.
-L8578:  .byte _id_ObjFrame17
-
+ObjAnim_8578:
+    .byte _id_ObjFrame17
 ;Samus Stand animation.
-L8579:  .byte _id_ObjFrame08, $FF
+ObjAnim_8579:
+    .byte _id_ObjFrame08, $FF
 
 ;Samus stand and fire animation.
-L857B:  .byte _id_ObjFrame22, $FF
+ObjAnim_857B:
+    .byte _id_ObjFrame22, $FF
 
 ;Samus stand and jump animation.
-L857D:  .byte _id_ObjFrame04
-
+ObjAnim_857D:
+    .byte _id_ObjFrame04
 ;Samus Jump animation.
-L857E:  .byte _id_ObjFrame10, $FF
+ObjAnim_857E:
+    .byte _id_ObjFrame10, $FF
 
 ;Samus somersault animation.
-L8580:  .byte _id_ObjFrame17, _id_ObjFrame18, _id_ObjFrame19, _id_ObjFrame1A, $FF
+ObjAnim_8580:
+    .byte _id_ObjFrame17, _id_ObjFrame18, _id_ObjFrame19, _id_ObjFrame1A, $FF
 
 ;Samus run and jump animation.
-L8585:  .byte _id_ObjFrame03, _id_ObjFrame17, $FF
+ObjAnim_8585:
+    .byte _id_ObjFrame03, _id_ObjFrame17, $FF
 
 ;Samus roll animation.
-L8588:  .byte _id_ObjFrame1E, _id_ObjFrame1D, _id_ObjFrame1C, _id_ObjFrame1B, $FF
+ObjAnim_8588:
+    .byte _id_ObjFrame1E, _id_ObjFrame1D, _id_ObjFrame1C, _id_ObjFrame1B, $FF
 
 ;Bullet animation.
-L858D:  .byte _id_ObjFrame28, $FF
+ObjAnim_858D:
+    .byte _id_ObjFrame28, $FF
 
 ;Bullet hit animation.
-L858F:  .byte _id_ObjFrame2A, $F7, $FF
+ObjAnim_858F:
+    .byte _id_ObjFrame2A, $F7, $FF
 
 ;Samus jump and fire animation.
-L8592:  .byte _id_ObjFrame12, $FF
+ObjAnim_8592:
+    .byte _id_ObjFrame12, $FF
 
 ;Samus run and fire animation.
-L8594:  .byte _id_ObjFrame0C, _id_ObjFrame0D, _id_ObjFrame0E, $FF
+ObjAnim_8594:
+    .byte _id_ObjFrame0C, _id_ObjFrame0D, _id_ObjFrame0E, $FF
 
 ;Samus point up and shoot animation.
-L8598:  .byte _id_ObjFrame30
+ObjAnim_8598:
+    .byte _id_ObjFrame30
 
 ;Samus point up animation.
-L8599:  .byte _id_ObjFrame2B, $FF
+ObjAnim_8599:
+    .byte _id_ObjFrame2B, $FF
 
 ;Door open animation.
-L859B:  .byte _id_ObjFrame31, _id_ObjFrame31, _id_ObjFrame33, $F7, $FF
+ObjAnim_859B:
+    .byte _id_ObjFrame31, _id_ObjFrame31, _id_ObjFrame33, $F7, $FF
 
 ;Door close animation.
-L85A0:  .byte _id_ObjFrame33, _id_ObjFrame33, _id_ObjFrame31, $FF
+ObjAnim_85A0:
+    .byte _id_ObjFrame33, _id_ObjFrame33, _id_ObjFrame31, $FF
 
 ;Samus explode animation.
-L85A4: .byte _id_ObjFrame35, $FF
+ObjAnim_85A4: .byte _id_ObjFrame35, $FF
 
 ;Samus jump and point up animation.
-L85A6: .byte _id_ObjFrame39, _id_ObjFrame38, $FF
+ObjAnim_85A6: .byte _id_ObjFrame39, _id_ObjFrame38, $FF
 
 ;Samus run and point up animation.
-L85A9:  .byte _id_ObjFrame40, _id_ObjFrame41, _id_ObjFrame42, $FF
+ObjAnim_85A9:
+    .byte _id_ObjFrame40, _id_ObjFrame41, _id_ObjFrame42, $FF
 
 ;Samus run, point up and shoot animation 1.
-L85AD:  .byte _id_ObjFrame46, $FF
+ObjAnim_85AD:
+    .byte _id_ObjFrame46, $FF
 
 ;Samus run, point up and shoot animation 2.
-L85AF:  .byte _id_ObjFrame47, $FF
+ObjAnim_85AF:
+    .byte _id_ObjFrame47, $FF
 
 ;Samus run, point up and shoot animation 3.
-L85B1:  .byte _id_ObjFrame48, $FF
+ObjAnim_85B1:
+    .byte _id_ObjFrame48, $FF
 
 ;Samus on elevator animation 1.
-L85B3:  .byte _id_ObjFrame07, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, $F7, _id_ObjFrame07, $F7, $FF
+ObjAnim_85B3:
+    .byte _id_ObjFrame07, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, $F7, _id_ObjFrame07, $F7, $FF
 
 ;Samus on elevator animation 2.
-L85C2:  .byte _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23, $F7, $FF
+ObjAnim_85C2:
+    .byte _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23, $F7, $FF
 
 ;Samus on elevator animation 3.
-L85D1:  .byte _id_ObjFrame07, $F7, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, _id_ObjFrame07, $F7, $FF
+ObjAnim_85D1:
+    .byte _id_ObjFrame07, $F7, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, $F7, _id_ObjFrame07, $F7, $F7, _id_ObjFrame07, $F7, $FF
 
 ;Samus on elevator animation 4.
-L85E0:  .byte _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7, $FF
+ObjAnim_85E0:
+    .byte _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7, $FF
 
 ;Wave beam animation.
-L85EF:  .byte _id_ObjFrame4B, $FF
+ObjAnim_85EF:
+    .byte _id_ObjFrame4B, $FF
 
 ;Bomb tick animation.
-L85F1:  .byte _id_ObjFrame4E, _id_ObjFrame4F, $FF
+ObjAnim_85F1:
+    .byte _id_ObjFrame4E, _id_ObjFrame4F, $FF
 
 ;Bomb explode animation.
-L85F4:  .byte _id_ObjFrame3C, _id_ObjFrame4A, _id_ObjFrame49, _id_ObjFrame4A, _id_ObjFrame4D, _id_ObjFrame4A, _id_ObjFrame4D, $F7, $FF
+ObjAnim_85F4:
+    .byte _id_ObjFrame3C, _id_ObjFrame4A, _id_ObjFrame49, _id_ObjFrame4A, _id_ObjFrame4D, _id_ObjFrame4A, _id_ObjFrame4D, $F7, $FF
 
 ;Missile left animation.
-L85FD:  .byte _id_ObjFrame26, $FF
+ObjAnim_85FD:
+    .byte _id_ObjFrame26, $FF
 
 ;Missile right animation.
-L85FF:  .byte _id_ObjFrame25, $FF
+ObjAnim_85FF:
+    .byte _id_ObjFrame25, $FF
 
 ;Missile up animation.
-L8601:  .byte _id_ObjFrame27, $FF
+ObjAnim_8601:
+    .byte _id_ObjFrame27, $FF
 
 ;Missile explode animation.
-L8603:  .byte _id_ObjFrame67, _id_ObjFrame67, _id_ObjFrame67, _id_ObjFrame68, _id_ObjFrame68, _id_ObjFrame69, $F7, $FF
+ObjAnim_8603:
+    .byte _id_ObjFrame67, _id_ObjFrame67, _id_ObjFrame67, _id_ObjFrame68, _id_ObjFrame68, _id_ObjFrame69, $F7, $FF
 
 ;----------------------------[ Sprite drawing pointer tables ]--------------------------------------
 
 ;The above animation pointers provide an index into the following table
 ;for the animation sequences.
-
 ObjFramePtrTable:
     PtrTableEntry ObjFramePtrTable, ObjFrame00
     PtrTableEntry ObjFramePtrTable, ObjFrame01
@@ -229,7 +259,6 @@ ObjFramePtrTable:
 
 ;The following table provides pointers to data used for the placement of the sprites that make up
 ;Samus and other non-enemy objects.
-
 ObjPlacePtrTable:
     PtrTableEntry ObjPlacePtrTable, ObjPlace0
     PtrTableEntry ObjPlacePtrTable, ObjPlace1

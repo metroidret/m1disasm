@@ -197,7 +197,7 @@ EnemyDeathAnimIndex:
 EnemyHitPointTbl:
     .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-EnemyAnimIndex_963B:
+EnemyRestingAnimIndex:
     .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
     .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
     .byte EnAnim_A41C - EnAnimTbl, EnAnim_A41C - EnAnimTbl
@@ -215,7 +215,7 @@ EnemyAnimIndex_963B:
     .byte $00, $00
     .byte $00, $00
 
-EnemyAnimIndex_965B:
+EnemyActiveAnimIndex:
     .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
     .byte EnAnim_A40B - EnAnimTbl, EnAnim_A40B - EnAnimTbl
     .byte EnAnim_A41C - EnAnimTbl, EnAnim_A41C - EnAnimTbl
@@ -234,7 +234,22 @@ EnemyAnimIndex_965B:
     .byte $00, $00
 
 L967B:
-    .byte $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $02
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
 
 L968B:
     .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -248,46 +263,43 @@ L96AB:
 EnemyInitDelayTbl:
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-L96CB:
-    .byte $00, $02, $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnemyMovementChoiceOffset:
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice02 - EnemyMovementChoices
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
 
 EnemyMovementPtrs:
-    .word EnemyMovement00
-    .word EnemyMovement01
-    .word EnemyMovement02
-    .word EnemyMovement03
-    .word EnemyMovement04
-    .word EnemyMovement05
-    .word EnemyMovement06
-    .word EnemyMovement07
-    .word EnemyMovement08
-    .word EnemyMovement09
-    .word EnemyMovement0A
-    .word EnemyMovement0B
-    .word EnemyMovement0C
-    .word EnemyMovement0D
-    .word EnemyMovement0E
-    .word EnemyMovement0F
-    .word EnemyMovement10
-    .word EnemyMovement11
-    .word EnemyMovement12
-    .word EnemyMovement13
-    .word EnemyMovement14
-    .word EnemyMovement15
-    .word EnemyMovement16
-    .word EnemyMovement17
-    .word EnemyMovement18
-    .word EnemyMovement19
-    .word EnemyMovement1A
-    .word EnemyMovement1B
-    .word EnemyMovement1C
-    .word EnemyMovement1D
-    .word EnemyMovement1E
-    .word EnemyMovement1F
-    .word EnemyMovement20
-    .word EnemyMovement21
-    .word EnemyMovement22
-    .word EnemyMovement23
+    .word EnemyMovement00_R, EnemyMovement00_L
+    .word EnemyMovement01_R, EnemyMovement01_L
+    .word EnemyMovement02_R, EnemyMovement02_L
+    .word EnemyMovement03_R, EnemyMovement03_L
+    .word EnemyMovement04_R, EnemyMovement04_L
+    .word EnemyMovement05_R, EnemyMovement05_L
+    .word EnemyMovement06_R, EnemyMovement06_L
+    .word EnemyMovement07_R, EnemyMovement07_L
+    .word EnemyMovement08_R, EnemyMovement08_L
+    .word EnemyMovement09_R, EnemyMovement09_L
+    .word EnemyMovement0A_R, EnemyMovement0A_L
+    .word EnemyMovement0B_R, EnemyMovement0B_L
+    .word EnemyMovement0C_R, EnemyMovement0C_L
+    .word EnemyMovement0D_R, EnemyMovement0D_L
+    .word EnemyMovement0E_R, EnemyMovement0E_L
+    .word EnemyMovement0F_R, EnemyMovement0F_L
+    .word EnemyMovement10_R, EnemyMovement10_L
+    .word EnemyMovement11_R, EnemyMovement11_L
 
 L9723:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $C0, $D0, $00, $00, $7F
 L9733:  .byte $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $00
@@ -343,44 +355,50 @@ TileBlastFramePtrTable:
     .word TileBlastFrame0F
     .word TileBlastFrame10
 
-L97D1:  .byte $00, $00, $00, $01
+EnemyMovementChoices:
+EnemyMovementChoice00:
+    EnemyMovementChoiceEntry {$00}
+EnemyMovementChoice01:
+    EnemyMovementChoiceEntry {$01}
+EnemyMovementChoice02:
+    ; nothing
 
-EnemyMovement00:
-EnemyMovement01:
-EnemyMovement02:
-EnemyMovement03:
-EnemyMovement04:
-EnemyMovement05:
-EnemyMovement06:
-EnemyMovement07:
-EnemyMovement08:
-EnemyMovement09:
-EnemyMovement0A:
-EnemyMovement0B:
-EnemyMovement0C:
-EnemyMovement0D:
-EnemyMovement0E:
-EnemyMovement0F:
-EnemyMovement10:
-EnemyMovement11:
-EnemyMovement12:
-EnemyMovement13:
-EnemyMovement14:
-EnemyMovement15:
-EnemyMovement16:
-EnemyMovement17:
-EnemyMovement18:
-EnemyMovement19:
-EnemyMovement1A:
-EnemyMovement1B:
-EnemyMovement1C:
-EnemyMovement1D:
-EnemyMovement1E:
-EnemyMovement1F:
-EnemyMovement20:
-EnemyMovement21:
-EnemyMovement22:
-EnemyMovement23:
+EnemyMovement00_R:
+EnemyMovement00_L:
+EnemyMovement01_R:
+EnemyMovement01_L:
+EnemyMovement02_R:
+EnemyMovement02_L:
+EnemyMovement03_R:
+EnemyMovement03_L:
+EnemyMovement04_R:
+EnemyMovement04_L:
+EnemyMovement05_R:
+EnemyMovement05_L:
+EnemyMovement06_R:
+EnemyMovement06_L:
+EnemyMovement07_R:
+EnemyMovement07_L:
+EnemyMovement08_R:
+EnemyMovement08_L:
+EnemyMovement09_R:
+EnemyMovement09_L:
+EnemyMovement0A_R:
+EnemyMovement0A_L:
+EnemyMovement0B_R:
+EnemyMovement0B_L:
+EnemyMovement0C_R:
+EnemyMovement0C_L:
+EnemyMovement0D_R:
+EnemyMovement0D_L:
+EnemyMovement0E_R:
+EnemyMovement0E_L:
+EnemyMovement0F_R:
+EnemyMovement0F_L:
+EnemyMovement10_R:
+EnemyMovement10_L:
+EnemyMovement11_R:
+EnemyMovement11_L:
     ; nothing
 
 EnemyFireballMovement0:

@@ -57,6 +57,33 @@
     .word ptr
 .endmacro
 
+.macro EnemyMovementChoiceEntry enemyMovementIndexList
+    enemyMovementIndexListLen .set 0
+    .repeat .tcount(enemyMovementIndexList), tokenID
+        .if .match({.mid(tokenID, 1, enemyMovementIndexList)}, $00)
+            ; assume the number is a byte
+            enemyMovementIndexListLen .set enemyMovementIndexListLen+1
+        .elseif .match({.mid(tokenID, 1, enemyMovementIndexList)}, {,})
+            ; ignore comma token
+        .else
+            .error "all elements in enemyMovementIndexList must be bytes"
+        .endif
+    .endrep
+
+    .assert enemyMovementIndexListLen >= 1 && enemyMovementIndexListLen <= 256, error, "enemyMovementIndexListLen must be from 1 to 256 inclusive"
+    
+    enemyMovementIndexListLen2 .set enemyMovementIndexListLen
+    .repeat 8
+        .if (enemyMovementIndexListLen2 & 1) = 0
+            enemyMovementIndexListLen2 .set enemyMovementIndexListLen2>>1
+        .endif
+    .endrep
+    .assert enemyMovementIndexListLen2 = 1, error, "enemyMovementIndexListLen must be a power of 2"
+    
+    .byte enemyMovementIndexListLen - 1
+    .byte enemyMovementIndexList
+.endmacro
+
 
 ;There are 3 control bytes associated with the music data and the rest are musical note indexes.
 ;If the byte has the binary format 1011xxxx ($Bx), then the byte is an index into the corresponding
