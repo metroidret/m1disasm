@@ -4,12 +4,14 @@
 KraidAIRoutine:
     lda EnStatus,x
     cmp #enemyStatus_Explode
-    bcc KraidBranchB
-    beq KraidBranchA
+    bcc KraidBranch_Normal ; 0, 1, 2
+    beq KraidBranch_Explode ; 3
     cmp #enemyStatus_Pickup
-    bne KraidBranchC
+    bne KraidBranch_Exit ; 4, 6
+    ; 5
+    ; fallthrough
 
-KraidBranchA:
+KraidBranch_Explode:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
     sta EnStatus+$10
@@ -17,14 +19,16 @@ KraidBranchA:
     sta EnStatus+$30
     sta EnStatus+$40
     sta EnStatus+$50
-    beq KraidBranchC
+    beq KraidBranch_Exit
 
-KraidBranchB:
+KraidBranch_Normal:
     jsr KraidUpdateAllProjectiles
     jsr KraidTryToLaunchLint
     jsr KraidTryToLaunchNail
+    ; fallthrough
 
-KraidBranchC:
+KraidBranch_Exit:
+    ; change animation frame every 10 frames
     lda #$0A
     sta $00
     jmp CommonEnemyStub ;sidehopper.asm
@@ -258,7 +262,7 @@ KraidTryToLaunchLint:
     tya
     asl
     ; exit if (lint counter * 2) is not #$0A, #$1A, #$2A, #$3A, #$4A, #$5A, #$6A or #$7A
-    ; lint will fire every 16 frames 8 times, then will pause for 128 frames, in a cycle
+    ; lint will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
     bmi KraidTryToLaunchLint_Exit
     and #$0F
     cmp #$0A
@@ -280,7 +284,7 @@ KraidTryToLaunchLint:
     cmp EnStatus,x
     beq KraidTryToLaunchLint_PrimeLintForLaunch
     
-    ; all lint is currently launched or unavailable
+    ; all lints are currently launched
     ; undo decrement lint counter so that it will try to launch again the next frame
     inc KraidLintCounter
     rts
@@ -313,7 +317,7 @@ KraidTryToLaunchNail:
     tya
     asl
     ; exit if (nail counter * 2)'s low nibble is not 0
-    ; nail will fire every 16 frames
+    ; nail will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
     bmi KraidTryToLaunchNail_Exit
     and #$0F
     bne KraidTryToLaunchNail_Exit
@@ -329,7 +333,7 @@ KraidTryToLaunchNail:
     cmp EnStatus,x
     beq KraidTryToLaunchNail_PrimeNailForLaunch
     
-    ; all nail is currently launched or unavailable
+    ; all nails are currently launched
     ; undo decrement nail counter so that it will try to launch again the next frame
     inc KraidNailCounter
     rts

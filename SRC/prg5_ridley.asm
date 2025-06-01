@@ -163,7 +163,7 @@ ChooseEnemyAIRoutine:
         .word PipeBugAIRoutine ; 07 - zebbo
         .word InvalidEnemy ; 08 - same as 4
         .word RidleyAIRoutine ; 09 - ridley
-        .word RidleyFireballAIRoutine ; 0A - ridley fireball
+        .word RidleyProjectileAIRoutine ; 0A - ridley fireball
         .word InvalidEnemy ; 0B - same as 4
         .word MultiviolaAIRoutine ; 0C - bouncy orbs
         .word InvalidEnemy ; 0D - same as 4

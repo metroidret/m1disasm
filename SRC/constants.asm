@@ -298,8 +298,7 @@ OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she 
 
 KraidLintCounter       = $7E
 KraidNailCounter       = $7F
-Ridley7E               = $7E
-Ridley80               = $80
+RidleyProjectileCounter= $80
 
 EnemyMovementPtr       = $81
 ; EnemyMovementPtr+1     = $82
