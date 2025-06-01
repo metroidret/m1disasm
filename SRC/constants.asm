@@ -552,7 +552,7 @@ EnSpeedX               = $0403   ; unknown - x speed?
 EnData04               = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
-                                   ;bit2: 0=facing up, 1=facing down (used by multiviola)
+                                   ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
                                    ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
