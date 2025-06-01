@@ -124,9 +124,9 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballKilledAnimIndex:
-    .byte EnAnim_9D6D - EnAnimTbl
+    .byte EnAnim_03 - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_9DAD - EnAnimTbl
+    .byte EnAnim_43 - EnAnimTbl
 
     .byte $00, $00
 AreaFireballFallingAnimIndex:
@@ -134,7 +134,7 @@ AreaFireballFallingAnimIndex:
 AreaFireballSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_9DD3 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -159,19 +159,19 @@ ChooseEnemyAIRoutine:
 
 ; Animation related table ?
 EnemyDeathAnimIndex:
-    .byte EnAnim_9D91 - EnAnimTbl, EnAnim_9D91 - EnAnimTbl
-    .byte EnAnim_9D93 - EnAnimTbl, EnAnim_9D93 - EnAnimTbl
-    .byte EnAnim_9D97 - EnAnimTbl, EnAnim_9D95 - EnAnimTbl
-    .byte EnAnim_9D9B - EnAnimTbl, EnAnim_9D99 - EnAnimTbl
-    .byte EnAnim_9D9D - EnAnimTbl, EnAnim_9D9D - EnAnimTbl
-    .byte EnAnim_9DAB - EnAnimTbl, EnAnim_9DAB - EnAnimTbl
-    .byte EnAnim_9DB5 - EnAnimTbl, EnAnim_9DB5 - EnAnimTbl
-    .byte EnAnim_9DBF - EnAnimTbl, EnAnim_9DBD - EnAnimTbl
-    .byte EnAnim_9DDC - EnAnimTbl, EnAnim_9DDE - EnAnimTbl
+    .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl
+    .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl
+    .byte EnAnim_2D - EnAnimTbl, EnAnim_2B - EnAnimTbl
+    .byte EnAnim_31 - EnAnimTbl, EnAnim_2F - EnAnimTbl
+    .byte EnAnim_33 - EnAnimTbl, EnAnim_33 - EnAnimTbl
+    .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl
+    .byte EnAnim_4B - EnAnimTbl, EnAnim_4B - EnAnimTbl
+    .byte EnAnim_55 - EnAnimTbl, EnAnim_53 - EnAnimTbl
+    .byte EnAnim_72 - EnAnimTbl, EnAnim_74 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -181,38 +181,38 @@ EnemyHitPointTbl:
 
 ; ResetAnimIndex table for resting enemy
 EnemyRestingAnimIndex:
-    .byte EnAnim_9D6F - EnAnimTbl, EnAnim_9D6F - EnAnimTbl
-    .byte EnAnim_9D75 - EnAnimTbl, EnAnim_9D75 - EnAnimTbl
-    .byte EnAnim_9D81 - EnAnimTbl, EnAnim_9D7D - EnAnimTbl
-    .byte EnAnim_9D85 - EnAnimTbl, EnAnim_9D83 - EnAnimTbl
-    .byte EnAnim_9D8D - EnAnimTbl, EnAnim_9D8D - EnAnimTbl
-    .byte EnAnim_9D9F - EnAnimTbl, EnAnim_9D9F - EnAnimTbl
-    .byte EnAnim_9DB2 - EnAnimTbl, EnAnim_9DB2 - EnAnimTbl
-    .byte EnAnim_9DC3 - EnAnimTbl, EnAnim_9DC1 - EnAnimTbl
-    .byte EnAnim_9DD6 - EnAnimTbl, EnAnim_9DD9 - EnAnimTbl
-    .byte EnAnim_9DC5 - EnAnimTbl, EnAnim_9DC7 - EnAnimTbl
-    .byte EnAnim_9DCC - EnAnimTbl, EnAnim_9DD1 - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
+    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
+    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
+    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
+    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
+    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
+    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
+    .byte EnAnim_59 - EnAnimTbl, EnAnim_57 - EnAnimTbl
+    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl
+    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl
+    .byte EnAnim_62 - EnAnimTbl, EnAnim_67 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
-    .byte EnAnim_9D6F - EnAnimTbl, EnAnim_9D6F - EnAnimTbl
-    .byte EnAnim_9D75 - EnAnimTbl, EnAnim_9D75 - EnAnimTbl
-    .byte EnAnim_9D81 - EnAnimTbl, EnAnim_9D7D - EnAnimTbl
-    .byte EnAnim_9D85 - EnAnimTbl, EnAnim_9D83 - EnAnimTbl
-    .byte EnAnim_9D8D - EnAnimTbl, EnAnim_9D8D - EnAnimTbl
-    .byte EnAnim_9D9F - EnAnimTbl, EnAnim_9D9F - EnAnimTbl
-    .byte EnAnim_9DB2 - EnAnimTbl, EnAnim_9DB2 - EnAnimTbl
-    .byte EnAnim_9DBA - EnAnimTbl, EnAnim_9DB7 - EnAnimTbl
-    .byte EnAnim_9DD6 - EnAnimTbl, EnAnim_9DD9 - EnAnimTbl
-    .byte EnAnim_9DC5 - EnAnimTbl, EnAnim_9DC7 - EnAnimTbl
-    .byte EnAnim_9DC9 - EnAnimTbl, EnAnim_9DCE - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
+    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
+    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
+    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
+    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
+    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
+    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
+    .byte EnAnim_50 - EnAnimTbl, EnAnim_4D - EnAnimTbl
+    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl
+    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl
+    .byte EnAnim_5F - EnAnimTbl, EnAnim_64 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -317,8 +317,8 @@ L977B:
 ; Enemy animation related table?
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_9DCE - EnAnimTbl, EnAnim_9DD1 - EnAnimTbl
-    .byte EnAnim_9DD3 - EnAnimTbl, EnAnim_9DD3 - EnAnimTbl
+    .byte EnAnim_64 - EnAnimTbl, EnAnim_67 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -706,17 +706,20 @@ EnemyFireballMovement3:
 ;-------------------------------------------------------------------------------
 
 CommonEnemyJump_00_01_02:
-    lda EnemyStatus81
-    cmp #$01
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Resting
     beq L99B0
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq L99B5
+        ; enemy default
         lda $00
         jmp CommonJump_00
     L99B0:
+        ; enemy resting
         lda $01
         jmp CommonJump_01
     L99B5:
+        ; enemy explode
         jmp CommonJump_02
 
 .include "enemies/sidehopper.asm"

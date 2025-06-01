@@ -1,69 +1,94 @@
 ; Pipe Bug AI Handler
 
 PipeBugAIRoutine:
+    ; branch if pipe bug is not active
     lda EnStatus,x
     cmp #enemyStatus_Active
-    bne PipeBugBranchA
+    bne PipeBugApplySpeed
+
+    ; if pipe bug is going forward, apply speed
     lda EnSpeedX,x
-    bne PipeBugBranchA
+    bne PipeBugApplySpeed
+
+    ; if EnAccelY is in effect, we need to check if y speed became positive
     lda EnAccelY,x
-    bne PipeBugBranchB
+    bne PipeBugCheckIfGoForwards
 
-    lda ObjY            ;\
-    sec                 ;|
-    sbc EnY,x           ;| - branch if (SamusY - PipeBugY) >= 0x40
-    cmp #$40            ;|
-    bcs PipeBugBranchA  ;/
+    ; branch if pipe bug is more than #$40 pixels (4 blocks) below Samus
+    ; while this is true, pipe bug will continue to rise at a fixed y speed
+    lda ObjY
+    sec
+    sbc EnY,x
+    cmp #$40
+    bcs PipeBugApplySpeed
 
-    lda #$7F            ;\
-    sta EnAccelY,x      ;| - EnAccelY := $7E, branch always
-    bne PipeBugBranchA  ;/
-
-PipeBugBranchB:
-    lda EnSpeedY,x
-    bmi PipeBugBranchA
-    lda #$00
-    sta EnSpeedY,x
-    sta EnSpeedSubPixelY,x
+    ; set EnAccelY to #$7F
+    ; eventually, this gravity will make y speed positive
+    lda #$7F
     sta EnAccelY,x
-    lda EnData05,x
-    and #$01
-    tay
-    lda PipeBugTable,y
-    sta EnSpeedX,x
+    bne PipeBugApplySpeed ; branch always
 
-PipeBugBranchA:
+PipeBugCheckIfGoForwards:
+    ; branch if y speed is negative (pipe bug is still rising)
+    lda EnSpeedY,x
+    bmi PipeBugApplySpeed
+        ; y speed is not negative, we must stop moving vertically and go forwards
+        ; set y speed and acceleration to 0
+        lda #$00
+        sta EnSpeedY,x
+        sta EnSpeedSubPixelY,x
+        sta EnAccelY,x
+        ; set pipe bug x speed depending on its facing direction
+        lda EnData05,x
+        and #$01
+        tay
+        lda PipeBugSpeedXTable,y
+        sta EnSpeedX,x
+PipeBugApplySpeed:
+    ; exit if bit 7 of EnData05 is set
     lda EnData05,x
     asl
-    bmi PipeBugBranchC
+    bmi PipeBugExit
     
+    ; exit if pipe bug is not active
     lda EnStatus,x
     cmp #enemyStatus_Active
-    bne PipeBugBranchC
+    bne PipeBugExit
     
+    ; get y speed
     jsr CommonJump_12
+    ; push y speed to stack
     pha
+    ; get x speed
     jsr CommonJump_13
-    sta $05
+    ; set x speed
+    sta Temp05_SpeedX
+    ; set y speed
     pla
-    sta $04
+    sta Temp04_SpeedY
+
+    ; apply speed
     jsr StorePositionToTemp
-    jsr CommonJump_ApplySpeedToPosition ; Check if onscreen?
+    jsr CommonJump_ApplySpeedToPosition
+    ; remove bug if it is out of bounds
     bcc PipeBugDelete
     jsr LoadPositionFromTemp
+    ; fallthrough
 
 ;Exit 1
-PipeBugBranchC:
+PipeBugExit:
+    ; change animation frame every 3 frames
     lda #$03
     jmp CommonJump_01 ; Common Enemy Handler
 
 ;Exit 2
-PipeBugDelete: ; Set enemy status to 0
+PipeBugDelete:
+    ; Set enemy status to 0
     lda #enemyStatus_NoEnemy
     sta EnStatus,x
     rts
 
-PipeBugTable:
+PipeBugSpeedXTable:
 .if BANK = 1 ; Brinstar
     .byte $04, -$04
 .else ; Norfair, Kraid, Ridley

@@ -1,5 +1,5 @@
 RioAIRoutine:
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq RioExitC
 

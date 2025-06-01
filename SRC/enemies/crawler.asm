@@ -3,17 +3,17 @@ CrawlerAIRoutine:
     jsr CommonJump_03
     and #$03
     beq Crawler03
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     .if BANK = 1 || BANK = 4
         cmp #enemyStatus_Resting
-        beq SkreeExitB
+        beq SkreeExit_Resting
         cmp #enemyStatus_Explode
-        beq SkreeExitC
+        beq SkreeExit_Explode
     .elseif BANK = 2 || BANK = 5
         cmp #enemyStatus_Resting
-        beq Crawler03c
+        beq CrawlerExit_Resting
         cmp #enemyStatus_Explode
-        beq Crawler03b
+        beq CrawlerExit_Explode
     .endif
     lda EnStatus,x
     cmp #enemyStatus_Explode
@@ -41,11 +41,11 @@ Crawler02:
 Crawler03:
     lda #$03
     jsr CommonJump_UpdateEnemyAnim
-Crawler03b:
+CrawlerExit_Explode:
     jmp CommonJump_02
 
 .if BANK = 2 || BANK = 5
-    Crawler03c:
+    CrawlerExit_Resting:
         jmp CommonJump_01
 .endif
 
@@ -60,11 +60,35 @@ Crawler04:
     jmp CommonJump_InitEnAnimIndex
 
 .if BANK = 1 || BANK = 4
-    CrawlerAnimIndexTable:  .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E
+    CrawlerAnimIndexTable:
+        .byte EnAnim_35 - EnAnimTbl
+        .byte EnAnim_35 - EnAnimTbl
+        .byte EnAnim_3E - EnAnimTbl
+        .byte EnAnim_38 - EnAnimTbl
+        .byte EnAnim_3B - EnAnimTbl
+        .byte EnAnim_3B - EnAnimTbl
+        .byte EnAnim_38 - EnAnimTbl
+        .byte EnAnim_3E - EnAnimTbl
 .elseif BANK = 2
-    CrawlerAnimIndexTable:  .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
+    CrawlerAnimIndexTable:
+        .byte EnAnim_69 - EnAnimTbl
+        .byte EnAnim_69 - EnAnimTbl
+        .byte EnAnim_72 - EnAnimTbl
+        .byte EnAnim_6C - EnAnimTbl
+        .byte EnAnim_6F - EnAnimTbl
+        .byte EnAnim_6F - EnAnimTbl
+        .byte EnAnim_6C - EnAnimTbl
+        .byte EnAnim_72 - EnAnimTbl
 .elseif BANK = 5
-    CrawlerAnimIndexTable:  .byte $4A, $4A, $53, $4D, $50, $50, $4D, $53
+    CrawlerAnimIndexTable:
+        .byte EnAnim_4A - EnAnimTbl
+        .byte EnAnim_4A - EnAnimTbl
+        .byte EnAnim_53 - EnAnimTbl
+        .byte EnAnim_4D - EnAnimTbl
+        .byte EnAnim_50 - EnAnimTbl
+        .byte EnAnim_50 - EnAnimTbl
+        .byte EnAnim_4D - EnAnimTbl
+        .byte EnAnim_53 - EnAnimTbl
 .endif
 
 Crawler06:

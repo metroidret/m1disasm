@@ -5230,13 +5230,13 @@ AddToMaxMissiles:
 LDD8B_Lx143:
     ; Y coord
     lda EnY,x
-    sta $0A
+    sta Temp0A_PositionY
     ; X coord
     lda EnX,x
-    sta $0B
+    sta Temp0B_PositionX
     ; hi coord
     lda EnHi,x
-    sta $06
+    sta Temp06_PositionHi
     
     ; load pointer to enemy frame data into $00-$01
     lda EnAnimFrame,x
@@ -5301,7 +5301,7 @@ LDD8B_Lx143:
     lda ($00),y
     sta EnRadX,x
     ; write x radius to temp $09
-    sta $09
+    sta Temp09_RadiusX
     
     ; save y to $11
     iny
@@ -5349,7 +5349,7 @@ ReduceYRadius:
     bcs LDE44                       ;If number is still a positive number, branch to store value.
         lda #$00                        ;Number is negative.  Set Y radius to #$00.
     LDE44:
-    sta $08                         ;Store result and return.
+    sta Temp08_RadiusY              ;Store result and return.
     rts                             ;
 
 AnimDrawObject:
@@ -5372,11 +5372,11 @@ ObjDrawFrame:
 
 LDE60:
     lda ObjY,x                      ;
-    sta $0A                         ;
+    sta Temp0A_PositionY            ;
     lda ObjX,x                      ;Copy object y and x room position and name table-->
-    sta $0B                         ;data into $0A, $0B and $06 respectively.
+    sta Temp0B_PositionX            ;data into $0A, $0B and $06 respectively.
     lda ObjHi,x                     ;
-    sta $06                         ;
+    sta Temp06_PositionHi           ;
     lda ObjAnimFrame,x              ;Load A with index into ObjFramePtrTable.
     asl                             ;*2. Frame pointers are two bytes.
     tax                             ;X is now the index into the ObjFramePtrTable.
@@ -5426,7 +5426,7 @@ LDEBC:
     iny                             ;Increment to third frame data byte.
     lda ($00),y                     ;Get horizontal radius in pixels of object.
     sta ObjRadX,x                   ;
-    sta $09                         ;Temp storage for object x radius.
+    sta Temp09_RadiusX              ;Temp storage for object x radius.
     iny                             ;Set index to 4th byte of frame data.
     sty $11                         ;Store current index into frame data.
     jsr IsObjectVisible             ;($DFDF)Determine if object is within the screen boundaries.
@@ -5624,12 +5624,12 @@ ExplodeXDisplace:
 ;why is $09 (radius x) used, but not $08 (radius y)?
 IsObjectVisible: ;($DFDF)
     ldx #$01                        ;Assume object is visible on screen.
-    lda $0A                         ;Object Y position in room.
+    lda Temp0A_PositionY            ;Object Y position in room.
     tay                             ;
     sec                             ;Subtract y scroll to find sprite's y position on screen.
     sbc ScrollY                     ;
     sta $10                         ;Store result in $10.
-    lda $0B                         ;Object X position in room.
+    lda Temp0B_PositionX            ;Object X position in room.
     sec                             ;
     sbc ScrollX                     ;Subtract x scroll to find sprite's x position on screen.
     sta $0E                         ;Store result in $0E.
@@ -5639,7 +5639,7 @@ IsObjectVisible: ;($DFDF)
 
 VertScrollCheck:
     cpy ScrollY                     ;If object room pos is >= scrollY, set carry.
-    lda $06                         ;Check if object is on different name table as current-->
+    lda Temp06_PositionHi           ;Check if object is on different name table as current-->
     eor PPUCTRL_ZP                  ;name table active in PPU.-->
     and #$01                        ;If not, branch.
     beq LE012                       ;
@@ -5647,7 +5647,7 @@ VertScrollCheck:
     lda $10                         ;
     sbc #$0F                        ;Move sprite y position up 15 pixels.
     sta $10                         ;
-    lda $09                         ;
+    lda Temp09_RadiusX              ;
     clc                             ;If a portion of the object is outside the sceen-->
     adc $10                         ;boundaries, treat object as if the whole thing is-->
     cmp #$F0                        ;not visible.
@@ -5655,7 +5655,7 @@ VertScrollCheck:
     clc                             ;Causes next statement to branch always.
 LE012:
     bcc LE01A                       ;
-    lda $09                         ;If object is on same name table as the current one in-->
+    lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
     cmp $10                         ;the PPU, check if part of object is out of screen-->
     bcc RTS_E01B                    ;boundaries.  If so, branch.
 LE01A:
@@ -5664,19 +5664,19 @@ RTS_E01B:
     rts
 
 HorzScrollCheck:
-    lda $06                         ;
+    lda Temp06_PositionHi           ;
     eor PPUCTRL_ZP                  ;Check if object is on different name table as current-->
     and #$01                        ;name table active in PPU.-->
     beq LE02E                       ;If not, branch.
         bcs LE036                   ;If carry is still set, sprite is not in screen boundaries.
-        lda $09                     ;
+        lda Temp09_RadiusX          ;
         clc                         ;If a portion of the object is outside the sceen-->
         adc $0E                     ;boundaries, treat object as if the whole thing is-->
         bcc RTS_E037                ;not visible.
         clc                         ;Causes next statement to branch always.
     LE02E:
     bcc LE036                       ;
-    lda $09                         ;If object is on same name table as the current one in-->
+    lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
     cmp $0E                         ;the PPU, check if part of object is out of screen-->
     bcc RTS_E037                    ;boundaries.  If so, branch.
 LE036:
@@ -9063,7 +9063,7 @@ DoOneEnemy: ;LF351
     @endIf:
     jsr DoOneEnemy_UpdateEnData05Bit6
     lda EnStatus,x
-    sta EnemyStatus81
+    sta EnemyStatusPreAI
     cmp #enemyStatus_Hurt+1
     bcs @invalidStatus
     jsr ChooseRoutine
@@ -9085,15 +9085,15 @@ DoOneEnemy_CheckIfVisible:
     bne @exit
         ; Store Enemy Position/Hitbox to Temp
         lda EnY,x     ; Y coord
-        sta $0A
+        sta Temp0A_PositionY
         lda EnX,x     ; X coord
-        sta $0B
+        sta Temp0B_PositionX
         lda EnHi,x     ; hi coord
-        sta $06
+        sta Temp06_PositionHi
         lda EnRadY,x
-        sta $08
+        sta Temp08_RadiusY
         lda EnRadX,x
-        sta $09
+        sta Temp09_RadiusX
         ;Determine if object is within the screen boundaries.
         jsr IsObjectVisible
         txa
@@ -9145,7 +9145,7 @@ Lx299:
     jmp DoActiveEnemy_BranchB
 ;------------------------------------------
 DoActiveEnemy: ; LF3E6
-    ; Branch if bit 6 is set
+    ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
     bmi DoActiveEnemy_BranchB

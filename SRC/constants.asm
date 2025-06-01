@@ -121,6 +121,13 @@ Temp04_CartRAMPtr      = $04
 ; Temp04_CartRAMPtr+1    = $05
 ;Temp0B_PositionHi      = $0B
 
+; IsObjectVisible
+Temp06_PositionHi      = $06
+Temp08_RadiusY         = $08
+Temp09_RadiusX         = $09
+Temp0A_PositionY       = $0A
+Temp0B_PositionX       = $0B
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
@@ -296,7 +303,7 @@ Ridley80               = $80
 
 EnemyMovementPtr       = $81
 ; EnemyMovementPtr+1     = $82
-EnemyStatus81          = $81
+EnemyStatusPreAI       = $81     ;set to enemy status before enemy ai routine is run
 Enemy82                = $82
 
 ;--------------------------------------[ End routine specific ]--------------------------------------
@@ -554,6 +561,8 @@ EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
                                    ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
+                                   ;bit4: always set?
+                                   ;bit5: when active, this bit being unset will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
 ; EnCounter              = $0406   ;Counts such things as explosion time.

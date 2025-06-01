@@ -1,6 +1,6 @@
 ; Lava Jumper Routine
 SqueeptAIRoutine:
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     bne L9A88
     lda EnStatus,x
@@ -19,7 +19,7 @@ L9A88:
     lda EnStatus,x
     cmp #enemyStatus_Explode
     beq L9ACA
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq L9ACA
     cmp #enemyStatus_Explode

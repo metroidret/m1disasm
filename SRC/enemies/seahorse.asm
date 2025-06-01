@@ -24,9 +24,9 @@ SeahorseAIRoutine:
         sta SpawnFireball_87
         lda #$00
         sta SpawnFireball_EnData0A
-        lda #EnAnim_9C1D - EnAnimTbl
+        lda #EnAnim_43 - EnAnimTbl
         sta SpawnFireball_83
-        lda #EnAnim_9C21 - EnAnimTbl
+        lda #EnAnim_47 - EnAnimTbl
         sta SpawnFireball_83+1
         lda #$03
         sta SpawnFireball_AnimTableIndex
@@ -62,4 +62,4 @@ L9B59:
     jmp CommonEnemyJump_00_01_02
 
 SeahorseTable:
-    .byte EnAnim_9C1F - EnAnimTbl, EnAnim_9C23 - EnAnimTbl
+    .byte EnAnim_45 - EnAnimTbl, EnAnim_49 - EnAnimTbl

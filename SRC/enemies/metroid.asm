@@ -7,22 +7,28 @@ MetroidAIRoutine:
         sta EnStatus,x
     L9804:
     
+    ; prepare CommonEnemyJump_00_01_02 parameters
+    ; change animation frame every 15 frames
     lda #$0F
     sta $00
     sta $01
+    ; branch if bit 7 of EnData05 is set
     lda EnData05,x
     asl
     bmi CommonEnemyJump_00_01_02
+    ; branch if metroid is exploding
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq CommonEnemyJump_00_01_02
     
+    ; branch if metroid latch for this metroid is inactive
     jsr LoadEnemySlotIDIntoY
     lda MetroidLatch0400,y
     beq L9822
+        ; metroid latch is active, jump
         jmp L9899
-
     L9822:
+
     ; load whether the metroid is red (#$00) or green (#$01) into y
     ldy EnMovementIndex,x
     
@@ -114,7 +120,7 @@ L9899:
     bne L98A9
     cmp EnStatus,x
     beq L98A9
-    lda #$04
+    lda #enemyStatus_Frozen
     sta EnStatus,x
 L98A9:
     lda EnData04,x
@@ -124,6 +130,7 @@ L98A9:
         jsr LoadEnemySlotIDIntoY
         lda MetroidLatch0400,y
         beq L98EF
+            ; metroid is latched onto Samus
             ; don't count bomb hit if not hit by a bomb explosion
             lda EnWeaponAction,x
             cmp #wa_Unknown7
@@ -173,7 +180,7 @@ L98A9:
         jsr GetMetroidRepelSpeed
         sta EnSpeedX,x
     L990F:
-    ; check if latched
+    ; check if metroid is latched onto Samus (again)
     jsr LoadEnemySlotIDIntoY
     lda MetroidLatch0400,y
     bne L9932
@@ -181,6 +188,7 @@ L98A9:
         ; check if metroid is touching Samus
         lda EnData04,x
         and #$04
+        ; branch if metroid doesnt touch Samus
         beq L9964
         
         ; begin attempt to latch onto Samus
@@ -235,10 +243,13 @@ L98A9:
     jmp L9967
 
 L9964:
+    ; metroid is not latched and doesn't touch Samus
+    ; clear metroid latch (it's already clear but ok)
     jsr ClearCurrentMetroidLatch
 L9967:
+    ; if metroid just died, clear metroid latch
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     bne L9971
         jsr ClearCurrentMetroidLatch
     L9971:

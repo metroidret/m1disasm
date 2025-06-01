@@ -39,7 +39,7 @@ L9907:
 ;-------------------------------------------------------------------------------
 ; Swooper Routine 2?
 SwooperAIRoutine2:
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     cmp #$01
     beq SwooperExitA
         cmp #$03

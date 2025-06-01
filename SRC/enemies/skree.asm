@@ -1,23 +1,23 @@
 ; SkreeRoutine
 SkreeAIRoutine:
-    lda EnemyStatus81
+    lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
-    beq SkreeExitB
+    beq SkreeExit_Resting
     cmp #enemyStatus_Explode
-    beq SkreeExitC
+    beq SkreeExit_Explode
     
     lda EnSpeedSubPixelY,x
     cmp #$0F
-    bcc SkreeExitA
+    bcc SkreeExit_Active
     cmp #$11
     bcs SkreeBlowUpIntoProjectiles
     lda #$3A
     sta EnData1D,x
-    bne SkreeExitA
+    bne SkreeExit_Active
 
 SkreeBlowUpIntoProjectiles:
     dec EnData1D,x
-    bne SkreeExitA
+    bne SkreeExit_Active
     lda #enemyStatus_NoEnemy
     sta EnStatus,x
     ldy #(4-1)*4
@@ -36,13 +36,18 @@ SkreeBlowUpIntoProjectiles:
         dey
         bpl SkreeLoop
 
-SkreeExitA:
+SkreeExit_Active:
+    ; skree is active
+    ; change animation frame every 2 frames
     lda #$02
     jmp CommonJump_00
 
-SkreeExitB:
+SkreeExit_Resting:
+    ; skree is resting (hanging on the ceiling)
+    ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_01
 
-SkreeExitC:
+SkreeExit_Explode:
+    ; skree is exploding
     jmp CommonJump_02

@@ -127,17 +127,17 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballKilledAnimIndex:
-    .byte EnAnim_9BDD - EnAnimTbl
+    .byte EnAnim_03 - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_9C51 - EnAnimTbl
+    .byte EnAnim_77 - EnAnimTbl
 ; fireball rising?
-    .byte EnAnim_9C2D - EnAnimTbl, EnAnim_9C31 - EnAnimTbl
+    .byte EnAnim_53 - EnAnimTbl, EnAnim_57 - EnAnimTbl
 AreaFireballFallingAnimIndex:
-    .byte EnAnim_9C2F - EnAnimTbl, EnAnim_9C33 - EnAnimTbl
+    .byte EnAnim_55 - EnAnimTbl, EnAnim_59 - EnAnimTbl
 AreaFireballSplatterAnimIndex:
-    .byte EnAnim_9C35 - EnAnimTbl, EnAnim_9C29 - EnAnimTbl
+    .byte EnAnim_5B - EnAnimTbl, EnAnim_4F - EnAnimTbl
 AreaMellowAnimIndex:
-    .byte EnAnim_9C0C - EnAnimTbl
+    .byte EnAnim_32 - EnAnimTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -161,20 +161,20 @@ ChooseEnemyAIRoutine:
         .word InvalidEnemy ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_9C02 - EnAnimTbl, EnAnim_9C02 - EnAnimTbl
-    .byte EnAnim_9C02 - EnAnimTbl, EnAnim_9C02 - EnAnimTbl
-    .byte EnAnim_9C0A - EnAnimTbl, EnAnim_9C0A - EnAnimTbl
+    .byte EnAnim_28 - EnAnimTbl, EnAnim_28 - EnAnimTbl
+    .byte EnAnim_28 - EnAnimTbl, EnAnim_28 - EnAnimTbl
+    .byte EnAnim_30 - EnAnimTbl, EnAnim_30 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_9C4F - EnAnimTbl, EnAnim_9C4F - EnAnimTbl
-    .byte EnAnim_9C5E - EnAnimTbl, EnAnim_9C5C - EnAnimTbl
+    .byte EnAnim_75 - EnAnimTbl, EnAnim_75 - EnAnimTbl
+    .byte EnAnim_84 - EnAnimTbl, EnAnim_82 - EnAnimTbl
     .byte $00, $00
-    .byte EnAnim_9BEB - EnAnimTbl, EnAnim_9BEB - EnAnimTbl
-    .byte EnAnim_9BED - EnAnimTbl, EnAnim_9BF2 - EnAnimTbl
-    .byte EnAnim_9C0F - EnAnimTbl, EnAnim_9C0F - EnAnimTbl
-    .byte EnAnim_9C1B - EnAnimTbl, EnAnim_9C1B - EnAnimTbl
-    .byte EnAnim_9C25 - EnAnimTbl, EnAnim_9C25 - EnAnimTbl
+    .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
+    .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl
+    .byte EnAnim_4B - EnAnimTbl, EnAnim_4B - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
 
@@ -182,38 +182,38 @@ EnemyHitPointTbl:
     .byte $08, $08, $FF, $01, $01, $01, $02, $01, $01, $20, $FF, $FF, $08, $06, $FF, $00
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_9BFC - EnAnimTbl, EnAnim_9BFC - EnAnimTbl
-    .byte EnAnim_9BFC - EnAnimTbl, EnAnim_9BFC - EnAnimTbl
-    .byte EnAnim_9C04 - EnAnimTbl, EnAnim_9C07 - EnAnimTbl
+    .byte EnAnim_22 - EnAnimTbl, EnAnim_22 - EnAnimTbl
+    .byte EnAnim_22 - EnAnimTbl, EnAnim_22 - EnAnimTbl
+    .byte EnAnim_2A - EnAnimTbl, EnAnim_2D - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_9C43 - EnAnimTbl, EnAnim_9C43 - EnAnimTbl
-    .byte EnAnim_9C62 - EnAnimTbl, EnAnim_9C60 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_88 - EnAnimTbl, EnAnim_86 - EnAnimTbl
     .byte $00, $00
-    .byte EnAnim_9BDF - EnAnimTbl, EnAnim_9BE2 - EnAnimTbl
-    .byte EnAnim_9BED - EnAnimTbl, EnAnim_9BF2 - EnAnimTbl
-    .byte EnAnim_9BFA - EnAnimTbl, EnAnim_9BFA - EnAnimTbl
-    .byte EnAnim_9C16 - EnAnimTbl, EnAnim_9C11 - EnAnimTbl
-    .byte EnAnim_9C1D - EnAnimTbl, EnAnim_9C21 - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_20 - EnAnimTbl, EnAnim_20 - EnAnimTbl
+    .byte EnAnim_3C - EnAnimTbl, EnAnim_37 - EnAnimTbl
+    .byte EnAnim_43 - EnAnimTbl, EnAnim_47 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_9BFF - EnAnimTbl, EnAnim_9BFF - EnAnimTbl
-    .byte EnAnim_9BFF - EnAnimTbl, EnAnim_9BFF - EnAnimTbl
-    .byte EnAnim_9C04 - EnAnimTbl, EnAnim_9C07 - EnAnimTbl
+    .byte EnAnim_25 - EnAnimTbl, EnAnim_25 - EnAnimTbl
+    .byte EnAnim_25 - EnAnimTbl, EnAnim_25 - EnAnimTbl
+    .byte EnAnim_2A - EnAnimTbl, EnAnim_2D - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_9C43 - EnAnimTbl, EnAnim_9C43 - EnAnimTbl
-    .byte EnAnim_9C59 - EnAnimTbl, EnAnim_9C56 - EnAnimTbl
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_7F - EnAnimTbl, EnAnim_7C - EnAnimTbl
     .byte $00, $00
-    .byte EnAnim_9BDF - EnAnimTbl, EnAnim_9BE2 - EnAnimTbl
-    .byte EnAnim_9BED - EnAnimTbl, EnAnim_9BF2 - EnAnimTbl
-    .byte EnAnim_9BF7 - EnAnimTbl, EnAnim_9BF7 - EnAnimTbl
-    .byte EnAnim_9C16 - EnAnimTbl, EnAnim_9C11 - EnAnimTbl
-    .byte EnAnim_9C1D - EnAnimTbl, EnAnim_9C21 - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl
+    .byte EnAnim_3C - EnAnimTbl, EnAnim_37 - EnAnimTbl
+    .byte EnAnim_43 - EnAnimTbl, EnAnim_47 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
 
@@ -297,8 +297,8 @@ L977B:  .byte $4C, $4C, $01, $00, $00, $00, $00, $40, $00, $64, $44, $44, $40, $
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_9C27 - EnAnimTbl, EnAnim_9C27 - EnAnimTbl
-    .byte EnAnim_9C2D - EnAnimTbl, EnAnim_9C31 - EnAnimTbl
+    .byte EnAnim_4D - EnAnimTbl, EnAnim_4D - EnAnimTbl
+    .byte EnAnim_53 - EnAnimTbl, EnAnim_57 - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
