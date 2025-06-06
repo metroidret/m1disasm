@@ -109,8 +109,8 @@ SoundEngine            = $B3B4
 .export TwosComplement
 .export Base10Subtract
 .export SubtractHealth
-.export SetProjectileAnim
-.export SetProjectileAnim2
+.export InitObjAnimIndex
+.export SetObjAnimIndex
 .export UpdateEnemyAnim
 .export VerticalRoomCentered
 .export EnemyCheckMoveUp
@@ -3504,9 +3504,9 @@ LD2EB:
     sta ObjRadX,y
     lda #an_Bullet
 
-SetProjectileAnim:
+InitObjAnimIndex:
     sta ObjAnimResetIndex,x
-SetProjectileAnim2:
+SetObjAnimIndex:
     sta ObjAnimIndex,x
     lda #$00
     sta ObjAnimDelay,x
@@ -3962,7 +3962,7 @@ LD5E4:
     bne Lx076
     lda #an_MissileExplode
 Lx076:
-    jsr SetProjectileAnim
+    jsr InitObjAnimIndex
     lda #wa_BulletExplode
 Lx077:
     sta ObjAction,x
@@ -4034,7 +4034,7 @@ RTS_X083:
 
 BombInit:
     lda #an_BombTick
-    jsr SetProjectileAnim
+    jsr InitObjAnimIndex
     lda #$18        ; fuse length :-)
     sta ProjectileDieDelay,x
     inc ObjAction,x       ; bomb update handler
@@ -4055,7 +4055,7 @@ BombCountdown:
     bne Lx084
         lda #an_BombExplode
     Lx084:
-    jsr SetProjectileAnim
+    jsr InitObjAnimIndex
     inc ObjAction,x
     jsr SFX_BombExplode
 Lx085:
