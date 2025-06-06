@@ -1038,48 +1038,57 @@ ExtractNibbles:
 ;---------------------------[ NMI and PPU control routines ]--------------------------------
 
 ; Wait for the NMI to end.
-
 WaitNMIPass:
-    jsr ClearNMIStat                ;($C434)Indicate currently in NMI.
-    LC42F:
-        lda NMIStatus                   ;
-        beq LC42F                       ;Wait for NMI to end.
-    rts                             ;
+    ;Indicate currently in NMI.
+    jsr ClearNMIStat
+    @loop:
+        ;Wait for NMI to end before continuing.
+        lda NMIStatus
+        beq @loop
+    rts
 
-ClearNMIStat:
-    lda #$00                        ;Clear NMI byte to indicate the game is-->
-    sta NMIStatus                   ;currently running NMI routines.
-    rts                             ;
+ClearNMIStat: ;($C434)
+    ;Clear NMI byte to indicate the game is currently running NMI routines.
+    lda #$00
+    sta NMIStatus
+    rts
 
 ScreenOff:
-    lda PPUMASK_ZP                   ;
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)                        ; BG & SPR visibility = off
+    ; BG & SPR visibility = off
+    lda PPUMASK_ZP
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
+    ; fallthrough
 
-WriteAndWait:
-LC43D:
-    sta PPUMASK_ZP                   ;Update value to be loaded into PPU control register.
+WriteAndWait: ;($C43D)
+    ;Update value to be loaded into PPU control register.
+    sta PPUMASK_ZP
 
 WaitNMIPass_:
-    jsr ClearNMIStat                ;($C434)Indicate currently in NMI.
-    LC442:
-        lda NMIStatus                   ;
-        beq LC442                       ;Wait for NMI to end before continuing.
-    rts                             ;
+    ;Indicate currently in NMI.
+    jsr ClearNMIStat
+    @loop:
+        ;Wait for NMI to end before continuing.
+        lda NMIStatus
+        beq @loop
+    rts
 
 ScreenOn:
-    lda PPUMASK_ZP                   ;
-    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON)                        ;BG & SPR visibility = on
-    bne WriteAndWait                ;Branch always
+    ;BG & SPR visibility = on
+    lda PPUMASK_ZP
+    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON)
+    bne WriteAndWait ;Branch always
 
 ;Update the actual PPU control registers.
 
 WritePPUCtrl:
-    lda PPUCTRL_ZP                   ;
-    sta PPUCTRL                 ;
-    lda PPUMASK_ZP                   ;Update PPU control registers.
-    sta PPUMASK                 ;
-    lda MirrorCntrl                 ;
-    jsr PrepPPUMirror               ;($C4D9)Setup vertical or horizontal mirroring.
+    ;Update PPU control registers.
+    lda PPUCTRL_ZP
+    sta PPUCTRL
+    lda PPUMASK_ZP
+    sta PPUMASK
+    lda MirrorCntrl
+    ;($C4D9)Setup vertical or horizontal mirroring.
+    jsr PrepPPUMirror
 
 ExitSub:
     rts                             ;Exit subroutines.
@@ -1087,41 +1096,52 @@ ExitSub:
 ;Turn off both screen and NMI.
 
 ScreenNmiOff:
-    lda PPUMASK_ZP                   ;
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON) ;BG & SPR visibility = off
+    ;BG & SPR visibility = off
+    lda PPUMASK_ZP
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
     jsr WriteAndWait                ;($C43D)Wait for end of NMI.
-    lda PPUCTRL_ZP                   ;Prepare to turn off NMI in PPU.
-    and #~PPUCTRL_VBLKNMI_ON         ;NMI = off
-    sta PPUCTRL_ZP                   ;
-    sta PPUCTRL                 ;Actually load PPU register with NMI off value.
-    rts                             ;
+    
+    ;Prepare to turn off NMI in PPU.
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_VBLKNMI_ON
+    sta PPUCTRL_ZP
+    ;Actually load PPU register with NMI off value.
+    sta PPUCTRL
+    rts
 
 ;The following routine does not appear to be used.
 
-    lda PPUCTRL_ZP                   ;Enable VBlank.
-    ora #PPUCTRL_VBLKNMI_ON                        ;
-    sta PPUCTRL_ZP                   ;Write PPU control register 0 and PPU status byte.
-    sta PPUCTRL                 ;
-    lda PPUMASK_ZP                   ;Turn sprites and screen on.
+    ;Enable VBlank.
+    lda PPUCTRL_ZP
+    ora #PPUCTRL_VBLKNMI_ON
+    ;Write PPU control register 0 and PPU status byte.
+    sta PPUCTRL_ZP
+    sta PPUCTRL
+    ;Turn sprites and screen on.
+    lda PPUMASK_ZP
     ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG
-    bne WriteAndWait                ;Branch always.
+    bne WriteAndWait ;Branch always.
 
 VBOffAndHorzWrite:
-    lda PPUCTRL_ZP                   ;
+    lda PPUCTRL_ZP
     and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON)
     ;Horizontal write, disable VBlank.
 LC481:
-    sta PPUCTRL                 ;Save new values in the PPU control register-->
-    sta PPUCTRL_ZP                  ;and PPU status byte.
-    rts                             ;
+    ;Save new values in the PPU control register and PPU status byte.
+    sta PPUCTRL
+    sta PPUCTRL_ZP
+    rts
 
 NMIOn:
-        lda PPUSTATUS                   ;
-        and #$80                        ;Wait for end of VBlank.
-        bne NMIOn                       ;
-    lda PPUCTRL_ZP                  ;
-    ora #PPUCTRL_VBLKNMI_ON         ;Enable VBlank interrupts.
-    bne LC481                       ;Branch always.
+    @loop:
+        ;Wait for end of VBlank.
+        lda PPUSTATUS
+        and #PPUSTATUS_VBLK
+        bne @loop
+    ;Enable VBlank interrupts.
+    lda PPUCTRL_ZP
+    ora #PPUCTRL_VBLKNMI_ON
+    bne LC481 ;Branch always.
 
 ;--------------------------------------[ Timer routines ]--------------------------------------------
 
@@ -1143,7 +1163,7 @@ WaitTimer:
 SetMainRoutine:
     sta MainRoutine                 ;Set next routine to run.
 RTS_C4A9:
-    rts                             ;
+    rts
 
 SetTimer:
     sta Timer3                      ;Set Timer3. Frames to wait is value stored in A*10.
@@ -1225,7 +1245,7 @@ MMCWriteReg3:
     sta MMC1Reg3                    ;Write bit 4 of ROM bank #.
     lda $00                         ;Restore A with current bank number before exiting.
 RTS_C50F:
-    rts                             ;
+    rts
 
 ;Calls the proper routine according to the bank number in A.
 
@@ -1271,7 +1291,6 @@ InitBank0:
     jmp NMIOn                       ;($C487)Turn on VBlank interrupts.
 
 ;Brinstar memory page.
-
 InitBank1:
     lda #$00                        ;
     sta GameMode                    ;GameMode = play.
@@ -1292,16 +1311,18 @@ InitBank1:
     jmp NMIOn                       ;($C487)Turn on VBlank interrupts.
 
 ClearSamusStats:
-    ldy #$0F                        ;
-    lda #$00                        ;Clears Samus stats(Health, full tanks, game timer, etc.).
-    LC57C:
-        sta $0100,y                     ;Load $100 thru $10F with #$00.
-        dey                             ;
-        bpl LC57C                       ;Loop 16 times.
-    rts                             ;
+    ;Clears Samus stats(Health, full tanks, game timer, etc.).
+    ldy #$0F
+    lda #$00
+    @loop:
+        ;Load $100 thru $10F with #$00.
+        sta $0100,y
+        dey
+        ;Loop 16 times.
+        bpl @loop
+    rts
 
 ;Norfair memory page.
-
 InitBank2:
     lda #$00                        ;GameMode = play.
     sta GameMode                    ;
@@ -1310,7 +1331,6 @@ InitBank2:
     jmp NMIOn                       ;($C487)Turn on VBlank interrupts.
 
 ;Tourian memory page.
-
 InitBank3:
     lda #$00                        ;GameMode = play.
     sta GameMode                    ;
@@ -1326,12 +1346,10 @@ InitBank3:
 
 ;Table used by above subroutine and loads the initial data used to describe
 ;metroid's behavior in the Tourian section of the game.
-
 MetroidData:
     .byte $F8, $08, $30, $D0, $60, $A0, $02, $04, $00, $00, $00, $00, $00, $00
 
 ;Kraid memory page.
-
 InitBank4:
     lda #$00                        ;GameMode = play.
     sta GameMode                    ;
@@ -1340,7 +1358,6 @@ InitBank4:
     jmp NMIOn                       ;($C487)Turn on VBlank interrupts.
 
 ;Ridley memory page.
-
 InitBank5:
     lda #$00                        ;GameMode = play.
     sta GameMode                    ;
