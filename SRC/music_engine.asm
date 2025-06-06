@@ -131,7 +131,7 @@ MultiSFXInitPointers:
     .byte $04
 
 MultiSFXContPointers:
-    .word MultiSFXContRoutineTbl, LoadSQ1Flags              ;Multi continue SFX     (4th).
+    .word MultiSFXContRoutineTbl, GotoLoadSQ1SFXInitFlags              ;Multi continue SFX     (4th).
     .byte $04
 
 MusicContPointers:
@@ -258,7 +258,7 @@ LoadMultiSFXContFlags:
     ldx #.lobyte(MultiSFXContPointers) ;Lower address byte in ChooseNextSFXRoutineTbl.
     jmp GotoSFXCheckFlags           ;($B337)Checks to see if SFX or music flags set.
 
-LoadSQ1Flags:
+GotoLoadSQ1SFXInitFlags:
     jsr LoadSQ1SFXInitFlags         ;($B329)Check for SQ1 init flags.
     rts
 
@@ -369,10 +369,11 @@ LB3EB:
     beq ClearSFXFlags               ;Branch always.
 
 CheckRepeatMusic:
-    lda MusicRepeat                 ;
-    beq InitializeSoundAddresses    ;If music is supposed to repeat, reset music,-->
-    lda CurrentMusic                ;flags else branch to exit.
-    sta CurrentMusicRepeat          ;
+    ;If music is supposed to repeat, reset music flags else branch to exit.
+    lda MusicRepeat
+    beq InitializeSoundAddresses
+    lda CurrentMusic
+    sta CurrentMusicRepeat
     rts
 
 CheckMusicFlags: ;($B3FC)

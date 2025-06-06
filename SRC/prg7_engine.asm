@@ -60,14 +60,14 @@ ChooseEnemyAIRoutine   = $95E5
 
 EnemyDeathAnimIndex    = $960B
 EnemyHitPointTbl       = $962B
-EnemyRestingAnimIndex    = $963B
-EnemyActiveAnimIndex    = $965B
+EnemyRestingAnimIndex  = $963B
+EnemyActiveAnimIndex   = $965B
 L967B                  = $967B
 L968B                  = $968B
 EnemyData0DTbl         = $969B
 L96AB                  = $96AB
 EnemyInitDelayTbl      = $96BB
-EnemyMovementChoiceOffset                  = $96CB
+EnemyMovementChoiceOffset = $96CB
 
 EnAccelYTable          = $972B
 EnAccelXTable          = $973F
@@ -81,7 +81,7 @@ EnemyFireballPosOffsetY = $97A3
 EnemyFireballMovementPtrTable = $97A7
 TileBlastFramePtrTable = $97AF
 
-EnemyMovementChoices                  = $97D1
+EnemyMovementChoices   = $97D1
 
 SoundEngine            = $B3B4
 

@@ -663,18 +663,21 @@ L8768:
     .byte $00, $18, $CE, $00
 
 LoadSparkleData:
-    ldx #$0A                        ;
+    ldx #$0A
     L87AD:
-        lda InitSparkleDataTbl,x        ;
+        lda InitSparkleDataTbl,x
         sta IntroSprYCoord,x           ;Loads $6EA0 thru $6EAA with the table below.
         sta IntroSprYCoord+$10,x       ;Loads $6EB0 thru $6EBA with the table below.
-        dex                             ;
-        bpl L87AD                       ;Loop until all values from table below are loaded.
-    lda #$6B                        ;
-    sta IntroSprYCoord+$10          ;$6EA0 thru $6EAA = #$3C, #$C6, #$01, #$18, #$00,-->
-    lda #$DC                        ;#$00, #$00, #$00, #$20, #$00, #$00, initial.
-    sta IntroSprXCoord+$10          ;$6EB0 thru $6EBA = #$6B, #$C6, #$01, #$DC, #$00,-->
-    rts                             ;#$00, #$00, #$00, #$20, #$00, #$00, initial.
+        dex
+        ;Loop until all values from table below are loaded.
+        bpl L87AD
+    ;$6EA0 thru $6EAA = #$3C, #$C6, #$01, #$18, #$00, #$00, #$00, #$00, #$20, #$00, #$00, initial.
+    ;$6EB0 thru $6EBA = #$6B, #$C6, #$01, #$DC, #$00, #$00, #$00, #$00, #$20, #$00, #$00, initial.
+    lda #$6B
+    sta IntroSprYCoord+$10
+    lda #$DC
+    sta IntroSprXCoord+$10
+    rts
 
 ;Used by above routine to load Metroid initial sparkle data into $6EA0
 ;thru $6EAA and $6EB0 thru $6EBA.
@@ -1191,12 +1194,14 @@ CrossExplodeDataTbl:
     CrossExplodeLength2 = * - CrossExplodeDataTbl
 
 LoadPalData:
-    ldy PalDataIndex                ;
-    lda PalSelectTbl,y              ;Chooses which set of palette data-->
-    cmp #$FF                        ;to load from the table below.
-    beq RTS_8A99                    ;
-    sta PalDataPending              ;Prepare to write palette data.
-    inc PalDataIndex                ;
+    ;Chooses which set of palette data to load from the table below.
+    ldy PalDataIndex
+    lda PalSelectTbl,y
+    cmp #$FF
+    beq RTS_8A99
+    ;Prepare to write palette data.
+    sta PalDataPending
+    inc PalDataIndex
 RTS_8A99:
     rts
 
@@ -1283,12 +1288,15 @@ IntroStarPal7:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
 ;----------------------------------------------------------------------------------------------------
 
 DoFadeOut:
-    ldy FadeDataIndex               ;Load palette data from table below.
-    lda FadeOutPalData,y            ;
-    cmp #$FF                        ;If palette data = #$FF, exit.
-    beq RTS_8B6C                    ;
-    sta PalDataPending              ;Store new palette data.
-    inc FadeDataIndex               ;
+    ;Load palette data from table below.
+    ldy FadeDataIndex
+    lda FadeOutPalData,y
+    ;If palette data = #$FF, exit.
+    cmp #$FF
+    beq RTS_8B6C
+    ;Store new palette data.
+    sta PalDataPending
+    inc FadeDataIndex
 RTS_8B6C:
     rts
 
@@ -1301,41 +1309,53 @@ FadeInPalData:
 ;----------------------------------------[ Password routines ]---------------------------------------
 
 ProcessUniqueItems:
-    lda NumberOfUniqueItems         ;
-    sta $03                         ;Store NumberOfUniqueItems at $03.
-    ldy #$00                        ;
-    sty $04                         ;Set $04 to #$00.
+    ;Store NumberOfUniqueItems at $03.
+    lda NumberOfUniqueItems
+    sta $03
+    ;Set $04 to #$00.
+    ldy #$00
+    sty $04
     L8B82:
-        ldy $04                         ;Use $04 at index into unique itme list.
-        iny                             ;
-        lda UniqueItemHistory-1,y       ;
-        sta $00                         ;Load the two bytes representing the aquired-->
-        iny                             ;Unique item and store them in $00 and $01.
-        lda UniqueItemHistory-1,y       ;
-        sta $01                         ;
-        sty $04                         ;Increment $04 by two (load unique item complete).
-        jsr UniqueItemSearch            ;($8B9C)Find unique item.
-        ldy $04                         ;
-        cpy $03                         ;If all unique items processed, return, else-->
-        bcc L8B82                       ;branch to process next unique item.
+        ;Use $04 at index into unique item list.
+        ldy $04
+        ;Load the two bytes representing the aquired Unique item and store them in $00 and $01.
+        iny
+        lda UniqueItemHistory-1,y
+        sta $00
+        iny
+        lda UniqueItemHistory-1,y
+        sta $01
+        ;Increment $04 by two (load unique item complete).
+        sty $04
+        ;Find unique item.
+        jsr UniqueItemSearch
+        ;If all unique items processed, return, else branch to process next unique item.
+        ldy $04
+        cpy $03
+        bcc L8B82
     rts
 
-UniqueItemSearch:
+UniqueItemSearch: ;($8B9C)
     ldx #$00
     L8B9E:
-        txa                             ;Transfer X to A(Item number).
-        asl                             ;Multiply by 2.
-        tay                             ;Store multiplied value in y.
-        lda ItemData,y                  ;Load unique item reference starting at $9029(2 bytes).
-        cmp $00                         ;
-        bne L8BAF                       ;
-            lda ItemData+1,y                ;Get next byte of unique item.
-            cmp $01                         ;
-            beq UniqueItemFound             ;If unique item found, branch to UniqueItemFound.
+        ; y = x*2
+        txa
+        asl
+        tay
+        ;Load unique item reference starting at $9029(2 bytes).
+        lda ItemData,y
+        cmp $00
+        bne L8BAF
+            ;Get next byte of unique item.
+            lda ItemData+1,y
+            cmp $01
+            ;If unique item found, branch to UniqueItemFound.
+            beq UniqueItemFound
         L8BAF:
-        inx                             ;
-        cpx #$3C                        ;If the unque item is a Zeebetite, return-->
-        bcc L8B9E                       ;else branch to find next unique item.
+        ;If the unique item is a Zebetite, return, else branch to find next unique item.
+        inx
+        cpx #>ui_ZEBETITE1
+        bcc L8B9E
     rts
 
 ;The following routine sets the item bits for aquired items in addresses $6988 thru $698E.-->
@@ -1557,7 +1577,7 @@ LoadPasswordData:
         dey                             ;
         bpl L8D33                       ;Loop to load all 3 age bytes.
 RTS_8D3C:
-    rts                             ;
+    rts
 
 LoadTanksAndMissiles:
     lda PasswordByte+$09            ;Loads Samus gear.
@@ -1647,8 +1667,8 @@ L8DCF:
     L8DD8:
         lda #$FF                        ;If number of missiles exceeds 255, it stays at 255.
 L8DDA:
-    sta MaxMissiles                 ;
-    rts                             ;
+    sta MaxMissiles
+    rts
 
 ValidatePassword:
     ;If invincible Samus already active, branch.
@@ -1680,7 +1700,7 @@ L8DF7:
 L8E05:
     clc                             ;If password is valid, clears carry flag.
 RTS_8E06:
-    rts                             ;
+    rts
 
 ;The table below is used by the code above. It checks to see if NARPASSWORD has been entered.
 ;NOTE: any characters after the 16th character will be ignored if the first 16 characters
@@ -1693,7 +1713,7 @@ PasswordChecksumAndScramble:
     jsr PasswordChecksum            ;($8E21)Store the combined added value of-->
     sta PasswordByte+$11            ;addresses $6988 thu $6998 in $6999.
     jsr PasswordScramble            ;($8E2D)Scramble password.
-    rts                             ;
+    rts
 
 ;Add the values at addresses $6988 thru $6998 together.
 PasswordChecksum:
@@ -1772,7 +1792,7 @@ SixUpperBits: ;($8F2D)
     lda PasswordByte,y              ;Uses six upper bits to create a new byte.-->
     lsr                             ;Bits are right shifted twice and two lower-->
     lsr                             ;bits are discarded.
-    rts                             ;
+    rts
 
 TwoLowerAndFourUpper: ;($8F33)
     lda PasswordByte,y              ;
@@ -1796,11 +1816,12 @@ FourLowerAndTwoUpper: ;($8F46)
     rol                             ;
     and #$03                        ;Add two sets of bits together to make a byte-->
     ora $00                         ;where bits 6 and 7 = 0.
-    rts                             ;
+    rts
 
 SixLowerBits: ;($8F5A)
-    lda PasswordByte,y              ;Discard bits 6 and 7.
-    and #$3F                        ;
+    ;Discard bits 6 and 7.
+    lda PasswordByte,y
+    and #$3F
     rts
 
 ;The following routine converts the 24 user entered password characters into the 18 password
@@ -1831,7 +1852,7 @@ SixLowerAndTwoUpper:
     lda PasswordChar+1,y            ;Move bits 4and 5 to lower two-->
     jsr Adiv16                      ;($C2BF)bits and discard the rest.
     ora $00                         ;Combine the two bytes together.
-    rts                             ;
+    rts
 
 FourLowerAndFiveThruTwo:
     lda PasswordChar,y              ;Take four lower bits and transfer-->
@@ -1852,7 +1873,7 @@ TwoLowerAndSixLower:
     sta $00                         ;
     lda PasswordChar+1,y            ;Add six lower bits to previous results.
     ora $00                         ;
-    rts                             ;
+    rts
 
 PasswordBitmaskTbl:
     .byte $01, $02, $04, $08, $10, $20, $40, $80
@@ -1915,11 +1936,11 @@ ItemData: ; $9029
     .word ui_MISSILEDOOR + ($03 << 5) + $07  ;Orange door at coord 03,07                  (Item 50)
     .word ui_MISSILEDOOR + ($09 << 5) + $07  ;Red door at coord 09,07                     (Item 51)
     .word ui_MISSILEDOOR + ($09 << 5) + $0B  ;Red door at coord 0A,0B                     (Item 52)
-    .word ui_ZEBETITE1                       ;1st Zeebetite in mother brain room          (Item 53)
-    .word ui_ZEBETITE2                       ;2nd Zeebetite in mother brain room          (Item 54)
-    .word ui_ZEBETITE3                       ;3rd Zeebetite in mother brain room          (Item 55)
-    .word ui_ZEBETITE4                       ;4th Zeebetite in mother brain room          (Item 56)
-    .word ui_ZEBETITE5                       ;5th Zeebetite in mother brain room          (Item 57)
+    .word ui_ZEBETITE1                       ;1st Zebetite in mother brain room           (Item 53)
+    .word ui_ZEBETITE2                       ;2nd Zebetite in mother brain room           (Item 54)
+    .word ui_ZEBETITE3                       ;3rd Zebetite in mother brain room           (Item 55)
+    .word ui_ZEBETITE4                       ;4th Zebetite in mother brain room           (Item 56)
+    .word ui_ZEBETITE5                       ;5th Zebetite in mother brain room           (Item 57)
     .word ui_MOTHERBRAIN                     ;Mother brain                                (Item 58)
 
 ClearAll:
@@ -1981,7 +2002,7 @@ L90FF:
     sta SpriteRAM+2                 ;
     lda #$50                        ;Set data for selection sprite.
     sta SpriteRAM+3                 ;
-    rts                             ;
+    rts
 
 StartContTbl:
     .byte $60                       ;Y sprite position for START.
@@ -2008,104 +2029,139 @@ LoadPasswordScreen:
     jmp TurnOnDisplay               ;($90D1)Turn on screen and NMI.
 
 EnterPassword:
-    jsr EraseAllSprites             ;($C1A3)Remove sprites from screen.
-    lda Joy1Change                  ;
-    and #$10                        ;Check to see if START has been pressed.
-    beq L9153                       ;If not, branch.
-        jmp CheckPassword               ;($8C5E)Check if password is correct.
-
+    ;($C1A3)Remove sprites from screen.
+    jsr EraseAllSprites
+    
+    ;Check to see if START has been pressed.
+    lda Joy1Change
+    and #$10
+    ;If not, branch.
+    beq L9153
+        ;($8C5E)Check if password is correct.
+        jmp CheckPassword
     L9153:
-    ldx #$01                        ;
-    stx PPUDataPending              ;Prepare to write the password screen data to PPU.
-    ldx PPUStrIndex                 ;
-    lda #$21                        ;Upper byte of PPU string.
-    jsr WritePPUByte                ;($C36B)Write byte to PPU.
-    lda #$A8                        ;Lower byte of PPU string.
-    jsr WritePPUByte                ;($C36B)Write byte to PPU.
-    lda #$0F                        ;PPU string length.
-    jsr WritePPUByte                ;($C36B)Write byte to PPU.
-    lda Timer3                      ;
-    beq L9178                       ;
-        lda #.lobyte(L8759)             ;
-        sta $02                         ;Writes 'ERROR TRY AGAIN' on the screen-->
-        lda #.hibyte(L8759)             ;if Timer3 is anything but #$00.
-        sta $03                         ;
-        jmp L9180                       ;
+    
+    ;Prepare to write the password screen data to PPU.
+    ldx #$01
+    stx PPUDataPending
+    ldx PPUStrIndex
+    
+    ;Upper byte of PPU string.
+    lda #$21
+    jsr WritePPUByte
+    ;Lower byte of PPU string.
+    lda #$A8
+    jsr WritePPUByte
+    ;PPU string length.
+    lda #$0F
+    jsr WritePPUByte
+    
+    lda Timer3
+    beq L9178
+        ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
+        lda #.lobyte(L8759)
+        sta $02
+        lda #.hibyte(L8759)
+        sta $03
+        jmp L9180
     L9178:
-        lda #.lobyte(L8768)             ;
-        sta $02                         ;
-        lda #.hibyte(L8768)             ;
-        sta $03                         ;Writes the blank lines that cover-->
+        ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
+        lda #.lobyte(L8768)
+        sta $02
+        lda #.hibyte(L8768)
+        sta $03
     L9180:
-    ldy #$00                        ;the message 'ERROR TRY AGAIN'.
+    ; loop to write all the bytes from those strings to ppu string buffer
+    ldy #$00
     L9182:
-        lda ($02),y                     ;
-        jsr WritePPUByte                ;
-        iny                             ;
-        cpy #$0F                        ;
-        bne L9182                       ;
-    lda Joy1Change                  ;If button A pressed, branch.
-    bmi L9193                       ;
-    jmp CheckBackspace              ;($91FB)Check if backspace pressed.
-
-L9193:
-    lda TriSFXFlag                  ;Initiate BombLaunch SFX if a character-->
-    ora #sfxTri_BombLaunch          ;has been written to the screen.
-    sta TriSFXFlag                  ;
-    lda PasswordCursor              ;
-    cmp #$12                        ;Check to see if password cursor is on-->
-    bcc L91A8                       ;character 19 thru 24.  If not, branch.
-    clc                             ;
-    adc #$3E                        ;Will equal #$50 thru #$55.
-    jmp LoadRowAndColumn            ;($91BF)
+        lda ($02),y
+        jsr WritePPUByte
+        iny
+        cpy #$0F
+        bne L9182
+    
+    ;If button A pressed, branch.
+    lda Joy1Change
+    bmi L9193
+        ;($91FB)Check if backspace pressed.
+        jmp CheckBackspace
+    L9193:
+    
+    ;Initiate BombLaunch SFX if a character has been written to the screen.
+    lda TriSFXFlag
+    ora #sfxTri_BombLaunch
+    sta TriSFXFlag
+    ;Check to see if password cursor is on character 19 thru 24.  If not, branch.
+    lda PasswordCursor
+    cmp #$12
+    bcc L91A8
+    ;Will equal #$50 thru #$55.
+    clc
+    adc #$3E
+    jmp LoadRowAndColumn
 
 L91A8:
-    cmp #$0C                        ;Check to see if password cursor is on-->
-    bcc L91B2                       ;character 13 thru 18.  If not, branch.
-    clc                             ;
-    adc #$3D                        ;Will equal #$49 thru #$4E.
-    jmp LoadRowAndColumn            ;($91BF)
+    ;Check to see if password cursor is on character 13 thru 18.  If not, branch.
+    cmp #$0C
+    bcc L91B2
+    ;Will equal #$49 thru #$4E.
+    clc
+    adc #$3D
+    jmp LoadRowAndColumn
 
 L91B2:
-    cmp #$06                        ;Check to see if password cursor is on-->
-    bcc L91BC                       ;character 7 thru 12.  If not, branch.
-    clc                             ;
-    adc #$0A                        ;Will equal #$10 thru #$15.
-    jmp LoadRowAndColumn            ;($91BF)
+    ;Check to see if password cursor is on character 7 thru 12.  If not, branch.
+    cmp #$06
+    bcc L91BC
+    ;Will equal #$10 thru #$15.
+    clc
+    adc #$0A
+    jmp LoadRowAndColumn
 
 L91BC:
-    clc                             ;
-    adc #$09                        ;Will equal #$09 thru #$0E.
+    ;Will equal #$09 thru #$0E.
+    clc
+    adc #$09
 
-LoadRowAndColumn:
-    sta $06                         ;
-    lda InputRow                    ;
-    asl                             ;*2. address pointer is two bytes.
-    tay                             ;
-    lda PasswordRowTbl,y            ;Store lower byte of row pointer.
-    sta $00                         ;
-    lda PasswordRowTbl+1,y          ;Store upper byte of row pointer.
-    sta $01                         ;
-    ldy InputColumn                 ;Uses InputColumn value to find proper index-->
-    lda ($00),y                     ;of current character selected.
-    pha                             ;Temp storage of A.
-    sta TileInfo0                   ;Store value of current character slected.
-    lda #$11                        ;
-    sta TileSize                    ;
-    ldx $06                         ;Replace password character tile with-->
-    ldy #$21                        ;the one selected by the player.
+LoadRowAndColumn: ;($91BF)
+    sta $06
+    lda InputRow
+    asl ;*2. address pointer is two bytes.
+    tay
+    ;Store lower byte of row pointer.
+    lda PasswordRowTbl,y
+    sta $00
+    ;Store upper byte of row pointer.
+    lda PasswordRowTbl+1,y
+    sta $01
+    ;Uses InputColumn value to find proper index of current character selected.
+    ldy InputColumn
+    lda ($00),y
+    ;Temp storage of A.
+    pha
+    ;Store value of current character selected.
+    sta TileInfo0
+    ;Replace password character tile with the one selected by the player.
+    lda #$11
+    sta TileSize
+    ldx $06
+    ldy #$21
     jsr PrepareEraseTiles           ;($9450)
-    ldx PasswordCursor              ;
-    pla                             ;Store the currently selected password character-->
-    sta PasswordChar,x              ;in the proper PasswordChar RAM location.
-    lda PasswordCursor              ;
-    clc                             ;
-    adc #$01                        ;
-    cmp #$18                        ;
-    bcc L91F8                       ;Increment PasswordCursor.  If at last character,-->
-    lda #$00                        ;loop back to the first character.
-L91F8:
-    sta PasswordCursor              ;
+    ldx PasswordCursor
+    ;Store the currently selected password character in the proper PasswordChar RAM location.
+    pla
+    sta PasswordChar,x
+    
+    ;Increment PasswordCursor.
+    lda PasswordCursor
+    clc
+    adc #$01
+    ;If at last character, loop back to the first character.
+    cmp #$18
+    bcc L91F8
+        lda #$00
+    L91F8:
+    sta PasswordCursor
 
 CheckBackspace:
     lda Joy1Change                  ;
