@@ -572,17 +572,20 @@ EnemyFireballMovement3:
     .byte $FF
 
 CommonEnemyJump_00_01_02:
-    lda EnemyMovementPtr
-    cmp #$01
-    beq L9914
-    cmp #$03
-    beq L9919
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Resting
+    beq @resting
+    cmp #enemyStatus_Explode
+    beq @explode
+        ; enemy default
         lda $00
         jmp CommonJump_00
-    L9914:
+    @resting:
+        ; enemy resting
         lda $01
         jmp CommonJump_01
-    L9919:
+    @explode:
+        ; enemy explode
         jmp CommonJump_02
 
 ;-------------------------------------------------------------------------------

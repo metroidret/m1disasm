@@ -708,17 +708,17 @@ EnemyFireballMovement3:
 CommonEnemyJump_00_01_02:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
-    beq L99B0
+    beq @resting
     cmp #enemyStatus_Explode
-    beq L99B5
+    beq @explode
         ; enemy default
         lda $00
         jmp CommonJump_00
-    L99B0:
+    @resting:
         ; enemy resting
         lda $01
         jmp CommonJump_01
-    L99B5:
+    @explode:
         ; enemy explode
         jmp CommonJump_02
 
