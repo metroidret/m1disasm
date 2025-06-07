@@ -162,7 +162,7 @@ ChooseEnemyAIRoutine:
         .word MetroidAIRoutine ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
         .word InvalidEnemy ; 03 - disappears
-        .word RinkaAIRoutine ; 04 - rinka ?
+        .word RinkaAIRoutine ; 04 - rinka
         .word InvalidEnemy ; 05 - same as 3
         .word InvalidEnemy ; 06 - same as 3
         .word InvalidEnemy ; 07 - same as 3
@@ -180,19 +180,19 @@ EnemyDeathAnimIndex:
     .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl
     .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
     .byte EnAnim_1F - EnAnimTbl, EnAnim_1F - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 EnemyHitPointTbl:
     .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -201,55 +201,55 @@ EnemyRestingAnimIndex:
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
     .byte EnAnim_1B - EnAnimTbl, EnAnim_1B - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 EnemyActiveAnimIndex:
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
     .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 L967B:
     .byte $00
     .byte $00
     .byte $00
-    .byte $00
+    .byte $00 ; unused enemy
     .byte $02
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
 
 L968B:
     .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -264,22 +264,22 @@ EnemyInitDelayTbl:
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice02 - EnemyMovementChoices
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
+    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy doesn't move
+    .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice02 - EnemyMovementChoices ; enemy moves manually
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
 
 EnemyMovementPtrs:
     .word EnemyMovement00_R, EnemyMovement00_L
@@ -300,15 +300,19 @@ EnemyMovementPtrs:
     .word EnemyMovement0F_R, EnemyMovement0F_L
     .word EnemyMovement10_R, EnemyMovement10_L
     .word EnemyMovement11_R, EnemyMovement11_L
+    .byte $00, $00, $00, $00, $00, $00, $00, $00
+    
+EnAccelYTable:
+    .byte $18, $30, $00, $C0, $D0, $00, $00, $7F, $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
+EnAccelXTable:
+    .byte $18, $30, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnSpeedYTable:
+    .byte $00, $00, $00, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnSpeedXTable:
+    .byte $00, $00, $00, $02, $02, $00, $00, $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
-L9723:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $C0, $D0, $00, $00, $7F
-L9733:  .byte $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00, $18, $30, $00, $00
-L9743:  .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-L9753:  .byte $00, $00, $00, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00
-L9763:  .byte $00, $00, $00, $00, $00, $00, $00, $02, $02, $00, $00, $00, $02, $02, $02, $02
-L9773:  .byte $00, $00, $00, $00, $00, $00, $00, $00
-
-L977B:  .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+L977B:
+    .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
@@ -358,9 +362,9 @@ TileBlastFramePtrTable:
 EnemyMovementChoices:
 EnemyMovementChoice00:
     EnemyMovementChoiceEntry {$00}
-EnemyMovementChoice01:
+EnemyMovementChoice01: ; enemy can't use movement strings
     EnemyMovementChoiceEntry {$01}
-EnemyMovementChoice02:
+EnemyMovementChoice02: ; enemy moves manually
     ; nothing
 
 EnemyMovement00_R:

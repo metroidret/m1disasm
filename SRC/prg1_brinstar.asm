@@ -167,14 +167,14 @@ EnemyDeathAnimIndex:
     .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl
     .byte EnAnim_4B - EnAnimTbl, EnAnim_4B - EnAnimTbl
     .byte EnAnim_55 - EnAnimTbl, EnAnim_53 - EnAnimTbl
-    .byte EnAnim_72 - EnAnimTbl, EnAnim_74 - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte EnAnim_72 - EnAnimTbl, EnAnim_74 - EnAnimTbl ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 EnemyHitPointTbl:
     .byte $08, $08, $04, $FF, $02, $02, $04, $01, $20, $FF, $FF, $04, $01, $00, $00, $00
@@ -189,14 +189,14 @@ EnemyRestingAnimIndex:
     .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
     .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
     .byte EnAnim_59 - EnAnimTbl, EnAnim_57 - EnAnimTbl
-    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl
-    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl
-    .byte EnAnim_62 - EnAnimTbl, EnAnim_67 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; unused enemy
+    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; unused enemy
+    .byte EnAnim_62 - EnAnimTbl, EnAnim_67 - EnAnimTbl ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
@@ -208,14 +208,14 @@ EnemyActiveAnimIndex:
     .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
     .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
     .byte EnAnim_50 - EnAnimTbl, EnAnim_4D - EnAnimTbl
-    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl
-    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl
-    .byte EnAnim_5F - EnAnimTbl, EnAnim_64 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte $00, $00
-    .byte $00, $00
-    .byte $00, $00
+    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; unused enemy
+    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; unused enemy
+    .byte EnAnim_5F - EnAnimTbl, EnAnim_64 - EnAnimTbl ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
+    .byte $00, $00 ; unused enemy
 
 ;another animation related table
 L967B:
@@ -227,14 +227,14 @@ L967B:
     .byte $00
     .byte $00
     .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00 | $80
-    .byte $00
-    .byte $00
-    .byte $00
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 | $80 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
 
 ; Bit 7: Screw attack vulnerability?
 ; Bit 5: EnemyMovementInstr_FE failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
@@ -256,22 +256,22 @@ EnemyInitDelayTbl:
 
 ; Index to a table starting at EnemyMovementChoices
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
     .byte EnemyMovementChoice02 - EnemyMovementChoices
     .byte EnemyMovementChoice03 - EnemyMovementChoices
     .byte EnemyMovementChoice04 - EnemyMovementChoices
-    .byte EnemyMovementChoice07 - EnemyMovementChoices
-    .byte EnemyMovementChoice05 - EnemyMovementChoices
-    .byte EnemyMovementChoice06 - EnemyMovementChoices
-    .byte EnemyMovementChoice09 - EnemyMovementChoices
-    .byte EnemyMovementChoice0A - EnemyMovementChoices
-    .byte EnemyMovementChoice0B - EnemyMovementChoices
-    .byte EnemyMovementChoice07 - EnemyMovementChoices
-    .byte EnemyMovementChoice08 - EnemyMovementChoices
-    .byte $00
-    .byte $00
-    .byte $00
+    .byte EnemyMovementChoice07 - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice05 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice06 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice09 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice0A - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice0B - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice07 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice08 - EnemyMovementChoices ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
 
 ; EnData08*2 + one of the low bits of EnData05 is used as an index to this pointer table
 ; Pointer table to enemy movement strings
@@ -369,9 +369,9 @@ TileBlastFramePtrTable:
 ;  EnData08 = EnemyMovementChoices[(EnemyMovementChoices[EnemyMovementChoiceOffset[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
 ; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice00: ; enemy can't use movement strings
     EnemyMovementChoiceEntry {$01, $02}
-EnemyMovementChoice01:
+EnemyMovementChoice01: ; enemy can't use movement strings
     EnemyMovementChoiceEntry {$03, $04}
 EnemyMovementChoice02:
     EnemyMovementChoiceEntry {$05}
@@ -379,19 +379,19 @@ EnemyMovementChoice03:
     EnemyMovementChoiceEntry {$06}
 EnemyMovementChoice04:
     EnemyMovementChoiceEntry {$07}
-EnemyMovementChoice05:
+EnemyMovementChoice05: ; enemy can't use movement strings
     EnemyMovementChoiceEntry {$08}
-EnemyMovementChoice06:
+EnemyMovementChoice06: ; enemy can't use movement strings
     EnemyMovementChoiceEntry {$09}
-EnemyMovementChoice07:
+EnemyMovementChoice07: ; enemy moves manually
     EnemyMovementChoiceEntry {$00}
-EnemyMovementChoice08:
+EnemyMovementChoice08: ; unused
     EnemyMovementChoiceEntry {$0B}
-EnemyMovementChoice09:
+EnemyMovementChoice09: ; unused
     EnemyMovementChoiceEntry {$0C, $0D}
-EnemyMovementChoice0A:
+EnemyMovementChoice0A: ; unused
     EnemyMovementChoiceEntry {$0E}
-EnemyMovementChoice0B:
+EnemyMovementChoice0B: ; unused
     EnemyMovementChoiceEntry {$0F, $10, $11, $0F}
 
 ;-------------------------------------------------------------------------------
@@ -409,6 +409,7 @@ EnemyMovementChoice0B:
 ; 0xFA-0xFE are control codes I haven't deciphered yet
 ; 0xFF is "restart"
 
+; unused (???)
 EnemyMovement00_R:
     SignMagSpeed $20,  2,  2
     EnemyMovementInstr_FE
@@ -417,7 +418,6 @@ EnemyMovement00_L:
     SignMagSpeed $20, -2,  2
     EnemyMovementInstr_FE
 
-; probably for wavers
 EnemyMovement01_R:
 EnemyMovement01_L:
 EnemyMovement02_R:
@@ -426,6 +426,9 @@ EnemyMovement03_R:
 EnemyMovement03_L:
 EnemyMovement04_R:
 EnemyMovement04_L:
+    ; nothing
+
+; waver
 EnemyMovement05_R:
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
@@ -510,6 +513,7 @@ EnemyMovement05_L:
     EnemyMovementInstr_ClearEnData1D
     EnemyMovementInstr_Restart
 
+; ripper
 EnemyMovement06_R:
     SignMagSpeed $01,  1,  0
     EnemyMovementInstr_Restart
@@ -545,6 +549,7 @@ EnemyMovement07_L:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
+
 EnemyMovement08_R:
 EnemyMovement08_L:
 EnemyMovement09_R:
@@ -553,6 +558,9 @@ EnemyMovement0A_R:
 EnemyMovement0A_L:
 EnemyMovement0B_R:
 EnemyMovement0B_L:
+    ; nothing
+
+; unused (kraid)
 EnemyMovement0C_R:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
@@ -577,6 +585,7 @@ EnemyMovement0D_L:
     SignMagSpeed $1E,  1,  1
     EnemyMovementInstr_FE
 
+; unused (kraid lint)
 EnemyMovement0E_R:
     SignMagSpeed $50,  4,  0
     EnemyMovementInstr_Restart
@@ -585,6 +594,7 @@ EnemyMovement0E_L:
     SignMagSpeed $50, -4,  0
     EnemyMovementInstr_Restart
 
+; unused (kraid nail)
 EnemyMovement0F_R:
     SignMagSpeed $02,  3, -7
     SignMagSpeed $04,  3, -6
