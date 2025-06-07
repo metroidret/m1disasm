@@ -741,10 +741,10 @@ L8376:
         tya
         sta EnSpeedY,x
     L8383:
-    lda EnData18,x
+    lda EnSubPixelY,x
     clc
     adc EnSpeedSubPixelY,x
-    sta EnData18,x
+    sta EnSubPixelY,x
     lda #$00
     adc EnSpeedY,x
     sta $00
@@ -793,10 +793,10 @@ EnemyGetDeltaX_Negative977B:
         lda $01
         sta EnSpeedX,x
     L83E3:
-    lda EnData19,x
+    lda EnSubPixelX,x
     clc
     adc EnSpeedSubPixelX,x
-    sta EnData19,x
+    sta EnSubPixelX,x
     lda #$00
     adc EnSpeedX,x
     sta $00
