@@ -1,35 +1,49 @@
 ; SkreeRoutine
 SkreeAIRoutine:
+    ; branch if enemy is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq SkreeExit_Resting
+    ; branch if enemy is exploding
     cmp #enemyStatus_Explode
     beq SkreeExit_Explode
     
-    lda EnSpeedSubPixelY,x
+    ; branch if skree has not reached the ground
+    lda EnMovementInstrIndex,x
     cmp #$0F
     bcc SkreeExit_Active
+    ; branch if skree was on the ground for more than 1 frame
     cmp #$11
     bcs SkreeBlowUpIntoProjectiles
+    ; skree just landed on the ground
+    ; set blow up delay to roughly 1 second
     lda #$3A
     sta EnData1D,x
     bne SkreeExit_Active
 
 SkreeBlowUpIntoProjectiles:
+    ; decrement blow up delay
     dec EnData1D,x
+    ; exit if delay is not zero
     bne SkreeExit_Active
+
+    ; remove skree
     lda #enemyStatus_NoEnemy
     sta EnStatus,x
+    ; spawn 4 projectiles
     ldy #(4-1)*4
     SkreeLoop:
-        lda #$0A ; projectile is alive for 10 frames
+        ; projectile is alive for 10 frames
+        lda #$0A
         sta SkreeProjectileDieDelay,y
+        ; set projectile position to skree position
         lda EnY,x
         sta SkreeProjectileY,y
         lda EnX,x
         sta SkreeProjectileX,y
         lda EnHi,x
         sta SkreeProjectileHi,y
+        ; move to next projectile slot
         dey
         dey
         dey

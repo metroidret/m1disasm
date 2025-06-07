@@ -365,11 +365,11 @@ EnemyMovement01_R:
 EnemyMovement01_L:
 EnemyMovement02_R:
     SignMagSpeed $01,  3,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement02_L:
     SignMagSpeed $01, -3,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement03_R:
 EnemyMovement03_L:
@@ -403,10 +403,10 @@ EnemyMovement11_R:
 EnemyMovement11_L:
     SignMagSpeed $14,  0, -1
     SignMagSpeed $0A,  0,  0
-    .byte $FD
+    EnemyMovementInstr_ClearEnData1D
     SignMagSpeed $30,  0,  0
     SignMagSpeed $14,  0,  1
-    .byte $FA
+    EnemyMovementInstr_StopMovementSeahorse
 
 EnemyFireballMovement0:
     SignMagSpeed $0A,  3, -5

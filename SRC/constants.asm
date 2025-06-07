@@ -564,7 +564,7 @@ EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit5: when active, this bit being unset will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
-; EnCounter              = $0406   ;Counts such things as explosion time.
+EnMovementInstrIndex   = $0406   ;Counts such things as explosion time.
 EnSpeedSubPixelY       = $0406   ;- y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter
 EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.

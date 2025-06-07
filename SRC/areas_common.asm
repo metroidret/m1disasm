@@ -494,7 +494,7 @@ EnemyGetDeltaY:
 
     jsr LoadEnemyMovementPtr ; Puts a pointer at $81
 L8258:
-    ldy EnSpeedSubPixelY,x
+    ldy EnMovementInstrIndex,x
 EnemyGetDeltaY_ReadByte:
     lda (EnemyMovementPtr),y
 
@@ -523,10 +523,10 @@ EnemyGetDeltaY_ReadByte:
     cmp #$FE
     beq EnemyGetDeltaY_CaseFE
 
-;Default case
+;Default case (see this as CaseFF)
 ; Reset enemy counter
     lda #$00
-    sta EnSpeedSubPixelY,x
+    sta EnMovementInstrIndex,x
     beq L8258
 
 ;---------------------------------------
@@ -536,17 +536,17 @@ EnemyGetDeltaY_JumpToCaseFA: ; L827C
 ;---------------------------------------
 EnemyGetDeltaY_CommonCase:
 ; Take the value from memory
-; Branch ahead if velocityString[EnSpeedSubPixelY] - EnDelay != 0
+; Branch ahead if velocityString[EnMovementInstrIndex] - EnDelay != 0
     sec
     sbc EnDelay,x
     bne L8290
 
     sta EnDelay,x
-; EnSpeedSubPixelY += 2
+; EnMovementInstrIndex += 2
     iny
     iny
     tya
-    sta EnSpeedSubPixelY,x
+    sta EnMovementInstrIndex,x
     bne EnemyGetDeltaY_ReadByte ; Handle another byte
 
 ; Increment EnDelay
@@ -576,7 +576,7 @@ L82A2:
 ;---------------------------------------
 ; Clear EnData1D, move on to next byte in the stream
 EnemyGetDeltaY_CaseFD:
-    inc EnSpeedSubPixelY,x
+    inc EnMovementInstrIndex,x
     iny
     lda #$00
     sta EnData1D,x
@@ -593,79 +593,88 @@ EnemyGetDeltaY_CaseFB:
 ; Retruns back to F416 in the engine bank
 
 ;---------------------------------------
-; Repeat Previous Movement Until [Condition?]
+; Repeat Previous Movement Until Vertical Movement Fails
 EnemyGetDeltaY_CaseFC:
-; If bit 7 of EnData1F is set, then check if you can move up and then jump ahead
+    ; If bit 7 of EnData1F is set, then check if you can move up and then jump ahead
     lda EnData1F,x
     bpl L82BE
-    jsr EnemyCheckMoveUp
-    jmp L82C3
-; If EnData1F is non-zero, check if you can move down and then jump ahead
-L82BE:
-    beq L82D2
-    jsr EnemyCheckMoveDown
-
-; If the movement check [succeeded? failed?] move on to the next byte
-L82C3:
+        jsr EnemyCheckMoveUp
+        jmp L82C3
+    L82BE:
+        ; If EnData1F is non-zero, check if you can move down and then jump ahead
+        beq L82D2
+        jsr EnemyCheckMoveDown
+    L82C3:
+    ; branch if movement check succeeded
     ldx PageIndex
     bcs L82D2
-    ldy EnSpeedSubPixelY,x
+    ; movement check failed, move on to the next byte
+    ldy EnMovementInstrIndex,x
     iny
     lda #$00
     sta EnData1F,x
     beq L82D7 ; Branch always
 
-; Else, repeat the previous two bytes
 L82D2:
-    ldy EnSpeedSubPixelY,x
+    ; movement check succeeded
+    ; repeat the previous two bytes
+    ldy EnMovementInstrIndex,x
     dey
     dey
 
-; Save EnSpeedSubPixelY
+; Save EnMovementInstrIndex
 L82D7:
     tya
-    sta EnSpeedSubPixelY,x
+    sta EnMovementInstrIndex,x
 ; Read the next bytes
     jmp EnemyGetDeltaY_ReadByte
 
 ;---------------------------------------
 ; Repeat previous until ???
 EnemyGetDeltaY_CaseFE:
-; Move EnSpeedSubPixelY back to the previous movement
+    ; Move EnMovementInstrIndex back to the previous movement instruction
     dey
     dey
     tya
-    sta EnSpeedSubPixelY,x
-; Then do some other stuff
+    sta EnMovementInstrIndex,x
+    ; Then do some other stuff
     lda EnData1F,x
     bpl L82EF
-    jsr EnemyCheckMoveUp
-    jmp L82F4
-
-L82EF:
-    beq L82FB
-    jsr EnemyCheckMoveDown
-
-L82F4:
+        jsr EnemyCheckMoveUp
+        jmp L82F4
+    L82EF:
+        beq L82FB
+        jsr EnemyCheckMoveDown
+    L82F4:
+    ; branch if movement check failed
     ldx PageIndex
     bcc L82FB
+    ; movement check succeeded
+    ; run previous movement instruction
     jmp L8258
 
 L82FB:
+    ; movement check failed
+    ; branch if bit 5 of L968B entry is unset
     ldy EnType,x
     lda L968B,y
     and #$20
     beq EnemyGetDeltaY_CaseFA
-    lda EnData05,x
-    eor #$05
-    ora L968B,y
-    and #$1F
-    sta EnData05,x
-
+        ; toggle facing direction bits
+        lda EnData05,x
+        eor #$05
+        ; or with bits 0-4 of L968B entry
+        ora L968B,y
+        and #$1F
+        ; save to EnData05
+        ; (this clears bits 6 and 7, -->
+        ;  bit 5 is set by the routine call that follows)
+        sta EnData05,x
+        ; fallthrough
 ;---------------------------------------
 ;SetBit5OfEnData05_AndClearEnAccelY
 ; Move horizontally indefinitely (???)
-; Is this even used?
+; Used only at the end of seahorse's movement string
 EnemyGetDeltaY_CaseFA:
     jsr SetBit5OfEnData05_AndClearEnAccelY
     jmp L82A2 ; Set delta-y to zero and exit
@@ -685,7 +694,7 @@ EnemyGetDeltaX:
     beq L833C
 
 ; Read the same velocity byte as in EnemyGetDeltaY
-    ldy EnSpeedSubPixelY,x
+    ldy EnMovementInstrIndex,x
     iny
     lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
     tax

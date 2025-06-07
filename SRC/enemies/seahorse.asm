@@ -6,9 +6,10 @@ SeahorseAIRoutine:
         lda #$E8
         sta EnY,x
     L9AF5:
-    cmp #$02
+    cmp #enemyStatus_Active
     bne L9B4F
-    lda EnSpeedSubPixelY,x
+
+    lda EnMovementInstrIndex,x
     beq L9B4F
     lda EnData1D,x
     bne L9B4F

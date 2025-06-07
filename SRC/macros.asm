@@ -84,6 +84,30 @@
     .byte enemyMovementIndexList
 .endmacro
 
+.macro EnemyMovementInstr_StopMovementSeahorse
+    .byte $FA
+.endmacro
+
+.macro EnemyMovementInstr_StopMovement
+    .byte $FB
+.endmacro
+
+.macro EnemyMovementInstr_RepeatPreviousUntilFailure
+    .byte $FC
+.endmacro
+
+.macro EnemyMovementInstr_ClearEnData1D
+    .byte $FD
+.endmacro
+
+.macro EnemyMovementInstr_FE ; some form of end
+    .byte $FE
+.endmacro
+
+.macro EnemyMovementInstr_Restart
+    .byte $FF
+.endmacro
+
 
 ;There are 3 control bytes associated with the music data and the rest are musical note indexes.
 ;If the byte has the binary format 1011xxxx ($Bx), then the byte is an index into the corresponding

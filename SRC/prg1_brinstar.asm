@@ -236,8 +236,10 @@ L967B:
     .byte $00
     .byte $00
 
-; Screw attack vulnerability? Hit sound?
-; Bit 5 (0x20) determines something about how it computes velocity
+; Bit 7: Screw attack vulnerability?
+; Bit 5: EnemyMovementInstr_FE failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
+; Bits 0-4 are used when bit 5 is set
+; Bits 2-3: #$00,#$04=normal enemy hit sound, #$08=big enemy hit sound, #$0C=metroid hit sound
 L968B:
     .byte $01, $01, $01, $00, $86, $04, $89, $80, $81, $00, $00, $00, $82, $00, $00, $00
 
@@ -310,7 +312,7 @@ EnSpeedXTable:
 
 ; Behavior-Related Table?
 ; bit7: unused?
-; bit6: does enemy use acceleration and speed and subpixels. 0=no, 1=yes
+; bit6: 0=enemy uses movement strings. 1=enemy uses acceleration and speed and subpixels.
 L977B:
     .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 
@@ -409,11 +411,11 @@ EnemyMovementChoice0B:
 
 EnemyMovement00_R:
     SignMagSpeed $20,  2,  2
-    .byte $FE
+    EnemyMovementInstr_FE
 
 EnemyMovement00_L:
     SignMagSpeed $20, -2,  2
-    .byte $FE
+    EnemyMovementInstr_FE
 
 ; probably for wavers
 EnemyMovement01_R:
@@ -447,7 +449,7 @@ EnemyMovement05_R:
     SignMagSpeed $05,  2, -5
     SignMagSpeed $04,  2, -6
     SignMagSpeed $02,  2, -7
-    .byte $FD
+    EnemyMovementInstr_ClearEnData1D
 
     SignMagSpeed $03,  2, -5
     SignMagSpeed $06,  2, -3
@@ -463,8 +465,8 @@ EnemyMovement05_R:
     SignMagSpeed $07,  2, -1
     SignMagSpeed $05,  2, -3
     SignMagSpeed $04,  2, -5
-    .byte $FD
-    .byte $FF
+    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_Restart
 
 EnemyMovement05_L:
     SignMagSpeed $02, -2, -7
@@ -489,7 +491,7 @@ EnemyMovement05_L:
     SignMagSpeed $05, -2, -5
     SignMagSpeed $04, -2, -6
     SignMagSpeed $02, -2, -7
-    .byte $FD
+    EnemyMovementInstr_ClearEnData1D
 
     SignMagSpeed $03, -2, -5
     SignMagSpeed $06, -2, -3
@@ -505,17 +507,18 @@ EnemyMovement05_L:
     SignMagSpeed $07, -2, -1
     SignMagSpeed $05, -2, -3
     SignMagSpeed $04, -2, -5
-    .byte $FD
-    .byte $FF
+    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_Restart
 
 EnemyMovement06_R:
     SignMagSpeed $01,  1,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement06_L:  
     SignMagSpeed $01, -1,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
+; skree
 EnemyMovement07_R:
     SignMagSpeed $04,  2,  2
     SignMagSpeed $01,  2,  4
@@ -524,7 +527,10 @@ EnemyMovement07_R:
     SignMagSpeed $01,  2,  6
     SignMagSpeed $01,  2,  4
     SignMagSpeed $04,  2,  6
-    .byte $FC, $01, $00, $64, $00, $FB
+    EnemyMovementInstr_RepeatPreviousUntilFailure
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $64,  0,  0
+    EnemyMovementInstr_StopMovement
 
 EnemyMovement07_L:
     SignMagSpeed $04, -2,  2
@@ -534,7 +540,10 @@ EnemyMovement07_L:
     SignMagSpeed $01, -2,  6
     SignMagSpeed $01, -2,  4
     SignMagSpeed $04, -2,  6
-    .byte $FC, $01, $00, $64, $00, $FB
+    EnemyMovementInstr_RepeatPreviousUntilFailure
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $64,  0,  0
+    EnemyMovementInstr_StopMovement
 
 EnemyMovement08_R:
 EnemyMovement08_L:
@@ -548,33 +557,33 @@ EnemyMovement0C_R:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
-    .byte $FE
+    EnemyMovementInstr_FE
 
 EnemyMovement0C_L:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
-    .byte $FE
+    EnemyMovementInstr_FE
 
 EnemyMovement0D_R:
     SignMagSpeed $1E,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E, -1,  1
-    .byte $FE
+    EnemyMovementInstr_FE
 
 EnemyMovement0D_L:
     SignMagSpeed $1E, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E,  1,  1
-    .byte $FE
+    EnemyMovementInstr_FE
 
 EnemyMovement0E_R:
     SignMagSpeed $50,  4,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement0E_L:
     SignMagSpeed $50, -4,  0
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement0F_R:
     SignMagSpeed $02,  3, -7
@@ -588,7 +597,7 @@ EnemyMovement0F_R:
     SignMagSpeed $05,  3,  5
     SignMagSpeed $04,  3,  6
     SignMagSpeed $50,  3,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement0F_L:
     SignMagSpeed $02, -3, -7
@@ -602,7 +611,7 @@ EnemyMovement0F_L:
     SignMagSpeed $05, -3,  5
     SignMagSpeed $04, -3,  6
     SignMagSpeed $50, -3,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement10_R:
     SignMagSpeed $02,  4, -7
@@ -616,7 +625,7 @@ EnemyMovement10_R:
     SignMagSpeed $05,  4,  5
     SignMagSpeed $04,  4,  6
     SignMagSpeed $50,  4,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement10_L:
     SignMagSpeed $02, -4, -7
@@ -630,7 +639,7 @@ EnemyMovement10_L:
     SignMagSpeed $05, -4,  5
     SignMagSpeed $04, -4,  6
     SignMagSpeed $50, -4,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement11_R:
     SignMagSpeed $02,  2, -7
@@ -644,7 +653,7 @@ EnemyMovement11_R:
     SignMagSpeed $05,  2,  5
     SignMagSpeed $04,  2,  6
     SignMagSpeed $50,  2,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 EnemyMovement11_L:
     SignMagSpeed $02, -2, -7
@@ -658,7 +667,7 @@ EnemyMovement11_L:
     SignMagSpeed $05, -2,  5
     SignMagSpeed $04, -2,  6
     SignMagSpeed $50, -2,  7
-    .byte $FF
+    EnemyMovementInstr_Restart
 
 ;-------------------------------------------------------------------------------
 

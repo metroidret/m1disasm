@@ -9144,21 +9144,24 @@ DoOneEnemy_UpdateEnData05Bit6:
 
 ;---------------------------------------------
 DoRestingEnemy: ;($F3BE)
+    ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
     bmi Lx299
-    lda #$00
-    sta EnData1D,x
-    sta EnSpeedSubPixelY,x
-    sta EnData0A,x
-    jsr LF6B9
-    jsr LF75B
-    jsr InitEnRestingAnimIndex
-    jsr LF676
-    lda EnDelay,x
-    beq Lx299
-    jsr DoRestingEnemy_TryBecomingActive
-Lx299:
+        lda #$00
+        sta EnData1D,x
+        sta EnMovementInstrIndex,x
+        sta EnData0A,x
+        jsr LF6B9
+        jsr LF75B
+        jsr InitEnRestingAnimIndex
+        jsr DoRestingEnemy_F676
+
+        ; branch if delay is zero
+        lda EnDelay,x
+        beq Lx299
+            jsr DoRestingEnemy_TryBecomingActive
+    Lx299:
     jmp DoActiveEnemy_BranchB
 ;------------------------------------------
 DoActiveEnemy: ; LF3E6
@@ -9603,11 +9606,11 @@ Lx329:
     sta EnExplosionX,x
     lda EnHi,y
     sta EnExplosionHi,x
-    GetPageIndex:
+GetPageIndex:
     ldx PageIndex
     rts
 
-LF676:
+DoRestingEnemy_F676:
     jsr LoadTableAt977B
     asl
     asl
