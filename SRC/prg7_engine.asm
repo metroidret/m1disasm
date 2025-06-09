@@ -2075,10 +2075,11 @@ LoadGameData:
     ;Prepare to load unique item history which is 64 bytes in length.
     ldy #$3F
     LCA78:
-        lda ($00),y                     ;
-        sta NumberOfUniqueItems,y       ;Loop until unique item history is loaded.
-        dey                             ;
-        bpl LCA78                       ;
+        ;Loop until unique item history is loaded.
+        lda ($00),y
+        sta NumberOfUniqueItems,y
+        dey
+        bpl LCA78
     ;Branch always.
     bmi LCA83
         pha ; unused instruction
@@ -2099,13 +2100,17 @@ LoadGameData:
     rts
 
 GetGameDataIndex:
-    lda DataSlot                    ;
-    asl                             ;A contains the save game slot to work on (0 1 or 2).-->
-    asl                             ;This number is transferred to the upper four bits to-->
-    asl                             ;find the offset for Samus' data for this particular-->
-    asl                             ;saved game (#$00, #$10 or #$20).
-    sta SamusDataIndex              ;
-    rts                             ;
+    ;A contains the save game slot to work on (0, 1 or 2).-->
+    ;This number is transferred to the upper four bits to-->
+    ;find the offset for Samus' data for this particular-->
+    ;saved game (#$00, #$10 or #$20).
+    lda DataSlot
+    asl
+    asl
+    asl
+    asl
+    sta SamusDataIndex
+    rts
 
 EraseAllGameData:
     lda #$00                        ;Always start at saved game 0. Erase all 3 saved games.
@@ -2130,7 +2135,7 @@ EraseAllGameData:
         inx                             ;
         cpx #$0C                        ;
         bne LCABC                       ;Loop until all data is erased.
-    rts                             ;
+    rts
 
 ;This routine finds the base address of the unique item history for the desired saved game (0, 1 or 2).
 ;The memory set aside for each unique item history is 64 bytes and occupies memory addresses $69B4 thru
@@ -2666,34 +2671,44 @@ SetSamusData:
 ;---------------------------------[ Set mirror control bit ]-----------------------------------------
 
 SetMirrorCntrlBit:
-    lda SamusDir                    ;Facing left=#$01, facing right=#$00.
-    jsr Amul16                      ;($C2C5)*16. Move bit 0 to bit 4 position.
-    ora ObjectCntrl                 ;
-    sta ObjectCntrl                 ;Use SamusDir bit to set mirror bit.
+    ;Facing left=#$01, facing right=#$00.
+    lda SamusDir
+    ;Move bit 0 to bit 4 position.
+    jsr Amul16
+    ;Use SamusDir bit to set mirror bit.
+    ora ObjectCntrl
+    sta ObjectCntrl
     rts
 
 ;------------------------------[ Check if screw attack is active ]-----------------------------------
 
 IsScrewAttackActive:
-    sec                             ;Assume screw attack is not active.
-    ldy ObjAction                   ;
-    dey                             ;Is Samus running?-->
-    bne RTS_CDBE                       ;If not, branch to exit.
-    lda SamusGear                   ;
-    and #gr_SCREWATTACK             ;Does Samus have screw attack?-->
-    beq RTS_CDBE                    ;If not, branch to exit.
-    lda ObjAnimResetIndex           ;
-    cmp #an_SamusSalto              ;Is Samus somersaulting?-->
-    beq LCDBB                           ;If so, branch to clear carry(screw attack active).
-        cmp #an_SamusJump               ;
-        sec                             ;Is Samus jumping?-->
-        bne RTS_CDBE                       ;If not, branch to exit.
-        bit ObjSpeedY                ;If Samus is jumping and still moving upwards, screw-->
-        bpl RTS_CDBE                       ;attack is active.
+    ; default to screw attack inactive (carry flag set).
+    sec
+    ; return inactive if Samus is not running (spinjumping is a form of running)
+    ldy ObjAction
+    dey
+    bne RTS_CDBE
+    ; return inactive if Samus doesn't have the screw attack upgrade
+    lda SamusGear
+    and #gr_SCREWATTACK
+    beq RTS_CDBE
+    ; return active if Samus is in the somersaulting animation
+    lda ObjAnimResetIndex
+    cmp #an_SamusSalto
+    beq LCDBB
+        ; return inactive if Samus is not in the neutral jump animation
+        cmp #an_SamusJump
+        sec
+        bne RTS_CDBE
+        ; samus is in the neutral jump animation
+        ; screw attack is active if Samus is moving upwards
+        bit ObjSpeedY
+        bpl RTS_CDBE
     LCDBB:
-    cmp ObjAnimIndex                ;Screw attack will still be active if not spinning, but-->
+    cmp ObjAnimIndex
 RTS_CDBE:
-    rts                             ;jumping while running and still moving upwards.
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -2785,8 +2800,10 @@ CheckHealthStatus: ;($CDFA)
     ldx SamusKnockbackDir
     inx
     beq Lx009
-    ; 
+    ; a is #$01=left or #$02=right
     jsr Adiv16       ; / 16
+    ; a is zero here
+    ; (then why are we even comparing its value? am i missing something?)
     cmp #$03
     bcs Lx007
         ldy SamusAccelX
