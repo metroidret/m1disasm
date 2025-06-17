@@ -220,7 +220,7 @@ RandomNumbers: ;$C000
     txa
     pha
     ldx #$05
-    @:
+    @loop:
         lda RandomNumber1
         clc
         adc #$05
@@ -230,7 +230,7 @@ RandomNumbers: ;$C000
         adc #$13
         sta RandomNumber2
         dex
-        bne @-
+        bne @loop
     pla
     tax
     lda RandomNumber1
@@ -4618,14 +4618,18 @@ LDA1A:
     tay
     lda StatueAnimFrameTable,y
     sta StatueAnimFrame
+    ; always display statue if statue status is up or not blinking
     lda KraidStatueStatus-$60,x
     beq Lx126
     bmi Lx126
+    ; statue is blinking
+    ; only display statue at odd frames
     lda FrameCount
     lsr
-    bcc RTS_X127    ; only display statue at odd frames
+    bcc RTS_X127
 Lx126:
-    jmp ObjDrawFrame       ; display statue
+    ; display statue
+    jmp ObjDrawFrame
 
 StatueXTable:
     .byte $88 ; Kraid's X

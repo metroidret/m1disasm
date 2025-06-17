@@ -129,13 +129,15 @@ L8027:
 ;----------------------------------------[ Intro routines ]------------------------------------------
 
 ClearSpareMem:
-    lda #$00                        ;
-    sta SpareMemCB                  ;Clears two memory addresses not used by the game.
-    sta SpareMemC9                  ;
+    ;Clears two memory addresses not used by the game.
+    lda #$00
+    sta SpareMemCB
+    sta SpareMemC9
 
 IncTitleRoutine:
-    inc TitleRoutine                ;Increment to next title routine.
-    rts                             ;
+    ;Increment to next title routine.
+    inc TitleRoutine
+    rts
 
 InitializeAfterReset:
     ldy #$02                        ;Y=2.
@@ -1294,10 +1296,10 @@ DoFadeOut:
     ;If palette data = #$FF, exit.
     cmp #$FF
     beq RTS_8B6C
-    ;Store new palette data.
-    sta PalDataPending
-    inc FadeDataIndex
-RTS_8B6C:
+        ;Store new palette data.
+        sta PalDataPending
+        inc FadeDataIndex
+    RTS_8B6C:
     rts
 
 FadeOutPalData:
@@ -1393,17 +1395,18 @@ LoadUniqueItems:
     ldx $06                         ;
     beq ProcessNewItemByte          ;If start of new byte, branch.
 
-    ldx #$01                        ;
-    stx $02                         ;
-    clc                             ;
+    ;This code does not appear to ever be executed.
+    ldx #$01
+    stx $02
+    clc
     L8BF5:
-        ror                             ;
-        sta $08                         ;This code does not appear to ever be executed.
-        ldx $02                         ;
-        cpx $06                         ;
-        beq ProcessNewItemByte          ;
-        inc $02                         ;
-        jmp L8BF5                       ;
+        ror
+        sta $08
+        ldx $02
+        cpx $06
+        beq ProcessNewItemByte
+        inc $02
+        jmp L8BF5
 
 ProcessNextItem:
     ldy $05                         ;Locates next password byte to process-->
@@ -1544,7 +1547,7 @@ CalculatePassword:
     L8CF7:
         lda SamusAge,y                  ;Store SamusAge in $6993,-->
         sta PasswordByte+$0B,y            ;SamusAge+1 in $6994 and-->
-        dey                             ;SamusAe+2 in $6995.
+        dey                             ;SamusAge+2 in $6995.
         bpl L8CF7                       ;
     L8D00:
         jsr $C000                       ;
@@ -2266,7 +2269,7 @@ CheckBackspace:
         lda CharSelectXTbl,y            ;Set x-Coord of character selection sprite.
         sta SpriteRAM+$02<<2+3          ;
     RTS_92B3:
-    rts                             ;
+    rts
 
 ;The following data does not appear to be used in the program.
     .byte $21, $20
@@ -2539,7 +2542,7 @@ UnusedIntroRoutine4:
     sta PPUDataString,x             ;The following unused routine writes something to the-->
     lda #$01                        ;PPU string and prepares for a PPU write.
     sta PPUDataPending              ;
-    rts                             ;
+    rts
 
 
 ;Unused intro routine. It looks like originally the-->
@@ -2663,7 +2666,7 @@ UnusedIntroRoutine8:
     jsr Amul16 ;($C2C5)Multiply by 16.
     ora $02                         ;
     sta $07                         ;
-    rts                             ;
+    rts
 
 ;Not used.
     .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
@@ -2843,7 +2846,7 @@ UpdateCrossMissileCoords: ;($981E)
         lda IntroSprXChange,x          ;position addresses to make sure the sprites don't-->
         sta IntroSprXCoord,x           ;overshoot their mark.
     RTS_9870:
-    rts                             ;
+    rts
 
 CalcDisplacement:
     sta $04                         ;
@@ -2886,19 +2889,19 @@ DecSpriteYCoord:
     lda #$00                        ;
     sta SpriteLoadPending           ;Sprite RAM load complete.
 RTS_98AD:
-    rts                             ;
+    rts
 
 LoadStarSprites:
     ldy #$9F                        ;
-L98B0:
-    lda IntroStarSprite,y         ;
-    sta SpriteRAM+$18<<2,y               ;Store RAM contents of $6E00 thru $6E9F -->
-    dey                             ;in sprite RAM at locations $0260 thru $02FF.
-    cpy #$FF                        ;
-    bne L98B0                       ;
+    L98B0:
+        lda IntroStarSprite,y           ;
+        sta SpriteRAM+$18<<2,y          ;Store RAM contents of $6E00 thru $6E9F -->
+        dey                             ;in sprite RAM at locations $0260 thru $02FF.
+        cpy #$FF                        ;
+        bne L98B0                       ;
     lda #$00                        ;
     sta SpriteLoadPending           ;Set $C8 to #$00.
-    rts                             ;
+    rts
 
 ;The following values are loaded into RAM $6E00 thru $6E9F in InitBank0
 ;routine.  These values are then loaded into sprite RAM at $0260 thru $02FF
@@ -3125,26 +3128,26 @@ ShowEndSamus:
     lda Timer3                      ;Once 960 frames (16 seconds) have expired,-->
     bne L9B26                       ;Move to EndSamusFlash routine.
         inc RoomPtr                     ;
-        rts                             ;
+        rts
 
     L9B26:
-    cmp #$50                        ;After 160 frames have past-->
+    cmp #$50                        ;After 160 frames have passed-->
     bne L9B2D                       ;(2.6 seconds), write end message.
         inc EndMsgWrite                 ;
-        rts                             ;
+        rts
 
     L9B2D:
-    cmp #$01                        ;After 950 frames have past-->
+    cmp #$01                        ;After 950 frames have passed-->
     bne L9B33                       ;(15.8 seconds), erase end message.
         inc HideShowEndMsg              ;
     L9B33:
-    rts                             ;
+    rts
 
 EndSamusFlash:
     lda FrameCount                  ;If FrameCount not divisible by 32, branch.
     and #$1F                        ;
     bne L9B69                       ;
-        inc ColorCntIndex               ;Every 32 frame, increment the ColorCntInex-->
+        inc ColorCntIndex               ;Every 32 frames, increment the ColorCntIndex-->
         lda ColorCntIndex               ;value.  Flashing Samus lasts for 512-->
         cmp #$08                        ;frames (8.5 seconds).
         bne L9B52                       ;
@@ -3198,7 +3201,7 @@ SamusWave:
     lda #$08                        ;(2.6 seconds).
     sta PalDataPending              ;Change palette
     inc RoomPtr                     ;Increment RoomPtr
-    rts                             ;
+    rts
 
 L9BA2:
     lda EndingType                  ;If suitless Samus-->
@@ -3278,7 +3281,7 @@ L9C1D:
     cmp #$88                        ;If last page of credits is not finished-->
     bcc L9C2A                       ;scrolling, branch.  Else increment to next-->
     inc RoomPtr                     ;routine.
-    rts                             ;
+    rts
 
 L9C2A:
     lda FrameCount                  ;credits scroll up one position every 3 frames.
@@ -3346,7 +3349,7 @@ L9C70:
     tay                             ;
     jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
 RTS_9C7E:
-    rts                             ;
+    rts
 
 LoadWaveSprites:
     ldx WaveSpritePointer           ;
@@ -3410,19 +3413,19 @@ LoadEndSamusSprites:
     ldy #$00                        ;
     ldx #$00                        ;
     L9CED:
-        lda SamusHeadSpriteTble,y       ;The following code loads the sprite graphics-->
+        lda SamusHeadSpriteTable,y      ;The following code loads the sprite graphics-->
         sta SpriteRAM,x               ;when the helmet off ending is playing.  The-->
         iny                             ;sprites below keep Samus head from flashing-->
         inx                             ;while the rest of her body does.
         cpy #$18                        ;
         bne L9CED                       ;
 RTS_9CF9:
-    rts                             ;
+    rts
 
 ;The following table is used by the routine above to keep Samus'
 ;head from flashing during the helmet off ending.
 
-SamusHeadSpriteTble:
+SamusHeadSpriteTable:
     .byte $93, $36, $01, $70        ;Sprite00RAM
     .byte $93, $37, $01, $78        ;Sprite01RAM
     .byte $93, $38, $01, $80        ;Sprite02RAM
