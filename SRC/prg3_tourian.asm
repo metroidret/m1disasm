@@ -17,20 +17,6 @@
 .redef BANK = 3
 .SECTION "ROM Bank $003" BANK 3 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_KraidSprites
-.export GFX_RidleySprites
-.export GotoClearCurrentMetroidLatchAndMetroidOnSamus
-.export GotoClearAllMetroidLatches
-.export GotoL9C6F
-.export GotoSpawnCannonRoutine
-.export GotoSpawnMotherBrainRoutine
-.export GotoSpawnZebetiteRoutine
-.export GotoSpawnRinkaSpawnerRoutine
-.export GotoLA0C6
-.export GotoLA142
-
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"

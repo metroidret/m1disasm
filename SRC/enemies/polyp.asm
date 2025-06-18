@@ -9,7 +9,7 @@ PolypAIRoutine:
     lda #$10
     sta EnData05,x
 
-    .if BANK = 2
+    .if BANK == 2
         ; put bit 4 of enemy slot offset in bit 6
         txa
         asl

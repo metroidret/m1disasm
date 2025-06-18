@@ -17,11 +17,6 @@
 .redef BANK = 2
 .SECTION "ROM Bank $002" BANK 2 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_NorfairSprites
-.export GFX_TourianSprites
-
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 .include "areas_common.asm"

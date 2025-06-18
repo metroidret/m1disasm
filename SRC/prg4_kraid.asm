@@ -14,17 +14,8 @@
 
 ;Kraid hideout (memory page 4)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 4
-.segment "BANK_04_MAIN"
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_EndingSprites
-.export GFX_KraiBG3
+.redef BANK = 4
+.SECTION "ROM Bank $004" BANK 4 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -347,23 +338,23 @@ TileBlastFramePtrTable:
 
 EnemyMovementChoices:
 EnemyMovementChoice00: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01, $02}
+    EnemyMovementChoiceEntry $01, $02
 EnemyMovementChoice01: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$03, $04}
+    EnemyMovementChoiceEntry $03, $04
 EnemyMovementChoice02:
-    EnemyMovementChoiceEntry {$06}
+    EnemyMovementChoiceEntry $06
 EnemyMovementChoice03:
-    EnemyMovementChoiceEntry {$07}
+    EnemyMovementChoiceEntry $07
 EnemyMovementChoice04: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$09}
+    EnemyMovementChoiceEntry $09
 EnemyMovementChoice05: ; enemy moves manually
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice06:
-    EnemyMovementChoiceEntry {$0C, $0D}
+    EnemyMovementChoiceEntry $0C, $0D
 EnemyMovementChoice07:
-    EnemyMovementChoiceEntry {$0E}
+    EnemyMovementChoiceEntry $0E
 EnemyMovementChoice08:
-    EnemyMovementChoiceEntry {$0F, $10, $11, $0F}
+    EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ; unused (???)
 EnemyMovement00_R:
@@ -769,9 +760,13 @@ TileBlastFrame10:
 
 .include "reset.asm"
 
+.ENDS
+
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_04_VEC"
+.SECTION "ROM Bank $004 - Vectors" BANK 4 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+

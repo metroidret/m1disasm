@@ -16,198 +16,8 @@
 
 ;Game engine (memory page 7)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 7
-.segment "BANK_07_MAIN"
-
-;-------------------------------------[ Forward declarations ]--------------------------------------
-
-CommonEnemyAI          = $8058
-LoadTableAt977B        = $80B0
-L81D1                  = $81D1
-L81DA                  = $81DA
-L8206                  = $8206
-L820F                  = $820F
-L8296                  = $8296
-L832F                  = $832F
-ObjectAnimIndexTbl     = $8572
-L85E0                  = $85E0
-ObjFramePtrTable       = $860B
-ObjPlacePtrTable       = $86DF
-SamusEnterDoor         = $8B13
-UpdateAllDoors         = $8B79
-
-PalPntrTbl             = $9560
-AreaPointers           = $9598
-SpecItmsTable          = $9598
-AreaRoutine            = $95C3
-AreaMusicFlag          = $95CD
-AreaEnemyDamage        = $95CE
-AreaItemRoomNumbers    = $95D0
-AreaSamusMapPosX       = $95D7
-AreaSamusMapPosY       = $95D8
-AreaSamusY             = $95D9
-AreaPalToggle          = $95DA
-AreaFireballKilledAnimIndex = $95DC
-AreaExplosionAnimIndex = $95DD
-AreaFireballFallingAnimIndex = $95E0
-AreaFireballSplatterAnimIndex = $95E2
-AreaMellowAnimIndex    = $95E4
-ChooseEnemyAIRoutine   = $95E5
-
-EnemyDeathAnimIndex    = $960B
-EnemyHitPointTbl       = $962B
-EnemyRestingAnimIndex  = $963B
-EnemyActiveAnimIndex   = $965B
-L967B                  = $967B
-L968B                  = $968B
-EnemyData0DTbl         = $969B
-L96AB                  = $96AB
-EnemyInitDelayTbl      = $96BB
-EnemyMovementChoiceOffset = $96CB
-
-EnAccelYTable          = $972B
-EnAccelXTable          = $973F
-EnSpeedYTable          = $9753
-EnSpeedXTable          = $9767
-
-EnemyFireballRisingAnimIndexTable = $978B
-EnemyFireballPosOffsetX = $979B
-EnemyFireballPosOffsetY = $97A3
-
-EnemyFireballMovementPtrTable = $97A7
-TileBlastFramePtrTable = $97AF
-
-EnemyMovementChoices   = $97D1
-
-SoundEngine            = $B3B4
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export Startup
-.export NMI
-.export ClearNameTables
-.export ClearNameTable0
-.export EraseAllSprites
-.export RemoveIntroSprites
-.export ClearRAM_33_DF
-.export PreparePPUProcess_
-.export ChooseRoutine
-.export AddYToPtr02
-.export Adiv32
-.export Adiv16
-.export Adiv8
-.export Amul16
-.export Amul8
-.export ProcessPPUString
-.export EraseTile
-.export WritePPUByte
-.export PrepPPUPaletteString
-.export TwosComplement
-.export Base10Subtract
-.export SubtractHealth
-.export InitObjAnimIndex
-.export SetObjAnimIndex
-.export UpdateEnemyAnim
-.export VerticalRoomCentered
-.export EnemyCheckMoveUp
-.export EnemyCheckMoveDown
-.export EnemyCheckMoveLeft
-.export EnemyCheckMoveRight
-.export WaitNMIPass
-.export ScreenOff
-.export WaitNMIPass_
-.export ScreenOn
-.export ExitSub
-.export ScreenNmiOff
-.export VBOffAndHorzWrite
-.export NMIOn
-.export SetTimer
-.export ClearSamusStats
-.export InitEndGFX
-.export LoadSamusGFX
-.export InitGFX7
-.export BankTable
-.export ChooseEnding
-.export SilenceMusic
-.export AnimDrawObject
-.export SFX_Door
-.export OrEnData05
-.export ReadTableAt968B
-.export MapScrollRoutine
-.export MotherBrainMusic
-.export TourianMusic
-.export SelectSamusPal
-.export MakeCartRAMPtr
-.export LDD8B
-.export NegateTemp00Temp01
-.export LEB6E
-.export LF410
-.export LF416
-.export LF438
-.export InitEnAnimIndex
-.export GetEnemyTypeTimes2PlusFacingDirectionBit0
-.export LF852
-.export LF85A
-.export SpawnFireball
-.export EnemyBGCollideOrApplySpeed
-.export LFB70
-.export LFB88
-.export LFBB9
-.export LFBCA
-.export ApplySpeedToPosition
-.export DrawTileBlast
-
-
-;---------------------------------------------[ Import ]---------------------------------------------
-
-.import MainTitleRoutine
-.import StarPalSwitch
-.import DecSpriteYCoord
-.import NMIScreenWrite
-.import EndGamePalWrite
-.import CopyMap
-.import IntroStarsData
-
-.import GotoClearCurrentMetroidLatchAndMetroidOnSamus
-.import GotoClearAllMetroidLatches
-.import GotoL9C6F
-.import GotoSpawnCannonRoutine
-.import GotoSpawnMotherBrainRoutine
-.import GotoSpawnZebetiteRoutine
-.import GotoSpawnRinkaSpawnerRoutine
-.import GotoLA0C6
-.import GotoLA142
-
-.import GFX_TheEndFont
-.import GFX_BrinstarSprites
-.import GFX_NorfairSprites
-.import GFX_TourianSprites
-.import GFX_KraidSprites
-.import GFX_RidleySprites
-.import GFX_EndingSprites
-.import GFX_KraiBG3
-.import GFX_CREBG1
-.import GFX_TourianFont
-.import GFX_Samus
-.import GFX_IntroSprites
-.import GFX_Title
-.import GFX_SamusSuitless
-.import GFX_ExclamationPoint
-.import GFX_Solid
-.import GFX_BrinBG1
-.import GFX_CREBG2
-.import GFX_NorfBG1
-.import GFX_NorfBG2
-.import GFX_BossBG
-.import GFX_TourBG
-.import GFX_Zebetite
-.import GFX_KraiBG2
-.import GFX_RidlBG
-.import GFX_Font
+.redef BANK = 7
+.SECTION "ROM Bank $007" BANK 7 SLOT "ROMFixedSlot" ORGA $C000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -770,7 +580,7 @@ Adiv8:
     lsr                             ;Divide by 8.
     lsr                             ;
     lsr                             ;Divide by shifting A right.
-    rts                             ;
+    rts
 
 Amul32:
     asl                             ;Multiply by 32.
@@ -780,7 +590,7 @@ Amul8:
     asl                             ;Multiply by 8.
     asl                             ;
     asl                             ;Multiply by shifting A left.
-    rts                             ;
+    rts
 
 ;-------------------------------------[ PPU writing routines ]---------------------------------------
 
@@ -788,17 +598,22 @@ Amul8:
 ;RLE data is one tile that repeats several times in a row.  RLE-Repeat Last Entry
 
 CheckPPUWrite:
-    lda PPUDataPending              ;
-    beq RTS_C2E3                       ;If zero no PPU data to write, branch to exit.
-    lda #.lobyte(PPUDataString)     ;
-    sta $00                         ;Sets up PPU writer to start at address $07A1.
-    lda #.hibyte(PPUDataString)     ;
-    sta $01                         ;$0000 = ptr to PPU data string ($07A1).
-    jsr ProcessPPUString            ;($C30C)write it to PPU.
-    lda #$00                        ;
-    sta PPUStrIndex                 ;PPU data string has been written so the data-->
-    sta PPUDataString               ;stored for the write is now erased.
-    sta PPUDataPending              ;
+    ;If zero no PPU data to write, branch to exit.
+    lda PPUDataPending
+    beq RTS_C2E3
+    ;Sets up PPU writer to start at address $07A1.
+    ;$0000 = ptr to PPU data string ($07A1).
+    lda #<PPUDataString
+    sta $00
+    lda #>PPUDataString
+    sta $01
+    ;($C30C)write it to PPU.
+    jsr ProcessPPUString
+    ;PPU data string has been written so the data stored for the write is now erased.
+    lda #$00
+    sta PPUStrIndex
+    sta PPUDataString
+    sta PPUDataPending
 RTS_C2E3:
     rts
 
@@ -1503,63 +1318,63 @@ InitGFX7: ; Load Password Font
 ;byte 5-6: data length (16-bit).
 
 GFXInfo:
-    .byte .bank(GFX_Samus)          ;[SPR]Samus, items.             Entry 0.
+    .byte bank(GFX_Samus)          ;[SPR]Samus, items.             Entry 0.
         .word GFX_Samus, $0000, $09A0
-    .byte .bank(GFX_EndingSprites)  ;[SPR]Samus in ending.          Entry 1.
+    .byte bank(GFX_EndingSprites)  ;[SPR]Samus in ending.          Entry 1.
         .word GFX_EndingSprites, $0000, $0520
-    .byte .bank(GFX_TheEndFont)     ;[BGR]Partial font, "The End".  Entry 2.
+    .byte bank(GFX_TheEndFont)     ;[BGR]Partial font, "The End".  Entry 2.
         .word GFX_TheEndFont, $1000, $0400
-    .byte .bank(GFX_BrinBG1)        ;[BGR]Brinstar rooms.           Entry 3.
+    .byte bank(GFX_BrinBG1)        ;[BGR]Brinstar rooms.           Entry 3.
         .word GFX_BrinBG1, $1000, $0150
-    .byte .bank(GFX_CREBG1)         ;[BGR]Common Room Elements      Entry 4.
+    .byte bank(GFX_CREBG1)         ;[BGR]Common Room Elements      Entry 4.
         .word GFX_CREBG1, $1200, $0450
-    .byte .bank(GFX_CREBG2)         ;[BGR]More CRE                  Entry 5.
+    .byte bank(GFX_CREBG2)         ;[BGR]More CRE                  Entry 5.
         .word GFX_CREBG2, $1800, $0800
-    .byte .bank(GFX_BrinstarSprites);[SPR]Brinstar enemies.         Entry 6.
+    .byte bank(GFX_BrinstarSprites);[SPR]Brinstar enemies.         Entry 6.
         .word GFX_BrinstarSprites, $0C00, $0400
-    .byte .bank(GFX_NorfBG1)        ;[BGR]Norfair rooms.            Entry 7.
+    .byte bank(GFX_NorfBG1)        ;[BGR]Norfair rooms.            Entry 7.
         .word GFX_NorfBG1, $1000, $0260
-    .byte .bank(GFX_NorfBG2)        ;[BGR]More Norfair rooms.       Entry 8.
+    .byte bank(GFX_NorfBG2)        ;[BGR]More Norfair rooms.       Entry 8.
         .word GFX_NorfBG2, $1700, $0070
-    .byte .bank(GFX_NorfairSprites) ;[SPR]Norfair enemies.          Entry 9.
+    .byte bank(GFX_NorfairSprites) ;[SPR]Norfair enemies.          Entry 9.
         .word GFX_NorfairSprites, $0C00, $0400
-    .byte .bank(GFX_BossBG)         ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
+    .byte bank(GFX_BossBG)         ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
         .word GFX_BossBG, $1000, $02E0
-    .byte .bank(GFX_TourBG)         ;[BGR]Tourian rooms.            Entry 11. (0B)
+    .byte bank(GFX_TourBG)         ;[BGR]Tourian rooms.            Entry 11. (0B)
         .word GFX_TourBG, $1200, $0600
-    .byte .bank(GFX_Zebetite)       ;[BGR]Mother Brain room.        Entry 12. (0C)
+    .byte bank(GFX_Zebetite)       ;[BGR]Mother Brain room.        Entry 12. (0C)
         .word GFX_Zebetite, $1900, $0090
-    .byte .bank(GFX_TourianFont)    ;[BGR]Misc. object.             Entry 13. (0D)
+    .byte bank(GFX_TourianFont)    ;[BGR]Misc. object.             Entry 13. (0D)
         .word GFX_TourianFont, $1D00, $0300
-    .byte .bank(GFX_TourianSprites) ;[SPR]Tourian enemies.          Entry 14. (0E)
+    .byte bank(GFX_TourianSprites) ;[SPR]Tourian enemies.          Entry 14. (0E)
         .word GFX_TourianSprites, $0C00, $0400
-    .byte .bank(GFX_KraiBG2)        ;[BGR]More Kraid Rooms          Entry 15. (0F)
+    .byte bank(GFX_KraiBG2)        ;[BGR]More Kraid Rooms          Entry 15. (0F)
         .word GFX_KraiBG2, $1700, $00C0
-    .byte .bank(GFX_KraiBG3)        ;[BGR]More Kraid Rooms          Entry 16. (10)
+    .byte bank(GFX_KraiBG3)        ;[BGR]More Kraid Rooms          Entry 16. (10)
         .word GFX_KraiBG3, $1E00, $0200
-    .byte .bank(GFX_KraidSprites)   ;[SPR]Miniboss I enemies.       Entry 17. (11)
+    .byte bank(GFX_KraidSprites)   ;[SPR]Miniboss I enemies.       Entry 17. (11)
         .word GFX_KraidSprites, $0C00, $0400
-    .byte .bank(GFX_RidlBG)         ;[BGR]More Ridley Rooms         Entry 18. (12)
+    .byte bank(GFX_RidlBG)         ;[BGR]More Ridley Rooms         Entry 18. (12)
         .word GFX_RidlBG, $1700, $00C0
-    .byte .bank(GFX_RidleySprites)  ;[SPR]Miniboss II enemies.      Entry 19. (13)
+    .byte bank(GFX_RidleySprites)  ;[SPR]Miniboss II enemies.      Entry 19. (13)
         .word GFX_RidleySprites, $0C00, $0400
-    .byte .bank(GFX_IntroSprites)   ;[SPR]Intro/End sprites.        Entry 20. (14)
+    .byte bank(GFX_IntroSprites)   ;[SPR]Intro/End sprites.        Entry 20. (14)
         .word GFX_IntroSprites, $0C00, $0100
-    .byte .bank(GFX_Title)          ;[BGR]Title.                    Entry 21. (15)
+    .byte bank(GFX_Title)          ;[BGR]Title.                    Entry 21. (15)
         .word GFX_Title, $1400, $0500
-    .byte .bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 22. (16)
+    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 22. (16)
         .word GFX_Solid, $1FC0, $0040
-    .byte .bank(GFX_Font)           ;[BGR]Complete font.            Entry 23. (17)
+    .byte bank(GFX_Font)           ;[BGR]Complete font.            Entry 23. (17)
         .word GFX_Font, $1000, $0400
-    .byte .bank(GFX_Font)           ;[BGR]Ingame HUD font.          Entry 24. (18)
+    .byte bank(GFX_Font)           ;[BGR]Ingame HUD font.          Entry 24. (18)
         .word GFX_Font, $0A00, $00A0
-    .byte .bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 25. (19)
+    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 25. (19)
         .word GFX_Solid, $0FC0, $0040
-    .byte .bank(GFX_Font)           ;[BGR]Tourian font.             Entry 26. (1A)
+    .byte bank(GFX_Font)           ;[BGR]Tourian font.             Entry 26. (1A)
         .word GFX_Font, $1D00, $02A0
-    .byte .bank(GFX_SamusSuitless)  ;[SPR]Suitless Samus.           Entry 27. (1B)
+    .byte bank(GFX_SamusSuitless)  ;[SPR]Suitless Samus.           Entry 27. (1B)
         .word GFX_SamusSuitless, $0000, $07B0
-    .byte .bank(GFX_ExclamationPoint)  ;[BGR]Exclaimation point.       Entry 28. (1C)
+    .byte bank(GFX_ExclamationPoint)  ;[BGR]Exclaimation point.       Entry 28. (1C)
         .word GFX_ExclamationPoint, $1F40, $0010
 
 ;--------------------------------[ Pattern table loading routines ]---------------------------------
@@ -1800,7 +1615,7 @@ SamusInit:
     stx Mem0732
     stx Mem0738
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
-    stx EndTimer+1                  ;escape timer not currently active.
+    stx EndTimer+1.w                  ;escape timer not currently active.
     stx $8B
     stx $8E
     ldy #$27
@@ -6623,8 +6438,8 @@ PPUAddrs:
     .byte $2C                       ;High byte of nametable #3(PPU)
 
 WRAMAddrs:
-    .byte .hibyte(RoomRAMA)         ;High byte of RoomRAMA(cart RAM).
-    .byte .hibyte(RoomRAMB)         ;High byte of RoomRAMB(cart RAM).
+    .byte >RoomRAMA         ;High byte of RoomRAMA(cart RAM).
+    .byte >RoomRAMB         ;High byte of RoomRAMB(cart RAM).
 
 GetNameAddrs:
     jsr GetNameTable                ;($EB85)Get current name table number.
@@ -6632,7 +6447,7 @@ GetNameAddrs:
     tay                             ;
     lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
     ldx WRAMAddrs,y                 ;Get high cart RAM addr of nametable(src).
-    rts                             ;
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -7830,7 +7645,7 @@ SpawnElevatorRoutine:
     lda ($00),y
     sta Elevator032F
     ldy #$83
-    sty ObjY+$20       ; elevator Y coord
+    sty ObjY+$20.w       ; elevator Y coord
     lda #$80
     sta ObjX+$20       ; elevator X coord
     jsr GetNameTable                ;($EB85)
@@ -11216,9 +11031,13 @@ TileBlastAnim9:  .byte $07,$06,$08,$FE
 
 .include "reset.asm"
 
-;-----------------------------------------[ Interrupt vectors ]--------------------------------------
+.ENDS
 
-.segment "BANK_07_VEC"
+;----------------------------------------[ Interrupt vectors ]--------------------------------------
+
+.SECTION "ROM Bank $007 - Vectors" BANK 7 SLOT "ROMFixedSlot" ORGA $FFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+

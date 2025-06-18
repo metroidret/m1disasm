@@ -14,17 +14,8 @@
 
 ;Ridley hideout (memory page 5)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 5
-.segment "BANK_05_MAIN"
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_CREBG1
-.export GFX_TourianFont
+.redef BANK = 5
+.SECTION "ROM Bank $005" BANK 5 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -356,27 +347,27 @@ TileBlastFramePtrTable:
 
 EnemyMovementChoices:
 EnemyMovementChoice00: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$04, $05}
+    EnemyMovementChoiceEntry $04, $05
 EnemyMovementChoice01: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$06, $07}
+    EnemyMovementChoiceEntry $06, $07
 EnemyMovementChoice02: ; not assigned to any enemy
-    EnemyMovementChoiceEntry {$02}
+    EnemyMovementChoiceEntry $02
 EnemyMovementChoice03: ; enemy moves manually
-    EnemyMovementChoiceEntry {$09}
+    EnemyMovementChoiceEntry $09
 EnemyMovementChoice04: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$0D}
+    EnemyMovementChoiceEntry $0D
 EnemyMovementChoice05: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$0E, $0F}
+    EnemyMovementChoiceEntry $0E, $0F
 EnemyMovementChoice06: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$00, $01, $02, $03}
+    EnemyMovementChoiceEntry $00, $01, $02, $03
 EnemyMovementChoice07: ; unused enemy
-    EnemyMovementChoiceEntry {$10}
+    EnemyMovementChoiceEntry $10
 EnemyMovementChoice08: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$11}
+    EnemyMovementChoiceEntry $11
 EnemyMovementChoice09: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice0A: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01}
+    EnemyMovementChoiceEntry $01
 
 EnemyMovement00_R:
 EnemyMovement00_L:
@@ -666,9 +657,13 @@ TileBlastFrame10:
 
 .include "reset.asm"
 
+.ENDS
+
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_05_VEC"
+.SECTION "ROM Bank $005 - Vectors" BANK 5 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+
