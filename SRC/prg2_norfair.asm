@@ -14,12 +14,8 @@
 
 ;Norfair (memory page 2)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 2
-.segment "BANK_02_MAIN"
+.redef BANK = 2
+.SECTION "ROM Bank $002" BANK 2 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;--------------------------------------------[ Export ]---------------------------------------------
 
@@ -345,23 +341,23 @@ TileBlastFramePtrTable:
 
 EnemyMovementChoices:
 EnemyMovementChoice00:
-    EnemyMovementChoiceEntry {$02}
+    EnemyMovementChoiceEntry $02
 EnemyMovementChoice01: ; enemy moves manually
-    EnemyMovementChoiceEntry {$09}
+    EnemyMovementChoiceEntry $09
 EnemyMovementChoice02: ; unused enemy
-    EnemyMovementChoiceEntry {$0D}
+    EnemyMovementChoiceEntry $0D
 EnemyMovementChoice03: ; unused enemy
-    EnemyMovementChoiceEntry {$0E, $0F}
+    EnemyMovementChoiceEntry $0E, $0F
 EnemyMovementChoice04: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$00, $01, $02, $03}
+    EnemyMovementChoiceEntry $00, $01, $02, $03
 EnemyMovementChoice05: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$10}
+    EnemyMovementChoiceEntry $10
 EnemyMovementChoice06:
-    EnemyMovementChoiceEntry {$11}
+    EnemyMovementChoiceEntry $11
 EnemyMovementChoice07: ; enemy doesn't move
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice08: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01}
+    EnemyMovementChoiceEntry $01
 
 
 EnemyMovement00_R:
@@ -696,9 +692,13 @@ TileBlastFrame10:
 
 .include "reset.asm"
 
+.ENDS
+
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_02_VEC"
+.SECTION "ROM Bank $002 - Vectors" BANK 2 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+

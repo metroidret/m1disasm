@@ -14,12 +14,8 @@
 
 ;Tourian (memory page 3)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 3
-.segment "BANK_03_MAIN"
+.redef BANK = 3
+.SECTION "ROM Bank $003" BANK 3 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;--------------------------------------------[ Export ]---------------------------------------------
 
@@ -1803,9 +1799,13 @@ TileBlastFrame10:
 
 .include "reset.asm"
 
+.ENDS
+
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_03_VEC"
+.SECTION "ROM Bank $003 - Vectors" BANK 3 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+
