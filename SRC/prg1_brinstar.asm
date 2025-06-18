@@ -14,17 +14,8 @@
 
 ;Brinstar (memory page 1)
 
-.include "hardware.asm"
-.include "constants.asm"
-.include "macros.asm"
-
-BANK .set 1
-.segment "BANK_01_MAIN"
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_TheEndFont
-.export GFX_BrinstarSprites
+.redef BANK = 1
+.SECTION "ROM Bank $001" BANK 1 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -370,29 +361,29 @@ TileBlastFramePtrTable:
 ; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
 EnemyMovementChoices:
 EnemyMovementChoice00: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01, $02}
+    EnemyMovementChoiceEntry $01, $02
 EnemyMovementChoice01: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$03, $04}
+    EnemyMovementChoiceEntry $03, $04
 EnemyMovementChoice02:
-    EnemyMovementChoiceEntry {$05}
+    EnemyMovementChoiceEntry $05
 EnemyMovementChoice03:
-    EnemyMovementChoiceEntry {$06}
+    EnemyMovementChoiceEntry $06
 EnemyMovementChoice04:
-    EnemyMovementChoiceEntry {$07}
+    EnemyMovementChoiceEntry $07
 EnemyMovementChoice05: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$08}
+    EnemyMovementChoiceEntry $08
 EnemyMovementChoice06: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$09}
+    EnemyMovementChoiceEntry $09
 EnemyMovementChoice07: ; enemy moves manually
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice08: ; unused
-    EnemyMovementChoiceEntry {$0B}
+    EnemyMovementChoiceEntry $0B
 EnemyMovementChoice09: ; unused
-    EnemyMovementChoiceEntry {$0C, $0D}
+    EnemyMovementChoiceEntry $0C, $0D
 EnemyMovementChoice0A: ; unused
-    EnemyMovementChoiceEntry {$0E}
+    EnemyMovementChoiceEntry $0E
 EnemyMovementChoice0B: ; unused
-    EnemyMovementChoiceEntry {$0F, $10, $11, $0F}
+    EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ;-------------------------------------------------------------------------------
 ;I believe this is the point where the level banks don't need to match addresses
@@ -888,16 +879,20 @@ TileBlastFrame10:
     .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
-
+.print "hey\n"
 .include "music_engine.asm"
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
 .include "reset.asm"
 
+.ENDS
+
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_01_VEC"
+.SECTION "ROM Bank $001 - Vectors" BANK 1 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word RESET                     ;($FFB0)Reset vector.
     .word RESET                     ;($FFB0)IRQ vector.
+.ENDS
+

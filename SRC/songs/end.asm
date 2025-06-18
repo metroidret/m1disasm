@@ -661,118 +661,118 @@ SongEndSQ2:
 SongEndNoise:
     SongRepeatSetup $A
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
     SongRepeat
     SongRepeatSetup $18
         SongNoteLength $2 ;7/32 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat02SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat02SFXData
     SongRepeat
     SongRepeatSetup $4
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
     SongRepeat
     SongRepeatSetup $8
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat02SFXData)
+        .byte <DrumBeat02SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
     SongRepeat
     SongRepeatSetup $10
         SongNoteLength $2 ;7/32 seconds
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
     SongRepeat
     SongRepeatSetup $20
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
     SongRepeat
     SongRepeatSetup $20
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat02SFXData)
+        .byte <DrumBeat02SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat03SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat03SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte .lobyte(DrumBeat02SFXData)
+        .byte <DrumBeat02SFXData
     SongRepeat
     SongRepeatSetup $8
         SongNoteLength $0 ;1/4 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat00SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat00SFXData
     SongRepeat
     SongNoteLength $4 ;7/8 seconds
-    .byte .lobyte(DrumBeat02SFXData)
+    .byte <DrumBeat02SFXData
     SongNoteLength $2 ;7/32 seconds
-    .byte .lobyte(DrumBeat00SFXData)
+    .byte <DrumBeat00SFXData
     SongNoteLength $0 ;1/4 seconds
-    .byte .lobyte(DrumBeat02SFXData)
-    .byte .lobyte(DrumBeat00SFXData)
-    .byte .lobyte(DrumBeat02SFXData)
-    .byte .lobyte(DrumBeat02SFXData)
+    .byte <DrumBeat02SFXData
+    .byte <DrumBeat00SFXData
+    .byte <DrumBeat02SFXData
+    .byte <DrumBeat02SFXData
     SongNoteLength $2 ;7/32 seconds
-    .byte .lobyte(DrumBeat02SFXData)
+    .byte <DrumBeat02SFXData
     SongEnd ;End of end music.

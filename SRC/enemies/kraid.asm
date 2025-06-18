@@ -195,7 +195,7 @@ KraidUpdateProjectile_Resting:
     ; apply offset to kraid's position
     jsr CommonJump_ApplySpeedToPosition
 
-    .IF BANK = 1
+    .IF BANK == 1
         ; load projectile's enemy slot offset into x
         ; (BUG! this is actually kraid's enemy slot offset) 
         ldx PageIndex

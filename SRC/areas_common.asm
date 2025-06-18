@@ -15,55 +15,6 @@
 
 ;Common area code (shared between banks)
 
-;---------------------------------------------[ Import ]---------------------------------------------
-
-.import Startup
-.import NMI
-.import ChooseRoutine
-.import Adiv32
-.import Adiv16
-.import Adiv8
-.import Amul16
-.import TwosComplement
-.import Base10Subtract
-.import SubtractHealth
-.import InitObjAnimIndex
-.import SetObjAnimIndex
-.import UpdateEnemyAnim
-.import VerticalRoomCentered
-.import EnemyCheckMoveUp
-.import EnemyCheckMoveDown
-.import EnemyCheckMoveLeft
-.import EnemyCheckMoveRight
-.import ExitSub
-.import AnimDrawObject
-.import SFX_Door
-.import OrEnData05
-.import ReadTableAt968B
-.import MapScrollRoutine
-.import MotherBrainMusic
-.import TourianMusic
-.import SelectSamusPal
-.import MakeCartRAMPtr
-.import LDD8B
-.import NegateTemp00Temp01
-.import LEB6E
-.import LF410
-.import LF416
-.import LF438
-.import InitEnAnimIndex
-.import GetEnemyTypeTimes2PlusFacingDirectionBit0
-.import LF852
-.import LF85A
-.import SpawnFireball
-.import EnemyBGCollideOrApplySpeed
-.import LFB70
-.import LFB88
-.import LFBB9
-.import LFBCA
-.import ApplySpeedToPosition
-.import DrawTileBlast
-
 ;-----------------------------------------[ Start of code ]------------------------------------------
 
 ; These first three all jump to different points within the same procedure

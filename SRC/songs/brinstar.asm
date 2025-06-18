@@ -326,11 +326,11 @@ SongBrinstarTri:
 SongBrinstarNoise:
     SongRepeatSetup $28
         SongNoteLength $2 ;3/8 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
         SongNoteLength $9 ;1/8 seconds
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
-        .byte .lobyte(DrumBeat01SFXData)
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
+        .byte <DrumBeat01SFXData
     SongRepeat
