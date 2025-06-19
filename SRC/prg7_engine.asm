@@ -527,12 +527,12 @@ ChooseRoutine:
     pla                             ;Low byte of ptr table address.
     sta CodePtr                     ;
     pla                             ;High byte of ptr table address.
-    sta CodePtr+1                   ;
+    sta CodePtr+1.b                   ;
     lda (CodePtr),y                 ;Low byte of code ptr.
     tax                             ;
     iny                             ;
     lda (CodePtr),y                 ;High byte of code ptr.
-    sta CodePtr+1                   ;
+    sta CodePtr+1.b                   ;
     stx CodePtr                     ;
     ldx TempX                       ;Restore X.
     ldy TempY                       ;Restore Y.
@@ -1532,7 +1532,7 @@ MoreInit:
         iny
         bne LC86F
 
-    ldy CartRAMPtr+1
+    ldy CartRAMPtr+1.b
     sty $01
     ldy CartRAMPtr
     sty $00
@@ -2691,7 +2691,7 @@ Exit3:
 SubtractHealth:
     ;Check to see if health needs to be changed. If not, branch to exit.
     lda HealthChange
-    ora HealthChange+1
+    ora HealthChange+1.b
     beq Exit3
     ;Samus cannot be hurt while she is dead
     jsr IsSamusDead
@@ -2714,7 +2714,7 @@ SubtractHealth:
     beq LCEBF
     ;Samus has Varia, divide damage by 2.
     lsr HealthChange
-    lsr HealthChange+1
+    lsr HealthChange+1.b
     ;If Health+1 moved a bit into the carry flag while--> 
     ;dividing, add #$4F to Health for proper division results.
     bcc LCEBF
@@ -2738,7 +2738,7 @@ LCEBF:
     lda Health+1
     sta $03
     ;Amount to subtract from Health+1.
-    lda HealthChange+1
+    lda HealthChange+1.b
     ;($C3FB)Perform base 10 subtraction.
     jsr Base10Subtract
     ;Save Results.
@@ -2777,7 +2777,7 @@ AddHealth:
 
     lda Health+1                    ;Prepare to add to Health+1.
     sta $03                         ;
-    lda HealthChange+1              ;Amount to add to Health+1.
+    lda HealthChange+1.b              ;Amount to add to Health+1.
     jsr Base10Add                   ;($C3DA)Perform base 10 addition.
     sta Health+1                    ;Save results.
 
@@ -6915,7 +6915,7 @@ LE81E:
     ldx #$06
     Lx203:
         lda $05
-        eor DoorCartRAMPtr+1,x
+        eor DoorCartRAMPtr+1.b,x
         and #$04
         bne Lx206
         lda $04
@@ -7136,16 +7136,16 @@ LE95F:
 MakeCartRAMPtr:
     ;Set pointer to $6xxx(cart RAM).
     lda #RoomRAMA >> 10.b
-    sta Temp04_CartRAMPtr+1
+    sta Temp04_CartRAMPtr+1.b
     ;Object Y room position.
     lda Temp02_PositionY
     ;Drop 3 LSBs. Only use multiples of 8.
     and #$F8
     ;Move upper 2 bits to lower 2 bits of $05
     asl
-    rol Temp04_CartRAMPtr+1
+    rol Temp04_CartRAMPtr+1.b
     asl
-    rol Temp04_CartRAMPtr+1
+    rol Temp04_CartRAMPtr+1.b
     ;move bits 3, 4, 5 to upper 3 bits of $04.
     sta Temp04_CartRAMPtr
     ;Object X room position.
@@ -7165,8 +7165,8 @@ MakeCartRAMPtr:
     ;Set bit 2 if object is on nametable 3.
     and #$04
     ;Include nametable bit in $05.
-    ora Temp04_CartRAMPtr+1
-    sta Temp04_CartRAMPtr+1
+    ora Temp04_CartRAMPtr+1.b
+    sta Temp04_CartRAMPtr+1.b
     ;Return pointer in $04 = 01100HYY YYYXXXXX.
     rts
 
@@ -7256,7 +7256,7 @@ SelectRoomRAM:
     asl                             ;
     asl                             ;
     ora #$60                        ;A=#$64 for name table 3, A=#$60 for name table 0.
-    sta CartRAMPtr+1                ;
+    sta CartRAMPtr+1.b                ;
     lda #$00                        ;
     sta CartRAMPtr                  ;Save two byte pointer to start of proper room RAM.
     rts                             ;
@@ -7302,7 +7302,7 @@ SetupRoom:
     sta RoomPtr                     ;Base copied from $959A to $3B.
     iny                             ;
     lda (RoomPtrTable),y            ;High byte of 16-bit room pointer.-->
-    sta RoomPtr+1                   ;Base copied from $959B to $3C.
+    sta RoomPtr+1.b                   ;Base copied from $959B to $3C.
     ldy #$00                        ;
     lda (RoomPtr),y                 ;First byte of room data.
     sta RoomPal                     ;store initial palette # to fill attrib table with.
@@ -7319,20 +7319,20 @@ DrawObject:
     sta $0E                         ;Store object position byte(%yyyyxxxx).
     lda CartRAMPtr                  ;
     sta CartRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
-    lda CartRAMPtr+1                ;(start at beginning of the room).
-    sta CartRAMWorkPtr+1            ;
+    lda CartRAMPtr+1.b                ;(start at beginning of the room).
+    sta CartRAMWorkPtr+1.b            ;
     lda $0E                         ;Reload object position byte.
     jsr Adiv16                      ;($C2BF)/16. Lower nibble contains object y position.-->
     tax                             ;Transfer it to X, prepare for loop.
     beq LEA80                         ;Skip y position calculation loop as y position=0 and-->
                                         ;does not need to be calculated.
     LEA72:
-        lda CartRAMWorkPtr              ;LoW byte of pointer working in room RAM.
+        lda CartRAMWorkPtr              ;Low byte of pointer working in room RAM.
         clc                             ;
         adc #$40                        ;Advance two rows in room RAM(one y unit).
         sta CartRAMWorkPtr              ;
         bcc LEA7D                           ;If carry occurred, increment high byte of pointer-->
-            inc CartRAMWorkPtr+1            ;in room RAM.
+            inc CartRAMWorkPtr+1.b            ;in room RAM.
         LEA7D:
         dex                             ;
         bne LEA72                          ;Repeat until at desired y position(X=0).
@@ -7344,7 +7344,7 @@ LEA80:
     adc CartRAMWorkPtr              ;
     sta CartRAMWorkPtr              ;Add x position to room RAM work pointer.
     bcc LEA8D                           ;If carry occurred, increment high byte of room RAM work-->
-    inc CartRAMWorkPtr+1            ;pointer, else branch to draw object.
+    inc CartRAMWorkPtr+1.b            ;pointer, else branch to draw object.
 
 ;CartRAMWorkPtr now points to the object's starting location (upper left corner)
 ;on the room RAM which will eventually be loaded into a name table.
@@ -7363,7 +7363,7 @@ LEA8D:
     sta StructPtr                   ;
     iny                             ;
     lda (StructPtrTable),y          ;High byte of 16-bit structure ptr.
-    sta StructPtr+1                 ;
+    sta StructPtr+1.b                 ;
     jsr DrawStruct                  ;($EF8C)Draw one structure.
     lda #$03                        ;Move to next set of structure data.
     jsr AddToRoomPtr                ;($EAC0)Add A to room data pointer.
@@ -7393,16 +7393,16 @@ AddToRoomPtr:
     adc RoomPtr                     ;
     sta RoomPtr                     ;
     bcc RTS_EAC9                           ;Did carry occur? If not branch to exit.
-        inc RoomPtr+1                   ;Increment high byte of room pointer if carry occured.
+        inc RoomPtr+1.b                   ;Increment high byte of room pointer if carry occured.
     RTS_EAC9:
-    rts                             ;
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
 EndOfObjs:
     lda RoomPtr                     ;
     sta $00                         ;Store room pointer in $0000.
-    lda RoomPtr+1                   ;
+    lda RoomPtr+1.b                   ;
     sta $01                         ;
     lda #$01                        ;Prepare to increment to enemy/door data.
 
@@ -8152,7 +8152,7 @@ LEF19:
     adc CartRAMWorkPtr              ;Add x coord offset to CartRAMWorkPtr and save in $00.
     sta $00                         ;
     lda #$00                        ;
-    adc CartRAMWorkPtr+1            ;Save high byte of work pointer in $01.
+    adc CartRAMWorkPtr+1.b            ;Save high byte of work pointer in $01.
     sta $01                         ;$0000 = work pointer.
 
 DrawMacro:
@@ -8211,14 +8211,14 @@ AdvanceRow:
     adc StructPtr                   ;addition will be one more than expected.
     sta StructPtr                   ;Update the struct pointer.
     bcc LEF81                           ;
-        inc StructPtr+1                 ;Update high byte of struct pointer if carry occured.
+        inc StructPtr+1.b                 ;Update high byte of struct pointer if carry occured.
     LEF81:
     lda #$40                        ;
     clc                             ;
     adc CartRAMWorkPtr              ;Advance to next macro row in room RAM(two tile rows).
     sta CartRAMWorkPtr              ;
     bcc DrawStruct                  ;Begin drawing next structure row.
-    inc CartRAMWorkPtr+1            ;Increment high byte of pointer if necessary.
+    inc CartRAMWorkPtr+1.b            ;Increment high byte of pointer if necessary.
 
 DrawStruct:
     ldy #$00                        ;Reset struct index.
@@ -8320,7 +8320,7 @@ AttribMaskTable:
 ;------------------------[ Initialize room RAM and associated attribute table ]-----------------------
 
 InitTables:
-    lda CartRAMPtr+1                ;#$60 or #$64.
+    lda CartRAMPtr+1.b                ;#$60 or #$64.
     tay                             ;
     tax                             ;Save value to create counter later.
     iny                             ;
@@ -8853,7 +8853,7 @@ LF306:
     lda AreaEnemyDamage
     sta HealthChange
     lda AreaEnemyDamage+1
-    sta HealthChange+1
+    sta HealthChange+1.b
 RTS_X294:
     rts
 
@@ -8871,7 +8871,7 @@ Lx295:
 ClearHealthChange:
     lda #$00
     sta HealthChange
-    sta HealthChange+1
+    sta HealthChange+1.b
 
 Exit22:
     rts                             ;Return for routine above and below.
@@ -9135,7 +9135,7 @@ Lx305:
 Lx306:
     pla
     sty HealthChange
-    stx HealthChange+1
+    stx HealthChange+1.b
     jsr AddHealth                   ;($CEF9)Add health to Samus.
     jmp SFX_EnergyPickup
 
@@ -10987,7 +10987,7 @@ LFF3C:
     rts
 
 UpdateTileBlastAnim:
-/*    ldx PageIndex
+    ldx PageIndex
     ldy TileBlastAnimDelay,x
     beq Lx418
         dec TileBlastAnimDelay,x
@@ -11013,7 +11013,7 @@ Lx420:
     pla
     pla
     rts
-*/
+
 ; Frame data for tile blasts
 
 TileBlastAnim:

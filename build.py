@@ -13,7 +13,6 @@ if not os.path.exists('out/'):
     os.mkdir('out/')
 
 banks = [
-    "header",
     "prg0_title",
     "prg1_brinstar",
     "prg2_norfair",

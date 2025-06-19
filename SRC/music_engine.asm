@@ -281,10 +281,10 @@ LoadSQ2ChannelSFX:                      ;Used to determine which sound registers
 LoadSFXData:
     sta SoundE0                     ;Lower address byte of desired APU control register.
     lda #$40                        ;
-    sta SoundE0+1                   ;Upper address byte of desired APU control register.
+    sta SoundE0+1.b                   ;Upper address byte of desired APU control register.
     sty SoundE2                     ;Lower address byte of data to load into sound channel.
     lda #>SFXData.b                   ;
-    sta SoundE2+1                   ;Upper address byte of data to load into sound channel.
+    sta SoundE2+1.b                   ;Upper address byte of data to load into sound channel.
     ldy #$00                        ;Starting index for loading four byte sound data.
 
 LoadSFXRegisters:
@@ -503,7 +503,7 @@ CheckSFXFlag:
     ;Prepare pointer to SFX data
     stx SoundE4
     ldy #>NoiseSFXInitPointers.b
-    sty SoundE4+1
+    sty SoundE4+1.b
     ;Y=0 for counting loop ahead.
     ldy #$00
     LB4C8:
@@ -547,7 +547,7 @@ SFXFlagFound:
     sta SoundE2                     ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
     lda (SoundE0),y                 ;$E2 and $E3.
-    sta SoundE2+1                   ;
+    sta SoundE2+1.b                   ;
     jmp RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
 
 ;-----------------------------------[ SFX Handling Routines ]---------------------------------------
@@ -1314,7 +1314,7 @@ LBA5C:
     lda VolumeEnvelopePtrTable,y
     sta VolumeEnvelopePtr
     lda VolumeEnvelopePtrTable+1,y
-    sta VolumeEnvelopePtr+1
+    sta VolumeEnvelopePtr+1.b
     ;Index to desired volume data.
     ldy SQ1VolumeIndex,x
     ;Load desired volume for current channel into Cntrl0Data.
@@ -1405,7 +1405,7 @@ LBAC2:
     lda SQ1Base,x                 ;
     sta SoundChannelBase                         ;Load sound channel info base address into $E6-->
     lda SQ1Base+1,x                 ;and $E7. ($E6=low byte, $E7=high byte).
-    sta SoundChannelBase+1                         ;
+    sta SoundChannelBase+1.b                         ;
     lda SQ1Base+1,x                 ;If no data for this sound channel, branch-->
     beq LBAB0                       ;to find data for next sound channel.
     txa                             ;
@@ -2059,4 +2059,4 @@ InitializeMusic:
     .byte $61, $BD, $9D, $2B, $06, $C8, $E8, $8A, $C9, $0D, $D0, $F3, $A9, $01, $8D, $40
     .byte $06, $8D, $41, $06, $8D, $42, $06, $8D, $43, $06, $A9, $00, $8D, $38, $06, $8D
     .byte $39, $06, $8D, $3A, $06, $8D, $3B, $06, $60, $FF, $00, $00, $00, $00, $00, $00
-;    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00

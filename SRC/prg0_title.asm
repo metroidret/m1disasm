@@ -523,7 +523,7 @@ PPUString_DrawIntroBackground:
         $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
     ;Writes some blank spaces in row $20A0 (6th row from top).
-    PPUStringRepeat $20A8, ' ', $0F
+    PPUStringRepeat $20A8, " ", $0F
 
     ;Writes METROID graphics in row $2100 (9th row from top).
     PPUString $2103, \
@@ -637,12 +637,12 @@ PPUString_DrawIntroBackground:
 
 ;The following error message is diplayed if the player enters an incorrect password.
 L8759:
-    .byte "ERROR TRY AGAIN"
+    .stringmap charmap, "ERROR TRY AGAIN"
 
 ;If the error message above is not being displayed on the password
 ;screen, the following fifteen blanks spaces are used to cover it up.
 L8768:
-    .byte "               "
+    .stringmap charmap, "               "
 
 ;Not used.
     .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
@@ -717,7 +717,7 @@ SparkleUpdate:
         ;changed back and forth between pattern table-->
         ;graphic $C6 and $C5. (BUG! Should be $C6 and $C7)
         lda IntroSprPattTbl,x
-        eor #<($C6^$C5)
+        eor #$C6~$C5
         sta IntroSprPattTbl,x
         ;IntroSprChangeDelay is reset to #$20.
         lda #$20
@@ -790,16 +790,16 @@ WriteIntroSprite:
     lda IntroSprYCoord,x
     sec ;Subtract #$01 from first byte to get proper y coordinate.
     sbc #$01
-    sta SpriteRAM+$04<<2,x
+    sta SpriteRAM+($04<<2),x
     
     lda IntroSprPattTbl,x
-    sta SpriteRAM+$04<<2+1,x
+    sta SpriteRAM+($04<<2)+1,x
     
     lda IntroSprCntrl,x
-    sta SpriteRAM+$04<<2+2,x
+    sta SpriteRAM+($04<<2)+2,x
     
     lda IntroSprXCoord,x
-    sta SpriteRAM+$04<<2+3,x
+    sta SpriteRAM+($04<<2)+3,x
     
     rts
 
@@ -1696,7 +1696,7 @@ RTS_8E06:
 ;match the values below.
 
 NARPASSWORDTbl:
-    .byte "NARPASSWORD00000"
+    .stringmap charmap, "NARPASSWORD00000"
 
 PasswordChecksumAndScramble:
     jsr PasswordChecksum            ;($8E21)Store the combined added value of-->
@@ -2174,11 +2174,11 @@ CheckBackspace:
         bcc L9222                       ;
             lda #$4F                        ;
         L9222:
-        sta SpriteRAM+$01<<2            ;Set Y-coord of password cursor sprite.
+        sta SpriteRAM+($01<<2)            ;Set Y-coord of password cursor sprite.
         lda #$6E                        ;
-        sta SpriteRAM+$01<<2+1          ;Set pattern for password cursor sprite.
+        sta SpriteRAM+($01<<2)+1          ;Set pattern for password cursor sprite.
         lda #$20                        ;
-        sta SpriteRAM+$01<<2+2          ;Set attributes for password cursor sprite.
+        sta SpriteRAM+($01<<2)+2          ;Set attributes for password cursor sprite.
         lda PasswordCursor              ;If the password cursor is at the 12th-->
         cmp #$0C                        ;character or less, branch.
         bcc L9238                       ;
@@ -2186,7 +2186,7 @@ CheckBackspace:
         L9238:
         tax                             ;is from the left if on the second row of password.
         lda CursorPosTbl,x              ;Load X position of PasswordCursor.
-        sta SpriteRAM+$01<<2+3          ;
+        sta SpriteRAM+($01<<2)+3          ;
     L923F:
     ldx InputRow                    ;Load X and Y with row and column-->
     ldy InputColumn                 ;of current character selected.
@@ -2247,13 +2247,13 @@ CheckBackspace:
     and #$08                        ;If FrameCount bit 3 not set, branch.
     beq RTS_92B3                    ;
         lda CharSelectYTbl,x            ;Set Y-coord of character selection sprite.
-        sta SpriteRAM+$02<<2            ;
+        sta SpriteRAM+($02<<2)            ;
         lda #$6E                        ;Set pattern for character selection sprite.
-        sta SpriteRAM+$02<<2+1          ;
+        sta SpriteRAM+($02<<2)+1          ;
         lda #$20                        ;Set attributes for character selection sprite.
-        sta SpriteRAM+$02<<2+2          ;
+        sta SpriteRAM+($02<<2)+2          ;
         lda CharSelectXTbl,y            ;Set x-Coord of character selection sprite.
-        sta SpriteRAM+$02<<2+3          ;
+        sta SpriteRAM+($02<<2)+3          ;
     RTS_92B3:
     rts
 
@@ -2887,7 +2887,7 @@ DecSpriteYCoord:
     ldx #$9F                        ;
     L989B:
         dec IntroStarSprite,x         ;Decrement y coord of the intro star sprites.
-        dec SpriteRAM+$18<<2,x               ;Decrement y coord of 40 sprites.
+        dec SpriteRAM+($18<<2),x               ;Decrement y coord of 40 sprites.
         dex                             ;
         dex                             ;
         dex                             ;Move to next sprite.
@@ -2903,7 +2903,7 @@ LoadStarSprites:
     ldy #$9F                        ;
     L98B0:
         lda IntroStarSprite,y           ;
-        sta SpriteRAM+$18<<2,y          ;Store RAM contents of $6E00 thru $6E9F -->
+        sta SpriteRAM+($18<<2),y          ;Store RAM contents of $6E00 thru $6E9F -->
         dey                             ;in sprite RAM at locations $0260 thru $02FF.
         cpy #$FF                        ;
         bne L98B0                       ;
@@ -2952,11 +2952,11 @@ PasswordRowTbl:
     .word PasswordRow4              ;($99D6)
 
 ;The following data is used to load the name table With the password characters:
-PasswordRow0: .byte "0123456789ABC"
-PasswordRow1: .byte "DEFGHIJKLMNOP"
-PasswordRow2: .byte "QRSTUVWXYZabc"
-PasswordRow3: .byte "defghijklmnop"
-PasswordRow4: .byte "qrstuvwxyz?- "
+PasswordRow0: .stringmap charmap, "0123456789ABC"
+PasswordRow1: .stringmap charmap, "DEFGHIJKLMNOP"
+PasswordRow2: .stringmap charmap, "QRSTUVWXYZabc"
+PasswordRow3: .stringmap charmap, "defghijklmnop"
+PasswordRow4: .stringmap charmap, "qrstuvwxyz?- "
 
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
 L99E3:
@@ -3620,7 +3620,7 @@ LoadEndStarSprites:
     ldy #$00
     L9EAC:
         lda EndStarDataTable,y
-        sta SpriteRAM+$1C<<2,y               ;Load the table below into sprite RAM-->
+        sta SpriteRAM+($1C<<2),y               ;Load the table below into sprite RAM-->
         iny                             ;starting at address $0270.
         cpy #$9C
         bne L9EAC
@@ -3912,37 +3912,37 @@ EndMessageStringTbl1:
 
 LA26D:
     ;Erases end message on name table 0 in row $2060 (4th row from top).
-    PPUStringRepeat $206D, ' ', $08
+    PPUStringRepeat $206D, " ", $08
 
     ;Erases end message on name table 0 in row $20C0 (7th row from top).
-    PPUStringRepeat $20C3, ' ', $1A
+    PPUStringRepeat $20C3, " ", $1A
 
     .byte $00                       ;End PPU string write.
 
 LA276:
     ;Erases end message on name table 0 in row $2100 (9th row from top).
-    PPUStringRepeat $2103, ' ', $17
+    PPUStringRepeat $2103, " ", $17
 
     ;Erases end message on name table 0 in row $2140 (11th row from top).
-    PPUStringRepeat $2142, ' ', $0A
+    PPUStringRepeat $2142, " ", $0A
 
     .byte $00                       ;End PPU string write.
 
 LA27F:
     ;Erases end message on name table 0 in row $2180 (13th row from top).
-    PPUStringRepeat $2183, ' ', $18
+    PPUStringRepeat $2183, " ", $18
 
     ;Erases end message on name table 0 in row $21C0 (15th row from top).
-    PPUStringRepeat $21C2, ' ', $12
+    PPUStringRepeat $21C2, " ", $12
 
     .byte $00                       ;End PPU string write.
 
 LA288:
     ;Erases end message on name table 0 in row $2200 (18th row from top).
-    PPUStringRepeat $2203, ' ', $18
+    PPUStringRepeat $2203, " ", $18
 
     ;Erases end message on name table 0 in row $2240 (19th row from top).
-    PPUStringRepeat $2242, ' ', $0A
+    PPUStringRepeat $2242, " ", $0A
 
     .byte $00                       ;End PPU string write
 
@@ -4066,7 +4066,7 @@ PPUString_Credits07:
 
 PPUString_Credits08:
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
-    PPUStringRepeat $2828, ' ', $0E
+    PPUStringRepeat $2828, " ", $0E
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
     PPUString $286C, \
@@ -4080,7 +4080,7 @@ PPUString_Credits09:
         "     GOYAKE        "
 
     ;Writes credits on name table 2 in row $28E0 (8th row from top).
-    PPUStringRepeat $28E8, ' ', $0F
+    PPUStringRepeat $28E8, " ", $0F
 
     .byte $00                       ;End PPU string write.
 
@@ -4097,7 +4097,7 @@ PPUString_Credits0B:
         "       PENPEN         "
 
     ;Writes credits on name table 2 in row $29A0 (14th row from top).
-    PPUStringRepeat $29A8, ' ', $0F
+    PPUStringRepeat $29A8, " ", $0F
 
     .byte $00                       ;End PPU string write.
 
@@ -4114,7 +4114,7 @@ PPUString_Credits0D:
         "     T.NARIHIRO  "
 
     ;Writes credits on name table 2 in row $2A60 (20th row from top).
-    PPUStringRepeat $2A67, ' ', $11
+    PPUStringRepeat $2A67, " ", $11
 
     .byte $00                       ;End PPU string write.
 
@@ -4131,7 +4131,7 @@ PPUString_Credits0E:
 
 PPUString_Credits0F:
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
-    PPUStringRepeat $2BA6, ' ', $13
+    PPUStringRepeat $2BA6, " ", $13
 
     .byte $00                       ;End PPU string write.
 
@@ -4148,7 +4148,7 @@ PPUString_Credits11:
         "     YAMAMOTO       "
 
     ;Writes credits on name table 0 in row $20A0 (6th row from the top).
-    PPUStringRepeat $20AA, ' ', $0E
+    PPUStringRepeat $20AA, " ", $0E
 
     .byte $00                       ;End PPU string write.
 
@@ -4165,7 +4165,7 @@ PPUString_Credits12:
 
 PPUString_Credits13:
     ;Writes credits on name table 0 in row $21E0 (16th row from the top).
-    PPUStringRepeat $21E6, ' ', $18
+    PPUStringRepeat $21E6, " ", $18
 
     .byte $00                       ;End PPU string write.
 
@@ -4182,16 +4182,16 @@ PPUString_Credits14:
 
 PPUString_Credits15:
     ;Writes credits on name table 0 in row $22A0 (22nd row from the top).
-    PPUStringRepeat $22A6, ' ', $13
+    PPUStringRepeat $22A6, " ", $13
 
     ;Writes credits on name table 0 in row $22E0 (24th row from the top).
-    PPUStringRepeat $22E8, ' ', $0F
+    PPUStringRepeat $22E8, " ", $0F
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits16:
     ;Writes credits on name table 0 in row $2320 (26th row from the top).
-    PPUStringRepeat $2329, ' ', $0D
+    PPUStringRepeat $2329, " ", $0D
 
     ;Writes credits on name table 0 in row $2340 (27th row from the top).
     PPUString $234B, \
@@ -4201,14 +4201,14 @@ PPUString_Credits16:
 
 PPUString_Credits17:
     ;Writes credits on name table 0 in row $2360 (28th row from the top).
-    PPUStringRepeat $236B, ' ', $0A
+    PPUStringRepeat $236B, " ", $0A
 
     ;Writes credits on name table 0 in row $2380 (29th row from the top).
     PPUString $238E, \
         "1986"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    PPUStringRepeat $23A8, ' ', $0F
+    PPUStringRepeat $23A8, " ", $0F
 
     .byte $00                       ;End PPU string write.
 
@@ -4218,49 +4218,49 @@ PPUString_Credits18:
         "NINTENDO"
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
-    PPUStringRepeat $2866, ' ', $11
+    PPUStringRepeat $2866, " ", $11
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits19:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    PPUStringRepeat $28AA, ' ', $0C
+    PPUStringRepeat $28AA, " ", $0C
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
-    PPUStringRepeat $2926, ' ', $1B
+    PPUStringRepeat $2926, " ", $1B
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    PPUStringRepeat $2967, ' ', $12
+    PPUStringRepeat $2967, " ", $12
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
-    PPUStringRepeat $29E6, ' ', $14
+    PPUStringRepeat $29E6, " ", $14
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    PPUStringRepeat $2A28, ' ', $15
+    PPUStringRepeat $2A28, " ", $15
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    PPUStringRepeat $2AE6, ' ', $10
+    PPUStringRepeat $2AE6, " ", $10
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits1F:
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
-    PPUStringRepeat $2B29, ' ', $0E
+    PPUStringRepeat $2B29, " ", $0E
 
 PPUString_Credits20:
     .byte $00                       ;End PPU string write.
@@ -4278,19 +4278,19 @@ PPUString_Credits22:
         $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
     ;Writes credits on name table 0 in row $2060 (4th row from top).
-    PPUStringRepeat $206A, ' ', $0C
+    PPUStringRepeat $206A, " ", $0C
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits23:
     ;Writes credits on name table 0 in row $2120 (10th row from top).
-    PPUStringRepeat $2126, ' ', $13
+    PPUStringRepeat $2126, " ", $13
 
     .byte $00                       ;End PPU string write.
 
 PPUString_Credits24:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
-    PPUStringRepeat $216A, ' ', $0C
+    PPUStringRepeat $216A, " ", $0C
 
     .byte $00                       ;End PPU string write.
 
@@ -4301,7 +4301,7 @@ PPUString_Credits25:
 
 PPUString_Credits28:
     ;Writes credits on name table 0 in row $2220 (18th row from top).
-    PPUStringRepeat $2226, ' ', $0B
+    PPUStringRepeat $2226, " ", $0B
 
     .byte $00                       ;End PPU string write.
 
@@ -4450,7 +4450,7 @@ CopyMap:
     .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
     .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
-;    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 .ENDS
 

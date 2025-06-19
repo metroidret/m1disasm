@@ -1,5 +1,5 @@
 [header]
-out/header.o
+SRC/header.bin
 
 [objects]
 out/prg0_title.o

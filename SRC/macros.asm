@@ -58,7 +58,14 @@
 .macro PPUStringRepeat args ppuAddress, ppuByte, repetitions
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
-    .byte ppuByte
+    .if (\?2 == ARG_IMMEDIATE) || (\?2 == ARG_NUMBER)
+        .db ppuByte
+    .elif \?2 == ARG_STRING
+        .stringmap charmap, ppuByte
+    .else
+        .print \?2, "\n"
+        .fail "PPUString: bad data argument type"
+    .endif
 .endm
 
 .macro PtrTableEntry args ptrTable, ptr
