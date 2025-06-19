@@ -14,6 +14,10 @@
 
 ;Tourian (memory page 3)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 3
 .SECTION "ROM Bank $003" BANK 3 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
@@ -343,9 +347,9 @@ TileBlastFramePtrTable:
 
 EnemyMovementChoices:
 EnemyMovementChoice00:
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice01: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01}
+    EnemyMovementChoiceEntry $01
 EnemyMovementChoice02: ; enemy moves manually
     ; nothing
 
@@ -1775,7 +1779,7 @@ TileBlastFrame10:
     .byte $1F, $80, $C0, $C0, $60, $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $01, $00, $00, $00, $00, $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80
     .byte $C4, $A5, $45, $0B, $1B, $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04
-    .byte $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+;    .byte $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;-----------------------------------------[ Sound engine ]-------------------------------------------
 

@@ -14,6 +14,10 @@
 
 ;Norfair (memory page 2)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 2
 .SECTION "ROM Bank $002" BANK 2 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
@@ -677,7 +681,7 @@ TileBlastFrame10:
     .byte $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $80
     .byte $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B, $03, $03, $00, $3A
     .byte $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8
-    .byte $E8, $C8, $90, $60, $00, $00, $00
+;    .byte $E8, $C8, $90, $60, $00, $00, $00
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 

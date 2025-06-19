@@ -14,6 +14,10 @@
 
 ;Ridley hideout (memory page 5)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 5
 .SECTION "ROM Bank $005" BANK 5 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
@@ -647,7 +651,7 @@ TileBlastFrame10:
     .byte $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00
     .byte $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B, $03, $03
     .byte $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C, $3C, $18
-    .byte $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+;    .byte $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 

@@ -127,10 +127,10 @@ KraidUpdateProjectile_BranchA:
     dey
     beq KraidUpdateProjectile_Resting
     ; remove projectile if its exploding
-    cpy #enemyStatus_Explode-1
+    cpy #enemyStatus_Explode-1.b
     beq KraidUpdateProjectile_Remove
     ; exit if projectile is not frozen
-    cpy #enemyStatus_Frozen-1
+    cpy #enemyStatus_Frozen-1.b
     bne KraidUpdateProjectile_Exit
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting

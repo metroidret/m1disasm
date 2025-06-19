@@ -1,3 +1,7 @@
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .SECTION "Header" BANK 0 SLOT "HeaderSlot"
 ; iNES header
 ;.byte $4E,$45,$53,$1A,$08,$00,$42,$00,$01,$00,$00,$00,$00,$00,$00,$00

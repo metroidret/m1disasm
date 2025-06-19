@@ -16,6 +16,10 @@
 
 ;Game engine (memory page 7)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 7
 .SECTION "ROM Bank $007" BANK 7 SLOT "ROMFixedSlot" ORGA $C000 FORCE
 
@@ -102,7 +106,7 @@ LC057:
     ;Switch low PRGROM area during a page switch.
     ;16KB PRGROM switching enabled.
     ;8KB CHRROM switching enabled.
-    lda #MMC1_0_MIRROR_VERTI | MMC1_0_PRGFIXED_C000 | MMC1_0_PRGBANK_16K | MMC1_0_CHRBANK_8K
+    lda #MMC1_0_MIRROR_VERTI | MMC1_0_PRGFIXED_C000 | MMC1_0_PRGBANK_16K | MMC1_0_CHRBANK_8K.b
     sta MMCReg0Cntrl
 
     lda #$00                        ;Clear bits 3 and 4 of MMC1 register 3.
@@ -124,7 +128,7 @@ LC057:
     ;SPR pattern table address = $0000
     ;PPU address increment = 1
     ;Name table address = $2000
-    lda #PPUCTRL_VBLKNMI_ON | PPUCTRL_OBJH_8 | PPUCTRL_BG_1000 | PPUCTRL_OBJ_0000 | PPUCTRL_INCR_FWD | PPUCTRL_NMTBL_2000
+    lda #PPUCTRL_VBLKNMI_ON | PPUCTRL_OBJH_8 | PPUCTRL_BG_1000 | PPUCTRL_OBJ_0000 | PPUCTRL_INCR_FWD | PPUCTRL_NMTBL_2000.b
     sta PPUCTRL
     sta PPUCTRL_ZP
 
@@ -133,7 +137,7 @@ LC057:
     ;Sprite clipping = yes
     ;Background clipping = no
     ;Display type = color
-    lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR
+    lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR.b
     sta PPUMASK_ZP
 
     lda #$47                        ;
@@ -382,7 +386,7 @@ ClearRAM_33_DF:
         inx                             ;
         cpx #$E0                        ;
         bcc LC1D8                       ;Loop until all desired addresses are cleared.
-    rts                             ;
+    rts
 
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
 
@@ -460,7 +464,7 @@ ReadOnePad:
     eor $00                         ;
     beq LC24D                       ;Branch if no buttons changed.
         lda $00                         ;
-        and #~BUTTON_B                  ;Remove the previous status of the B button.
+        and #~BUTTON_B.b                  ;Remove the previous status of the B button.
         sta $00                         ;
         eor Joy1Status,x                ;
     LC24D:
@@ -505,7 +509,7 @@ UpdateTimer:
         LC278:
         dex                             ;Timer1 and Timer2 decremented every frame.
         bpl DecTimer                    ;
-    rts                             ;
+    rts
 
 ;-----------------------------------------[ Choose routine ]-----------------------------------------
 
@@ -532,7 +536,7 @@ ChooseRoutine:
     stx CodePtr                     ;
     ldx TempX                       ;Restore X.
     ldy TempY                       ;Restore Y.
-    jmp (CodePtr)                   ;
+    jmp (CodePtr)
 
 ;--------------------------------------[ Write to scroll registers ]---------------------------------
 
@@ -542,7 +546,7 @@ WriteScroll:
     sta PPUSCROLL                   ;
     lda ScrollY                     ;X and Y scroll offsets are loaded serially.
     sta PPUSCROLL                   ;
-    rts                             ;
+    rts
 
 ;----------------------------------[ Add y index to stored addresses ]-------------------------------
 
@@ -556,7 +560,7 @@ AddYToPtr00:
     bcc LC2B2                       ;Increment $01(upper address byte) if carry-->
         inc $01                     ;has occurred.
     LC2B2:
-    rts                             ;
+    rts
 
 ;Add Y to pointer at $0002
 
@@ -568,7 +572,7 @@ AddYToPtr02:
     bcc RTS_C2BD                       ;Increment $01(upper address byte) if carry-->
         inc $03                     ;has occurred.
     RTS_C2BD:
-    rts                             ;
+    rts
 
 ;--------------------------------[ Simple divide and multiply routines ]-----------------------------
 
@@ -603,9 +607,9 @@ CheckPPUWrite:
     beq RTS_C2E3
     ;Sets up PPU writer to start at address $07A1.
     ;$0000 = ptr to PPU data string ($07A1).
-    lda #<PPUDataString
+    lda #<PPUDataString.b
     sta $00
-    lda #>PPUDataString
+    lda #>PPUDataString.b
     sta $01
     ;($C30C)write it to PPU.
     jsr ProcessPPUString
@@ -787,7 +791,7 @@ TwosComplement:
     eor #$FF                        ;
     clc                             ;Generate twos complement of value stored in A.
     adc #$01                        ;
-    rts                             ;
+    rts
 
 ;The following two routines add a Binary coded decimal (BCD) number to another BCD number.
 ;A base number is stored in $03 and the number in A is added/subtracted from $03.  $01 and $02
@@ -811,11 +815,11 @@ Base10Add:
 LC3F2:
     adc #$5F                        ;If upper result caused a carry, add #$60 (#$5f+carry) to create-->
     sec                             ;valid result. Set carry indicating carry to next digit.
-    rts                             ;
+    rts
 LC3F6:
     cmp #$A0                        ;If result of upper nibble add is greater than #$90,-->
     bcs LC3F2                       ;Branch to add #$60 to create valid result.
-    rts                             ;
+    rts
 
 Base10Subtract: ;($C3FB)
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
@@ -837,7 +841,7 @@ Base10Subtract: ;($C3FB)
         clc                             ;
     LC41A:
     ora $01                         ;Combine A and $01 to create final value.
-    rts                             ;
+    rts
 
 ExtractNibbles:
     pha                             ;
@@ -848,7 +852,7 @@ ExtractNibbles:
     sta $02                         ;
     lda $03                         ;
     and #$0F                        ;Keep lower 4 bits of Health/Health+1 in A.
-    rts                             ;
+    rts
 
 ;---------------------------[ NMI and PPU control routines ]--------------------------------
 
@@ -871,7 +875,7 @@ ClearNMIStat: ;($C434)
 ScreenOff:
     ; BG & SPR visibility = off
     lda PPUMASK_ZP
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
     ; fallthrough
 
 WriteAndWait: ;($C43D)
@@ -890,7 +894,7 @@ WaitNMIPass_:
 ScreenOn:
     ;BG & SPR visibility = on
     lda PPUMASK_ZP
-    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON)
+    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
     bne WriteAndWait ;Branch always
 
 ;Update the actual PPU control registers.
@@ -913,12 +917,12 @@ ExitSub:
 ScreenNmiOff:
     ;BG & SPR visibility = off
     lda PPUMASK_ZP
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
     jsr WriteAndWait                ;($C43D)Wait for end of NMI.
     
     ;Prepare to turn off NMI in PPU.
     lda PPUCTRL_ZP
-    and #~PPUCTRL_VBLKNMI_ON
+    and #~PPUCTRL_VBLKNMI_ON.b
     sta PPUCTRL_ZP
     ;Actually load PPU register with NMI off value.
     sta PPUCTRL
@@ -934,12 +938,12 @@ ScreenNmiOff:
     sta PPUCTRL
     ;Turn sprites and screen on.
     lda PPUMASK_ZP
-    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG
+    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG.b
     bne WriteAndWait ;Branch always.
 
 VBOffAndHorzWrite:
     lda PPUCTRL_ZP
-    and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON)
+    and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON).b
     ;Horizontal write, disable VBlank.
 LC481:
     ;Save new values in the PPU control register and PPU status byte.
@@ -1407,7 +1411,7 @@ LoadGFX:
     
     ;Set the PPU to increment by 1.
     lda PPUCTRL_ZP
-    and #~PPUCTRL_INCR_DOWN
+    and #~PPUCTRL_INCR_DOWN.b
     sta PPUCTRL_ZP
     sta PPUCTRL
     
@@ -1468,7 +1472,7 @@ AreaInit:
     sta PPUCTRL_ZP                  ;
     inc MainRoutine                 ;Increment MainRoutine to MoreInit.
     lda Joy1Status                  ;
-    and #BUTTON_A | BUTTON_B        ;Stores status of both the A and B buttons.
+    and #BUTTON_A | BUTTON_B.b        ;Stores status of both the A and B buttons.
     sta ABStatus                    ;Appears to never be accessed.
     jsr EraseAllSprites             ;($C1A3)Clear all sprite info.
     lda #$10                        ;Prepare to load Brinstar memory page.
@@ -2124,7 +2128,7 @@ SFX_MissileLaunch:
     lda #sfxNoise_MissileLaunch
 
 SFX_SetNoiseSFXFlag:
-    ldx #NoiseSFXFlag - NoiseSFXFlag
+    ldx #NoiseSFXFlag - NoiseSFXFlag.b
     beq SFX_SetSoundFlag
 
 SFX_OutOfHole:
@@ -2159,7 +2163,7 @@ SFX_MissilePickup:
     lda #sfxSQ1_MissilePickup
 
 SFX_SetSQ1SFXFlag:
-    ldx #SQ1SFXFlag - NoiseSFXFlag
+    ldx #SQ1SFXFlag - NoiseSFXFlag.b
     bne SFX_SetSoundFlag
 
 SFX_WaveFire:
@@ -2195,7 +2199,7 @@ SFX_SamusDie:
     bne SFX_SetTriSFXFlag
 
 SFX_SetSQ2SFXFlag:
-    ldx #SQ2SFXFlag - NoiseSFXFlag
+    ldx #SQ2SFXFlag - NoiseSFXFlag.b
 
 SFX_SetSoundFlag:
     ora NoiseSFXFlag,x
@@ -2210,7 +2214,7 @@ SFX_Beep:
     lda #sfxTri_Beep
 
 SFX_SetTriSFXFlag:
-    ldx #TriSFXFlag - NoiseSFXFlag
+    ldx #TriSFXFlag - NoiseSFXFlag.b
     bne SFX_SetSoundFlag
 
 ;Initiate music
@@ -2223,7 +2227,7 @@ IntroMusic:
     lda #sfxMulti_Intro
 
 SFX_SetMultiSFXFlag:
-    ldx #MultiSFXFlag - NoiseSFXFlag
+    ldx #MultiSFXFlag - NoiseSFXFlag.b
     bne SFX_SetSoundFlag
 
 MotherBrainMusic:
@@ -2234,7 +2238,7 @@ TourianMusic:
     lda #music_Tourian
 
 SFX_SetMusicInitFlag:
-    ldx #MusicInitFlag - NoiseSFXFlag
+    ldx #MusicInitFlag - NoiseSFXFlag.b
     bne SFX_SetSoundFlag
 
 ;--------------------------------------[ Update Samus ]----------------------------------------------
@@ -2271,12 +2275,12 @@ GoSamusHandler: ;($CC1A)
 
 SamusStand:
     lda Joy1Status                  ;Status of joypad 1.
-    and #~(BUTTON_SELECT | BUTTON_START);Remove SELECT & START status bits.
+    and #~(BUTTON_SELECT | BUTTON_START).b ;Remove SELECT & START status bits.
     beq LCC41                           ;Branch if no buttons pressed.
         jsr ClearHorzMvmtAnimData       ;($CF5D)Set no horiontal movement and single frame animation.
         lda Joy1Status                  ;
     LCC41:
-    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT ;Keep status of DOWN/LEFT/RIGHT.
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b ;Keep status of DOWN/LEFT/RIGHT.
     bne LCC4B                           ;Branch if any are pressed.
         lda Joy1Change                  ;
         and #BUTTON_UP                  ;Check if UP was pressed last frame.-->
@@ -2445,7 +2449,7 @@ LCCC2:
             jsr LCDD7
         samL11:
         lda Joy1Status
-        and #BUTTON_RIGHT | BUTTON_LEFT
+        and #BUTTON_RIGHT | BUTTON_LEFT.b
         bne samL12
             jsr StopHorzMovement
             jmp LCD6B
@@ -2814,7 +2818,7 @@ LCF4E:
     sty ObjSpeedX                ;Set Samus Horizontal speed and horizontal-->
     sty SamusSpeedSubPixelX              ;linear counter to #$00.
 RTS_X014:
-    rts                             ;
+    rts
 
 StopHorzMovement:
     lda SamusAccelX              ;Is Samus moving horizontally?-->
@@ -2836,7 +2840,7 @@ SetSamusNextAnim:
     sta ObjAnimIndex                ;Set new animation data index.
     lda #$00                        ;
     sta ObjAnimDelay                ;New animation to take effect immediately.
-    rts                             ;
+    rts
 
 SetSamusPntUp:
     lda #sa_PntUp                   ;
@@ -2847,11 +2851,11 @@ SetSamusPntUp:
 NoHorzMoveNoDelay:
     jsr ClearHorzData               ;($CFB7)Clear all horizontal movement data.
     sty ObjAnimDelay                ;Clear animation delay data.
-    rts                             ;
+    rts
 
 LCF88:
     lda Joy1Status
-    and #BUTTON_RIGHT | BUTTON_LEFT
+    and #BUTTON_RIGHT | BUTTON_LEFT.b
     beq Lx015
         jsr BitScan                     ;($E1E1)
         tax
@@ -2877,7 +2881,7 @@ ClearHorzData:
     jsr ClearHorzMvmntData          ;($CF4C)Clear horizontal speed and linear counter.
     sty SamusAccelX              ;Clear horizontal acceleration data.
 RTS_X016:
-    rts                             ;
+    rts
 
 LCFBE:
     ldy #an_SamusJumpPntUp
@@ -3090,7 +3094,7 @@ SamusRoll:
         jsr LCF2E
         jsr CheckBombLaunch
         lda Joy1Status
-        and #BUTTON_RIGHT | BUTTON_LEFT
+        and #BUTTON_RIGHT | BUTTON_LEFT.b
         bne Lx034
             jsr ClearHorzData
         Lx034:
@@ -3159,7 +3163,7 @@ SamusPntUp:
         sta ObjAction
     Lx037:
     lda Joy1Status
-    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT        ; DOWN, LEFT, RIGHT pressed?
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b        ; DOWN, LEFT, RIGHT pressed?
     beq Lx039    ; branch if no
         jsr BitScan                     ;($E1E1)
         cmp #BUTTONBIT_DOWN
@@ -3718,7 +3722,7 @@ Lx071:
     ldx PageIndex
     sta ObjSpeedY,x
     lda ($0A),y
-    jsr L832F
+    jsr EnemyGetDeltaX_832F
     ldx PageIndex
     sta ObjSpeedX,x
     tay
@@ -4285,7 +4289,7 @@ Lx110:
     sta ObjAnimIndex
     lda #$7A
     sta ObjAnimResetIndex,x
-    lda #(L85E0-ObjectAnimIndexTbl)
+    lda #(ObjAnim_85E0-ObjectAnimIndexTbl).b
     sta ObjAnimIndex,x
     inc ObjAction,x
     lda #$40
@@ -4310,7 +4314,7 @@ StartMusic:
 Lx114:
     ora MusicInitFlag               ;
     sta MusicInitFlag               ;Store music flag info.
-    rts                             ;
+    rts
 
 ElevatorStop:
     lda ScrollY
@@ -4419,9 +4423,9 @@ UpdateStatues:
     bcs Lx125
     inc StatueStatus
 Lx125:
-    ldx #(KraidStatueStatus-(KraidStatueStatus-$60))
+    ldx #(KraidStatueStatus-(KraidStatueStatus-$60)).b
     jsr LDA1A
-    ldx #(RidleyStatueStatus-(KraidStatueStatus-$60))
+    ldx #(RidleyStatueStatus-(KraidStatueStatus-$60)).b
     jsr LDA1A
     jmp LDADA
 
@@ -4693,7 +4697,7 @@ CheckOneItem:
     cpy #pu_WAVEBEAM                        ;Is item the wave beam or ice beam?-->
     bcc LDBDA                       ;If not, branch.
         lda SamusGear                   ;Clear status of wave beam and ice beam power ups.
-        and #~(gr_WAVEBEAM | gr_ICEBEAM)
+        and #~(gr_WAVEBEAM | gr_ICEBEAM).b
         sta SamusGear                   ;Remove beam weapon data from Samus gear byte.
     LDBDA:
     jsr MakeBitMask                 ;($DB2F)Create a bit mask for beam weapon just obtained.
@@ -4822,7 +4826,7 @@ CreateItemID:
     asl                             ;
     ora $07                         ;Add upper two bits of X coordinate to byte.
     sta $07                         ;Upper data byte complete. Save in #$06.
-    rts                             ;
+    rts
 
 ;-----------------------------------------------------------------------------------------------------
 
@@ -4904,7 +4908,7 @@ GetSpriteCntrlData:
     ;Bits 6 and 7 are transferred into $05 bits 6 and 7(sprite flip bits).
     ;bit 5 is then set(sprite always drawn behind background).
     txa
-    and #OAMDATA_HFLIP | OAMDATA_VFLIP 
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
     ora #OAMDATA_PRIORITY
     ora $05
     sta $05
@@ -5131,7 +5135,7 @@ LDD8B_Lx143:
         and #$03
         tax
         lda $05
-        and #~(OAMDATA_VFLIP | OAMDATA_HFLIP)
+        and #~(OAMDATA_VFLIP | OAMDATA_HFLIP).b
         ora ExplodeRotationTbl,x
         sta $05
         pla
@@ -5549,7 +5553,7 @@ SpriteFlipBitsOverride: ;($E038)
     ;Reload frame data control byte into A.
     lda ($00),y
     ;Extract the two sprite flip bytes from the original control byte and set any additional bits from ObjectCntrl.
-    and #OAMDATA_HFLIP | OAMDATA_VFLIP
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
     ora ObjectCntrl
     ;Store modified byte to load in sprite control byte later.
     sta $05
@@ -7131,7 +7135,7 @@ LE95F:
 
 MakeCartRAMPtr:
     ;Set pointer to $6xxx(cart RAM).
-    lda #RoomRAMA >> 10
+    lda #RoomRAMA >> 10.b
     sta Temp04_CartRAMPtr+1
     ;Object Y room position.
     lda Temp02_PositionY
@@ -7722,7 +7726,7 @@ LEC93:
     eor #$01                        ;If currently on name table 0,-->
     and #$01                        ;return #$01. Else return #$00.
     tay                             ;
-    rts                             ;
+    rts
 
 UpdateRoomSpriteInfo:
 LEC9B:
@@ -7884,9 +7888,9 @@ Exit11:
 ;the appropriate routine to load those items.
 
 ScanForItems:
-    lda SpecItmsTable               ;Low byte of ptr to 1st item data.
+    lda SpecItmsTbl               ;Low byte of ptr to 1st item data.
     sta $00                         ;
-    lda SpecItmsTable+1             ;High byte of ptr to 1st item data.
+    lda SpecItmsTbl+1             ;High byte of ptr to 1st item data.
 
 ScanOneItem:
     sta $01                         ;
@@ -8909,7 +8913,7 @@ DoOneEnemy: ;LF351
                                     ;iteration. There is a max of 6 enemies at a time.
     ldy EnStatus,x
     beq @endIf
-        cpy #enemyStatus_Active+1
+        cpy #enemyStatus_Active+1.b
         bcs @endIf
             ; enemy status is enemyStatus_Resting or enemyStatus_Active here
             jsr DoOneEnemy_CheckIfVisible
@@ -8917,7 +8921,7 @@ DoOneEnemy: ;LF351
     jsr DoOneEnemy_UpdateEnData05Bit6
     lda EnStatus,x
     sta EnemyStatusPreAI
-    cmp #enemyStatus_Hurt+1
+    cmp #enemyStatus_Hurt+1.b
     bcs @invalidStatus
     jsr ChooseRoutine
         .word ExitSub ; 00 ($C45C) rts
@@ -9397,7 +9401,7 @@ ExplodeEnemy:
     bvs Lx327
     ; branch if enemy was not hit by the regular beam
     lda EnWeaponAction,x
-    cmp #wa_RegularBeam+1
+    cmp #wa_RegularBeam+1.b
     bcs Lx327
     ; call LDCFC routine
     lda #$00 ; useless instruction
@@ -9699,10 +9703,10 @@ DoRestingEnemy_TryBecomingActive:
     lda EnemyMovementChoiceOffset,y
     ; make pointer to enemy's EnemyMovementChoice in $00-$01
     clc
-    adc #<EnemyMovementChoices
+    adc #<EnemyMovementChoices.b
     sta $00
     lda #$00
-    adc #>EnemyMovementChoices
+    adc #>EnemyMovementChoices.b
     sta $01
     ; create randomly generated offset
     lda FrameCount
@@ -10030,7 +10034,7 @@ Lx362:
     sta EnSpeedY,x
 
     lda ($0A),y
-    jsr L832F ; Get the x velocity from this byte
+    jsr EnemyGetDeltaX_832F ; Get the x velocity from this byte
     ldx PageIndex
     sta EnSpeedX,x
 
@@ -10760,7 +10764,7 @@ UpdateTourianItems: ; $FDE3
         ; Add [mother brain defeated] to item history
         ; a is #$00, low byte of ui_MOTHERBRAIN
         sta $06
-        lda #>ui_MOTHERBRAIN
+        lda #>ui_MOTHERBRAIN.b
         sta $07
         jsr LDC54
     Lx411:
@@ -10788,7 +10792,7 @@ CheckZebetite: ; $FE05
     inc ZebetiteStatus,x
     txa
     lsr                     ; A =  zebetite index * 4 (10, C, 8, 4, or 0)
-    adc #>ui_ZEBETITE1      ;      + $3C
+    adc #>ui_ZEBETITE1.b      ;      + $3C
     sta $07
     jmp LDC54               ; Add zebetite to item history
 
@@ -10983,7 +10987,7 @@ LFF3C:
     rts
 
 UpdateTileBlastAnim:
-    ldx PageIndex
+/*    ldx PageIndex
     ldy TileBlastAnimDelay,x
     beq Lx418
         dec TileBlastAnimDelay,x
@@ -11009,7 +11013,7 @@ Lx420:
     pla
     pla
     rts
-
+*/
 ; Frame data for tile blasts
 
 TileBlastAnim:
@@ -11026,6 +11030,7 @@ TileBlastAnim9:  .byte $07,$06,$08,$FE
 
     .byte $00
     .byte $00
+
 
 ;-----------------------------------------------[ RESET ]--------------------------------------------
 

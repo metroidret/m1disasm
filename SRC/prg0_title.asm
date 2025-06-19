@@ -14,6 +14,10 @@
 
 ;Title/end (memory page 0)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .def BANK = 0
 .SECTION "ROM Bank $000" BANK 0 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
@@ -150,8 +154,8 @@ DrawIntroBackground:
     sta MultiSFXFlag                ;Initiates intro music.
     jsr ScreenOff                   ;($C439)Turn screen off.
     jsr ClearNameTables             ;($C158)Erase name table data.
-    ldx #<L82F4                     ;Lower address of PPU information.
-    ldy #>L82F4                     ;Upper address of PPU information.
+    ldx #<PPUString_DrawIntroBackground.b                     ;Lower address of PPU information.
+    ldy #>PPUString_DrawIntroBackground.b                     ;Upper address of PPU information.
     jsr PreparePPUProcess_          ;($C20E) Writes background of intro screen to name tables.
     lda #$01                        ;
     sta PalDataPending              ;Prepare to load palette data.
@@ -482,7 +486,7 @@ TitleRoutineReturn:
     rts                             ;Last title routine function. Should not be reached.
 
 ;The following data fills name table 0 with the intro screen background graphics.
-L82F4:
+PPUString_DrawIntroBackground:
     ;Information to be stored in attribute table 0.
     PPUString $23C0, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -1033,11 +1037,11 @@ RTS_89A9:
 ;starts the cross out small, it then grows bigger and gets small again.
 
 CrossExplodeLengthTbl:
-    .byte CrossExplodeLength0
-    .byte CrossExplodeLength1
-    .byte CrossExplodeLength2
-    .byte CrossExplodeLength1
-    .byte CrossExplodeLength0
+    .byte CrossExplodeDataTbl@end_0 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_1 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_2 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_1 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_0 - CrossExplodeDataTbl
 
 ;The following table is used to find the data for the sparkle routine in the table below:
 
@@ -1149,7 +1153,7 @@ BottomSparkleDataTbl:
 CrossExplodeDataTbl:
     .byte $10                       ;Load following sprite data into Sprite04RAM.
     .byte $5A, $C0, $00, $79        ;Sprite data.
-    CrossExplodeLength0 = * - CrossExplodeDataTbl
+    @end_0:
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C8, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1158,7 +1162,7 @@ CrossExplodeDataTbl:
     .byte $5A, $C2, $00, $81        ;Sprite data.
     .byte $20                       ;Load following sprite data into Sprite08RAM.
     .byte $62, $C8, $80, $79        ;Sprite data.
-    CrossExplodeLength1 = * - CrossExplodeDataTbl
+    @end_1:
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C9, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1175,7 +1179,7 @@ CrossExplodeDataTbl:
     .byte $5A, $C2, $00, $89        ;Sprite data.
     .byte $30                       ;Load following sprite data into Sprite0CRAM.
     .byte $6A, $C8, $80, $79        ;Sprite data.
-    CrossExplodeLength2 = * - CrossExplodeDataTbl
+    @end_2:
 
 LoadPalData:
     ;Chooses which set of palette data to load from the table below.
@@ -1277,11 +1281,11 @@ DoFadeOut:
     lda FadeOutPalData,y
     ;If palette data = #$FF, exit.
     cmp #$FF
-    beq RTS_8B6C
+    beq @RTS
         ;Store new palette data.
         sta PalDataPending
         inc FadeDataIndex
-    RTS_8B6C:
+    @RTS:
     rts
 
 FadeOutPalData:
@@ -1338,7 +1342,7 @@ UniqueItemSearch: ;($8B9C)
         L8BAF:
         ;If the unique item is a Zebetite, return, else branch to find next unique item.
         inx
-        cpx #>ui_ZEBETITE1
+        cpx #>ui_ZEBETITE1.b
         bcc L8B9E
     rts
 
@@ -1755,19 +1759,19 @@ UnscramblePassword:
 LoadPasswordChar:
     .repeat 6 index I
         ;%XXXXXX-- %-------- %--------
-        ldy #(I*3+0)
+        ldy #(I*3+0).b
         jsr SixUpperBits
         sta PasswordChar+I*4+0
         ;%------XX %XXXX---- %--------
-        ldy #(I*3+0)
+        ldy #(I*3+0).b
         jsr TwoLowerAndFourUpper
         sta PasswordChar+I*4+1
         ;%-------- %----XXXX %XX------
-        ldy #(I*3+1)
+        ldy #(I*3+1).b
         jsr FourLowerAndTwoUpper
         sta PasswordChar+I*4+2
         ;%-------- %-------- %--XXXXXX
-        ldy #(I*3+2)
+        ldy #(I*3+2).b
         jsr SixLowerBits
         sta PasswordChar+I*4+3
     .endr
@@ -1815,15 +1819,15 @@ SixLowerBits: ;($8F5A)
 ConsolidatePassword:
     .repeat 6 index I
         ;%00XXXXXX %00XX---- %00------ %00------
-        ldy #(I*4+0)
+        ldy #(I*4+0).b
         jsr SixLowerAndTwoUpper
         sta PasswordByte+I*3+0
         ;%00------ %00--XXXX %00XXXX-- %00------
-        ldy #(I*4+1)
+        ldy #(I*4+1).b
         jsr FourLowerAndFiveThruTwo
         sta PasswordByte+I*3+1
         ;%00------ %00------ %00----XX %00XXXXXX
-        ldy #(I*4+2)
+        ldy #(I*4+2).b
         jsr TwoLowerAndSixLower
         sta PasswordByte+I*3+2
     .endr
@@ -1943,8 +1947,8 @@ ClearAll:
 
 StartContinueScreen:
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L9984                     ;Low address for PPU write.
-    ldy #>L9984                     ;High address for PPU write.
+    ldx #<L9984.b                     ;Low address for PPU write.
+    ldy #>L9984.b                     ;High address for PPU write.
     jsr PreparePPUProcess           ;($9449)Clears screen and writes "START CONTINUE".
     ldy #$00                        ;
     sty StartContinue               ;Set selection sprite at START.
@@ -1995,8 +1999,8 @@ StartContTbl:
 
 LoadPasswordScreen:
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L99E3                     ;Loads PPU with info to display-->
-    ldy #>L99E3                     ;PASS WORD PLEASE.
+    ldx #<L99E3.b                     ;Loads PPU with info to display-->
+    ldy #>L99E3.b                     ;PASS WORD PLEASE.
     jsr PreparePPUProcess           ;($9449)Load "PASSWORD PLEASE" on screen.
     jsr InitGFX7                    ;($C6D6)Loads the font for the password.
     jsr DisplayInputCharacters      ;($940B)Write password character to screen.
@@ -2044,16 +2048,16 @@ EnterPassword:
     lda Timer3
     beq L9178
         ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
-        lda #<L8759
+        lda #<L8759.b
         sta $02
-        lda #>L8759
+        lda #>L8759.b
         sta $03
         jmp L9180
     L9178:
         ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
-        lda #<L8768
+        lda #<L8768.b
         sta $02
-        lda #>L8768
+        lda #>L8768.b
         sta $03
     L9180:
     ; loop to write all the bytes from those strings to ppu string buffer
@@ -2358,8 +2362,8 @@ DisplayPassword:
     lda Timer3                      ;Wait for "GAME OVER" to be displayed-->
     bne RTS_9324                    ;for 160 frames (2.6 seconds).
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L937F                     ;Low byte of start of PPU data.
-    ldy #>L937F                     ;High byte of start of PPU data.
+    ldx #<L937F.b                     ;Low byte of start of PPU data.
+    ldy #>L937F.b                     ;High byte of start of PPU data.
     jsr PreparePPUProcess           ;($9449)Clears screen and writes "PASS WORD".
     jsr InitGFX7                    ;($C6D6)Loads the font for the password.
     jsr CalculatePassword           ;($8C7A)Calculates the password.
@@ -2395,8 +2399,8 @@ WaitForSTART:
 
 GameOver:
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L93B9                     ;Low byte of start of PPU data.
-    ldy #>L93B9                     ;High byte of start of PPU data.
+    ldx #<L93B9.b                     ;Low byte of start of PPU data.
+    ldy #>L93B9.b                     ;High byte of start of PPU data.
     jsr PreparePPUProcess           ;($9449)Clears screen and writes "GAME OVER".
     jsr InitGFX7                    ;($C6D6)Loads the font for the password.
     jsr NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
@@ -2506,8 +2510,8 @@ PrepareEraseTiles:
     sty $01                         ;PPU high address byte
     
     ;Address of byte where tile size of tile to be erased is stored.
-    ldx #<TileSize
-    ldy #>TileSize
+    ldx #<TileSize.b
+    ldy #>TileSize.b
     stx $02
     sty $03
     jmp EraseTile                   ;($C328)Erase the selected tiles.
@@ -2663,136 +2667,136 @@ UnusedIntroRoutine8:
 ;The following table points to the palette data
 ;used in the intro and ending portions of the game.
 
-PalPntrTbl:
-    .word Palette00                 ;($9586)
-    .word Palette01                 ;($95AA)
-    .word Palette02                 ;($95CE)
-    .word Palette03                 ;($95F2)
-    .word Palette04                 ;($9616)
-    .word Palette05                 ;($963A)
-    .word Palette06                 ;($965E)
-    .word Palette07                 ;($9682)
-    .word Palette08                 ;($96A6)
-    .word Palette09                 ;($96CA)
-    .word Palette0A                 ;($96EE)
-    .word Palette0B                 ;($9712)
-    .word Palette0C                 ;($9736)
-    .word Palette0D                 ;($975A)
-    .word Palette0E                 ;($977E)
-    .word Palette0F                 ;($97A2)
-    .word Palette10                 ;($97C6)
-    .word Palette11                 ;($97EA)
-    .word Palette12                 ;($97F2)
+bank0_PalPntrTbl:
+    .word bank0_Palette00                 ;($9586)
+    .word bank0_Palette01                 ;($95AA)
+    .word bank0_Palette02                 ;($95CE)
+    .word bank0_Palette03                 ;($95F2)
+    .word bank0_Palette04                 ;($9616)
+    .word bank0_Palette05                 ;($963A)
+    .word bank0_Palette06                 ;($965E)
+    .word bank0_Palette07                 ;($9682)
+    .word bank0_Palette08                 ;($96A6)
+    .word bank0_Palette09                 ;($96CA)
+    .word bank0_Palette0A                 ;($96EE)
+    .word bank0_Palette0B                 ;($9712)
+    .word bank0_Palette0C                 ;($9736)
+    .word bank0_Palette0D                 ;($975A)
+    .word bank0_Palette0E                 ;($977E)
+    .word bank0_Palette0F                 ;($97A2)
+    .word bank0_Palette10                 ;($97C6)
+    .word bank0_Palette11                 ;($97EA)
+    .word bank0_Palette12                 ;($97F2)
 
-Palette00:
+bank0_Palette00:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette01 info.
 
-Palette01:
+bank0_Palette01:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette02 info.
 
-Palette02:
+bank0_Palette02:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette03 info.
 
-Palette03:
+bank0_Palette03:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette04 info.
 
-Palette04:
+bank0_Palette04:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette05 info.
 
-Palette05:
+bank0_Palette05:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette06 info.
 
-Palette06:
+bank0_Palette06:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette07 info.
 
-Palette07:
+bank0_Palette07:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette08 info.
 
-Palette08:
+bank0_Palette08:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette09 info.
 
-Palette09:
+bank0_Palette09:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette0A info.
 
-Palette0A:
+bank0_Palette0A:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette0B info.
 
-Palette0B:
+bank0_Palette0B:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette0C info.
 
-Palette0C:
+bank0_Palette0C:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
 
     .byte $00                       ;End Palette0D info.
 
-Palette0D:
+bank0_Palette0D:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette0E info.
 
-Palette0E:
+bank0_Palette0E:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette0F info.
 
-Palette0F:
+bank0_Palette0F:
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
 
     .byte $00                       ;End Palette10 info.
 
-Palette10:
+bank0_Palette10:
     PPUString $3F00, \
         $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
 
     .byte $00                       ;End Palette11 info.
 
-Palette11:
+bank0_Palette11:
     PPUString $3F00, \
         $0F, $30, $30, $21
 
     .byte $00                       ;End Palette12 info.
 
-Palette12:
+bank0_Palette12:
     PPUString $3F00, \
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
 
@@ -3106,8 +3110,8 @@ L9AE4:
     sta EndingType                  ;
     asl                             ;Loads SpritePointerIndex with #$08(suitless).
     sta SpritePointerIndex          ;
-    ldx #<LA052                     ;Loads the screen where Samus stands on-->
-    ldy #>LA052                     ;the surface of the planet in end of game.
+    ldx #<LA052.b                     ;Loads the screen where Samus stands on-->
+    ldy #>LA052.b                     ;the surface of the planet in end of game.
     jsr PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
     lda #sfxMulti_EndMusic          ;Initiate end game music.
@@ -3688,7 +3692,7 @@ EndGamePalWrite:
     sta PPUADDR                  ;
     sta PPUADDR                  ;Set PPU address to $0000.
 RTS_9F80:
-    rts                             ;
+    rts
 
 ;The following pointer table is used by the routine above to
 ;find the proper palette data during the EndGame routine.
@@ -3945,12 +3949,52 @@ LA288:
 ;The following table is used by the LoadCredits routine to load the end credits on the screen.
 
 CreditsPointerTbl:
-    .word LA2E9, LA2FB, LA31A, LA31B, LA32D, LA339, LA34F, LA362, LA375, LA384, LA39F, LA3AA
-    .word LA3C8, LA3D8, LA3F1, LA412, LA417, LA426, LA442, LA46B, LA470, LA493, LA49C, LA4AD
-    .word LA4BD, LA4CD, LA4D2, LA4D7, LA4DC, LA4E1, LA4E6, LA4EB, LA4EF, LA4F0, LA508, LA51A
-    .word LA51F, LA524, LA51F, LA524, LA538, LA53D, LA538, LA53D
+    .word PPUString_Credits00
+    .word PPUString_Credits01
+    .word PPUString_Credits02
+    .word PPUString_Credits03
+    .word PPUString_Credits04
+    .word PPUString_Credits05
+    .word PPUString_Credits06
+    .word PPUString_Credits07
+    .word PPUString_Credits08
+    .word PPUString_Credits09
+    .word PPUString_Credits0A
+    .word PPUString_Credits0B
+    .word PPUString_Credits0C
+    .word PPUString_Credits0D
+    .word PPUString_Credits0E
+    .word PPUString_Credits0F
+    .word PPUString_Credits10
+    .word PPUString_Credits11
+    .word PPUString_Credits12
+    .word PPUString_Credits13
+    .word PPUString_Credits14
+    .word PPUString_Credits15
+    .word PPUString_Credits16
+    .word PPUString_Credits17
+    .word PPUString_Credits18
+    .word PPUString_Credits19
+    .word PPUString_Credits1A
+    .word PPUString_Credits1B
+    .word PPUString_Credits1C
+    .word PPUString_Credits1D
+    .word PPUString_Credits1E
+    .word PPUString_Credits1F
+    .word PPUString_Credits20
+    .word PPUString_Credits21
+    .word PPUString_Credits22
+    .word PPUString_Credits23
+    .word PPUString_Credits24
+    .word PPUString_Credits25
+    .word PPUString_Credits24
+    .word PPUString_Credits25
+    .word PPUString_Credits28
+    .word PPUString_Credits29
+    .word PPUString_Credits28
+    .word PPUString_Credits29
 
-LA2E9:
+PPUString_Credits00:
     ;Writes credits on name table 0 in row $2020 (2nd row from top).
     PPUString $202C, \
         "HAI YUKAMI"
@@ -3960,7 +4004,7 @@ LA2E9:
 
     .byte $00                       ;End PPU string write.
 
-LA2FB:
+PPUString_Credits01:
     ;Writes credits on name table 0 in row $2060 (4th row from top)
     PPUString $206A, \
         "ZARU SOBAJIMA"
@@ -3971,10 +4015,10 @@ LA2FB:
 
     .byte $00                       ;End PPU string write.
 
-LA31A:
+PPUString_Credits02:
     .byte $00                       ;End PPU string write.
 
-LA31B:
+PPUString_Credits03:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
     PPUString $216A, \
         "N.SHIOTANI"
@@ -3985,20 +4029,20 @@ LA31B:
     .byte $00                       ;End PPU string write.
 
 ;Writes credits on name table 0 in row $21E0 (16th row from top).
-LA32D:
+PPUString_Credits04:
     PPUString $21EB, \
         "M.HOUDAI"
 
     .byte $00                       ;End PPU string write.
 
-LA339:
+PPUString_Credits05:
     ;Writes credits on name table 0 in row $22A0 (22nd row from top).
     PPUString $22A7, \
         "SPECIAL THANKS  TO"
 
     .byte $00                       ;End PPU string write.
 
-LA34F:
+PPUString_Credits06:
     ;Writes credits on name table 0 in row $22E0 (24nd row from top).
     PPUString $22EC, \
         "KEN ZURI"
@@ -4009,7 +4053,7 @@ LA34F:
 
     .byte $00                       ;End PPU string write.
 
-LA362:
+PPUString_Credits07:
     ;Writes credits on name table 0 in row $2360 (28nd row from top).
     PPUString $236C, \
         "INUSAWA"
@@ -4020,7 +4064,7 @@ LA362:
 
     .byte $00                       ;End PPU string write.
 
-LA375:
+PPUString_Credits08:
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
     PPUStringRepeat $2828, ' ', $0E
 
@@ -4030,7 +4074,7 @@ LA375:
 
     .byte $00                       ;End PPU string write.
 
-LA384:
+PPUString_Credits09:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
     PPUString $28A8, \
         "     GOYAKE        "
@@ -4040,14 +4084,14 @@ LA384:
 
     .byte $00                       ;End PPU string write.
 
-LA39F:
+PPUString_Credits0A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
     PPUString $292C, \
         "HARADA "
 
     .byte $00                       ;End PPU string write.
 
-LA3AA:
+PPUString_Credits0B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
     PPUString $2966, \
         "       PENPEN         "
@@ -4057,14 +4101,14 @@ LA3AA:
 
     .byte $00                       ;End PPU string write.
 
-LA3C8:
+PPUString_Credits0C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
     PPUString $29EA, \
         "CONVERTED BY"
 
     .byte $00                       ;End PPU string write.
 
-LA3D8:
+PPUString_Credits0D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
     PPUString $2A26, \
         "     T.NARIHIRO  "
@@ -4074,7 +4118,7 @@ LA3D8:
 
     .byte $00                       ;End PPU string write.
 
-LA3F1:
+PPUString_Credits0E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
     PPUString $2AEB, \
         "ASSISTED BY"
@@ -4085,20 +4129,20 @@ LA3F1:
 
     .byte $00                       ;End PPU string write.
 
-LA412:
+PPUString_Credits0F:
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
     PPUStringRepeat $2BA6, ' ', $13
 
     .byte $00                       ;End PPU string write.
 
-LA417:
+PPUString_Credits10:
     ;Writes credits on name table 0 in row $2020 (2nd row from the top).
     PPUString $202B, \
         "DIRECTED BY"
 
     .byte $00                       ;End PPU string write.
 
-LA426:
+PPUString_Credits11:
     ;Writes credits on name table 0 in row $2060 (4th row from the top).
     PPUString $2067, \
         "     YAMAMOTO       "
@@ -4108,7 +4152,7 @@ LA426:
 
     .byte $00                       ;End PPU string write.
 
-LA442:
+PPUString_Credits12:
     ;Writes credits on name table 0 in row $2120 (10th row from the top).
     PPUString $2127, \
         "  CHIEF DIRECTOR "
@@ -4119,13 +4163,13 @@ LA442:
 
     .byte $00                       ;End PPU string write.
 
-LA46B:
+PPUString_Credits13:
     ;Writes credits on name table 0 in row $21E0 (16th row from the top).
     PPUStringRepeat $21E6, ' ', $18
 
     .byte $00                       ;End PPU string write.
 
-LA470:
+PPUString_Credits14:
     ;Writes credits on name table 0 in row $2220 (18th row from the top).
     PPUString $222B, \
         "PRODUCED BY     "
@@ -4136,7 +4180,7 @@ LA470:
 
     .byte $00                       ;End PPU string write.
 
-LA493:
+PPUString_Credits15:
     ;Writes credits on name table 0 in row $22A0 (22nd row from the top).
     PPUStringRepeat $22A6, ' ', $13
 
@@ -4145,7 +4189,7 @@ LA493:
 
     .byte $00                       ;End PPU string write.
 
-LA49C:
+PPUString_Credits16:
     ;Writes credits on name table 0 in row $2320 (26th row from the top).
     PPUStringRepeat $2329, ' ', $0D
 
@@ -4155,7 +4199,7 @@ LA49C:
 
     .byte $00                       ;End PPU string write.
 
-LA4AD:
+PPUString_Credits17:
     ;Writes credits on name table 0 in row $2360 (28th row from the top).
     PPUStringRepeat $236B, ' ', $0A
 
@@ -4168,7 +4212,7 @@ LA4AD:
 
     .byte $00                       ;End PPU string write.
 
-LA4BD:
+PPUString_Credits18:
     ;Writes credits on name table 2 in row $2800 (top row)
     PPUString $280C, \
         "NINTENDO"
@@ -4178,91 +4222,90 @@ LA4BD:
 
     .byte $00                       ;End PPU string write.
 
-LA4CD:
+PPUString_Credits19:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
     PPUStringRepeat $28AA, ' ', $0C
 
     .byte $00                       ;End PPU string write.
 
-LA4D2:
+PPUString_Credits1A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
     PPUStringRepeat $2926, ' ', $1B
 
     .byte $00                       ;End PPU string write.
 
-LA4D7:
+PPUString_Credits1B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
     PPUStringRepeat $2967, ' ', $12
 
     .byte $00                       ;End PPU string write.
 
-LA4DC:
+PPUString_Credits1C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
     PPUStringRepeat $29E6, ' ', $14
 
     .byte $00                       ;End PPU string write.
 
-LA4E1:
+PPUString_Credits1D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
     PPUStringRepeat $2A28, ' ', $15
 
     .byte $00                       ;End PPU string write.
 
-LA4E6:
+PPUString_Credits1E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
     PPUStringRepeat $2AE6, ' ', $10
 
     .byte $00                       ;End PPU string write.
 
-LA4EB:
+PPUString_Credits1F:
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
     PPUStringRepeat $2B29, ' ', $0E
 
-LA4EF:
+PPUString_Credits20:
     .byte $00                       ;End PPU string write.
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
-LA4F0:
+PPUString_Credits21:
     PPUString $2026, \
         "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
 
     .byte $00                       ;End PPU string write.
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
-LA508:
+PPUString_Credits22:
     PPUString $204B, \
         $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
-LA515:
     ;Writes credits on name table 0 in row $2060 (4th row from top).
     PPUStringRepeat $206A, ' ', $0C
 
     .byte $00                       ;End PPU string write.
 
-LA51A:
+PPUString_Credits23:
     ;Writes credits on name table 0 in row $2120 (10th row from top).
     PPUStringRepeat $2126, ' ', $13
 
     .byte $00                       ;End PPU string write.
 
-LA51F:
+PPUString_Credits24:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
     PPUStringRepeat $216A, ' ', $0C
 
     .byte $00                       ;End PPU string write.
 
-LA524:
+PPUString_Credits25:
     ;Writes credits on name table 0 in row $2180 (13th row from top).
     PPUString $2188, \
         "                 "
 
-LA538:
+PPUString_Credits28:
     ;Writes credits on name table 0 in row $2220 (18th row from top).
     PPUStringRepeat $2226, ' ', $0B
 
     .byte $00                       ;End PPU string write.
 
-LA53D:
+PPUString_Credits29:
     .byte $00                       ;End PPU block write.
 
 ;-------------------------------------------[ World map ]--------------------------------------------
@@ -4304,13 +4347,13 @@ WorldMap:
 ;Loads contents of world map into -->
 ;RAM at addresses $7000 thru $73FF.
 CopyMap:
-    lda #<WorldMap
+    lda #<WorldMap.b
     sta $00
-    lda #>WorldMap
+    lda #>WorldMap.b
     sta $01
-    lda #<WorldMapRAM
+    lda #<WorldMapRAM.b
     sta $02
-    lda #>WorldMapRAM
+    lda #>WorldMapRAM.b
     sta $03
     ldx #$04
     LA950:
@@ -4407,9 +4450,13 @@ CopyMap:
     .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
     .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
-    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+;    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+
+.ENDS
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
+
+.SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
 
 .include "music_engine.asm"
 

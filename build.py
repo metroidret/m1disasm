@@ -12,12 +12,25 @@ def run_or_exit(args, err):
 if not os.path.exists('out/'):
     os.mkdir('out/')
 
+banks = [
+    "header",
+    "prg0_title",
+    "prg1_brinstar",
+    "prg2_norfair",
+    "prg3_tourian",
+    "prg4_kraid",
+    "prg5_ridley",
+    "prg6_graphics",
+    "prg7_engine",
+]
+
 print('Assembling .asm files')
-run_or_exit("wla-6502 -o out/main.o -I SRC SRC/main.asm", "Assembler Error.")
+for bank in banks:
+    run_or_exit("wla-6502 -h -o out/" + bank + ".o -I SRC SRC/" + bank + ".asm", "Assembler Error.")
 print('Success\n')
 
 print('Linking .o files')
-run_or_exit("wlalink -S SRC/linkfile out/M1.nes", "Linker Error.")
+run_or_exit("wlalink -c -S SRC/linkfile out/M1.nes", "Linker Error.")
 print('Success\n')
 
 with open("out/M1.nes", "rb") as f:

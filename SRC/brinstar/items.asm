@@ -119,7 +119,6 @@ SpecItmsTbl:
         .byte it_PowerUp, pu_ICEBEAM, $37
         .byte $00
     ;Mellows.
-    LA418:
     @@x15:
         .byte $15, $FF
         .byte it_Mellow

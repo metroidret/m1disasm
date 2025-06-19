@@ -14,6 +14,10 @@
 
 ;Kraid hideout (memory page 4)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 4
 .SECTION "ROM Bank $004" BANK 4 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 

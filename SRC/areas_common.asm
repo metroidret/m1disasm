@@ -648,6 +648,7 @@ EnemyGetDeltaX:
     ldy EnMovementInstrIndex,x
     iny
     lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
+EnemyGetDeltaX_832F:
     tax
 ; Save the sign bit to the processor flags
     and #$08
@@ -1102,7 +1103,7 @@ UpdateDoor_Init:
     ; increment door status to "closed"
     inc DoorStatus,x
     ; set door animation to closed
-    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0 - ObjectAnimIndexTbl + $02.b
     jsr InitObjAnimIndex           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
@@ -1171,7 +1172,7 @@ UpdateDoor_Closed:
     ; set door animation to opening the door
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
-    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B - ObjectAnimIndexTbl + $03.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$03
@@ -1257,7 +1258,7 @@ GotoDrawDoor:
     jmp DrawDoor
 
 DoorSubRoutine8C76:
-    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0 - ObjectAnimIndexTbl + $02.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$02
@@ -1330,7 +1331,7 @@ UpdateDoor_Scroll:
     lda #$06
     sta DoorStatus,x
     ; set that door's animation to opening the door
-    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B - ObjectAnimIndexTbl + $03.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$03

@@ -14,6 +14,10 @@
 
 ;Brinstar (memory page 1)
 
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
 .redef BANK = 1
 .SECTION "ROM Bank $001" BANK 1 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
@@ -876,9 +880,13 @@ TileBlastFrame10:
     .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
 ; ???
-    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+;    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+
+.ENDS
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
+
+.SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
 
 .include "music_engine.asm"
 
