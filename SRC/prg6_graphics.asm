@@ -297,6 +297,7 @@ GFX_Font:
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMSWITCH_RESET:
 .include "reset.asm"
 
 .ENDS
@@ -305,7 +306,7 @@ GFX_Font:
 
 .SECTION "ROM Bank $006 - Vectors" BANK 6 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
 .ENDS
 

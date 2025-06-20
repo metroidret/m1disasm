@@ -179,7 +179,7 @@ KraidUpdateProjectile_Resting:
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
 ;  a crash when attempting to spawn him
-    .IF BANK <> 1
+    .IF BANK != 1
         ; push x to stack
         txa
         pha
@@ -187,7 +187,7 @@ KraidUpdateProjectile_Resting:
     ; store kraid's position in temp
     ldx #$00
     jsr StorePositionToTemp
-    .IF BANK <> 1
+    .IF BANK != 1
         ; pull x from stack
         pla
         tax

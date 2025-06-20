@@ -880,7 +880,7 @@ TileBlastFrame10:
     .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
 ; ???
-;    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
 .ENDS
 
@@ -892,6 +892,7 @@ TileBlastFrame10:
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMSWITCH_RESET:
 .include "reset.asm"
 
 .ENDS
@@ -900,7 +901,7 @@ TileBlastFrame10:
 
 .SECTION "ROM Bank $001 - Vectors" BANK 1 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
 .ENDS
 

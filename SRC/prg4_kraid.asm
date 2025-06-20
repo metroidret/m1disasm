@@ -756,12 +756,17 @@ TileBlastFrame10:
     .byte $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C, $3C, $18
     .byte $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
+.ENDS
+
 ;------------------------------------------[ Sound Engine ]------------------------------------------
+
+.SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
 
 .include "music_engine.asm"
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMSWITCH_RESET:
 .include "reset.asm"
 
 .ENDS
@@ -770,7 +775,7 @@ TileBlastFrame10:
 
 .SECTION "ROM Bank $004 - Vectors" BANK 4 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
 .ENDS
 

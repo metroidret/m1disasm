@@ -8,7 +8,7 @@ SidehopperFloorAIRoutine:
     .endif
 Sidehopper_Common:
     sta EnemyLFB88_85
-    sta EnemyLFB88_85+1
+    sta EnemyLFB88_85+1.b
     lda EnStatus,x
     cmp #$03
     beq CommonEnemyStub2

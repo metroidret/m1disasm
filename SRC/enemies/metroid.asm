@@ -274,7 +274,7 @@ L9967:
     beq L999E
     
     ; Subtract 1/4 health point from Samus
-    sty HealthChange+1
+    sty HealthChange+1.b
     ldy #$04
     sty HealthChange
     jsr CommonJump_SubtractHealth

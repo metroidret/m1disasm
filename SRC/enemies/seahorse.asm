@@ -28,7 +28,7 @@ SeahorseAIRoutine:
         lda #EnAnim_43 - EnAnimTbl.b
         sta SpawnFireball_83
         lda #EnAnim_47 - EnAnimTbl.b
-        sta SpawnFireball_83+1
+        sta SpawnFireball_83+1.b
         lda #$03
         sta SpawnFireball_AnimTableIndex
         jsr CommonJump_SpawnFireball

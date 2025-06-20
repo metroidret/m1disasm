@@ -427,7 +427,7 @@ LoadEnemyMovementPtr:
     lda EnemyMovementPtrs,y
     sta EnemyMovementPtr
     lda EnemyMovementPtrs+1,y
-    sta EnemyMovementPtr+1
+    sta EnemyMovementPtr+1.b
     rts
 
 ;-------------------------------------------------------------------------------

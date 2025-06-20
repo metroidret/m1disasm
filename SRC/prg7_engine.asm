@@ -4668,7 +4668,7 @@ CheckOneItem:
     bne LDBA5                       ;If not, branch.
     LDB9F:
         tya                             ;Transfer color data to A.
-        sta SpriteRAM+$01<<2+2,x             ;Store power up color for beam weapon.
+        sta SpriteRAM+($01<<2)+2,x             ;Store power up color for beam weapon.
         lda #$FF                        ;Indicate power up obtained is a beam weapon.
 
     LDBA5:
@@ -5668,10 +5668,10 @@ LE10A:
     lda #$FF                        ;"Blank" tile.
     cpx #$F4                        ;If at last 3 sprites, branch to skip.
     bcs LE14A                          ;
-    sta SpriteRAM+$03<<2+1,x             ;Erase left half of missile.
+    sta SpriteRAM+($03<<2)+1,x             ;Erase left half of missile.
     cpx #$F0                        ;If at last 4 sprites, branch to skip.
     bcs LE14A                          ;
-    sta SpriteRAM+$04<<2+1,x             ;Erase right half of missile.
+    sta SpriteRAM+($04<<2)+1,x             ;Erase right half of missile.
     bne LE14A                          ;Branch always.
 
 ;Display 3-digit end sequence timer.
@@ -5691,8 +5691,8 @@ LE11C:
     cpx #$FC                        ;If at last sprite, branch to skip.
     bcs LE14A                           ;
     lda #$59                        ;"ME" sprite(right half of "TIME").
-    sta SpriteRAM+$01<<2+1,x             ;
-    inc SpriteRAM+$01<<2+2,x             ;Change color of sprite.
+    sta SpriteRAM+($01<<2)+1,x             ;
+    inc SpriteRAM+($01<<2)+2,x             ;Change color of sprite.
 
 LE14A:
     ldx SpritePagePos               ;Restore initial sprite page pos.
@@ -7888,9 +7888,9 @@ Exit11:
 ;the appropriate routine to load those items.
 
 ScanForItems:
-    lda SpecItmsTbl               ;Low byte of ptr to 1st item data.
+    lda AreaPointers               ;Low byte of ptr to 1st item data.
     sta $00                         ;
-    lda SpecItmsTbl+1             ;High byte of ptr to 1st item data.
+    lda AreaPointers+1             ;High byte of ptr to 1st item data.
 
 ScanOneItem:
     sta $01                         ;
@@ -11034,6 +11034,7 @@ TileBlastAnim9:  .byte $07,$06,$08,$FE
 
 ;-----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMFIXED_RESET:
 .include "reset.asm"
 
 .ENDS
@@ -11042,7 +11043,7 @@ TileBlastAnim9:  .byte $07,$06,$08,$FE
 
 .SECTION "ROM Bank $007 - Vectors" BANK 7 SLOT "ROMFixedSlot" ORGA $FFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMFIXED_RESET            ;($FFB0)Reset vector.
+    .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
 .ENDS
 
