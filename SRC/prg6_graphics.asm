@@ -19,32 +19,8 @@
 .include "constants.asm"
 .include "macros.asm"
 
-BANK .set 6
-.segment "BANK_06_MAIN"
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_Samus
-.export GFX_IntroSprites
-.export GFX_Title
-.export GFX_SamusSuitless
-.export GFX_ExclamationPoint
-.export GFX_Solid
-.export GFX_BrinBG1
-.export GFX_CREBG2
-.export GFX_NorfBG1
-.export GFX_NorfBG2
-.export GFX_BossBG
-.export GFX_TourBG
-.export GFX_Zebetite
-.export GFX_KraiBG2
-.export GFX_RidlBG
-.export GFX_Font
-
-;---------------------------------------------[ Import ]---------------------------------------------
-
-.import Startup
-.import NMI
+.redef BANK = 6
+.SECTION "ROM Bank $006" BANK 6 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -321,11 +297,16 @@ GFX_Font:
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMSWITCH_RESET:
 .include "reset.asm"
+
+.ENDS
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_06_VEC"
+.SECTION "ROM Bank $006 - Vectors" BANK 6 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
+.ENDS
+

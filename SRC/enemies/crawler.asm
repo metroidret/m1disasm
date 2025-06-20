@@ -4,12 +4,12 @@ CrawlerAIRoutine:
     and #$03
     beq Crawler03
     lda EnemyStatusPreAI
-    .if BANK = 1 || BANK = 4
+    .if BANK == 1 || BANK == 4
         cmp #enemyStatus_Resting
         beq SkreeExit_Resting
         cmp #enemyStatus_Explode
         beq SkreeExit_Explode
-    .elseif BANK = 2 || BANK = 5
+    .elif BANK == 2 || BANK == 5
         cmp #enemyStatus_Resting
         beq CrawlerExit_Resting
         cmp #enemyStatus_Explode
@@ -23,9 +23,9 @@ CrawlerAIRoutine:
     cmp #$01
     bne Crawler01
     ldy EnY,x
-    .if BANK = 1 || BANK = 4
+    .if BANK == 1 || BANK == 4
         cpy #$E4
-    .elseif BANK = 2 || BANK = 5
+    .elif BANK == 2 || BANK == 5
         cpy #$EB
     .endif
     bne Crawler01
@@ -44,7 +44,7 @@ Crawler03:
 CrawlerExit_Explode:
     jmp CommonJump_02
 
-.if BANK = 2 || BANK = 5
+.if BANK == 2 || BANK == 5
     CrawlerExit_Resting:
         jmp CommonJump_01
 .endif
@@ -59,7 +59,7 @@ Crawler04:
     lda CrawlerAnimIndexTable,y
     jmp CommonJump_InitEnAnimIndex
 
-.if BANK = 1 || BANK = 4
+.if BANK == 1 || BANK == 4
     CrawlerAnimIndexTable:
         .byte EnAnim_35 - EnAnimTbl
         .byte EnAnim_35 - EnAnimTbl
@@ -69,7 +69,7 @@ Crawler04:
         .byte EnAnim_3B - EnAnimTbl
         .byte EnAnim_38 - EnAnimTbl
         .byte EnAnim_3E - EnAnimTbl
-.elseif BANK = 2
+.elif BANK == 2
     CrawlerAnimIndexTable:
         .byte EnAnim_69 - EnAnimTbl
         .byte EnAnim_69 - EnAnimTbl
@@ -79,7 +79,7 @@ Crawler04:
         .byte EnAnim_6F - EnAnimTbl
         .byte EnAnim_6C - EnAnimTbl
         .byte EnAnim_72 - EnAnimTbl
-.elseif BANK = 5
+.elif BANK == 5
     CrawlerAnimIndexTable:
         .byte EnAnim_4A - EnAnimTbl
         .byte EnAnim_4A - EnAnimTbl

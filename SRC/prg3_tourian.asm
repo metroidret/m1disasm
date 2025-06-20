@@ -18,22 +18,8 @@
 .include "constants.asm"
 .include "macros.asm"
 
-BANK .set 3
-.segment "BANK_03_MAIN"
-
-;--------------------------------------------[ Export ]---------------------------------------------
-
-.export GFX_KraidSprites
-.export GFX_RidleySprites
-.export GotoClearCurrentMetroidLatchAndMetroidOnSamus
-.export GotoClearAllMetroidLatches
-.export GotoL9C6F
-.export GotoSpawnCannonRoutine
-.export GotoSpawnMotherBrainRoutine
-.export GotoSpawnZebetiteRoutine
-.export GotoSpawnRinkaSpawnerRoutine
-.export GotoLA0C6
-.export GotoLA142
+.redef BANK = 3
+.SECTION "ROM Bank $003" BANK 3 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -361,9 +347,9 @@ TileBlastFramePtrTable:
 
 EnemyMovementChoices:
 EnemyMovementChoice00:
-    EnemyMovementChoiceEntry {$00}
+    EnemyMovementChoiceEntry $00
 EnemyMovementChoice01: ; enemy can't use movement strings
-    EnemyMovementChoiceEntry {$01}
+    EnemyMovementChoiceEntry $01
 EnemyMovementChoice02: ; enemy moves manually
     ; nothing
 
@@ -891,7 +877,7 @@ L9DF2:
     lda #$00
     sta HealthChange
     lda #$02
-    sta HealthChange+1
+    sta HealthChange+1.b
     lda #$38
     sta SamusHit
     jmp CommonJump_SubtractHealth
@@ -1795,17 +1781,26 @@ TileBlastFrame10:
     .byte $C4, $A5, $45, $0B, $1B, $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04
     .byte $E6, $E6, $C4, $8E, $1C, $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
 
-;-----------------------------------------[ Sound engine ]-------------------------------------------
+.ENDS
+
+;------------------------------------------[ Sound Engine ]------------------------------------------
+
+.SECTION "ROM Bank $003 - Music Engine" BANK 3 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
 
 .include "music_engine.asm"
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
 
+ROMSWITCH_RESET:
 .include "reset.asm"
+
+.ENDS
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.segment "BANK_03_VEC"
+.SECTION "ROM Bank $003 - Vectors" BANK 3 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word RESET                     ;($FFB0)Reset vector.
-    .word RESET                     ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
+.ENDS
+

@@ -21,7 +21,7 @@ RidleyBranch_Normal:
     lda #$0B
     sta EnemyLFB88_85
     lda #$0E
-    sta EnemyLFB88_85+1
+    sta EnemyLFB88_85+1.b
     jsr CommonJump_09
     jsr RidleyTryToLaunchProjectile
 

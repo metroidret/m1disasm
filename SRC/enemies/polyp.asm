@@ -9,7 +9,7 @@ PolypAIRoutine:
     lda #$10
     sta EnData05,x
 
-    .if BANK = 2
+    .if BANK == 2
         ; put bit 4 of enemy slot offset in bit 6
         txa
         asl
@@ -24,12 +24,12 @@ PolypAIRoutine:
     lsr
     ; add framecount
     adc FrameCount
-    .if BANK = 2
+    .if BANK == 2
         ; polyps in norfair will try shooting 8 times every 8 frames, then stop trying for 64 frames
         ; when polyps of even enemy slot id stops trying, polyps of odd enemy slot id will start trying, and vice versa
         adc $00
         and #$47
-    .elseif BANK = 5
+    .elif BANK == 5
         ; polyps in ridley will always try to shoot every 8 frames
         ; (there arent any in ridley though)
         and #$07

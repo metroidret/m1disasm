@@ -54,186 +54,199 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+@y0A:
     .byte $0A
-    .word LA2E8
+    .word @y0B
     ;Missiles.
-        .byte $1B, (LA2E2-*)+1
+    @@x1B:
+        .byte $1B, @@x1C - @@x1B
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Missiles.
-    LA2E2:
+    @@x1C:
         .byte $1C, $FF
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
 
-LA2E8:
+@y0B:
     .byte $0B
-    .word LA302
+    .word @y0C
     ;Elevator from Brinstar.
-        .byte $16, (LA2F0-*)+1
+    @@x16:
+        .byte $16, @@x1A - @@x16
         .byte it_Elevator, $81
         .byte $00
     ;Missiles.
-    LA2F0:
-        .byte $1A, (LA2F6-*)+1
+    @@x1A:
+        .byte $1A, @@x1B - @@x1A
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Missiles.
-    LA2F6:
-        .byte $1B, (LA2FC-*)+1
+    @@x1B:
+        .byte $1B, @@x1C - @@x1B
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Missiles.
-    LA2FC:
+    @@x1C:
         .byte $1C, $FF
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
 
-LA302:
+@y0C:
     .byte $0C
-    .word LA30B
+    .word @y0D
     ;Ice beam.
+    @@x1A:
         .byte $1A, $FF
         .byte it_PowerUp, pu_ICEBEAM, $37
         .byte $00
 
-LA30B:
+@y0D:
     .byte $0D
-    .word LA313
+    .word @y0E
     ;Elevator to Brinstar.
+    @@x16:
         .byte $16, $FF
         .byte it_Elevator, $81
         .byte $00
 
-LA313:
+@y0E:
     .byte $0E
-    .word LA31C
+    .word @y0F
     ;Missiles.
+    @@x12:
         .byte $12, $FF
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
 
-LA31C:
+@y0F:
     .byte $0F
-    .word LA33B
+    .word @y10
     ;Missiles and Melias.
-        .byte $11, (LA326-*)+1
+    @@x11:
+        .byte $11, @@x13 - @@x11
         .byte it_PowerUp, pu_MISSILES, $34
         .byte it_Mellow
         .byte $00
     ;Missiles.
-    LA326:
-        .byte $13, (LA32C-*)+1
+    @@x13:
+        .byte $13, @@x14 - @@x13
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Missiles.
-    LA32C:
-        .byte $14, (LA332-*)+1
+    @@x14:
+        .byte $14, @@x15 - @@x14
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Squeept.
-    LA332:
+    @@x15:
         .byte $15, $FF
         .byte it_Squeept | $40, $8B, $E9
         .byte it_Squeept | $50, $02, $9B
         .byte $00
 
-LA33B:
+@y10:
     .byte $10
-    .word LA344
+    .word @y11
     ;Screw attack.
+    @@x0F:
         .byte $0F, $FF
         .byte it_PowerUp, pu_SCREWATTACK, $37
         .byte $00
 
-LA344:
+@y11:
     .byte $11
-    .word LA36D
+    .word @y13
     ;Palette change room.
-        .byte $16, (LA34B-*)+1
+    @@x16:
+        .byte $16, @@x18 - @@x16
         .byte it_PaletteChange
         .byte $00
     ;Squeept.
-    LA34B:
-        .byte $18, (LA354-*)+1
+    @@x18:
+        .byte $18, @@x19 - @@x18
         .byte it_Squeept | $30, $0B, $E9
         .byte it_Squeept | $40, $02, $9A
         .byte $00
     ;Squeept.
-    LA354:
-        .byte $19, (LA35D-*)+1
+    @@x19:
+        .byte $19, @@x1B - @@x19
         .byte it_Squeept | $20, $8B, $E9
         .byte it_Squeept | $50, $02, $9A
         .byte $00
     ;High jump.
-    LA35D:
-        .byte $1B, (LA363-*)+1
+    @@x1B:
+        .byte $1B, @@x1D - @@x1B
         .byte it_PowerUp, pu_HIGHJUMP, $37
         .byte $00
     ;Right door.
-    LA363:
-        .byte $1D, (LA368-*)+1
+    @@x1D:
+        .byte $1D, @@x1E - @@x1D
         .byte it_Door, $A0
         .byte $00
     ;Left door.
-    LA368:
+    @@x1E:
         .byte $1E, $FF
         .byte it_Door, $B0
         .byte $00
 
-LA36D:
+@y13:
     .byte $13
-    .word LA376
+    .word @y14
     ;Energy tank.
+    @@x1A:
         .byte $1A, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $42
         .byte $00
 
-LA376:
+@y14:
     .byte $14
-    .word LA389
+    .word @y15
     ;Right door.
-        .byte $0D, (LA37E-*)+1
+    @@x0D:
+        .byte $0D, @@x0E - @@x0D
         .byte it_Door, $A0
         .byte $00
     ;Left door.
-    LA37E:
-        .byte $0E, (LA383-*)+1
+    @@x0E:
+        .byte $0E, @@x1C - @@x0E
         .byte it_Door, $B0
         .byte $00
     ;Missiles.
-    LA383:
+    @@x1C:
         .byte $1C, $FF
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
 
-LA389:
+@y15:
     .byte $15
-    .word LA397
+    .word @y16
     ;Wave beam.
-        .byte $12, (LA392-*)+1
+    @@x12:
+        .byte $12, @@x17 - @@x12
         .byte it_PowerUp, pu_WAVEBEAM, $37
         .byte $00
     ;Right door(undefined room).
-    LA392:
+    @@x17:
         .byte $17, $FF
         .byte it_Door, $A0
         .byte $00
 
-LA397:
+@y16:
     .byte $16
     .word $FFFF
     ;Missiles.
-        .byte $13, (LA3A0-*)+1
+    @@x13:
+        .byte $13, @@x14 - @@x13
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Missiles.
-    LA3A0:
-        .byte $14, (LA3A6-*)+1
+    @@x14:
+        .byte $14, @@x19 - @@x14
         .byte it_PowerUp, pu_MISSILES, $34
         .byte $00
     ;Elevator to Ridley hideout.
-    LA3A6:
+    @@x19:
         .byte $19, $FF
         .byte it_Elevator, $04
         .byte $00

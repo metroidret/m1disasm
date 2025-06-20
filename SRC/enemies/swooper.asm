@@ -19,16 +19,16 @@ L98F4:
     lda EnStatus,x
     cmp #$02
     bne L9907
-    .if BANK = 2
+    .if BANK == 2
         lda #$25
-    .elseif BANK = 5
+    .elif BANK == 5
         lda #$20
     .endif
     ldy EnSpeedY,x
     bpl L9904
-        .if BANK = 2
+        .if BANK == 2
             lda #$22
-        .elseif BANK = 5
+        .elif BANK == 5
             lda #$1D
         .endif
     L9904:

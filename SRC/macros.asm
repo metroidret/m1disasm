@@ -1,112 +1,128 @@
+.macro assertMsg args condition, message
+    .if !(condition)
+        .fail message
+    .endif
+.endm
 
-.macro SignMagSpeed duration, xSpd, ySpd
-    .assert duration < $FF, error, "duration must be smaller than $FF"
-    .assert xSpd > -8 && xSpd < 8, error, "xSpd must be from -7 to 7 inclusive"
-    .assert ySpd > -8 && ySpd < 8, error, "ySpd must be from -7 to 7 inclusive"
+.macro SignMagSpeed args duration, xSpd, ySpd
+    assertMsg duration >= $00 && duration < $F0, "duration must be from $00 to $EF frames inclusive"
+    assertMsg xSpd > -8 && xSpd < 8, "xSpd must be from -7 to 7 inclusive"
+    assertMsg ySpd > -8 && ySpd < 8, "ySpd must be from -7 to 7 inclusive"
 
-    absXSpd .set xSpd
-    absYSpd .set ySpd
-    signXSpd .set 0
-    signYSpd .set 0
+    .def absXSpd = xSpd
+    .def absYSpd = ySpd
+    .def signXSpd = 0
+    .def signYSpd = 0
 
     .if xSpd < 0
-        signXSpd .set 1
-        absXSpd .set -xSpd
+        .redef signXSpd = 1
+        .redef absXSpd = -xSpd
     .endif
     .if ySpd < 0
-        signYSpd .set 1
-        absYSpd .set -ySpd
+        .redef signYSpd = 1
+        .redef absYSpd = -ySpd
     .endif
 
     .byte duration
-    ;.out .sprintf("spdByte = $%02X", ((($8*signYSpd)|absYSpd)<<4) + (($8*signXSpd)|absXSpd))
-    .byte ((($8*signYSpd)|absYSpd)<<4) + (($8*signXSpd)|absXSpd)
-.endmacro
-
-.macro PPUString ppuAddress, ppuString
-    .byte .hibyte(ppuAddress), .lobyte(ppuAddress)
+    .byte ((($8 * signYSpd) | absYSpd) << 4) + (($8 * signXSpd) | absXSpd)
     
-    ppuStringLen .set 0
-    .repeat .tcount(ppuString), tokenID
-        .if .match({.mid(tokenID, 1, ppuString)}, "")
-            ppuStringLen .set ppuStringLen+.strlen(.mid(tokenID, 1, ppuString))
-        .elseif .match({.mid(tokenID, 1, ppuString)}, $00)
-            ; assume the number is a byte
-            ppuStringLen .set ppuStringLen+1
-        .elseif .match({.mid(tokenID, 1, ppuString)}, {,})
-            ; ignore comma token
+    .undef absXSpd, absYSpd, signXSpd, signYSpd
+.endm
+
+.macro PPUString args ppuAddress ; , ppuString
+    .byte >ppuAddress, <ppuAddress
+    .shift
+    
+    .byte @PPUString\@_end - @PPUString\@_start
+    @PPUString\@_start:
+    .repeat NARGS
+        .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
+            .db \1
+        .elif \?1 == ARG_STRING
+            .stringmap charmap, \1
         .else
-            .error "all elements in ppuString must be strings or bytes"
+            .print \?1, "\n"
+            .fail "PPUString: bad data argument type"
         .endif
-    .endrep
+        .shift
+    .endr
+    @PPUString\@_end:
     
-    .assert ppuStringLen >= 1 && ppuStringLen <= 256, error, "ppuStringLen must be from 1 to 256 inclusive"
+    .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
+        .print @PPUString\@_end - @PPUString\@_start, "\n"
+        .fail "PPUString: bad string length"
+    .endif
     
-    .byte ppuStringLen
-    .byte ppuString
-.endmacro
+.endm
 
-.macro PPUStringRepeat ppuAddress, ppuByte, repetitions
-    .byte .hibyte(ppuAddress), .lobyte(ppuAddress)
+.macro PPUStringRepeat args ppuAddress, ppuByte, repetitions
+    .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
-    .byte ppuByte
-.endmacro
+    .if (\?2 == ARG_IMMEDIATE) || (\?2 == ARG_NUMBER)
+        .db ppuByte
+    .elif \?2 == ARG_STRING
+        .stringmap charmap, ppuByte
+    .else
+        .print \?2, "\n"
+        .fail "PPUString: bad data argument type"
+    .endif
+.endm
 
-.macro PtrTableEntry ptrTable, ptr
-    .ident(.concat("_id_", .string(ptr))) .set (* - ptrTable) / 2
-    .word ptr
-.endmacro
-
-.macro EnemyMovementChoiceEntry enemyMovementIndexList
-    enemyMovementIndexListLen .set 0
-    .repeat .tcount(enemyMovementIndexList), tokenID
-        .if .match({.mid(tokenID, 1, enemyMovementIndexList)}, $00)
-            ; assume the number is a byte
-            enemyMovementIndexListLen .set enemyMovementIndexListLen+1
-        .elseif .match({.mid(tokenID, 1, enemyMovementIndexList)}, {,})
-            ; ignore comma token
+.macro PtrTableEntry args ptrTable, ptr
+    .ifndef _id_\2
+        .ifdef _entryNumber_\1
+            .redef _entryNumber_\1 = _entryNumber_\1 + 1
         .else
-            .error "all elements in enemyMovementIndexList must be bytes"
+            .def _entryNumber_\1 = 0
         .endif
-    .endrep
+        
+        .def _id_\2 = _entryNumber_\1
+    .endif
+    .word ptr
+.endm
 
-    .assert enemyMovementIndexListLen >= 1 && enemyMovementIndexListLen <= 256, error, "enemyMovementIndexListLen must be from 1 to 256 inclusive"
+.macro EnemyMovementChoiceEntry ; args enemyMovementIndexList
+    assertMsg NARGS >= 1 && NARGS <= 256, "number of choices must be from 1 to 256 inclusive"
     
-    enemyMovementIndexListLen2 .set enemyMovementIndexListLen
+    .def NARGS2 = NARGS
     .repeat 8
-        .if (enemyMovementIndexListLen2 & 1) = 0
-            enemyMovementIndexListLen2 .set enemyMovementIndexListLen2>>1
+        .if (NARGS2 & 1) == 0
+            .redef NARGS2 = NARGS2 >> 1
         .endif
-    .endrep
-    .assert enemyMovementIndexListLen2 = 1, error, "enemyMovementIndexListLen must be a power of 2"
-    
-    .byte enemyMovementIndexListLen - 1
-    .byte enemyMovementIndexList
-.endmacro
+    .endr
+    assertMsg NARGS2 == 1, "number of choices must be a power of 2"
+    .undef NARGS2
+
+    .byte NARGS - 1
+    .repeat NARGS
+        .byte \1
+        .shift
+    .endr
+.endm
 
 .macro EnemyMovementInstr_StopMovementSeahorse
     .byte $FA
-.endmacro
+.endm
 
 .macro EnemyMovementInstr_StopMovement
     .byte $FB
-.endmacro
+.endm
 
 .macro EnemyMovementInstr_RepeatPreviousUntilFailure
     .byte $FC
-.endmacro
+.endm
 
 .macro EnemyMovementInstr_ClearEnData1D
     .byte $FD
-.endmacro
+.endm
 
 .macro EnemyMovementInstr_FE ; some form of end
     .byte $FE
-.endmacro
+.endm
 
 .macro EnemyMovementInstr_Restart
     .byte $FF
-.endmacro
+.endm
 
 
 ;There are 3 control bytes associated with the music data and the rest are musical note indexes.
@@ -120,103 +136,124 @@
 ;remaining bytes are indexes into the MusicNotesTbl and should only be even numbers as there are 2
 ;bytes of data per musical note.
 
-.macro SongHeader noteLengthsTable, repeatFlag, triangleLength, sq1Envelope, sq2Envelope
-    .byte noteLengthsTable - NoteLengthsTbl, repeatFlag, triangleLength, sq1Envelope, sq2Envelope
-.endmacro
+.macro SongHeader args noteLengthsTable, repeatFlag, triangleLength, sq1Envelope, sq2Envelope
+    ; wla-dx weird pointer math forces me to get low byte
+    .byte <(noteLengthsTable - NoteLengthsTbl)
+    
+    .byte repeatFlag, triangleLength, sq1Envelope, sq2Envelope
+.endm
 
 .macro SongEnd
     .byte $00
-.endmacro
+.endm
 
 .macro SongRest
     .byte $02
-.endmacro
+.endm
 
-.macro SongNote noteName
-    .assert .match(noteName, ""), error, "noteName must be a string"
-    noteNameLen .set .strlen(noteName)
-    note .set -1
-    octave .set -1
+.macro SongNote args noteName
+    assertMsg \?1 == ARG_STRING, "noteName must be a string"
+    
+    .def note = -1
+    .def octave = -1
 
-    .repeat noteNameLen, i
-        .if i = 0
-            ; notes
-            .if .strat(noteName, i) = 'C'
-                note .set 0
-            .elseif .strat(noteName, i) = 'D'
-                note .set 2
-            .elseif .strat(noteName, i) = 'E'
-                note .set 4
-            .elseif .strat(noteName, i) = 'F'
-                note .set 5
-            .elseif .strat(noteName, i) = 'G'
-                note .set 7
-            .elseif .strat(noteName, i) = 'A'
-                note .set 9
-            .elseif .strat(noteName, i) = 'B'
-                note .set 11
-            .else
-                .error "noteName note is invalid"
-            .endif
-        .elseif i = noteNameLen-1
-            ; octave (there must be a way to parse integer, this is stupid)
-            .if .strat(noteName, i) = '2'
-                octave .set 2
-            .elseif .strat(noteName, i) = '3'
-                octave .set 3
-            .elseif .strat(noteName, i) = '4'
-                octave .set 4
-            .elseif .strat(noteName, i) = '5'
-                octave .set 5
-            .elseif .strat(noteName, i) = '6'
-                octave .set 6
-            .elseif .strat(noteName, i) = '7'
-                octave .set 7
-            .else
-                .error "noteName octave is invalid"
-            .endif
-        .else
-            ; accidentals
-            .if .strat(noteName, i) = 's' || .strat(noteName, i) = '#'
-                note .set note+1
-            .elseif .strat(noteName, i) = 'b'
-                note .set note-1
-            .else
-                .error "noteName accidental is invalid"
-            .endif
-        .endif
-    .endrepeat
+    .if substring(noteName, 0, 2) == noteName
+        .def noteNameLen = 2
+    .elif substring(noteName, 0, 3) == noteName
+        .def noteNameLen = 3
+    .else
+        .fail "SongNote: bad noteName string length"
+    .endif
+    
+    ; weird that i need to precalculate these values
+    .def noteNameLenMinusOne = noteNameLen - 1
+    .def noteNameLenMinusTwo = noteNameLen - 2
+    
+    .def strNote = substring(noteName, 0, 1)
+    .def strAccidental = substring(noteName, 1, noteNameLenMinusTwo)
+    .def strOctave = substring(noteName, noteNameLenMinusOne, 1)
+    
+    .undef noteNameLen, noteNameLenMinusOne, noteNameLenMinusTwo
 
-    noteID .set (note + (octave-2)*12) * 2
-    ;.out .sprintf("noteID = $%02X", noteID)
+    ; notes
+    .if strNote == "C"
+        .redef note = 0
+    .elif strNote == "D"
+        .redef note = 2
+    .elif strNote == "E"
+        .redef note = 4
+    .elif strNote == "F"
+        .redef note = 5
+    .elif strNote == "G"
+        .redef note = 7
+    .elif strNote == "A"
+        .redef note = 9
+    .elif strNote == "B"
+        .redef note = 11
+    .else
+        .fail "noteName note is invalid"
+    .endif
+    
+    ; accidentals
+    .if strAccidental == "s" || strAccidental == "#"
+        .redef note = note + 1
+    .elif strAccidental == "b"
+        .redef note = note - 1
+    .elif strAccidental == ""
+        ; nothing
+    .else
+        .fail "noteName accidental is invalid"
+    .endif
+    
+    ; octave (there must be a way to parse integer, this is stupid)
+    .if strOctave == "2"
+        .redef octave = 2
+    .elif strOctave == "3"
+        .redef octave = 3
+    .elif strOctave == "4"
+        .redef octave = 4
+    .elif strOctave == "5"
+        .redef octave = 5
+    .elif strOctave == "6"
+        .redef octave = 6
+    .elif strOctave == "7"
+        .redef octave = 7
+    .else
+        .fail "noteName octave is invalid"
+    .endif
+
+    .def noteID = (note + (octave - 2) * 12) * 2
 
     ; MusicNotesTbl weirdness
-    .if noteID = $7E || noteID = $80
-        .error "the note D#7 was replaced by F7 in the MusicNotesTbl, so D#7 and E7 don't exist"
-    .elseif noteID = $82
-        noteID .set $7E
+    .if noteID == $7E || noteID == $80
+        .fail "the note D#7 was replaced by F7 in the MusicNotesTbl, so D#7 and E7 don't exist"
+    .elif noteID == $82
+        .redef noteID = $7E
     .endif
 
-    .if noteID = $06
-        .error "the note D#2 was skipped in the MusicNotesTbl, so it doesn't exist"
-    .elseif noteID = $04 || noteID = $02
-        noteID .set noteID+2
+    .if noteID == $06
+        .fail "the note D#2 was skipped in the MusicNotesTbl, so it doesn't exist"
+    .elif noteID == $04 || noteID == $02
+        .redef noteID = noteID + 2
     .endif
 
-    .assert noteID >= $04 && noteID < $80, error, "noteID not in range"
+    assertMsg noteID >= $04 && noteID < $80, "noteID not in range"
     .byte noteID
-.endmacro
+    
+    .undef note, octave, strNote, strAccidental, strOctave, noteID
+.endm
 
-.macro SongNoteLength lengthIndex
-    .assert lengthIndex < $10, error, "Invalid note length index"
+.macro SongNoteLength args lengthIndex
+    assertMsg lengthIndex < $10, "Invalid note length index"
     .byte $B0 | lengthIndex
-.endmacro
+.endm
 
-.macro SongRepeatSetup repetitions
-    .assert repetitions < $3F, error, "Invalid number of repetitions"
+.macro SongRepeatSetup args repetitions
+    assertMsg repetitions < $3F, "Invalid number of repetitions"
     .byte $C0 | repetitions
-.endmacro
+.endm
 
 .macro SongRepeat
     .byte $FF
-.endmacro
+.endm
+

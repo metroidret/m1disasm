@@ -54,100 +54,109 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+@y02:
     .byte $02
-    .word LA3E4
+    .word @y03
     ;Elevator to Tourian.
-        .byte $03, (LA3DE-*)+1
+    @@x03:
+        .byte $03, @@x0F - @@x03
         .byte it_Elevator, $03
         .byte $00
     ;Varia suit.
-    LA3DE:
+    @@x0F:
         .byte $0F, $FF
         .byte it_PowerUp, pu_VARIA, $37
         .byte $00
 
-LA3E4:
+@y03:
     .byte $03
-    .word LA3F3
+    .word @y05
     ;Missiles.
-        .byte $18, (LA3ED-*)+1
+    @@x18:
+        .byte $18, @@x1B - @@x18
         .byte it_PowerUp, pu_MISSILES, $67
         .byte $00
     ;Energy tank.
-    LA3ED:
+    @@x1B:
         .byte $1B, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $87
         .byte $00
 
-LA3F3:
+@y05:
     .byte $05
-    .word LA402
+    .word @y07
     ;Long beam.
-        .byte $07, (LA3FC-*)+1
+    @@x07:
+        .byte $07, @@x19 - @@x07
         .byte it_PowerUp, pu_LONGBEAM, $37
         .byte $00
     ;Bombs.
-    LA3FC:
+    @@x19:
         .byte $19, $FF
         .byte it_PowerUp, pu_BOMBS, $37
         .byte $00
 
-LA402:
+@y07:
     .byte $07
-    .word LA40F
+    .word @y09
     ;Palette change room.
-        .byte $0C, (LA409-*)+1
+    @@x0C:
+        .byte $0C, @@x19 - @@x0C
         .byte it_PaletteChange
         .byte $00
     ;Energy tank.
-    LA409:
+    @@x19:
         .byte $19, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $87
         .byte $00
 
-LA40F:
+@y09:
     .byte $09
-    .word LA41C
+    .word @y0B
     ;Ice beam.
-        .byte $13, (LA418-*)+1
+    @@x13:
+        .byte $13, @@x15 - @@x13
         .byte it_PowerUp, pu_ICEBEAM, $37
         .byte $00
     ;Mellows.
-    LA418:
+    @@x15:
         .byte $15, $FF
         .byte it_Mellow
         .byte $00
 
-LA41C:
+@y0B:
     .byte $0B
-    .word LA42A
+    .word @y0E
     ;Missiles.
-        .byte $12, (LA425-*)+1
+    @@x12:
+        .byte $12, @@x16 - @@x12
         .byte it_PowerUp, pu_MISSILES, $67
         .byte $00
     ;Elevator to Norfair.
-    LA425:
+    @@x16:
         .byte $16, $FF
         .byte it_Elevator, $01
         .byte $00
 
-LA42A:
+@y0E:
     .byte $0E
-    .word LA439
+    .word @y12
     ;Maru Mari.
-        .byte $02, (LA433-*)+1
+    @@x02:
+        .byte $02, @@x09 - @@x02
         .byte it_PowerUp, pu_MARUMARI, $96
         .byte $00
     ;Energy tank.
-    LA433:
+    @@x09:
         .byte $09, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $12
         .byte $00
 
-LA439:
+@y12:
     .byte $12
     .word $FFFF
     ;Elevator to Kraid.
+    @@x07:
         .byte $07, $FF
         .byte it_Elevator, $02
         .byte $00

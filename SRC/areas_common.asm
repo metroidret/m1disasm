@@ -15,55 +15,6 @@
 
 ;Common area code (shared between banks)
 
-;---------------------------------------------[ Import ]---------------------------------------------
-
-.import Startup
-.import NMI
-.import ChooseRoutine
-.import Adiv32
-.import Adiv16
-.import Adiv8
-.import Amul16
-.import TwosComplement
-.import Base10Subtract
-.import SubtractHealth
-.import InitObjAnimIndex
-.import SetObjAnimIndex
-.import UpdateEnemyAnim
-.import VerticalRoomCentered
-.import EnemyCheckMoveUp
-.import EnemyCheckMoveDown
-.import EnemyCheckMoveLeft
-.import EnemyCheckMoveRight
-.import ExitSub
-.import AnimDrawObject
-.import SFX_Door
-.import OrEnData05
-.import ReadTableAt968B
-.import MapScrollRoutine
-.import MotherBrainMusic
-.import TourianMusic
-.import SelectSamusPal
-.import MakeCartRAMPtr
-.import LDD8B
-.import NegateTemp00Temp01
-.import LEB6E
-.import LF410
-.import LF416
-.import LF438
-.import InitEnAnimIndex
-.import GetEnemyTypeTimes2PlusFacingDirectionBit0
-.import LF852
-.import LF85A
-.import SpawnFireball
-.import EnemyBGCollideOrApplySpeed
-.import LFB70
-.import LFB88
-.import LFBB9
-.import LFBCA
-.import ApplySpeedToPosition
-.import DrawTileBlast
-
 ;-----------------------------------------[ Start of code ]------------------------------------------
 
 ; These first three all jump to different points within the same procedure
@@ -476,7 +427,7 @@ LoadEnemyMovementPtr:
     lda EnemyMovementPtrs,y
     sta EnemyMovementPtr
     lda EnemyMovementPtrs+1,y
-    sta EnemyMovementPtr+1
+    sta EnemyMovementPtr+1.b
     rts
 
 ;-------------------------------------------------------------------------------
@@ -697,6 +648,7 @@ EnemyGetDeltaX:
     ldy EnMovementInstrIndex,x
     iny
     lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
+EnemyGetDeltaX_832F:
     tax
 ; Save the sign bit to the processor flags
     and #$08
@@ -1151,7 +1103,7 @@ UpdateDoor_Init:
     ; increment door status to "closed"
     inc DoorStatus,x
     ; set door animation to closed
-    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0 - ObjectAnimIndexTbl + $02.b
     jsr InitObjAnimIndex           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
@@ -1220,7 +1172,7 @@ UpdateDoor_Closed:
     ; set door animation to opening the door
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
-    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B - ObjectAnimIndexTbl + $03.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$03
@@ -1306,7 +1258,7 @@ GotoDrawDoor:
     jmp DrawDoor
 
 DoorSubRoutine8C76:
-    lda #ObjAnim_85A0-ObjectAnimIndexTbl+$02
+    lda #ObjAnim_85A0 - ObjectAnimIndexTbl + $02.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$02
@@ -1379,7 +1331,7 @@ UpdateDoor_Scroll:
     lda #$06
     sta DoorStatus,x
     ; set that door's animation to opening the door
-    lda #ObjAnim_859B-ObjectAnimIndexTbl+$03
+    lda #ObjAnim_859B - ObjectAnimIndexTbl + $03.b
     sta DoorAnimResetIndex,x
     sec
     sbc #$03

@@ -89,7 +89,7 @@ PipeBugDelete:
     rts
 
 PipeBugSpeedXTable:
-.if BANK = 1 ; Brinstar
+.if BANK == 1 ; Brinstar
     .byte $04, -$04
 .else ; Norfair, Kraid, Ridley
     .byte $08, -$08

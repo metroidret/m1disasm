@@ -53,46 +53,52 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+@y18:
     .byte $18
-    .word LA21B
+    .word @y19
     ;Missiles.
-        .byte $12, (LA216-*)+1
+    @@x12:
+        .byte $12, @@x19 - @@x12
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00
     ;Elevator to Norfair.
-    LA216:
+    @@x19:
         .byte $19, $FF
         .byte it_Elevator, $84
         .byte $00
 
-LA21B:
+@y19:
     .byte $19
-    .word LA224
+    .word @y1B
     ;Energy tank.
+    @@x11:
         .byte $11, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $74
         .byte $00
 
-LA224:
+@y1B:
     .byte $1B
-    .word LA22D
+    .word @y1D
     ;Missiles.
+    @@x18:
         .byte $18, $FF
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00
 
-LA22D:
+@y1D:
     .byte $1D
-    .word LA236
+    .word @y1E
     ;Energy tank.
+    @@x0F:
         .byte $0F, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $66
         .byte $00
 
-LA236:
+@y1E:
     .byte $1E
     .word $FFFF
     ;Missiles.
+    @@x14:
         .byte $14, $FF
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00

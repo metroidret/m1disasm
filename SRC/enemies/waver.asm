@@ -3,7 +3,7 @@ WaverAIRoutine:
     lda #$21
     sta EnemyLFB88_85
     lda #$1E
-    sta EnemyLFB88_85+1
+    sta EnemyLFB88_85+1.b
     lda EnStatus,x
     cmp #enemyStatus_Explode
     beq L99F7

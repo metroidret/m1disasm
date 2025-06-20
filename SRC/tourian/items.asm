@@ -53,74 +53,81 @@
 ;#$0A=Palette change room.
 
 SpecItmsTbl:
+@y03:
     .byte $03
-    .word LA843
+    .word @y04
     ;Elevator to end.
+    @@x01:
         .byte $01, $FF
         .byte it_Elevator, $8F
         .byte $00
 
-LA843:
+@y04:
     .byte $04
-    .word LA84B
+    .word @y07
     ;Elevator to Brinstar.
+    @@x03:
         .byte $03, $FF
         .byte it_Elevator, $83
         .byte $00
 
-LA84B:
+@y07:
     .byte $07
-    .word LA85B
+    .word @y08
     ;10 missile door.
-        .byte $03, (LA853-*)+1
+    @@x03:
+        .byte $03, @@x04 - @@x03
         .byte it_Door, $A2
         .byte $00
     ;Rinkas
-    LA853:
-        .byte $04, (LA857-*)+1
+    @@x04:
+        .byte $04, @@x09 - @@x04
         .byte it_RinkaSpawner
         .byte $00
     ;Rinkas
-    LA857:
+    @@x09:
         .byte $09, $FF
         .byte it_RinkaSpawner
         .byte $00
 
-LA85B:
+@y08:
     .byte $08
-    .word LA862
+    .word @y09
     ;Rinkas
+    @@x0A:
         .byte $0A, $FF
         .byte it_RinkaSpawner | $10
         .byte $00
 
-LA862:
+@y09:
     .byte $09
-    .word LA869
+    .word @y0A
     ;Rinkas
+    @@x0A:
         .byte $0A, $FF
         .byte it_RinkaSpawner
         .byte $00
 
-LA869:
+@y0A:
     .byte $0A
-    .word LA870
+    .word @y0B
     ;Rinkas
+    @@x0A:
         .byte $0A, $FF
         .byte it_RinkaSpawner | $10
         .byte $00
 
-LA870:
+@y0B:
     .byte $0B
     .word $FFFF
     ;Door at bottom of escape shaft.
-        .byte $01, (LA878-*)+1
+    @@x01:
+        .byte $01, @@x02 - @@x01
         .byte it_Door, $A3
         .byte $00
-
     ;Mother brain, Zebetite, 3 cannons and Rinkas.
-    LA878:
-        .byte $02, (LA884-*)+1
+    @@x02:
+        .byte $02, @@x03 - @@x02
         .byte it_MotherBrain
         .byte it_Zebetite | $40
         .byte it_RinkaSpawner | $10
@@ -128,10 +135,9 @@ LA870:
         .byte it_Cannon | $10, $4B
         .byte it_Cannon | $20, $3E
         .byte $00
-
     ;2 Zebetites, 6 cannons and Rinkas.
-    LA884:
-        .byte $03, (LA896-*)+1
+    @@x03:
+        .byte $03, @@x04 - @@x03
         .byte it_Zebetite | $30
         .byte it_Zebetite | $20
         .byte it_RinkaSpawner
@@ -142,10 +148,9 @@ LA870:
         .byte it_Cannon | $10, $4B
         .byte it_Cannon | $30, $3E
         .byte $00
-
     ;Right door, 2 Zebetites, 6 cannons and Rinkas.
-    LA896:
-        .byte $04, (LA8AA-*)+1
+    @@x04:
+        .byte $04, @@x05 - @@x04
         .byte it_Door, $A3
         .byte it_Zebetite | $10
         .byte it_Zebetite | $00
@@ -157,9 +162,8 @@ LA870:
         .byte it_Cannon | $10, $4B
         .byte it_Cannon | $30, $3E
         .byte $00
-
     ;Left door.
-    LA8AA:
+    @@x05:
         .byte $05, $FF
         .byte it_Door, $B3
         .byte $00

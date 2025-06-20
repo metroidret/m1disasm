@@ -127,10 +127,10 @@ KraidUpdateProjectile_BranchA:
     dey
     beq KraidUpdateProjectile_Resting
     ; remove projectile if its exploding
-    cpy #enemyStatus_Explode-1
+    cpy #enemyStatus_Explode-1.b
     beq KraidUpdateProjectile_Remove
     ; exit if projectile is not frozen
-    cpy #enemyStatus_Frozen-1
+    cpy #enemyStatus_Frozen-1.b
     bne KraidUpdateProjectile_Exit
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting
@@ -179,7 +179,7 @@ KraidUpdateProjectile_Resting:
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
 ;  a crash when attempting to spawn him
-    .IF BANK <> 1
+    .IF BANK != 1
         ; push x to stack
         txa
         pha
@@ -187,7 +187,7 @@ KraidUpdateProjectile_Resting:
     ; store kraid's position in temp
     ldx #$00
     jsr StorePositionToTemp
-    .IF BANK <> 1
+    .IF BANK != 1
         ; pull x from stack
         pla
         tax
@@ -195,7 +195,7 @@ KraidUpdateProjectile_Resting:
     ; apply offset to kraid's position
     jsr CommonJump_ApplySpeedToPosition
 
-    .IF BANK = 1
+    .IF BANK == 1
         ; load projectile's enemy slot offset into x
         ; (BUG! this is actually kraid's enemy slot offset) 
         ldx PageIndex
