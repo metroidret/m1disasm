@@ -4,23 +4,23 @@ SongFadeInSQ2:
         SongNote "G4"
         SongNote "C4"
     SongRepeat
-        SongRepeatSetup $4
+    SongRepeatSetup $4
         SongNote "A4"
         SongNote "C4"
     SongRepeat
-        SongRepeatSetup $4
+    SongRepeatSetup $4
         SongNote "F4"
         SongNote "A#3"
     SongRepeat
-        SongRepeatSetup $4
+    SongRepeatSetup $4
         SongNote "E4"
         SongNote "G3"
     SongRepeat
-        SongRepeatSetup $4
+    SongRepeatSetup $4
         SongNote "D4"
         SongNote "E3"
     SongRepeat
-        SongRepeatSetup $20 ; only 12 out of 32 repetitions play before the song ends
+    SongRepeatSetup $20 ; only 12 out of 32 repetitions play before the song ends
         SongNote "D4"
         SongNote "F#3"
     SongRepeat

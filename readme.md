@@ -2,11 +2,11 @@
 
 A full disassembly of Metroid 1 for the NES, with sections of varying completeness.
 
-Based on the prior work of SnowBro (Kent Hansen), Dirty McDingus, and the metconst wiki. ZaneDubya's MMC3 mapper port was also a useful resource in making this.
+Based on the prior work of SnowBro (Kent Hansen), Dirty McDingus, and the metconst wiki. ZaneDubya's MMC3 mapper port was also a useful resource in making this. Figurative fork of alex-west's [met1disasm](https://github.com/alex-west/met1disasm) GitHub repository.
 
-The code has been manually reworked to assemble with asm6f instead of Ophis, because Ophis was slow and lacking some crucial features.
+The code has been manually reworked multiple times in a laborious journey to find the assembler fit for the job. (Ophis -> asm6f -> ca65 -> WLA-DX)
 
-To build, run build.bat in the SRC folder. Currently, each of the banks must be assembled separately and then combined into a single file. This may change eventually.
+To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together. Right now, there is nothing to ensure multi-bank labels have consistant NES memory locations in every bank they're in. This may change eventually.
 
 Please be sure to verify that your code produces an exact copy of the original before submitting a pull request.
 
@@ -14,8 +14,9 @@ Please be sure to verify that your code produces an exact copy of the original b
 
 Subject to change.
 
- * build.bat - Under Windows, click this to build. Requires asm6f to be in your path.
- * prg*.asm - Main assembly files for each bank
- * .\brinstar, .\norfair, etc. - Data pertaining to each bank
- * .\common_chr, .\misc_chr - Common and miscellaneous CHR data
- * .\enemies - Assembly files for enemies shared between areas
+ * build.py - Run this to build. Requires WLA-DX binaries to be in your path.
+ * SRC/prg*.asm - Main assembly files for each bank
+ * SRC/brinstar, SRC/norfair, etc. - Data pertaining to each bank
+ * SRC/common_chr - Common CHR data
+ * SRC/enemies - Assembly files for enemy AI routines shared between areas
+ * SRC/songs - Song data for all songs in the game
