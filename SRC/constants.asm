@@ -722,15 +722,17 @@ TileInfo5              = $0786   ;
 
 PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F bytes max.
 
-;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. The first
-;byte in the string is the upper address byte of the starting point in the PPU to write
-;the data.  The second byte is the lower address byte. The third byte is a configuration
-;byte. if the MSB of this byte is set, the PPU is incremented by 32 after each byte write
-;(vertical write).  It the MSB is cleared, the PPU is incremented by 1 after each write
-;(horizontal write). If bit 6 is set, the next data byte is repeated multiple times during
-;successive PPU writes.  The number of times the next byte is repeated is based on bits
-;0-5 of the configuration byte.  Those bytes are a repitition counter. Any following bytes
-;are the actual data bytes to be written to the PPU. #$00 separates the data chunks.
+;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. 
+;The first two bytes in the string are the address of the starting point in the PPU to write -->
+;the data (high byte, low byte).
+;The third byte is a configuration byte.
+; If the MSB of this byte is set, the PPU is incremented by 32 after each byte write (vertical write).
+; If the MSB is cleared, the PPU is incremented by 1 after each write (horizontal write).
+; If bit 6 is set, the next data byte is repeated multiple times during successive PPU writes.
+; The number of times the next byte is repeated is based on bits 0-5 of the configuration byte.
+; Those bytes are a repetition counter.
+;Any following bytes are the actual data bytes to be written to the PPU.
+;#$00 separates the data chunks.
 
 PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written to PPU.
 
@@ -738,6 +740,25 @@ PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written
 
 RoomRAMA               = $6000   ;Thru $63FF. Used to load room before it is put into the PPU.
 RoomRAMB               = $6400   ;Thru $67FF. Used to load room before it is put into the PPU.
+
+
+; ??? slots of ??? bytes each
+UnusedIntro6833        = $6833   ;Unused. Would have contained a BCD version of the number in -->
+; UnusedIntro6833+1      = $6834   ;UnusedIntro684C. (high, low)
+
+; ??? slots of ???(at least 2) bytes each
+UnusedIntro6839        = $6839   ;Unused.
+
+; ??? slots of ??? bytes each
+UnusedIntro683C        = $683C   ;Unused. Would have contained a BCD version of the number in -->
+; UnusedIntro683C+1      = $683D   ;UnusedIntro684A. (high, low)
+
+; ??? slots of 16 bytes each
+UnusedIntro6842        = $6842   ;Unused.
+UnusedIntro684A        = $684A   ;Unused. Would have contained a 16bit hex number to be converted -->
+; UnusedIntro684A+1      = $684B   ;to decimal by UnusedIntroRoutine8.
+UnusedIntro684C        = $684C   ;Unused. Would have contained a 16bit hex number to be converted -->
+; UnusedIntro684C+1      = $684C   ;to decimal by UnusedIntroRoutine8.
 
 EndingType             = $6872   ;1=worst ending, 5=best ending
 

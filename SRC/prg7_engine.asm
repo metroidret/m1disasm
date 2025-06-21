@@ -5761,8 +5761,8 @@ Xplus4:
 
 ;------------------------------------[ Convert hex to decimal ]--------------------------------------
 
-;Convert 8-bit value in A to 3 decimal digits. Upper digit put in $02, middle in $01 and lower in $00.
-
+;Convert 8-bit value in A to 3 decimal digits.
+;Upper digit put in $02, middle in $01 and lower in $00.
 HexToDec:
     ldy #100                        ;Find upper digit.
     sty $0A                         ;

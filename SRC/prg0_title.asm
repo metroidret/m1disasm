@@ -24,12 +24,14 @@
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 MainTitleRoutine:
-    lda TitleRoutine                ;
-    cmp #$15                        ;If intro routines not running, branch.
-    bcs L8027                       ;
-    lda Joy1Change                  ;
-    and #$10                        ;if start has not been pressed, branch.
-    beq L8022                       ;
+    ;If intro routines not running, branch.
+    lda TitleRoutine
+    cmp #_id_StartContinueScreen15.b
+    bcs L8027
+    ;if start has not been pressed, branch.
+    lda Joy1Change
+    and #BUTTON_START
+    beq L8022
         ldy #$00                        ;
         sty SpareMemD1                  ;Not accessed by game.
         sty SpareMemBB                  ;Not accessed by game.
@@ -38,7 +40,7 @@ MainTitleRoutine:
         lda PPUCTRL_ZP                  ;
         and #$FC                        ;Set name table to name table 0.
         sta PPUCTRL_ZP                  ;
-        lda #$1B                        ;If start pressed, load START/CONTINUE screen.
+        lda #_id_StartContinueScreen1B.b  ;If start pressed, load START/CONTINUE screen.
         sta TitleRoutine                ;
         bne L8027                       ;Branch always.
     L8022:
@@ -46,37 +48,38 @@ MainTitleRoutine:
         lda TitleRoutine                ;
 L8027:
     jsr ChooseRoutine               ;($C27C)Jump to proper routine below.
-        .word InitializeAfterReset      ;($8071)First routine after reset.
-        .word DrawIntroBackground       ;($80D0)Draws ground on intro screen.
-        .word FadeInDelay               ;($80F9)Sets up METROID fade in delay.
-        .word METROIDFadeIn             ;($812C)Fade METROID onto screen.
-        .word LoadFlashTimer            ;($8142)Load timer for METROID flash.
-        .word FlashEffect               ;($8109)Makes METROID flash.
-        .word METROIDSparkle            ;($814D)Top and bottom "sparkles" on METROID.
-        .word METROIDFadeOut            ;($8163)Fades METROID off the screen.
-        .word Crosshairs                ;($8182)Displays "crosshairs" effect on screen.
-        .word MoreCrosshairs            ;($81D1)Continue "crosshairs" effect.
-        .word IncTitleRoutine           ;($806E)Increment TitleRoutine.
-        .word IncTitleRoutine           ;($806E)Increment TitleRoutine.
-        .word ChangeIntroNameTable      ;($822E)Change from name table 0 to name table 1.
-        .word MessageFadeIn             ;($8243)Fade in intro sequence message.
-        .word MessageFadeOut            ;($8263)Fade out intro sequence message.
-        .word DelayIntroReplay          ;($8283)Set Delay time before intro sequence restarts.
-        .word ClearSpareMem             ;($8068)clears some memory addresses not used by game.
-        .word PrepIntroRestart          ;($82A3)Prepare to restart intro routines.
-        .word TitleScreenOff            ;($82ED)Turn screen off.
-        .word TitleRoutineReturn        ;($82F3)Rts.
-        .word TitleRoutineReturn        ;($82F3)Rts.
-        .word StartContinueScreen       ;($90BA)Displays START/Continue screen.
-        .word ChooseStartContinue       ;($90D7)player chooses between START and CONTINUE.
-        .word LoadPasswordScreen        ;($911A)Loads password entry screen.
-        .word EnterPassword             ;($9147)User enters password.
-        .word DisplayPassword           ;($9359)After game over, display password on screen.
-        .word WaitForSTART              ;($9394)Wait for START when showing password.
-        .word StartContinueScreen       ;($90BA)Displays START/Continue screen.
-        .word GameOver                  ;($939E)Displays "GAME OVER".
-        .word EndGame                   ;($9AA7)Show ending of the game.
-        .word SetTimer                  ;($C4AA)Set delay timer.
+    TitleRoutinePtrTable:
+        PtrTableEntry TitleRoutinePtrTable, InitializeAfterReset      ;($8071)First routine after reset.
+        PtrTableEntry TitleRoutinePtrTable, DrawIntroBackground       ;($80D0)Draws ground on intro screen.
+        PtrTableEntry TitleRoutinePtrTable, FadeInDelay               ;($80F9)Sets up METROID fade in delay.
+        PtrTableEntry TitleRoutinePtrTable, METROIDFadeIn             ;($812C)Fade METROID onto screen.
+        PtrTableEntry TitleRoutinePtrTable, LoadFlashTimer            ;($8142)Load timer for METROID flash.
+        PtrTableEntry TitleRoutinePtrTable, FlashEffect               ;($8109)Makes METROID flash.
+        PtrTableEntry TitleRoutinePtrTable, METROIDSparkle            ;($814D)Top and bottom "sparkles" on METROID.
+        PtrTableEntry TitleRoutinePtrTable, METROIDFadeOut            ;($8163)Fades METROID off the screen.
+        PtrTableEntry TitleRoutinePtrTable, Crosshairs                ;($8182)Displays "crosshairs" effect on screen.
+        PtrTableEntry TitleRoutinePtrTable, MoreCrosshairs            ;($81D1)Continue "crosshairs" effect.
+        PtrTableEntry TitleRoutinePtrTable, IncTitleRoutine0A         ;($806E)Increment TitleRoutine.
+        PtrTableEntry TitleRoutinePtrTable, IncTitleRoutine0B         ;($806E)Increment TitleRoutine.
+        PtrTableEntry TitleRoutinePtrTable, ChangeIntroNameTable      ;($822E)Change from name table 0 to name table 1.
+        PtrTableEntry TitleRoutinePtrTable, MessageFadeIn             ;($8243)Fade in intro sequence message.
+        PtrTableEntry TitleRoutinePtrTable, MessageFadeOut            ;($8263)Fade out intro sequence message.
+        PtrTableEntry TitleRoutinePtrTable, DelayIntroReplay          ;($8283)Set Delay time before intro sequence restarts.
+        PtrTableEntry TitleRoutinePtrTable, ClearSpareMem             ;($8068)clears some memory addresses not used by game.
+        PtrTableEntry TitleRoutinePtrTable, PrepIntroRestart          ;($82A3)Prepare to restart intro routines.
+        PtrTableEntry TitleRoutinePtrTable, TitleScreenOff            ;($82ED)Turn screen off.
+        PtrTableEntry TitleRoutinePtrTable, TitleRoutineReturn13      ;($82F3)Rts.
+        PtrTableEntry TitleRoutinePtrTable, TitleRoutineReturn14      ;($82F3)Rts.
+        PtrTableEntry TitleRoutinePtrTable, StartContinueScreen15     ;($90BA)Displays START/Continue screen.
+        PtrTableEntry TitleRoutinePtrTable, ChooseStartContinue       ;($90D7)player chooses between START and CONTINUE.
+        PtrTableEntry TitleRoutinePtrTable, LoadPasswordScreen        ;($911A)Loads password entry screen.
+        PtrTableEntry TitleRoutinePtrTable, EnterPassword             ;($9147)User enters password.
+        PtrTableEntry TitleRoutinePtrTable, DisplayPassword           ;($9359)After game over, display password on screen.
+        PtrTableEntry TitleRoutinePtrTable, WaitForSTART              ;($9394)Wait for START when showing password.
+        PtrTableEntry TitleRoutinePtrTable, StartContinueScreen1B     ;($90BA)Displays START/Continue screen.
+        PtrTableEntry TitleRoutinePtrTable, GameOver                  ;($939E)Displays "GAME OVER".
+        PtrTableEntry TitleRoutinePtrTable, EndGame                   ;($9AA7)Show ending of the game.
+        PtrTableEntry TitleRoutinePtrTable, SetTimer                  ;($C4AA)Set delay timer.
 
 ;----------------------------------------[ Intro routines ]------------------------------------------
 
@@ -86,7 +89,8 @@ ClearSpareMem:
     sta SpareMemCB
     sta SpareMemC9
 
-IncTitleRoutine:
+IncTitleRoutine0A:
+IncTitleRoutine0B:
     ;Increment to next title routine.
     inc TitleRoutine
     rts
@@ -180,36 +184,46 @@ FadeInDelay:
     rts
 
 FlashEffect:
-    lda FrameCount                  ;Every third frame, run change palette-->
-    and #$03                        ;Creates METROID flash effect.
-    bne RTS_812B                    ;
-    lda PalDataIndex                ;Uses only the first three palette-->
-    and #$03                        ;data sets in the flash routine.
-    sta PalDataIndex                ;
-    jsr LoadPalData                 ;
-    lda Timer3                      ;If Timer 3 has not expired, branch-->
-    bne RTS_812B                    ;so routine will keep running.
-    lda PalDataIndex                ;
-    cmp #$04                        ;Ensures the palette index is back at 0.
-    bne RTS_812B                    ;
-    inc TitleRoutine                ;Increment to next routine.
+    ;Every fourth frame, run change palette. Creates METROID flash effect.
+    lda FrameCount
+    and #$03
+    bne @RTS
+    ;Uses only the first four palette data sets in the flash routine.
+    lda PalDataIndex
+    and #$03
+    sta PalDataIndex
+    jsr LoadPalData
+    ;If Timer3 has not expired, branch so routine will keep running.
+    lda Timer3
+    bne @RTS
+    ;Ensures the palette index is back at 0.
+    lda PalDataIndex
+    cmp #$04
+    bne @RTS
+    ;Increment to next routine.
+    inc TitleRoutine
     jsr LoadSparkleData             ;($87AB) Loads data for next routine.
-    lda #$18                        ;Sets Timer 3 for a delay of 240 frames-->
-    sta Timer3                      ;(4 seconds).
-RTS_812B:
+    ;Sets Timer 3 for a delay of 240 frames (4 seconds).
+    lda #$18
+    sta Timer3
+@RTS:
     rts
 
 METROIDFadeIn:
-    lda Timer3                      ;
-    bne RTS_8141                    ;
-    lda FrameCount                  ;Every 16th FrameCount, Change palette.-->
-    and #$0F                        ;Causes the fade in effect.
-    bne RTS_8141                    ;
+    ;
+    lda Timer3
+    bne RTS_8141
+    ;Every 16th FrameCount, Change palette. Causes the fade in effect.
+    lda FrameCount
+    and #$0F
+    bne RTS_8141
+    ;
     jsr LoadPalData                 ;($8A8C)Load data into Palettes.
-    bne RTS_8141                    ;
-    lda #$20                        ;Set timer delay for METROID flash effect.-->
-    sta Timer3                      ;Delays flash by 320 frames (5.3 seconds).
-    inc TitleRoutine                ;
+    bne RTS_8141
+    ;Set timer delay for METROID flash effect. Delays flash by 320 frames (5.3 seconds).
+    lda #$20
+    sta Timer3
+    inc TitleRoutine
 RTS_8141:
     rts
 
@@ -482,7 +496,8 @@ TitleScreenOff:
     inc TitleRoutine                ;Next routine is TitleRoutineReturn.
     rts                             ;This routine should not be reached.
 
-TitleRoutineReturn:
+TitleRoutineReturn13:
+TitleRoutineReturn14:
     rts                             ;Last title routine function. Should not be reached.
 
 ;The following data fills name table 0 with the intro screen background graphics.
@@ -1186,11 +1201,11 @@ LoadPalData:
     ldy PalDataIndex
     lda PalSelectTbl,y
     cmp #$FF
-    beq RTS_8A99
+    beq @RTS
     ;Prepare to write palette data.
     sta PalDataPending
     inc PalDataIndex
-RTS_8A99:
+@RTS:
     rts
 
 ;The table below is used by above routine to pick the proper palette.
@@ -1230,25 +1245,31 @@ RTS_8AD2:
     rts
 
 L8AD3:
-    lda #$19                        ;
-    sta $00                         ;Prepare to write to the sprite palette-->
-    lda #$3F                        ;starting at address $3F19.
-    sta $01                         ;
-    lda IntroStarOffset             ;Use only first 3 bits of byte since the pointer-->
-    and #$07                        ;table only has 8 entries.
-    asl                             ;*2 to find entry in IntroStarPntr table.
-    tay                             ;
-    lda IntroStarPntr,y             ;Stores starting address of palette data to write-->
-    sta $02                         ;into $02 and $03 from IntroStarPntr table.
-    lda IntroStarPntr+1,y           ;
-    sta $03                         ;
-    inc IntroStarOffset             ;Increment index for next palette change.
+    ;Prepare to write to the sprite palette starting at address $3F19.
+    lda #$19
+    sta $00
+    lda #$3F
+    sta $01
+    ;Use only first 3 bits of byte since the pointer table only has 8 entries.
+    lda IntroStarOffset
+    and #$07
+    ;*2 to find entry in IntroStarPntr table.
+    asl
+    tay
+    ;Stores starting address of palette data to write into $02 and $03 from IntroStarPntr table.
+    lda IntroStarPntr,y
+    sta $02
+    lda IntroStarPntr+1,y
+    sta $03
+    ;Increment index for next palette change.
+    inc IntroStarOffset
     jsr PrepPPUPaletteString        ;($C37E)Prepare and write new palette data.
-    lda #$1D                        ;
-    sta $00                         ;
-    lda #$3F                        ;Prepare another write to the sprite palette.-->
-    sta $01                         ;This tie starting at address $3F1D.
-    iny                             ;
+    ;Prepare another write to the sprite palette. This time, starting at address $3F1D.
+    lda #$1D
+    sta $00
+    lda #$3F
+    sta $01
+    iny
     jsr AddYToPtr02                 ;($C2B3)Find new data base of palette data.
     jmp PrepPPUPaletteString        ;($C37E)Prepare and write new palette data.
 
@@ -1464,107 +1485,142 @@ CheckPassword:
     lda #$0C
     sta Timer3
     ;Run EnterPassword routine.
-    lda #$18
+    lda #_id_EnterPassword.b
     sta TitleRoutine
     rts
 
 CalculatePassword:
-    lda #$00                        ;
-    ldy #$0F                        ;Clears values at addresses -->
+    lda #$00
+    ldy #$0F
+    ;Clears the 16 first password bytes (and also the 16 first password characters, for some reason)
     L8C7E:
-        sta PasswordByte,y              ;$6988 thru $6997 and -->
-        sta PasswordChar,y              ;$699A thru $69A9.
-        dey                             ;
-        bpl L8C7E                       ;
+        sta PasswordByte,y
+        sta PasswordChar,y
+        dey
+        bpl L8C7E
+    
     jsr ProcessUniqueItems          ;($8B79)Determine what items Samus has collected.
-    lda PasswordByte+$07            ;
-    and #$04                        ;Check to see if mother brain has been defeated,-->
-    beq L8C9E                       ;If so, restore mother brain, zeebetites and-->
-        lda #$00                        ;all missile doors in Tourian as punishment for-->
-        sta PasswordByte+$07            ;dying after mother brain defeated. Only reset in the-->
-        lda PasswordByte+$06            ;password.  Continuing without resetting will not-->
-        and #$03                        ;restore those items.
-        sta PasswordByte+$06              ;
+    ;Branch if mother brain has not been defeated
+    lda PasswordByte+$07
+    and #$04
+    beq L8C9E
+        ;Mother brain was defeated
+        ;Restore mother brain, zebetites and all missile doors in Tourian as punishment for-->
+        ;dying in the escape.
+        ;Only reset in the password.  Continuing without resetting will not restore those items.
+        lda #$00
+        sta PasswordByte+$07
+        lda PasswordByte+$06
+        and #$03
+        sta PasswordByte+$06
     L8C9E:
-    lda InArea                      ;Store InArea in bits 0 thru 5 in-->
-    and #$3F                        ;address $6990.
-    ldy JustInBailey                ;
-    beq L8CA9                       ;
-        ora #$80                        ;Sets MSB of $6990 is Samus is suitless.
-    L8CA9:
-    sta PasswordByte+$08              ;
-    lda SamusGear                   ;
-    sta PasswordByte+$09              ;SamusGear stored in $6991.
-    lda MissileCount                ;
-    sta PasswordByte+$0A              ;MissileCount stored in $6992.
-    lda #$00                        ;
-    sta $00                         ;
-    lda KraidStatueStatus           ;
-    and #$80                        ;
-    beq L8CC9                       ;If statue not up, branch.
-        lda $00                         ;
-        ora #$80                        ;Set bit 7 of $00-->
-        sta $00                         ;if Kraid statue up.
-    L8CC9:
-    lda KraidStatueStatus           ;
-    and #$01                        ;
-    beq L8CD6                       ;Branch if Kraid not yet defeated.
-        lda $00                         ;
-        ora #$40                        ;Set bit 6 of $00-->
-        sta $00                         ;If Kraid defeated.
-    L8CD6:
-    lda RidleyStatueStatus          ;
-    and #$80                        ;
-    beq L8CE3                       ;Branch if Ridley statue not up.
-        lda $00                         ;
-        ora #$20                        ;Set bit 5 of $00-->
-        sta $00                         ;if Ridley statue up.
-    L8CE3:
-    lda RidleyStatueStatus          ;
-    and #$02                        ;
-    beq L8CF0                       ;Branch if Ridley not yet defeated.
-        lda $00                         ;
-        ora #$10                        ;Set bit 4 of $00-->
-        sta $00                         ;if Ridley defeated.
-    L8CF0:
-    lda $00                         ;
-    sta PasswordByte+$0F              ;Stores statue statuses in 4 MSB at $6997.
-    ldy #$03                        ;
-    L8CF7:
-        lda SamusAge,y                  ;Store SamusAge in $6993,-->
-        sta PasswordByte+$0B,y            ;SamusAge+1 in $6994 and-->
-        dey                             ;SamusAge+2 in $6995.
-        bpl L8CF7                       ;
-    L8D00:
-        jsr $C000                       ;
-        lda RandomNumber1               ;
-        and #$0F                        ;Store the value of $2E at $6998-->
-        beq L8D00                       ;When any of the 4 LSB are set. (Does not-->
-    sta PasswordByte+$10              ;allow RandomNumber1 to be a multiple of 16).
+    
+    ;Store InArea in bits 0 thru 5 in address $6990.
+    lda InArea
+    and #$3F
+    ;Sets MSB of $6990 is Samus is suitless.
+    ldy JustInBailey
+    beq @endIf_suitless
+        ora #$80
+    @endIf_suitless:
+    sta PasswordByte+$08
+    
+    ;SamusGear stored in $6991.
+    lda SamusGear
+    sta PasswordByte+$09
+    
+    ;MissileCount stored in $6992.
+    lda MissileCount
+    sta PasswordByte+$0A
+    
+    lda #$00
+    sta $00
+    ;Set bit 7 of $00 if Kraid statue is up.
+    lda KraidStatueStatus
+    and #$80
+    beq @endIf_statueBit7
+        lda $00
+        ora #$80
+        sta $00
+    @endIf_statueBit7:
+    ;Set bit 6 of $00 if Kraid is defeated.
+    lda KraidStatueStatus
+    and #$01
+    beq @endIf_statueBit6
+        lda $00
+        ora #$40
+        sta $00
+    @endIf_statueBit6:
+    ;Set bit 5 of $00 if Ridley statue is up.
+    lda RidleyStatueStatus
+    and #$80
+    beq @endIf_statueBit5
+        lda $00
+        ora #$20
+        sta $00
+    @endIf_statueBit5:
+    ;Set bit 4 of $00 if Ridley is defeated.
+    lda RidleyStatueStatus
+    and #$02
+    beq @endIf_statueBit4
+        lda $00
+        ora #$10
+        sta $00
+    @endIf_statueBit4:
+    ;Stores statue statuses in 4 MSB at $6997.
+    lda $00
+    sta PasswordByte+$0F
+    
+    ;Store SamusAge in $6993, SamusAge+1 in $6994 and SamusAge+2 in $6995.
+    ldy #$03
+    @loop_SamusAge:
+        lda SamusAge,y
+        sta PasswordByte+$0B,y
+        dey
+        bpl @loop_SamusAge
+    
+    ;Store the value of $2E at $6998 when any of the 4 LSB are set.
+    ;(Does not allow RandomNumber1 to be a multiple of 16).
+    @loop_random:
+        jsr RandomNumbers
+        lda RandomNumber1
+        and #$0F
+        beq @loop_random
+    sta PasswordByte+$10
+    
     jsr PasswordChecksumAndScramble ;($8E17)Calculate checksum and scramble password.
     jmp LoadPasswordChar            ;($8E6C)Calculate password characters.
 
 LoadPasswordData:
-    lda NARPASSWORD                 ;If invincible Samus active, skip-->
-    bne RTS_8D3C                    ;further password processing.
+    ;If invincible Samus active, skip further password processing.
+    lda NARPASSWORD
+    bne RTS_8D3C
+    
     jsr LoadUniqueItems             ;($8BD4)Load unique items from password.
     jsr LoadTanksAndMissiles        ;($8D3D)Calculate number of missiles from password.
-    ldy #$00                        ;
-    lda PasswordByte+$08            ;If MSB in PasswordByte08 is set,-->
-    and #$80                        ;Samus is not wearing her suit.
-    beq L8D27                       ;
-        iny                             ;
+    
+    ;If MSB in PasswordByte08 is set, Samus is not wearing her suit.
+    ldy #$00
+    lda PasswordByte+$08
+    and #$80
+    beq L8D27
+        iny
     L8D27:
-    sty JustInBailey                ;
-    lda PasswordByte+$08            ;Extract first 5 bits from PasswordByte08-->
-    and #$3F                        ;and use it to determine starting area.
-    sta InArea                      ;
-    ldy #$03                        ;
+    sty JustInBailey
+    
+    ;Extract first 5 bits from PasswordByte08 and use it to determine starting area.
+    lda PasswordByte+$08
+    and #$3F
+    sta InArea
+    
+    ;Load Samus' age.
+    ldy #$03
     L8D33:
-        lda PasswordByte+$0B,y          ;Load Samus' age.
-        sta SamusAge,y                  ;
-        dey                             ;
-        bpl L8D33                       ;Loop to load all 3 age bytes.
+        ;Loop to load all 3 age bytes.
+        lda PasswordByte+$0B,y
+        sta SamusAge,y
+        dey
+        bpl L8D33
 RTS_8D3C:
     rts
 
@@ -1945,7 +2001,8 @@ ClearAll:
     jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
     jmp VBOffAndHorzWrite           ;($C47D)Set PPU for horizontal write and turn off VBlank.
 
-StartContinueScreen:
+StartContinueScreen15:
+StartContinueScreen1B:
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
     ldx #<L9984.b                     ;Low address for PPU write.
     ldy #>L9984.b                     ;High address for PPU write.
@@ -1954,7 +2011,7 @@ StartContinueScreen:
     sty StartContinue               ;Set selection sprite at START.
     lda #$0D                        ;
     sta PalDataPending              ;Change palette and title routine.
-    lda #$16                        ;Next routine is ChooseStartContinue.
+    lda #_id_ChooseStartContinue.b  ;Next routine is ChooseStartContinue.
     sta TitleRoutine                ;
 
 TurnOnDisplay:
@@ -1970,7 +2027,7 @@ ChooseStartContinue:
     bne L90E7                       ;if CONTINUE selected, branch.
     jmp InitializeStats             ;($932B)Zero out all stats.
 L90E7:
-    ldy #$17                        ;Next routine is LoadPasswordScreen.
+    ldy #_id_LoadPasswordScreen.b   ;Next routine is LoadPasswordScreen.
     sty TitleRoutine                ;
 L90EB:
     cmp #$20                        ;check if SELECT has been pressed.
@@ -2185,7 +2242,7 @@ CheckBackspace:
             sbc #$0C                        ;Calculate how many characters the password cursor-->
         L9238:
         tax                             ;is from the left if on the second row of password.
-        lda CursorPosTbl,x              ;Load X position of PasswordCursor.
+        lda CursorPosXTbl,x              ;Load X position of PasswordCursor.
         sta SpriteRAM+($01<<2)+3          ;
     L923F:
     ldx InputRow                    ;Load X and Y with row and column-->
@@ -2262,20 +2319,17 @@ CheckBackspace:
 
 ;The following table is used to determine the proper Y position of the character
 ;selection sprite on password entry screen.
-
 CharSelectYTbl:
     .byte $77, $87, $97, $A7, $B7
 
 ;The following table is used to determine the proper X position of the character
 ;selection sprite on password entry screen.
-
 CharSelectXTbl:
     .byte $20, $30, $40, $50, $60, $70, $80, $90, $A0, $B0, $C0, $D0, $E0
 
 ;When the PasswordCursor is on the second row of the password, the following table is used
 ;to determine the proper x position of the password cursor sprite(password characters 12-23).
-
-CursorPosTbl:
+CursorPosXTbl:
     .byte $48, $50, $58, $60, $68, $70, $80, $88, $90, $98, $A0, $A8
 
 InitializeGame:
@@ -2406,7 +2460,7 @@ GameOver:
     jsr NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
     lda #$10                        ;Load Timer3 with a delay of 160 frames-->
     sta Timer3                      ;(2.6 seconds) for displaying "GAME OVER".
-    lda #$19                        ;Loads TitleRoutine with -->
+    lda #_id_DisplayPassword.b      ;Loads TitleRoutine with -->
     sta TitleRoutine                ;DisplayPassword.
     jmp ScreenOn                    ;($C447)Turn screen on.
 
@@ -2524,12 +2578,14 @@ PrepareEraseTiles:
 ;addition to unused routines, there are several unused memory addresses that are written to but
 ;never read.
 
+;The following unused routine writes something to the-->
+;PPU string and prepares for a PPU write.
 UnusedIntroRoutine4:
-    stx PPUStrIndex                 ;
-    lda #$00                        ;
-    sta PPUDataString,x             ;The following unused routine writes something to the-->
-    lda #$01                        ;PPU string and prepares for a PPU write.
-    sta PPUDataPending              ;
+    stx PPUStrIndex
+    lda #$00
+    sta PPUDataString,x
+    lda #$01
+    sta PPUDataPending
     rts
 
 
@@ -2537,123 +2593,169 @@ UnusedIntroRoutine4:
 ;title routines were going to write data to the name-->
 ;tables in the middle of the title sequences.
 UnusedIntroRoutine5:
+    ; run subroutine for high nybble
     sta $05
     and #$F0
     lsr
     lsr
     lsr
     lsr
-    jsr L947B
-        lda $05
-        and #$0F
-    L947B:
+    jsr @subroutine
+    ; run subroutine for low nybble
+    lda $05
+    and #$0F
+    ; fallthrough
+    
+@subroutine:
+    ; store nybble to current location in PPUDataString buffer
     sta PPUDataString,x
+    ; move to next byte in buffer
     inx
+    ; exit if we haven't moved outside the bounds of the buffer
     txa
     cmp #$55
-    bcc RTS_948E
+    bcc @RTS
+
+    ; oh no. we are out of bounds
+    ; cancel writing the current ppu string to the buffer
     ldx PPUStrIndex
-    L9487:
+    @loop_infinite:
+        ; cancel repeatedly forever
+        ; pretty sure this is a bug
         lda #$00 
         sta PPUDataString,x
-        beq L9487
-RTS_948E:
+        beq @loop_infinite
+@RTS:
     rts
 
 ;Another unused intro routine.
 UnusedIntroRoutine6:
+    ; push y
     tya
     pha
-    jsr Amul16 ;($C2C5)Multiply by 16.
+    
+    ; y = y*16
+    jsr Amul16
     tay
-    lda $684B,y
+    ; load hex number into $0A-$0B
+    lda UnusedIntro684A+1,y
     sta $0B
-    lda $684A,y
+    lda UnusedIntro684A,y
     sta $0A
-    jsr UnusedIntroRoutine8 ;($94DA)
+    ; transform into BCD
+    jsr UnusedIntroRoutine8
+    ; save BCD to UnusedIntro683C
     lda $06
-    sta $683D,x
+    sta UnusedIntro683C+1,x
     lda $07
-    sta $683C,x
+    sta UnusedIntro683C,x
+    
+    ; pop y
     pla
     tay
     rts
 
 ;Another unused intro routine.
 UnusedIntroRoutine7:
+    ; push y
     tya
     pha
-    jsr Amul16 ;($C2C5)Multiply by 16.
+    
+    ; y = y*16
+    jsr Amul16
     tay
-    lda $684D,y
+    ; load hex number into $0A-$0B
+    lda UnusedIntro684C+1,y
     sta $0B
-    lda $684C,y
+    lda UnusedIntro684C,y
     sta $0A
-    jsr UnusedIntroRoutine8 ;($94DA)
+    ; transform into BCD
+    jsr UnusedIntroRoutine8
+    ; save BCD to UnusedIntro6833
     lda $06
-    sta $6834,x
+    sta UnusedIntro6833+1,x
     lda $07
-    sta $6833,x
-    lda $6842,y
+    sta UnusedIntro6833,x
+    
+    ; push UnusedIntro6842,y to stack
+    lda UnusedIntro6842,y
     pha
+    ; y = x*2
     txa
     lsr
     tay
+    ; save pushed value
     pla
-    sta $6839,y
+    sta UnusedIntro6839,y
+    
+    ; pop y
     pla
     tay
     rts
 
-;Unused intro routine. Looks like the intro routines may-->
-;have had more complicated sprite control routines-->
-;than it does now.
-UnusedIntroRoutine8:
-    lda #$FF                        ;
-    sta $01                         ;
-    sta $02                         ;
-    sta $03                         ;
-    sec                             ;
-    L94E3:
-        lda $0A                         ;
-        sbc #$E8                        ;
-        sta $0A                         ;
-        lda $0B                         ;
-        sbc #$03                        ;
-        sta $0B                         ;
-        inc $03                         ;
-        bcs L94E3                       ;
-    lda $0A                         ;
-    adc #$E8                        ;
-    sta $0A                         ;
-    lda $0B                         ;
-    adc #$03                        ;
-    sta $0B                         ;
-    lda $0A                         ;
-    L9501:
+;Unused intro routine. A 16-bit version of HexToDec.
+;Convert 16-bit value in $0A-$0B to 4 decimal digits.
+;Stored as a 16-bit BCD value in $06-$07.
+UnusedIntroRoutine8: ;($94DA)
+    lda #$FF
+    sta $01
+    sta $02
+    sta $03
+    sec
+    @loop_A:
+        ; subtract 1000 from $0A-$0B
+        lda $0A
+        sbc #$E8
+        sta $0A
+        lda $0B
+        sbc #$03
+        sta $0B
+        ; increment the thousands digit
+        inc $03
+        bcs @loop_A
+    ; undo the last subtraction
+    lda $0A
+    adc #$E8
+    sta $0A
+    lda $0B
+    adc #$03
+    sta $0B
+    ; hundreds
+    lda $0A
+    @loop_B:
         sec
-        L9502:
-            sbc #$64                        
-            inc $02                         
-            bcs L9502                       ;
-        dec $0B                         ;
-        bpl L9501                       ;
-    adc #$64                        ;
-    sec                             ;
-    L950F:
-        sbc #$0A                        ;
-        inc $01                         ;
-        bcs L950F                       ;
-    adc #$0A                        ;
-    sta $06                         ;
-    lda $01                         ;
-    jsr Amul16 ;($C2C5)Multiply by 16.
-    ora $06                         ;
-    sta $06                         ;
-    lda $03                         ;
-    jsr Amul16 ;($C2C5)Multiply by 16.
-    ora $02                         ;
-    sta $07                         ;
+        @loop_C:
+            sbc #$64
+            inc $02
+            bcs @loop_C
+        dec $0B
+        bpl @loop_B
+    ; undo the last subtraction
+    adc #$64
+    ; tens
+    sec
+    @loop_D:
+        sbc #$0A
+        inc $01
+        bcs @loop_D
+    ; undo the last subtraction
+    adc #$0A
+    
+    ; all digits have now been isolated:
+    ; thousands in $03, hundreds in $02, tens in $01, ones in a
+    
+    ; store ones in $06
+    sta $06
+    ; add tens multiplied by 16 to $06
+    lda $01
+    jsr Amul16
+    ora $06
+    sta $06
+    ; store thousands multiplied by 16 + hundreds in $07
+    lda $03
+    jsr Amul16
+    ora $02
+    sta $07
     rts
 
 ;Not used.
@@ -2874,58 +2976,96 @@ CalcDisplacement:
     rts                             ;Return A/time.
 
 ;This function decrements the y coordinate of the 40 intro star sprites.
-
 DecSpriteYCoord:
-    lda TitleRoutine                ;
-    cmp #$1D                        ;
-    bcs RTS_98AD                       ;If the end game is playing, branch to exit.
-    lda SpriteLoadPending           ;
-    beq RTS_98AD                       ;If no sprite load is pending, branch to exit.
-    lda FrameCount                  ;
-    lsr                             ;
-    bcs RTS_98AD                       ;If not on an odd numbered frame, branch to exit.
-    ldx #$9F                        ;
-    L989B:
-        dec IntroStarSprite,x         ;Decrement y coord of the intro star sprites.
-        dec SpriteRAM+($18<<2),x               ;Decrement y coord of 40 sprites.
-        dex                             ;
-        dex                             ;
-        dex                             ;Move to next sprite.
-        dex                             ;
-        cpx #$FF                        ;
-        bne L989B                       ;Loop 40 times.
-    lda #$00                        ;
-    sta SpriteLoadPending           ;Sprite RAM load complete.
-RTS_98AD:
+    ;If the end game is playing, branch to exit.
+    lda TitleRoutine
+    cmp #_id_EndGame.b
+    bcs @RTS
+    ;If no sprite load is pending, branch to exit.
+    lda SpriteLoadPending
+    beq @RTS
+    ;If not on an odd numbered frame, branch to exit.
+    lda FrameCount
+    lsr
+    bcs @RTS
+    ;Decrement y coord of the intro star sprites.
+    ldx #$9F
+    @loop:
+        ;Decrement y coord of 40 sprites.
+        dec IntroStarSprite,x
+        dec SpriteRAM+($18<<2),x
+        ;Move to next sprite.
+        dex
+        dex
+        dex
+        dex
+        ;Loop 40 times.
+        cpx #$FF
+        bne @loop
+    ;Sprite RAM load complete.
+    lda #$00
+    sta SpriteLoadPending
+@RTS:
     rts
 
 LoadStarSprites:
-    ldy #$9F                        ;
-    L98B0:
-        lda IntroStarSprite,y           ;
-        sta SpriteRAM+($18<<2),y          ;Store RAM contents of $6E00 thru $6E9F -->
-        dey                             ;in sprite RAM at locations $0260 thru $02FF.
-        cpy #$FF                        ;
-        bne L98B0                       ;
-    lda #$00                        ;
-    sta SpriteLoadPending           ;Set $C8 to #$00.
+    ;Store RAM contents of $6E00 thru $6E9F in sprite RAM at locations $0260 thru $02FF.
+    ldy #$9F
+    @loop:
+        lda IntroStarSprite,y
+        sta SpriteRAM+($18<<2),y
+        dey
+        cpy #$FF
+        bne @loop
+    ;Sprite RAM load complete.
+    lda #$00
+    sta SpriteLoadPending
     rts
 
 ;The following values are loaded into RAM $6E00 thru $6E9F in InitBank0
 ;routine.  These values are then loaded into sprite RAM at $0260 thru $02FF
 ;in above routine.  They are the stars in the title screen.
-
 IntroStarsData:
-    .byte $73, $CC, $22, $F2, $48, $CD, $63, $EE, $2A, $CE, $A2, $DC, $36, $CF, $E2, $C6
-    .byte $11, $CC, $23, $B7, $53, $CD, $63, $A0, $BB, $CE, $A2, $9A, $0F, $CF, $E2, $8B
-    .byte $85, $CC, $E2, $70, $9D, $CD, $A3, $6B, $A0, $CE, $63, $58, $63, $CF, $23, $4F
-    .byte $0A, $CC, $22, $39, $1F, $CD, $23, $2A, $7F, $CE, $A3, $1F, $56, $CF, $A2, $03
-    .byte $4D, $CC, $E3, $AF, $3E, $CD, $63, $2B, $61, $CE, $E2, $4F, $29, $CF, $62, $6F
-    .byte $8A, $CC, $23, $82, $98, $CD, $A3, $07, $AE, $CE, $E2, $CA, $B6, $CF, $63, $E3
-    .byte $0F, $CC, $62, $18, $1F, $CD, $22, $38, $22, $CE, $A3, $5F, $53, $CF, $E2, $78
-    .byte $48, $CC, $E3, $94, $37, $CD, $A3, $B3, $6F, $CE, $A3, $DC, $78, $CF, $22, $FE
-    .byte $83, $CC, $62, $0B, $9F, $CD, $23, $26, $A0, $CE, $62, $39, $BD, $CF, $A2, $1C
-    .byte $07, $CC, $E3, $A4, $87, $CD, $63, $5D, $5A, $CE, $62, $4F, $38, $CF, $23, $85
+    .byte $73, $CC, $22, $F2
+    .byte $48, $CD, $63, $EE
+    .byte $2A, $CE, $A2, $DC
+    .byte $36, $CF, $E2, $C6
+    .byte $11, $CC, $23, $B7
+    .byte $53, $CD, $63, $A0
+    .byte $BB, $CE, $A2, $9A
+    .byte $0F, $CF, $E2, $8B
+    .byte $85, $CC, $E2, $70
+    .byte $9D, $CD, $A3, $6B
+    .byte $A0, $CE, $63, $58
+    .byte $63, $CF, $23, $4F
+    .byte $0A, $CC, $22, $39
+    .byte $1F, $CD, $23, $2A
+    .byte $7F, $CE, $A3, $1F
+    .byte $56, $CF, $A2, $03
+    .byte $4D, $CC, $E3, $AF
+    .byte $3E, $CD, $63, $2B
+    .byte $61, $CE, $E2, $4F
+    .byte $29, $CF, $62, $6F
+    .byte $8A, $CC, $23, $82
+    .byte $98, $CD, $A3, $07
+    .byte $AE, $CE, $E2, $CA
+    .byte $B6, $CF, $63, $E3
+    .byte $0F, $CC, $62, $18
+    .byte $1F, $CD, $22, $38
+    .byte $22, $CE, $A3, $5F
+    .byte $53, $CF, $E2, $78
+    .byte $48, $CC, $E3, $94
+    .byte $37, $CD, $A3, $B3
+    .byte $6F, $CE, $A3, $DC
+    .byte $78, $CF, $22, $FE
+    .byte $83, $CC, $62, $0B
+    .byte $9F, $CD, $23, $26
+    .byte $A0, $CE, $62, $39
+    .byte $BD, $CF, $A2, $1C
+    .byte $07, $CC, $E3, $A4
+    .byte $87, $CD, $63, $5D
+    .byte $5A, $CE, $62, $4F
+    .byte $38, $CF, $23, $85
 
 ;Not used.
     .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
@@ -2943,7 +3083,6 @@ L9984:
 
 ;The following pointer table is used to find the start
 ;of each row on the password screen in the data below.
-
 PasswordRowTbl:
     .word PasswordRow0              ;($99A2)
     .word PasswordRow1              ;($99AF)
@@ -2981,50 +3120,62 @@ L99E3:
 
 ;The following routine is accessed via the NMI routine every frame.
 NMIScreenWrite:
-    lda TitleRoutine                ;
-    cmp #$1D                        ;If titleRoutine not at end game, exit.
-    bcc Exit100                     ;
+    ;If titleRoutine not at end game, exit.
+    lda TitleRoutine
+    cmp #$1D
+    bcc Exit100
+    
     jsr LoadCredits                 ;($9C45)Display end credits on screen.
-    lda EndMsgWrite                 ;
-    beq L9A24                       ;If not time to write end message, branch
-    cmp #$05                        ;
-    bcs L9A24                       ;If end message is finished being written, branch
-    asl                             ;
-    tay                             ;
-    ldx EndMessageStringTbl0-2,y    ;Writes the end message on name table 0
-    lda EndMessageStringTbl0-1,y    ;
-    tay                             ;
-    jsr PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-L9A24:
+    ;If not time to write end message, branch
+    lda EndMsgWrite
+    beq L9A24
+    ;If end message is finished being written, branch
+    cmp #$05
+    bcs L9A24
+        ;Writes the end message on name table 0
+        asl
+        tay
+        ldx EndMessageStringTbl0-2,y
+        lda EndMessageStringTbl0-1,y
+        tay
+        jsr PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
+    L9A24:
+    ;If not time to erase end message, branch
     lda HideShowEndMsg              ;
-    beq Exit100                     ;If not time to erase end message, branch
+    beq Exit100                     
+    ;If end message is finished being erased, branch
     cmp #$05                        ;
-    bcs Exit100                     ;If end message is finished being erased, branch
-    asl                             ;
-    tay                             ;
-    ldx EndMessageStringTbl1-2,y    ;Erases the end message on name table 0
-    lda EndMessageStringTbl1-1,y    ;
-    tay                             ;
-    jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-
+    bcs Exit100                     
+        ;Erases the end message on name table 0
+        asl
+        tay
+        ldx EndMessageStringTbl1-2,y
+        lda EndMessageStringTbl1-1,y
+        tay
+        jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
 Exit100:
     rts                             ;Exit from above and below routines.
 
 Restart:
-    lda Joy1Status                  ;
-    and #$10                        ;If start has not been pressed, branch to exit.
-    beq Exit100                     ;
-    ldy #$11                        ;
-    lda #$00                        ;
+    ;If start has not been pressed, branch to exit.
+    lda Joy1Status
+    and #BUTTON_START
+    beq Exit100
+    
+    ;Erase PasswordByte00 thru PasswordByte11.
+    ldy #$11
+    lda #$00
     L9A43:
-        sta PasswordByte,y            ;Erase PasswordByte00 thru PasswordByte11.
-        dey                             ;
-        bpl L9A43                       ;
-    iny                             ;Y = #$00.
+        sta PasswordByte,y
+        dey
+        bpl L9A43
+    
+    ;Erase Unique item history.
+    iny ;Y = #$00.
     L9A4A:
-        sta UniqueItemHistory,y         ;
-        iny                             ;Erase Unique item history.
-        bne L9A4A                       ;
+        sta UniqueItemHistory,y
+        iny
+        bne L9A4A
     
     lda SamusGear
     and #gr_MARUMARI
