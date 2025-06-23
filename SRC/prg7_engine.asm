@@ -1524,7 +1524,7 @@ MoreInit:
     sta PalToggle
     lda #$FF
     sta RoomNumber                  ;Room number = $FF(undefined room).
-    jsr CopyPtrs    ; copy pointers from ROM to RAM
+    jsr CopyAreaPointers    ; copy pointers from ROM to RAM
     jsr GetRoomNum                  ;($E720)Put room number at current map pos in $5A.
     LC86F:
         jsr SetupRoom                   ;($EA2B)
@@ -1565,17 +1565,17 @@ MoreInit:
     inc MainRoutine                 ;SamusInit is next routine to run.
     jmp ScreenOn
 
-; CopyPtrs
+; CopyAreaPointers
 ; ========
 ; Copy 7 16-bit pointers from $959A thru $95A7 to $3B thru $48.
 
-CopyPtrs:
+CopyAreaPointers:
     ldx #$0D
-    LCopyPtrs:
+    LCopyAreaPointers:
         lda AreaPointers+2,x
         sta RoomPtrTable,x
         dex
-        bpl LCopyPtrs
+        bpl LCopyAreaPointers
     rts
 
 ; DestroyEnemies
@@ -1796,7 +1796,7 @@ SamusIntro:
     lda FrameCount                  ;Is game currently on an odd frame?-->
     lsr                             ;If not, branch to exit.
     bcc Exit14                      ;Only display Samus on odd frames [the blink effect].
-    lda #an_SamusFront              ;Samus front animation is animation to display.-->
+    lda #an_SamusFront.b              ;Samus front animation is animation to display.-->
     jsr SetSamusAnim                ;($CF6B)while fading in.
     lda #$00                        ;
     sta SpritePagePos               ;Samus sprites start at Sprite00RAM.
@@ -2332,7 +2332,7 @@ SetSamusExplode: ;($CC8B)
     lda #$50
     sta SamusJumpDsplcmnt
     ; set samus animation to explode
-    lda #an_Explode
+    lda #an_Explode.b
     jsr SetSamusAnim
     ; a is #$00 here
     sta ObjectCounter
@@ -2344,7 +2344,7 @@ SetSamusRun:
     sta WalkSoundDelay
     ldx #$00
     lda ObjAnimResetIndex
-    cmp #an_SamusStand
+    cmp #an_SamusStand.b
     beq LCCBX
     inx
     cmp #$27
@@ -2381,16 +2381,16 @@ LCCC2:
         bmi samL01
             cpy #$18
             bcs samL04
-            lda #an_SamusJump
+            lda #an_SamusJump.b
             sta ObjAnimResetIndex
             bcc samL04          ; branch always
         samL01:
         cpy #$18
         bcc samL04
         lda ObjAnimResetIndex
-        cmp #an_SamusFireJump
+        cmp #an_SamusFireJump.b
         beq samL02
-            lda #an_SamusSalto
+            lda #an_SamusSalto.b
             sta ObjAnimResetIndex
         samL02:
         cpy #$20
@@ -2398,17 +2398,17 @@ LCCC2:
         lda Joy1Status
         and #BUTTON_UP
         beq samL03
-            lda #an_SamusJumpPntUp
+            lda #an_SamusJumpPntUp.b
             sta ObjAnimResetIndex
         samL03:
         bit Joy1Status
         bmi samL04
-        jsr StopVertMovement            ;($D147)
+        jsr StopVertMovement
     samL04:
-        lda #an_SamusRun
+        lda #an_SamusRun.b
         cmp ObjAnimResetIndex
         bne samL05
-            lda #an_SamusJump
+            lda #an_SamusJump.b
             sta ObjAnimResetIndex
         samL05:
         lda SamusInLava
@@ -2514,10 +2514,10 @@ IsScrewAttackActive:
     beq RTS_CDBE
     ; return active if Samus is in the somersaulting animation
     lda ObjAnimResetIndex
-    cmp #an_SamusSalto
+    cmp #an_SamusSalto.b
     beq LCDBB
         ; return inactive if Samus is not in the neutral jump animation
-        cmp #an_SamusJump
+        cmp #an_SamusJump.b
         sec
         bne RTS_CDBE
         ; samus is in the neutral jump animation
@@ -2551,7 +2551,7 @@ LCDD7:
     lda Joy1Status
     and #BUTTON_UP
     bne LCDEX
-        lda #an_SamusFireRun
+        lda #an_SamusFireRun.b
         sta ObjAnimIndex
         rts
 
@@ -2813,10 +2813,11 @@ Lx013:
     sta SamusAccelX
 
 ClearHorzMvmntData:
-    ldy #$00                        ;
+    ;Set Samus Horizontal speed and horizontal linear counter to #$00.
+    ldy #$00
 LCF4E:
-    sty ObjSpeedX                ;Set Samus Horizontal speed and horizontal-->
-    sty SamusSpeedSubPixelX              ;linear counter to #$00.
+    sty ObjSpeedX
+    sty SamusSpeedSubPixelX
 RTS_X014:
     rts
 
@@ -2831,7 +2832,7 @@ ClearHorzMvmtAnimData:
     lda Joy1Status                  ;
     and #BUTTON_UP                  ;Is The up button being pressed?-->
     bne SetSamusPntUp               ;If so, branch.
-    lda #an_SamusStand              ;Set Samus animation for standing.
+    lda #an_SamusStand.b            ;Set Samus animation for standing.
 
 SetSamusAnim:
     sta ObjAnimResetIndex           ;Set new animation reset index.
@@ -2845,7 +2846,7 @@ SetSamusNextAnim:
 SetSamusPntUp:
     lda #sa_PntUp                   ;
     sta ObjAction                   ;Samus is pointing up.
-    lda #an_SamusPntUp              ;
+    lda #an_SamusPntUp.b            ;
     jsr SetSamusAnim                ;($CF6B)Set new animation values.
 
 NoHorzMoveNoDelay:
@@ -2863,7 +2864,7 @@ LCF88:
         lda SamusAccelY
         bmi RTS_X016
         lda ObjAnimResetIndex
-        cmp #an_SamusSalto
+        cmp #an_SamusSalto.b
         beq RTS_X016
         stx SamusDir
         lda Table06+1,x
@@ -2874,7 +2875,7 @@ LCF88:
     bmi RTS_X016
     beq RTS_X016
     lda ObjAnimResetIndex
-    cmp #an_SamusJump
+    cmp #an_SamusJump.b
     bne RTS_X016
 
 ClearHorzData:
@@ -2884,10 +2885,10 @@ RTS_X016:
     rts
 
 LCFBE:
-    ldy #an_SamusJumpPntUp
+    ldy #an_SamusJumpPntUp.b
     jmp LCFC5
     SetSamusJump:
-        ldy #an_SamusJump
+        ldy #an_SamusJump.b
     LCFC5:
     sty ObjAnimResetIndex
     dey
@@ -2933,9 +2934,9 @@ Lx019:
     lda Joy1Status
     and #BUTTON_UP     ; UP pressed?
     beq Lx020      ; branch if not
-        lda #an_SamusJumpPntUp
+        lda #an_SamusJumpPntUp.b
         sta ObjAnimResetIndex
-        lda #sa_PntJump      ; "jumping & pointing up" handler
+        lda #sa_PntJump.b      ; "jumping & pointing up" handler
         sta ObjAction
     Lx020:
     jsr LD09C
@@ -3015,13 +3016,13 @@ LD09C:
     asl
     bpl RTS_X028      ; exit if FIRE not pressed
     lda ObjAnimResetIndex
-    cmp #an_SamusJumpPntUp
+    cmp #an_SamusJumpPntUp.b
     bne Lx029
     jmp LD275
 
 Lx029:
     jsr LD210
-    lda #an_SamusFireJump
+    lda #an_SamusFireJump.b
     jmp SetSamusAnim
 
 SetSamusRoll:
@@ -3033,9 +3034,9 @@ SetSamusRoll:
 
 ;Turn Samus into ball
     ldx SamusDir
-    lda #an_SamusRoll
+    lda #an_SamusRoll.b
     sta ObjAnimResetIndex
-    lda #an_SamusRunJump
+    lda #an_SamusRunJump.b
     sta ObjAnimIndex
     lda RunAccelerationTbl,x
     sta SamusAccelX
@@ -3077,7 +3078,7 @@ SamusRoll:
         jsr LD638
         jsr StopHorzMovement
         dec ObjAnimIndex
-        jsr StopVertMovement            ;($D147)
+        jsr StopVertMovement
         lda #$04
         jmp LD144
     Lx032:
@@ -3086,7 +3087,7 @@ SamusRoll:
         cmp #BUTTONBIT_DOWN
         bcs Lx033
             sta SamusDir
-            lda #an_SamusRoll
+            lda #an_SamusRoll.b
             jsr SetSamusAnim
         Lx033:
         ldx SamusDir
@@ -3102,8 +3103,7 @@ SamusRoll:
     LD144:
     jmp SetSamusData                ;($CD6D)Set Samus control data and animation.
 
-StopVertMovement:
-LD147:
+StopVertMovement: ;($D147)
     ldy #$00
     sty ObjSpeedY
     sty SamusSpeedSubPixelY
@@ -3355,7 +3355,7 @@ LD2EB:
     lda #$02
     sta ObjRadY,y
     sta ObjRadX,y
-    lda #an_Bullet
+    lda #an_Bullet.b
 
 InitObjAnimIndex:
     sta ObjAnimResetIndex,x
@@ -3436,7 +3436,7 @@ Lx048:
     sta $0500,y
     lda #wa_WaveBeam
     sta ObjAction,y
-    lda #an_WaveBeam
+    lda #an_WaveBeam.b
     jsr SetBulletAnim
     jmp SFX_WaveFire
 
@@ -3501,7 +3501,7 @@ Lx052:
     lda #$00
     sta SamusDoorData
     sta DoorEntryStatus
-    jsr StopVertMovement            ;($D147)
+    jsr StopVertMovement
 
 MoveOutDoor:
     lda SamusDoorDir
@@ -3540,7 +3540,7 @@ SamusElevator:
         cmp #$08
         bne Lx062
     Lx056:
-    lda Elevator032F
+    lda ElevatorType
     bmi Lx059
         lda ObjY
         sec
@@ -3550,7 +3550,7 @@ SamusElevator:
             jsr ScrollDown  ; otherwise, attempt to scroll
         Lx057:
         ldy ObjY
-        cpy #239        ; wrap-around required?
+        cpy #SCRN_VY-1.b        ; wrap-around required?
         bne Lx058
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
             ldy #$FF        ; ObjY will now be 0
@@ -3569,7 +3569,7 @@ SamusElevator:
         ldy ObjY
         bne Lx061      ; wraparound required? (branch if not)
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
-            ldy #240        ; ObjY will now be 239
+            ldy #SCRN_VY        ; ObjY will now be 239
         Lx061:
         dey
         sty ObjY
@@ -3813,7 +3813,7 @@ LD5E4:
     beq Exit5
     cpy #wa_Missile
     bne Lx076
-    lda #an_MissileExplode
+    lda #an_MissileExplode.b
 Lx076:
     jsr InitObjAnimIndex
     lda #wa_BulletExplode
@@ -3886,7 +3886,7 @@ RTS_X083:
     rts
 
 BombInit:
-    lda #an_BombTick
+    lda #an_BombTick.b
     jsr InitObjAnimIndex
     lda #$18        ; fuse length :-)
     sta ProjectileDieDelay,x
@@ -3906,7 +3906,7 @@ BombCountdown:
     ldy ObjAction,x
     cpy #$09
     bne Lx084
-        lda #an_BombExplode
+        lda #an_BombExplode.b
     Lx084:
     jsr InitObjAnimIndex
     inc ObjAction,x
@@ -4097,178 +4097,221 @@ GetObjCoords:
 UpdateElevator:
     ldx #$20
     stx PageIndex
-    lda ObjAction,x
+    lda ElevatorStatus-$20,x
     jsr ChooseRoutine ; Pointer table to elevator handlers
         .word ExitSub       ;($C45C) rts
         .word ElevatorIdle
-        .word LD80E
+        .word ElevatorScrollXToCenter
         .word ElevatorMove
-        .word ElevatorScroll
-        .word LD8A3
-        .word LD8BF
-        .word LD8A3
+        .word ElevatorScrollY
+        .word ElevatorFade ; fade out samus (vestigial)
+        .word ElevatorD8BF
+        .word ElevatorFade ; fade in samus (vestigial)
         .word ElevatorMove
         .word ElevatorStop
 
 ElevatorIdle:
     lda SamusOnElevator
-    beq ShowElevator
-    lda #$04
-    bit Elevator032F       ; elevator direction in bit 7 (1 = up)
+    beq DrawElevator
+    lda #BUTTON_DOWN
+    bit ElevatorType       ; elevator direction in bit 7 (1 = up)
     bpl Lx099
         asl             ; BUTTON_UP
     Lx099:
     and Joy1Status
-    beq ShowElevator
-; start elevator!
-    jsr StopVertMovement            ;($D147)
+    beq DrawElevator
+    
+    ; start elevator!
+    ; clear samus variables
+    jsr StopVertMovement
+    ; y is #$00 here
     sty ObjAnimDelay
     sty SamusAccelY
-    tya
-    sta ObjSpeedY,x
-    inc ObjAction,x
+    ; clear elevator unused variable
+    tya ; a = #$00
+    sta ElevatorUnused0328-$20,x
+    ; increment elevator routine to ElevatorScrollXToCenter
+    inc ElevatorStatus-$20,x
+    ; set samus animation
     lda #sa_Elevator
     sta ObjAction
-    lda #an_SamusFront
+    lda #an_SamusFront.b
     jsr SetSamusAnim
-    lda #128
-    sta ObjX     ; center
-    lda #112
-    sta ObjY     ; center
-    ShowElevator:
+    ; set samus position to the center of the screen, on top of the elevator
+    lda #(SCRN_VX/2).b
+    sta ObjX
+    lda #(SCRN_VY/2 - 8).b
+    sta ObjY
+DrawElevator:
+    ; only display elevator at odd frames
     lda FrameCount
     lsr
-    bcc RTS_X098    ; only display elevator at odd frames
-    jmp ObjDrawFrame       ; display elevator
+    bcc RTS_X098
+    ; display elevator
+    jmp ObjDrawFrame
 
-LD80E:
+ElevatorScrollXToCenter:
     lda ScrollX
-    bne Lx100
+    bne @notCentered
+    ; we are centered horizontally
+    ; set mirroring to horizontal, to place the nametables in a vertical configuration
     lda MirrorCntrl
     ora #$08
     sta MirrorCntrl
+    ; set scrolling to vertical
     lda ScrollDir
     and #$01
     sta ScrollDir
-    inc ObjAction,x
-    jmp ShowElevator
+    ; increment elevator routine to ElevatorMove
+    inc ElevatorStatus-$20,x
+    jmp DrawElevator
 
-Lx100:
+@notCentered:
     lda #$80
     sta ObjX
     lda ObjX,x
     sec
     sbc ScrollX
-    bmi Lx101
-    jsr ScrollLeft
-    jmp ShowElevator
-
-Lx101:
-    jsr ScrollRight
-    jmp ShowElevator
+    bmi @scrollRight
+        jsr ScrollLeft
+        jmp DrawElevator
+    @scrollRight:
+        jsr ScrollRight
+        jmp DrawElevator
 
 ElevatorMove:
-    lda $030F,x
-    bpl Lx103    ; branch if elevator going down
-    ; move elevator up one pixel
-    ldy ObjY,x
-    bne Lx102
-        jsr ToggleObjHi
-        ldy #240
-    Lx102:
-    dey
-    tya
-    sta ObjY,x
-    jmp Lx104
-
-    ; move elevator down one pixel
-Lx103:
-    inc ObjY,x
-    lda ObjY,x
-    cmp #240
-    bne Lx104
-    jsr ToggleObjHi
-    lda #$00
-    sta ObjY,x
-Lx104:
+    ; branch if elevator going down
+    lda ElevatorType-$20,x
+    bpl @else_A
+        ; move elevator up one pixel
+        ; if current pos is 0, set to 240 and toggle hi byte
+        ldy ObjY,x
+        bne @endIf_B
+            jsr ToggleObjHi
+            ldy #SCRN_VY
+        @endIf_B:
+        ; decrement and save
+        dey
+        tya
+        sta ObjY,x
+        jmp @endIf_A
+    @else_A:
+        ; move elevator down one pixel
+        ; increment
+        inc ObjY,x
+        ; if new pos is 240, save as 0 and toggle hi byte
+        lda ObjY,x
+        cmp #SCRN_VY
+        bne @endIf_C
+            jsr ToggleObjHi
+            lda #$00
+            sta ObjY,x
+        @endIf_C:
+    @endIf_A:
     cmp #$83
-    bne Lx105      ; move until Y coord = $83
+    ; move until Y coord = $83
+    bne Lx105
+        ; increment elevator routine to ElevatorScrollY
         inc ObjAction,x
     Lx105:
-    jmp ShowElevator
+    jmp DrawElevator
 
-ElevatorScroll:
+ElevatorScrollY:
+    ; scroll until ScrollY = 0
     lda ScrollY
-    bne ElevScrollRoom  ; scroll until ScrollY = 0
-    lda #$4E
+    bne ElevScrollRoom
+    ; scroll y is 0
+    ; set samus animation to fade out
+    lda #ObjAnim_41 - ObjectAnimIndexTbl + $0D.b
     sta ObjAnimResetIndex
-    lda #$41
+    lda #ObjAnim_41 - ObjectAnimIndexTbl.b
     sta ObjAnimIndex
-    lda #$5D
-    sta ObjAnimResetIndex,x
-    lda #$50
-    sta ObjAnimIndex,x
+    ; set elevator animation to fade out
+    lda #ObjAnim_50 - ObjectAnimIndexTbl + $0D.b
+    sta ElevatorAnimResetIndex-$20,x
+    lda #ObjAnim_50 - ObjectAnimIndexTbl.b
+    sta ElevatorAnimIndex-$20,x
+    ; increment elevator routine to ElevatorFade
     inc ObjAction,x
+    ; set timer for 64 frames (useless)
+    ; the timer may have once been checked in ElevatorFade to handle the fade out / fade in, -->
+    ; but right now, ElevatorFade runs for a single frame instead of 64 frames. -->
+    ; the fade out / fade in plays fully in the FDS version, so it's probably a remnant from that
     lda #$40
     sta Timer1
-    jmp ShowElevator
+    jmp DrawElevator
 
 ElevScrollRoom:
-    lda $030F,x
-    bpl Lx106      ; branch if elevator going down
-    jsr ScrollUp
-    jmp ShowElevator
+    ; branch if elevator going down
+    lda ElevatorType-$20,x
+    bpl @scrollDown
+        jsr ScrollUp
+        jmp DrawElevator
+    @scrollDown:
+        jsr ScrollDown
+        jmp DrawElevator
 
-Lx106:
-    jsr ScrollDown
-    jmp ShowElevator
-
-LD8A3:
+ElevatorFade:
+    ; increment elevator routine
     inc ObjAction,x
+    ; branch if new elevator routine is not ElevatorMove
     lda ObjAction,x
-    cmp #$08        ; ElevatorMove
-    bne Lx107
-    lda #$23
-    sta $0303,x
-    lda #an_SamusFront
-    jsr SetSamusAnim
-    jmp ShowElevator
-Lx107:
-    lda #$01
-    jmp AnimDrawObject
+    cmp #$08
+    bne @endIf_A
+        lda #$23
+        sta ElevatorAnimFrame-$20,x
+        lda #an_SamusFront.b
+        jsr SetSamusAnim
+        jmp DrawElevator
+    @endIf_A:
+        ; draw elevator by animating it every frame
+        lda #$01
+        jmp AnimDrawObject
 
-LD8BF:
-    lda $030F,x
+ElevatorD8BF:
+    lda ElevatorType-$20,x
     tay
-    cmp #$8F        ; Leads-To-Ending elevator?
+    ; Leads-To-Ending elevator?
+    cmp #$8F
     bne Lx108
-; Samus made it! YAY!
-    lda #$07
-    sta MainRoutine
-    inc AtEnding
-    ldy #$00
-    sty $33
-    iny
-    sty SwitchPending   ; switch to bank 0
-    lda #$1D        ; ending
-    sta TitleRoutine
-    rts
-
-Lx108:
+        ; Samus made it! YAY!
+        lda #$07
+        sta MainRoutine
+        inc AtEnding
+        ldy #$00
+        sty RoomPtr
+        ; switch to bank 0
+        iny
+        sty SwitchPending
+        ; ending
+        lda #_id_EndGame.b
+        sta TitleRoutine
+        rts
+    Lx108:
+    
+    ; determine destination area
+    ; branch if elevator is going down
     tya
     bpl Lx110
-    ldy #$00
-    cmp #$84
-    bne Lx109
-        iny
-    Lx109:
-    tya
-Lx110:
+        ; elevator is going up
+        ; default destination is brinstar
+        ldy #$00
+        ; if the elevator is Norfair/Ridley, destination is norfair
+        cmp #$84
+        bne Lx109
+            iny
+        Lx109:
+        tya
+    Lx110:
+    ; destination area is now in the low nybble of y
+    ; load destination area bank
     ora #$10
     jsr IsEngineRunning
+    ; toggle palette
     lda PalToggle
     eor #$07
     sta PalToggle
+    ; if in tourian, load palette 1, else load palette PalToggle
     ldy InArea
     cpy #$12
     bcc Lx111
@@ -4276,63 +4319,90 @@ Lx110:
     Lx111:
     sta PalDataPending
     jsr WaitNMIPass_
+    ; update samus palette
     jsr SelectSamusPal
-    jsr StartMusic                  ;($D92C)Start music.
+    ;($D92C)Start music.
+    jsr StartMusic
+    ; turn the screen on (when had it turned off?)
     jsr ScreenOn
-    jsr CopyPtrs
+    ; copy area pointers
+    jsr CopyAreaPointers
+    ; clear all enemy slots
     jsr DestroyEnemies
+    ; load elevator slot into PageIndex
     ldx #$20
     stx PageIndex
-    lda #$6B
+    ; set samus animation to fade in
+    lda #ObjAnim_5F - ObjectAnimIndexTbl + $0C.b
     sta ObjAnimResetIndex
-    lda #$5F
+    lda #ObjAnim_5F - ObjectAnimIndexTbl.b
     sta ObjAnimIndex
-    lda #$7A
+    ; set elevator animation to fade in
+    lda #ObjAnim_6E - ObjectAnimIndexTbl + $0C.b
     sta ObjAnimResetIndex,x
-    lda #(ObjAnim_85E0-ObjectAnimIndexTbl).b
+    lda #ObjAnim_6E - ObjectAnimIndexTbl.b
     sta ObjAnimIndex,x
+    ; increment elevator routine to ElevatorFade
     inc ObjAction,x
+    ; set timer for 64 frames (useless)
     lda #$40
     sta Timer1
     rts
 
 StartMusic:
+    ; branch if we are not in an elevator transition
     lda ElevatorStatus
     cmp #$06
     bne Lx112
-        lda Elevator032F
+        ; we are in an elevator transition
+        ; branch if elevator is going up
+        lda ElevatorType
         bmi Lx113
     Lx112:
-        lda AreaMusicFlag                       ;Load proper bit flag for area music.
+        ; we are not in an elevator transition, or elevator is going down
+        ;Load proper bit flag for area music.
+        lda AreaMusicFlag
         ldy ItemRoomMusicStatus
         bmi Lx114
         beq Lx114
     Lx113:
-    lda #$81
-    sta ItemRoomMusicStatus
-    lda #music_ItemRoom             ;Set flag to play item room music.
-Lx114:
-    ora MusicInitFlag               ;
-    sta MusicInitFlag               ;Store music flag info.
+        ; elevator is going up, or item room music flag is set
+        ;Set flag to play item room music.
+        lda #$81
+        sta ItemRoomMusicStatus
+        lda #music_ItemRoom
+    Lx114:
+    ;Store music flag info.
+    ora MusicInitFlag
+    sta MusicInitFlag
     rts
 
 ElevatorStop:
+    ; scroll until ScrollY = 0
     lda ScrollY
-    bne Lx116    ; scroll until ScrollY = 0
+    bne Lx116
+    ; we are at the right height to stop moving
+    ; set samus to stand
     lda #sa_Stand
     sta ObjAction
+    ; clear samus horizontal movement
     jsr StopHorzMovement
-    ldx PageIndex   ; #$20
-    lda #$01        ; ElevatorIdle
+    ; set elevator routine to ElevatorIdle
+    ldx PageIndex
+    lda #$01
     sta ObjAction,x
-    lda $030F,x
-    eor #$80        ; switch elevator direction
-    sta $030F,x
+    ; switch elevator direction
+    lda ElevatorType-$20,x
+    eor #$80        
+    sta ElevatorType-$20,x
+    ; branch if elevator is now going up
     bmi Lx115
+        ; elevator is now going down
+        ; toggle scrolling to horizontal
         jsr ToggleScroll
         sta MirrorCntrl
     Lx115:
-    jmp ShowElevator
+    jmp DrawElevator
 Lx116:
     jmp ElevScrollRoom
 
@@ -5201,13 +5271,17 @@ ItemDropTbl:
 ;is 4 tiles tall or less.  If it is taller, #$10 is subtracted from the temporary y radius.
 
 ReduceYRadius:
-    sec                             ;
-    sbc #$10                        ;Subtract #$10 from object y radius.
-    bcs LDE44                       ;If number is still a positive number, branch to store value.
-        lda #$00                        ;Number is negative.  Set Y radius to #$00.
+    ;Subtract #$10 from object y radius.
+    sec
+    sbc #$10
+     ;If number is still a positive number, branch to store value.
+    bcs LDE44
+        ;Number is negative.  Set Y radius to #$00.
+        lda #$00
     LDE44:
-    sta Temp08_RadiusY              ;Store result and return.
-    rts                             ;
+    ;Store result and return.
+    sta Temp08_RadiusY
+    rts
 
 AnimDrawObject:
     jsr UpdateObjAnim               ;($DC8F)Update animation if needed.
@@ -6355,7 +6429,6 @@ RTS_X163:
     rts
 
 ; Attempt to scroll UP
-
 ScrollUp:
     lda ScrollDir
     beq Lx164
@@ -6372,7 +6445,7 @@ ScrollUp:
         jsr GetRoomNum      ; put room # at current map pos in $5A
         bcs Lx166           ; if function returns CF = 1, moving up is not possible
         jsr LE9B7           ; switch to the opposite Name Table
-        ldx #240            ; new Y coord
+        ldx #SCRN_VY        ; new Y coord
     Lx165:
     dex
     jmp LE53F
@@ -6383,7 +6456,6 @@ Lx167:
     rts
 
 ; Attempt to scroll DOWN
-
 ScrollDown:
     ldx ScrollDir
     dex
@@ -6401,7 +6473,7 @@ ScrollDown:
         bcs Lx171           ; if function returns CF = 1, moving down is not possible
     Lx169:
     ldx ScrollY
-    cpx #239
+    cpx #SCRN_VY-1.b
     bne Lx170
         jsr LE9B7       ; switch to the opposite Name Table
         ldx #$FF
@@ -7647,7 +7719,7 @@ SpawnElevatorRoutine:
     bne Lx234      ; exit if elevator already present
     iny
     lda ($00),y
-    sta Elevator032F
+    sta ElevatorType
     ldy #$83
     sty ObjY+$20.w       ; elevator Y coord
     lda #$80

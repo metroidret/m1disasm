@@ -1,13 +1,14 @@
 ;-------------------------------------[ Hardware defines ]-------------------------------------------
 
-PPUCTRL                = $2000   ;
-PPUMASK                = $2001   ;
-PPUSTATUS              = $2002   ;
-OAMADDR                = $2003   ;PPU hardware control registers.
-OAMDATA                = $2004   ;
-PPUSCROLL              = $2005   ;
-PPUADDR                = $2006   ;
-PPUDATA                = $2007   ;
+;PPU hardware control registers.
+PPUCTRL                = $2000
+PPUMASK                = $2001
+PPUSTATUS              = $2002
+OAMADDR                = $2003
+OAMDATA                = $2004
+PPUSCROLL              = $2005
+PPUADDR                = $2006
+PPUDATA                = $2007
 
     PPUCTRL_NMTBL_2000     = %00000000
     PPUCTRL_NMTBL_2400     = %00000001
@@ -50,30 +51,35 @@ PPUDATA                = $2007   ;
     OAMDATA_VFLIP      = %10000000
 
 
-SQ1_VOL                = $4000   ;
-SQ1_SWEEP              = $4001   ;SQ1 hardware control registers.
-SQ1_LO                 = $4002   ;
-SQ1_HI                 = $4003   ;
+;SQ1 hardware control registers.
+SQ1_VOL                = $4000
+SQ1_SWEEP              = $4001
+SQ1_LO                 = $4002
+SQ1_HI                 = $4003
 
-SQ2_VOL                = $4004   ;
-SQ2_SWEEP              = $4005   ;SQ2 hardware control registers.
-SQ2_LO                 = $4006   ;
-SQ2_HI                 = $4007   ;
+;SQ2 hardware control registers.
+SQ2_VOL                = $4004
+SQ2_SWEEP              = $4005
+SQ2_LO                 = $4006
+SQ2_HI                 = $4007
 
-TRI_LINEAR             = $4008   ;
-TRI_UNUSED             = $4009   ;Triangle hardware control registers.
-TRI_LO                 = $400A   ;
-TRI_HI                 = $400B   ;
+;Triangle hardware control registers.
+TRI_LINEAR             = $4008
+TRI_UNUSED             = $4009
+TRI_LO                 = $400A
+TRI_HI                 = $400B
 
-NOISE_VOL              = $400C   ;
-NOISE_UNUSED           = $400D   ;Noise hardware control registers.
-NOISE_LO               = $400E   ;
-NOISE_HI               = $400F   ;
+;Noise hardware control registers.
+NOISE_VOL              = $400C
+NOISE_UNUSED           = $400D
+NOISE_LO               = $400E
+NOISE_HI               = $400F
 
-DMC_FREQ               = $4010   ;
-DMC_RAW                = $4011   ;DMC hardware control registers.
-DMC_START              = $4012   ;
-DMC_LEN                = $4013   ;
+;DMC hardware control registers.
+DMC_FREQ               = $4010
+DMC_RAW                = $4011
+DMC_START              = $4012
+DMC_LEN                = $4013
 
 OAMDMA                 = $4014   ;Sprite RAM DMA register.
 SND_CHN                = $4015   ;APU common control 1 register.
@@ -104,10 +110,11 @@ JOY2                   = $4017   ;Joypad2/APU common control 2 register.
 
 ;----------------------------------------------------------------------------------------------------
 
-MMC1Reg0               = $8000   ;Writing to any of these addresses or any-->
-MMC1Reg1               = $A000   ;address in between will write configuration-->
-MMC1Reg2               = $C000   ;bits to the MMC chip.
-MMC1Reg3               = $E000   ;
+;Writing to any of these addresses or any address in between will write configuration bits to the MMC chip.
+MMC1Reg0               = $8000
+MMC1Reg1               = $A000
+MMC1Reg2               = $C000
+MMC1Reg3               = $E000
 
     MMC1_0_MIRROR_1LOWER   = %00000
     MMC1_0_MIRROR_1UPPER   = %00001
@@ -120,3 +127,7 @@ MMC1Reg3               = $E000   ;
     MMC1_0_CHRBANK_8K      = %00000
     MMC1_0_CHRBANK_4K      = %10000
 
+;----------------------------------------------------------------------------------------------------
+
+SCRN_VX                = 256
+SCRN_VY                = 240

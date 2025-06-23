@@ -21,6 +21,10 @@
 .def BANK = 0
 .SECTION "ROM Bank $000" BANK 0 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
+;---------------------------------------------[ Export ]---------------------------------------------
+
+.export _id_EndGame
+
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 MainTitleRoutine:
@@ -32,20 +36,24 @@ MainTitleRoutine:
     lda Joy1Change
     and #BUTTON_START
     beq L8022
-        ldy #$00                        ;
-        sty SpareMemD1                  ;Not accessed by game.
-        sty SpareMemBB                  ;Not accessed by game.
-        sty SpareMemB7                  ;Accessed by unused routine.
-        sty SpareMemB8                  ;Accessed by unused routine.
-        lda PPUCTRL_ZP                  ;
-        and #$FC                        ;Set name table to name table 0.
-        sta PPUCTRL_ZP                  ;
-        lda #_id_StartContinueScreen1B.b  ;If start pressed, load START/CONTINUE screen.
-        sta TitleRoutine                ;
-        bne L8027                       ;Branch always.
+        ; clear unused variables
+        ldy #$00
+        sty SpareMemD1
+        sty SpareMemBB
+        sty SpareMemB7
+        sty SpareMemB8
+        ;Set name table to name table 0.
+        lda PPUCTRL_ZP
+        and #$FC
+        sta PPUCTRL_ZP
+        ;start was pressed, load START/CONTINUE screen.
+        lda #_id_StartContinueScreen1B.b
+        sta TitleRoutine
+        bne L8027 ;Branch always.
     L8022:
-        jsr RemoveIntroSprites          ;($C1BC)Remove sparkle and crosshair sprites from screen.
-        lda TitleRoutine                ;
+        ;($C1BC)Remove sparkle and crosshair sprites from screen.
+        jsr RemoveIntroSprites
+        lda TitleRoutine
 L8027:
     jsr ChooseRoutine               ;($C27C)Jump to proper routine below.
     TitleRoutinePtrTable:
@@ -127,16 +135,16 @@ InitializeAfterReset:
         asl                             ;
         tay                             ;The following loop Loads the -->
         sty $02                         ;RAM with the following values: -->
-        lda RamValueTbl, y              ;$6000 thru $62FF = #$00.
+        lda RamValueTbl,y               ;$6000 thru $62FF = #$00.
         ldy #$00                        ;$6300 thru $633F = #$C0.
         L80AC:
-            sta ($00), y                    ;$6340 thru $63FF = #$C4.
+            sta ($00),y                     ;$6340 thru $63FF = #$C4.
             iny                             ;$6400 thru $66FF = #$00.
             beq L80BE                       ;$6700 thru $673F = #$C0.
             cpy #$40                        ;$6740 thru $67FF = #$C4.
             bne L80AC                       ;
             ldy $02                         ;
-            lda RamValueTbl+1, y            ;
+            lda RamValueTbl+1,y             ;
             ldy #$40                        ;
             bpl L80AC                       ;
         L80BE:
@@ -3356,13 +3364,17 @@ PalChangeTable:
     .byte $08, $07, $06, $05, $04, $03, $02, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
 SamusWave:
-    lda Timer3                      ;If 160 frame timer from previous routine-->
-    bne L9BA2                       ;has not expired, branch(waves for 2.6 seconds).
-    lda #$10                        ;
-    sta Timer3                      ;Load Timer3 with 160 frame delay-->
-    lda #$08                        ;(2.6 seconds).
-    sta PalDataPending              ;Change palette
-    inc RoomPtr                     ;Increment RoomPtr
+    ;If 160 frame timer from previous routine has not expired, branch(waves for 2.6 seconds).
+    lda Timer3
+    bne L9BA2
+    ;Load Timer3 with 160 frame delay (2.6 seconds).
+    lda #$10
+    sta Timer3
+    ;Change palette
+    lda #$08
+    sta PalDataPending
+    ;Increment RoomPtr
+    inc RoomPtr
     rts
 
 L9BA2:
@@ -3472,45 +3484,63 @@ RTS_9C44:
 ;pages and name table 2 contains even numbered pages.
 
 LoadCredits:
-    ldy CreditPageNumber            ;
-    beq RTS_9C7E                       ;If credits are not being displayed, exit.
-    cpy #$07                        ;
-    bcs RTS_9C7E                       ;If CreditPageNumber is higher than #$06, exit.
-    ldx #$00                        ;
-    lda ScrollY                     ;If ScrollY is less than #$80 (128), branch.
-    bpl L9C57                       ;
-    inx                             ;Load X with sign bit (#$01) and remove-->
-    sec                             ;sign bit from A.
-    sbc #$80                        ;
-L9C57:
-    cmp #$04                        ;
-    bcs RTS_9C7E                       ;If ScrollY is not #$04, branch to exit.
-    sta $01                         ;Store #$00, #$01, #$02 or #$03 in address $01.
-    dey                             ;Y now contains CreditPageNumber - 1.
-    txa                             ;
-    bne L9C6C                       ;If ScrollY is #$80 (128) or greater, branch.
-    dey                             ;Y now contains CreditPageNumber - 2.
-    bmi RTS_9C7E                       ;If on Credit page less than two , branch to exit.
-    tya                             ;
-    asl                             ;Start with CreditPageNumber - 2-->
-    asl                             ;* 8 + 4 + $01 * 2.
-    asl                             ;This formula is used when ScrollY = 0, 1, 2 and 3.
-    adc #$04                        ;Result is index to find proper credits to load.
-    bne L9C70                       ;Branch always.
-L9C6C:
-    tya                             ;
-    asl                             ;Start with CreditPageNumber - 1-->
-    asl                             ;* 8 + $01 * 2.
-    asl                             ;This formula is used when ScrollY = 128,-->
-L9C70:
-    adc $01                         ;129, 130 and 131.
-    asl                             ;Result is index to find proper credits to load.
-    tay                             ;
+    ;If credits are not being displayed, exit.
+    ldy CreditPageNumber
+    beq @RET
+    ;If CreditPageNumber is higher than #$06, exit.
+    cpy #$07
+    bcs @RET
+    ;If ScrollY is less than #$80 (128), branch.
+    ldx #$00
+    lda ScrollY
+    bpl @endIf_A
+        ;Load X with sign bit (#$01) and remove sign bit from A.
+        inx
+        sec
+        sbc #$80
+    @endIf_A:
+    ;If (ScrollY & #$7F) is greater or equal to #$04, branch to exit.
+    cmp #$04
+    bcs @RET
+    ;Store #$00, #$01, #$02 or #$03 in address $01.
+    sta $01
+    ;Y now contains CreditPageNumber - 1.
+    dey
+    ;If ScrollY is #$80 (128) or greater, branch.
+    txa
+    bne @else_B
+        ;Y now contains CreditPageNumber - 2.
+        dey
+        ;If on Credit page less than two, branch to exit.
+        bmi @RET
+        ;Start with ((CreditPageNumber - 2) * 8 + 4 + $01) * 2.
+        ;Equivalent to CreditPageNumber * 16 - 22
+        ;This formula is used when ScrollY = 0, 1, 2 and 3.
+        ;Result is index to find proper credits to load.
+        tya
+        asl
+        asl
+        asl
+        adc #$04
+        bne @endIf_B ;Branch always.
+    @else_B:
+        ;Start with ((CreditPageNumber - 1) * 8 + $01) * 2.
+        ;Equivalent to CreditPageNumber * 16 - 14
+        ;This formula is used when ScrollY = 128, 129, 130 and 131.
+        ;Result is index to find proper credits to load.
+        tya
+        asl
+        asl
+        asl
+    @endIf_B:
+    adc $01
+    asl
+    tay
     ldx CreditsPointerTbl,y         ;Base is $A291. Lower byte of pointer to PPU string.
     lda CreditsPointerTbl+1,y       ;Upper byte of pointer to PPU string.
-    tay                             ;
+    tay
     jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-RTS_9C7E:
+@RET:
     rts
 
 LoadWaveSprites:

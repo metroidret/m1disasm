@@ -441,7 +441,18 @@ SamusHorzSpeedMax      = $0316   ;Used to calc maximum horizontal speed Samus ca
 
 ;Elevator RAM.
 ElevatorStatus         = $0320   ;#$01=Elevator present, #$00=Elevator not present.
-Elevator032F           = $032F   ;bit 7 is up(1) or down(0)
+ElevatorAnimFrame      = $0323   ;*2 = Index into FramePtrTable for current animation.
+ElevatorAnimResetIndex = $0325   ;Restart index-1 when AnimIndex finished with last frame.
+ElevatorAnimIndex      = $0326   ;Current index into ObjectAnimIndexTbl.
+ElevatorUnused0328     = $0328   ;when starting to move, #$00 is written, but this is never read
+ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
+                                   ;low nybble is which elevator it is
+                                   ;#$0=Brinstar/Brinstar
+                                   ;#$1=Brinstar/Norfair
+                                   ;#$2=Brinstar/Kraid
+                                   ;#$3=Brinstar/Tourian
+                                   ;#$4=Norfair/Ridley
+                                   ;elevator type #$8F is for the ending elevator
 
 ;Power-up item RAM.
 PowerUpAnimFrame       = $0343   ;*2 = Index into FramePtrTable for current animation.
@@ -1003,7 +1014,8 @@ sa_FadeIn3             = 23
 sa_FadeIn4             = 24
 sa_Begin               = 255
 
-;Animations
+;once i replace all usages of these constants by (ObjAnim_00 - ObjectAnimIndexTbl) expressions, ->
+;i will rename the ObjAnim to match the names of these constants, and then delete the constants.
 an_SamusRun            = $00
 an_SamusFront          = $04
 an_SamusStand          = $07
