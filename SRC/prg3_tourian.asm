@@ -91,8 +91,8 @@ GotoSpawnRinkaSpawnerRoutine:
     jmp SpawnRinkaSpawnerRoutine
 GotoLA0C6:
     jmp LA0C6
-GotoLA142:
-    jmp LA142
+GotoUpdateBullet_CollisionWithMotherBrain:
+    jmp UpdateBullet_CollisionWithMotherBrain
 
 AreaRoutine:
     jmp L9B25                       ;Area specific routine.
@@ -777,9 +777,9 @@ SpawnZebetiteRoutine:
     sta ZebetiteStatus,x
     
     lda #$00
-    sta ZebetiteHits,x
+    sta ZebetiteQtyHits,x
     sta ZebetiteHealingDelay,x
-    sta ZebetiteJustGotHit,x
+    sta ZebetiteIsHit,x
     rts
 
 GetVRAMPtrHi:
@@ -879,7 +879,7 @@ L9DF2:
     lda #$02
     sta HealthChange+1.b
     lda #$38
-    sta SamusHit
+    sta SamusIsHit
     jmp CommonJump_SubtractHealth
 
 ;-------------------------------------------------------------------------------
@@ -892,7 +892,7 @@ L9E2E:
     jsr LA041
 L9E31:
     lda #$00
-    sta MotherBrain9E
+    sta MotherBrainIsHit
     rts
 
 ;-------------------------------------------------------------------------------
@@ -928,7 +928,7 @@ L9E52:
     ldy MotherBrainStatus
     dey
     bne L9E83
-    sty MotherBrainHits
+    sty MotherBrainQtyHits
     tya
     tax
     L9E68:
@@ -979,8 +979,8 @@ L9E86:
     sta MotherBrainStatus
     lda #$1C
     sta MotherBrain9F
-    ldy MotherBrainHits
-    inc MotherBrainHits
+    ldy MotherBrainQtyHits
+    inc MotherBrainQtyHits
     cpy #$04
     beq L9ED3
         ldx #$00
@@ -999,7 +999,7 @@ L9ED6:
     lda #$05
     sta MotherBrainStatus
     lda #$80
-    sta MotherBrainHits
+    sta MotherBrainQtyHits
     rts
 
 L9EE7:
@@ -1024,7 +1024,7 @@ L9EFF: .byte $60, $09, $0A
 
 ;-------------------------------------------------------------------------------
 L9F02:
-    lda MotherBrainHits
+    lda MotherBrainQtyHits
     bmi L9F33
         cmp #$08
         beq L9F36
@@ -1049,7 +1049,7 @@ L9F02:
         jsr CommonJump_DrawTileBlast
         bcs RTS_9F38
     L9F33:
-    inc MotherBrainHits
+    inc MotherBrainQtyHits
     rts
 
 L9F36:
@@ -1149,13 +1149,13 @@ RTS_9FEC:
 
 ;-------------------------------------------------------------------------------
 L9FED:
-    lda MotherBrain9E
+    lda MotherBrainIsHit
     beq RTS_A01A
     lda MultiSFXFlag
     ora #sfxMulti_BossHit
     sta MultiSFXFlag
-    inc MotherBrainHits
-    lda MotherBrainHits
+    inc MotherBrainQtyHits
+    lda MotherBrainQtyHits
     cmp #$20
     ldy #$02
     lda #$10
@@ -1184,7 +1184,7 @@ LA01B:
     sta MotherBrainAnimFrameTableID
     lda #$20
     sec
-    sbc MotherBrainHits
+    sbc MotherBrainQtyHits
     lsr
     sta MotherBrain9A
 RTS_A02D:
@@ -1198,7 +1198,7 @@ LA02E:
     bne RTS_A040
     lda #$20
     sec
-    sbc MotherBrainHits
+    sbc MotherBrainQtyHits
     ora #$80
     eor MotherBrain9B
     sta MotherBrain9B
@@ -1233,7 +1233,7 @@ LA06D:
     .byte $17
 
 LA072:
-    ldy MotherBrainHits
+    ldy MotherBrainQtyHits
     beq RTS_A086
     lda LA0C0,y
     clc
@@ -1341,7 +1341,7 @@ LA0C6:
         LA139:
             ; set zebetite flag to indicate it got hit
             lda #$01
-            sta ZebetiteJustGotHit,y
+            sta ZebetiteIsHit,y
 LA13E:
     pla
     pla
@@ -1349,21 +1349,30 @@ LA13E:
     rts
 
 ;-------------------------------------------------------------------------------
-LA142:
+; params: a is tile id
+UpdateBullet_CollisionWithMotherBrain:
+    ; y = tile id
     tay
-    lda $71
-    beq LA15C
+    ; exit if we are not updating samus projectile
+    lda UpdatingProjectile
+    beq @exit
     ldx PageIndex
-    lda ObjAction,x
+    ; exit if projectile status is not #$0B (missile?)
+    lda ProjectileStatus,x
     cmp #$0B
-    bne LA15C
+    bne @exit
+    ; exit if tile id < $5E
     cpy #$5E
-    bcc LA15C
+    bcc @exit
+    ; exit if tile id >= $72
     cpy #$72
-    bcs LA15C
+    bcs @exit
+    ; bullet is overlapping mother brain's tiles
+    ; mother brain is hit!
     lda #$01
-    sta MotherBrain9E
-LA15C:
+    sta MotherBrainIsHit
+@exit:
+    ; a = tile id
     tya
 RTS_A15D:
     rts
@@ -1464,7 +1473,7 @@ LA1E7:
     ora EndTimer+1
     bne RTS_A237
     dec EndTimer+1
-    sta MotherBrainHits
+    sta MotherBrainQtyHits
     lda #$07
     sta MotherBrainStatus
     lda NoiseSFXFlag
@@ -1544,13 +1553,13 @@ LA29B:
     bne RTS_A28A
     
     ; check if zebetite just got hit
-    lda ZebetiteJustGotHit,x
+    lda ZebetiteIsHit,x
     beq LA2F2
     
     ; zebetite was just hit
     ; increase hits count
-    inc ZebetiteHits,x
-    lda ZebetiteHits,x
+    inc ZebetiteQtyHits,x
+    lda ZebetiteQtyHits,x
     ; check if hits count is even or odd
     lsr
     bcs LA2F2
@@ -1580,8 +1589,8 @@ LA2BA:
     and #$80
     ora #$01
     sta ZebetiteStatus,x
-    sta ZebetiteJustGotHit,x
-    dec ZebetiteHits,x
+    sta ZebetiteIsHit,x
+    dec ZebetiteQtyHits,x
     rts
 
 LA2EB:
@@ -1590,7 +1599,7 @@ LA2EB:
     bne LA30A
 LA2F2:
     ; dont heal if at full health
-    ldy ZebetiteHits,x
+    ldy ZebetiteQtyHits,x
     beq LA30A
     ; dont heal if healing delay is not zero
     dec ZebetiteHealingDelay,x
@@ -1601,14 +1610,14 @@ LA2F2:
     sta ZebetiteHealingDelay,x
     dey
     tya
-    sta ZebetiteHits,x
+    sta ZebetiteQtyHits,x
     ; if hits count is odd, update zebetite appearance
     lsr
     tay
     bcc LA2BA
 LA30A:
     lda #$00
-    sta ZebetiteJustGotHit,x
+    sta ZebetiteIsHit,x
     rts
 
 ZebetiteAnimFrameTable:

@@ -508,7 +508,7 @@ L8290:
     iny
     lda (EnemyMovementPtr),y
 
-L8296: ;referenced in bank 7
+EnemyGetDeltaY_8296: ;referenced in bank 7
 ; Save the sign bit to the carry flag
     asl
     php
@@ -1103,7 +1103,7 @@ UpdateDoor_Init:
     ; increment door status to "closed"
     inc DoorStatus,x
     ; set door animation to closed
-    lda #ObjAnim_2E - ObjectAnimIndexTbl + $02.b
+    lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
     jsr InitObjAnimIndex           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
@@ -1124,7 +1124,7 @@ DrawDoor:
     sta ObjectCntrl
 
     lda #$00
-    sta DoorHit,x ; SamusHit (DoorHit?)
+    sta DoorIsHit,x
     ; use door slot number to determine whether to h-flip the door
     txa
     and #$10
@@ -1143,7 +1143,7 @@ DoorHitPointTable:
 
 UpdateDoor_Closed:
     ; branch if door was not hit
-    lda DoorHit,x
+    lda DoorIsHit,x
     and #$04
     beq DrawDoor
     ; door was hit, decrease hp
@@ -1172,10 +1172,10 @@ UpdateDoor_Closed:
     ; set door animation to opening the door
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
-    lda #ObjAnim_29 - ObjectAnimIndexTbl + $03.b
+    lda #ObjAnim_DoorOpen_Reset - ObjectAnimIndexTbl.b
     sta DoorAnimResetIndex,x
     sec
-    sbc #$03
+    sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
     jmp DoorSubRoutine8C7E
 
 UpdateDoor_Open:
@@ -1258,10 +1258,10 @@ GotoDrawDoor:
     jmp DrawDoor
 
 DoorSubRoutine8C76:
-    lda #ObjAnim_2E - ObjectAnimIndexTbl + $02.b
+    lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
     sta DoorAnimResetIndex,x
     sec
-    sbc #$02
+    sbc #ObjAnim_DoorClose_Reset - ObjAnim_DoorClose.b
 DoorSubRoutine8C7E:
     jsr SetObjAnimIndex
     jmp SFX_Door
@@ -1331,10 +1331,10 @@ UpdateDoor_Scroll:
     lda #$06
     sta DoorStatus,x
     ; set that door's animation to opening the door
-    lda #ObjAnim_29 - ObjectAnimIndexTbl + $03.b
+    lda #ObjAnim_DoorOpen_Reset - ObjectAnimIndexTbl.b
     sta DoorAnimResetIndex,x
     sec
-    sbc #$03
+    sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
     jsr SetObjAnimIndex
     ; play door sfx
     jsr SFX_Door
