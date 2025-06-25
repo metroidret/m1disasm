@@ -656,7 +656,11 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/norfair.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/norfair.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/norfair.asm"
+.endif
 
 ;Unused. (B099)
     .byte $B9, $30, $3A, $3E, $B6, $42, $B9, $42, $3E, $42, $B3, $44, $B2, $3A, $B9, $3A

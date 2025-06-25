@@ -732,9 +732,17 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/ridley.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/ridley.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/ridley.asm"
+.endif
 
-.include "songs/kraid.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/kraid.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/kraid.asm"
+.endif
 
 ;Not used.
     .byte $2A, $2A, $2A, $B9, $2A, $2A, $2A, $B2, $2A, $2A, $2A, $2A, $2A, $B9, $2A, $12

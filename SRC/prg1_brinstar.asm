@@ -864,7 +864,11 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/brinstar.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/brinstar.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/brinstar.asm"
+.endif
 
 ; Errant Mother Brain BG tiles (unused)
     .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05

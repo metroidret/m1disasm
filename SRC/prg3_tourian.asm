@@ -1778,9 +1778,17 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/escape.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/escape.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/escape.asm"
+.endif
 
-.include "songs/mthr_brn_room.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/mthr_brn_room.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/mthr_brn_room.asm"
+.endif
 
 ;Unused tile patterns.
     .byte $2B, $3B, $1B, $5A, $D0, $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0

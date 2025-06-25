@@ -2767,10 +2767,18 @@ UnusedIntroRoutine8: ;($94DA)
     rts
 
 ;Not used.
+.if BUILDTARGET == "NES_NTSC"
     .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $63, $D6, $88, $D0, $3A, $A9, $00, $9D, $D0, $05, $A5, $03, $18, $69, $09, $48
+    .byte $A5, $04, $29, $02, $F0, $05, $68, $18, $69, $05, $48, $68, $9D, $C0, $05, $A5
+    .byte $02, $18, $69, $08, $9D, $B0, $05, $A9, $22, $9D, $E0, $05, $A9, $08, $85, $4A
+    .byte $C6, $50, $20, $6E
+.endif
+
 
 ;--------------------------------------[ Palette data ]---------------------------------------------
 
@@ -3275,8 +3283,13 @@ L9AE4:
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
     lda #sfxMulti_EndMusic          ;Initiate end game music.
     sta MultiSFXFlag                ;
-    lda #$60                        ;Loads Timer3 with a delay of 960 frames-->
-    sta Timer3                      ;(16 seconds).
+    .if BUILDTARGET == "NES_NTSC"
+        ;Loads Timer3 with a delay of 960 frames (16 seconds).
+        lda #$60
+    .elif BUILDTARGET == "NES_PAL"
+        lda #$38
+    .endif
+    sta Timer3
     lda #$36                        ;#$36/#$03 = #$12.  Number of sprites-->
     sta SpriteByteCounter           ;used to draw end graphic of Samus.
     lda #$00                        ;
@@ -3301,9 +3314,14 @@ ShowEndSamus:
         rts
 
     L9B26:
-    cmp #$50                        ;After 160 frames have passed-->
-    bne L9B2D                       ;(2.6 seconds), write end message.
-        inc EndMsgWrite                 ;
+    .if BUILDTARGET == "NES_NTSC"
+        ;After 160 frames have passed (2.6 seconds), write end message.
+        cmp #$50
+    .elif BUILDTARGET == "NES_PAL"
+        cmp #$30
+    .endif
+    bne L9B2D
+        inc EndMsgWrite
         rts
 
     L9B2D:
@@ -3367,8 +3385,12 @@ SamusWave:
     ;If 160 frame timer from previous routine has not expired, branch(waves for 2.6 seconds).
     lda Timer3
     bne L9BA2
-    ;Load Timer3 with 160 frame delay (2.6 seconds).
-    lda #$10
+    .if BUILDTARGET == "NES_NTSC"
+        ;Load Timer3 with 160 frame delay (2.6 seconds).
+        lda #$10
+    .elif BUILDTARGET == "NES_PAL"
+        lda #$08
+    .endif
     sta Timer3
     ;Change palette
     lda #$08
@@ -3421,9 +3443,14 @@ EndFadeOut:
     lda PalDataPending              ;This creates the fade out effect.
     cmp #$0C                        ;
     bne L9BEF                       ;
-        lda #$10                        ;After fadeout complete, load Timer3 with 160 frame-->
-        sta Timer3                      ;delay(2.6 seconds) and increment RoomPtr.
-        inc RoomPtr                     ;
+        .if BUILDTARGET == "NES_NTSC"
+            ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
+            lda #$10
+        .elif BUILDTARGET == "NES_PAL"
+            lda #$08
+        .endif
+        sta Timer3
+        inc RoomPtr
     L9BEF:
     lda EndingType                  ;
     cmp #$04                        ;If suitless Samus ending, load hand wave sprites,-->
@@ -4551,6 +4578,7 @@ CopyMap:
     rts
 
 ;Unused tile patterns.
+.if BUILDTARGET == "NES_NTSC"
     .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
     .byte $22, $56, $03, $2B, $74, $37, $0D, $3F, $5F, $7D, $7F, $7F, $5F, $3F, $0F, $68
     .byte $F6, $BC, $5E, $3C, $DE, $7C, $F0, $FC, $DE, $FE, $FE, $FE, $FE, $FC, $F0, $00
@@ -4593,12 +4621,62 @@ CopyMap:
     .byte $FC, $0C, $4C, $0C, $0C, $0C, $0C, $00, $04, $FC, $9C, $FC, $FC, $FC, $FC, $C0
     .byte $C0, $D0, $C0, $FF, $FF, $00, $00, $3F, $3F, $27, $3F, $3F, $7F, $00, $00, $0C
     .byte $0C, $4C, $0C, $FC, $FC, $00, $00, $FC, $FC, $9C, $FC, $FC, $FC, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $A9, $01, $85, $10, $A5, $05, $29, $01, $85, $05, $A0, $17, $B9, $00, $03, $30
+    .byte $4F, $F0, $66, $C9, $03, $90, $62, $A5, $10, $D0, $49, $B9, $00, $03, $C9, $0F
+    .byte $F0, $57, $BD, $A8, $05, $C9, $03, $D0, $3B, $BD, $B8, $05, $19, $90, $03, $D0
+    .byte $48, $BD, $B0, $05, $18, $69, $10, $B0, $40, $38, $F9, $78, $03, $90, $3A, $C9
+    .byte $28, $B0, $36, $BD, $C0, $05, $18, $69, $10, $38, $F9, $A8, $03, $90, $2A, $C9
+    .byte $28, $B0, $26, $B9, $18, $03, $85, $04, $B9, $30, $03, $85, $05, $4C, $DD, $E9
+    .byte $A5, $10, $F0, $15, $B9, $90, $03, $C9, $01, $F0, $0E, $B9, $18, $03, $C5, $04
+    .byte $D0, $07, $B9, $30, $03, $C5, $05, $F0, $03, $4C, $F3, $EA, $8A, $48, $A5, $10
+    .byte $F0, $25, $10, $14, $B9, $00, $03, $C9, $0F, $D0, $19, $B9, $F0, $03, $D0, $05
+    .byte $A9, $01, $99, $F0, $03, $4C, $F1, $EA, $B9, $00, $03, $10, $07, $B9, $F0, $03
+    .byte $D0, $02, $F0, $1B, $4C, $F1, $EA, $38, $BD, $A8, $05, $AA, $B9, $F0, $03, $CA
+    .byte $D0, $05, $E5, $4D, $4C, $1B, $EA, $FD, $49, $DF, $99, $F0, $03, $B0, $E5, $A5
+    .byte $05, $18, $69, $06, $85, $05, $20, $1F, $EB, $E8, $D0, $03, $4C, $EE, $EA, $A5
+    .byte $10, $F0, $73, $10, $03, $4C, $9F, $EA, $B9, $00, $03, $29, $0F, $C9, $04, $D0
+    .byte $31, $A5, $34, $18, $69, $08, $C9, $81, $90, $02, $A9, $79, $85, $34, $D0, $45
+    .byte $A5, $B6, $4A, $B0, $14, $A9, $04, $20, $ED, $E1, $A5, $B6, $C9, $02, $D0, $01
+    .byte $2C, $A9, $00, $8D, $64, $04, $4C, $96, $EA, $E6, $55, $D0, $02, $C6, $55, $4C
+    .byte $96, $EA, $C9, $0D, $F0, $DA, $38, $E9, $05, $AA, $B5, $4D, $18, $7D, $09, $EC
+    .byte $90, $02, $A9, $FF, $95, $4D, $E8, $CA, $D0, $08, $C9, $1F, $90, $04, $A9, $1E
+    .byte $85, $4D, $20, $14, $E2, $98, $48, $A9, $0B, $20, $71, $87, $68, $A8, $A9, $00
+    .byte $99, $00, $03, $AA, $F0, $45, $B9, $00, $03, $48, $09, $80, $99, $00, $03, $A9
+    .byte $0B, $99, $F0, $03, $68, $A2, $00, $C9, $03, $F0, $07, $C9, $0E, $D0, $1A, $A9
+    .byte $00, $2C, $A9, $05, $20, $A2, $E2, $98, $48, $A9, $09, $20, $71, $87, $68, $A8
+    .byte $A9, $FF, $99, $30, $03, $A9, $00, $F0, $12, $A9, $05, $20, $A2, $E2, $98, $48
+    .byte $A9, $09, $20, $71, $87, $68, $A8, $A1, $04, $29, $F0, $81, $04, $68, $AA, $60
+    .byte $68, $AA, $88, $30, $03, $4C, $6D, $E9, $60, $A2, $01, $A9, $C0, $95, $6B, $A9
+    .byte $FF, $95, $69, $A9, $20, $95, $AA, $95, $AE, $A9, $00, $95, $A8, $95, $AC, $9D
+    .byte $5B, $04, $95, $A0, $95, $A2, $95, $A4, $95, $A6, $CA, $10, $DE, $60, $A2, $01
+    .byte $B5, $AA, $C9, $20, $F0, $03, $4C, $02, $EC, $B9, $60, $03, $95, $AA, $48, $B9
+    .byte $48, $03, $95, $A8, $18, $69, $20, $95, $AC, $68, $69, $00, $95, $AE, $98, $48
+    .byte $B9, $00, $03, $A8, $B9, $48, $00, $85, $0F, $98, $0A, $0A, $A8, $C0, $3C, $F0
+    .byte $04, $A5, $10, $F0, $04, $A0, $04, $D0, $04, $C0, $0C, $D0, $60, $AD, $63, $04
+    .byte $0A, $A8, $90, $20, $B9, $4C, $F4, $95, $A0, $B9, $C8, $F4, $95, $A2, $B9, $4D
+    .byte $F4, $95, $A4, $B9, $C9, $F4, $95, $A6, $AD, $63, $04, $4A, $4A, $A8, $B9, $3C
+    .byte $F4, $4C, $A2, $EB, $B9, $CC, $95, $95, $A0, $B9, $B2, $96, $95, $A2, $B9, $CD
+    .byte $95, $95, $A4, $B9, $B3, $96, $95, $A6, $AD, $63, $04, $4A, $4A, $A8, $B9, $AF
+    .byte $95, $85, $02, $AD, $63, $04, $29, $03, $F0, $08, $A8, $46, $02, $46, $02, $88
+    .byte $D0, $F9, $A5, $02, $29, $03, $A8, $B9, $11, $EC, $4C, $E8, $EB, $A5, $0F, $D0
+    .byte $10, $A9, $38, $95, $A0, $A9, $48, $95, $A2, $A9, $39, $95, $A4, $A9, $49, $D0
+    .byte $12, $B9, $AC, $E4, $95, $A0, $B9, $AD, $E4, $95, $A2, $B9, $AE, $E4, $95, $A4
+    .byte $B9, $AF, $E4, $95, $A6, $A9, $00, $85, $02, $68, $A8, $B9, $C0, $03, $95, $6B
+    .byte $B9, $D8, $03, $95, $69, $49, $FF, $25, $02, $9D, $5B, $04, $A9, $20, $4C
+.endif
+
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/end.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/end.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/end.asm"
+.endif
 
 ;Unused tile patterns.
+.if BUILDTARGET == "NES_NTSC"
     .byte $80, $40, $20, $10, $88, $00, $00, $00, $00, $00, $00, $00, $80, $04, $00, $02
     .byte $02, $00, $00, $00, $00, $07, $03, $03, $03, $01, $00, $00, $00, $84, $C4, $42
     .byte $62, $21, $31, $11, $11, $80, $C0, $C0, $E0, $E0, $F0, $F0, $F0, $00, $00, $00
@@ -4615,10 +4693,36 @@ CopyMap:
     .byte $80, $80, $00, $00, $00, $30, $30, $60, $60, $60, $E0, $E0, $E0, $C7, $C7, $C7
     .byte $C7, $C7, $C7, $C7, $C7, $38, $38, $38, $38, $38, $38, $38, $38, $20, $20, $20
     .byte $20, $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
+.elif BUILDTARGET == "NES_PAL"
+    .byte $02, $A8, $B9, $D9, $93, $85, $7A, $B9, $DA, $93, $85, $7B, $BD, $4A, $F6, $8D
+    .byte $61, $04, $A9, $00, $85, $7D, $8D, $12, $04, $60, $85, $7D, $0A, $A8, $B1, $7A
+    .byte $C8, $85, $3B, $B1, $7A, $85, $3C, $A9, $00, $85, $16, $85, $17, $85, $18, $85
+    .byte $19, $85, $1A, $85, $46, $85, $3D, $85, $59, $85, $1D, $A9, $90, $85, $1E, $A9
+    .byte $07, $85, $73, $A9, $08, $85, $72, $A9, $24, $85, $37, $A9, $DF, $85, $36, $A9
+    .byte $9F, $85, $38, $A9, $27, $85, $3A, $A9, $00, $A2, $07, $95, $F8, $CA, $10, $FB
+    .byte $A9, $FF, $85, $74, $20, $47, $EF, $60, $A2, $00, $A9, $00, $9D, $00, $06, $E8
+    .byte $D0, $FA, $9D, $00, $07, $E8, $D0, $FA, $60, $A5, $1E, $8D, $00, $20, $A5, $17
+    .byte $4A, $A5, $16, $6A, $8D, $05, $20, $A9, $00, $8D, $05, $20, $60, $A6, $1D, $A9
+    .byte $60, $CA, $F0, $02, $A9, $90, $85, $02, $A5, $2E, $4A, $A5, $2D, $6A, $C5, $02
+    .byte $D0, $08, $A5, $33, $29, $01, $C5, $1D, $F0, $07, $A9, $00, $85, $45, $4C, $FC
+    .byte $EF, $C9, $01, $D0, $00, $AD, $5A, $04, $F0, $05, $A9, $00, $85, $45, $60, $A5
+    .byte $31, $4A, $4A, $4A, $18, $65, $46, $85, $46, $A5, $49, $4A, $90, $0C, $A5, $46
+    .byte $4A, $4A, $85, $45, $A5, $46, $29, $03, $85, $46, $A5, $16, $18, $65, $45, $85
+    .byte $16, $90, $14, $A5, $17, $69, $00, $85, $17, $C9, $02, $D0, $0A, $29, $01, $85
+    .byte $17, $A5, $1E, $49, $01, $85, $1E, $A5, $45, $18, $65, $1A, $85, $1A, $38, $E9
+    .byte $10, $90, $0D, $85, $1A, $E6, $3D, $A5, $3D, $29, $3F, $85, $3D, $20, $18, $F0
+    .byte $A5, $45, $F0, $09, $A9, $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0
+    .byte $17
+.endif
 
-.include "songs/intro.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/intro.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/intro.asm"
+.endif
 
 ;Unused tile patterns.
+.if BUILDTARGET == "NES_NTSC"
     .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
     .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
     .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
@@ -4632,12 +4736,35 @@ CopyMap:
     .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
     .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $3B, $C8, $48, $B1, $3B, $85, $3C, $68, $85, $3B, $A0, $00, $4C, $54, $F0, $E6
+    .byte $3B, $D0, $02, $E6, $3C, $85, $74, $0A, $AA, $90, $15, $BD, $0B, $99, $85, $75
+    .byte $BD, $0C, $99, $85, $76, $BD, $3C, $95, $85, $56, $BD, $3D, $95, $4C, $77, $F1
+    .byte $BD, $0B, $98, $85, $75, $BD, $0C, $98, $85, $76, $BD, $3C, $94, $85, $56, $BD
+    .byte $3D, $94, $85, $57, $A9, $00, $85, $58, $84, $02, $84, $59, $A9, $01, $85, $03
+    .byte $A9, $0C, $85, $11, $B1, $75, $10, $14, $C9, $FF, $D0, $05, $85, $74, $4C, $49
+    .byte $F0, $C8, $E6, $59, $29, $7F, $85, $0F, $B1, $75, $D0, $04, $85, $0F, $A9, $01
+    .byte $85, $10, $C8, $E6, $59, $A9, $00, $85, $08, $A5, $0F, $48, $0A, $AA, $A5, $38
+    .byte $4A, $A5, $6D, $D0, $16, $90, $0A, $BD, $77, $F3, $48, $BD, $76, $F3, $4C, $FB
+    .byte $F1, $BD, $F3, $F2, $48, $BD, $F2, $F2, $4C, $FB, $F1, $30, $16, $90, $0A, $BD
+    .byte $B3, $96, $48, $BD, $B2, $96, $4C, $FB, $F1, $BD, $CD, $95, $48, $BD, $CC, $95
+    .byte $4C, $FB, $F1, $90, $0A, $BD, $C9, $F4, $48, $BD, $C8, $F4, $4C, $FB, $F1, $BD
+    .byte $4D, $F4, $48, $BD, $4C, $F4, $A6, $02, $95, $E0, $E8, $68, $95, $E0, $E8, $86
+    .byte $02, $68, $85, $05, $48, $4A, $4A, $AA, $A5, $6D, $D0, $06, $BD, $E1, $F2, $4C
+    .byte $22, $F2, $30, $06, $BD, $AF, $95, $4C, $22, $F2, $BD, $3C, $F4, $85, $04, $68
+    .byte $29, $03, $AA, $E8, $A5, $04, $CA, $F0, $05, $4A, $4A
+.endif
 
 .ENDS
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.if BUILDTARGET == "NES_NTSC"
+    .SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.elif BUILDTARGET == "NES_PAL"
+    .SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+.endif
+
 
 .include "music_engine.asm"
 
