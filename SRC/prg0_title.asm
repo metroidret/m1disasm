@@ -55,7 +55,7 @@ MainTitleRoutine:
         jsr RemoveIntroSprites
         lda TitleRoutine
 L8027:
-    jsr ChooseRoutine               ;($C27C)Jump to proper routine below.
+    jsr ChooseRoutine
     TitleRoutinePtrTable:
         PtrTableEntry TitleRoutinePtrTable, InitializeAfterReset      ;($8071)First routine after reset.
         PtrTableEntry TitleRoutinePtrTable, DrawIntroBackground       ;($80D0)Draws ground on intro screen.
@@ -104,61 +104,81 @@ IncTitleRoutine0B:
     rts
 
 InitializeAfterReset:
-    ldy #$02                        ;Y=2.
-    sty SpareMemCF                  ;Not accessed by game.
-    sty SpareMemCC                  ;Not accessed by game.
-    dey                             ;Y=1.
-    sty SpareMemCE                  ;Not accessed by game.
-    sty SpareMemD1                  ;Not accessed by game.
-    dey                             ;Y=0.
-    sty SpareMemD0                  ;Not accessed by game.
-    sty SpareMemCD                  ;Not accessed by game.
-    sty SpareMemD3                  ;Not accessed by game.
+    ldy #$02
+    sty SpareMemCF
+    sty SpareMemCC
+    dey ;Y=1.
+    sty SpareMemCE
+    sty SpareMemD1
+    dey ;Y=0.
+    sty SpareMemD0
+    sty SpareMemCD
+    sty SpareMemD3
     sty NARPASSWORD                 ;Set NARPASSWORD not active.
-    sty SpareMemCB                  ;Not accessed by game.
-    sty SpareMemC9                  ;Not accessed by game.
+    sty SpareMemCB
+    sty SpareMemC9
     lda #$02                        ;A=2.
     sta IntroMusicRestart           ;Title rountines cycle twice before restart of music.
-    sty SpareMemB7                  ;Accessed by unused routine.
-    sty SpareMemB8                  ;Accessed by unused routine.
+    sty SpareMemB7
+    sty SpareMemB8
     sty PalDataIndex                ;Reset index to palette data.
     sty ScreenFlashPalIndex         ;Reset index into screen flash palette data.
     sty IntroStarOffset             ;Reset index into IntroStarPntr table.
     sty FadeDataIndex               ;Reset index into fade out palette data.
-    sty $00                         ;
-    ldx #$60                        ;Set $0000 to point to address $6000.
-
-    L809E:
-        stx $01                         ;
-        txa                             ;
-        and #$03                        ;
-        asl                             ;
-        tay                             ;The following loop Loads the -->
-        sty $02                         ;RAM with the following values: -->
-        lda RamValueTbl,y               ;$6000 thru $62FF = #$00.
-        ldy #$00                        ;$6300 thru $633F = #$C0.
-        L80AC:
-            sta ($00),y                     ;$6340 thru $63FF = #$C4.
-            iny                             ;$6400 thru $66FF = #$00.
-            beq L80BE                       ;$6700 thru $673F = #$C0.
-            cpy #$40                        ;$6740 thru $67FF = #$C4.
-            bne L80AC                       ;
-            ldy $02                         ;
-            lda RamValueTbl+1,y             ;
-            ldy #$40                        ;
-            bpl L80AC                       ;
-        L80BE:
-        inx                             ;
-        cpx #$68                        ;
-        bne L809E                       ;
-
-    inc TitleRoutine                ;Draw intro background next.
+    
+    ;Set $0000 to point to address $6000.
+    sty $00
+    ldx #>RoomRAMA.b
+    ;The following loop Loads the RAM with the following values:
+    ;$6000 thru $62FF = #$00.
+    ;$6300 thru $633F = #$C0.
+    ;$6340 thru $63FF = #$C4.
+    ;$6400 thru $66FF = #$00.
+    ;$6700 thru $673F = #$C0.
+    ;$6740 thru $67FF = #$C4.
+    @loop_A:
+        ; save high byte to $01
+        stx $01
+        ; y = ((high byte) & $03) * 2
+        txa
+        and #$03
+        asl
+        tay
+        ; save to $02
+        sty $02
+        ; load fill byte into a
+        lda RamValueTbl,y
+        ; loop through 256 bytes
+        ldy #$00
+        @loop_B:
+            ; write fill byte
+            sta ($00),y
+            ; exit if we went through 256 bytes
+            iny
+            beq @exitloop_B
+            ; branch if y is not #$40
+            cpy #$40
+            bne @loop_B
+            ; y is #$40, we must change the fill byte
+            ldy $02
+            lda RamValueTbl+1,y
+            ldy #$40
+            bpl @loop_B
+        @exitloop_B:
+        ; exit loop when next high byte is #$68
+        inx
+        cpx #$68
+        bne @loop_A
+    ;Draw intro background next.
+    inc TitleRoutine
     jmp LoadStarSprites             ;($98AE)Loads stars on intro screen.
 
 ;The following table is used by the code above for writing values to RAM.
-
 RamValueTbl: ;$80C8
-    .byte $00, $00, $00, $00, $00, $00, $C0, $C4
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $C0, $C4
 
 DrawIntroBackground:
     lda #sfxMulti_IntroMusic        ;Intro music flag.

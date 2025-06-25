@@ -9105,8 +9105,8 @@ DoRestingEnemy: ;($F3BE)
         sta EnData1D,x
         sta EnMovementInstrIndex,x
         sta EnData0A,x
-        jsr LF6B9
-        jsr LF75B
+        jsr DoEnemy_F6B9
+        jsr DoEnemy_F75B
         jsr InitEnRestingAnimIndex
         jsr DoRestingEnemy_F676
 
@@ -9137,8 +9137,8 @@ DoActiveEnemy: ; LF3E6
     bne DoActiveEnemy_BranchB ; Branch always
 
 DoActiveEnemy_BranchA: ; LF401
-    jsr LF6B9
-    jsr LF75B
+    jsr DoEnemy_F6B9
+    jsr DoEnemy_F75B
     jsr RemoveEnemyIfItIsInLava
 DoActiveEnemy_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
@@ -9610,7 +9610,7 @@ Exit12:
     rts
 
 ;-------------------------------------------------------------------------------
-LF6B9:
+DoEnemy_F6B9:
     ; clear $82
     lda #$00
     sta Enemy82
@@ -9727,7 +9727,7 @@ LF752:
     rts
 
 ;-------------------------------------------------------------------------------
-LF75B:
+DoEnemy_F75B:
     lda #$E7
     sta $06
     lda #$18
@@ -10705,9 +10705,9 @@ UpdateMellow_FD25:
     lsr Mellow8A
     and #$03
     tay
-    lda Table18,y
+    lda MellowSpeedTable,y
     sta Temp04_SpeedY
-    lda Table18+1,y
+    lda MellowSpeedTable+1,y
     sta Temp05_SpeedX
     jsr UpdateMellow_StorePositionToTemp
     lda Temp08_PositionY
@@ -10727,8 +10727,7 @@ Lx401:
     jmp UpdateMellow_LoadPositionFromTemp
 
 ; Table used by above subroutine
-
-Table18:
+MellowSpeedTable:
     .byte  $02
     .byte -$02
     .byte  $01
