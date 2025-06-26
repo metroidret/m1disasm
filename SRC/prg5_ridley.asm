@@ -665,7 +665,11 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.SECTION "ROM Bank $005 - Music Engine" BANK 5 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.if BUILDTARGET == "NES_NTSC"
+    .SECTION "ROM Bank $005 - Music Engine" BANK 5 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.elif BUILDTARGET == "NES_PAL"
+    .SECTION "ROM Bank $005 - Music Engine" BANK 5 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+.endif
 
 .include "music_engine.asm"
 

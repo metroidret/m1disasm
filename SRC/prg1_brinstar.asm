@@ -871,6 +871,7 @@ TileBlastFrame10:
 .endif
 
 ; Errant Mother Brain BG tiles (unused)
+.if BUILDTARGET == "NES_NTSC"
     .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
     .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
     .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
@@ -885,12 +886,30 @@ TileBlastFrame10:
     .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
 ; ???
     .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $85, $03, $A9, $0C, $85, $11, $B1, $75, $10, $14, $C9, $FF, $D0, $05, $85, $74
+    .byte $4C, $49, $F0, $C8, $E6, $59, $29, $7F, $85, $0F, $B1, $75, $D0, $04, $85, $0F
+    .byte $A9, $01, $85, $10, $C8, $E6, $59, $A9, $00, $85, $08, $A5, $0F, $48, $0A, $AA
+    .byte $A5, $38, $4A, $A5, $6D, $D0, $16, $90, $0A, $BD, $77, $F3, $48, $BD, $76, $F3
+    .byte $4C, $FB, $F1, $BD, $F3, $F2, $48, $BD, $F2, $F2, $4C, $FB, $F1, $30, $16, $90
+    .byte $0A, $BD, $B3, $96, $48, $BD, $B2, $96, $4C, $FB, $F1, $BD, $CD, $95, $48, $BD
+    .byte $CC, $95, $4C, $FB, $F1, $90, $0A, $BD, $C9, $F4, $48, $BD, $C8, $F4, $4C, $FB
+    .byte $F1, $BD, $4D, $F4, $48, $BD, $4C, $F4, $A6, $02, $95, $E0, $E8, $68, $95, $E0
+    .byte $E8, $86, $02, $68, $85, $05, $48, $4A, $4A, $AA, $A5, $6D, $D0, $06, $BD, $E1
+    .byte $F2, $4C, $22, $F2, $30, $06, $BD, $AF, $95, $4C, $22, $F2, $BD, $3C, $F4, $85
+    .byte $04, $68, $29, $03, $AA, $E8, $A5, $04, $CA, $F0, $05, $4A, $4A
+.endif
+
 
 .ENDS
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.if BUILDTARGET == "NES_NTSC"
+    .SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.elif BUILDTARGET == "NES_PAL"
+    .SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+.endif
 
 .include "music_engine.asm"
 
