@@ -4765,7 +4765,6 @@ CopyMap:
     .SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
 .endif
 
-
 .include "music_engine.asm"
 
 ;----------------------------------------------[ RESET ]--------------------------------------------
