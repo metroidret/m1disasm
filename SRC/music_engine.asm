@@ -2002,7 +2002,8 @@ SongTourianHeader:
 ;The following table contains the musical notes used by the music player.  The first byte is
 ;the period high information(3 bits) and the second byte is the period low information(8 bits).
 ;The formula for figuring out the frequency is as follows: 1790000/16/(hhhllllllll + 1)
-
+;Note that on PAL consoles, the CPU clock speed is a bit slower, which affects the pitch.
+;The formula for PAL is 1663000/16/(hhhllllllll + 1), so all notes play roughly a semitone flat (-128 cents).
 MusicNotesTbl:
     .byte $07,$F0                       ;55.0Hz (A1)    Index #$00 (Not used)
     .byte $00,$00                       ;No sound       Index #$02

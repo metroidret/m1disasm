@@ -1826,7 +1826,7 @@ ROMSWITCH_RESET:
 
 .SECTION "ROM Bank $003 - Vectors" BANK 3 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
-    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
 .ENDS
 
