@@ -5046,11 +5046,11 @@ GetSpriteCntrlData:
     asl
     eor $04
     sta $04
-    ;If MSB is set in ObjectCntrl, use its flip bits(6 and 7).
+    ;If MSB is set in ObjectCntrl, use its attributes.
     lda ObjectCntrl
     bpl LDCEF
         asl ObjectCntrl
-        jsr SpriteFlipBitsOverride       ;($E038)Use object flip bits as priority over sprite flip bits.
+        jsr SpriteAttrsOverride     ;($E038)Use object attributes as priority over sprite attributes.
     LDCEF:
     ;Discard upper nibble so only entry number into PlacePtrTbl remains.
     txa
@@ -5179,12 +5179,12 @@ LDD75:
     jsr AddToMaxMissiles
     bne LDD5B
 
-LDD8B:
+DrawEnemy:
     ; branch if enemy frame is not blank
     ldx PageIndex
     lda EnAnimFrame,x
     cmp #$F7
-    bne LDD8B_Lx143
+    bne DrawEnemy_NotBlank
     ; enemy frame is blank
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
 
@@ -5209,7 +5209,7 @@ AddToMaxMissiles:
     RTS_X142:  sta MaxMissiles
     rts
 
-LDD8B_Lx143:
+DrawEnemy_NotBlank:
     ; Y coord
     lda EnY,x
     sta Temp0A_PositionY
@@ -5482,8 +5482,8 @@ SkipPlacementData: ;($DF32)
 GetNewControlByte: ;($DF3B)
     iny                             ;Increment index to next byte of frame data.
     asl ObjectCntrl                 ;If MSB of ObjectCntrl is not set, no overriding of-->
-    bcc LDF45                           ;flip bits needs to be performed.
-        jsr SpriteFlipBitsOverride       ;($E038)Use object flip bits as priority over sprite flip bits.
+    bcc LDF45                           ;attributes needs to be performed.
+        jsr SpriteAttrsOverride         ;($E038)Use object attributes as priority over sprite attributes.
         bne LDF4B                          ;Branch always.
     LDF45:
         lsr ObjectCntrl                 ;Restore MSB of ObjectCntrl.
@@ -5543,7 +5543,7 @@ ExplodeYDisplace:
         adc ObjectCounter               ;Increments every frame Samus is exploding. Initial=#$01.
     LDF91:
     tay                             ;
-    lda ExplodeIndexTbl+2,y         ;Get data from ExplodePlacementTbl.
+    lda ExplodePlacementTbl-1,y     ;Get data from ExplodePlacementTbl.
     pha                             ;Save data on stack.
     lda $0F                         ;Load placement data index.
     clc                             ;
@@ -5672,11 +5672,10 @@ RTS_E037:
 
 ;------------------------[ Override sprite flip bits with object flip bits ]-------------------------
 
-;If the MSB is set in ObjectCntrl, its two upper bits that control sprite flipping take priority
-;over the sprite control bits.  This function modifies the sprite control byte with any flipping
-;bits found in ObjectCntrl.
+;If the MSB is set in ObjectCntrl, its attributes take priority over the sprite control bits.
+;This function modifies the sprite control byte with any attributes found in ObjectCntrl.
 
-SpriteFlipBitsOverride: ;($E038)
+SpriteAttrsOverride: ;($E038)
     ;Restore MSB.
     lsr ObjectCntrl
     ;Reload frame data control byte into A.
@@ -5698,22 +5697,27 @@ SpriteFlipBitsOverride: ;($E038)
 ;for an exploding object.
 
 ExplodeIndexTbl:
-    .byte $00, $18, $30
+    .byte ExplodePlacementTopTbl-ExplodePlacementTbl
+    .byte ExplodePlacementMiddleTbl-ExplodePlacementTbl
+    .byte ExplodePlacementBottomTbl-ExplodePlacementTbl
 
 ;The following table is used to produce the arcing motion of exploding objects.  It is displacement
 ;data for the y directions only.  The x displacement is constant.
 
 ExplodePlacementTbl:
 
-;Bottom sprites.
+;Top sprites.
+ExplodePlacementTopTbl:
     .byte $FC, $F8, $F4, $F0, $EE, $EC, $EA, $E8, $E7, $E6, $E6, $E5, $E5, $E4, $E4, $E3
     .byte $E5, $E7, $E9, $EB, $EF, $F3, $F7, $FB
 
 ;Middle sprites.
+ExplodePlacementMiddleTbl:
     .byte $FE, $FC, $FA, $F8, $F6, $F4, $F2, $F0, $EE, $ED, $EB, $EA, $E9, $E8, $E7, $E6
     .byte $E6, $E6, $E6, $E6, $E8, $EA, $EC, $EE
 
-;Top sprites.
+;Bottom sprites.
+ExplodePlacementBottomTbl:
     .byte $FE, $FC, $FA, $F8, $F7, $F6, $F5, $F4, $F3, $F2, $F1, $F1, $F0, $F0, $EF, $EF
     .byte $EF, $EF, $EF, $EF, $F0, $F0, $F1, $F2
 
@@ -9180,7 +9184,7 @@ LF423:
 Lx301:
     lda EnStatus,x
     beq LF42D
-        jsr LDD8B
+        jsr DrawEnemy
     LF42D:
     ldx PageIndex
     lda #$00
@@ -10120,9 +10124,9 @@ UpdateEnemyFireball_Resting:
     jsr LFA60
 LF97C:
     lda #$01
-LF97E:
+AnimDrawEnemy:
     jsr UpdateEnemyAnim
-    jmp LDD8B
+    jmp DrawEnemy
 Lx361:
     inc EnMovementIndex,x
 LF987:
@@ -10347,7 +10351,7 @@ Lx377:
     lda #$80
     sta ObjectCntrl
     lda #$03
-    jmp LF97E
+    jmp AnimDrawEnemy
 
 ; Table used by above subroutine
 Table16:
@@ -10634,12 +10638,12 @@ UpdateMellow_Resting:
     jsr UpdateMellow_FD84
     jsr UpdateMellow_FD08
     jsr UpdateMellow_FD25
-    jmp LDD8B
+    jmp DrawEnemy
 
 UpdateMellow_Active:
     jsr UpdateMellow_FD84
     jsr UpdateMellow_RunAI
-    jmp LDD8B
+    jmp DrawEnemy
 
 UpdateMellow_Explode:
     lda #$00

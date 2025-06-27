@@ -59,7 +59,7 @@ CommonJump_12: ;$8036
 CommonJump_13: ;$8039
     jmp EnemyGetDeltaX_Negative977B
 CommonJump_14: ;$803C
-    jmp LDD8B
+    jmp DrawEnemy
 CommonJump_DrawTileBlast: ;$803F
     jmp DrawTileBlast
 CommonJump_SubtractHealth: ;$8042
