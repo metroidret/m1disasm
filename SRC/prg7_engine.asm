@@ -5194,19 +5194,25 @@ DrawEnemy:
 ; (255 if it overflows)
 
 AddToMaxMissiles:
-    pha                             ;Temp storage of # of missiles to add.
+    ;Temp storage of quantity of missiles to add.
+    pha
+    ; add to current missile count
     clc
     adc MissileCount
-    bcc Lx141
+    bcc @endIf_A
+        ; cap at 255
         lda #$FF
-    Lx141:
+    @endIf_A:
     sta MissileCount
     pla
+    ; add to max missile count
     clc
     adc MaxMissiles
-    bcc RTS_X142
+    bcc @endIf_B
+        ; cap at 255
         lda #$FF
-    RTS_X142:  sta MaxMissiles
+    @endIf_B:
+    sta MaxMissiles
     rts
 
 DrawEnemy_NotBlank:
