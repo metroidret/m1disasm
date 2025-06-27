@@ -166,15 +166,15 @@ SongNorfairTri:
 SongNorfairNoise:
     SongRepeatSetup $20
         SongNoteLength $2 ;3/8 seconds
-        .byte <DrumBeat00SFXData
-        .byte <DrumBeat01SFXData
-        .byte <DrumBeat01SFXData
-        .byte <DrumBeat00SFXData
-        .byte <DrumBeat01SFXData
-        .byte <DrumBeat01SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $6 ;1 3/16 seconds
-        .byte <DrumBeat01SFXData
-        .byte <DrumBeat01SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $2 ;3/8 seconds
-        .byte <DrumBeat00SFXData
+        .byte DrumBeat00SFXData - SFXData
     SongRepeat

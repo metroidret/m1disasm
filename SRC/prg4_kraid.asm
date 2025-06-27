@@ -732,11 +732,20 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.include "songs/ridley.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/ridley.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/ridley.asm"
+.endif
 
-.include "songs/kraid.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/kraid.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/kraid.asm"
+.endif
 
 ;Not used.
+.if BUILDTARGET == "NES_NTSC"
     .byte $2A, $2A, $2A, $B9, $2A, $2A, $2A, $B2, $2A, $2A, $2A, $2A, $2A, $B9, $2A, $12
     .byte $2A, $B2, $26, $B9, $0E, $26, $26, $B2, $26, $B9, $0E, $26, $26, $B2, $22, $B9
     .byte $0A, $22, $22, $B2, $22, $B9, $0A, $22, $22, $B2, $20, $20, $B9, $20, $20, $20
@@ -755,12 +764,39 @@ TileBlastFrame10:
     .byte $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B, $03, $03
     .byte $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C, $3C, $18
     .byte $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $BB, $02, $B9, $22, $20, $22, $BB, $02, $B9, $26, $22, $26, $BB, $02, $B9, $28
+    .byte $26, $28, $BB, $02, $B9, $2C, $28, $2C, $BB, $02, $B9, $22, $20, $22, $BB, $02
+    .byte $B9, $20, $22, $20, $BB, $02, $B9, $22, $1C, $22, $BB, $02, $B9, $1C, $22, $1C
+    .byte $BB, $02, $FF, $D0, $B2, $3E, $B9, $3E, $3E, $3E, $BB, $02, $FF, $C2, $B2, $2A
+    .byte $B9, $2A, $12, $2A, $BB, $02, $B2, $2A, $2A, $2A, $B9, $2A, $2A, $2A, $BB, $02
+    .byte $B2, $2A, $2A, $2A, $B9, $2A, $2A, $2A, $BB, $02, $B2, $2A, $2A, $2A, $2A, $2A
+    .byte $B9, $2A, $12, $2A, $BB, $02, $B2, $26, $B9, $0E, $26, $26, $BB, $02, $B2, $26
+    .byte $B9, $0E, $26, $26, $BB, $02, $B2, $22, $B9, $0A, $22, $22, $BB, $02, $B2, $22
+    .byte $B9, $0A, $22, $22, $BB, $02, $B2, $20, $20, $B9, $20, $20, $20, $BB, $02, $B2
+    .byte $20, $B9, $34, $30, $34, $BB, $02, $B9, $38, $34, $38, $BB, $02, $B9, $3A, $38
+    .byte $3A, $BB, $02, $B9, $3E, $3A, $3E, $BB, $02, $FF, $C2, $B2, $18, $30, $18, $30
+    .byte $18, $30, $18, $30, $22, $22, $B1, $22, $22, $B2, $22, $20, $1C, $18, $16, $14
+    .byte $14, $14, $2C, $2A, $2A, $B9, $2A, $2A, $2A, $BB, $02, $B2, $2A, $28, $28, $B9
+    .byte $28, $28, $28, $B2, $28, $26, $26, $B9, $26, $26, $3E, $BB, $02, $B9, $26, $26
+    .byte $3E, $BB, $02, $FF, $D0, $B2, $01, $04, $FF, $C8, $B2, $04, $04, $07, $04, $04
+    .byte $04, $07, $B9, $04, $04, $04, $BB, $01, $FF, $D0, $B2, $04, $07, $04, $B9, $07
+    .byte $04, $04, $BB, $01, $FF, $E0, $BA, $2A, $1A, $02, $3A, $40, $02, $1C, $2E, $38
+    .byte $2C, $3C, $38, $02, $40, $44, $46, $02, $1E, $02, $2C, $38, $46, $26, $02, $3A
+    .byte $20, $02, $28, $2E, $02, $18, $44, $02, $46, $48, $4A, $4C, $02, $18, $1E, $FF
+    .byte $B8, $02, $C8, $B0, $0A, $0C, $FF, $C8, $0E, $0C, $FF, $C8, $10, $0E, $FF, $C8
+    .byte $0E, $0C, $FF, $00, $CA, $F0, $05, $4A, $4A
+.endif
 
 .ENDS
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.if BUILDTARGET == "NES_NTSC"
+    .SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+.elif BUILDTARGET == "NES_PAL"
+    .SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+.endif
 
 .include "music_engine.asm"
 
@@ -775,7 +811,7 @@ ROMSWITCH_RESET:
 
 .SECTION "ROM Bank $004 - Vectors" BANK 4 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
-    .word ROMSWITCH_RESET           ;($FFB0)Reset vector.
-    .word ROMSWITCH_RESET           ;($FFB0)IRQ vector.
+    .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
+    .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
 .ENDS
 

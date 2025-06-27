@@ -16,6 +16,12 @@
 
 ;Metroid defines.
 
+
+.ifndef BUILDTARGET
+    .fail "no build target specified"
+.endif
+
+
 .MEMORYMAP
     DEFAULTSLOT 0
     SLOT 0 $0000 $0010 "HeaderSlot"

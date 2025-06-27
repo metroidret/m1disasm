@@ -89,6 +89,9 @@ MacroDefs:
     .byte $D1, $D2, $D3, $D4
     .byte $90, $91, $92, $93
 ;Not used.
-    .byte $20, $20, $20, $20
-    .byte $C0, $C0, $C0, $C0
-    .byte $C0, $C0, $C0, $C0
+.if BUILDTARGET == "NES_NTSC"
+    .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
+.elif BUILDTARGET == "NES_PAL"
+    .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
+.endif
+

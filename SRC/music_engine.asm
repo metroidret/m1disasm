@@ -1747,7 +1747,11 @@ VolumeEnvelopePtrTable:
     .word VolumeEnvelope1, VolumeEnvelope2, VolumeEnvelope3, VolumeEnvelope4, VolumeEnvelope5
 
 VolumeEnvelope1:
+.if BUILDTARGET == "NES_NTSC"
     .byte $01, $02, $02, $03, $03, $04, $05, $06, $07, $08, $FF
+.elif BUILDTARGET == "NES_PAL"
+    .byte $01, $02, $03, $04, $04, $05, $06, $06, $07, $08, $FF
+.endif
 
 VolumeEnvelope2:
     .byte $02, $04, $05, $06, $07, $08, $07, $06, $05, $FF
@@ -1782,113 +1786,224 @@ VolumeEnvelope5:
 SongHeaders:
 
 SongMthrBrnRoomHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $F5, $00, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $F5, $00, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $F5, $00, $00
+    .endif
+    
     .if BANK == 3
         .word SongMthrBrnRoomSQ1, SongMthrBrnRoomSQ2, SongMthrBrnRoomTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0000
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongEscapeHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $00, $02, $02
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $00, $02, $02
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $00, $02, $02
+    .endif
+    
     .if BANK == 3
         .word SongEscapeSQ1, SongEscapeSQ2, SongEscapeTri, SongEscapeNoise
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongNorfairHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $F0, $04, $04
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $F0, $04, $04
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $F0, $04, $04
+    .endif
+    
     .if BANK == 2
         .word SongNorfairSQ1, SongNorfairSQ2, SongNorfairTri, SongNorfairNoise
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongKraidHeader:
-    SongHeader NoteLengthsTbl@0, $FF, $F0, $00, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@4, $FF, $F0, $00, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@4, $FF, $F0, $00, $00
+    .endif
+    
     .if (BANK == 4) || (BANK == 5)
         .word SongKraidSQ1, SongKraidSQ2, SongKraidTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0000
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongItemRoomHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $03, $00, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $03, $00, $00
+    .endif
+    
     .if BANK <= 5
         .word SongItemRoomSQ1, SongItemRoomSQ2, SongItemRoomTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongRidleyHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $F0, $01, $01
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $F0, $01, $01
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $F0, $01, $01
+    .endif
+    
     .if (BANK == 4) || (BANK == 5)
         .word SongRidleySQ1, SongRidleySQ2, SongRidleyTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0000
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongEndHeader:
-    SongHeader NoteLengthsTbl@2, $00, $00, $02, $01
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@7, $00, $00, $02, $01
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@6, $00, $00, $02, $01
+    .endif
+    
     .if BANK == 0
         .word SongEndSQ1, SongEndSQ2, SongEndTri, SongEndNoise
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
 
+
 SongIntroHeader:
-    SongHeader NoteLengthsTbl@2, $00, $F0, $02, $05
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@7, $00, $F0, $02, $05
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@6, $00, $F0, $02, $05
+    .endif
+    
     .if BANK == 0
         .word SongIntroSQ1, SongIntroSQ2, SongIntroTri, SongIntroNoise
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
 
 SongFadeInHeader:
-    SongHeader NoteLengthsTbl@1, $00, $F0, $02, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $00, $F0, $02, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $00, $F0, $02, $00
+    .endif
+    
     .if BANK <= 5
         .word SongFadeInSQ1, SongFadeInSQ2, SongFadeInTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
 
+
 SongPowerUpHeader:
-    SongHeader NoteLengthsTbl@0, $00, $F0, $01, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@4, $00, $F0, $01, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@3, $00, $F0, $01, $00
+    .endif
+    
     .if BANK <= 5
         .word SongPowerUpSQ1, SongPowerUpSQ2, SongPowerUpTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
 
 SongBrinstarHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $00, $02, $03
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $00, $02, $03
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $00, $02, $03
+    .endif
+    
     .if BANK == 1
         .word SongBrinstarSQ1, SongBrinstarSQ2, SongBrinstarTri, SongBrinstarNoise
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
+
 
 SongTourianHeader:
-    SongHeader NoteLengthsTbl@1, $FF, $03, $00, $00
+    .if BUILDTARGET == "NES_NTSC"
+        SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
+    .elif BUILDTARGET == "NES_PAL"
+        SongHeader NoteLengthsTbl@5, $FF, $03, $00, $00
+    .endif
+    
     .if BANK <= 5
         .word SongTourianSQ1, SongTourianSQ2, SongTourianTri, $0000
-    .else
+    .elif BUILDTARGET == "NES_NTSC"
         .word $0100, $0300, $0500, $0700
+    .elif BUILDTARGET == "NES_PAL"
+        .word $0000, $0000, $0000, $0000
     .endif
 
-.include "songs/item_room.asm"
 
-.include "songs/power_up.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/item_room.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/item_room.asm"
+.endif
 
-.include "songs/fade_in.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/power_up.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/power_up.asm"
+.endif
 
-.include "songs/tourian.asm"
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/fade_in.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/fade_in.asm"
+.endif
+
+.if BUILDTARGET == "NES_NTSC"
+    .include "songs/ntsc/tourian.asm"
+.elif BUILDTARGET == "NES_PAL"
+    .include "songs/pal/tourian.asm"
+.endif
 
 ;The following table contains the musical notes used by the music player.  The first byte is
 ;the period high information(3 bits) and the second byte is the period low information(8 bits).
 ;The formula for figuring out the frequency is as follows: 1790000/16/(hhhllllllll + 1)
-
+;Note that on PAL consoles, the CPU clock speed is a bit slower, which affects the pitch.
+;The formula for PAL is 1663000/16/(hhhllllllll + 1), so all notes play roughly a semitone flat (-128 cents).
 MusicNotesTbl:
     .byte $07,$F0                       ;55.0Hz (A1)    Index #$00 (Not used)
     .byte $00,$00                       ;No sound       Index #$02
@@ -1962,53 +2077,121 @@ MusicNotesTbl:
 ;numbers below divide more evenly.
 
 NoteLengthsTbl:
+.if BUILDTARGET == "NES_NTSC"
+    ;Used by power up music and Kraid area music.
+    @4:
+        .byte $04                       ;About    1/16 seconds ($B0)
+        .byte $08                       ;About    1/8  seconds ($B1)
+        .byte $10                       ;About    1/4  seconds ($B2)
+        .byte $20                       ;About    1/2  seconds ($B3)
+        .byte $40                       ;About 1       seconds ($B4)
+        .byte $18                       ;About    3/8  seconds ($B5)
+        .byte $30                       ;About    3/4  seconds ($B6)
+        .byte $0C                       ;About    3/16 seconds ($B7)
+        .byte $0B                       ;About   11/64 seconds ($B8)
+        .byte $05                       ;About    5/64 seconds ($B9)
+        .byte $02                       ;About    1/32 seconds ($BA)
 
-;Used by power up music and Kraid area music.
+    ;Used by item room, fade in, Brinstar music, Ridley area music, Mother brain music,
+    ;escape music, Norfair music and Tourian music.
+    @6:
+        .byte $06                       ;About    3/32 seconds ($B0)
+        .byte $0C                       ;About    3/16 seconds ($B1)
+        .byte $18                       ;About    3/8  seconds ($B2)
+        .byte $30                       ;About    3/4  seconds ($B3)
+        .byte $60                       ;About 1  1/2  seconds ($B4)
+        .byte $24                       ;About    9/16 seconds ($B5)
+        .byte $48                       ;About 1  3/16 seconds ($B6)
+        .byte $12                       ;About    9/32 seconds ($B7)
+        .byte $10                       ;About    1/4  seconds ($B8)
+        .byte $08                       ;About    1/8  seconds ($B9)
+        .byte $03                       ;About    3/64 seconds ($BA)
+        .byte $10                       ;About    1/4  seconds ($BB)
 
-@0:
-    .byte $04                       ;About    1/16 seconds ($B0)
-    .byte $08                       ;About    1/8  seconds ($B1)
-    .byte $10                       ;About    1/4  seconds ($B2)
-    .byte $20                       ;About    1/2  seconds ($B3)
-    .byte $40                       ;About 1       seconds ($B4)
-    .byte $18                       ;About    3/8  seconds ($B5)
-    .byte $30                       ;About    3/4  seconds ($B6)
-    .byte $0C                       ;About    3/16 seconds ($B7)
-    .byte $0B                       ;About   11/64 seconds ($B8)
-    .byte $05                       ;About    5/64 seconds ($B9)
-    .byte $02                       ;About    1/32 seconds ($BA)
+    ;Used by intro and end game music.
+    @7:
+        .byte $07                       ;About    7/64 seconds ($B0)
+        .byte $0E                       ;About    7/32 seconds ($B1)
+        .byte $1C                       ;About    7/16 seconds ($B2)
+        .byte $38                       ;About    7/8  seconds ($B3)
+        .byte $70                       ;About 1 13/16 seconds ($B4)
+        .byte $2A                       ;About   21/32 seconds ($B5)
+        .byte $54                       ;About 1  5/16 seconds ($B6)
+        .byte $15                       ;About   21/64 seconds ($B7)
+        .byte $12                       ;About    9/32 seconds ($B8)
+        .byte $02                       ;About    1/32 seconds ($B9)
+        .byte $03                       ;About    3/64 seconds ($BA)
+.elif BUILDTARGET == "NES_PAL"
+    @3:
+        .byte $03
+        .byte $06
+        .byte $0C
+        .byte $18
+        .byte $30
+        .byte $12
+        .byte $24
+        .byte $09
+        .byte $08
+        .byte $04
+        .byte $02
+        .byte $01
+    
+    @4:
+        .byte $04
+        .byte $08
+        .byte $10
+        .byte $20
+        .byte $40
+        .byte $18
+        .byte $30
+        .byte $0C
+        .byte $0B
+        .byte $05
+        .byte $02
+        .byte $01
+    
+    @5:
+        .byte $05
+        .byte $0A
+        .byte $14
+        .byte $28
+        .byte $50
+        .byte $1E
+        .byte $3C
+        .byte $0F
+        .byte $0C
+        .byte $06
+        .byte $03
+        .byte $02
+    
+    @6:
+        .byte $06
+        .byte $0C
+        .byte $18
+        .byte $30
+        .byte $60
+        .byte $24
+        .byte $48
+        .byte $12
+        .byte $10
+        .byte $08
+        .byte $03
+        .byte $10
+    
+    @7:
+        .byte $07
+        .byte $0E
+        .byte $1C
+        .byte $38
+        .byte $70
+        .byte $2A
+        .byte $54
+        .byte $15
+        .byte $12
+        .byte $02
+        .byte $03
+.endif
 
-;Used by item room, fade in, Brinstar music, Ridley area music, Mother brain music,
-;escape music, Norfair music and Tourian music.
-
-@1:
-    .byte $06                       ;About    3/32 seconds ($B0)
-    .byte $0C                       ;About    3/16 seconds ($B1)
-    .byte $18                       ;About    3/8  seconds ($B2)
-    .byte $30                       ;About    3/4  seconds ($B3)
-    .byte $60                       ;About 1  1/2  seconds ($B4)
-    .byte $24                       ;About    9/16 seconds ($B5)
-    .byte $48                       ;About 1  3/16 seconds ($B6)
-    .byte $12                       ;About    9/32 seconds ($B7)
-    .byte $10                       ;About    1/4  seconds ($B8)
-    .byte $08                       ;About    1/8  seconds ($B9)
-    .byte $03                       ;About    3/64 seconds ($BA)
-    .byte $10                       ;About    1/4  seconds ($BB)
-
-;Used by intro and end game music.
-
-@2:
-    .byte $07                       ;About    7/64 seconds ($B0)
-    .byte $0E                       ;About    7/32 seconds ($B1)
-    .byte $1C                       ;About    7/16 seconds ($B2)
-    .byte $38                       ;About    7/8  seconds ($B3)
-    .byte $70                       ;About 1 13/16 seconds ($B4)
-    .byte $2A                       ;About   21/32 seconds ($B5)
-    .byte $54                       ;About 1  5/16 seconds ($B6)
-    .byte $15                       ;About   21/64 seconds ($B7)
-    .byte $12                       ;About    9/32 seconds ($B8)
-    .byte $02                       ;About    1/32 seconds ($B9)
-    .byte $03                       ;About    3/64 seconds ($BA)
 
 InitializeMusic:
     ;Check to see if restarting current music.
@@ -2054,9 +2237,15 @@ InitializeMusic:
     rts
 
 ;Not used.
+.if BUILDTARGET == "NES_NTSC"
     .byte $10, $07, $0E, $1C, $38, $70, $2A, $54, $15, $12, $02, $03, $20, $2C, $B4, $AD
     .byte $4D, $06, $8D, $8D, $06, $AD, $5E, $06, $A8, $B9, $2A, $BC, $A8, $A2, $00, $B9
     .byte $61, $BD, $9D, $2B, $06, $C8, $E8, $8A, $C9, $0D, $D0, $F3, $A9, $01, $8D, $40
     .byte $06, $8D, $41, $06, $8D, $42, $06, $8D, $43, $06, $A9, $00, $8D, $38, $06, $8D
     .byte $39, $06, $8D, $3A, $06, $8D, $3B, $06, $60, $FF, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+.elif BUILDTARGET == "NES_PAL"
+    .byte $99, $90, $04, $E5, $99, $85, $9A, $26, $97, $26, $98, $CA, $D0, $ED, $60, $01
+    .byte $02
+.endif
+
