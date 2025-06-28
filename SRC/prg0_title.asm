@@ -23,6 +23,9 @@
 
 ;---------------------------------------------[ Export ]---------------------------------------------
 
+.export _id_StartContinueScreen15
+.export _id_DisplayPassword
+.export _id_GameOver
 .export _id_EndGame
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
