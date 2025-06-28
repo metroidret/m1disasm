@@ -968,8 +968,8 @@ L9E86:
         bne L9E98
     lda PPUStrIndex
     bne L9EB5
-        lda L9EFF+1,y
-        sta $1C
+        lda L9F00,y
+        sta PalDataPending
     L9EB5:
     ldy MotherBrainStatus
     dey
@@ -1020,7 +1020,10 @@ L9EF9:
     tax
     rts
 
-L9EFF: .byte $60, $09, $0A
+    ; unused
+    rts
+
+L9F00: .byte $09, $0A
 
 ;-------------------------------------------------------------------------------
 L9F02:
