@@ -3032,10 +3032,10 @@ LD09C:
     lda ObjAnimResetIndex
     cmp #ObjAnim_35 - ObjectAnimIndexTbl.b
     bne Lx029
-    jmp FireWeaponForwards
+    jmp FireWeaponUpwards
 
 Lx029:
-    jsr FireWeaponUpwards
+    jsr FireWeaponForwards
     lda #ObjAnim_20 - ObjectAnimIndexTbl.b
     jmp SetSamusAnim
 
@@ -3224,8 +3224,8 @@ Table07:
 FireWeapon:
     lda Joy1Status
     and #BUTTON_UP
-    beq FireWeaponUpwards
-    jmp FireWeaponForwards
+    beq FireWeaponForwards
+    jmp FireWeaponUpwards
 
 
 ; search for open samus projectile slot
@@ -3258,7 +3258,7 @@ SearchOpenProjectileSlot:
     rts
 
 
-FireWeaponUpwards:
+FireWeaponForwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
     bne LD269
@@ -3270,8 +3270,8 @@ FireWeaponUpwards:
     
     
     jsr InitBullet
-    jsr LD359
-    jsr LD38E
+    jsr CheckHorizontalWaveBulletFire
+    jsr CheckIceBulletFire
     lda #$0C
     sta ProjectileDieDelay,y
     ldx SamusDir
@@ -3281,7 +3281,7 @@ FireWeaponUpwards:
     sta ObjSpeedY,y
     lda #$01
     sta ObjOnScreen,y
-    jsr CheckMissileLaunch
+    jsr CheckHorizontalMissileLaunch
     lda ObjAction,y
     asl
     ora SamusDir
@@ -3316,7 +3316,7 @@ BulletOffsetXTable:
 BulletSpeedXTable:
     .byte  $04, -$04
 
-FireWeaponForwards:
+FireWeaponUpwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
     bne Lx044
@@ -3327,8 +3327,8 @@ FireWeaponForwards:
     bne Lx044
     
     jsr InitBullet
-    jsr LD38A
-    jsr LD38E
+    jsr CheckVerticalWaveBulletFire
+    jsr CheckIceBulletFire
     lda #$0C
     sta ProjectileDieDelay,y
     lda #$FC
@@ -3337,7 +3337,7 @@ FireWeaponForwards:
     sta ObjSpeedX,y
     lda #$01
     sta ObjOnScreen,y
-    jsr LD340
+    jsr CheckVerticalMissileLaunch
     ldx SamusDir
     lda Table09+4,x
     sta $05
@@ -3407,13 +3407,13 @@ BulletD306:
     tay
     jmp LD638
 
-CheckMissileLaunch:
+CheckHorizontalMissileLaunch:
     lda MissileToggle
     beq Exit4       ; exit if Samus not in "missile fire" mode
     cpy #$D0
     bne Exit4
     ldx SamusDir
-    lda MissileAnims,x
+    lda HorizontalMissileAnims,x
 Lx047:
     jsr SetBulletAnim
     jsr SFX_MissileLaunch
@@ -3427,11 +3427,11 @@ Lx047:
     dec MissileToggle       ; put Samus in "regular fire" mode
     jmp SelectSamusPal      ; update Samus' palette to reflect this
 
-MissileAnims:
+HorizontalMissileAnims:
     .byte ObjAnim_MissileRight - ObjectAnimIndexTbl
     .byte ObjAnim_MissileLeft - ObjectAnimIndexTbl
 
-LD340:
+CheckVerticalMissileLaunch:
     lda MissileToggle
     beq Exit4
     cpy #$D0
@@ -3447,7 +3447,7 @@ SetBulletAnim:
 Exit4:
     rts
 
-LD359:
+CheckHorizontalWaveBulletFire:
     lda SamusDir
 LD35B:
     sta ProjectileWaveDir,y
@@ -3471,10 +3471,10 @@ Lx048:
     jsr SetBulletAnim
     jmp SFX_WaveFire
 
-LD38A:
+CheckVerticalWaveBulletFire:
     lda #$02
     bne LD35B
-LD38E:
+CheckIceBulletFire:
     lda MissileToggle
     bne Exit4
     lda SamusGear
