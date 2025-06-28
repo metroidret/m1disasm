@@ -2447,9 +2447,9 @@ SetSamusRun:
     cmp #ObjAnim_07 - ObjectAnimIndexTbl.b
     beq LCCBX
     inx
-    cmp #$27
+    cmp #ObjAnim_27 - ObjectAnimIndexTbl.b
     beq LCCBX
-        lda #$04
+        lda #ObjAnim_04 - ObjectAnimIndexTbl.b
         jsr SetSamusNextAnim
     LCCBX:
     lda RunAnimationTbl,x
@@ -2666,10 +2666,10 @@ LCDD7:
 
 ; Table used by above subroutine
 Table05:
-    .byte $3F
-    .byte $3B
-    .byte $3D
-    .byte $3F
+    .byte ObjAnim_3F - ObjectAnimIndexTbl.b
+    .byte ObjAnim_3B - ObjectAnimIndexTbl.b
+    .byte ObjAnim_3D - ObjectAnimIndexTbl.b
+    .byte ObjAnim_3F - ObjectAnimIndexTbl.b
 
 CheckHealthStatus: ;($CDFA)
     ;Has Samus been hit?
@@ -3391,7 +3391,7 @@ FireWeaponForwards:
     bne LD269
     jsr SFX_BulletFire
 LD269:
-    ldy #$09
+    ldy #ObjAnim_09 - ObjectAnimIndexTbl.b
 LD26B:
     tya
     jmp SetSamusNextAnim
@@ -3967,22 +3967,22 @@ Lx078:
     lda #$00
     beq Lx077   ; branch always
 
-GotoLE81E:
-    jmp LE81E
+GotoProjectileHitDoor:
+    jmp ProjectileHitDoor
 
 ; bullet <--> background crash detection
 UpdateBullet_CollisionWithBG:
     jsr GetObjCoords
     ; get tile id that bullet touches
     ldy #$00
-    lda ($04),y
+    lda (Temp04_CartRAMPtr),y
     ; branch if tile id < #$A0 (solid tiles)
     cmp #$A0
     bcs LD624
     ; tile is air
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     cmp #$4E
-    beq GotoLE81E
+    beq GotoProjectileHitDoor
     jsr LD651
     bcc RTS_X081
     clc
@@ -4016,12 +4016,12 @@ RTS_X081:
 LD651:
     ldy InArea
     cpy #$10
-    beq Lx082
+    beq @Brinstar
         cmp #$70
-        bcs RTS_X083
-    Lx082:
+        bcs @RTS
+    @Brinstar:
     cmp #$80
-RTS_X083:
+@RTS:
     rts
 
 BombInit:
@@ -4067,9 +4067,9 @@ Lx086:
 
 LD6A7:
     jsr GetObjCoords
-    lda $04
+    lda Temp04_CartRAMPtr
     sta $0A
-    lda $05
+    lda Temp04_CartRAMPtr+1.b
     sta $0B
     ldx PageIndex
     ldy ProjectileDieDelay,x
@@ -4081,15 +4081,15 @@ LD6A7:
     jsr LD78B
     txa
     bne Lx087
-    lda $04
+    lda Temp04_CartRAMPtr
     and #$20
     beq Exit6
 Lx087:
-    lda $05
+    lda Temp04_CartRAMPtr+1.b
     and #$03
     cmp #$03
     bne Lx088
-    lda $04
+    lda Temp04_CartRAMPtr
     cmp #$C0
     bcc Lx088
     lda ScrollDir
@@ -4109,15 +4109,15 @@ Lx089:
     jsr LD77F
     txa
     bne Lx090
-        lda $04
+        lda Temp04_CartRAMPtr
         and #$20
         bne Exit6
     Lx090:
-    lda $05
+    lda Temp04_CartRAMPtr+1.b
     and #$03
     cmp #$03
     bne Lx091
-        lda $04
+        lda Temp04_CartRAMPtr
         cmp #$C0
         bcc Lx091
         lda ScrollDir
@@ -4134,11 +4134,11 @@ Lx092:
         jsr LD78B
         txa
         bne Lx093
-            lda $04
+            lda Temp04_CartRAMPtr
             lsr
             bcc Exit7
         Lx093:
-        lda $04
+        lda Temp04_CartRAMPtr
         and #$1F
         cmp #$1E
         bcc Lx094
@@ -4147,9 +4147,9 @@ Lx092:
             beq Exit7
             lda #$1E
             jsr LD77F
-            lda $05
+            lda Temp04_CartRAMPtr+1.b
             eor #$04
-            sta $05
+            sta Temp04_CartRAMPtr+1.b
         Lx094:
         jmp LD76A
     Lx095:
@@ -4159,11 +4159,11 @@ Lx092:
     jsr LD77F
     txa
     bne Lx096
-        lda $04
+        lda Temp04_CartRAMPtr
         lsr
         bcs Exit7
     Lx096:
-    lda $04
+    lda Temp04_CartRAMPtr
     and #$1F
     cmp #$02
     bcs LD76A
@@ -4172,14 +4172,14 @@ Lx092:
     beq Exit7
     lda #$1E
     jsr LD78B
-    lda $05
+    lda Temp04_CartRAMPtr+1.b
     eor #$04
-    sta $05
+    sta Temp04_CartRAMPtr+1.b
 LD76A:
     txa
     pha
     ldy #$00
-    lda ($04),y
+    lda (Temp04_CartRAMPtr),y
     jsr LD651
     bcc Lx097
         cmp #$A0
@@ -4194,7 +4194,7 @@ Exit7:
 LD77F:
     clc
     adc $0A
-    sta $04
+    sta Temp04_CartRAMPtr
     lda $0B
     adc #$00
     jmp LD798
@@ -4204,13 +4204,13 @@ LD78B:
     lda $0A
     sec
     sbc $00
-    sta $04
+    sta Temp04_CartRAMPtr
     lda $0B
     sbc #$00
 LD798:
     and #$07
     ora #$60
-    sta $05
+    sta Temp04_CartRAMPtr+1.b
 RTS_X098:
     rts
 
@@ -6988,7 +6988,7 @@ LE733:
     adc SamusMapPosX                ;Add map pos X to A.
     sta $00                         ;Store result.
     lda $01                         ;
-    adc #$70                        ;Add #$7000 to result.
+    adc #>WorldMapRAM.b             ;Add #$7000 to result.
     sta $01                         ;$0000 = (MapY*32)+MapX+#$7000.
     ldy #$00                        ;
     lda ($00),y                     ;Load room number.
@@ -7101,7 +7101,7 @@ LE7E6:
     ldy #$00
     lda ($04),y     ; get tile value
     cmp #$4E
-    beq LE81E
+    beq ProjectileHitDoor
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     jsr LD651
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
@@ -7132,51 +7132,54 @@ Lx202:
 Exit16:
     rts
 
-LE81E:
+; bullet/missile hits a door
+
+ProjectileHitDoor:
     ldx UpdatingProjectile
     beq ClcExit
     ldx #$06
-    Lx203:
-        lda $05
+    ; go through all doors
+    @loop:
+        lda Temp04_CartRAMPtr+1.b
         eor DoorCartRAMPtr+1.b,x
         and #$04
-        bne Lx206
-        lda $04
+        bne @next
+        lda Temp04_CartRAMPtr
         eor DoorCartRAMPtr,x
         and #$1F
-        bne Lx206
+        bne @next
         txa
         jsr Amul8       ; * 8
         ora #$80
         tay
-        lda ObjAction,y
-        beq Lx206
-        lda $0307,y
+        lda DoorStatus,y
+        beq @next
+        lda DoorType,y
         lsr
-        bcs Lx205
+        bcs @blueDoor
             ldx PageIndex
             lda ObjAction,x
-            eor #$0B
-            beq Lx204
+            eor #wa_Missile
+            beq @hitByMissile
                 lda ObjAction,x
-                eor #$04
+                eor #wa_BulletExplode
                 bne GotoSFX_Metal
                 lda ObjAnimResetIndex,x
                 eor #$91
                 bne GotoSFX_Metal
-            Lx204:
+            @hitByMissile:
             lda TriSFXFlag
             ora #sfxTri_SamusBall
             sta TriSFXFlag
-        Lx205:
+        @blueDoor:
         lda #$04
-        sta SamusIsHit,y
+        sta DoorIsHit,y
         bne ClcExit
-    Lx206:
+    @next:
         dex
         dex
-    bpl Lx203
-    lda $04
+    bpl @loop
+    lda Temp04_CartRAMPtr
     jsr Adiv8       ; / 8
     and #$01
     tax
@@ -7802,10 +7805,10 @@ SpawnDoorRoutine:
     ldx LEC00,y
     pla          ; retrieve door info
     and #$03
-    sta $0307,x     ; door palette
+    sta DoorType,x     ; door type
     tya
     pha
-    lda $0307,x
+    lda DoorType,x
     cmp #$01
     beq Lx232
     cmp #$03
