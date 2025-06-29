@@ -87,6 +87,7 @@ LAD7B:  .byte $08, $22, $22, $22, $22, $22, $22, $22, $22, $FF
 LAD85:  .byte $01, $23, $FF
 
 ;Structure #$13
+;Wrong number of macros in third row. Should be $03.
 LAD88:  .byte $04, $24, $26, $26, $26, $04, $25, $26, $26, $26, $13, $27, $26, $26, $04, $28
 LAD98:  .byte $29, $26, $2A, $FF
 
