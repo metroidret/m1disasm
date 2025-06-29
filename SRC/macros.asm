@@ -68,6 +68,10 @@
     .endif
 .endm
 
+.macro PPUStringEnd
+    .byte $00
+.endm
+
 .macro PtrTableEntry args ptrTable, ptr
     .ifndef _id_\2
         .ifdef _entryNumber_\1

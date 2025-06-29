@@ -21,89 +21,75 @@
 Palette00:
     PPUString $3F00, \
         $0F, $20, $10, $00, $0F, $21, $14, $13, $0F, $28, $1B, $02, $0F, $15, $16, $04, $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $14, $13, $29, $0F, $13, $15, $27
-
-    .byte $00                       ;End Palette00 info.
+    PPUStringEnd
 
 Palette01:
     PPUString $3F12, \
         $19, $27
-
-    .byte $00                       ;End Palette01 info.
+    PPUStringEnd
 
 Palette03:
     PPUString $3F12, \
         $2C, $27
-
-    .byte $00                       ;End Palette03 info.
+    PPUStringEnd
 
 Palette02:
     PPUString $3F12, \
         $19, $35
-
-    .byte $00                       ;End Palette02 info.
+    PPUStringEnd
 
 Palette04:
     PPUString $3F12, \
         $2C, $24
-
-    .byte $00                       ;End Palette04 info.
+    PPUStringEnd
 
 Palette05:
     PPUString $3F00, \
         $0F, $20, $16, $04, $0F, $21, $14, $13, $0F, $27, $16, $02, $0F, $15, $16, $04
-
-    .byte $00                       ;End Palette05 info.
+    PPUStringEnd
 
 Palette06:
     PPUString $3F11, \
         $04, $09, $07
-
-    .byte $00                       ;End Palette06 info.
+    PPUStringEnd
 
 Palette07:
     PPUString $3F11, \
         $05, $09, $17
-
-    .byte $00                       ;End Palette07 info.
+    PPUStringEnd
 
 Palette08:
     PPUString $3F11, \
         $06, $0A, $26
-
-    .byte $00                       ;End Palette08 info.
+    PPUStringEnd
 
 Palette09:
     PPUString $3F11, \
         $16, $19, $27
-
-    .byte $00                       ;End Palette09 info.
+    PPUStringEnd
 
 Palette0A:
     PPUString $3F00, \
         $0F, $30, $30, $21
-
-    .byte $00                       ;End Palette0A info.
+    PPUStringEnd
 
 Palette0B:
     PPUString $3F10, \
         $0F, $15, $34, $17
-
-    .byte $00                       ;End Palette0B info.
+    PPUStringEnd
 
 Palette0C:
     PPUString $3F10, \
         $0F, $15, $34, $19
-
-    .byte $00                       ;End Palette0C info.
+    PPUStringEnd
 
 Palette0D:
     PPUString $3F10, \
         $0F, $15, $34, $28
-
-    .byte $00                       ;End Palette0D info.
+    PPUStringEnd
 
 Palette0E:
     PPUString $3F10, \
         $0F, $15, $34, $29
+    PPUStringEnd
 
-    .byte $00                       ;End Palette0E info.
