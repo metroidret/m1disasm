@@ -19,7 +19,36 @@
 ;Tourian Structure Pointers
 
 StrctPtrTbl:
-    .word LAC16, LAC29, LAC50, LAC69, LAC70, LAC77, LAC7A, LAC8B
-    .word LACA4, LACB5, LACC6, LACD0, LACF9, LAD26, LAD2D, LAD3C
-    .word LAD3F, LAD48, LAD61, LAD66, LAD6B, LAD99, LADAC, LADC8
-    .word LADDD, LADFE, LAE0F, LAE1A, LAE1E, LAE21, LAE2C, LAE36
+    .word Structure00
+    .word Structure01
+    .word Structure02
+    .word Structure03
+    .word Structure04
+    .word Structure05
+    .word Structure06
+    .word Structure07
+    .word Structure08
+    .word Structure09
+    .word Structure0A
+    .word Structure0B
+    .word Structure0C
+    .word Structure0D
+    .word Structure0E
+    .word Structure0F
+    .word Structure10
+    .word Structure11
+    .word Structure12
+    .word Structure13
+    .word Structure14
+    .word Structure15
+    .word Structure16
+    .word Structure17
+    .word Structure18
+    .word Structure19
+    .word Structure1A
+    .word Structure1B
+    .word Structure1C
+    .word Structure1D
+    .word Structure1E
+    .word Structure1F
+

@@ -19,10 +19,52 @@
 ;Norfair Structure Pointer Table
 
 StrctPtrTbl:
-    .word LACB9, LACCC, LACE5, LACFE, LAD05, LAD0C, LAD10, LAD16
-    .word LAD26, LAD2B, LAD31, LAD39, LAD4E, LAD57, LAD61, LAD6C
-    .word LAD78, LAD7B, LAD85, LAD88, LAD9C, LADB1, LADB7, LADBD
-    .word LADC6, LADCF, LADE2, LADF7, LAE0C, LAE1D, LAE23, LAE26
-    .word LAE2F, LAE3A, LAE40, LAE55, LAE59, LAE64, LAE6D, LAE82
-    .word LAE85, LAE8E, LAE91, LAE94, LAE9A, LAEA7, LAEB1, LAEC6
-    .word LAED9
+    .word Structure00
+    .word Structure01
+    .word Structure02
+    .word Structure03
+    .word Structure04
+    .word Structure05
+    .word Structure06
+    .word Structure07
+    .word Structure08
+    .word Structure09
+    .word Structure0A
+    .word Structure0B
+    .word Structure0C
+    .word Structure0D
+    .word Structure0E
+    .word Structure0F
+    .word Structure10
+    .word Structure11
+    .word Structure12
+    .word Structure13
+    .word Structure14
+    .word Structure15
+    .word Structure16
+    .word Structure17
+    .word Structure18
+    .word Structure19
+    .word Structure1A
+    .word Structure1B
+    .word Structure1C
+    .word Structure1D
+    .word Structure1E
+    .word Structure1F
+    .word Structure20
+    .word Structure21
+    .word Structure22
+    .word Structure23
+    .word Structure24
+    .word Structure25
+    .word Structure26
+    .word Structure27
+    .word Structure28
+    .word Structure29
+    .word Structure2A
+    .word Structure2B
+    .word Structure2C
+    .word Structure2D
+    .word Structure2E
+    .word Structure2F
+    .word Structure30

@@ -19,10 +19,54 @@
 ;Brinstar Structure Pointers
 
 StrctPtrTbl:
-    .word LAC84, LAC97, LACB0, LACC9, LACD0, LACD7, LACDB, LACE6
-    .word LACF3, LACFF, LAD05, LAD0A, LAD1A, LAD1E, LAD28, LAD4D
-    .word LAD57, LAD6A, LAD7F, LAD8E, LAD98, LADA2, LADAD, LADBE
-    .word LADE3, LADE6, LADEC, LADF9, LAE09, LAE13, LAE18, LAE2D
-    .word LAE42, LAE48, LAE4B, LAE5F, LAE70, LAE85, LAE8E, LAE92
-    .word LAEA5, LAEB0, LAEB3, LAEBE, LAEC8, LAECB, LAEDE, LAEE1
-    .word LAEE4, LAEED
+    .word Structure00
+    .word Structure01
+    .word Structure02
+    .word Structure03
+    .word Structure04
+    .word Structure05
+    .word Structure06
+    .word Structure07
+    .word Structure08
+    .word Structure09
+    .word Structure0A
+    .word Structure0B
+    .word Structure0C
+    .word Structure0D
+    .word Structure0E
+    .word Structure0F
+    .word Structure10
+    .word Structure11
+    .word Structure12
+    .word Structure13
+    .word Structure14
+    .word Structure15
+    .word Structure16
+    .word Structure17
+    .word Structure18
+    .word Structure19
+    .word Structure1A
+    .word Structure1B
+    .word Structure1C
+    .word Structure1D
+    .word Structure1E
+    .word Structure1F
+    .word Structure20
+    .word Structure21
+    .word Structure22
+    .word Structure23
+    .word Structure24
+    .word Structure25
+    .word Structure26
+    .word Structure27
+    .word Structure28
+    .word Structure29
+    .word Structure2A
+    .word Structure2B
+    .word Structure2C
+    .word Structure2D
+    .word Structure2E
+    .word Structure2F
+    .word Structure30
+    .word Structure31
+

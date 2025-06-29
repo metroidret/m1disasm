@@ -19,8 +19,43 @@
 ;Kraid Structure Pointers
 
 StrctPtrTbl:
-    .word LAA6B, LAA7E, LAA97, LAAB0, LAAB7, LAABE, LAAC2, LAAD2
-    .word LAAE2, LAAE7, LAAEC, LAAEF, LAAF2, LAAFD, LAB03, LAB08
-    .word LAB11, LAB26, LAB29, LAB3C, LAB51, LAB55, LAB68, LAB75
-    .word LAB88, LAB9B, LABB0, LABBA, LABBD, LABC4, LABE0, LABE9
-    .word LABFE, LAC01, LAC0A, LAC0F, LAC14, LAC1E, LAC27
+    .word Structure00
+    .word Structure01
+    .word Structure02
+    .word Structure03
+    .word Structure04
+    .word Structure05
+    .word Structure06
+    .word Structure07
+    .word Structure08
+    .word Structure09
+    .word Structure0A
+    .word Structure0B
+    .word Structure0C
+    .word Structure0D
+    .word Structure0E
+    .word Structure0F
+    .word Structure10
+    .word Structure11
+    .word Structure12
+    .word Structure13
+    .word Structure14
+    .word Structure15
+    .word Structure16
+    .word Structure17
+    .word Structure18
+    .word Structure19
+    .word Structure1A
+    .word Structure1B
+    .word Structure1C
+    .word Structure1D
+    .word Structure1E
+    .word Structure1F
+    .word Structure20
+    .word Structure21
+    .word Structure22
+    .word Structure23
+    .word Structure24
+    .word Structure25
+    .word Structure26
+

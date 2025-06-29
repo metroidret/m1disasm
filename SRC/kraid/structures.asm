@@ -25,14 +25,12 @@
 ;and are multiplied by 4 to find the index to the desired macro in MacroDefs.  Any further bytes in
 ;the structure definition represent the next rows.  #$FF marks the end of the structure definition.
 
-;Structure #$00
-LAA6B:
+Structure00:
     .byte $08,  $01, $01, $01, $01, $01, $01, $01, $01
     .byte $08,  $00, $00, $00, $00, $00, $00, $00, $00
     .byte $FF
 
-;Structure #$01
-LAA7E:
+Structure01:
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $01,  $1C
     .byte $01,  $1C
@@ -40,8 +38,7 @@ LAA7E:
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $FF
 
-;Structure #$02
-LAA97:
+Structure02:
     .byte $02,  $04, $05
     .byte $02,  $04, $05
     .byte $02,  $04, $05
@@ -52,27 +49,23 @@ LAA97:
     .byte $02,  $04, $05
     .byte $FF
 
-;Structure #$03
-LAAB0:
+Structure03:
     .byte $01,  $06
     .byte $01,  $06
     .byte $01,  $06
     .byte $FF
 
-;Structure #$04
-LAAB7:
+Structure04:
     .byte $01,  $07
     .byte $01,  $07
     .byte $01,  $07
     .byte $FF
 
-;Structure #$05
-LAABE:
+Structure05:
     .byte $02,  $14, $15
     .byte $FF
 
-;Structure #$06
-LAAC2:
+Structure06:
     .byte $02,  $17, $17
     .byte $02,  $17, $1B
     .byte $02,  $17, $1B
@@ -80,8 +73,7 @@ LAAC2:
     .byte $02,  $17, $17
     .byte $FF
 
-;Structure #$07
-LAAD2:
+Structure07:
     .byte $02,  $1A, $17
     .byte $02,  $17, $17
     .byte $02,  $1B, $1A
@@ -89,30 +81,25 @@ LAAD2:
     .byte $02,  $1A, $1B
     .byte $FF
 
-;Structure #$08
-LAAE2:
+Structure08:
     .byte $01,  $18
     .byte $01,  $18
     .byte $FF
 
-;Structure #$09
-LAAE7:
+Structure09:
     .byte $01,  $19
     .byte $01,  $19
     .byte $FF
 
-;Structure #$0A
-LAAEC:
+Structure0A:
     .byte $01,  $09
     .byte $FF
 
-;Structure #$0B
-LAAEF:
+Structure0B:
     .byte $01,  $0A
     .byte $FF
 
-;Structure #$0C
-LAAF2:
+Structure0C:
     .byte $01,  $1E
     .byte $01,  $1A
     .byte $01,  $1A
@@ -120,168 +107,142 @@ LAAF2:
     .byte $01,  $1E
     .byte $FF
 
-;Structure #$0D
-LAAFD:
+Structure0D:
     .byte $04,  $17, $17, $17, $17
     .byte $FF
 
-;Structure #$0E
-LAB03:
+Structure0E:
     .byte $03,  $17, $1D, $17
     .byte $FF
 
-;Structure #$0F
-LAB08:
+Structure0F:
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $FF
 
-;Structure #$10
-LAB11:
+Structure10:
     .byte $04,  $17, $17, $1B, $17
     .byte $04,  $1B, $17, $17, $17
     .byte $04,  $1B, $17, $1B, $1B
     .byte $04,  $17, $1B, $17, $17
     .byte $FF
 
-;Structure #$11
-LAB26:
+Structure11:
     .byte $01,  $17
     .byte $FF
 
-;Structure #$12
-LAB29:
+Structure12:
     .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
     .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
     .byte $FF
 
-;Structure #$13
-LAB3C:
+Structure13:
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $FF
 
-;Structure #$14
-LAB51:
+Structure14:
     .byte $02,  $12, $12
     .byte $FF
 
-;Structure #$15
-LAB55:
+Structure15:
     .byte $08,  $10, $10, $10, $10, $10, $10, $10, $10
     .byte $08,  $10, $10, $10, $10, $10, $10, $10, $10
     .byte $FF
 
-;Structure #$16
-LAB68:
+Structure16:
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $FF
 
-;Structure #$17
-LAB75:
+Structure17:
     .byte $08,  $13, $0E, $13, $0E, $0E, $13, $0E, $0E
     .byte $08,  $0E, $0E, $13, $13, $0E, $0E, $13, $13
     .byte $FF
 
-;Structure #$18
-LAB88:
+Structure18:
     .byte $08,  $11, $11, $11, $11, $11, $11, $11, $11
     .byte $08,  $11, $11, $11, $11, $11, $11, $11, $11
     .byte $FF
 
-;Structure #$19
-LAB9B:
+Structure19:
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $FF
 
-;Structure #$1A
-LABB0:
+Structure1A:
     .byte $08,  $20, $22, $22, $22, $22, $22, $22, $22
     .byte $FF
 
-;Structure #$1B
-LABBA:
+Structure1B:
     .byte $01,  $1F
     .byte $FF
 
-;Structure #$1C
-LABBD:
+Structure1C:
     .byte $01,  $21
     .byte $01,  $21
     .byte $01,  $21
     .byte $FF
 
-;Structure #$1D
-LABC4:
+Structure1D:
     .byte $08,  $23, $23, $23, $23, $23, $23, $23, $23
     .byte $08,  $23, $24, $24, $24, $24, $24, $24, $23
     .byte $08,  $23, $23, $23, $23, $23, $23, $23, $23
     .byte $FF
 
-;Structure #$1E
-LABE0:
+Structure1E:
     .byte $01,  $23
     .byte $01,  $23
     .byte $01,  $23
     .byte $01,  $23
     .byte $FF
 
-;Structure #$1F
-LABE9:
+Structure1F:
     .byte $04,  $23, $23, $23, $23
     .byte $04,  $23, $24, $24, $23
     .byte $04,  $23, $24, $24, $23
     .byte $04,  $23, $23, $23, $23
     .byte $FF
 
-;Structure #$20
-LABFE:
+Structure20:
     .byte $01,  $25
     .byte $FF
 
-;Structure #$21
-LAC01:
+Structure21:
     .byte $01,  $26
     .byte $01,  $26
     .byte $01,  $26
     .byte $01,  $26
     .byte $FF
 
-;Structure #$22
-LAC0A:
+Structure22:
     .byte $03,  $27, $27, $27
     .byte $FF
 
-;Structure #$23
-LAC0F:
+Structure23:
     .byte $03,  $28, $28, $28
     .byte $FF
 
-;Structure #$24
-LAC14:
+Structure24:
     .byte $08,  $13, $13, $13, $13, $13, $13, $13, $13
     .byte $FF
 
-;Structure #$25
-LAC1E:
+Structure25:
     .byte $01,  $13
     .byte $01,  $13
     .byte $01,  $13
     .byte $01,  $13
     .byte $FF
 
-;Structure #$26
-LAC27:
+Structure26:
     .byte $04,  $0C, $0C, $0C, $0C
     .byte $04,  $0D, $0D, $0D, $0D
     .byte $FF

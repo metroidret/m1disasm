@@ -19,7 +19,33 @@
 ;Ridley Structure Pointers
 
 StrctPtrTbl:
-    .word LA9BF, LA9D2, LA9D9, LA9E0, LA9F9, LA9FD, LAA02, LAA07
-    .word LAA17, LAA2C, LAA32, LAA3D, LAA57, LAA64, LAA6D, LAA78
-    .word LAA83, LAA86, LAA8C, LAA96, LAAAB, LAAC7, LAAD2, LAAD9
-    .word LAAEE, LAB0A, LAB11, LAB1A, LAB1D
+    .word Structure00
+    .word Structure01
+    .word Structure02
+    .word Structure03
+    .word Structure04
+    .word Structure05
+    .word Structure06
+    .word Structure07
+    .word Structure08
+    .word Structure09
+    .word Structure0A
+    .word Structure0B
+    .word Structure0C
+    .word Structure0D
+    .word Structure0E
+    .word Structure0F
+    .word Structure10
+    .word Structure11
+    .word Structure12
+    .word Structure13
+    .word Structure14
+    .word Structure15
+    .word Structure16
+    .word Structure17
+    .word Structure18
+    .word Structure19
+    .word Structure1A
+    .word Structure1B
+    .word Structure1C
+
