@@ -26,96 +26,202 @@
 ;the structure definition represent the next rows.  #$FF marks the end of the structure definition.
 
 ;Structure #$00
-LA9BF:  .byte $08, $00, $00, $00, $00, $00, $00, $00, $00, $08, $01, $01, $01, $01, $01, $01
-LA9CF:  .byte $01, $01, $FF
+LA9BF:
+    .byte $08,  $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $08,  $01, $01, $01, $01, $01, $01, $01, $01
+    .byte $FF
 
 ;Structure #$01
-LA9D2:  .byte $01, $12, $01, $12, $01, $12, $FF
+LA9D2:
+    .byte $01,  $12
+    .byte $01,  $12
+    .byte $01,  $12
+    .byte $FF
 
 ;Structure #$02
-LA9D9:  .byte $01, $13, $01, $13, $01, $13, $FF
+LA9D9:
+    .byte $01,  $13
+    .byte $01,  $13
+    .byte $01,  $13
+    .byte $FF
 
 ;Structure #$03
-LA9E0:  .byte $02, $02, $03, $02, $02, $03, $02, $02, $03, $02, $02, $03, $02, $02, $03
-LA9F0:  .byte $02, $02, $03, $02, $02, $03, $02, $02, $03, $FF
+LA9E0:
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $02,  $02, $03
+    .byte $FF
 
 ;Structure #$04
-LA9F9:  .byte $02, $06, $07, $FF
+LA9F9:
+    .byte $02,  $06, $07
+    .byte $FF
 
 ;Structure #$05
-LA9FD:  .byte $01, $0A, $01, $0A, $FF
+LA9FD:
+    .byte $01,  $0A
+    .byte $01,  $0A
+    .byte $FF
 
 ;Structure #$06
-LAA02:  .byte $01, $0B, $01, $0B, $FF
+LAA02:
+    .byte $01,  $0B
+    .byte $01,  $0B
+    .byte $FF
 
 ;Structure #$07
-LAA07:  .byte $02, $08, $08, $02, $08, $05, $02, $09, $08, $02, $08, $08, $02, $05, $08, $FF
+LAA07:
+    .byte $02,  $08, $08
+    .byte $02,  $08, $05
+    .byte $02,  $09, $08
+    .byte $02,  $08, $08
+    .byte $02,  $05, $08
+    .byte $FF
 
 ;Structure #$08
-LAA17:  .byte $04, $08, $08, $08, $08, $04, $08, $09, $09, $08, $04, $08, $09, $09, $08, $04
-LAA27:  .byte $08, $08, $08, $08, $FF
+LAA17:
+    .byte $04,  $08, $08, $08, $08
+    .byte $04,  $08, $09, $09, $08
+    .byte $04,  $08, $09, $09, $08
+    .byte $04,  $08, $08, $08, $08
+    .byte $FF
 
 ;Structure #$09
-LAA2C:  .byte $04, $08, $09, $09, $08, $FF
+LAA2C:
+    .byte $04,  $08, $09, $09, $08
+    .byte $FF
 
 ;Structure #$0A
-LAA32:  .byte $01, $14, $01, $05, $01, $05, $01, $05, $01, $14, $FF
+LAA32:
+    .byte $01,  $14
+    .byte $01,  $05
+    .byte $01,  $05
+    .byte $01,  $05
+    .byte $01,  $14
+    .byte $FF
 
 ;Structure #$0B
-LAA3D:  .byte $04, $15, $15, $15, $15, $04, $15, $15, $15, $15, $04, $15, $15, $15, $15, $04
-LAA4D:  .byte $15, $15, $15, $15, $04, $15, $15, $15, $15, $FF
+LAA3D:
+    .byte $04,  $15, $15, $15, $15
+    .byte $04,  $15, $15, $15, $15
+    .byte $04,  $15, $15, $15, $15
+    .byte $04,  $15, $15, $15, $15
+    .byte $04,  $15, $15, $15, $15
+    .byte $FF
 
 ;Structure #$0C
-LAA57:  .byte $02, $16, $16, $02, $16, $16, $02, $16, $16, $02, $16, $16, $FF
+LAA57:
+    .byte $02,  $16, $16
+    .byte $02,  $16, $16
+    .byte $02,  $16, $16
+    .byte $02,  $16, $16
+    .byte $FF
 
 ;Structure #$0D
-LAA64:  .byte $01, $17, $01, $17, $01, $17, $01, $17, $FF
+LAA64:
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $FF
 
 ;Structure #$0E
-LAA6D:  .byte $04, $11, $11, $11, $11, $04, $11, $11, $11, $11, $FF
+LAA6D:
+    .byte $04,  $11, $11, $11, $11
+    .byte $04,  $11, $11, $11, $11
+    .byte $FF
 
 ;Structure #$0F
-LAA78:  .byte $04, $18, $18, $18, $18, $04, $19, $19, $19, $19, $FF
+LAA78:
+    .byte $04,  $18, $18, $18, $18
+    .byte $04,  $19, $19, $19, $19
+    .byte $FF
 
 ;Structure #$10
-LAA83:  .byte $01, $1B, $FF
+LAA83:
+    .byte $01,  $1B
+    .byte $FF
 
 ;Structure #$11
-LAA86:  .byte $04, $1A, $1A, $1A, $1A, $FF
+LAA86:
+    .byte $04,  $1A, $1A, $1A, $1A
+    .byte $FF
 
 ;Structure #$12
-LAA8C:  .byte $08, $0F, $0F, $0F, $0F, $10, $10, $10, $10, $FF
+LAA8C:
+    .byte $08,  $0F, $0F, $0F, $0F, $10, $10, $10, $10
+    .byte $FF
 
 ;Structure #$13
-LAA96:  .byte $04, $0D, $0D, $0D, $0D, $04, $0D, $0E, $0E, $0D, $04, $0D, $0E, $0E, $0D, $04
-LAAA6:  .byte $0D, $0D, $0D, $0D, $FF
+LAA96:
+    .byte $04,  $0D, $0D, $0D, $0D
+    .byte $04,  $0D, $0E, $0E, $0D
+    .byte $04,  $0D, $0E, $0E, $0D
+    .byte $04,  $0D, $0D, $0D, $0D
+    .byte $FF
 
 ;Structure #$14
-LAAAB:  .byte $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $08, $0D, $0E, $0E, $0E, $0E, $0E
-LAABB:  .byte $0E, $0D, $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $FF
+LAAAB:
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $08,  $0D, $0E, $0E, $0E, $0E, $0E, $0E, $0D
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $FF
 
 ;Structure #$15
-LAAC7:  .byte $04, $1C, $1C, $1C, $1C, $04, $1C, $1C, $1C, $1C, $FF
+LAAC7:
+    .byte $04,  $1C, $1C, $1C, $1C
+    .byte $04,  $1C, $1C, $1C, $1C
+    .byte $FF
 
 ;Structure #$16
-LAAD2:  .byte $01, $1D, $01, $1D, $01, $1D, $FF
+LAAD2:
+    .byte $01,  $1D
+    .byte $01,  $1D
+    .byte $01,  $1D
+    .byte $FF
 
 ;Structure #$17
-LAAD9:  .byte $04, $1E, $1E, $1E, $1E, $04, $1E, $05, $05, $1E, $04, $1E, $05, $05, $1E, $04
-LAAE9:  .byte $1E, $1E, $1E, $1E, $FF
+LAAD9:
+    .byte $04,  $1E, $1E, $1E, $1E
+    .byte $04,  $1E, $05, $05, $1E
+    .byte $04,  $1E, $05, $05, $1E
+    .byte $04,  $1E, $1E, $1E, $1E
+    .byte $FF
 
 ;Structure #$18
-LAAEE:  .byte $08, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $08, $1E, $09, $09, $09, $09, $09
-LAAFE:  .byte $09, $1E, $08, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $FF
+LAAEE:
+    .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
+    .byte $08,  $1E, $09, $09, $09, $09, $09, $09, $1E
+    .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
+    .byte $FF
 
 ;Structure #$19
-LAB0A:  .byte $01, $14, $01, $05, $01, $14, $FF
+LAB0A:
+    .byte $01,  $14
+    .byte $01,  $05
+    .byte $01,  $14
+    .byte $FF
 
 ;Structure #$1A
-LAB11:  .byte $01, $04, $01, $04, $01, $04, $01, $04, $FF
+LAB11:
+    .byte $01,  $04
+    .byte $01,  $04
+    .byte $01,  $04
+    .byte $01,  $04
+    .byte $FF
 
 ;Structure #$1B
-LAB1A:  .byte $01, $1F, $FF
+LAB1A:
+    .byte $01,  $1F
+    .byte $FF
 
 ;Structure #$1C
-LAB1D:  .byte $04, $20, $20, $20, $20, $FF
+LAB1D:
+    .byte $04,  $20, $20, $20, $20
+    .byte $FF
+

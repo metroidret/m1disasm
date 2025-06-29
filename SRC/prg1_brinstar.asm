@@ -773,7 +773,7 @@ CommonEnemyJump_00_01_02:
 AreaRoutineStub: ;L9D35
     rts
 
-; More strings pointed to by EnemyFireballMovementPtrTable
+; Strings pointed to by TileBlastFramePtrTable
 TileBlastFrame00:
     .byte $22
     .byte $FF, $FF

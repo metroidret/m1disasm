@@ -20,3 +20,9 @@ Subject to change.
  * SRC/common_chr - Common CHR data
  * SRC/enemies - Assembly files for enemy AI routines shared between areas
  * SRC/songs - Song data for all songs in the game
+
+### Build targets
+
+ * NES_NTSC - The NTSC version of the game released in North America. This is the most popular one. Port of the FDS version.
+ * NES_PAL - The PAL version of the game released in Europe. Derived from the NTSC version.
+
