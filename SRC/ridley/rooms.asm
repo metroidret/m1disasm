@@ -32,357 +32,813 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-;Room #$00
-LA23F:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA240:  .byte $07, $03, $02, $87, $03, $02, $FF
+Room00:
+Room01:
+    .byte $02
+    .byte $07, $03, $02
+    .byte $87, $03, $02
+    .byte $FF
 
-;Room #$01
-LA247:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA248:  .byte $00, $07, $03, $01, $08, $03, $06, $09, $03, $0B, $08, $03, $0E, $07, $03, $50
-LA258:  .byte $07, $03, $5E, $07, $03, $93, $0A, $00, $96, $09, $03, $9C, $0A, $00, $A0, $07
-LA268:  .byte $03, $AE, $07, $03, $E2, $08, $03, $EA, $08, $03, $FF
+Room02:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $01, $08, $03
+    .byte $06, $09, $03
+    .byte $0B, $08, $03
+    .byte $0E, $07, $03
+    .byte $50, $07, $03
+    .byte $5E, $07, $03
+    .byte $93, $0A, $00
+    .byte $96, $09, $03
+    .byte $9C, $0A, $00
+    .byte $A0, $07, $03
+    .byte $AE, $07, $03
+    .byte $E2, $08, $03
+    .byte $EA, $08, $03
+    .byte $FF
 
-;Room #$02
-LA273:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA274:  .byte $00, $07, $03, $0E, $07, $03, $46, $08, $03, $50, $01, $02, $5F, $01, $02, $80
-LA284:  .byte $08, $03, $84, $09, $03, $88, $09, $03, $8C, $08, $03, $B0, $08, $03, $BC, $08
-LA294:  .byte $03, $D4, $00, $03, $FD
-;Room enemy/door data:
-LA299:  .byte $02, $A1, $02, $B1, $FF
+Room03:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $46, $08, $03
+    .byte $50, $01, $02
+    .byte $5F, $01, $02
+    .byte $80, $08, $03
+    .byte $84, $09, $03
+    .byte $88, $09, $03
+    .byte $8C, $08, $03
+    .byte $B0, $08, $03
+    .byte $BC, $08, $03
+    .byte $D4, $00, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $02, $B1 ; Blue door
+    .byte $FF
 
-;Room #$03
-LA29E:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA29F:  .byte $00, $07, $03, $0E, $07, $03, $50, $07, $03, $5E, $07, $03, $A0, $07, $03, $AE
-LA2AF:  .byte $07, $03, $FF
+Room04:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $50, $07, $03
+    .byte $5E, $07, $03
+    .byte $A0, $07, $03
+    .byte $AE, $07, $03
+    .byte $FF
 
-;Room #$04
-LA2B2:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA2B3:  .byte $00, $08, $03, $04, $08, $03, $08, $08, $03, $0C, $08, $03, $40, $08, $03, $44
-LA2C3:  .byte $08, $03, $48, $08, $03, $4C, $08, $03, $70, $08, $03, $74, $08, $03, $78, $08
-LA2D3:  .byte $03, $7C, $08, $03, $B0, $08, $03, $B4, $08, $03, $B8, $08, $03, $BC, $08, $03
-LA2E3:  .byte $FF
+Room05:
+    .byte $03
+    .byte $00, $08, $03
+    .byte $04, $08, $03
+    .byte $08, $08, $03
+    .byte $0C, $08, $03
+    .byte $40, $08, $03
+    .byte $44, $08, $03
+    .byte $48, $08, $03
+    .byte $4C, $08, $03
+    .byte $70, $08, $03
+    .byte $74, $08, $03
+    .byte $78, $08, $03
+    .byte $7C, $08, $03
+    .byte $B0, $08, $03
+    .byte $B4, $08, $03
+    .byte $B8, $08, $03
+    .byte $BC, $08, $03
+    .byte $FF
 
-;Room #$05
-LA2E4:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA2E5:  .byte $00, $07, $03, $05, $08, $03, $0E, $07, $03, $50, $01, $02, $5F, $01, $02, $68
-LA2F5:  .byte $08, $03, $80, $07, $03, $82, $09, $03, $8C, $09, $03, $8E, $07, $03, $AE, $07
-LA305:  .byte $03, $B0, $07, $03, $FD
-;Room enemy/door data:
-LA30A:  .byte $02, $A1, $02, $B1, $FF
+Room06:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $05, $08, $03
+    .byte $0E, $07, $03
+    .byte $50, $01, $02
+    .byte $5F, $01, $02
+    .byte $68, $08, $03
+    .byte $80, $07, $03
+    .byte $82, $09, $03
+    .byte $8C, $09, $03
+    .byte $8E, $07, $03
+    .byte $AE, $07, $03
+    .byte $B0, $07, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $02, $B1 ; Blue door
+    .byte $FF
 
-;Room #$06
-LA30F:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA310:  .byte $00, $07, $03, $0E, $07, $03, $26, $04, $03, $35, $09, $03, $50, $01, $02, $5E
-LA320:  .byte $07, $03, $80, $07, $03, $82, $09, $03, $89, $09, $03, $AE, $07, $03, $B2, $05
-LA330:  .byte $01, $C4, $09, $03, $D0, $07, $03, $DC, $04, $03, $EB, $09, $03, $FD
-;Room enemy/door data:
-LA33E:  .byte $02, $B1, $07, $87, $27, $17, $87, $DD, $21, $86, $B5, $31, $86, $7B, $FF
+Room07:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $26, $04, $03
+    .byte $35, $09, $03
+    .byte $50, $01, $02
+    .byte $5E, $07, $03
+    .byte $80, $07, $03
+    .byte $82, $09, $03
+    .byte $89, $09, $03
+    .byte $AE, $07, $03
+    .byte $B2, $05, $01
+    .byte $C4, $09, $03
+    .byte $D0, $07, $03
+    .byte $DC, $04, $03
+    .byte $EB, $09, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $07, $87, $27 ; Zebbo
+    .byte $17, $87, $DD ; Zebbo
+    .byte $21, $86, $B5 ; Viola
+    .byte $31, $86, $7B ; Viola
+    .byte $FF
 
-;Room #$07
-LA34D:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA34E:  .byte $00, $07, $03, $0E, $07, $03, $22, $05, $01, $26, $09, $03, $50, $07, $03, $5E
-LA35E:  .byte $07, $03, $62, $09, $03, $79, $09, $03, $95, $04, $03, $A0, $07, $03, $A4, $09
-LA36E:  .byte $03, $AE, $07, $03, $E8, $09, $03, $FD
-;Room enemy/door data:
-LA376:  .byte $51, $06, $17, $01, $86, $6B, $11, $86, $DA, $27, $87, $96, $FF
+Room08:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $22, $05, $01
+    .byte $26, $09, $03
+    .byte $50, $07, $03
+    .byte $5E, $07, $03
+    .byte $62, $09, $03
+    .byte $79, $09, $03
+    .byte $95, $04, $03
+    .byte $A0, $07, $03
+    .byte $A4, $09, $03
+    .byte $AE, $07, $03
+    .byte $E8, $09, $03
+    .byte $FD
+    .byte $51, $06, $17 ; Viola
+    .byte $01, $86, $6B ; Viola
+    .byte $11, $86, $DA ; Viola
+    .byte $27, $87, $96 ; Zebbo
+    .byte $FF
 
-;Room #$08
-LA383:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA384:  .byte $00, $07, $03, $0E, $07, $03, $26, $09, $03, $2D, $06, $01, $50, $01, $02, $5C
-LA394:  .byte $09, $03, $5E, $07, $03, $80, $08, $03, $84, $08, $03, $88, $08, $03, $8C, $08
-LA3A4:  .byte $03, $C0, $08, $03, $CC, $08, $03, $D4, $00, $03, $FD
-;Room enemy/door data:
-LA3AF:  .byte $02, $B1, $31, $86, $18, $41, $86, $78, $FF
+Room09:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $26, $09, $03
+    .byte $2D, $06, $01
+    .byte $50, $01, $02
+    .byte $5C, $09, $03
+    .byte $5E, $07, $03
+    .byte $80, $08, $03
+    .byte $84, $08, $03
+    .byte $88, $08, $03
+    .byte $8C, $08, $03
+    .byte $C0, $08, $03
+    .byte $CC, $08, $03
+    .byte $D4, $00, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $31, $86, $18 ; Viola
+    .byte $41, $86, $78 ; Viola
+    .byte $FF
 
-;Room #$09
-LA3B8:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA3B9:  .byte $00, $07, $03, $07, $19, $00, $0E, $07, $03, $45, $19, $00, $4C, $19, $00, $50
-LA3C9:  .byte $07, $03, $5F, $01, $02, $72, $19, $00, $8C, $09, $03, $8E, $07, $03, $A0, $07
-LA3D9:  .byte $03, $AB, $19, $00, $B4, $19, $00, $BE, $07, $03, $E8, $19, $00, $FD
-;Room enemy/door data:
-LA3E7:  .byte $02, $A1, $01, $06, $34, $11, $86, $3C, $21, $06, $9B, $31, $86, $A4, $51, $86
-LA3F7:  .byte $D8, $FF
+Room0A:
+    .byte $00
+    .byte $00, $07, $03
+    .byte $07, $19, $00
+    .byte $0E, $07, $03
+    .byte $45, $19, $00
+    .byte $4C, $19, $00
+    .byte $50, $07, $03
+    .byte $5F, $01, $02
+    .byte $72, $19, $00
+    .byte $8C, $09, $03
+    .byte $8E, $07, $03
+    .byte $A0, $07, $03
+    .byte $AB, $19, $00
+    .byte $B4, $19, $00
+    .byte $BE, $07, $03
+    .byte $E8, $19, $00
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $01, $06, $34 ; Viola
+    .byte $11, $86, $3C ; Viola
+    .byte $21, $06, $9B ; Viola
+    .byte $31, $86, $A4 ; Viola
+    .byte $51, $86, $D8 ; Viola
+    .byte $FF
 
-;Room #$0A
-LA3F9:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA3FA:  .byte $00, $07, $03, $0E, $07, $03, $16, $19, $00, $50, $07, $03, $53, $19, $00, $5E
-LA40A:  .byte $07, $03, $86, $19, $00, $A0, $07, $03, $AE, $07, $03, $B9, $19, $00, $BD, $06
-LA41A:  .byte $01, $FD
-;Room enemy/door data:
-LA41C:  .byte $41, $86, $06, $01, $06, $43, $11, $86, $76, $21, $86, $A9, $FF
+Room0B:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $16, $19, $00
+    .byte $50, $07, $03
+    .byte $53, $19, $00
+    .byte $5E, $07, $03
+    .byte $86, $19, $00
+    .byte $A0, $07, $03
+    .byte $AE, $07, $03
+    .byte $B9, $19, $00
+    .byte $BD, $06, $01
+    .byte $FD
+    .byte $41, $86, $06 ; Viola
+    .byte $01, $06, $43 ; Viola
+    .byte $11, $86, $76 ; Viola
+    .byte $21, $86, $A9 ; Viola
+    .byte $FF
 
-;Room #$0B
-LA429:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA42A:  .byte $00, $07, $03, $0E, $07, $03, $50, $07, $03, $5F, $01, $02, $80, $08, $03, $84
-LA43A:  .byte $08, $03, $88, $09, $03, $8C, $08, $03, $C0, $08, $03, $CC, $08, $03, $D4, $00
-LA44A:  .byte $03, $FD
-;Room enemy/door data:
-LA44C:  .byte $02, $A1, $31, $82, $74, $41, $82, $79, $FF
+Room0C:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $0E, $07, $03
+    .byte $50, $07, $03
+    .byte $5F, $01, $02
+    .byte $80, $08, $03
+    .byte $84, $08, $03
+    .byte $88, $09, $03
+    .byte $8C, $08, $03
+    .byte $C0, $08, $03
+    .byte $CC, $08, $03
+    .byte $D4, $00, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $31, $82, $74 ; Dessgeega
+    .byte $41, $82, $79 ; Dessgeega
+    .byte $FF
 
-;Room #$0C
-LA455:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA456:  .byte $00, $0B, $00, $04, $0B, $00, $08, $0B, $00, $0C, $0B, $00, $50, $01, $02, $5F
-LA466:  .byte $01, $02, $80, $0B, $00, $82, $0B, $00, $86, $0C, $00, $88, $0B, $00, $8C, $0B
-LA476:  .byte $00, $C0, $0B, $00, $C2, $0B, $00, $C6, $0C, $00, $D8, $0B, $00, $DC, $0B, $00
-LA486:  .byte $FD
-;Room enemy/door data:
-LA487:  .byte $02, $A0, $02, $B1, $FF
+Room0D:
+    .byte $00
+    .byte $00, $0B, $00
+    .byte $04, $0B, $00
+    .byte $08, $0B, $00
+    .byte $0C, $0B, $00
+    .byte $50, $01, $02
+    .byte $5F, $01, $02
+    .byte $80, $0B, $00
+    .byte $82, $0B, $00
+    .byte $86, $0C, $00
+    .byte $88, $0B, $00
+    .byte $8C, $0B, $00
+    .byte $C0, $0B, $00
+    .byte $C2, $0B, $00
+    .byte $C6, $0C, $00
+    .byte $D8, $0B, $00
+    .byte $DC, $0B, $00
+    .byte $FD
+    .byte $02, $A0 ; Red door
+    .byte $02, $B1 ; Blue door
+    .byte $FF
 
-;Room #$0D
-LA48C:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA48D:  .byte $00, $0B, $00, $04, $0B, $00, $08, $0B, $00, $0C, $0B, $00, $0E, $0D, $00, $1E
-LA49D:  .byte $0D, $00, $50, $01, $02, $5F, $01, $02, $80, $0B, $00, $84, $0B, $00, $88, $0B
-LA4AD:  .byte $00, $8C, $0B, $00, $C0, $0B, $00, $C4, $0B, $00, $C8, $0B, $00, $CC, $0B, $00
-LA4BD:  .byte $FD
-;Room enemy/door data:
-LA4BE:  .byte $02, $A1, $02, $B1, $FF
+Room0E:
+    .byte $00
+    .byte $00, $0B, $00
+    .byte $04, $0B, $00
+    .byte $08, $0B, $00
+    .byte $0C, $0B, $00
+    .byte $0E, $0D, $00
+    .byte $1E, $0D, $00
+    .byte $50, $01, $02
+    .byte $5F, $01, $02
+    .byte $80, $0B, $00
+    .byte $84, $0B, $00
+    .byte $88, $0B, $00
+    .byte $8C, $0B, $00
+    .byte $C0, $0B, $00
+    .byte $C4, $0B, $00
+    .byte $C8, $0B, $00
+    .byte $CC, $0B, $00
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $02, $B1 ; Blue door
+    .byte $FF
 
-;Room #$0E
-LA4C3:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA4C4:  .byte $00, $0E, $00, $04, $0E, $00, $08, $0E, $00, $0C, $0E, $00, $7D, $0A, $00, $B0
-LA4D4:  .byte $0B, $00, $B4, $0B, $00, $B8, $0C, $00, $B9, $0B, $00, $BE, $0B, $00, $BF, $0C
-LA4E4:  .byte $00, $D0, $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA4EC:  .byte $51, $80, $27, $01, $02, $A4, $11, $02, $AA, $FF
+Room0F:
+    .byte $00
+    .byte $00, $0E, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0C, $0E, $00
+    .byte $7D, $0A, $00
+    .byte $B0, $0B, $00
+    .byte $B4, $0B, $00
+    .byte $B8, $0C, $00
+    .byte $B9, $0B, $00
+    .byte $BE, $0B, $00
+    .byte $BF, $0C, $00
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $51, $80, $27 ; Holtz
+    .byte $01, $02, $A4 ; Dessgeega
+    .byte $11, $02, $AA ; Dessgeega
+    .byte $FF
 
-;Room #$0F
-LA4F6:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA4F7:  .byte $00, $0E, $00, $04, $0E, $00, $08, $0E, $00, $0B, $0E, $00, $0F, $0A, $00, $5F
-LA507:  .byte $02, $02, $8C, $08, $03, $CC, $08, $03, $D0, $0F, $03, $D4, $00, $03, $D8, $0F
-LA517:  .byte $03, $FD
-;Room enemy/door data:
-LA519:  .byte $02, $A2, $51, $80, $27, $21, $80, $29, $11, $80, $2B, $FF
+Room10:
+    .byte $00
+    .byte $00, $0E, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0B, $0E, $00
+    .byte $0F, $0A, $00
+    .byte $5F, $02, $02
+    .byte $8C, $08, $03
+    .byte $CC, $08, $03
+    .byte $D0, $0F, $03
+    .byte $D4, $00, $03
+    .byte $D8, $0F, $03
+    .byte $FD
+    .byte $02, $A2 ; 10-missile door
+    .byte $51, $80, $27 ; Holtz
+    .byte $21, $80, $29 ; Holtz
+    .byte $11, $80, $2B ; Holtz
+    .byte $FF
 
-;Room #$10
-LA525:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA526:  .byte $00, $08, $03, $04, $08, $03, $08, $0E, $00, $0C, $0E, $00, $40, $08, $03, $42
-LA536:  .byte $0B, $00, $70, $08, $03, $72, $0B, $00, $76, $0A, $00, $B0, $08, $03, $B4, $08
-LA546:  .byte $03, $D8, $0F, $03, $DC, $0F, $03, $FD
-;Room enemy/door data:
-LA54E:  .byte $31, $80, $2E, $41, $80, $2B, $FF
+Room11:
+    .byte $03
+    .byte $00, $08, $03
+    .byte $04, $08, $03
+    .byte $08, $0E, $00
+    .byte $0C, $0E, $00
+    .byte $40, $08, $03
+    .byte $42, $0B, $00
+    .byte $70, $08, $03
+    .byte $72, $0B, $00
+    .byte $76, $0A, $00
+    .byte $B0, $08, $03
+    .byte $B4, $08, $03
+    .byte $D8, $0F, $03
+    .byte $DC, $0F, $03
+    .byte $FD
+    .byte $31, $80, $2E ; Holtz
+    .byte $41, $80, $2B ; Holtz
+    .byte $FF
 
-;Room #$11
-LA555:  .byte $03                       ;Attribute table data.
-;Room object data:
-LA556:  .byte $00, $07, $03, $02, $11, $03, $06, $11, $03, $0A, $11, $03, $0E, $07, $03, $13
-LA566:  .byte $10, $03, $14, $12, $03, $1C, $10, $03, $22, $0A, $00, $50, $02, $02, $5F, $02
-LA576:  .byte $02, $80, $07, $03, $84, $11, $03, $8F, $07, $03, $92, $19, $00, $95, $11, $03
-LA586:  .byte $99, $11, $03, $AE, $19, $00, $C0, $07, $03, $D2, $00, $03, $D7, $00, $03, $DF
-LA596:  .byte $07, $03, $FD
-;Room enemy/door data:
-LA599:  .byte $02, $A1, $02, $B2, $01, $49, $66, $FF
+Room12:
+    .byte $03
+    .byte $00, $07, $03
+    .byte $02, $11, $03
+    .byte $06, $11, $03
+    .byte $0A, $11, $03
+    .byte $0E, $07, $03
+    .byte $13, $10, $03
+    .byte $14, $12, $03
+    .byte $1C, $10, $03
+    .byte $22, $0A, $00
+    .byte $50, $02, $02
+    .byte $5F, $02, $02
+    .byte $80, $07, $03
+    .byte $84, $11, $03
+    .byte $8F, $07, $03
+    .byte $92, $19, $00
+    .byte $95, $11, $03
+    .byte $99, $11, $03
+    .byte $AE, $19, $00
+    .byte $C0, $07, $03
+    .byte $D2, $00, $03
+    .byte $D7, $00, $03
+    .byte $DF, $07, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $02, $B2 ; 10-missile door
+    .byte $01, $49, $66 ; Ridley
+    .byte $FF
 
-;Room #$12
-LA5A1:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA5A2:  .byte $00, $07, $03, $01, $0E, $00, $05, $0E, $00, $09, $0E, $00, $0D, $0E, $00, $22
-LA5B2:  .byte $11, $03, $26, $11, $03, $50, $02, $02, $80, $07, $03, $81, $11, $03, $8B, $0A
-LA5C2:  .byte $00, $A7, $0A, $00, $B0, $07, $03, $BF, $0A, $00, $D2, $00, $03, $DA, $00, $03
-LA5D2:  .byte $FD
-;Room enemy/door data:
-LA5D3:  .byte $02, $B1, $11, $86, $97, $21, $06, $7B, $31, $86, $AF, $41, $80, $35, $51, $83
-LA5E3:  .byte $3E, $FF
+Room13:
+    .byte $01
+    .byte $00, $07, $03
+    .byte $01, $0E, $00
+    .byte $05, $0E, $00
+    .byte $09, $0E, $00
+    .byte $0D, $0E, $00
+    .byte $22, $11, $03
+    .byte $26, $11, $03
+    .byte $50, $02, $02
+    .byte $80, $07, $03
+    .byte $81, $11, $03
+    .byte $8B, $0A, $00
+    .byte $A7, $0A, $00
+    .byte $B0, $07, $03
+    .byte $BF, $0A, $00
+    .byte $D2, $00, $03
+    .byte $DA, $00, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $11, $86, $97 ; Viola
+    .byte $21, $06, $7B ; Viola
+    .byte $31, $86, $AF ; Viola
+    .byte $41, $80, $35 ; Holtz
+    .byte $51, $83, $3E ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$13
-LA5E5:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA5E6:  .byte $00, $0E, $00, $04, $0E, $00, $08, $0E, $00, $0C, $0E, $00, $86, $0A, $00, $8A
-LA5F6:  .byte $0A, $00, $A2, $0A, $00, $A3, $0A, $00, $BE, $0A, $00, $D0, $00, $03, $D8, $00
-LA606:  .byte $03, $FD
-;Room enemy/door data:
-LA608:  .byte $01, $86, $92, $11, $86, $76, $21, $86, $7A, $31, $06, $AE, $41, $80, $27, $FF
+Room14:
+    .byte $01
+    .byte $00, $0E, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0C, $0E, $00
+    .byte $86, $0A, $00
+    .byte $8A, $0A, $00
+    .byte $A2, $0A, $00
+    .byte $A3, $0A, $00
+    .byte $BE, $0A, $00
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $01, $86, $92 ; Viola
+    .byte $11, $86, $76 ; Viola
+    .byte $21, $86, $7A ; Viola
+    .byte $31, $06, $AE ; Viola
+    .byte $41, $80, $27 ; Holtz
+    .byte $FF
 
-;Room #$14
-LA618:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA619:  .byte $00, $0E, $00, $04, $0E, $00, $08, $0E, $00, $0C, $0B, $00, $5F, $01, $02, $85
-LA629:  .byte $0A, $00, $86, $0A, $00, $8C, $11, $03, $9E, $07, $03, $A2, $0A, $00, $B9, $0A
-LA639:  .byte $00, $CE, $07, $03, $D0, $00, $03, $D6, $00, $03, $FD
-;Room enemy/door data:
-LA644:  .byte $02, $A1, $51, $86, $92, $01, $86, $75, $21, $80, $23, $31, $80, $28, $FF
+Room15:
+    .byte $01
+    .byte $00, $0E, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0C, $0B, $00
+    .byte $5F, $01, $02
+    .byte $85, $0A, $00
+    .byte $86, $0A, $00
+    .byte $8C, $11, $03
+    .byte $9E, $07, $03
+    .byte $A2, $0A, $00
+    .byte $B9, $0A, $00
+    .byte $CE, $07, $03
+    .byte $D0, $00, $03
+    .byte $D6, $00, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $51, $86, $92 ; Viola
+    .byte $01, $86, $75 ; Viola
+    .byte $21, $80, $23 ; Holtz
+    .byte $31, $80, $28 ; Holtz
+    .byte $FF
 
-;Room #$15
-LA653:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA654:  .byte $00, $14, $01, $08, $14, $01, $10, $13, $01, $50, $01, $02, $80, $13, $01, $94
-LA664:  .byte $05, $01, $C0, $14, $01, $CA, $14, $01, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA670:  .byte $02, $B1, $41, $80, $37, $51, $80, $3C, $01, $80, $3E, $FF
+Room16:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $10, $13, $01
+    .byte $50, $01, $02
+    .byte $80, $13, $01
+    .byte $94, $05, $01
+    .byte $C0, $14, $01
+    .byte $CA, $14, $01
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $41, $80, $37 ; Holtz
+    .byte $51, $80, $3C ; Holtz
+    .byte $01, $80, $3E ; Holtz
+    .byte $FF
 
-;Room #$16
-LA67C:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA67D:  .byte $00, $14, $01, $08, $14, $01, $30, $14, $01, $38, $14, $01, $90, $14, $01, $92
-La68D:  .byte $04, $03, $94, $04, $03, $98, $14, $01, $9B, $04, $03, $C0, $14, $01, $C8, $14
-LA69D:  .byte $01, $FD
-;Room enemy/door data:
-LA69F:  .byte $17, $87, $93, $27, $07, $95, $37, $87, $9C, $FF
+Room17:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $30, $14, $01
+    .byte $38, $14, $01
+    .byte $90, $14, $01
+    .byte $92, $04, $03
+    .byte $94, $04, $03
+    .byte $98, $14, $01
+    .byte $9B, $04, $03
+    .byte $C0, $14, $01
+    .byte $C8, $14, $01
+    .byte $FD
+    .byte $17, $87, $93 ; Zebbo
+    .byte $27, $07, $95 ; Zebbo
+    .byte $37, $87, $9C ; Zebbo
+    .byte $FF
 
-;Room #$17
-LA6A9:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA6AA:  .byte $00, $14, $01, $08, $14, $01, $30, $14, $01, $38, $14, $01, $52, $13, $01, $5A
-LA6BA:  .byte $13, $01, $61, $06, $01, $C0, $14, $01, $C3, $04, $03, $C8, $14, $01, $CB, $04
-LA6CA:  .byte $03, $FD
-;Room enemy/door data:
-LA6CC:  .byte $47, $87, $C4, $57, $87, $CC, $01, $80, $67, $FF
+Room18:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $30, $14, $01
+    .byte $38, $14, $01
+    .byte $52, $13, $01
+    .byte $5A, $13, $01
+    .byte $61, $06, $01
+    .byte $C0, $14, $01
+    .byte $C3, $04, $03
+    .byte $C8, $14, $01
+    .byte $CB, $04, $03
+    .byte $FD
+    .byte $47, $87, $C4 ; Zebbo
+    .byte $57, $87, $CC ; Zebbo
+    .byte $01, $80, $67 ; Holtz
+    .byte $FF
 
-;Room #$18
-LA6D6:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA6D7:  .byte $00, $14, $01, $08, $14, $01, $1C, $13, $01, $5F, $01, $02, $8C, $13, $01, $C0
-LA6E7:  .byte $14, $01, $CA, $14, $01, $D0, $00, $03, $D5, $00, $03, $FD
-;Room enemy/door data:
-LA6F3:  .byte $02, $A1, $11, $80, $33, $21, $00, $35, $31, $80, $37, $FF
+Room19:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $1C, $13, $01
+    .byte $5F, $01, $02
+    .byte $8C, $13, $01
+    .byte $C0, $14, $01
+    .byte $CA, $14, $01
+    .byte $D0, $00, $03
+    .byte $D5, $00, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $11, $80, $33 ; Holtz
+    .byte $21, $00, $35 ; Holtz
+    .byte $31, $80, $37 ; Holtz
+    .byte $FF
 
-;Room #$19
-LA6FF:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA700:  .byte $00, $14, $01, $08, $14, $01, $30, $14, $01, $38, $14, $01, $D0, $00, $03, $D2
-LA710:  .byte $13, $01, $D7, $13, $01, $D8, $04, $03, $DB, $00, $03, $DC, $13, $01, $FD
-;Room enemy/door data:
-LA71E:  .byte $41, $00, $64, $51, $80, $68, $01, $00, $6C, $17, $87, $D9, $FF
+Room1A:
+    .byte $00
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $30, $14, $01
+    .byte $38, $14, $01
+    .byte $D0, $00, $03
+    .byte $D2, $13, $01
+    .byte $D7, $13, $01
+    .byte $D8, $04, $03
+    .byte $DB, $00, $03
+    .byte $DC, $13, $01
+    .byte $FD
+    .byte $41, $00, $64 ; Holtz
+    .byte $51, $80, $68 ; Holtz
+    .byte $01, $00, $6C ; Holtz
+    .byte $17, $87, $D9 ; Zebbo
+    .byte $FF
 
-;Room #$1A
-LA72C:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA72D:  .byte $00, $14, $01, $08, $14, $01, $30, $13, $01, $34, $13, $01, $38, $13, $01, $3C
-LA73D:  .byte $13, $01, $40, $16, $01, $41, $15, $01, $44, $15, $01, $48, $15, $01, $4C, $15
-LA74D:  .byte $01, $4F, $16, $01, $90, $14, $01, $92, $04, $03, $98, $14, $01, $9B, $04, $03
-LA75D:  .byte $C0, $14, $01, $C8, $14, $01, $FD
-;Room enemy/door data:
-LA764:  .byte $27, $87, $93, $37, $87, $9C, $FF
+Room1B:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $30, $13, $01
+    .byte $34, $13, $01
+    .byte $38, $13, $01
+    .byte $3C, $13, $01
+    .byte $40, $16, $01
+    .byte $41, $15, $01
+    .byte $44, $15, $01
+    .byte $48, $15, $01
+    .byte $4C, $15, $01
+    .byte $4F, $16, $01
+    .byte $90, $14, $01
+    .byte $92, $04, $03
+    .byte $98, $14, $01
+    .byte $9B, $04, $03
+    .byte $C0, $14, $01
+    .byte $C8, $14, $01
+    .byte $FD
+    .byte $27, $87, $93 ; Zebbo
+    .byte $37, $87, $9C ; Zebbo
+    .byte $FF
 
-;Room #$1B
-LA76B:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA76C:  .byte $00, $18, $02, $08, $18, $02, $20, $18, $02, $28, $0A, $00, $50, $01, $02, $5F
-LA77C:  .byte $19, $00, $80, $17, $02, $8C, $19, $00, $C0, $18, $02, $CA, $18, $02, $D8, $00
-LA78C:  .byte $03, $FD
-;Room enemy/door data:
-LA78E:  .byte $02, $B1, $01, $8C, $39, $11, $0C, $3D, $21, $8C, $6B, $31, $0C, $66, $FF
+Room1C:
+    .byte $02
+    .byte $00, $18, $02
+    .byte $08, $18, $02
+    .byte $20, $18, $02
+    .byte $28, $0A, $00
+    .byte $50, $01, $02
+    .byte $5F, $19, $00
+    .byte $80, $17, $02
+    .byte $8C, $19, $00
+    .byte $C0, $18, $02
+    .byte $CA, $18, $02
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $01, $8C, $39 ; Multiviola
+    .byte $11, $0C, $3D ; Multiviola
+    .byte $21, $8C, $6B ; Multiviola
+    .byte $31, $0C, $66 ; Multiviola
+    .byte $FF
 
-;Room #$1C
-LA79D:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA79E:  .byte $00, $18, $02, $08, $18, $02, $28, $18, $02, $5F, $01, $02, $70, $19, $00, $8C
-LA7AE:  .byte $17, $02, $94, $19, $00, $B8, $17, $02, $BC, $17, $02, $C0, $18, $02, $D0, $00
-LA7BE:  .byte $03, $FD
-;Room enemy/door data:
-LA7C0:  .byte $02, $A1, $01, $8C, $33, $11, $0C, $36, $41, $8C, $92, $51, $0C, $A6, $FF
+Room1D:
+    .byte $02
+    .byte $00, $18, $02
+    .byte $08, $18, $02
+    .byte $28, $18, $02
+    .byte $5F, $01, $02
+    .byte $70, $19, $00
+    .byte $8C, $17, $02
+    .byte $94, $19, $00
+    .byte $B8, $17, $02
+    .byte $BC, $17, $02
+    .byte $C0, $18, $02
+    .byte $D0, $00, $03
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $01, $8C, $33 ; Multiviola
+    .byte $11, $0C, $36 ; Multiviola
+    .byte $41, $8C, $92 ; Multiviola
+    .byte $51, $0C, $A6 ; Multiviola
+    .byte $FF
 
-;Room #$1D
-LA7CF:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA7D0:  .byte $00, $18, $02, $08, $18, $02, $30, $0A, $00, $49, $19, $00, $55, $0A, $00, $5D
-LA7E0:  .byte $0A, $00, $A0, $18, $02, $A8, $18, $02, $D0, $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA7F1:  .byte $21, $8C, $38, $31, $0C, $97, $41, $8C, $99, $51, $0C, $9B, $FF
+Room1E:
+    .byte $00
+    .byte $00, $18, $02
+    .byte $08, $18, $02
+    .byte $30, $0A, $00
+    .byte $49, $19, $00
+    .byte $55, $0A, $00
+    .byte $5D, $0A, $00
+    .byte $A0, $18, $02
+    .byte $A8, $18, $02
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $21, $8C, $38 ; Multiviola
+    .byte $31, $0C, $97 ; Multiviola
+    .byte $41, $8C, $99 ; Multiviola
+    .byte $51, $0C, $9B ; Multiviola
+    .byte $FF
 
-;Room #$1E
-LA7FC:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA7FD:  .byte $00, $17, $02, $04, $17, $02, $08, $17, $02, $0C, $17, $02, $70, $17, $02, $74
-LA80D:  .byte $17, $02, $78, $17, $02, $7C, $17, $02, $D0, $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA81C:  .byte $01, $8C, $42, $11, $0C, $45, $21, $8C, $48, $FF
+Room1F:
+    .byte $02
+    .byte $00, $17, $02
+    .byte $04, $17, $02
+    .byte $08, $17, $02
+    .byte $0C, $17, $02
+    .byte $70, $17, $02
+    .byte $74, $17, $02
+    .byte $78, $17, $02
+    .byte $7C, $17, $02
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $01, $8C, $42 ; Multiviola
+    .byte $11, $0C, $45 ; Multiviola
+    .byte $21, $8C, $48 ; Multiviola
+    .byte $FF
 
-;Room #$1F
-LA826:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA827:  .byte $00, $0B, $00, $04, $18, $02, $0C, $0B, $00, $50, $01, $02, $80, $0B, $00, $C0
-LA837:  .byte $18, $02, $C8, $18, $02, $FD
-;Room enemy/door data:
-LA83D:  .byte $02, $B1, $21, $82, $5B, $31, $03, $85, $41, $83, $88, $FF
+Room20:
+    .byte $00
+    .byte $00, $0B, $00
+    .byte $04, $18, $02
+    .byte $0C, $0B, $00
+    .byte $50, $01, $02
+    .byte $80, $0B, $00
+    .byte $C0, $18, $02
+    .byte $C8, $18, $02
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $21, $82, $5B ; Dessgeega
+    .byte $31, $03, $85 ; Ceiling dessgeega
+    .byte $41, $83, $88 ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$20
-LA849:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA84A:  .byte $20, $18, $02, $28, $18, $02, $A0, $18, $02, $A8, $18, $02, $D0, $00, $03, $D8
-LA85A:  .byte $00, $03, $FD
-;Room enemy/door data:
-LA85D:  .byte $01, $82, $98, $11, $02, $9E, $41, $83, $53, $FF
+Room21:
+    .byte $02
+    .byte $20, $18, $02
+    .byte $28, $18, $02
+    .byte $A0, $18, $02
+    .byte $A8, $18, $02
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $01, $82, $98 ; Dessgeega
+    .byte $11, $02, $9E ; Dessgeega
+    .byte $41, $83, $53 ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$21
-LA867:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA868:  .byte $00, $0B, $00, $04, $18, $02, $0C, $0B, $00, $5F, $01, $02, $8C, $0B, $00, $C0
-LA878:  .byte $18, $02, $C8, $18, $02, $FD
-;Room enemy/door data:
-LA87E:  .byte $02, $A1, $11, $02, $57, $31, $83, $85, $41, $83, $88, $51, $03, $8A, $FF
+Room22:
+    .byte $00
+    .byte $00, $0B, $00
+    .byte $04, $18, $02
+    .byte $0C, $0B, $00
+    .byte $5F, $01, $02
+    .byte $8C, $0B, $00
+    .byte $C0, $18, $02
+    .byte $C8, $18, $02
+    .byte $FD
+    .byte $02, $A1 ; Blue door
+    .byte $11, $02, $57 ; Dessgeega
+    .byte $31, $83, $85 ; Ceiling dessgeega
+    .byte $41, $83, $88 ; Ceiling dessgeega
+    .byte $51, $03, $8A ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$22
-LA88D:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA88E:  .byte $00, $07, $03, $02, $12, $03, $0A, $12, $03, $50, $01, $02, $80, $07, $03, $82
-LA89E:  .byte $0B, $00, $8F, $0B, $00, $B0, $07, $03, $B9, $0B, $00, $D2, $00, $03, $DA, $00
-LA8AE:  .byte $03, $FD
-;Room enemy/door data:
-LA8B0:  .byte $02, $B1, $01, $80, $18, $11, $80, $1E, $21, $86, $AB, $31, $86, $7F, $FF
+Room23:
+    .byte $00
+    .byte $00, $07, $03
+    .byte $02, $12, $03
+    .byte $0A, $12, $03
+    .byte $50, $01, $02
+    .byte $80, $07, $03
+    .byte $82, $0B, $00
+    .byte $8F, $0B, $00
+    .byte $B0, $07, $03
+    .byte $B9, $0B, $00
+    .byte $D2, $00, $03
+    .byte $DA, $00, $03
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $01, $80, $18 ; Holtz
+    .byte $11, $80, $1E ; Holtz
+    .byte $21, $86, $AB ; Viola
+    .byte $31, $86, $7F ; Viola
+    .byte $FF
 
-;Room #$23
-LA8BF:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA8C0:  .byte $00, $12, $03, $08, $12, $03, $92, $04, $03, $94, $04, $03, $99, $0B, $00, $A2
-LA8D0:  .byte $0B, $00, $BF, $0B, $00, $D0, $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA8DC:  .byte $07, $87, $93, $11, $00, $1A, $21, $80, $1F, $47, $87, $95, $51, $86, $8B, $FF
+Room24:
+    .byte $01
+    .byte $00, $12, $03
+    .byte $08, $12, $03
+    .byte $92, $04, $03
+    .byte $94, $04, $03
+    .byte $99, $0B, $00
+    .byte $A2, $0B, $00
+    .byte $BF, $0B, $00
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $07, $87, $93 ; Zebbo
+    .byte $11, $00, $1A ; Holtz
+    .byte $21, $80, $1F ; Holtz
+    .byte $47, $87, $95 ; Zebbo
+    .byte $51, $86, $8B ; Viola
+    .byte $FF
 
-;Room #$24
-LA8EC:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA8ED:  .byte $00, $0B, $00, $04, $0E, $00, $08, $0E, $00, $0C, $0E, $00, $37, $0A, $00, $50
-LA8FD:  .byte $01, $02, $77, $0A, $00, $80, $17, $02, $8D, $1A, $01, $C0, $18, $02, $C4, $1B
-LA90D:  .byte $02, $C8, $18, $02, $D4, $1C, $02, $D8, $1C, $02, $DC, $1C, $02, $FD
-;Room enemy/door data:
-LA91B:  .byte $02, $B0, $01, $82, $27, $11, $82, $2B, $21, $83, $B5, $31, $83, $BA, $FF
+Room25:
+    .byte $02
+    .byte $00, $0B, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0C, $0E, $00
+    .byte $37, $0A, $00
+    .byte $50, $01, $02
+    .byte $77, $0A, $00
+    .byte $80, $17, $02
+    .byte $8D, $1A, $01
+    .byte $C0, $18, $02
+    .byte $C4, $1B, $02
+    .byte $C8, $18, $02
+    .byte $D4, $1C, $02
+    .byte $D8, $1C, $02
+    .byte $DC, $1C, $02
+    .byte $FD
+    .byte $02, $B0 ; Red door
+    .byte $01, $82, $27 ; Dessgeega
+    .byte $11, $82, $2B ; Dessgeega
+    .byte $21, $83, $B5 ; Ceiling dessgeega
+    .byte $31, $83, $BA ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$25
-LA92A:  .byte $02                       ;Attribute table data.
-;Room object data:
-LA92B:  .byte $00, $0E, $00, $04, $0E, $00, $08, $0E, $00, $0C, $0E, $00, $87, $1A, $01, $C0
-LA93B:  .byte $18, $02, $C8, $18, $02, $CF, $1B, $02, $D0, $1C, $02, $D4, $1C, $02, $D8, $1C
-LA94B:  .byte $02, $DC, $1C, $02, $FD
-;Room enemy/door data:
-LA950:  .byte $21, $82, $26, $31, $02, $2B, $41, $83, $B3, $51, $03, $BC, $FF
+Room26:
+    .byte $02
+    .byte $00, $0E, $00
+    .byte $04, $0E, $00
+    .byte $08, $0E, $00
+    .byte $0C, $0E, $00
+    .byte $87, $1A, $01
+    .byte $C0, $18, $02
+    .byte $C8, $18, $02
+    .byte $CF, $1B, $02
+    .byte $D0, $1C, $02
+    .byte $D4, $1C, $02
+    .byte $D8, $1C, $02
+    .byte $DC, $1C, $02
+    .byte $FD
+    .byte $21, $82, $26 ; Dessgeega
+    .byte $31, $02, $2B ; Dessgeega
+    .byte $41, $83, $B3 ; Ceiling dessgeega
+    .byte $51, $03, $BC ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$26
-LA95D:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA95E:  .byte $00, $14, $01, $08, $14, $01, $B2, $04, $03, $C0, $14, $01, $C9, $14, $01, $D0
-LA96E:  .byte $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA974:  .byte $07, $87, $B3, $11, $03, $29, $FF
+Room27:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $B2, $04, $03
+    .byte $C0, $14, $01
+    .byte $C9, $14, $01
+    .byte $D0, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $07, $87, $B3 ; Zebbo
+    .byte $11, $03, $29 ; Ceiling dessgeega
+    .byte $FF
 
-;Room #$27
-LA97B:  .byte $01                       ;Attribute table data.
-;Room object data:
-LA97C:  .byte $00, $14, $01, $08, $14, $01, $10, $0A, $00, $60, $0A, $00, $B0, $0A, $00, $B5
-LA98C:  .byte $04, $03, $C1, $14, $01, $CA, $14, $01, $D1, $00, $03, $D8, $00, $03, $FD
-;Room enemy/door data:
-LA99B:  .byte $27, $87, $B6, $11, $82, $B7, $11, $80, $27, $FF
+Room28:
+    .byte $01
+    .byte $00, $14, $01
+    .byte $08, $14, $01
+    .byte $10, $0A, $00
+    .byte $60, $0A, $00
+    .byte $B0, $0A, $00
+    .byte $B5, $04, $03
+    .byte $C1, $14, $01
+    .byte $CA, $14, $01
+    .byte $D1, $00, $03
+    .byte $D8, $00, $03
+    .byte $FD
+    .byte $27, $87, $B6 ; Zebbo
+    .byte $11, $82, $B7 ; Dessgeega
+    .byte $11, $80, $27 ; Holtz
+    .byte $FF
 
-;Room #$28
-LA9A5:  .byte $00                       ;Attribute table data.
-;Room object data:
-LA9A6:  .byte $00, $0B, $00, $0C, $0B, $00, $50, $01, $02, $5C, $0B, $00, $80, $0B, $00, $AF
-LA9B6:  .byte $0B, $00, $D0, $0B, $00, $FD
-;Room enemy/door data:
-LA9BC:  .byte $02, $B1, $FF
+Room29:
+    .byte $00
+    .byte $00, $0B, $00
+    .byte $0C, $0B, $00
+    .byte $50, $01, $02
+    .byte $5C, $0B, $00
+    .byte $80, $0B, $00
+    .byte $AF, $0B, $00
+    .byte $D0, $0B, $00
+    .byte $FD
+    .byte $02, $B1 ; Blue door
+    .byte $FF

@@ -19,9 +19,49 @@
 ;Norfair Room Pointer Table
 
 RmPtrTbl:
-    .word LA3AB, LA3BE, LA3C6, LA3F8, LA42F, LA473, LA4AB, LA4F5
-    .word LA527, LA55F, LA598, LA5D9, LA617, LA63E, LA678, LA6AA
-    .word LA6DF, LA70E, LA749, LA77E, LA7B3, LA7E6, LA82B, LA852
-    .word LA87F, LA8B2, LA8DC, LA909, LA947, LA979, LA9AB, LA9D5
-    .word LA9FF, LAA3D, LAA6F, LAAA7, LAAD4, LAB0D, LAB34, LAB70
-    .word LABA5, LABDA, LAC0D, LAC42, LAC72, LAC99
+    .word Room00
+    .word Room01
+    .word Room02
+    .word Room03
+    .word Room04
+    .word Room05
+    .word Room06
+    .word Room07
+    .word Room08
+    .word Room09
+    .word Room0A
+    .word Room0B
+    .word Room0C
+    .word Room0D
+    .word Room0E
+    .word Room0F
+    .word Room10
+    .word Room11
+    .word Room12
+    .word Room13
+    .word Room14
+    .word Room15
+    .word Room16
+    .word Room17
+    .word Room18
+    .word Room19
+    .word Room1A
+    .word Room1B
+    .word Room1C
+    .word Room1D
+    .word Room1E
+    .word Room1F
+    .word Room20
+    .word Room21
+    .word Room22
+    .word Room23
+    .word Room24
+    .word Room25
+    .word Room26
+    .word Room27
+    .word Room28
+    .word Room29
+    .word Room2A
+    .word Room2B
+    .word Room2C
+    .word Room2D

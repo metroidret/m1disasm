@@ -19,6 +19,24 @@
 ;Tourian Room Pointers
 
 RmPtrTbl:
-    .word LA8AF, LA8BD, LA8C5, LA8FA, LA929, LA95E, LA975, LA990
-    .word LA9AB, LA9CF, LA9F2, LAA33, LAA75, LAAAE, LAAE3, LAB12
-    .word LAB4A, LAB7C, LABA5, LABCE, LABEF
+    .word Room00
+    .word Room01
+    .word Room02
+    .word Room03
+    .word Room04
+    .word Room05
+    .word Room06
+    .word Room07
+    .word Room08
+    .word Room09
+    .word Room0A
+    .word Room0B
+    .word Room0C
+    .word Room0D
+    .word Room0E
+    .word Room0F
+    .word Room10
+    .word Room11
+    .word Room12
+    .word Room13
+    .word Room14

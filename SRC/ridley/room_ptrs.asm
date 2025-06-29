@@ -19,9 +19,45 @@
 ;Ridley Room Pointers
 
 RmPtrTbl:
-    .word LA23F, LA23F, LA247, LA273, LA29E, LA2B2, LA2E4, LA30F
-    .word LA34D, LA383, LA3B8, LA3F9, LA429, LA455, LA48C, LA4C3
-    .word LA4F6, LA525, LA555, LA5A1, LA5E5, LA618, LA653, LA67C
-    .word LA6A9, LA6D6, LA6FF, LA72C, LA76B, LA79D, LA7CF, LA7FC
-    .word LA826, LA849, LA867, LA88D, LA8BF, LA8EC, LA92A, LA95D
-    .word LA97B, LA9A5
+    .word Room00
+    .word Room01
+    .word Room02
+    .word Room03
+    .word Room04
+    .word Room05
+    .word Room06
+    .word Room07
+    .word Room08
+    .word Room09
+    .word Room0A
+    .word Room0B
+    .word Room0C
+    .word Room0D
+    .word Room0E
+    .word Room0F
+    .word Room10
+    .word Room11
+    .word Room12
+    .word Room13
+    .word Room14
+    .word Room15
+    .word Room16
+    .word Room17
+    .word Room18
+    .word Room19
+    .word Room1A
+    .word Room1B
+    .word Room1C
+    .word Room1D
+    .word Room1E
+    .word Room1F
+    .word Room20
+    .word Room21
+    .word Room22
+    .word Room23
+    .word Room24
+    .word Room25
+    .word Room26
+    .word Room27
+    .word Room28
+    .word Room29

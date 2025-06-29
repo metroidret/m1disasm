@@ -19,8 +19,40 @@
 ;Kraid Room Pointers
 
 RmPtrTbl:
-    .word LA2B7, LA2C5, LA2CD, LA308, LA345, LA388, LA3B8, LA401
-    .word LA442, LA47E, LA4AD, LA4E2, LA514, LA558, LA590, LA5BF
-    .word LA5E8, LA647, LA647, LA683, LA6B5, LA6D9, LA713, LA745
-    .word LA780, LA7B2, LA7F6, LA83F, LA8A3, LA8C7, LA923, LA94F
-    .word LA972, LA990, LA9BE, LA9FE, LAA33
+    .word Room00
+    .word Room01
+    .word Room02
+    .word Room03
+    .word Room04
+    .word Room05
+    .word Room06
+    .word Room07
+    .word Room08
+    .word Room09
+    .word Room0A
+    .word Room0B
+    .word Room0C
+    .word Room0D
+    .word Room0E
+    .word Room0F
+    .word Room10
+    .word Room11
+    .word Room12
+    .word Room13
+    .word Room14
+    .word Room15
+    .word Room16
+    .word Room17
+    .word Room18
+    .word Room19
+    .word Room1A
+    .word Room1B
+    .word Room1C
+    .word Room1D
+    .word Room1E
+    .word Room1F
+    .word Room20
+    .word Room21
+    .word Room22
+    .word Room23
+    .word Room24
