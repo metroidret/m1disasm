@@ -19,9 +19,50 @@
 ;Brinstar Room Pointers
 
 RmPtrTbl:
-    .word LA441, LA454, LA45C, LA480, LA4BB, LA4ED, LA524, LA55A
-    .word LA587, LA5B9, LA5DD, LA615, LA635, LA661, LA68D, LA6B1
-    .word LA6DB, LA715, LA73C, LA768, LA78B, LA7A3, LA7D0, LA7F1
-    .word LA81B, LA85B, LA88B, LA8B1, LA8E7, LA910, LA92B, LA96B
-    .word LA997, LA9C6, LA9F6, LAA20, LAA56, LAAA4, LAAE6, LAB19
-    .word LAB48, LAB71, LAB92, LABBF, LAC24, LAC4D, LAC6A
+    .word Room00
+    .word Room01
+    .word Room02
+    .word Room03
+    .word Room04
+    .word Room05
+    .word Room06
+    .word Room07
+    .word Room08
+    .word Room09
+    .word Room0A
+    .word Room0B
+    .word Room0C
+    .word Room0D
+    .word Room0E
+    .word Room0F
+    .word Room10
+    .word Room11
+    .word Room12
+    .word Room13
+    .word Room14
+    .word Room15
+    .word Room16
+    .word Room17
+    .word Room18
+    .word Room19
+    .word Room1A
+    .word Room1B
+    .word Room1C
+    .word Room1D
+    .word Room1E
+    .word Room1F
+    .word Room20
+    .word Room21
+    .word Room22
+    .word Room23
+    .word Room24
+    .word Room25
+    .word Room26
+    .word Room27
+    .word Room28
+    .word Room29
+    .word Room2A
+    .word Room2B
+    .word Room2C
+    .word Room2D
+    .word Room2E
