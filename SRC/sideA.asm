@@ -14,6 +14,8 @@
 .ENDRO
 
 
+.STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"
+
 .SECTION "Side A - Dummy" BANK 0 SLOT "DummySlot" ORGA $0000 FORCE
 
 ; disk info block
@@ -22,7 +24,13 @@
 
 ; file $00 - kyodaku-
     .byte $03, $00, $00, $4B, $59, $4F, $44, $41, $4B, $55, $2D, $00, $28, $E0, $00, $02, $04
-    .incbin "fdspacker_output/side_1/kyodaku-.nt"
+    .stringmap charmap_kyodaku, "           NINTENDO r           "
+    .stringmap charmap_kyodaku, "       FAMILY COMPUTER TM       "
+    .stringmap charmap_kyodaku, "                                "
+    .stringmap charmap_kyodaku, "  THIS PRODUCT IS MANUFACTURED  "
+    .stringmap charmap_kyodaku, "  AND SOLD BY NINTENDO CO;LTD.  "
+    .stringmap charmap_kyodaku, "  OR BY OTHER COMPANY UNDER     "
+    .stringmap charmap_kyodaku, "  LICENSE OF NINTENDO CO;LTD..  "
 
 ; file $01 - demo.chr
     .byte $03, $01, $00, $44, $45, $4D, $4F, $2E, $43, $48, $52, $00, $00, $A0, $1D, $01, $04
