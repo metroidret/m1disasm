@@ -1,13 +1,4 @@
-[header]
-SRC/header.bin
-
 [objects]
-out/prg0_title.o
-out/prg1_brinstar.o
-out/prg2_norfair.o
-out/prg3_tourian.o
-out/prg4_kraid.o
-out/prg5_ridley.o
-out/prg6_graphics.o
-out/prg7_engine.o
+out/sideA.o
+out/sideB.o
 

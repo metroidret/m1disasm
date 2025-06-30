@@ -13,14 +13,8 @@ if not os.path.exists('out/'):
     os.mkdir('out/')
 
 banks = [
-    "prg0_title",
-    "prg1_brinstar",
-    "prg2_norfair",
-    "prg3_tourian",
-    "prg4_kraid",
-    "prg5_ridley",
-    "prg6_graphics",
-    "prg7_engine",
+    "sideA",
+    "sideB",
 ]
 
 class BuildTarget:
@@ -29,14 +23,10 @@ class BuildTarget:
         self.filename = filename
 
 build_targets = {
-    "NES_NTSC": BuildTarget(
-        md5_hash_expected_hex="d7da4a907be0012abca6625471ef2c9c",
-        filename="out/M1_NES_NTSC.nes",
+    "FDS": BuildTarget(
+        md5_hash_expected_hex="e4e3ccc654d47043e6d996ad2c7ca01b",
+        filename="out/M1_FDS.fds",
     ),
-    "NES_PAL": BuildTarget(
-        md5_hash_expected_hex="442fcb92fce27cabdb7635bd35593d8a",
-        filename="out/M1_NES_PAL.nes",
-    )
 }
 
 for bt, bto in build_targets.items():

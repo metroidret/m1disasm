@@ -1,0 +1,426 @@
+{
+  "sides": [
+    {
+      "licensee_code": "Nintendo",
+      "game_name": "MET",
+      "game_type": " ",
+      "game_version": "2",
+      "disk_side": "A",
+      "disk_number": "0",
+      "disk_type": "FMS",
+      "unknown01": "$00",
+      "boot_file": "15",
+      "unknown02": "$FF",
+      "unknown03": "$FF",
+      "unknown04": "$FF",
+      "unknown05": "$FF",
+      "unknown06": "$FF",
+      "manufacturing_date": null,
+      "country_code": "$00",
+      "unknown07": "$00",
+      "unknown08": "$00",
+      "unknown09": "$00",
+      "unknown10": "$00",
+      "unknown11": "$00",
+      "unknown12": "$00",
+      "unknown13": "$00",
+      "unknown14": "$00",
+      "unknown15": "$00",
+      "rewritten_date": null,
+      "unknown16": "$00",
+      "unknown17": "$00",
+      "disk_writer_serial_number": "$0000",
+      "unknown18": "$00",
+      "disk_rewrite_count": "0",
+      "actual_disk_side": "A",
+      "disk_type_other": "YellowDisk",
+      "disk_version": "$00",
+      "file_amount": 15,
+      "files": [
+        {
+          "file_number": "0",
+          "file_indicate_code": "0",
+          "file_name": "KYODAKU-",
+          "file_address": "$2800",
+          "file_kind": "NameTable",
+          "data": "side_1/kyodaku-.nt"
+        },
+        {
+          "file_number": "1",
+          "file_indicate_code": "0",
+          "file_name": "DEMO.CHR",
+          "file_address": "$0000",
+          "file_kind": "Character",
+          "data": "side_1/demo.chr.chr"
+        },
+        {
+          "file_number": "2",
+          "file_indicate_code": "0",
+          "file_name": "MET.HEX",
+          "file_address": "$D000",
+          "file_kind": "Program",
+          "data": "side_1/met.hex.prg"
+        },
+        {
+          "file_number": "3",
+          "file_indicate_code": "0",
+          "file_name": "DEMO.PGM",
+          "file_address": "$6800",
+          "file_kind": "Program",
+          "data": "side_1/demo.pgm.prg"
+        },
+        {
+          "file_number": "4",
+          "file_indicate_code": "0",
+          "file_name": "DEMO.PG2",
+          "file_address": "$C5A0",
+          "file_kind": "Program",
+          "data": "side_1/demo.pg2.prg"
+        },
+        {
+          "file_number": "5",
+          "file_indicate_code": "0",
+          "file_name": "DEMO.VEC",
+          "file_address": "$DFFA",
+          "file_kind": "Program",
+          "data": "side_1/demo.vec.prg"
+        },
+        {
+          "file_number": "6",
+          "file_indicate_code": "32",
+          "file_name": "BMENST",
+          "file_address": "$C000",
+          "file_kind": "Program",
+          "data": "side_1/bmenst.prg"
+        },
+        {
+          "file_number": "7",
+          "file_indicate_code": "32",
+          "file_name": "MAIN.VEC",
+          "file_address": "$DFFA",
+          "file_kind": "Program",
+          "data": "side_1/main.vec.prg"
+        },
+        {
+          "file_number": "8",
+          "file_indicate_code": "32",
+          "file_name": "MAIN.PGM",
+          "file_address": "$6800",
+          "file_kind": "Program",
+          "data": "side_1/main.pgm.prg"
+        },
+        {
+          "file_number": "9",
+          "file_indicate_code": "238",
+          "file_name": "ENDOBJ",
+          "file_address": "$0000",
+          "file_kind": "Character",
+          "data": "side_1/endobj.chr"
+        },
+        {
+          "file_number": "10",
+          "file_indicate_code": "238",
+          "file_name": "ENDBG",
+          "file_address": "$1000",
+          "file_kind": "Character",
+          "data": "side_1/endbg.chr"
+        },
+        {
+          "file_number": "11",
+          "file_indicate_code": "238",
+          "file_name": "MMEEE",
+          "file_address": "$CC00",
+          "file_kind": "Program",
+          "data": "side_1/mmeee.prg"
+        },
+        {
+          "file_number": "12",
+          "file_indicate_code": "238",
+          "file_name": "ENDPGM",
+          "file_address": "$6000",
+          "file_kind": "Program",
+          "data": "side_1/endpgm.prg"
+        },
+        {
+          "file_number": "13",
+          "file_indicate_code": "238",
+          "file_name": "ENDVEC",
+          "file_address": "$DFFA",
+          "file_kind": "Program",
+          "data": "side_1/endvec.prg"
+        },
+        {
+          "file_number": "14",
+          "file_indicate_code": "14",
+          "file_name": "\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001",
+          "file_address": "$C5A0",
+          "file_kind": "Program",
+          "data": "side_1/\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001.prg"
+        }
+      ]
+    },
+    {
+      "licensee_code": "Nintendo",
+      "game_name": "MET",
+      "game_type": " ",
+      "game_version": "2",
+      "disk_side": "B",
+      "disk_number": "0",
+      "disk_type": "FMS",
+      "unknown01": "$00",
+      "boot_file": "15",
+      "unknown02": "$FF",
+      "unknown03": "$FF",
+      "unknown04": "$FF",
+      "unknown05": "$FF",
+      "unknown06": "$FF",
+      "manufacturing_date": null,
+      "country_code": "$4F",
+      "unknown07": "$4E",
+      "unknown08": "$20",
+      "unknown09": "$62",
+      "unknown10": "$79",
+      "unknown11": "$20",
+      "unknown12": "$68",
+      "unknown13": "$61",
+      "unknown14": "$6C",
+      "unknown15": "$39",
+      "rewritten_date": null,
+      "unknown16": "$00",
+      "unknown17": "$00",
+      "disk_writer_serial_number": "$0000",
+      "unknown18": "$00",
+      "disk_rewrite_count": "0",
+      "actual_disk_side": "A",
+      "disk_type_other": "YellowDisk",
+      "disk_version": "$00",
+      "file_amount": 28,
+      "files": [
+        {
+          "file_number": "0",
+          "file_indicate_code": "129",
+          "file_name": "HMBG1A",
+          "file_address": "$1000",
+          "file_kind": "Character",
+          "data": "side_2/hmbg1a.chr"
+        },
+        {
+          "file_number": "1",
+          "file_indicate_code": "144",
+          "file_name": "HMBG1B",
+          "file_address": "$1200",
+          "file_kind": "Character",
+          "data": "side_2/hmbg1b.chr"
+        },
+        {
+          "file_number": "2",
+          "file_indicate_code": "145",
+          "file_name": "HMBG1C",
+          "file_address": "$1800",
+          "file_kind": "Character",
+          "data": "side_2/hmbg1c.chr"
+        },
+        {
+          "file_number": "3",
+          "file_indicate_code": "129",
+          "file_name": "HMOB1B",
+          "file_address": "$0C00",
+          "file_kind": "Character",
+          "data": "side_2/hmob1b.chr"
+        },
+        {
+          "file_number": "4",
+          "file_indicate_code": "132",
+          "file_name": "HMBG4A",
+          "file_address": "$1000",
+          "file_kind": "Character",
+          "data": "side_2/hmbg4a.chr"
+        },
+        {
+          "file_number": "5",
+          "file_indicate_code": "132",
+          "file_name": "HMBG4B",
+          "file_address": "$1700",
+          "file_kind": "Character",
+          "data": "side_2/hmbg4b.chr"
+        },
+        {
+          "file_number": "6",
+          "file_indicate_code": "132",
+          "file_name": "HMOB4A",
+          "file_address": "$0C00",
+          "file_kind": "Character",
+          "data": "side_2/hmob4a.chr"
+        },
+        {
+          "file_number": "7",
+          "file_indicate_code": "146",
+          "file_name": "HMBG6C",
+          "file_address": "$1000",
+          "file_kind": "Character",
+          "data": "side_2/hmbg6c.chr"
+        },
+        {
+          "file_number": "8",
+          "file_indicate_code": "133",
+          "file_name": "HMBG5B",
+          "file_address": "$1200",
+          "file_kind": "Character",
+          "data": "side_2/hmbg5b.chr"
+        },
+        {
+          "file_number": "9",
+          "file_indicate_code": "133",
+          "file_name": "HMBG5C",
+          "file_address": "$1900",
+          "file_kind": "Character",
+          "data": "side_2/hmbg5c.chr"
+        },
+        {
+          "file_number": "10",
+          "file_indicate_code": "133",
+          "file_name": "HMBG5D",
+          "file_address": "$1D00",
+          "file_kind": "Character",
+          "data": "side_2/hmbg5d.chr"
+        },
+        {
+          "file_number": "11",
+          "file_indicate_code": "133",
+          "file_name": "HMOB5A",
+          "file_address": "$0C00",
+          "file_kind": "Character",
+          "data": "side_2/hmob5a.chr"
+        },
+        {
+          "file_number": "12",
+          "file_indicate_code": "134",
+          "file_name": "HMBG6A",
+          "file_address": "$1700",
+          "file_kind": "Character",
+          "data": "side_2/hmbg6a.chr"
+        },
+        {
+          "file_number": "13",
+          "file_indicate_code": "134",
+          "file_name": "HMBG6B",
+          "file_address": "$1E00",
+          "file_kind": "Character",
+          "data": "side_2/hmbg6b.chr"
+        },
+        {
+          "file_number": "14",
+          "file_indicate_code": "134",
+          "file_name": "HMOB6A",
+          "file_address": "$0C00",
+          "file_kind": "Character",
+          "data": "side_2/hmob6a.chr"
+        },
+        {
+          "file_number": "15",
+          "file_indicate_code": "135",
+          "file_name": "HMBG7A",
+          "file_address": "$1700",
+          "file_kind": "Character",
+          "data": "side_2/hmbg7a.chr"
+        },
+        {
+          "file_number": "16",
+          "file_indicate_code": "135",
+          "file_name": "HMOB7A",
+          "file_address": "$0C00",
+          "file_kind": "Character",
+          "data": "side_2/hmob7a.chr"
+        },
+        {
+          "file_number": "17",
+          "file_indicate_code": "16",
+          "file_name": "MMROCK",
+          "file_address": "$DEA0",
+          "file_kind": "Program",
+          "data": "side_2/mmrock.prg"
+        },
+        {
+          "file_number": "18",
+          "file_indicate_code": "17",
+          "file_name": "MMFIRE",
+          "file_address": "$DEA0",
+          "file_kind": "Program",
+          "data": "side_2/mmfire.prg"
+        },
+        {
+          "file_number": "19",
+          "file_indicate_code": "19",
+          "file_name": "MMKITI",
+          "file_address": "$DEA0",
+          "file_kind": "Program",
+          "data": "side_2/mmkiti.prg"
+        },
+        {
+          "file_number": "20",
+          "file_indicate_code": "31",
+          "file_name": "MMKBOS",
+          "file_address": "$DEA0",
+          "file_kind": "Program",
+          "data": "side_2/mmkbos.prg"
+        },
+        {
+          "file_number": "21",
+          "file_indicate_code": "16",
+          "file_name": "STG1PGM",
+          "file_address": "$B560",
+          "file_kind": "Program",
+          "data": "side_2/stg1pgm.prg"
+        },
+        {
+          "file_number": "22",
+          "file_indicate_code": "17",
+          "file_name": "STG4PGM",
+          "file_address": "$B560",
+          "file_kind": "Program",
+          "data": "side_2/stg4pgm.prg"
+        },
+        {
+          "file_number": "23",
+          "file_indicate_code": "19",
+          "file_name": "STG5PGM",
+          "file_address": "$B560",
+          "file_kind": "Program",
+          "data": "side_2/stg5pgm.prg"
+        },
+        {
+          "file_number": "24",
+          "file_indicate_code": "18",
+          "file_name": "STG6PGM",
+          "file_address": "$B560",
+          "file_kind": "Program",
+          "data": "side_2/stg6pgm.prg"
+        },
+        {
+          "file_number": "25",
+          "file_indicate_code": "20",
+          "file_name": "STG7PGM",
+          "file_address": "$B560",
+          "file_kind": "Program",
+          "data": "side_2/stg7pgm.prg"
+        },
+        {
+          "file_number": "26",
+          "file_indicate_code": "239",
+          "file_name": "MENSAVE2",
+          "file_address": "$C3F0",
+          "file_kind": "Program",
+          "data": "side_2/mensave2.prg"
+        },
+        {
+          "file_number": "27",
+          "file_indicate_code": "239",
+          "file_name": "\u0002\u0002\u0002\u0002\u0002\u0002\u0002\u0002",
+          "file_address": "$C000",
+          "file_kind": "Program",
+          "data": "side_2/\u0002\u0002\u0002\u0002\u0002\u0002\u0002\u0002.prg"
+        }
+      ]
+    }
+  ]
+}

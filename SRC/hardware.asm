@@ -129,5 +129,24 @@ MMC1Reg3               = $E000
 
 ;----------------------------------------------------------------------------------------------------
 
+;FDS BIOS routines
+
+FDSBIOS_LoadFiles = $E1F8
+FDSBIOS_AppendFile = $E237
+FDSBIOS_WriteFile = $E239
+FDSBIOS_CheckFileCount = $E2B7
+FDSBIOS_AdjustFileCount = $E2BB
+FDSBIOS_SetFileCount1 = $E301
+FDSBIOS_SetFileCount = $E305
+FDSBIOS_GetDiskInfo = $E32A
+
+FDSBIOS_CheckDiskHeader = $E445
+FDSBIOS_GetNumFiles = $E484
+FDSBIOS_SetNumFiles = $E492
+FDSBIOS_FileMatchTest = $E4A0
+FDSBIOS_SkipFiles = $E4DA
+
+;----------------------------------------------------------------------------------------------------
+
 SCRN_VX                = 256
 SCRN_VY                = 240
