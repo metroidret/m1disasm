@@ -208,9 +208,9 @@ Room08:
     .byte $CD, $18, $01
     .byte $FD
     .byte $02, $A1 ; Blue door
-    .byte $41, $02, $8B ; Ripper
+    .byte $41, $02, $8B ; Ripper II
     .byte $51, $06, $76 ; Nova
-    .byte $21, $82, $A3 ; Ripper
+    .byte $21, $82, $A3 ; Ripper II
     .byte $FF
 
 Room09:
@@ -232,7 +232,7 @@ Room09:
     .byte $D4, $06, $03
     .byte $FD
     .byte $01, $86, $25 ; Nova
-    .byte $11, $82, $C5 ; Ripper
+    .byte $11, $82, $C5 ; Ripper II
     .byte $41, $06, $79 ; Nova
     .byte $FF
 
@@ -258,7 +258,7 @@ Room0A:
     .byte $E5, $0B, $03
     .byte $FD
     .byte $02, $A1 ; Blue door
-    .byte $31, $02, $36 ; Ripper
+    .byte $31, $02, $36 ; Ripper II
     .byte $41, $86, $48 ; Nova
     .byte $FF
 
@@ -284,7 +284,7 @@ Room0B:
     .byte $FD
     .byte $02, $B1 ; Blue door
     .byte $41, $06, $2B ; Nova
-    .byte $51, $02, $1A ; Ripper
+    .byte $51, $02, $1A ; Ripper II
     .byte $FF
 
 Room0C:
@@ -300,8 +300,8 @@ Room0C:
     .byte $AE, $07, $03
     .byte $CD, $18, $01
     .byte $FD
-    .byte $01, $02, $33 ; Ripper
-    .byte $31, $82, $88 ; Ripper
+    .byte $01, $02, $33 ; Ripper II
+    .byte $31, $82, $88 ; Ripper II
     .byte $FF
 
 Room0D:
@@ -345,8 +345,8 @@ Room0E:
     .byte $FD
     .byte $02, $B1 ; Blue door
     .byte $11, $86, $A6 ; Nova
-    .byte $31, $02, $EA ; Ripper
-    .byte $21, $02, $39 ; Ripper
+    .byte $31, $02, $EA ; Ripper II
+    .byte $21, $02, $39 ; Ripper II
     .byte $FF
 
 Room0F:
@@ -701,7 +701,7 @@ Room1F:
     .byte $D8, $00, $02
     .byte $FD
     .byte $41, $0E, $A7 ; Polyp
-    .byte $11, $02, $99 ; Ripper
+    .byte $11, $02, $99 ; Ripper II
     .byte $FF
 
 Room20:

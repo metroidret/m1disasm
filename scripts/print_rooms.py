@@ -30,7 +30,7 @@ enemy_names = {
     'norfair': [
         'Geruta',
         'Geruta?',
-        'Ripper',
+        'Ripper II',
         'Null',
         'Null',
         'Null',

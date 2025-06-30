@@ -140,7 +140,7 @@ ChooseEnemyAIRoutine:
     jsr CommonJump_ChooseRoutine
         .word SwooperAIRoutine ; 00 - swooper
         .word SwooperAIRoutine2 ; 01 - becomes swooper?
-        .word RipperAIRoutine ; 02 - ripper
+        .word RipperAIRoutine ; 02 - ripper II
         .word InvalidEnemy ; 03 - disappears
         .word InvalidEnemy ; 04 - same as 3
         .word InvalidEnemy ; 05 - same as 3
@@ -365,7 +365,7 @@ EnemyMovement01_R:
 EnemyMovement01_L:
     ; nothing
 
-; ripper
+; ripper II
 EnemyMovement02_R:
     SignMagSpeed $01,  3,  0
     EnemyMovementInstr_Restart
