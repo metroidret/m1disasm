@@ -4016,7 +4016,7 @@ ToggleObjHi:
 RTS_X081:
     rts
 
-; Blast tile ids are #$70-$9F in Brinstar and #$80-$9F in other areas
+; Blast tile ids are #$80-$9F in Brinstar and #$70-$9F in other areas
 CheckBlastTile:
     ldy InArea
     cpy #$10
