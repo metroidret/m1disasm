@@ -3765,7 +3765,7 @@ DoOneProjectile:
         .word UpdateBullet          ; regular beam
         .word UpdateWaveBullet      ; wave beam
         .word UpdateIceBullet       ; ice beam
-        .word BulletExplode         ; bullet/missile explode
+        .word UpdateBulletExplode   ; bullet/missile explode
         .word BombInit              ; lay bomb
         .word BombCountdown         ; lay bomb
         .word BombExplode           ; lay bomb
@@ -3777,12 +3777,12 @@ DoOneProjectile:
 UpdateBullet:
     lda #$01
     sta UpdatingProjectile
-    jsr UpdateBullet_D5FC
-    jsr UpdateBullet_D5DA
+    jsr UpdateBullet_DeleteIfOffScreen
+    jsr UpdateBullet_ExplodeIfHitSprite
     jsr UpdateBullet_CollisionWithBG
 CheckBulletStat:
     ldx PageIndex
-    bcc Lx068
+    bcc @collided
         lda SamusGear
         and #gr_LONGBEAM
         bne DrawBullet  ; branch if Samus has Long Beam
@@ -3791,10 +3791,10 @@ CheckBulletStat:
         lda #$00        ; timer hit 0, kill bullet
         sta ProjectileStatus,x
         beq DrawBullet  ; branch always
-    Lx068:
+    @collided:
     lda ProjectileStatus,x
     beq Lx069
-        jsr LD5E4
+        jsr BulletExplode
 DrawBullet:
         lda #$01
         jsr AnimDrawObject
@@ -3813,8 +3813,8 @@ LD522:
 UpdateWaveBullet:
     lda #$01
     sta UpdatingProjectile
-    jsr UpdateBullet_D5FC
-    jsr UpdateBullet_D5DA
+    jsr UpdateBullet_DeleteIfOffScreen
+    jsr UpdateBullet_ExplodeIfHitSprite
     ; get movement string depending on wave bullet direction
     lda ProjectileWaveDir,x
     and #$FE
@@ -3872,7 +3872,8 @@ Lx071:
     
     jsr UpdateBullet_CollisionWithBG
     bcs Lx074
-        jsr LD624
+        ; move bullet even if collided
+        jsr UpdateBullet_Move
     Lx074:
     jmp CheckBulletStat
 
@@ -3923,11 +3924,11 @@ UpdateIceBullet:
     sta ObjectCntrl
     jmp UpdateBullet
 
-; BulletExplode
+; UpdateBulletExplode
 ; =============
 ; bullet/missile explode
 
-BulletExplode:
+UpdateBulletExplode:
     lda #$01
     sta UpdatingProjectile
     lda ObjAnimFrame,x
@@ -3938,13 +3939,13 @@ BulletExplode:
 Lx075:
     jmp DrawBullet
 
-UpdateBullet_D5DA:
+UpdateBullet_ExplodeIfHitSprite:
     lda SamusIsHit,x
     beq Exit5
     lda #$00
     sta SamusIsHit,x
-LD5E4:
-    lda #$1D
+BulletExplode:
+    lda #ObjAnim_1D - ObjectAnimIndexTbl.b
     ldy ObjAction,x
     cpy #wa_BulletExplode
     beq Exit5
@@ -3959,7 +3960,7 @@ Lx077:
 Exit5:
     rts
 
-UpdateBullet_D5FC:
+UpdateBullet_DeleteIfOffScreen:
     lda ObjOnScreen,x
     lsr
     bcs Exit5
@@ -3971,24 +3972,25 @@ GotoProjectileHitDoor:
     jmp ProjectileHitDoor
 
 ; bullet <--> background crash detection
+; return carry clear if collided, set otherwise
 UpdateBullet_CollisionWithBG:
     jsr GetObjCoords
     ; get tile id that bullet touches
     ldy #$00
     lda (Temp04_CartRAMPtr),y
-    ; branch if tile id < #$A0 (solid tiles)
+    ; branch if tile id >= #$A0 (air tiles)
     cmp #$A0
-    bcs LD624
-    ; tile is air
+    bcs UpdateBullet_Move
+    ; tile is solid
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     cmp #$4E
     beq GotoProjectileHitDoor
-    jsr LD651
+    jsr CheckBlastTile
     bcc RTS_X081
     clc
     jmp IsBlastTile
 
-LD624:
+UpdateBullet_Move:
     ldx PageIndex
     lda ObjSpeedX,x
     sta Temp05_SpeedX
@@ -3996,6 +3998,7 @@ LD624:
     sta Temp04_SpeedY
     jsr StoreObjectPositionToTemp
     jsr ApplySpeedToPosition
+    ; delete bullet if out of bounds
     bcc Lx078
 LD638:
     lda Temp08_PositionY
@@ -4013,7 +4016,8 @@ ToggleObjHi:
 RTS_X081:
     rts
 
-LD651:
+; Blast tile ids are #$70-$9F in Brinstar and #$80-$9F in other areas
+CheckBlastTile:
     ldy InArea
     cpy #$10
     beq @Brinstar
@@ -4180,7 +4184,7 @@ LD76A:
     pha
     ldy #$00
     lda (Temp04_CartRAMPtr),y
-    jsr LD651
+    jsr CheckBlastTile
     bcc Lx097
         cmp #$A0
         bcs Lx097
@@ -7103,7 +7107,7 @@ LE7E6:
     cmp #$4E
     beq ProjectileHitDoor
     jsr GotoUpdateBullet_CollisionWithMotherBrain
-    jsr LD651
+    jsr CheckBlastTile
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
     cmp #$A0        ; is tile >= A0h? (walkable tile)
     bcs IsWalkableTile
@@ -7159,13 +7163,13 @@ ProjectileHitDoor:
         bcs @blueDoor
             ldx PageIndex
             lda ObjAction,x
-            eor #wa_Missile
+            eor #wa_Missile         ; eor to preserve carry clear?
             beq @hitByMissile
                 lda ObjAction,x
                 eor #wa_BulletExplode
                 bne GotoSFX_Metal
                 lda ObjAnimResetIndex,x
-                eor #$91
+                eor #ObjAnim_MissileExplode - ObjectAnimIndexTbl.b
                 bne GotoSFX_Metal
             @hitByMissile:
             lda TriSFXFlag
@@ -8844,7 +8848,7 @@ DistFromObj0ToObj1:
 
 DistFromObj0ToEn1:
     lda ObjRadY,x
-    jsr LF1E7
+    jsr AddEnemy1YRadius
     lda ObjRadX,x
     jmp AddEnemy1XRadius
 
@@ -8877,7 +8881,7 @@ AddObject1YRadius:
     sta Temp04_ObjEn1RadY
     rts
 
-LF1E7:
+AddEnemy1YRadius:
     clc
     adc EnRadY,y
     sta Temp04_ObjEn1RadY
