@@ -6583,30 +6583,33 @@ MoveSamusDown:
 RTS_X163:
     rts
 
-; Attempt to scroll UP
+; Attempt to scroll UP, return carry clear if success, carry set if failure
 ScrollUp:
     lda ScrollDir
-    beq Lx164
+    beq @currentlyScrollingUp
+        ; can't scroll vertically while scrolling horizontally
         cmp #$01
-        bne Lx167
-        dec ScrollDir
+        bne @cantScroll
+        ; currently scrolling down
+        dec ScrollDir       ; ScrollDir = up
         lda ScrollY
-        beq Lx164
+        beq @currentlyScrollingUp
         dec SamusMapPosY
-    Lx164:
+    @currentlyScrollingUp:
     ldx ScrollY
-    bne Lx165
+    bne @noNewRoom
+        ; new room is above
         dec SamusMapPosY    ; decrement MapY
         jsr GetRoomNum      ; put room # at current map pos in $5A
-        bcs Lx166           ; if function returns CF = 1, moving up is not possible
-        jsr LE9B7           ; switch to the opposite Name Table
+        bcs @atTopBound     ; if function returns CF = 1, moving up is not possible
+        jsr ToggleNameTable ; switch to the opposite Name Table
         ldx #SCRN_VY        ; new Y coord
-    Lx165:
+    @noNewRoom:
     dex
-    jmp LE53F
-Lx166:
+    jmp ScrollVertically_Merge
+@atTopBound:
     inc SamusMapPosY
-Lx167:
+@cantScroll:
     sec
     rts
 
@@ -6614,49 +6617,54 @@ Lx167:
 ScrollDown:
     ldx ScrollDir
     dex
-    beq Lx168
-        bpl Lx172
-        inc ScrollDir
+    beq @currentlyScrollingDown
+        ; can't scroll vertically while scrolling horizontally
+        bpl ScrollDown_cantScroll
+        ; currently scrolling up
+        inc ScrollDir       ; ScrollDir = down
         lda ScrollY
-        beq Lx168
+        beq @currentlyScrollingDown
         inc SamusMapPosY
-    Lx168:
+    @currentlyScrollingDown:
     lda ScrollY
-    bne Lx169
-        inc SamusMapPosY    ; increment MapY
-        jsr GetRoomNum      ; put room # at current map pos in $5A
-        bcs Lx171           ; if function returns CF = 1, moving down is not possible
-    Lx169:
+    bne @noNewRoom
+        inc SamusMapPosY                ; increment MapY
+        jsr GetRoomNum                  ; put room # at current map pos in $5A
+        bcs ScrollDown_atBottomBound    ; if function returns CF = 1, moving down is not possible
+    @noNewRoom:
+    ; ScrollY = (ScrollY + 1) % 0xF0
     ldx ScrollY
     cpx #SCRN_VY-1.b
-    bne Lx170
-        jsr LE9B7       ; switch to the opposite Name Table
+    bne @noNameTableSwitch
+        jsr ToggleNameTable ; switch to the opposite Name Table
         ldx #$FF
-    Lx170:
+    @noNameTableSwitch:
     inx
-LE53F:
+ScrollVertically_Merge:
     stx ScrollY
-    jsr LE54A       ; check if it's time to update Name Table
+    jsr CheckUpdateNameTable    ; check if it's time to update Name Table
     clc
     rts
-Lx171:
+ScrollDown_atBottomBound:
     dec SamusMapPosY
-Lx172:
+ScrollDown_cantScroll:
     sec
 RTS_X173:
     rts
 
-LE54A:
+CheckUpdateNameTable:
     jsr SetupRoom
+    ; return if new room loaded
     ldx RoomNumber
     inx
     bne RTS_X173
+
     lda ScrollDir
     and #$02
-    bne Lx174
-        jmp LE571
-    Lx174:
-    jmp LE701
+    bne @horizontal
+        jmp CheckUpdateNameTableVertical
+    @horizontal:
+    jmp CheckUpdateNameTableHorizontal
 
 Table11:
     .byte $07
@@ -6684,7 +6692,7 @@ GetNameAddrs:
 
 ; check if it's time to update nametable (when scrolling is VERTICAL)
 
-LE571:
+CheckUpdateNameTableVertical:
     ldx ScrollDir
     lda ScrollY
     and #$07        ; compare value = 0 if ScrollDir = down, else 7
@@ -6692,9 +6700,11 @@ LE571:
     bne RTS_X173     ; exit if not equal (no nametable update)
 
 LE57C:
-    ldx ScrollDir                   ;
-    cpx TempScrollDir               ;Still scrolling same direction when room was loaded?-->
-    bne RTS_X173                          ;If not, branch to exit.
+    ; Avoid redundant name table updates by checking if ScrollDir = TempScrollDir.
+    ldx ScrollDir
+    cpx TempScrollDir
+    bne RTS_X173
+    ; $01.00 = (ScrollY & 0xF8) << 2 = tile index
     lda ScrollY
     and #$F8        ; keep upper 5 bits
     sta $00
@@ -6704,11 +6714,13 @@ LE57C:
     asl $00
     rol
 
-LE590:
-    sta $01  ; $0001 = (ScrollY & 0xF8) << 2 = row offset
+UpdateNameTable:
+    sta $01
+    ; $03.02 = $01.00 + PPU nametable addr = pointer to PPU nametable tile
     jsr GetNameAddrs
     ora $01
     sta $03
+    ; $01.00 += cart RAM nametable addr = pointer to cart RAM nametable tile
     txa
     ora $01
     sta $01
@@ -6718,30 +6730,33 @@ LE590:
     lsr             ; A = 0 if vertical scrolling, 1 if horizontal
     tax
     lda Table01,x
-    sta $04
+    sta $04         ; $04 = control
     ldy #$01
     sty PPUDataPending      ; data pending = YES
     dey
     ldx PPUStrIndex
+    ; PPU starting address = $03.02
     lda $03
     jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
     lda $02
     jsr WritePPUByte
+    ; Control byte = $04
     lda $04
     jsr SeparateControlBits         ;($C3C6)
-    Lx175:
+    @loop_data:
         lda ($00),y
         jsr WritePPUByte
-        sty $06
+        sty $06         ; backup Y to $06
         ldy #$01        ; WRAM pointer increment = 1...
         bit $04  ; ... if bit 7 (PPU inc) of $04 clear
-        bpl Lx176
+        bpl @inc1
             ldy #$20        ; else ptr inc = 32
-        Lx176:
+        @inc1:
         jsr AddYToPtr00                 ;($C2A8)
-        ldy $06
-        dec $05
-    bne Lx175
+        ldy $06         ; restore Y from $06
+        dec $05         ; decrement number of bytes of data remaining if branch if there's any left
+    bne @loop_data
+    ; End PPU string.
     stx PPUStrIndex
     jsr EndPPUString
 
@@ -6877,28 +6892,30 @@ Lx186:
 ScrollLeft:
     lda ScrollDir
     cmp #$02
-    beq Lx187
+    beq @currentlyScrollingLeft
+        ; can't scroll horizontally while scrolling vertically
         cmp #$03
-        bne Lx190
-        dec ScrollDir
+        bne @cantScroll
+        ; currently scrolling right
+        dec ScrollDir       ; ScrollDir = left
         lda ScrollX
-        beq Lx187
+        beq @currentlyScrollingLeft
         dec SamusMapPosX
-    Lx187:
+    @currentlyScrollingLeft:
     lda ScrollX
-    bne Lx188
+    bne @noNewRoom
         dec SamusMapPosX    ; decrement MapX
         jsr GetRoomNum      ; put room # at current map pos in $5A
-        bcs Lx189           ; if function returns CF=1, scrolling left is not possible
-        jsr LE9B7           ; switch to the opposite Name Table
-    Lx188:
+        bcs @atLeftBound    ; if function returns CF=1, scrolling left is not possible
+        jsr ToggleNameTable ; switch to the opposite Name Table
+    @noNewRoom:
     dec ScrollX
-    jsr LE54A       ; check if it's time to update Name Table
+    jsr CheckUpdateNameTable    ; check if it's time to update Name Table
     clc
     rts
-Lx189:
+@atLeftBound:
     inc SamusMapPosX
-Lx190:
+@cantScroll:
     sec
     rts
 
@@ -6907,30 +6924,31 @@ Lx190:
 ScrollRight:
     lda ScrollDir
     cmp #$03
-    beq Lx191
+    beq @currentlyScrollingRight
+        ; can't scroll horizontally while scrolling vertically
         cmp #$02
-        bne Lx195
+        bne @cantScroll
         inc ScrollDir
         lda ScrollX
-        beq Lx191
+        beq @currentlyScrollingRight
         inc SamusMapPosX
-    Lx191:
+    @currentlyScrollingRight:
     lda ScrollX
-    bne Lx192
+    bne @noNewRoom
         inc SamusMapPosX
-        jsr GetRoomNum  ; put room # at current map pos in $5A
-        bcs Lx194       ; if function returns CF=1, scrolling right is not possible
-    Lx192:
+        jsr GetRoomNum      ; put room # at current map pos in $5A
+        bcs @atRightBound   ; if function returns CF=1, scrolling right is not possible
+    @noNewRoom:
     inc ScrollX
-    bne Lx193
-        jsr LE9B7       ; switch to the opposite Name Table
-    Lx193:
-    jsr LE54A       ; check if it's time to update Name Table
+    bne @noNameTableSwitch
+        jsr ToggleNameTable ; switch to the opposite Name Table
+    @noNameTableSwitch:
+    jsr CheckUpdateNameTable    ; check if it's time to update Name Table
     clc
     rts
-Lx194:
+@atRightBound:
     dec SamusMapPosX
-Lx195:
+@cantScroll:
     sec
 RTS_X196:
     rts
@@ -6940,7 +6958,7 @@ Table02:
 
 ; check if it's time to update nametable (when scrolling is HORIZONTAL)
 
-LE701:
+CheckUpdateNameTableHorizontal:
     ldx ScrollDir
     lda ScrollX
     and #$07        ; keep lower 3 bits
@@ -6948,15 +6966,17 @@ LE701:
     bne RTS_X196      ; exit if not equal (no nametable update)
 
 LE70C:
+    ; Avoid redundant name table updates by checking if ScrollDir = TempScrollDir.
     ldx ScrollDir
     cpx TempScrollDir
     bne RTS_X196
+    ; $01.00 = (ScrollX & 0xF8) / 8 = tile index
     lda ScrollX
-    and #$F8        ; keep upper five bits
+    and #$F8        ; keep upper five bits (redundant)
     jsr Adiv8       ; / 8 (make 'em lower five)
     sta $00
     lda #$00
-    jmp LE590
+    jmp UpdateNameTable
 
 ;---------------------------------------[ Get room number ]-------------------------------------------
 
@@ -7428,7 +7448,7 @@ Lx217:
 RTS_X218:
     rts
 
-LE9B7:
+ToggleNameTable:
     lda PPUCTRL_ZP
     eor #$03
     sta PPUCTRL_ZP
