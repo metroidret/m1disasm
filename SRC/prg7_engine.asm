@@ -2677,7 +2677,7 @@ CheckHealthStatus: ;($CDFA)
     and #$20
     ;If not, branch to check if still blinking from recent hit.
     beq Lx006
-        ;Samus has been hit. Set blink for 32 frames.
+        ;Samus has been hit. Set blink for 50 frames.
         lda #$32
         sta SamusBlink
         ; default to no knockback
@@ -3102,13 +3102,13 @@ RTS_X028:
 ; Table used by above subroutine
 
 Table06:
-    .byte $0C
-    .byte $0C
-    .byte $0C
+    .byte ObjAnim_0C - ObjectAnimIndexTbl
+    .byte ObjAnim_0C - ObjectAnimIndexTbl
+    .byte ObjAnim_0C - ObjectAnimIndexTbl
 Table04:
-    .byte $35
-    .byte $35
-    .byte $35
+    .byte ObjAnim_35 - ObjectAnimIndexTbl
+    .byte ObjAnim_35 - ObjectAnimIndexTbl
+    .byte ObjAnim_35 - ObjectAnimIndexTbl
 
 LD09C:
     lda Joy1Change
@@ -3460,10 +3460,10 @@ Lx044:
 ; Table used by above subroutine
 
 Table09:
-    .byte $26, $26
-    .byte $34, $34
-    .byte $01, $FF
-    .byte $EC, $F0
+    .byte ObjAnim_26 - ObjectAnimIndexTbl, ObjAnim_26 - ObjectAnimIndexTbl
+    .byte ObjAnim_34 - ObjectAnimIndexTbl, ObjAnim_34 - ObjectAnimIndexTbl
+    .byte  $01, -$01
+    .byte -$14, -$10
 
 InitBullet:
     tya
@@ -4045,9 +4045,9 @@ BombCountdown:
     dec ProjectileDieDelay,x
     bne Lx085
     ; countdown is over, time to explode
-    lda #$37
+    lda #ObjAnim_37 - ObjectAnimIndexTbl.b ; ?
     ldy ObjAction,x
-    cpy #$09
+    cpy #wa_BombCount
     bne Lx084
         lda #ObjAnim_BombExplode - ObjectAnimIndexTbl.b
     Lx084:
@@ -8675,7 +8675,7 @@ CollisionDetection:
         tax
         bpl Lx261
 
-; doors <--> bullet/missile/bomb detection
+; doors <--> samus detection
     ldx #$B0
     Lx267:
         ; check next door if this door is not closed
