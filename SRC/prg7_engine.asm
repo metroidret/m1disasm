@@ -1701,8 +1701,8 @@ SamusInit:
     stx Mem0738
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
-    stx $8B
-    stx $8E
+    stx Mem8B
+    stx Mem8E
     ldy #$27
     lda InArea
     and #$0F
@@ -4353,10 +4353,10 @@ ElevatorMove:
     @endIf_A:
     cmp #$83
     ; move until Y coord = $83
-    bne Lx105
+    bne @endIf_D
         ; increment elevator routine to ElevatorScrollY
         inc ObjAction,x
-    Lx105:
+    @endIf_D:
     jmp DrawElevator
 
 ElevatorScrollY:
@@ -4536,11 +4536,11 @@ ElevatorStop:
     sta ObjAction,x
     ; switch elevator direction
     lda ElevatorType-$20,x
-    eor #$80        
+    eor #$80
     sta ElevatorType-$20,x
-    ; branch if elevator is now going up
+    ; branch if elevator is now on the lower floor
     bmi Lx115
-        ; elevator is now going down
+        ; elevator is now on the upper floor
         ; toggle scrolling to horizontal
         jsr ToggleScroll
         sta MirrorCntrl
