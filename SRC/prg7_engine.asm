@@ -7979,7 +7979,6 @@ LEC93:
     rts
 
 UpdateRoomSpriteInfo:
-LEC9B:
     ldx ScrollDir
     dex
     ldy #$00
