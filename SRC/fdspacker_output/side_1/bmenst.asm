@@ -1,105 +1,85 @@
-          * = $C000
-          CLD
-LC001     LDA $2002
-          BPL LC001
-          LDX #$00
-          STX $2000
-          STX $2001
-          DEX
-          TXS
-          LDY #$07
-          STY $01
-          LDY #$00
-          STY $00
-          TYA
-LC019     STA ($00),Y
-          INY
-          BNE LC019
-          DEC $01
-          BMI LC02E
-          LDX $01
-          CPX #$01
-          BNE LC019
-          INY
-          INY
-          INY
-          INY
-          BNE LC019
-LC02E     JSR $941D
-          JSR $6F3B
-          LDY #$00
-          STY $2005
-          STY $2005
-          INY
-          STY $1D
-          LDA #$90
-          STA $2000
-          STA $FF
-          LDA #$02
-          STA $FE
-          LDA #$47
-          STA $4025
-          STA $73
-          STA $FB
-          STA $28
-          JMP $9388
-LC058     JSR $6EE4
-          LDA #$6C
-          STA $00
-          LDA #$C0
-          STA $01
-          JSR $94BC
-          JSR $D060
-          JMP $B310
-          AND ($D4,X)
-          ORA ($5B,X)
-          AND ($E9,X)
-          ASL $4F0B
-          .BYTE $5A    ;%01011010 'Z'
-          BIT $FF
-          .BYTE $3B    ;%00111011 ';'
-          AND $3941
-          RTI
-          AND $3D,X
-          SEC
-          .BYTE $2F    ;%00101111 '/'
-          BRK
-          LDA #$01
-          STA $70
-          INC $1E
-          LDA $14
-          AND #$C0
-          STA $F0
-          JSR LC058
-          JSR $6F3B
-          LDA #$10
-          JMP $B261
-          CMP ($38,X)
-          CMP ($40,X)
-          CMP ($A9,X)
-          .BYTE $02    ;%00000010
-          STA $07F7
-          JSR $C0F4
-          BNE LC038
-          JSR $C0CA
-          BEQ LC0B2
-          LDA #$00
-          STA $D29F
-LC0B2     LDA $D29F
-          CLC
-          ADC #$01
-          CMP #$19
-          BCC LC0BE
-          LDA #$18
-LC0BE     STA $009F
-          .END
+    ; * = $C000
+    cld
+    ; wait for vblank
+    LC001:
+        lda PPUSTATUS
+        bpl LC001
+    ldx #$00
+    stx PPUCTRL
+    stx PPUMASK
+    dex
+    txs
+    ; clear $0000-$00FF and $0104-$07FF
+    ldy #$07
+    sty $01
+    ldy #$00
+    sty $00
+    tya
+    LC019:
+                sta ($00),Y
+                iny
+                bne LC019
+            dec $01
+            bmi LC02E
+            ldx $01
+            cpx #$01
+            bne LC019
+        iny
+        iny
+        iny
+        iny
+        bne LC019
+LC02E:
+    jsr $941D
+    jsr $6F3B
+    ldy #$00
+    sty PPUSCROLL
+    sty PPUSCROLL
+    iny
+    sty $1D
+    lda #$90
+    sta PPUCTRL
+    sta $FF
+    lda #$02
+    sta $FE
+    lda #$47
+    sta FDS_CTRL
+    sta $73
+    sta $FB
+    sta $28
+    jmp $9388
 
-;auto-generated symbols and labels
- LC001      $C001
- LC019      $C019
- LC02E      $C02E
- LC058      $C058
- LC038      $C038
- LC0B2      $C0B2
- LC0BE      $C0BE
+
+LC058:
+    jsr $6EE4
+    lda #<DataC06C.b
+    sta $00
+    lda #>DataC06C.b
+    sta $01
+    jsr $94BC
+    jsr $D060
+    jmp $B310
+
+DataC06C:
+    .byte $21, $D4, $01, $5B, $21, $E9, $0E, $0B, $4F, $5A, $24, $FF, $3B, $2D, $41, $39
+    .byte $40, $35, $3D, $38, $2F, $00
+
+
+LC082:
+    lda #$01
+    sta $70
+    inc $1E
+    lda $14
+    and #$C0
+    sta $F0
+    jsr LC058
+    jsr $6F3B
+    lda #$10
+    jmp $B261
+
+; is this data?
+DataC099:
+    .byte $C1, $38, $C1, $40, $C1, $A9, $02, $8D, $F7, $07, $20, $F4, $C0, $D0, $90, $20
+    .byte $CA, $C0, $F0, $05, $A9, $00, $8D, $9F, $D2, $AD, $9F, $D2, $18, $69, $01, $C9
+    .byte $19, $90, $02, $A9, $18, $8D, $9F
 

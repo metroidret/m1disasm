@@ -108,6 +108,54 @@ JOY2                   = $4017   ;Joypad2/APU common control 2 register.
     APU_IRQENABLE         = %00000000
     APU_IRQDISABLE        = %01000000
 
+
+; FDS write-only
+TIMERIRQ_RELOAD        = $4020
+; TIMERIRQ_RELOAD+1      = $4021
+TIMERIRQ_CTRL          = $4022
+
+    TIMERIRQ_CTRL_REPEAT   = %00000001
+    TIMERIRQ_CTRL_ENABLE   = %00000010
+
+IO_ENABLE              = $4023
+IO_WRITE               = $4024
+FDS_CTRL               = $4025
+
+    FDS_CTRL_TRANS_RESET   = %00000001
+    FDS_CTRL_MOTOR_START   = %00000000
+    FDS_CTRL_MOTOR_STOP    = %00000010
+    FDS_CTRL_TRANS_WRITE   = %00000000
+    FDS_CTRL_TRANS_READ    = %00000100
+    FDS_CTRL_MIRROR_VERTI  = %00000000
+    FDS_CTRL_MIRROR_HORIZ  = %00001000
+    FDS_CTRL_TRANS_CRC     = %00010000
+    FDS_CTRL_UNK           = %00100000 ; always set
+    FDS_CTRL_CRC_ENABLE    = %01000000
+    FDS_CTRL_IRQ_ENABLE    = %10000000
+
+EXPANSION_WRITE        = $4026
+
+; FDS read-only
+DISKSTATUS             = $4030
+
+    DISKSTATUS_TIMERIRQ    = %00000001
+    DISKSTATUS_TRANSBYTE   = %00000010
+    DISKSTATUS_MIRROR      = %00001000
+    DISKSTATUS_CRC         = %00010000
+    DISKSTATUS_ENDOFHEAD   = %01000000
+    DISKSTATUS_ACCESSIBLE  = %10000000
+
+DISKDATA               = $4031
+DRIVESTATUS            = $4032
+
+    DRIVESTATUS_NODISK     = %00000001
+    DRIVESTATUS_ENDOFDISK  = %00000010
+    DRIVESTATUS_NOWRITE    = %00000100
+
+EXPANSION_READ         = $4033
+
+    EXPANSION_READ_VOLT    = %10000000
+
 ;----------------------------------------------------------------------------------------------------
 
 ;Writing to any of these addresses or any address in between will write configuration bits to the MMC chip.

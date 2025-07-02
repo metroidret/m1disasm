@@ -19,10 +19,9 @@
 
 .STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"
 
-.SECTION "Side A - Dummy" BANK 0 SLOT "DummySlot" ORGA $0000 FORCE
-
 ; disk info block
     .byte $01, $2A, $4E, $49, $4E, $54, $45, $4E, $44, $4F, $2D, $48, $56, $43, $2A, $01, $4D, $45, $54, $20, $02, $00, $00, $00, $00, $0F, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $0F
+
 
 
 ; file $00 - kyodaku-
@@ -40,6 +39,8 @@ SideAFile00_Start:
     .stringmap charmap_kyodaku, "  LICENSE OF NINTENDO CO;LTD..  "
 SideAFile00_End:
 
+
+
 ; file $01 - demo.chr
     .byte $03, $01, $00
     .ascstr "DEMO.CHR"
@@ -48,6 +49,8 @@ SideAFile00_End:
 SideAFile01_Start:
     .incbin "fdspacker_output/side_1/demo.chr.chr"
 SideAFile01_End:
+
+
 
 ; file $02 - met.hex
     .byte $03, $02, $00
@@ -58,6 +61,8 @@ SideAFile02_Start:
     .incbin "fdspacker_output/side_1/met.hex.prg"
 SideAFile02_End:
 
+
+
 ; file $03 - demo.pgm
     .byte $03, $03, $00
     .ascstr "DEMO.PGM"
@@ -67,6 +72,8 @@ SideAFile03_Start:
     .incbin "fdspacker_output/side_1/demo.pgm.prg"
 SideAFile03_End:
 
+
+
 ; file $04 - demo.pg2
     .byte $03, $04, $00
     .ascstr "DEMO.PG2"
@@ -75,6 +82,8 @@ SideAFile03_End:
 SideAFile04_Start:
     .incbin "fdspacker_output/side_1/demo.pg2.prg"
 SideAFile04_End:
+
+
 
 ; file $05 - demo.vec
     .byte $03, $05, $00
@@ -87,25 +96,33 @@ SideAFile05_Start:
     .word $6821
 SideAFile05_End:
 
+
+
 ; file $06 - bmenst
     .byte $03, $06, $20
     .ascstr "BMENST", $00, $00
     .word $C000, SideAFile06_End - SideAFile06_Start
     .byte $00, $04
+.orga $C000
 SideAFile06_Start:
     .incbin "fdspacker_output/side_1/bmenst.prg"
 SideAFile06_End:
+
+
 
 ; file $07 - main.vec
     .byte $03, $07, $20
     .ascstr "MAIN.VEC"
     .word $DFFA, SideAFile07_End - SideAFile07_Start
     .byte $00, $04
+.orga $0000
 SideAFile07_Start:
     .word $9396
     .word $C000
     .word $C000
 SideAFile07_End:
+
+
 
 ; file $08 - main.pgm
     .byte $03, $08, $20
@@ -116,6 +133,8 @@ SideAFile08_Start:
     .incbin "fdspacker_output/side_1/main.pgm.prg"
 SideAFile08_End:
 
+
+
 ; file $09 - endobj
     .byte $03, $09, $EE
     .ascstr "ENDOBJ", $00, $00
@@ -124,6 +143,8 @@ SideAFile08_End:
 SideAFile09_Start:
     .incbin "fdspacker_output/side_1/endobj.chr"
 SideAFile09_End:
+
+
 
 ; file $0A - endbg
     .byte $03, $0A, $EE
@@ -134,6 +155,8 @@ SideAFile0A_Start:
     .incbin "fdspacker_output/side_1/endbg.chr"
 SideAFile0A_End:
 
+
+
 ; file $0B - mmeee
     .byte $03, $0B, $EE
     .ascstr "MMEEE", $00, $00, $00
@@ -143,6 +166,8 @@ SideAFile0B_Start:
     .incbin "fdspacker_output/side_1/mmeee.prg"
 SideAFile0B_End:
 
+
+
 ; file $0C - endpgm
     .byte $03, $0C, $EE
     .ascstr "ENDPGM", $00, $00
@@ -151,6 +176,8 @@ SideAFile0B_End:
 SideAFile0C_Start:
     .incbin "fdspacker_output/side_1/endpgm.prg"
 SideAFile0C_End:
+
+
 
 ; file $0D - endvec
     .byte $03, $0D, $EE
@@ -163,6 +190,8 @@ SideAFile0D_Start:
     .word $6143
 SideAFile0D_End:
 
+
+
 ; file $0E - \u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001
     .byte $03, $0E, $0E
     .ascstr $01, $01, $01, $01, $01, $01, $01, $01
@@ -172,8 +201,8 @@ SideAFile0E_Start:
     .incbin "fdspacker_output/side_1/u0001.prg"
 SideAFile0E_End:
 
+
+
 ; pad the rest with zero ($34C6 bytes)
     .ds $34C6, $00
-
-.ENDS
 
