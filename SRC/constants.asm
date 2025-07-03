@@ -242,6 +242,9 @@ ItemRoomMusicStatus    = $79     ;#$00=Item room music not playing.
                                    ;#$80=Stop item room music once door scroll complete.
                                    ;#$81=Item room music already playing. Don't restart.
 
+; $7A-$DE cleared in MoreInit (should clear $DF, off-by-one bug?)
+SpareMem7A             = $7A     ;cleared in MoreInit, never used in gameplay
+
 OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
 
 KraidLintCounter       = $7E
@@ -279,6 +282,13 @@ SpawnFireball_87       = $87     ;fireball status?
 SpawnFireball_EnData0A = $88
 
 Mellow8A               = $8A
+
+; 2 slots of 3 bytes each ($8B-$90)
+RinkaSpawnerStatus     = $8B    ;#$00=use even indices to RinkaSpawnPosTbl,-->
+                                  ;#$01=use odd indices to RinkaSpawnPosTbl,-->
+                                  ;#$FF=inactive
+RinkaSpawnerHi         = $8C
+RinkaSpawnerPosIndex   = $8D
 
 DoorPalChangeDir       = $91    ;When Samus enters a palette change room, this stores the ScrollDir
                                   ;she entered with, so that if the next door she enters is also

@@ -680,14 +680,14 @@ RTS_9CD5:
     rts
 
 L9CD6:
-    lda $8B,x
+    lda RinkaSpawnerStatus,x
     bmi RTS_9CE5
-    lda $8C,x
+    lda RinkaSpawnerHi,x
     eor $02
     lsr
     bcs RTS_9CE5
     lda #$FF
-    sta $8B,x
+    sta RinkaSpawnerStatus,x
 RTS_9CE5:
     rts
 
@@ -797,13 +797,13 @@ SpawnRinkaSpawnerRoutine:
         bmi RTS_9D87
         ldx #$00
     L9D75:
-    lda $8B,x
+    lda RinkaSpawnerStatus,x
     bpl RTS_9D87
     lda ($00),y
     jsr Adiv16_
-    sta $8B,x
+    sta RinkaSpawnerStatus,x
     jsr GetNameTable_
-    sta $8C,x
+    sta RinkaSpawnerHi,x
     lda #$FF
 RTS_9D87:
     rts
@@ -1390,9 +1390,9 @@ LA15E:
         ldy #$00
     LA16B:
     sty PageIndex
-    lda $8B,y
+    lda RinkaSpawnerStatus,y
     bmi RTS_A15D
-    lda $8C,y
+    lda RinkaSpawnerHi,y
     eor FrameCount
     lsr
     bcc RTS_A15D
@@ -1428,26 +1428,33 @@ LA19C:
     lda #$F7
     sta EnAnimFrame,x
     ldy PageIndex
-    lda $8C,y
+    lda RinkaSpawnerHi,y
     sta EnHi,x
-    lda $8D,y
+    lda RinkaSpawnerPosIndex,y
     asl
-    ora $8B,y
+    ora RinkaSpawnerStatus,y
     tay
-    lda LA1DB,y
+    lda RinkaSpawnPosTbl,y
     jsr L9EE7
     ldx PageIndex
-    inc $8D,x
-    lda $8D,x
+    inc RinkaSpawnerPosIndex,x
+    lda RinkaSpawnerPosIndex,x
     cmp #$06
     bne RTS_A1DA
     lda #$00
 LA1D8:
-    sta $8D,x
+    sta RinkaSpawnerPosIndex,x
 RTS_A1DA:
     rts
 
-LA1DB:  .byte $22, $2A, $2A, $BA, $B2, $2A, $C4, $2A, $C8, $BA, $BA, $BA
+; X in low nibble, Y in high nibble
+RinkaSpawnPosTbl:
+    .byte $22, $2A
+    .byte $2A, $BA
+    .byte $B2, $2A
+    .byte $C4, $2A
+    .byte $C8, $BA
+    .byte $BA, $BA
 
 ;-------------------------------------------------------------------------------
 LA1E7:
