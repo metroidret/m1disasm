@@ -442,7 +442,7 @@ L9A27:
 ;-------------------------------------------------------------------------------
 ; Tourian specific routine -- called every active frame
 L9B25:
-    jsr L9B37
+    jsr UpdateAllCannons
     jsr MotherBrainStatusHandler
     jsr LA1E7
     jsr LA238
@@ -450,141 +450,182 @@ L9B25:
     jmp LA15E
 
 ;-------------------------------------------------------------------------------
-L9B37:
+UpdateAllCannons:
     ldx #$78
-    L9B39:
-        jsr L9B44
+    @loop:
+        jsr @updateIfPossible
         lda CannonIndex
         sec
         sbc #$08
         tax
-        bne L9B39
+        bne @loop
 
-L9B44:
+@updateIfPossible:
     stx CannonIndex
     ldy CannonStatus,x
-    bne L9B4C
+    bne UpdateCannon
 RTS_9B4B:
     rts
 
-L9B4C:
-    jsr L9C4D
+UpdateCannon:
+    ; exit if cannon is offscreen
+    jsr UpdateCannon_CheckIfOnScreen
     tya
     bne RTS_9B4B
+    ; branch if escape timer is active
     ldy EndTimer+1
     iny
-    bne L9B65
-    lda CannonInstrListID,x
-    cmp #$05
-    beq RTS_9B4B
-    jsr L9B70
-    jmp L9C2B
+    bne @escape
+        ; escape timer is not active, behave normally
+        ; exit if cannon instr list is 5 (unused?)
+        lda CannonInstrListID,x
+        cmp #$05
+        beq RTS_9B4B
+        ; run instructions
+        jsr UpdateCannon_RunInstructions
+        jmp DrawCannon_Normal
+    @escape:
+        ; escape timer is active, flash and do nothing
+        lda FrameCount
+        and #$02
+        bne RTS_9B4B
+        lda #_id_EnFrame19.b
+        jmp DrawCannon_Escape
 
-L9B65:
-    lda FrameCount
-    and #$02
-    bne RTS_9B4B
-    lda #$19
-    jmp L9C31
-
-L9B70:
+UpdateCannon_RunInstructions:
     ldy CannonInstrListID,x
+    ; branch if instruction delay is not zero (continue running current angle instruction)
     lda CannonInstrDelay,x
-    bne L9B81
-        lda L9D8F,y
+    bne @endIf_A
+        ; instruction delay is zero
+        ; reset delay (always to 40 frames)
+        lda CannonInstrDelayTable,y
         sta CannonInstrDelay,x
+        ; change to next instruction
         inc CannonInstrID,x
-    L9B81:
+    @endIf_A:
+    ; decrement delay
     dec CannonInstrDelay,x
-L9B84:
+@getInstruction:
+    ; get cannon instruction from instruction list
     lda CannonInstrListsOffset,y
     clc
     adc CannonInstrID,x
     tay
     lda CannonInstrLists,y
-    bpl L9BAB
+    ; branch if it's an angle instruction
+    bpl @setAngle
         cmp #$FF
-        bne L9B9F
+        bne @shootFireball
+            ; instruction is restart
             ldy CannonInstrListID,x
+            ; restart to first instruction
             lda #$00
             sta CannonInstrID,x
-            beq L9B84
-        L9B9F:
-        inc CannonInstrID,x
-        jsr L9BAF
-        ldy CannonInstrListID,x
-        jmp L9B84
+            ; go back to get instuction
+            beq @getInstruction ; branch always
+        @shootFireball:
+            ; instruction is shoot fireball
+            ; change to next instruction
+            inc CannonInstrID,x
+            ; shoot
+            jsr Cannon_ShootFireball
+            ldy CannonInstrListID,x
+            ; go back to get instuction
+            jmp @getInstruction
 
-    L9BAB:
+    @setAngle:
         sta CannonAngle,x
         rts
 
-L9BAF:
+Cannon_ShootFireball:
+    ; push instruction byte #$FC, #$FD or #$FE
     pha
+    ; exit if mother brain is dying or dead
     lda MotherBrainStatus
     cmp #$04
-    bcs L9BC6
+    bcs @exit
+    ; loop through all enemy fireballs
     ldy #$60
-    L9BB8:
+    @loop:
+        ; branch if slot is empty
         lda EnStatus,y
-        beq L9BC8
+        beq @slotFound
+        ; slot is not empty, check next slot
         tya
         clc
         adc #$10
         tay
         cmp #$A0
-        bne L9BB8
-L9BC6:
+        bne @loop
+    ; no fireball slots found, exit
+@exit:
     pla
     rts
 
-L9BC8:
+@slotFound:
+    ; store slot
     sty PageIndex
+    ; set fireball position to cannon position
     lda CannonY,x
     sta EnY,y
     lda CannonX,x
     sta EnX,y
     lda CannonHi,x
     sta EnHi,y
-    lda #$02
+    ; set fireball status to active
+    lda #enemyStatus_Active
     sta EnStatus,y
+    ; init fireball animation timers
     lda #$00
     sta EnDelay,y
     sta EnAnimDelay,y
     sta EnMovementIndex,y
+    ; pop instruction byte #$FC, #$FD or #$FE
     pla
+    ; #$FC, #$FD or #$FE becomes #$04, #$03 or #$02
     jsr TwosComplement_
+    ; save to x and EnData0A
     tax
     sta EnData0A,y
+    ; set fireball facing direction
     ora #$02
     sta EnData05,y
-    lda L9C28-2,x
+    ; set fireball animation
+    lda CannonFireballAnimTable-2,x
     sta EnResetAnimIndex,y
     sta EnAnimIndex,y
-    lda L9DCC,x
-    sta $05
-    lda L9DCF,x
-    sta $04
+    ; store offset into temp
+    lda CannonFireballXOffsetTable,x
+    sta Temp05_SpeedX
+    lda CannonFireballYOffsetTable,x
+    sta Temp04_SpeedY
+    ; store cannon position into temp
     ldx CannonIndex
     lda CannonY,x
-    sta $08
+    sta Temp08_PositionY
     lda CannonX,x
-    sta $09
+    sta Temp09_PositionX
     lda CannonHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     tya
     tax
+    ; apply offset to cannon position
     jsr CommonJump_ApplySpeedToPosition
+    ; use as fireball position
     jsr LoadPositionFromTemp
     ldx CannonIndex
     rts
 
-L9C28:  .byte $0C, $0A, $0E
+CannonFireballAnimTable:
+    .byte EnAnim_0C - EnAnimTbl ; cannon instr #$FE : diagonal right
+    .byte EnAnim_0A - EnAnimTbl ; cannon instr #$FD : diagonal left
+    .byte EnAnim_0E - EnAnimTbl ; cannon instr #$FC : straight down
 
-L9C2B:
+DrawCannon_Normal:
     ldy CannonAngle,x
     lda L9DC6,y
-L9C31:
+DrawCannon_Escape:
     sta EnAnimFrame+$E0
     lda CannonY,x
     sta EnY+$E0
@@ -596,27 +637,36 @@ L9C31:
     sta PageIndex
     jmp CommonJump_DrawEnemy
 
-L9C4D:
+; return y=#$00 if cannon is on screen and y=#$01 if not
+UpdateCannon_CheckIfOnScreen:
     ldy #$00
+    ; set carry if CannonX >= ScrollX
     lda CannonX,x
     cmp ScrollX
+    ; branch if room is horizontal (in vanilla, this is always the case)
     lda ScrollDir
     and #$02
-    bne L9C5F
+    bne @endIf_A
+        ; set carry if CannonY >= ScrollY
         lda CannonY,x
         cmp ScrollY
-    L9C5F:
+    @endIf_A:
+    ; return y=#$00 if same hi and carry set
+    ; return y=#$00 if different hi and carry not set
+    ; return y=#$01 if same hi and carry not set
+    ; return y=#$01 if different hi and carry set
+    ; in effect, return y=#$00 if cannon is on screen and y=#$01 if not
     lda CannonHi,x
     eor PPUCTRL_ZP
     and #$01
-    beq L9C6B
-        bcs L9C6D
+    beq @endIf_B
+        bcs @return_y1
         sec
-    L9C6B:
-    bcs RTS_9C6E
-L9C6D:
+    @endIf_B:
+    bcs @return_y0
+@return_y1:
     iny
-RTS_9C6E:
+@return_y0:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -814,7 +864,12 @@ GetNameTable_:
     and #$01
     rts
 
-L9D8F:  .byte $28, $28, $28, $28, $28
+CannonInstrDelayTable:
+    .byte $28
+    .byte $28
+    .byte $28
+    .byte $28
+    .byte $28
 
 CannonInstrListsOffset:
     .byte CannonInstrList0 - CannonInstrLists
@@ -823,18 +878,27 @@ CannonInstrListsOffset:
     .byte CannonInstrList3 - CannonInstrLists
     .byte CannonInstrList4 - CannonInstrLists
 
-; #$00-#$07 is angles, #$FE is shooting a bullet, #$FF is end
+; #$00-#$07 is angles, #$FC-$FE is shooting a bullet, #$FF is end
 CannonInstrLists:
 CannonInstrList0: .byte $00, $01, $02, $FD, $03, $04, $FD, $03, $02, $01, $FF
 CannonInstrList1: .byte $00, $07, $06, $FE, $05, $04, $FE, $05, $06, $07, $FF
 CannonInstrList2: .byte $02, $03, $FC, $04, $05, $06, $05, $FC, $04, $03, $FF
 CannonInstrList3: .byte $02, $03, $FC, $04, $03, $FF
 CannonInstrList4: .byte $06, $05, $FC, $04, $05, $FF
+; cannon instr list 5 means the cannon won't do anything
 
 L9DC6:  .byte $06, $07, $08, $09, $0A, $0B
-L9DCC:  .byte $0C, $0D, $09
 
-L9DCF:  .byte $F7, $00, $09, $09, $0B
+CannonFireballXOffsetTable:
+    .byte $0C ; cannon instr #$FE : diagonal right
+    .byte $0D ; cannon instr #$FD : diagonal left
+    .byte $09 ; cannon instr #$FC : straight down
+CannonFireballYOffsetTable:
+    .byte $F7 ; cannon instr #$FE : diagonal right
+    .byte $00 ; cannon instr #$FD : diagonal left
+    .byte $09 ; cannon instr #$FC : straight down
+
+    .byte $09, $0B
 
 ;-------------------------------------------------------------------------------
 ; This is code:
