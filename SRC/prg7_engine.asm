@@ -1568,11 +1568,11 @@ MoreInit:
     txa                             ;A=0.
 
     LC830:
-        cpx #$65                        ;Check to see if more RAM to clear in $7A thru $DE.
+        cpx #(SoundE0-1)-SpareMem7A.b   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
         bcs LC836                           ;
-            sta $7A,x                       ;Clear RAM $7A thru $DE.
+            sta SpareMem7A.b,x              ;Clear RAM $7A thru $DE.
         LC836:
-        cpx #$FF                        ;Check to see if more RAM to clear in $300 thru $3FE.
+        cpx #$FF                        ;Check to see if more RAM to clear in $300 thru $3FE. (off-by-one bug)
         bcs LC83D                           ;
             sta ObjAction,x                 ;Clear RAM $300 thru $3FE.
         LC83D:
@@ -1701,8 +1701,8 @@ SamusInit:
     stx Mem0738
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
-    stx Mem8B
-    stx Mem8E
+    stx RinkaSpawnerStatus
+    stx RinkaSpawnerStatus+3.b
     ldy #$27
     lda InArea
     and #$0F
@@ -7936,7 +7936,6 @@ Lx237:
     jmp EnemyLoop   ; do next room object
 
 ZebHole:
-LEC57:
     ldx #$20
     Lx238:
         txa
@@ -7971,13 +7970,13 @@ Lx239:
     bne Lx237
 
 OnNameTable0:
-LEC93:
     lda PPUCTRL_ZP                   ;
     eor #$01                        ;If currently on name table 0,-->
     and #$01                        ;return #$01. Else return #$00.
     tay                             ;
     rts
 
+; Despawn offscreen room sprites to make room for new room sprites.
 UpdateRoomSpriteInfo:
     ldx ScrollDir
     dex
@@ -7985,56 +7984,61 @@ UpdateRoomSpriteInfo:
     jsr UpdateDoorData              ;($ED51)Update name table 0 door data.
     iny
     jsr UpdateDoorData              ;($ED51)Update name table 3 door data.
+    ; If the enemy is in the opposite nametable and is offscreen, delete it.
     ldx #$50
     jsr GetNameTable                ;($EB85)
     tay
-    Lx240:
+    @loop_enemies:
         tya
         eor EnHi,x
         lsr
-        bcs Lx241
+        bcs @dontDeleteEnemy
         lda EnData05,x
         and #$02
-        bne Lx241
+        bne @dontDeleteEnemy
         sta EnStatus,x
-    Lx241:
+    @dontDeleteEnemy:
         jsr Xminus16
-        bpl Lx240
+        bpl @loop_enemies
+    ; same thing with mellows
     ldx #$18
-    Lx242:
+    @loop_mellows:
         tya
         eor MellowHi,x
         lsr
-        bcs Lx243
+        bcs @dontDeleteMellow
             lda #$00
             sta MellowStatus,x
-        Lx243:
+        @dontDeleteMellow:
         txa
         sec
         sbc #$08
         tax
-        bpl Lx242
+        bpl @loop_mellows
+    ; doors
     jsr LED65
     jsr LED5B
     jsr GetNameTable                ;(EB85)
     asl
     asl
     tay
+    ; tile blasts
     ldx #$C0
-    Lx244:
+    @loop_tileBlasts:
         tya
         eor TileBlastWRAMPtr+1,x
         and #$04
-        bne Lx245
+        bne @dontDeleteTileBlast
             sta TileBlastRoutine,x
-        Lx245:
+        @dontDeleteTileBlast:
         jsr Xminus16
         cmp #$F0
-        bne Lx244
+        bne @loop_tileBlasts
     tya
     lsr
     lsr
     tay
+    ; non-beam projectiles
     ldx #$D0
     jsr LED7A
     ldx #$E0
@@ -8042,11 +8046,13 @@ UpdateRoomSpriteInfo:
     ldx #$F0
     jsr LED7A
     tya
+    ; elevator
     sec
     sbc ObjHi+$20
     bne Lx246
         sta ElevatorStatus
     Lx246:
+    ; unused RAM $0700-$0723
     ldx #$1E
     Lx247:
         lda $0704,x
@@ -8059,11 +8065,13 @@ UpdateRoomSpriteInfo:
         sbc #$06
         tax
         bpl Lx247
-    cpy $036C
+    ; statues
+    cpy StatueHi
     bne Lx249
         lda #$00
-        sta $0360
+        sta StatueStatus
     Lx249:
+    ; zeb holes
     ldx #$18
     Lx250:
         tya
@@ -8077,10 +8085,12 @@ UpdateRoomSpriteInfo:
         sbc #$08
         tax
         bpl Lx250
+    ; power-ups
     ldx #$00
     jsr LED8C
     ldx #$08
     jsr LED8C
+    ; tourian stuff
     jmp GotoL9C6F
 
 UpdateDoorData:
@@ -8112,7 +8122,7 @@ LED65:
 
 LED7A:
     lda ObjAction,x
-    cmp #$05
+    cmp #wa_BulletExplode+1.b
     bcc RTS_X254
     tya
     eor ObjHi,x
