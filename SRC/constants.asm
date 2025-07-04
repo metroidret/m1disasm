@@ -320,7 +320,7 @@ MotherBrain9B          = $9B
 MotherBrainAnimFrameTableID = $9C
 MotherBrainNameTable   = $9D
 MotherBrainIsHit       = $9E     ;Was mother brain hit by a missile? #$00=no, #$01=yes
-MotherBrain9F          = $9F
+MotherBrainFlashDelay  = $9F     ;Delay until mother brain no longer flashes from being hit.
 
 ; 4 slots of 4 bytes each ($A0-$AF)
 SkreeProjectileDieDelay= $A0     ;Delay until projectile dies.
