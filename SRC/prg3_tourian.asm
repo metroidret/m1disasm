@@ -596,9 +596,9 @@ Cannon_ShootFireball:
     sta EnResetAnimIndex,y
     sta EnAnimIndex,y
     ; store offset into temp
-    lda CannonFireballXOffsetTable,x
+    lda CannonFireballXOffsetTable-2,x
     sta Temp05_SpeedX
-    lda CannonFireballYOffsetTable,x
+    lda CannonFireballYOffsetTable-2,x
     sta Temp04_SpeedY
     ; store cannon position into temp
     ldx CannonIndex
@@ -624,7 +624,7 @@ CannonFireballAnimTable:
 
 DrawCannon_Normal:
     ldy CannonAngle,x
-    lda L9DC6,y
+    lda CannonAnimFrameTable,y
 DrawCannon_Escape:
     sta EnAnimFrame+$E0
     lda CannonY,x
@@ -887,18 +887,24 @@ CannonInstrList3: .byte $02, $03, $FC, $04, $03, $FF
 CannonInstrList4: .byte $06, $05, $FC, $04, $05, $FF
 ; cannon instr list 5 means the cannon won't do anything
 
-L9DC6:  .byte $06, $07, $08, $09, $0A, $0B
+CannonAnimFrameTable:
+    .byte _id_EnFrame06
+    .byte _id_EnFrame07
+    .byte _id_EnFrame08
+    .byte _id_EnFrame09
+    .byte _id_EnFrame0A
+    .byte _id_EnFrame0B
+    .byte _id_EnFrame0C
+    .byte _id_EnFrame0D
 
 CannonFireballXOffsetTable:
-    .byte $0C ; cannon instr #$FE : diagonal right
-    .byte $0D ; cannon instr #$FD : diagonal left
-    .byte $09 ; cannon instr #$FC : straight down
+    .byte $09 ; cannon instr #$FE : diagonal right
+    .byte $F7 ; cannon instr #$FD : diagonal left
+    .byte $00 ; cannon instr #$FC : straight down
 CannonFireballYOffsetTable:
-    .byte $F7 ; cannon instr #$FE : diagonal right
-    .byte $00 ; cannon instr #$FD : diagonal left
-    .byte $09 ; cannon instr #$FC : straight down
-
-    .byte $09, $0B
+    .byte $09 ; cannon instr #$FE : diagonal right
+    .byte $09 ; cannon instr #$FD : diagonal left
+    .byte $0B ; cannon instr #$FC : straight down
 
 ;-------------------------------------------------------------------------------
 ; This is code:
