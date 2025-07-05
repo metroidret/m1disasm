@@ -80,7 +80,7 @@
             .def _entryNumber_\1 = 0
         .endif
         
-        .def _id_\2 = _entryNumber_\1
+        .def _id_\2 = _entryNumber_\1 export
     .endif
     .word ptr
 .endm

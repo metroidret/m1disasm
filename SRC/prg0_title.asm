@@ -21,13 +21,6 @@
 .def BANK = 0
 .SECTION "ROM Bank $000" BANK 0 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
 
-;---------------------------------------------[ Export ]---------------------------------------------
-
-.export _id_StartContinueScreen15
-.export _id_DisplayPassword
-.export _id_GameOver
-.export _id_EndGame
-
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 MainTitleRoutine:
