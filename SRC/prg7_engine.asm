@@ -4427,7 +4427,7 @@ ElevatorFade:
     lda ObjAction,x
     cmp #$08
     bne @endIf_A
-        lda #$23
+        lda #_id_ObjFrame23.b
         sta ElevatorAnimFrame-$20,x
         lda #ObjAnim_04 - ObjectAnimIndexTbl.b
         jsr SetSamusAnim
@@ -4695,8 +4695,8 @@ StatueXTable:
     .byte $88 ; Kraid's X
     .byte $68 ; Ridley's X
 StatueAnimFrameTable:
-    .byte $65 ; Kraid anim frame
-    .byte $66 ; Ridley anim frame
+    .byte _id_ObjFrame65 ; Kraid anim frame
+    .byte _id_ObjFrame66 ; Ridley anim frame
 
 LDA3D:
     lda ObjAnimDelay,x
@@ -4881,7 +4881,7 @@ CheckOneItem:
     bcc RTS_DB36                       ;If so, branch to exit.
     lda PowerUpType,x               ;
     and #$0F                        ;Load power up type byte and keep only bits 0 thru 3.
-    ora #$50                        ;Set bits 4 and 6.
+    ora #_id_ObjFrame50.b           ;Set bits 4 and 6.
     sta PowerUpAnimFrame            ;Save index to find object animation.
     lda FrameCount                  ;
     lsr                             ;Color affected every other frame.
@@ -5245,10 +5245,11 @@ LDD30:
         beq LDD5B
         
         inc EnergyPickupQtyCur
-        ; exit if it is not no pickup (energy pickup)
+        ; exit if it is not big energy (small energy pickup)
         cmp #$89
         bne RTS_X137
         
+        ; fail if enemy can't drop big energy
         lsr $00
         bcs RTS_X137
 
@@ -5435,12 +5436,12 @@ DrawEnemy_NotBlank:
 ItemDropTbl:
     .byte $80                       ;Missile.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
     .byte $80                       ;Missile.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
 
 ;------------------------------------[ Object drawing routines ]-------------------------------------
 
@@ -7930,7 +7931,7 @@ SpawnElevatorRoutine:
     sta ObjX+$20       ; elevator X coord
     jsr GetNameTable                ;($EB85)
     sta ObjHi+$20       ; high Y coord
-    lda #$23
+    lda #_id_ObjFrame23.b
     sta ObjAnimFrame+$20       ; elevator frame
     inc ElevatorStatus              ;1
 Lx234:
@@ -9408,8 +9409,10 @@ LF483:
     pla
     ; branch if EnType is non-zero (health pickup from a metroid)
     bne Lx306
+    ;Increase Health by 20.
     dex
     pla
+    ; branch if small health pickup
     cmp #$81
     bne Lx305
     ;Increase Health by 5.
@@ -10701,7 +10704,7 @@ UpdateSkreeProjectile:
     sta PowerUpHi
     
     ;Save index to find object animation.
-    lda #$5A
+    lda #_id_ObjFrame5A.b
     sta PowerUpAnimFrame
     txa
     pha

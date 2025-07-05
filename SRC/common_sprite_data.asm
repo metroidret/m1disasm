@@ -1323,7 +1323,7 @@ ObjFrame51:
     .byte $8C
     .byte $FF
 
-;ObjFrame_ong beam item.
+;Long beam item.
 ObjFrame52:
     .byte ($0 << 4) + _id_ObjPlaceD, $03, $03
     .byte $88
