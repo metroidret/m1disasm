@@ -235,6 +235,7 @@ L967B:
 ; Bit 5: EnemyMovementInstr_FE failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
 ; Bits 0-4 are used when bit 5 is set
 ; Bits 2-3: #$00,#$04=normal enemy hit sound, #$08=big enemy hit sound, #$0C=metroid hit sound
+; Bit 0: can drop big energy
 L968B:
     .byte $01, $01, $01, $00, $86, $04, $89, $80, $81, $00, $00, $00, $82, $00, $00, $00
 

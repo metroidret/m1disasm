@@ -5219,10 +5219,11 @@ LDD30:
         beq LDD5B
         
         inc EnergyPickupQtyCur
-        ; exit if it is not no pickup (energy pickup)
+        ; exit if it is not big energy (small energy pickup)
         cmp #$89
         bne RTS_X137
         
+        ; fail if enemy can't drop big energy
         lsr $00
         bcs RTS_X137
 
@@ -5409,12 +5410,12 @@ DrawEnemy_NotBlank:
 ItemDropTbl:
     .byte $80                       ;Missile.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
     .byte $80                       ;Missile.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
     .byte $81                       ;Energy.
-    .byte $89                       ;No item.
+    .byte $89                       ;No item / big energy.
 
 ;------------------------------------[ Object drawing routines ]-------------------------------------
 
@@ -9382,8 +9383,10 @@ LF483:
     pla
     ; branch if EnType is non-zero (health pickup from a metroid)
     bne Lx306
+    ;Increase Health by 20.
     dex
     pla
+    ; branch if small health pickup
     cmp #$81
     bne Lx305
     ;Increase Health by 5.
