@@ -169,8 +169,8 @@ ItemIndex              = $4C     ;#$00 or #$08. Added to PowerUpType addresses t
 
 SamusDir               = $4D     ;0 = Right, 1 = Left.
 SamusDoorDir           = $4E     ;Direction Samus passed through door.
-SamusMapPosY           = $4F     ;Current y position on world map.
-SamusMapPosX           = $50     ;Current x position on world map.
+SamusMapPosY           = $4F     ;Current y position on world map of the screen to load into VRAM.
+SamusMapPosX           = $50     ;Current x position on world map of the screen to load into VRAM.
 SamusScrX              = $51     ;Samus x position on screen.
 SamusScrY              = $52     ;Samus y position on screen.
 WalkSoundDelay         = $53
@@ -194,7 +194,7 @@ SamusDoorData          = $58     ;The upper 4 bits store either 1 or 2. If 1 is 
                                    ;action status as she enters the door. This is used to set-->
                                    ;Samus' action after she exits and keeps her looking the same.
 DoorDelay              = $59     ;Number of frames to delay when Samus entering/exiting doors.
-RoomNumber             = $5A     ;Room number currently being loaded.
+RoomNumber             = $5A     ;Room number currently being loaded. #$FF=no room requested.
 SpritePagePos          = $5B     ;Index into sprite RAM used to load object sprite data.
 
 ; 4 slots of 2 bytes each ($5C-$63)
@@ -247,9 +247,9 @@ SpareMem7A             = $7A     ;cleared in MoreInit, never used in gameplay
 
 OnFrozenEnemy          = $7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
 
-KraidLintCounter       = $7E
-KraidNailCounter       = $7F
-RidleyProjectileCounter= $80
+KraidLintCounter       = $7E     ;Used to determine when to fire Kraid's lint. Accidentally used by Ridley too.
+KraidNailCounter       = $7F     ;Used to determine when to fire Kraid's nail.
+RidleyProjectileCounter= $80     ;Used to determine when to fire Ridley's projectile.
 
 EnemyMovementPtr       = $81
 ; EnemyMovementPtr+1     = $82
