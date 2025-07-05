@@ -373,11 +373,11 @@ UnusedIntroRoutine2:
     bne RTS_822D
     lda #$00
     sta ObjAction
-    lda #$0B
+    lda #ObjAnim_0B - ObjectAnimIndexTbl.b
     sta ObjAnimResetIndex
-    lda #$0C
+    lda #ObjAnim_0C - ObjectAnimIndexTbl.b
     sta ObjAnimIndex
-    lda #$07
+    lda #_id_ObjFrame07.b
     sta ObjAnimFrame
     lda #$08
     sta Timer3
@@ -2366,7 +2366,7 @@ InitializeGame:
     sty ObjectCntrl                 ;
     sty ObjHi                       ;
     jsr SilenceMusic                ;($CB8E)Turn off music.
-    lda #$5A                        ;
+    lda #_id_ObjFrame5A.b           ;
     sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
     ldx #$01                        ;x is the index into the position tables below.
     lda InArea                      ;Load starting area.
