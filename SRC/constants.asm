@@ -313,7 +313,7 @@ MotherBrainStatus      = $98     ;#$00=Mother brain not in room, #$01=Mother bra
                                    ;#$06=Time bomb set, #$07=Time bomb exploded,-->
                                    ;#$08=Initialize mother brain,-->
                                    ;#$09, #$0A=Mother brain already dead.
-MotherBrainQtyHits        = $99     ;Number of times mother brain has been hit. Dies at #$20.
+MotherBrainQtyHits     = $99     ;Number of times mother brain has been hit. Dies at #$20.
 
 MotherBrain9A          = $9A
 MotherBrain9B          = $9B
