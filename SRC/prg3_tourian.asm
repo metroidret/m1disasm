@@ -447,7 +447,7 @@ L9B25:
     jsr UpdateEndTimer
     jsr LA238
     jsr ZebetiteA28B
-    jmp LA15E
+    jmp UpdateAllRinkaSpawners
 
 ;-------------------------------------------------------------------------------
 UpdateAllCannons:
@@ -1084,12 +1084,16 @@ L9ED6:
     sta MotherBrainQtyHits
     rts
 
-L9EE7:
+; high nybble of a is y position
+; low nybble of a is x position
+SpawnRinka_InitPositionXY:
     pha
+    ; y position = (high nybble * #$10) + #$07
     and #$F0
     ora #$07
     sta EnY,x
     pla
+    ; x position = (low nybble * #$10) + #$07
     jsr Amul16_
     ora #$07
     sta EnX,x
@@ -1300,7 +1304,7 @@ MotherBrain_9E22_UpdateAnimEye:
     ; exit if eye delay is not #$00 or #$80
     lda MotherBrainAnimEyeDelay
     asl
-    bne RTS_A040
+    bne @RTS
     
     ; set eye delay depending on how many hits are left until mother brain dies
     ; also toggle bit 7 of eye delay
@@ -1310,7 +1314,7 @@ MotherBrain_9E22_UpdateAnimEye:
     ora #$80
     eor MotherBrainAnimEyeDelay
     sta MotherBrainAnimEyeDelay
-RTS_A040:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1500,52 +1504,77 @@ RTS_A15D:
     rts
 
 ;-------------------------------------------------------------------------------
-LA15E:
+UpdateAllRinkaSpawners:
+    ; exit if timer is active
     ldy EndTimer+1
     iny
     bne RTS_A1DA
+    
+    ; run subroutine for the second rinka spawner
     ldy #$03
-    jsr LA16B
-        ldy #$00
-    LA16B:
+    jsr @subroutine
+    
+    ; run subroutine for the first rinka spawner
+    ldy #$00
+@subroutine:
     sty PageIndex
+    
+    ; exit if rinka spawner is inactive
     lda RinkaSpawnerStatus,y
     bmi RTS_A15D
+    
+    ; exit if RinkaSpawnerHi == bit 0 of FrameCount
+    ; (maybe to alternate which rinka spawner is processed each frame?)
     lda RinkaSpawnerHi,y
     eor FrameCount
     lsr
     bcc RTS_A15D
+    
+    ; exit if mother brain is dying or dead
     lda MotherBrainStatus
     cmp #$04
     bcs RTS_A15D
+    
+    ; exit if framecount modulo 8 is not 0 or 1
     lda FrameCount
     and #$06
     bne RTS_A15D
+    
+    ; attempt to spawn a rinka
+    ; search for an open enemy slot in the first three enemy slots
     ldx #$20
-    LA188:
+    @loop:
+        ; use slot if no enemy in slot or enemy is invisible
         lda EnStatus,x
-        beq LA19C
+        beq @slotFound
         lda EnData05,x
         and #$02
-        beq LA19C
+        beq @slotFound
+        ; slot occupied, try next slot
         txa
         sec
         sbc #$10
         tax
-        bpl LA188
+        bpl @loop
+    ; no open slot found, exiting
     rts
 
-LA19C:
-    lda #$01
+@slotFound:
+    ; set rinka status to resting
+    lda #enemyStatus_Resting
     sta EnStatus,x
+    ; set rinka enemy type to rinka
     lda #$04
     sta EnType,x
+    ; init more rinka stuff idk
     lda #$00
     sta EnSpecialAttribs,x
     sta EnData04,x
     jsr CommonJump_0E
+    ; set rinka frame to nothing (it will fade into view)
     lda #$F7
     sta EnAnimFrame,x
+    ; init rinka position
     ldy PageIndex
     lda RinkaSpawnerHi,y
     sta EnHi,x
@@ -1554,7 +1583,8 @@ LA19C:
     ora RinkaSpawnerStatus,y
     tay
     lda RinkaSpawnPosTbl,y
-    jsr L9EE7
+    jsr SpawnRinka_InitPositionXY
+    ; increment rinka spawner position id
     ldx PageIndex
     inc RinkaSpawnerPosIndex,x
     lda RinkaSpawnerPosIndex,x
