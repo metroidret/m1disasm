@@ -5446,7 +5446,7 @@ ObjDrawFrame:
     GotoClearObjectCntrl:
         jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
     LDE56:
-        cmp #$07                        ;Is the animation of Samus facing forward?-->
+        cmp #_id_ObjFrame07.b           ;Is the animation of Samus facing forward?-->
     bne LDE60                           ;If not, branch.
 
     lda ObjectCntrl                 ;Ensure object mirroring bit is clear so Samus'-->
