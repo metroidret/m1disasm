@@ -5135,24 +5135,24 @@ Lx133:
 GetSpriteCntrlData:
     ;Clear index into placement data.
     ldy #$00
-    sty $0F
+    sty Temp0F_PlaceIndex
     
     ;Load control byte from frame pointer data.
-    lda ($00),y
-    sta $04 ;Store value in $04 for processing below.
+    lda (Temp00_FramePtr),y
+    sta Temp04_MetaspriteFlipFlags ;Store value in $04 for processing below.
     tax ;Keep a copy of the value in x as well.
     
     ;Transfer bits 4 and 5 of the control byte into $05 bits 0 and 1(sprite color bits).
     jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
     and #$03
-    sta $05
+    sta Temp05_Cntrl
     ;Bits 6 and 7 are transferred into $05 bits 6 and 7(sprite flip bits).
     ;bit 5 is then set(sprite always drawn behind background).
     txa
     and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
     ora #OAMDATA_PRIORITY
-    ora $05
-    sta $05
+    ora Temp05_Cntrl
+    sta Temp05_Cntrl
     
     ;Extract bit from control byte that controls the object mirroring.
     lda ObjectCntrl
@@ -5160,8 +5160,8 @@ GetSpriteCntrlData:
     ;Move it to the bit 6 position and use it to flip the horizontal mirroring of the sprite if set.
     asl
     asl
-    eor $04
-    sta $04
+    eor Temp04_MetaspriteFlipFlags
+    sta Temp04_MetaspriteFlipFlags
     ;If MSB is set in ObjectCntrl, use its attributes.
     lda ObjectCntrl
     bpl LDCEF
@@ -5351,22 +5351,22 @@ DrawEnemy_NotBlank:
     bcc Lx144
         lda (EnmyFrameTbl2Ptr),y
     Lx144:
-    sta $00
+    sta Temp00_FramePtr
     iny
     lda (EnmyFrameTbl1Ptr),y
     bcc Lx145
         lda (EnmyFrameTbl2Ptr),y
     Lx145:
-    sta $01
+    sta Temp00_FramePtr+1.b
     
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     ; load pointer to enemy place data into $02-$03
     tay
     lda (EnmyPlaceTblPtr),y
-    sta $02
+    sta Temp02_PlacePtr
     iny
     lda (EnmyPlaceTblPtr),y
-    sta $03
+    sta Temp02_PlacePtr+1.b
     ; branch if place is not EnPlace2
     ldy #$00
     cpx #$02
@@ -5382,10 +5382,10 @@ DrawEnemy_NotBlank:
         ; update h-flip and v-flip of the blown up chunks of the enemy
         and #$03
         tax
-        lda $05
+        lda Temp05_Cntrl
         and #~(OAMDATA_VFLIP | OAMDATA_HFLIP).b
         ora ExplodeRotationTbl,x
-        sta $05
+        sta Temp05_Cntrl
         pla
         ; if explosion timer reaches #$19, the enemy has finished exploding
         cmp #$19
@@ -5397,34 +5397,34 @@ DrawEnemy_NotBlank:
     ldx PageIndex
     ; write y radius to EnRadY
     iny ; y = #$01
-    lda ($00),y
+    lda (Temp00_FramePtr),y
     sta EnRadY,x
     ; write y radius - #$10 to temp $08
     jsr ReduceYRadius
     ; write x radius
     iny
-    lda ($00),y
+    lda (Temp00_FramePtr),y
     sta EnRadX,x
     ; write x radius to temp $09
     sta Temp09_RadiusX
     
     ; save y to $11
     iny
-    sty $11
+    sty Temp11_FrameIndex
     ;Determine if object is within screen boundaries.
     ;x=1 object on screen, x=0 object not on screen
     jsr IsObjectVisible
     ; write this flag in bit 1 of EnData05
     txa
     asl
-    sta $08
+    sta Temp08_RadiusY
     ldx PageIndex
     lda EnData05,x
     and #$FD
-    ora $08
+    ora Temp08_RadiusY
     sta EnData05,x
     ; draw enemy if it is on screen
-    lda $08
+    lda Temp08_RadiusY
     beq GotoClearObjectCntrl
     jmp LDEDE
 
@@ -5472,7 +5472,7 @@ ObjDrawFrame:
     GotoClearObjectCntrl:
         jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
     LDE56:
-        cmp #$07                        ;Is the animation of Samus facing forward?-->
+        cmp #_id_ObjFrame07.b           ;Is the animation of Samus facing forward?-->
     bne LDE60                           ;If not, branch.
 
     lda ObjectCntrl                 ;Ensure object mirroring bit is clear so Samus'-->
@@ -5490,14 +5490,14 @@ LDE60:
     asl                             ;*2. Frame pointers are two bytes.
     tax                             ;X is now the index into the ObjFramePtrTable.
     lda ObjFramePtrTable,x             ;
-    sta $00                         ;
+    sta Temp00_FramePtr             ;
     lda ObjFramePtrTable+1,x           ;Entry from ObjFramePtrTable is stored in $0000.
-    sta $01                         ;
+    sta Temp00_FramePtr+1.b         ;
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     lda ObjPlacePtrTable,x             ;
-    sta $02                         ;
+    sta Temp02_PlacePtr             ;
     lda ObjPlacePtrTable+1,x           ;Store pointer from PlacePtrTbl in $0002.
-    sta $03                         ;
+    sta Temp02_PlacePtr+1.b         ;
     lda IsSamus                     ;Is Samus the object being drawn?-->
     beq LDEBC                           ;If not, branch.
 
@@ -5510,10 +5510,10 @@ LDE60:
     pha                             ;Save value of A.
     and #$03                        ;Use 2 LSBs for index into ExplodeRotationTbl.
     tax                             ;
-    lda $05                         ;Drop mirror control bits from sprite control byte.
+    lda Temp05_Cntrl                ;Drop mirror control bits from sprite control byte.
     and #$3F                        ;
     ora ExplodeRotationTbl,x        ;Use mirror control bytes from table(Base is $DC8B).
-    sta $05                         ;Save modified sprite control byte.
+    sta Temp05_Cntrl                ;Save modified sprite control byte.
     pla                             ;Restore A
     cmp #$19                        ;After 25 frames, Move on to second part of death-->
     bne LDEBC                           ;handler, else branch to skip the rest of this code.
@@ -5529,15 +5529,15 @@ LDE60:
 LDEBC:
     ldx PageIndex                   ;
     iny                             ;Increment to second frame data byte.
-    lda ($00),y                     ;
+    lda (Temp00_FramePtr),y         ;
     sta ObjRadY,x                   ;Get vertical radius in pixels of object.
     jsr ReduceYRadius               ;($DE3D)Reduce temp y radius by #$10.
     iny                             ;Increment to third frame data byte.
-    lda ($00),y                     ;Get horizontal radius in pixels of object.
+    lda (Temp00_FramePtr),y         ;Get horizontal radius in pixels of object.
     sta ObjRadX,x                   ;
     sta Temp09_RadiusX              ;Temp storage for object x radius.
     iny                             ;Set index to 4th byte of frame data.
-    sty $11                         ;Store current index into frame data.
+    sty Temp11_FrameIndex           ;Store current index into frame data.
     jsr IsObjectVisible             ;($DFDF)Determine if object is within the screen boundaries.
     txa                             ;
     ldx PageIndex                   ;Get index to object.
@@ -5551,37 +5551,37 @@ LDEE3:
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte then exit.
 
 WriteSpriteRAM: ;($DEE6)
-    ldy $0F                         ;Load index for placement data.
+    ldy Temp0F_PlaceIndex           ;Load index for placement data.
     jsr YDisplacement               ;($DF6B)Get displacement for y direction.
-    adc $10                         ;Add initial Y position.
+    adc Temp10_ScreenY              ;Add initial Y position.
     sta SpriteRAM,x               ;Store sprite Y coord.
     dec SpriteRAM,x               ;Because PPU uses Y + 1 as real Y coord.
-    inc $0F                         ;Increment index to next byte of placement data.
-    ldy $11                         ;Get index to frame data.
-    lda ($00),y                     ;Tile value.
+    inc Temp0F_PlaceIndex           ;Increment index to next byte of placement data.
+    ldy Temp11_FrameIndex           ;Get index to frame data.
+    lda (Temp00_FramePtr),y         ;Tile value.
     sta SpriteRAM+1,x             ;Store tile value in sprite RAM.
     lda ObjectCntrl                 ;
     asl                             ;Move horizontal mirror control byte to bit 6 and-->
     asl                             ;discard all other bits.
     and #OAMDATA_HFLIP                        ;
-    eor $05                         ;Use it to override sprite horz mirror bit.
+    eor Temp05_Cntrl              ;Use it to override sprite horz mirror bit.
     sta SpriteRAM+2,x             ;Store sprite control byte in sprite RAM.
-    inc $11                         ;Increment to next byte of frame data.
-    ldy $0F                         ;Load index for placement data.
+    inc Temp11_FrameIndex           ;Increment to next byte of frame data.
+    ldy Temp0F_PlaceIndex           ;Load index for placement data.
     jsr XDisplacement               ;($DFA3)Get displacement for x direction.
-    adc $0E                         ;Add initial X pos
+    adc Temp0E_ScreenX              ;Add initial X pos
     sta SpriteRAM+3,x             ;Store sprite X coord
-    inc $0F                         ;Increment to next placement data byte.
+    inc Temp0F_PlaceIndex           ;Increment to next placement data byte.
     inx                             ;
     inx                             ;
     inx                             ;Advance to next sprite.
     inx                             ;
 
 DrawSpriteObject:
-    ldy $11                         ;Get index into frame data.
+    ldy Temp11_FrameIndex           ;Get index into frame data.
 
 GetNextFrameByte:
-    lda ($00),y                     ;Get next frame data byte.
+    lda (Temp00_FramePtr),y         ;Get next frame data byte.
     cmp #$FC                        ;If byte < #$FC, byte is tile data. If >= #$FC, byte is-->
     bcc WriteSpriteRAM              ;frame data control info. Branch to draw sprite.
     beq OffsetObjectPosition        ;#$FC changes object's x and y position.
@@ -5597,9 +5597,9 @@ ClearObjectCntrl:
     rts                             ;
 
 SkipPlacementData: ;($DF32)
-    inc $0F                         ;Skip next y and x placement data bytes.
-    inc $0F                         ;
-    inc $11                         ;Increment to next data item in frame data.
+    inc Temp0F_PlaceIndex           ;Skip next y and x placement data bytes.
+    inc Temp0F_PlaceIndex           ;
+    inc Temp11_FrameIndex           ;Increment to next data item in frame data.
     jmp DrawSpriteObject            ;($DF19)Draw next sprite.
 
 GetNewControlByte: ;($DF3B)
@@ -5610,40 +5610,40 @@ GetNewControlByte: ;($DF3B)
         bne LDF4B                          ;Branch always.
     LDF45:
         lsr ObjectCntrl                 ;Restore MSB of ObjectCntrl.
-        lda ($00),y                     ;
-        sta $05                         ;Save new sprite control byte.
+        lda (Temp00_FramePtr),y         ;
+        sta Temp05_Cntrl              ;Save new sprite control byte.
     LDF4B:
     iny                             ;Increment past sprite control byte.
-    sty $11                         ;Save index of frame data.
+    sty Temp11_FrameIndex           ;Save index of frame data.
     jmp GetNextFrameByte            ;($DF1B)Load next frame data byte.
 
 OffsetObjectPosition:
     iny                             ;Increment index to next byte of frame data.
-    lda ($00),y                     ;This data byte is used to offset the object from-->
+    lda (Temp00_FramePtr),y         ;This data byte is used to offset the object from-->
     clc                             ;its current y positon.
-    adc $10                         ;
-    sta $10                         ;Add offset amount to object y screen position.
-    inc $11                         ;
-    inc $11                         ;Increment past control byte and y offset byte.
-    ldy $11                         ;
-    lda ($00),y                     ;Load x offset data byte.
+    adc Temp10_ScreenY              ;
+    sta Temp10_ScreenY              ;Add offset amount to object y screen position.
+    inc Temp11_FrameIndex           ;
+    inc Temp11_FrameIndex           ;Increment past control byte and y offset byte.
+    ldy Temp11_FrameIndex           ;
+    lda (Temp00_FramePtr),y         ;Load x offset data byte.
     clc                             ;
-    adc $0E                         ;Add offset amount to object x screen position.
-    sta $0E                         ;
-    inc $11                         ;Increment past x offset byte.
+    adc Temp0E_ScreenX              ;Add offset amount to object x screen position.
+    sta Temp0E_ScreenX              ;
+    inc Temp11_FrameIndex           ;Increment past x offset byte.
     jmp DrawSpriteObject            ;($DF19)Draw next sprite.
 
 ;----------------------------------[ Sprite placement routines ]-------------------------------------
 
 YDisplacement:
-    lda ($02),y                     ;Load placement data byte.
+    lda (Temp02_PlacePtr),y         ;Load placement data byte.
     tay                             ;
     and #$F0                        ;Check to see if this is placement data for the object-->
     cmp #$80                        ;exploding.  If so, branch.
     beq ExplodeYDisplace                          ;
     tya                             ;Restore placement data byte to A.
 LDF75:
-    bit $04                         ;
+    bit Temp04_MetaspriteFlipFlags  ;
     bmi NegativeDisplacement        ;Branch if MSB in $04 is set(Flips object).
     clc                             ;Clear carry before returning.
     rts                             ;
@@ -5668,24 +5668,24 @@ ExplodeYDisplace:
     tay                             ;
     lda ExplodePlacementTbl-1,y     ;Get data from ExplodePlacementTbl.
     pha                             ;Save data on stack.
-    lda $0F                         ;Load placement data index.
+    lda Temp0F_PlaceIndex           ;Load placement data index.
     clc                             ;
     adc #$0C                        ;Move index forward by 12 bytes. to find y-->
     tay                             ;placement data.
     pla                             ;Restore A with ExplodePlacementTbl data.
     clc                             ;
-    adc ($02),y                     ;Add table displacements with sprite placement data.
+    adc (Temp02_PlacePtr),y         ;Add table displacements with sprite placement data.
     jmp LDF75                       ;Branch to add y placement values to sprite coords.
 
 XDisplacement:
-    lda ($02),y                     ;Load placement data byte.
+    lda (Temp02_PlacePtr),y         ;Load placement data byte.
     tay                             ;
     and #$F0                        ;Check to see if this is placement data for the object-->
     cmp #$80                        ;exploding.  If so, branch.
     beq ExplodeXDisplace            ;
     tya                             ;Restore placement data byte to A.
 LDFAD:
-    bit $04                         ;
+    bit Temp04_MetaspriteFlipFlags  ;
     bvc LDFB6                           ;Branch if bit 6 cleared, else data is negative displacement.
 
 NegativeDisplacement:
@@ -5705,8 +5705,8 @@ ExplodeXDisplace:
     LDFC3:
     asl                             ;*2. Move sprite in x direction 2 pixels every frame.
     pha                             ;Store value on stack.
-    ldy $0F                         ;
-    lda ($02),y                     ;Load placement data byte.
+    ldy Temp0F_PlaceIndex           ;
+    lda (Temp02_PlacePtr),y         ;Load placement data byte.
     lsr                             ;
     bcs LDFD2                       ;Check if LSB is set. If not, the byte stored on stack-->
         pla                             ;Will be twos complemented and used to move sprite in-->
@@ -5714,13 +5714,13 @@ ExplodeXDisplace:
         adc #$01                        ;
         pha                             ;
     LDFD2:
-    lda $0F                         ;Load placement data index.
+    lda Temp0F_PlaceIndex           ;Load placement data index.
     clc                             ;
     adc #$0C                        ;Move index forward by 12 bytes. to find x-->
     tay                             ;placement data.
     pla                             ;Restore A with x displacement data.
     clc                             ;
-    adc ($02),y                     ;Add x displacement with sprite placement data.
+    adc (Temp02_PlacePtr),y         ;Add x displacement with sprite placement data.
     jmp LDFAD                       ;Branch to add x placement values to sprite coords.
 
 ;---------------------------------[ Check if object is on screen ]----------------------------------
@@ -5737,11 +5737,11 @@ IsObjectVisible: ;($DFDF)
     tay                             ;
     sec                             ;Subtract y scroll to find sprite's y position on screen.
     sbc ScrollY                     ;
-    sta $10                         ;Store result in $10.
+    sta Temp10_ScreenY              ;Store result in $10.
     lda Temp0B_PositionX            ;Object X position in room.
     sec                             ;
     sbc ScrollX                     ;Subtract x scroll to find sprite's x position on screen.
-    sta $0E                         ;Store result in $0E.
+    sta Temp0E_ScreenX              ;Store result in $0E.
     lda ScrollDir                   ;
     and #$02                        ;Is Samus scrolling left or right?-->
     bne HorzScrollCheck             ;($E01C)If so, branch.
@@ -5753,19 +5753,19 @@ VertScrollCheck:
     and #$01                        ;If not, branch.
     beq LE012                       ;
     bcs LE01A                       ;If carry is still set, sprite is not in screen boundaries.
-    lda $10                         ;
+    lda Temp10_ScreenY              ;
     sbc #$0F                        ;Move sprite y position up 15 pixels.
-    sta $10                         ;
+    sta Temp10_ScreenY              ;
     lda Temp09_RadiusX              ;
     clc                             ;If a portion of the object is outside the sceen-->
-    adc $10                         ;boundaries, treat object as if the whole thing is-->
+    adc Temp10_ScreenY              ;boundaries, treat object as if the whole thing is-->
     cmp #$F0                        ;not visible.
     bcc RTS_E01B                    ;
     clc                             ;Causes next statement to branch always.
 LE012:
     bcc LE01A                       ;
     lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
-    cmp $10                         ;the PPU, check if part of object is out of screen-->
+    cmp Temp10_ScreenY              ;the PPU, check if part of object is out of screen-->
     bcc RTS_E01B                    ;boundaries.  If so, branch.
 LE01A:
     dex                             ;Sprite is not within screen boundaries. Decrement X.
@@ -5780,13 +5780,13 @@ HorzScrollCheck:
         bcs LE036                   ;If carry is still set, sprite is not in screen boundaries.
         lda Temp09_RadiusX          ;
         clc                         ;If a portion of the object is outside the sceen-->
-        adc $0E                     ;boundaries, treat object as if the whole thing is-->
+        adc Temp0E_ScreenX          ;boundaries, treat object as if the whole thing is-->
         bcc RTS_E037                ;not visible.
         clc                         ;Causes next statement to branch always.
     LE02E:
     bcc LE036                       ;
     lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
-    cmp $0E                         ;the PPU, check if part of object is out of screen-->
+    cmp Temp0E_ScreenX              ;the PPU, check if part of object is out of screen-->
     bcc RTS_E037                    ;boundaries.  If so, branch.
 LE036:
     dex                             ;Sprite is not within screen boundaries. Decrement X.
@@ -5802,12 +5802,12 @@ SpriteAttrsOverride: ;($E038)
     ;Restore MSB.
     lsr ObjectCntrl
     ;Reload frame data control byte into A.
-    lda ($00),y
+    lda (Temp00_FramePtr),y
     ;Extract the two sprite flip bytes from the original control byte and set any additional bits from ObjectCntrl.
     and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
     ora ObjectCntrl
     ;Store modified byte to load in sprite control byte later.
-    sta $05
+    sta Temp05_Cntrl
     ;Ensure MSB of object control byte remains set.
     lda ObjectCntrl
     ora #$80

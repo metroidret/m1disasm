@@ -75,6 +75,18 @@ Temp09_RadiusX         = $09
 Temp0A_PositionY       = $0A
 Temp0B_PositionX       = $0B
 
+; WriteSpriteRAM
+Temp00_FramePtr        = $00
+; Temp00_FramePtr+1      = $01
+Temp02_PlacePtr        = $02
+; Temp02_PlacePtr+1      = $03
+Temp04_MetaspriteFlipFlags = $04 ;Bit 7=vflip, bit 6=hflip
+Temp05_Cntrl           = $05
+Temp0E_ScreenX         = $0E     ;X position of object relative to screen.
+Temp0F_PlaceIndex      = $0F
+Temp10_ScreenY         = $10     ;Y position of object relative to screen.
+Temp11_FrameIndex      = $11
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
