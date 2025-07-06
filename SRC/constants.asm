@@ -327,10 +327,11 @@ MotherBrainStatus      = $98     ;#$00=Mother brain not in room, #$01=Mother bra
                                    ;#$09, #$0A=Mother brain already dead.
 MotherBrainQtyHits     = $99     ;Number of times mother brain has been hit. Dies at #$20.
 
-MotherBrain9A          = $9A
-MotherBrain9B          = $9B
-MotherBrainAnimFrameTableID = $9C
-MotherBrainNameTable   = $9D
+MotherBrainAnimBrainDelay = $9A     ; delay until next brain frame. depends on mother brain health
+MotherBrainAnimEyeDelay = $9B     ; delay until eye opens or closes. depends on mother brain health
+                                    ; bit7=is eye open? #%0=yes, #%1=no
+MotherBrainAnimFrameTableID = $9C     ; current id in MotherBrainAnimFrameTable for the brain pulsations
+MotherBrainHi          = $9D
 MotherBrainIsHit       = $9E     ;Was mother brain hit by a missile? #$00=no, #$01=yes
 MotherBrainFlashDelay  = $9F     ;Delay until mother brain no longer flashes from being hit.
 

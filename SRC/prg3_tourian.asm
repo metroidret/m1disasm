@@ -711,7 +711,7 @@ L9C6F:
     beq L9CC3
     cmp #$0A
     beq L9CC3
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     eor $02
     lsr
     bcs L9CC3
@@ -791,15 +791,15 @@ SpawnMotherBrainRoutine:
     lda #$01
     sta MotherBrainStatus
     jsr GetNameTable_
-    sta MotherBrainNameTable
+    sta MotherBrainHi
     eor #$01
     tax
     lda L9D3C
     ora DoorOnNameTable3,x
     sta DoorOnNameTable3,x
     lda #$20
-    sta MotherBrain9A
-    sta MotherBrain9B
+    sta MotherBrainAnimBrainDelay
+    sta MotherBrainAnimEyeDelay
     rts
 
 L9D3B:  .byte $02
@@ -927,15 +927,18 @@ RTS_9DF1:
     rts
 
 ;-------------------------------------------------------------------------------
-L9DF2:
+MotherBrain_9E22_CollideWithSamus:
+    ; exit if samus is not in the same nametable as mother brain
     lda ObjHi
-    eor MotherBrainNameTable
+    eor MotherBrainHi
     bne RTS_9DF1
+    ; exit if samus x pos is not in range #$48 to #$76 inclusive
     lda ObjX
     sec
     sbc #$48
     cmp #$2F
     bcs RTS_9DF1
+    ; exit if samus y pos is not in range #$61 to #$9F inclusive
     lda ObjY
     sec
     sbc #$80
@@ -944,6 +947,9 @@ L9DF2:
     L9E0E:
     cmp #$20
     bcs RTS_9DF1
+    
+    ; samus is touching mother brain
+    ; deal 20 damage to samus
     lda #$00
     sta HealthChange
     lda #$02
@@ -954,12 +960,12 @@ L9DF2:
 
 ;-------------------------------------------------------------------------------
 MotherBrain_9E22:
-    jsr L9DF2
-    jsr L9FED
-    jsr LA01B
-    jsr LA02E
+    jsr MotherBrain_9E22_CollideWithSamus
+    jsr MotherBrain_9E22_HandleBeingHit
+    jsr MotherBrain_9E22_UpdateAnimBrain
+    jsr MotherBrain_9E22_UpdateAnimEye
 L9E2E:
-    jsr LA041
+    jsr MotherBrain_DrawSprites
 ClearMotherBrainIsHit:
     lda #$00
     sta MotherBrainIsHit
@@ -1010,7 +1016,7 @@ MotherBrain_9E52:
     L9E68:
         tya
         sta EnStatus,x
-        jsr L9EF9
+        jsr Xplus16
         cpx #$C0
         bne L9E68
     lda #$04
@@ -1029,7 +1035,7 @@ MotherBrain_9E86:
     ora NoiseSFXFlag
     sta NoiseSFXFlag
     jsr LA072
-    inc MotherBrain9A
+    inc MotherBrainAnimBrainDelay
     jsr UpdateMotherBrainFlashDelay
     ldx #$00
     L9E98:
@@ -1039,7 +1045,7 @@ MotherBrain_9E86:
             lda #$00
             sta EnStatus,x
         L9EA4:
-        jsr L9EF9
+        jsr Xplus16
         cmp #$40
         bne L9E98
     lda PPUStrIndex
@@ -1050,7 +1056,7 @@ MotherBrain_9E86:
     ldy MotherBrainStatus
     dey
     bne RTS_9ED5
-    sty MotherBrain9A
+    sty MotherBrainAnimBrainDelay
     lda #$04
     sta MotherBrainStatus
     lda #$1C
@@ -1089,7 +1095,7 @@ L9EE7:
     sta EnX,x
     rts
 
-L9EF9:
+Xplus16:
     txa
     clc
     adc #$10
@@ -1116,7 +1122,7 @@ MotherBrain_9F02_08:
         adc #$42
         sta TileBlastWRAMPtr
         php
-        lda MotherBrainNameTable
+        lda MotherBrainHi
         asl
         asl
         plp
@@ -1150,7 +1156,7 @@ MotherBrain_9F49:
     sta EndTimer+1
     lda #$01
     sta MotherBrain010D
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     sta MotherBrain010C
 RTS_9F64:
     rts
@@ -1172,7 +1178,7 @@ L9F69:
     sta SamusOnElevator,x
     lda #$03
     sta ObjAction,x
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     sta ObjHi,x
     lda #$10
     sta ObjX,x
@@ -1189,7 +1195,7 @@ L9F69:
     sta TileBlastAnimFrame
     lda #$40
     sta TileBlastWRAMPtr
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     asl
     asl
     ora #$61
@@ -1218,7 +1224,7 @@ RTS_9FD9:
 MotherBrain_9FDA:
     jsr L9F69
     bcs RTS_9FEC
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     sta MotherBrain010C
     ldy #$01
     sty MotherBrain010D
@@ -1228,101 +1234,137 @@ RTS_9FEC:
     rts
 
 ;-------------------------------------------------------------------------------
-L9FED:
+MotherBrain_9E22_HandleBeingHit:
+    ; exit if mother brain was not hit
     lda MotherBrainIsHit
-    beq RTS_A01A
+    beq @RTS
+    
+    ; play boss hit sfx
     lda MultiSFXFlag
     ora #sfxMulti_BossHit
     sta MultiSFXFlag
+    ; increment mother brain hits quantity
     inc MotherBrainQtyHits
+    ; exit if hits quantity is less than 32
     lda MotherBrainQtyHits
     cmp #$20
-    ldy #$02
-    lda #$10
-    bcc LA016
-    ldx #$00
-    LA007:
-        lda #$00
-        sta TileBlastRoutine,x
-        jsr L9EF9
-        cmp #$D0
-        bne LA007
-    iny
-    lda #$80
-LA016:
+    ldy #$02 ; default mb status to hit
+    lda #$10 ; default mb flash time to 16 frames
+    bcc @notDead
+        ; hits quantity is 32 or greater
+        ; mother brain must start to die
+        
+        ; clear all tile blasts
+        ldx #$00
+        @loop:
+            lda #$00
+            sta TileBlastRoutine,x
+            jsr Xplus16
+            cmp #$D0
+            bne @loop
+        ; set mother brain status to dying
+        iny
+        ; set flashing delay to 128 frames
+        lda #$80
+    @notDead:
     sty MotherBrainStatus
     sta MotherBrainFlashDelay
-RTS_A01A:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
-LA01B:
-    dec MotherBrain9A
-    bne RTS_A02D
+MotherBrain_9E22_UpdateAnimBrain:
+    ; decrement brain delay
+    dec MotherBrainAnimBrainDelay
+    ; exit if brain delay is not zero
+    bne @RTS
+    
+    ; set brain frame to one of four randomly chosen frames from MotherBrainAnimFrameTable
     lda RandomNumber1
     and #$03
     sta MotherBrainAnimFrameTableID
+    
+    ; set brain delay depending on how many hits are left until mother brain dies
     lda #$20
     sec
     sbc MotherBrainQtyHits
     lsr
-    sta MotherBrain9A
-RTS_A02D:
+    sta MotherBrainAnimBrainDelay
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
-LA02E:
-    dec MotherBrain9B
-    lda MotherBrain9B
+MotherBrain_9E22_UpdateAnimEye:
+    ; decrement eye delay
+    dec MotherBrainAnimEyeDelay
+    ; exit if eye delay is not #$00 or #$80
+    lda MotherBrainAnimEyeDelay
     asl
     bne RTS_A040
+    
+    ; set eye delay depending on how many hits are left until mother brain dies
+    ; also toggle bit 7 of eye delay
     lda #$20
     sec
     sbc MotherBrainQtyHits
     ora #$80
-    eor MotherBrain9B
-    sta MotherBrain9B
+    eor MotherBrainAnimEyeDelay
+    sta MotherBrainAnimEyeDelay
 RTS_A040:
     rts
 
 ;-------------------------------------------------------------------------------
-LA041:
+MotherBrain_DrawSprites:
+    ; set PageIndex to mother brain enemy slot
     lda #$E0
     sta PageIndex
-    lda MotherBrainNameTable
+    ; set mother brain enemy pos to hardcoded constants
+    lda MotherBrainHi
     sta EnHi+$E0
     lda #$70
     sta EnY+$E0
     lda #$48
     sta EnX+$E0
+    ; update mother brain anim frame
     ldy MotherBrainAnimFrameTableID
-    lda LA06D,y
+    lda MotherBrainAnimFrameTable,y
     sta EnAnimFrame+$E0
+    ; draw mother brain enemy
     jsr CommonJump_DrawEnemy
-    lda MotherBrain9B
-    bmi RTS_A06C
-    lda LA06D+4
-    sta EnAnimFrame+$E0
-    jsr CommonJump_DrawEnemy
-RTS_A06C:
+    
+    ; branch if bit 7 of eye delay is set
+    lda MotherBrainAnimEyeDelay
+    bmi @endIf_A
+        ; bit 7 is not set, eyes are open
+        ; draw the eyes of mother brain
+        lda MotherBrainAnimFrameTable+4
+        sta EnAnimFrame+$E0
+        jsr CommonJump_DrawEnemy
+    @endIf_A:
     rts
 
 ; animation frame id table
-LA06D:
-    .byte $13, $14, $15, $16
-    .byte $17
+MotherBrainAnimFrameTable:
+; pulsations on the brain
+    .byte _id_EnFrame13
+    .byte _id_EnFrame14
+    .byte _id_EnFrame15
+    .byte _id_EnFrame16
+
+; mother brain's eyes
+    .byte _id_EnFrame17
 
 LA072:
     ldy MotherBrainQtyHits
     beq RTS_A086
     lda LA0C0,y
     clc
-    adc MotherBrain9A
+    adc MotherBrainAnimBrainDelay
     tay
     lda LA0A3,y
     cmp #$FF
     bne LA087
-    dec MotherBrain9A
+    dec MotherBrainAnimBrainDelay
 RTS_A086:
     rts
 
@@ -1330,7 +1372,7 @@ LA087:
     adc #$44
     sta TileBlastWRAMPtr
     php
-    lda MotherBrainNameTable
+    lda MotherBrainHi
     asl
     asl
     ora #$61
@@ -1362,7 +1404,7 @@ LA0C6:
     LA0D9:
         lda TileBlastRoutine,x
         beq LA0E7
-            jsr L9EF9
+            jsr Xplus16
             cmp #$D0
             bne LA0D9
             beq LA13E
