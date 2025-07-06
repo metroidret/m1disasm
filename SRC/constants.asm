@@ -325,6 +325,7 @@ MotherBrainStatus      = $98     ;#$00=Mother brain not in room, #$01=Mother bra
                                    ;#$06=Time bomb set, #$07=Time bomb exploded,-->
                                    ;#$08=Initialize mother brain,-->
                                    ;#$09, #$0A=Mother brain already dead.
+; when mother brain is alive
 MotherBrainQtyHits     = $99     ;Number of times mother brain has been hit. Dies at #$20.
 
 MotherBrainAnimBrainDelay = $9A     ; delay until next brain frame. depends on mother brain health
@@ -334,6 +335,10 @@ MotherBrainAnimFrameTableID = $9C     ; current id in MotherBrainAnimFrameTable 
 MotherBrainHi          = $9D
 MotherBrainIsHit       = $9E     ;Was mother brain hit by a missile? #$00=no, #$01=yes
 MotherBrainFlashDelay  = $9F     ;Delay until mother brain no longer flashes from being hit.
+
+; when mother brain is dead
+MotherBrainDeathStringID     = $99     ;
+MotherBrainDeathInstrID     = $9A     ;
 
 ; 4 slots of 4 bytes each ($A0-$AF)
 SkreeProjectileDieDelay= $A0     ;Delay until projectile dies.

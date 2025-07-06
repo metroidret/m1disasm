@@ -446,7 +446,7 @@ L9B25:
     jsr MotherBrainStatusHandler
     jsr UpdateEndTimer
     jsr DrawEndTimerEnemy
-    jsr ZebetiteA28B
+    jsr UpdateAllZebetites
     jmp UpdateAllRinkaSpawners
 
 ;-------------------------------------------------------------------------------
@@ -1034,7 +1034,7 @@ MotherBrain_9E86:
     lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
     sta NoiseSFXFlag
-    jsr LA072
+    jsr MotherBrain_Disintegrate
     inc MotherBrainAnimBrainDelay
     jsr UpdateMotherBrainFlashDelay
     ldx #$00
@@ -1358,21 +1358,28 @@ MotherBrainAnimFrameTable:
 ; mother brain's eyes
     .byte _id_EnFrame17
 
-LA072:
-    ldy MotherBrainQtyHits
-    beq RTS_A086
-    lda LA0C0,y
+MotherBrain_Disintegrate:
+    ; exit if mother brain disintegration step is zero
+    ldy MotherBrainDeathStringID
+    beq @RTS
+    ; get MotherBrainDeathString offset
+    lda MotherBrainDeathStringOffsets-1,y
     clc
-    adc MotherBrainAnimBrainDelay
+    adc MotherBrainDeathInstrID
     tay
-    lda LA0A3,y
+    ; get byte from MotherBrainDeathString
+    lda MotherBrainDeathString,y
+    ; branch if not #$FF
     cmp #$FF
-    bne LA087
-    dec MotherBrainAnimBrainDelay
-RTS_A086:
+    bne @disintegrate
+    ; byte is #$FF, the instruction string has ended
+    ; dont increment to next byte
+    dec MotherBrainDeathInstrID
+@RTS:
     rts
 
-LA087:
+@disintegrate:
+    ; add ($6144 + MotherBrainHi*$0400) to byte
     adc #$44
     sta TileBlastWRAMPtr
     php
@@ -1383,15 +1390,55 @@ LA087:
     plp
     adc #$00
     sta TileBlastWRAMPtr+1
+    ; clear 2x2 tile region at that location
     lda #$00
     sta TileBlastAnimFrame
     sta PageIndex
     jmp CommonJump_DrawTileBlast
 
-LA0A3:  .byte $00, $02, $04, $06, $08, $40, $80, $C0, $48, $88, $C8, $FF, $42, $81, $C1, $27
-LA0B3:  .byte $FF, $82, $43, $25, $47, $FF, $C2, $C4, $C6, $FF, $84, $45, $86
-LA0C0:  .byte $FF, $00, $0C
-LA0C3:  .byte $11, $16, $1A
+MotherBrainDeathString:
+MotherBrainDeathString_1:
+    .byte $6144 - $6144
+    .byte $6146 - $6144
+    .byte $6148 - $6144
+    .byte $614A - $6144
+    .byte $614C - $6144
+    .byte $6184 - $6144
+    .byte $61C4 - $6144
+    .byte $6204 - $6144
+    .byte $618C - $6144
+    .byte $61CC - $6144
+    .byte $620C - $6144
+    .byte $FF
+MotherBrainDeathString_2:
+    .byte $6186 - $6144
+    .byte $61C5 - $6144
+    .byte $6205 - $6144
+    .byte $616B - $6144
+    .byte $FF
+MotherBrainDeathString_3:
+    .byte $61C6 - $6144
+    .byte $6187 - $6144
+    .byte $6169 - $6144
+    .byte $618B - $6144
+    .byte $FF
+MotherBrainDeathString_4:
+    .byte $6206 - $6144
+    .byte $6208 - $6144
+    .byte $620A - $6144
+    .byte $FF
+MotherBrainDeathString_5:
+    .byte $61C8 - $6144
+    .byte $6189 - $6144
+    .byte $61CA - $6144
+    .byte $FF
+
+MotherBrainDeathStringOffsets:
+    .byte MotherBrainDeathString_1 - MotherBrainDeathString
+    .byte MotherBrainDeathString_2 - MotherBrainDeathString
+    .byte MotherBrainDeathString_3 - MotherBrainDeathString
+    .byte MotherBrainDeathString_4 - MotherBrainDeathString
+    .byte MotherBrainDeathString_5 - MotherBrainDeathString
 
 ;-------------------------------------------------------------------------------
 ;$04-$05 is pointer to projectile ??
@@ -1718,19 +1765,19 @@ RTS_A28A:
     rts
 
 ;-------------------------------------------------------------------------------
-ZebetiteA28B:
+UpdateAllZebetites:
     lda #$10
     sta PageIndex
-    ; run LA29B for all zebetite slots
+    ; run UpdateZebetite for all zebetite slots
     ldx #$20
     @loop:
-        jsr LA29B
+        jsr UpdateZebetite
         txa
         sec
         sbc #$08
         tax
         bne @loop
-LA29B:
+UpdateZebetite:
     ; return if status is not #$x1
     lda ZebetiteStatus,x
     and #$0F
@@ -1755,19 +1802,25 @@ LA29B:
     bne LA2BA
     inc ZebetiteStatus,x
 LA2BA:
+    ; set anim frame
     lda ZebetiteAnimFrameTable,y
     sta TileBlastAnimFrame+$10
+    ; set vram pointer
     lda ZebetiteVRAMPtr,x
     sta TileBlastWRAMPtr+$10
     lda ZebetiteVRAMPtr+1,x
     sta TileBlastWRAMPtr+1+$10
+    ; if a ppu string is in the buffer, dont update gfx
     lda PPUStrIndex
     bne LA2DA
+        ; ppu string buffer is empty
+        ; update zebetite gfx
         txa
         pha
         jsr CommonJump_DrawTileBlast
         pla
         tax
+        ; (when is the carry flag set/unset here?)
         bcc LA2EB
     LA2DA:
     lda ZebetiteStatus,x
@@ -1779,9 +1832,11 @@ LA2BA:
     rts
 
 LA2EB:
+    ; reset healing delay to max
     lda #$40
     sta ZebetiteHealingDelay,x
-    bne LA30A
+    bne LA30A ; branch always
+
 LA2F2:
     ; dont heal if at full health
     ldy ZebetiteQtyHits,x
