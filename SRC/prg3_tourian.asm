@@ -445,7 +445,7 @@ L9B25:
     jsr UpdateAllCannons
     jsr MotherBrainStatusHandler
     jsr UpdateEndTimer
-    jsr LA238
+    jsr DrawEndTimerEnemy
     jsr ZebetiteA28B
     jmp UpdateAllRinkaSpawners
 
@@ -718,14 +718,14 @@ L9C6F:
     lda #$00
     sta MotherBrainStatus
 L9CC3:
-    lda MotherBrain010D
+    lda EndTimerEnemyIsEnabled
     beq RTS_9CD5
-    lda MotherBrain010C
+    lda EndTimerEnemyHi
     eor $02
     lsr
     bcs RTS_9CD5
     lda #$00
-    sta MotherBrain010D
+    sta EndTimerEnemyIsEnabled
 RTS_9CD5:
     rts
 
@@ -1159,9 +1159,9 @@ MotherBrain_9F49:
     sta EndTimer
     sta EndTimer+1
     lda #$01
-    sta MotherBrain010D
+    sta EndTimerEnemyIsEnabled
     lda MotherBrainHi
-    sta MotherBrain010C
+    sta EndTimerEnemyHi
 RTS_9F64:
     rts
 
@@ -1229,9 +1229,9 @@ MotherBrain_9FDA:
     jsr L9F69
     bcs RTS_9FEC
     lda MotherBrainHi
-    sta MotherBrain010C
+    sta EndTimerEnemyHi
     ldy #$01
-    sty MotherBrain010D
+    sty EndTimerEnemyIsEnabled
     dey
     sty MotherBrainStatus
 RTS_9FEC:
@@ -1662,26 +1662,34 @@ UpdateEndTimer:
     rts
 
 ;-------------------------------------------------------------------------------
-LA238:
-    lda MotherBrain010D
+; the end timer that is part of the "TIME BOMB SET" message
+DrawEndTimerEnemy:
+    ; exit if end timer enemy is not enabled
+    lda EndTimerEnemyIsEnabled
     beq RTS_A28A
-    lda MotherBrain010C
+
+    ; attempt to draw end timer enemy sprite
+    lda EndTimerEnemyHi
     sta EnHi+$E0
     lda #$84
     sta EnY+$E0
     lda #$64
     sta EnX+$E0
-    lda #$1A
+    lda #_id_EnFrame1A.b
     sta EnAnimFrame+$E0
     lda #$E0
     sta PageIndex
+    ; remember page pos for later
     lda SpritePagePos
     pha
     jsr CommonJump_DrawEnemy
+    ; exit if past page pos is the same as current page pos (sprite failed to draw)
     pla
     cmp SpritePagePos
     beq RTS_A28A
+    
     tax
+    ; set tile of hundreds digit
     lda EndTimer+1
     lsr
     lsr
@@ -1690,11 +1698,13 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta SpriteRAM+$01,x
+    sta SpriteRAM+($00<<2)+$01,x
+    ; set tile of tens digit
     lda EndTimer+1
     and #$0F
     ora #$A0
-    sta SpriteRAM+$05,x
+    sta SpriteRAM+($01<<2)+$01,x
+    ; set tile of ones digit
     lda EndTimer
     lsr
     lsr
@@ -1703,7 +1713,7 @@ LA238:
     ror
     and #$0F
     ora #$A0
-    sta SpriteRAM+$09,x
+    sta SpriteRAM+($02<<2)+$01,x
 RTS_A28A:
     rts
 

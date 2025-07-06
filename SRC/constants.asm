@@ -423,8 +423,8 @@ PowerUpDelayFlag       = $0109   ;Initiate power up music and delay after item p
 EndTimer               = $010A   ;Lower byte of end game escape timer.
 ; EndTimer+1             = $010B   ;Upper byte of end game escape timer.
 
-MotherBrain010C        = $010C
-MotherBrain010D        = $010D
+EndTimerEnemyHi        = $010C
+EndTimerEnemyIsEnabled = $010D   ;the end timer in the "TIME BOMB SET" message. #$00=no, #$01=yes
 
 MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 SamusHurt010F          = $010F
