@@ -95,7 +95,7 @@ GotoUpdateBullet_CollisionWithMotherBrain:
     jmp UpdateBullet_CollisionWithMotherBrain
 
 AreaRoutine:
-    jmp L9B25                       ;Area specific routine.
+    jmp AreaRoutine_Tourian                       ;Area specific routine.
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -441,7 +441,7 @@ L9A27:
 
 ;-------------------------------------------------------------------------------
 ; Tourian specific routine -- called every active frame
-L9B25:
+AreaRoutine_Tourian:
     jsr UpdateAllCannons
     jsr MotherBrainStatusHandler
     jsr UpdateEndTimer
@@ -693,7 +693,7 @@ L9C6F:
         jsr GetVRAMPtrHi
         eor ZebetiteVRAMPtr+1,x
         bne L9C99
-        sta ZebetiteStatus,x
+            sta ZebetiteStatus,x
         L9C99:
         txa
         clc

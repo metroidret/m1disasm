@@ -741,26 +741,26 @@ CurrentMusic           = $068D   ;Stores the flag of the current music being pla
 
 ;----------------------------------------------------------------------------------------------------
 
-; used by ZebHole in bank 7
-Mem0728                = $0728
-Mem0729                = $0729
-Mem072A                = $072A
-Mem072B                = $072B
-Mem072C                = $072C
-Mem0730                = $0730
-Mem0732                = $0732
-Mem0738                = $0738
+; 5 slots of 6 bytes each ($0700-$0723)
+Mem0700                = $0700
+Mem0704                = $0704
+
+
+; 4 slots of 8 bytes each ($0728-$0747)
+PipeBugHoleStatus      = $0728   ;bit0-3: spawned enemy type (often $7, pipe bug)
+                                   ;bit7: strong variant
+                                   ;#$FF=no hole
+PipeBugHoleEnemySlot   = $0729   ; enemy slot to spawn pipe bug in
+PipeBugHoleY           = $072A   ; y position of hole
+PipeBugHoleX           = $072B   ; x position of hole
+PipeBugHoleHi          = $072C   ; nametable position of hole
+
+; 2 slots of 8 bytes each ($0748-$0757)
 PowerUpType            = $0748   ;Holds the byte describing what power-up is on name table.
 PowerUpYCoord          = $0749   ;Y coordinate of the power-up.
 PowerUpXCoord          = $074A   ;X coordiante of the power-up
 PowerUpNameTable       = $074B   ;#$00 if on name table 0, #$01 if on name table 3.
 PowerUpAnimIndex       = $074F   ;Entry into FramePtrTable for item animation.
-
-PowerUpBType           = $0750   ;Holds the description byte of a second power-up(if any).
-PowerUpBYCoord         = $0751   ;Y coordinate of second power-up.
-PowerUpBXCoord         = $0752   ;X coordiante of second power-up.
-PowerUpBNameTable      = $0753   ;#$00 if on name table 0, #$01 if on name table 3.
-PowerUpBAnimIndex      = $0757   ;Entry into FramePtrTable for item animation.
 
 ; 5 Zebetite slots of 8 bytes each ($0758-$077F)
 ZebetiteStatus         = $0758

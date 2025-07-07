@@ -1714,10 +1714,10 @@ SamusInit:
     ldx #$00
     stx SamusBlink
     dex                             ;X = $FF
-    stx Mem0728
-    stx Mem0730
-    stx Mem0732
-    stx Mem0738
+    stx PipeBugHoleStatus+$00
+    stx PipeBugHoleStatus+$08
+    stx PipeBugHoleStatus+10 ; (BUG! those last two should be +$10 and +$18)
+    stx PipeBugHoleStatus+$10
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
     stx RinkaSpawnerStatus
@@ -3757,10 +3757,10 @@ LD48C:
         bne Lx066
 LD4A8:
     tya
-    cmp Mem072C,x
+    cmp PipeBugHoleHi,x
     bne RTS_X067
         lda #$FF
-        sta Mem0728,x
+        sta PipeBugHoleStatus,x
     RTS_X067:
     rts
 
@@ -7698,7 +7698,7 @@ EnemyLoop:
         .word LoadElevator              ;($EC04)Elevator.
         .word ExitSub                   ;($C45C)Rts.
         .word LoadStatues               ;($EC2F)Kraid & Ridley statues.
-        .word ZebHole                   ;($EC57)Regenerating enemies(such as Zeb).
+        .word LoadPipeBugHole                   ;($EC57)Regenerating enemies(such as Zeb).
 
 EndOfRoom:
     ldx #$F0                        ;Prepare for PPU attribute table write.
@@ -7962,45 +7962,50 @@ LoadStatues:
 Lx237:
     jmp EnemyLoop   ; do next room object
 
-ZebHole:
+LoadPipeBugHole:
+    ; find first open pipe bug hole slot
     ldx #$20
-    Lx238:
+    @loop:
         txa
         sec
         sbc #$08
-        bmi Lx239
+        ; exit if no slots are open
+        bmi @exit
         tax
-        ldy Mem0728,x
+        ; slot is occupied if status is not #$FF
+        ldy PipeBugHoleStatus,x
         iny
-        bne Lx238
+        bne @loop
+    ; slot found, spawn pipe bug hole
     ldy #$00
     lda ($00),y
     and #$F0
-    sta Mem0729,x
+    sta PipeBugHoleEnemySlot,x
     iny
     lda ($00),y
-    sta Mem0728,x
+    sta PipeBugHoleStatus,x
     iny
     lda ($00),y
     tay
     and #$F0
     ora #$08
-    sta Mem072A,x
+    sta PipeBugHoleY,x
     tya
     jsr Amul16       ; * 16
     ora #$00
-    sta Mem072B,x
+    sta PipeBugHoleX,x
     jsr GetNameTable                ;($EB85)
-    sta Mem072C,x
-Lx239:
+    sta PipeBugHoleHi,x
+@exit:
     lda #$03
     bne Lx237
 
 OnNameTable0:
-    lda PPUCTRL_ZP                   ;
-    eor #$01                        ;If currently on name table 0,-->
-    and #$01                        ;return #$01. Else return #$00.
-    tay                             ;
+    ;If currently on name table 0, return #$01. Else return #$00.
+    lda PPUCTRL_ZP
+    eor #$01
+    and #$01
+    tay
     rts
 
 ; Despawn offscreen room sprites to make room for new room sprites.
@@ -8082,10 +8087,10 @@ UpdateRoomSpriteInfo:
     ; unused RAM $0700-$0723
     ldx #$1E
     Lx247:
-        lda $0704,x
+        lda Mem0704,x
         bne Lx248
             lda #$FF
-            sta $0700,x
+            sta Mem0700,x
         Lx248:
         txa
         sec
@@ -8098,14 +8103,14 @@ UpdateRoomSpriteInfo:
         lda #$00
         sta StatueStatus
     Lx249:
-    ; zeb holes
+    ; pipe bug holes
     ldx #$18
     Lx250:
         tya
-        cmp Mem072C,x
+        cmp PipeBugHoleHi,x
         bne Lx251
             lda #$FF
-            sta Mem0728,x
+            sta PipeBugHoleStatus,x
         Lx251:
         txa
         sec
@@ -8247,10 +8252,10 @@ SpawnPowerUp:
     iny                             ;Prepare to store item type.
     ldx #$00                        ;
     lda #$FF                        ;
-    cmp PowerUpType                 ;Is first power-up item slot available?-->
+    cmp PowerUpType+$00             ;Is first power-up item slot available?-->
     beq LEE0F                           ;if yes, branch to load item.
         ldx #$08                        ;Prepare to check second power-up item slot.
-        cmp PowerUpBType                ;Is second power-up item slot available?-->
+        cmp PowerUpType+$08             ;Is second power-up item slot available?-->
         bne LEE39                          ;If not, branch to exit.
     LEE0F:
     lda ($00),y                     ;Power-up item type.
@@ -10534,10 +10539,10 @@ Lx379:
 
 LFAFF:
     sty PageIndex
-    ldx Mem0728,y
+    ldx PipeBugHoleStatus,y
     inx
     beq RTS_X375
-    ldx Mem0729,y
+    ldx PipeBugHoleEnemySlot,y
     lda EnStatus,x
     beq Lx380
     lda EnData05,x
@@ -10550,14 +10555,14 @@ Lx380:
     bne Lx381
     dec EnDelay,x
     bne Exit13
-    lda Mem0728,y
+    lda PipeBugHoleStatus,y
     jsr LEB28
     ldy PageIndex
-    lda Mem072A,y
+    lda PipeBugHoleY,y
     sta EnY,x
-    lda Mem072B,y
+    lda PipeBugHoleX,y
     sta EnX,x
-    lda Mem072C,y
+    lda PipeBugHoleHi,y
     sta EnHi,x
     lda #$18
     sta EnRadX,x
