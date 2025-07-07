@@ -89,8 +89,8 @@ GotoSpawnZebetiteRoutine:
     jmp SpawnZebetiteRoutine
 GotoSpawnRinkaSpawnerRoutine:
     jmp SpawnRinkaSpawnerRoutine
-GotoLA0C6:
-    jmp LA0C6
+GotoUpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
+    jmp UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass
 GotoUpdateBullet_CollisionWithMotherBrain:
     jmp UpdateBullet_CollisionWithMotherBrain
 
@@ -1441,81 +1441,102 @@ MotherBrainDeathStringOffsets:
     .byte MotherBrainDeathString_5 - MotherBrainDeathString
 
 ;-------------------------------------------------------------------------------
-;$04-$05 is pointer to projectile ??
-LA0C6:
+;$04-$05 is pointer to projectile's location in the room vram buffers
+UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
+    ; exit if not updating a projectile
     lda UpdatingProjectile
-    beq LA13E
+    beq @exit
+    ; exit if not a missile
     ldx PageIndex
     lda ObjAction,x
-    cmp #$0B
-    bne LA13E
+    cmp #wa_Missile
+    bne @exit
+    ; branch if tile id is not #$98 (mother brain glass)
     cpy #$98
-    bne LA103
+    bne @checkZebetite
+        ; tile is #$98, mother brain glass must be destroyed
+        ; find open TileBlast slot
         ldx #$00
-    LA0D9:
-        lda TileBlastRoutine,x
-        beq LA0E7
+        @loop_Slot:
+            lda TileBlastRoutine,x
+            beq @slotFound
+            ; slot occupied, try next slot
             jsr Xplus16
             cmp #$D0
-            bne LA0D9
-            beq LA13E
-        LA0E7:
+            bne @loop_Slot
+        ; no slots found, exit
+        beq @exit ; branch always
+
+        @slotFound:
+        ; set pointer
         lda #$8C
         sta TileBlastWRAMPtr,x
-        lda $05
+        lda Temp04_CartRAMPtr+1.b
         sta TileBlastWRAMPtr+1,x
+        ; set to clear 2x3 tile region
         lda #$01
         sta TileBlastAnimFrame,x
+        ; push current samus projectile slot
         lda PageIndex
         pha
+        ; set TileBlast slot
         stx PageIndex
+        ; go remove the glass shield
         jsr CommonJump_DrawTileBlast
+        ; restore projectile slot
         pla
         sta PageIndex
-        bne LA13E
-    LA103:
-    lda $04
-    lsr
-    bcc LA10A
-        dec $04
-    LA10A:
-    ; if projectile is a missile
-    ldy #$00
-    lda ($04),y
-    lsr
-    bcs LA13E
-    cmp #$48
-    bcc LA13E
-    cmp #$4C
-    bcs LA13E
-    LA119:
-        ; if zebetite is active
-        lda ZebetiteStatus,y
-        beq LA12E
-        ; and if missile touches zebetite
-        lda $04
-        and #$9E
-        cmp ZebetiteVRAMPtr,y
-        bne LA12E
-        lda $05
-        cmp ZebetiteVRAMPtr+1,y
-        beq LA139
-        LA12E:
-            ; missile is not touching zebetite
-            ; check again for next zebetite
-            tya
-            clc
-            adc #$08
-            tay
-            cmp #$28
-            bne LA119
-            ; no more zebetites to loop through
-            beq LA13E
-        LA139:
-            ; set zebetite flag to indicate it got hit
-            lda #$01
-            sta ZebetiteIsHit,y
-LA13E:
+        bne @exit ; branch always
+
+    @checkZebetite:
+        ; tile is not #$98, check if samus shot a zebetite
+        ; $04 = $04 & #$FE
+        lda Temp04_CartRAMPtr
+        lsr
+        bcc @endIf_andFE
+            dec Temp04_CartRAMPtr
+        @endIf_andFE:
+        ; load tile id of left tile of block samus shot
+        ldy #$00
+        lda (Temp04_CartRAMPtr),y
+        ; exit if bit 0 of tile id is set (not the case for zebetites)
+        lsr
+        bcs @exit
+        ; exit if not in the range #$90 to #$97 inclusive
+        cmp #$90>>1
+        bcc @exit
+        cmp #$98>>1
+        bcs @exit
+        ; samus shot a zebetite tile with a missile
+        ; loop through zebetites to find the one she shot
+        @loop_Zebetite:
+            ; if zebetite is active
+            lda ZebetiteStatus,y
+            beq @notTheRightZebetite
+            ; and if missile is touching that zebetite
+            lda Temp04_CartRAMPtr
+            and #$9E
+            cmp ZebetiteVRAMPtr,y
+            bne @notTheRightZebetite
+            lda Temp04_CartRAMPtr+1.b
+            cmp ZebetiteVRAMPtr+1,y
+            beq @theRightZebetite
+            @notTheRightZebetite:
+                ; missile is not touching that zebetite
+                ; check again for next zebetite
+                tya
+                clc
+                adc #$08
+                tay
+                cmp #$28
+                bne @loop_Zebetite
+                ; no more zebetites to loop through, exit
+                beq @exit
+            @theRightZebetite:
+                ; set zebetite flag to indicate it got hit
+                lda #$01
+                sta ZebetiteIsHit,y
+@exit:
     pla
     pla
     clc

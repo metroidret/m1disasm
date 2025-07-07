@@ -4000,7 +4000,7 @@ GotoProjectileHitDoor:
 ; bullet <--> background crash detection
 ; return carry clear if collided, set otherwise
 UpdateBullet_CollisionWithBG:
-    jsr GetObjCoords
+    jsr GetObjCartRAMPtr
     ; get tile id that bullet touches
     ldy #$00
     lda (Temp04_CartRAMPtr),y
@@ -4096,7 +4096,7 @@ Lx086:
     jmp DrawBomb
 
 LD6A7:
-    jsr GetObjCoords
+    jsr GetObjCartRAMPtr
     lda Temp04_CartRAMPtr
     sta $0A
     lda Temp04_CartRAMPtr+1.b
@@ -4246,7 +4246,7 @@ RTS_X098:
 
 ;-------------------------------------[ Get object coordinates ]------------------------------------
 
-GetObjCoords:
+GetObjCartRAMPtr:
     ;Load index into object RAM to find proper object.
     ldx PageIndex
     ;Load and save temp copy of object y coord.
@@ -4873,10 +4873,10 @@ CheckOneItem:
     sta PowerUpX                    ;
     lda PowerUpNameTable,x          ;
     sta PowerUpHi                   ;
-    jsr GetObjCoords                ;($D79F)Find object position in room RAM.
+    jsr GetObjCartRAMPtr                ;($D79F)Find object position in room RAM.
     ldx ItemIndex                   ;Index to proper power up item.
     ldy #$00                        ;Reset index.
-    lda ($04),y                     ;Load pointer into room RAM.
+    lda (Temp04_CartRAMPtr),y                     ;Load pointer into room RAM.
     cmp #$A0                        ;Is object being placed on top of a solid tile?-->
     bcc RTS_DB36                       ;If so, branch to exit.
     lda PowerUpType,x               ;
@@ -7150,7 +7150,7 @@ LE7DE:
 LE7E6:
     jsr MakeCartRAMPtr              ;($E96A)Find object position in room RAM.
     ldy #$00
-    lda ($04),y     ; get tile value
+    lda (Temp04_CartRAMPtr),y     ; get tile value
     cmp #$4E
     beq ProjectileHitDoor
     jsr GotoUpdateBullet_CollisionWithMotherBrain
@@ -7486,7 +7486,7 @@ IsBlastTile:
     beq Exit18
 LE9C2:
     tay
-    jsr GotoLA0C6
+    jsr GotoUpdateBullet_CollisionWithZebetiteAndMotherBrainGlass
     cpy #$98
     bcs Lx223
 ; attempt to find a vacant tile slot
