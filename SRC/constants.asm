@@ -43,15 +43,20 @@
 
 ;-------------------------------------------[ Defines ]----------------------------------------------
 
-; entity to entity collsion detection
-Temp04_ObjEn1RadY      = $04
-Temp05_ObjEn1RadX      = $05
-Temp06_ObjEn1Y         = $06
-Temp07_ObjEn0Y         = $07
-Temp08_ObjEn1X         = $08
-Temp09_ObjEn0X         = $09
-Temp0A_ObjEn1Hi        = $0A
-Temp0B_ObjEn0Hi        = $0B
+; entity to entity collision detection
+Temp00_DiffY           = $00
+Temp01_DiffYHi         = $01
+Temp03_ScrollDir       = $03 ; #$00=vertical room, #$02=horizontal room
+Temp04_YSlotRadY       = $04
+Temp05_YSlotRadX       = $05
+Temp06_YSlotPositionY  = $06
+Temp07_XSlotPositionY  = $07
+Temp08_YSlotPositionX  = $08
+Temp09_XSlotPositionX  = $09
+Temp0A_YSlotPositionHi = $0A
+Temp0B_XSlotPositionHi = $0B
+Temp10_DistYHi         = $10
+Temp11_DistY           = $11
 
 ; LoadPositionFromTemp/StorePositionToTemp/ApplySpeedToPosition
 Temp02_ScrollDir       = $02 ; #$00=vertical room, #$02=horizontal room

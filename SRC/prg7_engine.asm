@@ -2182,7 +2182,7 @@ UpdateWorld:
     jsr UpdateAllTileBlasts         ; tile de/regeneration
     jsr CollisionDetection          ; collision detection between entities.
     jsr DisplayBar                  ;($E0C1)Display of status bar.
-    jsr LFAF2
+    jsr UpdateAllPipeBugHoles
     jsr CheckMissileToggle
     jsr UpdateItems                 ;($DB37)Display of power-up items.
     jsr UpdateTourianItems          ;($FDE3)
@@ -4583,14 +4583,14 @@ SamusOnElevatorOrEnemy:
     
     tay
     ldx #$50
-    jsr GetObject1CoordData
+    jsr GetObjectYSlotPosition
 Lx117:
     lda EnStatus,x
     cmp #enemyStatus_Frozen
     bne Lx118
-    jsr Object0_F152
-    jsr DistFromEn0ToObj1
-    jsr LF1FA
+    jsr GetEnemyXSlotPosition
+    jsr GetRadiusSumsOfEnXSlotAndObjYSlot
+    jsr CheckCollisionOfXSlotAndYSlot
     bcs Lx118
     jsr LD9BA
     bne Lx118
@@ -5072,11 +5072,11 @@ CreateItemID:
 ;-----------------------------------------------------------------------------------------------------
 
 AreObjectsTouching:
-    jsr GetObject1CoordData
+    jsr GetObjectYSlotPosition
 LDC82:
-    jsr GetObject0CoordData
-    jsr DistFromObj0ToObj1
-    jmp LF1FA
+    jsr GetObjectXSlotPosition
+    jsr GetRadiusSumsOfObjXSlotAndObjYSlot
+    jmp CheckCollisionOfXSlotAndYSlot
 
 ;The following table is used to rotate the sprites of both Samus and enemies when they explode.
 
@@ -7734,8 +7734,7 @@ Lx226:
     lda #$03                        ;Number of bytes to add to ptr to find next room item.
     rts                             ;
 
-GetEnemyType:
-LEB28:
+GetEnemyType: ; ($EB28)
     pha                             ;Store enemy type.
     and #$C0                        ;If MSB is set, the "tough" version of the enemy
     sta EnSpecialAttribs,x          ;is to be loaded(more hit points, except rippers).
@@ -8676,7 +8675,7 @@ CollisionDetection:
         beq Lx266
         cmp #$03
         beq Lx266
-        jsr LF19A
+        jsr GetMellowXSlotPosition
         jsr IsSamusDead
         beq Lx262
         lda SamusBlink
@@ -8748,7 +8747,7 @@ Lx269:
         beq NextEnemy      ; next slot
         
         ; skip projectile collision if enemy is a pickup
-        jsr Object0_F152
+        jsr GetEnemyXSlotPosition
         lda EnStatus,x
         cmp #enemyStatus_Pickup
         beq Lx274
@@ -8793,7 +8792,7 @@ Lx269:
 Lx275:
     ; get samus coord data
     ldx #$00
-    jsr GetObject0CoordData
+    jsr GetObjectXSlotPosition
     ldy #$60
     Lx276:
         lda EnStatus,y
@@ -8807,9 +8806,9 @@ Lx275:
         jsr IsSamusDead
         beq Lx277
         
-        jsr DistFromObj0ToEn1
-        jsr Object1_F162
-        jsr LF1FA
+        jsr GetRadiusSumsOfObjXSlotAndEnYSlot
+        jsr GetEnemyYSlotPosition
+        jsr CheckCollisionOfXSlotAndYSlot
         jsr CollisionDetectionFireball_F2ED
     Lx277:
         jsr Yplus16
@@ -8821,7 +8820,7 @@ Lx275:
     ldy #$00
     jsr IsSamusDead
     beq GotoSubtractHealth
-    jsr GetObject1CoordData
+    jsr GetObjectYSlotPosition
     ldx #$F0
     Lx278:
         lda ObjAction,x
@@ -8842,110 +8841,108 @@ GotoSubtractHealth:
 
 
 CollisionDetectionEnemy_F140:
-    jsr DistFromEn0ToObj1
-    jsr GetObject1CoordData
-    jmp LF1FA
+    jsr GetRadiusSumsOfEnXSlotAndObjYSlot
+    jsr GetObjectYSlotPosition
+    jmp CheckCollisionOfXSlotAndYSlot
 
 CollisionDetectionMellow_F149:
-    jsr GetObject1CoordData
-    jsr AddObject1YRadiusOf4AndXRadiusOf8
-    jmp LF1FA
+    jsr GetObjectYSlotPosition
+    jsr AddObjectYSlotRadiusYOf4AndRadiusXOf8
+    jmp CheckCollisionOfXSlotAndYSlot
 
-Object0_F152:
+GetEnemyXSlotPosition:
     lda EnY,x
-    sta Temp07_ObjEn0Y  ; Y coord
+    sta Temp07_XSlotPositionY  ; Y coord
     lda EnX,x
-    sta Temp09_ObjEn0X  ; X coord
+    sta Temp09_XSlotPositionX  ; X coord
     lda EnHi,x     ; hi coord
-    jmp Object0_F17F
+    jmp GetXSlotPosition_Common
 
-Object1_F162:
+GetEnemyYSlotPosition:
     lda EnY,y     ; Y coord
-    sta Temp06_ObjEn1Y
+    sta Temp06_YSlotPositionY
     lda EnX,y     ; X coord
-    sta Temp08_ObjEn1X
+    sta Temp08_YSlotPositionX
     lda EnHi,y     ; hi coord
-    jmp Object1_F193
+    jmp GetYSlotPosition_Common
 
-GetObject0CoordData:
+GetObjectXSlotPosition:
     lda ObjY,x
-    sta Temp07_ObjEn0Y
+    sta Temp07_XSlotPositionY
     lda ObjX,x
-    sta Temp09_ObjEn0X
+    sta Temp09_XSlotPositionX
     lda ObjHi,x
-
-Object0_F17F:
+GetXSlotPosition_Common:
     eor PPUCTRL_ZP
     and #$01
-    sta Temp0B_ObjEn0Hi
+    sta Temp0B_XSlotPositionHi
     rts
 
-GetObject1CoordData:
+GetObjectYSlotPosition:
     lda ObjY,y
-    sta Temp06_ObjEn1Y
+    sta Temp06_YSlotPositionY
     lda ObjX,y
-    sta Temp08_ObjEn1X
+    sta Temp08_YSlotPositionX
     lda ObjHi,y
-
-Object1_F193:
+GetYSlotPosition_Common:
     eor PPUCTRL_ZP
     and #$01
-    sta Temp0A_ObjEn1Hi
+    sta Temp0A_YSlotPositionHi
     rts
 
-LF19A:
+GetMellowXSlotPosition:
     lda MellowY,x
-    sta Temp07_ObjEn0Y
+    sta Temp07_XSlotPositionY
     lda MellowX,x
-    sta Temp09_ObjEn0X
+    sta Temp09_XSlotPositionX
     lda MellowHi,x
-    jmp Object0_F17F
+    jmp GetXSlotPosition_Common
 
-DistFromObj0ToObj1:
+GetRadiusSumsOfObjXSlotAndObjYSlot:
     lda ObjRadY,x
-    jsr AddObject1YRadius
+    jsr AddObjectYSlotRadiusY
     lda ObjRadX,x
-    jmp AddObject1XRadius
+    jmp AddObjectYSlotRadiusX
 
-DistFromObj0ToEn1:
+GetRadiusSumsOfObjXSlotAndEnYSlot:
     lda ObjRadY,x
-    jsr AddEnemy1YRadius
+    jsr AddEnemyYSlotRadiusY
     lda ObjRadX,x
-    jmp AddEnemy1XRadius
+    jmp AddEnemyYSlotRadiusX
 
-DistFromEn0ToObj1:
+GetRadiusSumsOfEnXSlotAndObjYSlot:
     lda EnRadY,x
-    jsr AddObject1YRadius
+    jsr AddObjectYSlotRadiusY
     lda EnRadX,x
-    jmp AddObject1XRadius
+    jmp AddObjectYSlotRadiusX
 
-AddEnemy1XRadius:
+AddEnemyYSlotRadiusX:
     clc
     adc EnRadX,y
-    sta Temp05_ObjEn1RadX
+    sta Temp05_YSlotRadX
     rts
 
-AddObject1YRadiusOf4AndXRadiusOf8:
+AddObjectYSlotRadiusYOf4AndRadiusXOf8:
     lda #$04
-    jsr AddObject1YRadius
+    jsr AddObjectYSlotRadiusY
     lda #$08
 
-AddObject1XRadius:
+AddObjectYSlotRadiusX:
     clc
     adc ObjRadX,y
-    sta Temp05_ObjEn1RadX
+    sta Temp05_YSlotRadX
     rts
 
-AddObject1YRadius:
+AddObjectYSlotRadiusY:
     clc
     adc ObjRadY,y
-    sta Temp04_ObjEn1RadY
+    sta Temp04_YSlotRadY
     rts
 
-AddEnemy1YRadius:
+AddEnemyYSlotRadiusY:
     clc
     adc EnRadY,y
-    sta Temp04_ObjEn1RadY
+    sta Temp04_YSlotRadY
     rts
 
 ; Y = Y + 16
@@ -8964,63 +8961,70 @@ Xminus16:
     tax
     rts
 
-LF1FA:
+; return carry set if both things dont overlap
+; return carry clear if they do overlap
+CheckCollisionOfXSlotAndYSlot:
     ; difference high byte in $10
     lda #$02
-    sta $10
+    sta Temp10_DistYHi
     ; put horizontal/vertical room flag in $03
     and ScrollDir
-    sta $03
+    sta Temp03_ScrollDir
     
     ;Load object 0 y coord.
-    lda Temp07_ObjEn0Y
+    lda Temp07_XSlotPositionY
     ;Subtract object 1 y coord.
     sec
-    sbc Temp06_ObjEn1Y
+    sbc Temp06_YSlotPositionY
     ;Store difference in $00.
-    sta $00
+    sta Temp00_DiffY
     
     ; branch if room is horizontal
-    lda $03
-    bne Lx283
+    lda Temp03_ScrollDir
+    bne @else_sameYHi
     ; room is vertical
-    ; branch if high bytes are equal
-    lda Temp0B_ObjEn0Hi
-    eor Temp0A_ObjEn1Hi
-    beq Lx283
+    ; branch if high bytes of y pos are equal
+    lda Temp0B_XSlotPositionHi
+    eor Temp0A_YSlotPositionHi
+    beq @else_sameYHi
         ; high bytes are not equal
         ; this must be reflected in the difference
         jsr LF262
-        lda $00
+        lda Temp00_DiffY
         sec
         sbc #$10
-        sta $00
-        bcs Lx282
-            dec $01
-        Lx282:
-        jmp LF22B
-    Lx283:
+        sta Temp00_DiffY
+        bcs @endIf_A
+            dec Temp01_DiffYHi
+        @endIf_A:
+        jmp @endIf_sameYHi
+    @else_sameYHi:
         ; high bytes are equal
         lda #$00
         sbc #$00
         jsr LF266
-LF22B:
+    @endIf_sameYHi:
+    ; return carry set if y distance is greater or equal to $100
     sec
-    lda $01
+    lda Temp01_DiffYHi
     bne RTS_X285
-    lda $00
-    sta $11
-    cmp Temp04_ObjEn1RadY
+
+    lda Temp00_DiffY
+    sta Temp11_DistY
+    ; return carry set if y distance is greater than both y radius combined
+    cmp Temp04_YSlotRadY
     bcs RTS_X285
-    asl $10
-    lda Temp09_ObjEn0X
+
+    ; both things are overlapping on the y axis
+    asl Temp10_DistYHi
+    lda Temp09_XSlotPositionX
     sec
-    sbc Temp08_ObjEn1X
+    sbc Temp08_YSlotPositionX
     sta $00
-    lda $03
+    lda Temp03_ScrollDir
     beq Lx284
-    lda Temp0B_ObjEn0Hi
-    eor Temp0A_ObjEn1Hi
+    lda Temp0B_XSlotPositionHi
+    eor Temp0A_YSlotPositionHi
     beq Lx284
     jsr LF262
     jmp LF256
@@ -9038,13 +9042,13 @@ RTS_X285:
     rts
 
 LF262:
-    lda Temp0B_ObjEn0Hi
-    sbc Temp0A_ObjEn1Hi
+    lda Temp0B_XSlotPositionHi
+    sbc Temp0A_YSlotPositionHi
 LF266:
-    sta $01
+    sta Temp01_DiffYHi
     bpl RTS_X286
     jsr NegateTemp00Temp01
-    inc $10
+    inc Temp10_DistYHi
 RTS_X286:
     rts
 
@@ -10505,9 +10509,9 @@ Lx377:
         asl
         tay
         lda Table16,y
-        sta $04
+        sta Temp04_SpeedY
         lda Table16+1,y
-        sta $05
+        sta Temp05_SpeedX
         jsr LFA41
     Lx378:
     lda #$80
@@ -10517,46 +10521,51 @@ Lx377:
 
 ; Table used by above subroutine
 Table16:
-    .byte $00
-    .byte $00
-    .byte $0C
-    .byte $1C
-    .byte $10
-    .byte $F0
-    .byte $F0
-    .byte $08
+    .byte $00, $00
+    .byte $0C, $1C
+    .byte $10, $F0
+    .byte $F0, $08
 
 ;-------------------------------------------------------------------------------
-LFAF2:
+UpdateAllPipeBugHoles:
     ldy #$18
-Lx379:
-    jsr LFAFF
-    lda PageIndex
-    sec
-    sbc #$08
-    tay
-    bne Lx379
+    @loop:
+        jsr UpdatePipeBugHole
+        lda PageIndex
+        sec
+        sbc #$08
+        tay
+        bne @loop
 
-LFAFF:
+UpdatePipeBugHole:
     sty PageIndex
+    ; exit if hole doesn't exist
     ldx PipeBugHoleStatus,y
     inx
     beq RTS_X375
+    ; exit if enemy slot is occupied by a visible enemy
     ldx PipeBugHoleEnemySlot,y
     lda EnStatus,x
-    beq Lx380
-    lda EnData05,x
-    and #$02
-    bne Exit13
-Lx380:
+    beq @endIf_A
+        lda EnData05,x
+        and #$02
+        bne Exit13
+    @endIf_A:
+    ; enemy slot is available, spawn pipe bug
+    ; a is #$00 here
     sta EnData04,x
+    ; check if the slot status needs to be cleared first
+    ; (why must clearing be done on a different frame than spawning the pipe bug?)
     lda #$FF
     cmp EnType,x
-    bne Lx381
+    bne @clearEnemySlot
+    ; exit if delay is not zero
     dec EnDelay,x
     bne Exit13
+    ; set pipe bug type
     lda PipeBugHoleStatus,y
-    jsr LEB28
+    jsr GetEnemyType
+    ; set pipe bug position
     ldy PageIndex
     lda PipeBugHoleY,y
     sta EnY,x
@@ -10564,27 +10573,33 @@ Lx380:
     sta EnX,x
     lda PipeBugHoleHi,y
     sta EnHi,x
+    ; set pipe bug radius
     lda #$18
     sta EnRadX,x
     lda #$0C
     sta EnRadY,x
+    ; abort spawning pipe bug if samus is too close
     ldy #$00
-    jsr GetObject1CoordData
-    jsr Object0_F152
-    jsr DistFromEn0ToObj1
-    jsr LF1FA
+    jsr GetObjectYSlotPosition
+    jsr GetEnemyXSlotPosition
+    jsr GetRadiusSumsOfEnXSlotAndObjYSlot
+    jsr CheckCollisionOfXSlotAndYSlot
     bcc Exit13
+    ; set status to resting
     lda #enemyStatus_Resting ; #$01
     sta EnDelay,x
     sta EnStatus,x
+    ; set enemy facing direction depending on scroll direction
     and ScrollDir
-    asl
+    asl ; to compensate for the ror instruction in LFB7B
     sta EnData05,x
+    ; set enemy delay
     ldy EnType,x
     jsr LFB7B
-LFB70:
+    ; init hit points and stuff
     jmp LF85A
-Lx381:
+
+@clearEnemySlot:
     sta EnType,x
     lda #$01
     sta EnDelay,x
@@ -11179,16 +11194,16 @@ UpdateTileBlast_Respawn:
     and #$01
     sta $0B
     ldy #$00
-    jsr GetObject1CoordData
+    jsr GetObjectYSlotPosition
     lda #$04
     clc
     adc ObjRadY
-    sta $04
+    sta Temp04_YSlotRadY
     lda #$04
     clc
     adc ObjRadX
-    sta $05
-    jsr LF1FA
+    sta Temp05_YSlotRadX
+    jsr CheckCollisionOfXSlotAndYSlot
     bcs Exit23
     
     jsr SamusHurtF311
