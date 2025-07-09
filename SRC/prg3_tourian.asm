@@ -79,8 +79,8 @@ GotoClearCurrentMetroidLatchAndMetroidOnSamus:
     jmp ClearCurrentMetroidLatchAndMetroidOnSamus
 GotoClearAllMetroidLatches:
     jmp ClearAllMetroidLatches
-GotoL9C6F:
-    jmp L9C6F
+GotoUpdateRoomSpriteInfo_Tourian:
+    jmp UpdateRoomSpriteInfo_Tourian
 GotoSpawnCannonRoutine:
     jmp SpawnCannonRoutine
 GotoSpawnMotherBrainRoutine:
@@ -670,75 +670,110 @@ UpdateCannon_CheckIfOnScreen:
     rts
 
 ;-------------------------------------------------------------------------------
-L9C6F:
+
+UpdateRoomSpriteInfo_Tourian:
+    ; save opposite nametable in $02
     sty $02
+    
+    ; loop through all cannons
     ldy #$00
-    L9C73:
+    @loop_A:
+        ; branch if cannon is in the current nametable
         lda CannonHi,y
         eor $02
         lsr
-        bcs L9C80
+        bcs @endIf_A
+            ; cannon is in the opposite nametable
+            ; clear status
             lda #$00
             sta CannonStatus,y
-        L9C80:
+        @endIf_A:
+        ; go to next cannon
         tya
         clc
         adc #$08
         tay
-        bpl L9C73
+        bpl @loop_A
+    
+    ; loop through all zebetites
     ldx #$00
-    L9C89:
+    @loop_B:
+        ; branch if zebetite doesn't exist
         lda ZebetiteStatus,x
-        beq L9C99
+        beq @endIf_B
+        ; branch if zebetite is in the current nametable
         jsr GetVRAMPtrHi
         eor ZebetiteVRAMPtr+1,x
-        bne L9C99
+        bne @endIf_B
+            ; zebetite is in the opposite nametable
+            ; clear status
             sta ZebetiteStatus,x
-        L9C99:
+        @endIf_B:
+        ; move to next zebetite
         txa
         clc
         adc #$08
         tax
         cmp #$28
-        bne L9C89
+        bne @loop_B
+    
+    ; for all rinka spawners
     ldx #$00
-    jsr L9CD6
+    jsr UpdateRoomSpriteInfo_Tourian_RinkaSpawner
     ldx #$03
-    jsr L9CD6
+    jsr UpdateRoomSpriteInfo_Tourian_RinkaSpawner
+
+    ; for mother brain
+    ; branch if mother brain doesnt exist
     lda MotherBrainStatus
-    beq L9CC3
+    beq @endIf_C
+    ; branch if time bomb exploded
     cmp #$07
-    beq L9CC3
+    beq @endIf_C
+    ; branch if mother brain is dead
     cmp #$0A
-    beq L9CC3
+    beq @endIf_C
+    ; branch if mother brain is in the current nametable
     lda MotherBrainHi
     eor $02
     lsr
-    bcs L9CC3
-    lda #$00
-    sta MotherBrainStatus
-L9CC3:
+    bcs @endIf_C
+        ; mother brain is in the opposite nametable
+        ; clear status
+        lda #$00
+        sta MotherBrainStatus
+    @endIf_C:
+
+    ; for end timer enemy
+    ; branch if timer enemy doesn't exist
     lda EndTimerEnemyIsEnabled
-    beq RTS_9CD5
+    beq @endIf_D
+    ; branch if timer enemy is in the current nametable
     lda EndTimerEnemyHi
     eor $02
     lsr
-    bcs RTS_9CD5
-    lda #$00
-    sta EndTimerEnemyIsEnabled
-RTS_9CD5:
+    bcs @endIf_D
+        ; timer enemy is in the opposite nametable
+        ; clear status
+        lda #$00
+        sta EndTimerEnemyIsEnabled
+    @endIf_D:
     rts
 
-L9CD6:
+UpdateRoomSpriteInfo_Tourian_RinkaSpawner:
+    ; exit if rinka spawner doesn't exist
     lda RinkaSpawnerStatus,x
-    bmi RTS_9CE5
+    bmi @RTS
+    ; exit if rinka is in the current nametable
     lda RinkaSpawnerHi,x
     eor $02
     lsr
-    bcs RTS_9CE5
-    lda #$FF
-    sta RinkaSpawnerStatus,x
-RTS_9CE5:
+    bcs @RTS
+        ; rinka is in the opposite nametable
+        ; clear status
+        lda #$FF
+        sta RinkaSpawnerStatus,x
+    @RTS:
     rts
 
 ;-------------------------------------------------------------------------------

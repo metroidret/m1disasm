@@ -5071,6 +5071,8 @@ CreateItemID:
 
 ;-----------------------------------------------------------------------------------------------------
 
+; carry set = not touching
+; carry clear = touching
 AreObjectsTouching:
     jsr GetObjectYSlotPosition
 LDC82:
@@ -8122,7 +8124,7 @@ UpdateRoomSpriteInfo:
     ldx #$08
     jsr LED8C
     ; tourian stuff
-    jmp GotoL9C6F
+    jmp GotoUpdateRoomSpriteInfo_Tourian
 
 UpdateDoorData:
     txa                             ;
