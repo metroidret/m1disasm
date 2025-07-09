@@ -6204,118 +6204,163 @@ RTS_E268:
 ;----------------------------------[ Check lava and movement routines ]------------------------------
 
 LavaAndMoveCheck:
-    lda ObjAction                   ;
-    cmp #sa_Elevator                ;Is Samus on elevator?-->
-    beq LE274                           ;If so, branch.
-        cmp #sa_Dead                    ;Is Samus Dead-->
-        bcs RTS_E268                           ;If so, branch to exit.
-    LE274:
-    jsr IsSamusInLava               ;($E25D)Clear carry flag if Samus is in lava.
-    ldy #$FF                        ;Assume Samus not in lava.
-    bcs LE2A6                        ;Samus not in lava so branch.
+    ; don't exit if samus is on elevator
+    lda ObjAction
+    cmp #sa_Elevator                
+    beq @endIf_A
+        ; exit if samus is dead (sa_Dead or sa_Dead2)
+        cmp #sa_Dead
+        bcs RTS_E268
+    @endIf_A:
 
-;Samus is in lava.
-    sty SamusKnockbackDir         ;Don't push Samus from lava damage.
-    jsr ClearHealthChange           ;($F323)Clear any pending health changes to Samus.
-    lda #$32                        ;
-    sta SamusBlink                  ;Make Samus blink.
-    lda FrameCount                  ;
-    and #$03                        ;Start the jump SFX every 4th frame while in lava.
-    bne LE28D                           ;
-        jsr SFX_SamusJump               ;($CBAC)Initiate jump SFX.
-    LE28D:
-    lda FrameCount                  ;
-    lsr                             ;This portion of the code causes Samus to be damaged by-->
-    and #$03                        ;lava twice every 8 frames if she does not have the varia-->
-    bne LE2A4                          ;but only once every 8 frames if she does.
-    lda SamusGear                   ;
-    and #gr_VARIA                   ;Does Samus have the Varia?-->
-    beq LE29D                           ;If not, branch.
-        bcc LE2A4                          ;Samus has varia. Carry set every other frame. Half damage.
-    LE29D:
-    lda #$07                        ;
-    sta HealthChange              ;Samus takes lava damage.
-    jsr SubtractHealth              ;($CE92)
-LE2A4:
-    ldy #$00                        ;Prepare to indicate Samus is in lava.
-LE2A6:
-    iny                             ;Set Samus lava status.
-LE2A7:
-    sty SamusInLava                 ;
+    ;($E25D)Clear carry flag if Samus is in lava.
+    jsr IsSamusInLava
+    ;branch if Samus not in lava.
+    ldy #$FF
+    bcs @noLava
 
-SamusMoveVertically:
-    jsr VertAccelerate              ;($E37A)Calculate vertical acceleration.
-    lda ObjY                        ;
-    sec                             ;
-    sbc ScrollY                     ;Calculate Samus' screen y position.
-    sta SamusScrY                   ;
-    lda $00                         ;Load temp copy of vertical speed.
-    bpl LE2D7                        ;If Samus is moving downwards, branch.
+    ;Samus is in lava.
+    ;Don't push Samus from lava damage.
+    sty SamusKnockbackDir
+    ;($F323)Clear any pending health changes to Samus.
+    jsr ClearHealthChange
+    ;Make Samus blink.
+    lda #$32
+    sta SamusBlink
+    ;Start the jump SFX every 4th frame while in lava.
+    lda FrameCount
+    and #$03
+    bne @endIf_B
+        ;($CBAC)Initiate jump SFX.
+        jsr SFX_SamusJump
+    @endIf_B:
+    ;This portion of the code causes Samus to be damaged by-->
+    ;lava twice every 8 frames if she does not have the varia-->
+    ;but only once every 8 frames if she does.
+    lda FrameCount
+    lsr
+    and #$03
+    bne @endIf_C
+    ;branch if Samus doesn't have the Varia
+    lda SamusGear
+    and #gr_VARIA
+    beq @endIf_D
+        ;Samus has varia. Carry set every other frame. Half damage.
+        bcc @endIf_C
+    @endIf_D:
+    ;Samus takes lava damage.
+    lda #$07
+    sta HealthChange
+    jsr SubtractHealth
+@endIf_C:
+    ;Prepare to indicate Samus is in lava.
+    ldy #$00
+@noLava:
+    ;Set Samus lava status.
+    iny
+    sty SamusInLava
 
-    jsr TwosComplement              ;($C3D4)Get twos complement of vertical speed.
-    ldy SamusInLava                 ;Is Samus in lava?
-    beq LE2C2                           ;If not, branch,-->
-    lsr                             ;else cut vertical speed in half.
-    beq SamusMoveHorizontally       ;($E31A)Branch if no vertical mvmnt to Check left/right mvmnt.
+SamusMoveVertically: ; unreferenced label
+    ;($E37A)Calculate vertical acceleration.
+    jsr VertAccelerate
+    ;Calculate Samus' screen y position.
+    lda ObjY
+    sec
+    sbc ScrollY                     
+    sta SamusScrY
+    ;Load temp copy of delta y. branch if Samus is moving downwards
+    lda $00
+    bpl @downwards
 
-;Samus is moving upwards.
-LE2C2:
-    sta ObjectCounter               ;Store number of pixels to move Samus this frame.
-LE2C4:
-    jsr MoveSamusUp                 ;($E457)Attempt to move Samus up 1 pixel.
-    bcs LE2D3                           ;Branch if Samus successfully moved up 1 pixel.
+    ;Samus is moving upwards.
+    ;($C3D4)Get twos complement of delta y.
+    jsr TwosComplement
+    ;branch if Samus isn't in lava
+    ldy SamusInLava
+    beq @endIf_A
+        ; samus is in lava, cut delta y in half
+        lsr
+        ; branch if delta y became zero
+        beq SamusMoveHorizontally
+    @endIf_A:
+    ;Store number of pixels to move Samus this frame.
+    sta ObjectCounter
+    @loop_up:
+        ;($E457)Attempt to move Samus up 1 pixel.
+        jsr MoveSamusUp
+        ;Branch if Samus successfully moved up 1 pixel.
+        bcs @endIf_B
+            ;Samus blocked upwards. Divide her speed by 2 and set the MSB to reverse her direction of travel.
+            sec
+            ror ObjSpeedY
+            ror SamusSpeedSubPixelY
+            ;($E31A)Attempt to move Samus left/right.
+            jmp SamusMoveHorizontally
+        @endIf_B:
+        ;1 pixel movement is complete.
+        dec ObjectCounter
+        ;Branch if Samus needs to be moved another pixel.
+        bne @loop_up
+        ; fallthrough to SamusMoveHorizontally
 
-    sec                             ;Samus blocked upwards. Divide her speed by 2 and set the
-    ror ObjSpeedY                ;MSB to reverse her direction of travel.
-    ror SamusSpeedSubPixelY              ;
-    jmp SamusMoveHorizontally       ;($E31A)Attempt to move Samus left/right.
+@downwards:
+    ;Samus is moving downwards.
+    ; branch if delta y is zero
+    beq SamusMoveHorizontally
+    ;branch if Samus isn't in lava
+    ldy SamusInLava
+    beq @endIf_C
+        ;samus is in lava, reduce Samus delta y by 75%(divide by 4).
+        lsr
+        lsr
+        ; branch if delta y became zero
+        beq SamusMoveHorizontally       
+    @endIf_C:
+    ;Store number of pixels to move Samus this frame.
+    sta ObjectCounter
+    @loop_down:
+        ;($E4A3)Attempt to move Samus 1 pixel down.
+        jsr MoveSamusDown
+        ;Branch if Samus successfully moved down 1 pixel.
+        bcs @endIf_D
+            ;Samus bounce after hitting the ground in ball form.
+            ;branch if Samus isn't rolled into a ball
+            lda ObjAction
+            cmp #sa_Roll                    
+            bne @landingNoBall
+            ;Divide vertical speed by 2.
+            lsr ObjSpeedY
+            ;branch if Speed is not falling fast enough to bounce (speed < 2px/frame)
+            beq @landingNoBounce        
+            ; continue division of vertical speed by 2
+            ror SamusSpeedSubPixelY
+            ; negate vertical speed
+            lda #$00
+            sec
+            sbc SamusSpeedSubPixelY
+            sta SamusSpeedSubPixelY
+            lda #$00
+            sbc ObjSpeedY
+            sta ObjSpeedY
+            ;($E31A)Attempt to move Samus left/right.
+            jmp SamusMoveHorizontally
 
-LE2D3:
-    dec ObjectCounter               ;1 pixel movement is complete.
-    bne LE2C4                          ;Branch if Samus needs to be moved another pixel.
-
-;Samus is moving downwards.
-LE2D7:
-    beq SamusMoveHorizontally       ;($E31A)Branch if no vertical mvmnt to Check left/right mvmnt.
-    ldy SamusInLava                 ;Is Samus in lava?
-    beq LE2E1                           ;If not, branch,-->
-    lsr                             ;Else reduce Samus speed by 75%(divide by 4).
-    lsr                             ;
-    beq SamusMoveHorizontally       ;($E31A)Attempt to move Samus left/right.
-
-LE2E1:
-    sta ObjectCounter               ;Store number of pixels to move Samus this frame.
-LE2E3:
-    jsr MoveSamusDown               ;($E4A3)Attempt to move Samus 1 pixel down.
-    bcs LE316                         ;Branch if Samus successfully moved down 1 pixel.
-
-;Samus bounce after hitting the ground in ball form.
-    lda ObjAction                   ;
-    cmp #sa_Roll                    ;Is Samus rolled into a ball?-->
-    bne LE30B                           ;If not, branch.
-    lsr ObjSpeedY                ;Divide vertical speed by 2.
-    beq LE30E                          ;Speed not fast enough to bounce. branch to skip.
-    ror SamusSpeedSubPixelY              ;Move carry bit into MSB to reverse Linear counter.
-    lda #$00                        ;
-    sec                             ;
-    sbc SamusSpeedSubPixelY              ;Subtract linear counter from 0 and save the results.-->
-    sta SamusSpeedSubPixelY              ;Carry will be cleared.
-    lda #$00                        ;
-    sbc ObjSpeedY                ;Subtract vertical speed from 0. this will reverse the-->
-    sta ObjSpeedY                ;vertical direction of travel(bounce up).
-    jmp SamusMoveHorizontally       ;($E31A)Attempt to move Samus left/right.
-
-;Samus has hit the ground after moving downwards.
-LE30B:
-    jsr SFX_SamusWalk               ;($CB96)Play walk SFX.
-LE30E:
-    jsr StopVertMovement            ;($D147)Clear vertical movement data.
-    sty SamusAccelY                ;Clear Samus gravity value.
-    beq SamusMoveHorizontally       ;($E31A)Attempt to move Samus left/right.
-
-LE316:
-    dec ObjectCounter               ;1 pixel movement is complete.
-    bne LE2E3                       ;Branch if Samus needs to be moved another pixel.
+        ;Samus has hit the ground after moving downwards.
+        @landingNoBall:
+            ;($CB96)Play walk SFX.
+            jsr SFX_SamusWalk
+        @landingNoBounce:
+            ;($D147)Clear vertical movement data.
+            jsr StopVertMovement
+            ;Clear Samus gravity value.
+            sty SamusAccelY
+            ;($E31A)Attempt to move Samus left/right.
+            beq SamusMoveHorizontally
+        @endIf_D:
+        ;1 pixel movement is complete.
+        dec ObjectCounter
+         ;Branch if Samus needs to be moved another pixel.
+        bne @loop_down
 
 SamusMoveHorizontally:
     jsr HorzAccelerate              ;($E3E5)Horizontally accelerate Samus.
@@ -6393,65 +6438,76 @@ CheckStopHorzMvmt:
 ;#$12-Jump with high jump boots.
 
 VertAccelerate:
-    lda SamusAccelY                ;Is Samus rising or falling?-->
-    bne LE3A5                          ;Branch if yes.
-    lda #$18                        ;
-    sta SamusHorzSpeedMax           ;Set Samus maximum running speed.
-    lda ObjY                        ;
-    clc                             ;
-    adc ObjRadY                     ;Check is Samus is obstructed downwards on y room-->
-    and #$07                        ;positions divisible by 8(every 8th pixel).
-    bne LE394                           ;
-    jsr CheckMoveDown               ;($E7AD)Is Samus obstructed downwards?-->
-    bcc LE3A5                          ;Branch if yes.
-LE394:
+    ;Branch if Samus is in the air
+    lda SamusAccelY
+    bne @dontStartFalling
+
+    ;Set Samus maximum running speed. (1.5 px)
+    lda #$18
+    sta SamusHorzSpeedMax
+    ;Check if Samus is obstructed downwards on y room positions divisible by 8(every 8th pixel).
+    lda ObjY
+    clc
+    adc ObjRadY
+    and #$07
+    bne @endIf_A
+        ;Branch if Samus is obstructed downwards
+        jsr CheckMoveDown               
+        bcc @dontStartFalling
+    @endIf_A:
     jsr SamusOnElevatorOrEnemy      ;($D976)Calculate if Samus standing on elevator or enemy.
-    lda SamusOnElevator             ;Is Samus on an elevator?-->
-    bne LE3A5                           ;Branch if yes.
-    lda OnFrozenEnemy               ;Is Samus standing on a frozen enemy?-->
-    bne LE3A5                           ;Branch if yes.
-    lda #$1A                        ;Samus is falling. Store falling gravity value.
-    sta SamusAccelY                ;
+    ;branch if Samus is on an elevator
+    lda SamusOnElevator
+    bne @dontStartFalling
+    ;branch if Samus is on a frozen enemy
+    lda OnFrozenEnemy
+    bne @dontStartFalling
 
-LE3A5:
-    ldx #$05                        ;Load X with maximum downward speed.
-    lda SamusSpeedSubPixelY              ;
-    clc                             ;The higher the gravity, the faster this addition overflows-->
-    adc SamusAccelY                ;and the faster ObjSpeedY is incremented.
-    sta SamusSpeedSubPixelY              ;
-    lda ObjSpeedY                ;Every time above addition sets carry bit, ObjSpeedY is-->
-    adc #$00                        ;incremented. This has the effect of speeding up a fall-->
-    sta ObjSpeedY                ;and slowing down a jump.
-    bpl LE3C9                           ;Branch if Samus is moving downwards.
+    ;Samus is falling. Store falling gravity value.
+    lda #$1A
+    sta SamusAccelY
 
-;Check if maximum upward speed has been exceeded. If so, prepare to set maximum speed.
-    lda #$00                        ;
-    cmp SamusSpeedSubPixelY              ;Sets carry bit.
-    sbc ObjSpeedY                ;Subtract ObjSpeedY to see if maximum speed has-->
-    cmp #$06                        ;been exceeded.
-    ldx #$FA                        ;Load X with maximum upward speed.
-    bne LE3CB                          ;Branch always.
-
-;Check if maximum downward speed has been reached. If so, prepare to set maximum speed.
-LE3C9:
-    cmp #$05                        ;Has maximum downward speed been reached?-->
-LE3CB:
-    bcc LE3D3                           ;If not, branch.
-
-;Max vertical speed reached or exceeded. Adjust Samus vertical speed to max.
-    jsr StopVertMovement            ;($D147)Clear vertical movement data.
-    stx ObjSpeedY                ;Set Samus vertical speed to max.
-
-;This portion of the function creates an exponential increase/decrease in vertical speed. This is the
-;part of the function that does all the work to make Samus' jump seem natural.
-LE3D3:
+@dontStartFalling:
+    ;Load X with maximum downward speed.
+    ldx #$05
+    ; apply gravity to y speed
+    lda SamusSpeedSubPixelY
+    clc
+    adc SamusAccelY
+    sta SamusSpeedSubPixelY
+    lda ObjSpeedY
+    adc #$00
+    sta ObjSpeedY
+    ;Branch if Samus is moving downwards.
+    bpl @else_B
+        ;Check if maximum upward speed has been exceeded. If so, prepare to set maximum speed.
+        ;Sets carry bit.
+        lda #$00
+        cmp SamusSpeedSubPixelY
+        ;Subtract ObjSpeedY to see if maximum speed has been exceeded.
+        sbc ObjSpeedY
+        cmp #$06
+        ;Load X with maximum upward speed.
+        ldx #$FA
+        bne @endIf_B ;Branch always.
+    @else_B:
+        ;Check if maximum downward speed has been reached. If so, prepare to set maximum speed.
+        cmp #$05                        ;Has maximum downward speed been reached?-->
+    @endIf_B:
+    bcc @endIf_C                           ;If not, branch.
+        ;Max vertical speed reached or exceeded. Adjust Samus vertical speed to max.
+        jsr StopVertMovement            ;($D147)Clear vertical movement data.
+        stx ObjSpeedY                ;Set Samus vertical speed to max.
+    @endIf_C:
+    ; apply sub-pixel speed to sub-pixel position
     lda SamusSubPixelY
-    clc                             ;This function adds itself plus the linear vertical counter-->
-    adc SamusSpeedSubPixelY              ;onto itself every frame.  This causes the non-linear-->
-    sta SamusSubPixelY           ;counter to increase exponentially.  This function will-->
-    lda #$00                        ;cause Samus to reach maximum speed first in most-->
-    adc ObjSpeedY                ;situations before the linear counter.
-    sta $00                         ;$00 stores temp copy of current vertical speed.
+    clc
+    adc SamusSpeedSubPixelY
+    sta SamusSubPixelY
+    ;$00 stores temp copy of current delta y.
+    lda #$00
+    adc ObjSpeedY
+    sta $00
     rts
 
 ;----------------------------------------------------------------------------------------------------
@@ -6728,7 +6784,7 @@ CheckUpdateNameTableVertical:
     cmp Table11,x
     bne RTS_X173     ; exit if not equal (no nametable update)
 
-LE57C:
+EndOfRoomVertical:
     ; Avoid redundant name table updates by checking if ScrollDir = TempScrollDir.
     ldx ScrollDir
     cpx TempScrollDir
@@ -6834,8 +6890,7 @@ WritePPUAttribTbl:
 
 ; attempt to move Samus one pixel left
 
-MoveSamusLeft:
-LE626:
+MoveSamusLeft: ;($E626)
     lda ObjX
     sec
     sbc ObjRadX
@@ -6994,7 +7049,7 @@ CheckUpdateNameTableHorizontal:
     cmp Table02-2,x ; compare value = 0 if ScrollDir = right, else 7
     bne RTS_X196      ; exit if not equal (no nametable update)
 
-LE70C:
+EndOfRoomHorizontal:
     ; Avoid redundant name table updates by checking if ScrollDir = TempScrollDir.
     ldx ScrollDir
     cpx TempScrollDir
@@ -7703,15 +7758,18 @@ EnemyLoop:
         .word LoadPipeBugHole                   ;($EC57)Regenerating enemies(such as Zeb).
 
 EndOfRoom:
-    ldx #$F0                        ;Prepare for PPU attribute table write.
-    stx RoomNumber                  ;
-    lda ScrollDir                   ;
-    sta TempScrollDir               ;Make temp copy of ScrollDir.
-    and #$02                        ;Check if scrolling left or right.
-    bne Lx224                           ;
-        jmp LE57C
+    ;Prepare for PPU attribute table write.
+    ldx #$F0
+    stx RoomNumber
+    ;Make temp copy of ScrollDir.
+    lda ScrollDir
+    sta TempScrollDir
+    ;Check if scrolling left or right.
+    and #$02
+    bne Lx224
+        jmp EndOfRoomVertical
     Lx224:
-    jmp LE70C
+        jmp EndOfRoomHorizontal
 
 LoadEnemy:
     jsr GetEnemyData                ;($EB0C)Get enemy data from room data.
@@ -7783,10 +7841,10 @@ LEB6E:
 
 IsSlotTaken:
     lda EnStatus,x
-    beq RTS_X229
+    beq @RTS
         lda EnData05,x
         and #$02
-    RTS_X229:
+    @RTS:
     rts
 
 ;------------------------------------------[ Get name table ]----------------------------------------
@@ -7922,7 +7980,7 @@ LoadElevator:
 
 SpawnElevatorRoutine:
     lda ElevatorStatus
-    bne Lx234      ; exit if elevator already present
+    bne @exit      ; exit if elevator already present
     iny
     lda ($00),y
     sta ElevatorType
@@ -7935,7 +7993,7 @@ SpawnElevatorRoutine:
     lda #_id_ObjFrame23.b
     sta ObjAnimFrame+$20       ; elevator frame
     inc ElevatorStatus              ;1
-Lx234:
+@exit:
     lda #$02
     rts
 
@@ -7947,15 +8005,15 @@ LoadStatues:
     sta StatueHi
     lda #$40
     ldx RidleyStatueStatus
-    bpl Lx235      ; branch if Ridley statue not hit
+    bpl @elseIf_A      ; branch if Ridley statue not hit
         lda #$30
-    Lx235:
+    @elseIf_A:
     sta RidleyStatueY
     lda #$60
     ldx KraidStatueStatus
-    bpl Lx236      ; branch if Kraid statue not hit
+    bpl @elseIf_B      ; branch if Kraid statue not hit
         lda #$50
-    Lx236:
+    @elseIf_B:
     sta KraidStatueY
     sty Statues54 ; y is #$00
     lda #$01
@@ -7978,13 +8036,16 @@ LoadPipeBugHole:
         iny
         bne @loop
     ; slot found, spawn pipe bug hole
+    ; set enemy slot
     ldy #$00
     lda ($00),y
     and #$F0
     sta PipeBugHoleEnemySlot,x
+    ; set status (enemy type to be spawned)
     iny
     lda ($00),y
     sta PipeBugHoleStatus,x
+    ; set position
     iny
     lda ($00),y
     tay
