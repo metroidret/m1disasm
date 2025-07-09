@@ -8029,8 +8029,8 @@ UpdateRoomSpriteInfo:
         lda EnData05,x
         and #$02
         bne @dontDeleteEnemy
-        sta EnStatus,x
-    @dontDeleteEnemy:
+            sta EnStatus,x
+        @dontDeleteEnemy:
         jsr Xminus16
         bpl @loop_enemies
     ; same thing with mellows
@@ -8132,7 +8132,7 @@ UpdateDoorData:
     and DoorOnNameTable3,y                     ;Moves door info from one name table to the next-->
 LED57:
     sta DoorOnNameTable3,y                     ;when the room is transferred across name tables.
-    rts                             ;
+    rts
 
 LED5B:
     jsr GetNameTable                ;($EB85)
@@ -8433,34 +8433,51 @@ AddToPtr00:
 ;A = number of 2x2 tile macros to draw horizontally.
 
 DrawStructRow:
-    and #$0F                        ;Row length(in macros). Range #$00 thru #$0F.
-    bne LEF19                       ;
-    lda #$10                        ;#$00 in row length=16.
-LEF19:
-    sta $0E                         ;Store horizontal macro count.
-    lda (StructPtr),y               ;Get length byte again.
-    jsr Adiv16                      ;($C2BF)/16. Upper nibble contains x coord offset(if any).
-    asl                             ;*2, because a macro is 2 tiles wide.
-    adc CartRAMWorkPtr              ;Add x coord offset to CartRAMWorkPtr and save in $00.
-    sta $00                         ;
-    lda #$00                        ;
-    adc CartRAMWorkPtr+1.b            ;Save high byte of work pointer in $01.
-    sta $01                         ;$0000 = work pointer.
+    ;Row length(in macros). Range #$00 thru #$0F.
+    and #$0F
+    bne LEF19
+        ;#$00 in row length=16.
+        lda #$10
+    LEF19:
+    ;Store horizontal macro count.
+    sta $0E
+    ;Get length byte again. Upper nibble contains x coord offset(if any).
+    lda (StructPtr),y
+    jsr Adiv16
+    ;*2, because a macro is 2 tiles wide.
+    asl
+    ;Add x coord offset to CartRAMWorkPtr and save in $00.
+    adc CartRAMWorkPtr
+    sta $00
+    ;Save high byte of work pointer in $01.
+    lda #$00
+    adc CartRAMWorkPtr+1.b
+    sta $01
+    ;$0000 = work pointer.
 
 DrawMacro:
-    lda $01                         ;High byte of current location in room RAM.
-    cmp #$63                        ;Check high byte of room RAM address for both room RAMs-->
-    beq LEF38                       ;to see if the attribute table data for the room RAM has-->
-    cmp #$67                        ;been reached.  If so, branch to check lower byte as well.
-    bcc LEF3F                       ;If not at end of room RAM, branch to draw macro.
-    beq LEF38                       ;
-    rts                             ;Return if have gone past room RAM(should never happen).
+    ;High byte of current location in room RAM.
+    lda $01
+    ;Check high byte of room RAM address for both room RAMs-->
+    ;to see if the attribute table data for the room RAM has-->
+    ;been reached.  If so, branch to check lower byte as well.
+    ;If not at end of room RAM, branch to draw macro.
+    cmp #$63
+    beq @checkLowByte
+    cmp #$67
+    bcc LEF3F
+    beq @checkLowByte
+    ;Return if have gone past room RAM(should never happen).
+    rts
 
-LEF38:
-    lda $00                         ;Low byte of current nametable address.
-    cmp #$A0                        ;Reached attrib table?-->
-    bcc LEF3F                       ;If not, branch to draw the macro.
-    rts                             ;Can't draw any more of the structure, exit.
+@checkLowByte:
+    ;Low byte of current nametable address.
+    lda $00
+    ;Reached attrib table? If not, branch to draw the macro.
+    cmp #$A0
+    bcc LEF3F
+    ;Can't draw any more of the structure, exit.
+    rts
 
 LEF3F:
     inc $10                         ;Increase struct data index.
