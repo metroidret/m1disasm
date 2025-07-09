@@ -6363,69 +6363,95 @@ SamusMoveVertically: ; unreferenced label
         bne @loop_down
 
 SamusMoveHorizontally:
-    jsr HorzAccelerate              ;($E3E5)Horizontally accelerate Samus.
-    lda ObjX                        ;
-    sec                             ;Calculate Samus' x position on screen.
-    sbc ScrollX                     ;
-    sta SamusScrX                   ;Save Samus' x position.
-    lda $00                         ;Load Samus' current horizontal speed.
-    bpl LE347                         ;Branch if moving right.
+    ;($E3E5)Horizontally accelerate Samus.
+    jsr HorzAccelerate
+    ;Calculate Samus' x position on screen.
+    lda ObjX
+    sec
+    sbc ScrollX
+    sta SamusScrX
+    ;Load Samus' current delta x.
+    lda $00
+    ;Branch if moving right.
+    bpl LE347
 
 ;Samus is moving left.
-    jsr TwosComplement              ;($C3D4)Get twos complement of horizontal speed.
-    ldy SamusInLava                 ;Is Samus in lava?-->
-    beq LE333                           ;If not, branch,-->
-        lsr                             ;else cut horizontal speed in half.
-        beq Exit10                      ;Branch to exit if Samus not going to move this frame.
-
+    ;($C3D4)Get twos complement of delta x.
+    jsr TwosComplement
+    ; branch if samus is not in lava
+    ldy SamusInLava
+    beq LE333
+        ;samus is in lava, cut delta x in half.
+        lsr
+        ;Branch to exit if Samus not going to move this frame.
+        beq Exit10
     LE333:
-    sta ObjectCounter               ;Store number of pixels to move Samus this frame.
+    ;Store number of pixels to move Samus this frame.
+    sta ObjectCounter
     LE335:
-        jsr MoveSamusLeft               ;($E626)Attempt to move Samus 1 pixel to the left.
-        jsr CheckStopHorzMvmt           ;($E365)Check if horizontal movement needs to be stopped.
-        dec ObjectCounter               ;1 pixel movement is complete.
-        bne LE335                           ;Branch if Samus needs to be moved another pixel.
-
-    lda SamusDoorData               ;Has Samus entered a door?-->
-    beq Exit10                      ;If not, branch to exit.
-    lda #$01                        ;Door leads to the left.
-    bne LE362                        ;Branch always.
+        ;($E626)Attempt to move Samus 1 pixel to the left.
+        jsr MoveSamusLeft
+        ;($E365)Check if horizontal movement needs to be stopped.
+        jsr CheckStopHorzMvmt
+        ;1 pixel movement is complete.
+        dec ObjectCounter
+        ;Branch if Samus needs to be moved another pixel.
+        bne LE335
+    ; exit if samus hasn't entered a door
+    lda SamusDoorData
+    beq Exit10
+    ; samus has entered a door, Door leads to the left.
+    lda #$01                        
+    bne LE362 ;Branch always.
 
 ;Samus is moving right.
 LE347:
-    beq Exit10                      ;Branch to exit if Samus not moving horizontally.
-    ldy SamusInLava                 ;Is Samus in lava?-->
-    beq LE350                           ;If not, branch,-->
-    lsr                             ;else cut horizontal speed in half.
-    beq Exit10                      ;Branch to exit if Samus not going to move this frame.
-
-LE350:
-    sta ObjectCounter               ;Store number of pixels to move Samus this frame.
+    ;Branch to exit if Samus not moving horizontally.
+    beq Exit10
+    ; branch if samus is not in lava
+    ldy SamusInLava
+    beq LE350
+        ;samus is in lava, cut horizontal speed in half.
+        lsr
+        ;Branch to exit if Samus not going to move this frame.
+        beq Exit10
+    LE350:
+    ;Store number of pixels to move Samus this frame.
+    sta ObjectCounter
     LE352:
-        jsr MoveSamusRight              ;($E668)Attempt to move Samus 1 pixel to the right.
-        jsr CheckStopHorzMvmt           ;($E365)Check if horizontal movement needs to be stopped.
-        dec ObjectCounter               ;1 pixel movement is complete.
-        bne LE352                           ;Branch if Samus needs to be moved another pixel.
-
-    lda SamusDoorData               ;Has Samus entered a door?-->
-    beq Exit10                      ;If not, branch to exit.
-    lda #$00                        ;
+        ;($E668)Attempt to move Samus 1 pixel to the right.
+        jsr MoveSamusRight
+        ;($E365)Check if horizontal movement needs to be stopped.
+        jsr CheckStopHorzMvmt
+        ;1 pixel movement is complete.
+        dec ObjectCounter
+        ;Branch if Samus needs to be moved another pixel.
+        bne LE352
+    ; exit if samus hasn't entered a door
+    lda SamusDoorData
+    beq Exit10
+    ; samus has entered a door, Door leads to the right.
+    lda #$00
 LE362:
-    sta SamusDoorDir                ;Door leads to the right.
-
+    sta SamusDoorDir
 Exit10:
     rts                             ;Exit for routines above and below.
 
 CheckStopHorzMvmt:
-    bcs Exit10                      ;Samus moved successfully. Branch to exit.
-    lda #$01                        ;Load counter with #$01 so this function will not be-->
-    sta ObjectCounter               ;called again.
-    lda SamusAccelY                ;Is Samus on the ground?-->
-    bne Exit10                      ;If not, branch to exit.
-    lda ObjAction                   ;
-    cmp #sa_Roll                    ;Is Samus rolled into a ball?-->
-    beq Exit10                      ;If so, branch to exit.
-    jmp StopHorzMovement            ;($CF55)Stop horizontal movement or play walk SFX if stopped.
+    ;Samus moved successfully. Branch to exit.
+    bcs Exit10
+    ; break loop of caller routine
+    lda #$01
+    sta ObjectCounter
+    ; exit if samus is in the air
+    lda SamusAccelY
+    bne Exit10
+    ; exit if samus is a ball
+    lda ObjAction
+    cmp #sa_Roll
+    beq Exit10
+    ;($CF55)Stop horizontal movement or play walk SFX if stopped.
+    jmp StopHorzMovement
 
 ;-------------------------------------[ Samus vertical acceleration ]--------------------------------
 
@@ -6499,6 +6525,7 @@ VertAccelerate:
         jsr StopVertMovement            ;($D147)Clear vertical movement data.
         stx ObjSpeedY                ;Set Samus vertical speed to max.
     @endIf_C:
+    
     ; apply sub-pixel speed to sub-pixel position
     lda SamusSubPixelY
     clc
@@ -6513,15 +6540,19 @@ VertAccelerate:
 ;----------------------------------------------------------------------------------------------------
 
 HorzAccelerate: ;($E3E5)
+    ; store max speed sub-pixels to temp
     lda SamusHorzSpeedMax
     jsr Amul16       ; * 16
     sta $00
     sta $02
+    ; store max speed pixels to temp
     lda SamusHorzSpeedMax
     jsr Adiv16       ; / 16
     sta $01
     sta $03
 
+    ; apply x acceleration to x speed
+    ; and save x speed in x and y
     lda SamusSpeedSubPixelX
     clc
     adc SamusAccelX
@@ -6529,15 +6560,16 @@ HorzAccelerate: ;($E3E5)
     tax
     lda #$00
     bit SamusAccelX
-    bpl Lx147                           ;Branch if Samus accelerating to the right.
-
+    bpl Lx147 ;Branch if Samus accelerating to the right.
         lda #$FF
     Lx147:
     adc ObjSpeedX
     sta ObjSpeedX
     tay
-    bpl Lx148                           ;Branch if Samus accelerating to the right.
-
+    ;Branch if Samus is moving to the right.
+    bpl Lx148
+        ; samus is moving left
+        ; store negative x speed in x and y
         lda #$00
         sec
         sbc SamusSpeedSubPixelX
@@ -6545,24 +6577,35 @@ HorzAccelerate: ;($E3E5)
         lda #$00
         sbc ObjSpeedX
         tay
+        ; negate max speed in temp $00-$01
         jsr NegateTemp00Temp01
     Lx148:
+    ;x and y now contain absolute x speed
+    ;temp $00-$01 now contain signed max x speed
+    ;temp $02-$03 now contain absolute max x speed
+
+    ; branch if absolute x speed is less than than absolute max x speed
     cpx $02
     tya
     sbc $03
     bcc Lx149
+        ; absolute x speed is greater than than absolute max x speed
+        ; cap signed x speed to signed max x speed
         lda $00
         sta SamusSpeedSubPixelX
         lda $01
         sta ObjSpeedX
     Lx149:
+
+    ; apply sub-pixel speed to sub-pixel position
     lda SamusSubPixelX
     clc
     adc SamusSpeedSubPixelX
     sta SamusSubPixelX
+    ;$00 stores temp copy of current delta x.
     lda #$00
     adc ObjSpeedX
-    sta $00                         ;$00 stores temp copy of current horizontal speed.
+    sta $00
     rts
 
 NegateTemp00Temp01:
