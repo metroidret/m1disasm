@@ -4,20 +4,24 @@ EnAnimTbl: ;($9C86)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_03:
+EnAnim_FireballKilled:
     .byte _id_EnFrame02, $FF
 
 EnAnim_05:
     .byte _id_EnFrame19, _id_EnFrame1A, $FF
 
 EnAnim_08:
-    .byte _id_EnFrame1A, _id_EnFrame1B, $FF
+    .byte _id_EnFrame1A
+EnAnim_09:
+    .byte _id_EnFrame1B, $FF
 
 EnAnim_0B:
     .byte _id_EnFrame1C, _id_EnFrame1D, $FF
 
 EnAnim_0E:
-    .byte _id_EnFrame1D, _id_EnFrame1E, $FF
+    .byte _id_EnFrame1D
+EnAnim_0F:
+    .byte _id_EnFrame1E, $FF
 
 EnAnim_11:
     .byte _id_EnFrame22, _id_EnFrame23
@@ -65,16 +69,16 @@ EnAnim_31:
 EnAnim_33:
     .byte _id_EnFrame3D, $FF
 
-EnAnim_35:
+EnAnim_ZeelaOnFloor:
     .byte _id_EnFrame58, _id_EnFrame59, $FF
 
-EnAnim_38:
+EnAnim_ZeelaOnRightWall:
     .byte _id_EnFrame5A, _id_EnFrame5B, $FF
 
-EnAnim_3B:
+EnAnim_ZeelaOnCeiling:
     .byte _id_EnFrame5C, _id_EnFrame5D, $FF
 
-EnAnim_3E:
+EnAnim_ZeelaOnLeftWall:
     .byte _id_EnFrame5E, _id_EnFrame5F, $FF
 
 EnAnim_41:
@@ -618,6 +622,7 @@ EnFrame3D:
     .byte $EE
     .byte $FF
 
+;Zeela on floor.
 EnFrame3E:
 EnFrame3F:
 EnFrame40:
@@ -652,6 +657,7 @@ EnFrame58:
     .byte $DD
     .byte $FF
 
+;Zeela on floor.
 EnFrame59:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -660,6 +666,7 @@ EnFrame59:
     .byte $DD
     .byte $FF
 
+;Zeela on right wall.
 EnFrame5A:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -668,6 +675,7 @@ EnFrame5A:
     .byte $DB
     .byte $FF
 
+;Zeela on right wall.
 EnFrame5B:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -676,6 +684,7 @@ EnFrame5B:
     .byte $DB
     .byte $FF
 
+;Zeela on ceiling.
 EnFrame5C:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -684,6 +693,7 @@ EnFrame5C:
     .byte $DD
     .byte $FF
 
+;Zeela on ceiling.
 EnFrame5D:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -692,6 +702,7 @@ EnFrame5D:
     .byte $DD
     .byte $FF
 
+;Zeela on left wall.
 EnFrame5E:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -700,6 +711,7 @@ EnFrame5E:
     .byte $DB
     .byte $FF
 
+;Zeela on left wall.
 EnFrame5F:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -708,6 +720,7 @@ EnFrame5F:
     .byte $DB
     .byte $FF
 
+;Zeela explode.
 EnFrame60:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CC

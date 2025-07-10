@@ -1,8 +1,8 @@
 ; Waver Routine
 WaverAIRoutine:
-    lda #$21
+    lda #EnAnim_21 - EnAnimTbl.b
     sta EnemyLFB88_85
-    lda #$1E
+    lda #EnAnim_1E - EnAnimTbl.b
     sta EnemyLFB88_85+1.b
     lda EnStatus,x
     cmp #enemyStatus_Explode

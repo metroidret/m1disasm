@@ -125,7 +125,7 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballAnimIndex:
-    .byte EnAnim_03 - EnAnimTbl
+    .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_43 - EnAnimTbl
 
@@ -184,7 +184,7 @@ EnemyRestingAnimIndex:
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; unused enemy
     .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
     .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
-    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
+    .byte EnAnim_ZeelaOnFloor - EnAnimTbl, EnAnim_ZeelaOnFloor - EnAnimTbl
     .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl ; unused enemy
     .byte EnAnim_54 - EnAnimTbl, EnAnim_52 - EnAnimTbl
     .byte EnAnim_67 - EnAnimTbl, EnAnim_6A - EnAnimTbl
@@ -202,7 +202,7 @@ EnemyActiveAnimIndex:
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; unused enemy
     .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
     .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
-    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
+    .byte EnAnim_ZeelaOnFloor - EnAnimTbl, EnAnim_ZeelaOnFloor - EnAnimTbl
     .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl ; unused enemy
     .byte EnAnim_4B - EnAnimTbl, EnAnim_48 - EnAnimTbl
     .byte EnAnim_67 - EnAnimTbl, EnAnim_6A - EnAnimTbl

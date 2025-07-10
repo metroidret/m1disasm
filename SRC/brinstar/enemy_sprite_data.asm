@@ -4,20 +4,24 @@ EnAnimTbl: ;($9D6A)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_03:
+EnAnim_FireballKilled:
     .byte _id_EnFrame02, $FF
 
 EnAnim_05:
     .byte _id_EnFrame19, _id_EnFrame1A, $FF
 
 EnAnim_08:
-    .byte _id_EnFrame1A, _id_EnFrame1B, $FF
+    .byte _id_EnFrame1A
+EnAnim_09:
+    .byte _id_EnFrame1B, $FF
 
 EnAnim_0B:
     .byte _id_EnFrame1C, _id_EnFrame1D, $FF
 
 EnAnim_0E:
-    .byte _id_EnFrame1D, _id_EnFrame1E, $FF
+    .byte _id_EnFrame1D
+EnAnim_0F:
+    .byte _id_EnFrame1E, $FF
 
 EnAnim_11:
     .byte _id_EnFrame22, _id_EnFrame23
@@ -29,19 +33,23 @@ EnAnim_15:
 EnAnim_17:
     .byte _id_EnFrame21, $FF
 
-EnAnim_19:
+EnAnim_RipperFacingLeft:
     .byte _id_EnFrame22, $FF
 
-EnAnim_1B:
+EnAnim_RipperFacingRight:
     .byte _id_EnFrame1F, $FF
 
 EnAnim_1D:
-    .byte _id_EnFrame23, _id_EnFrame04, $FF
+    .byte _id_EnFrame23,
+EnAnim_1E:
+    .byte _id_EnFrame04, $FF
 
 EnAnim_20:
-    .byte _id_EnFrame20, _id_EnFrame03, $FF
+    .byte _id_EnFrame20
+EnAnim_21:
+    .byte _id_EnFrame03, $FF
 
-EnAnim_23:
+EnAnim_Skree:
     .byte _id_EnFrame27, _id_EnFrame28, _id_EnFrame29, $FF
 
 EnAnim_27:
@@ -56,49 +64,49 @@ EnAnim_2B:
 EnAnim_2D:
     .byte _id_EnFrame3A, $FF
 
-EnAnim_2F:
+EnAnim_RipperExplodeFacingLeft:
     .byte _id_EnFrame3B, $FF
 
-EnAnim_31:
+EnAnim_RipperExplodeFacingRight:
     .byte _id_EnFrame3C, $FF
 
-EnAnim_33:
+EnAnim_SkreeExplode:
     .byte _id_EnFrame3D, $FF
 
-EnAnim_35:
+EnAnim_ZoomerOnFloor:
     .byte _id_EnFrame58, _id_EnFrame59, $FF
 
-EnAnim_38:
+EnAnim_ZoomerOnRightWall:
     .byte _id_EnFrame5A, _id_EnFrame5B, $FF
 
-EnAnim_3B:
+EnAnim_ZoomerOnCeiling:
     .byte _id_EnFrame5C, _id_EnFrame5D, $FF
 
-EnAnim_3E:
+EnAnim_ZoomerOnLeftWall:
     .byte _id_EnFrame5E, _id_EnFrame5F, $FF
 
-EnAnim_41:
+EnAnim_ZoomerExplode:
     .byte _id_EnFrame60, $FF
 
-EnAnim_43:
+EnAnim_Explosion:
     .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
 
-EnAnim_48:
+EnAnim_Rio:
     .byte _id_EnFrame63, _id_EnFrame64, $FF
 
-EnAnim_4B:
+EnAnim_RioExplode:
     .byte _id_EnFrame65, $FF
 
-EnAnim_4D:
+EnAnim_ZebFacingLeft:
     .byte _id_EnFrame66, _id_EnFrame67, $FF
 
-EnAnim_50:
+EnAnim_ZebFacingRight:
     .byte _id_EnFrame69, _id_EnFrame6A, $FF
 
-EnAnim_53:
+EnAnim_ZebExplodeFacingLeft:
     .byte _id_EnFrame68, $FF
 
-EnAnim_55:
+EnAnim_ZebExplodeFacingRight:
     .byte _id_EnFrame6B, $FF
 
 EnAnim_57:
@@ -123,7 +131,7 @@ EnAnim_64:
 EnAnim_67:
     .byte _id_EnFrame72, $FF
 
-EnAnim_69:
+EnAnim_Mellow:
     .byte _id_EnFrame8F, _id_EnFrame90, $FF
 
 EnAnim_6C:
@@ -357,6 +365,7 @@ EnPlaceF:
 
 ;Enemy frame drawing data.
 
+;Unused.
 EnFrame00:
     .byte ($0 << 4) + _id_EnPlace0, $02, $02
     .byte $14
@@ -367,6 +376,7 @@ EnFrame01:
     .byte $24
     .byte $FF
 
+;Fireball killed.
 EnFrame02:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
@@ -480,6 +490,7 @@ EnFrame1E:
     .byte $B3
     .byte $FF
 
+;Ripper facing right.
 EnFrame1F:
     .byte ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
@@ -505,6 +516,7 @@ EnFrame21:
     .byte $F1
     .byte $FF
 
+;Ripper facing left.
 EnFrame22:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
@@ -530,6 +542,7 @@ EnFrame24:
     .byte $F1
     .byte $FF
 
+;Skree.
 EnFrame25:
 EnFrame26:
 EnFrame27:
@@ -543,6 +556,7 @@ EnFrame27:
     .byte $EE
     .byte $FF
 
+;Skree.
 EnFrame28:
     .byte ($2 << 4) + _id_EnPlace8, $0C, $08
     .byte $CE
@@ -550,6 +564,7 @@ EnFrame28:
     .byte $EF
     .byte $FF
 
+;Skree.
 EnFrame29:
     .byte ($2 << 4) + _id_EnPlace8, $0C, $08
     .byte $CE
@@ -613,6 +628,7 @@ EnFrame3A:
     .byte $F1
     .byte $FF
 
+;Ripper explode facing left (uses waver gfx).
 EnFrame3B:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
@@ -620,6 +636,7 @@ EnFrame3B:
     .byte $D0
     .byte $FF
 
+;Ripper explode facing right (uses waver gfx).
 EnFrame3C:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
@@ -627,6 +644,7 @@ EnFrame3C:
     .byte $D1
     .byte $FF
 
+;Skree explode.
 EnFrame3D:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
@@ -636,6 +654,7 @@ EnFrame3D:
     .byte $EE
     .byte $FF
 
+;Zoomer on floor.
 EnFrame3E:
 EnFrame3F:
 EnFrame40:
@@ -670,6 +689,7 @@ EnFrame58:
     .byte $DD
     .byte $FF
 
+;Zoomer on floor.
 EnFrame59:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -678,6 +698,7 @@ EnFrame59:
     .byte $DD
     .byte $FF
 
+;Zoomer on right wall.
 EnFrame5A:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -686,6 +707,7 @@ EnFrame5A:
     .byte $DB
     .byte $FF
 
+;Zoomer on right wall.
 EnFrame5B:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -694,6 +716,7 @@ EnFrame5B:
     .byte $DB
     .byte $FF
 
+;Zoomer on ceiling.
 EnFrame5C:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -702,6 +725,7 @@ EnFrame5C:
     .byte $DD
     .byte $FF
 
+;Zoomer on ceiling.
 EnFrame5D:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -710,6 +734,7 @@ EnFrame5D:
     .byte $DD
     .byte $FF
 
+;Zoomer on left wall.
 EnFrame5E:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -718,6 +743,7 @@ EnFrame5E:
     .byte $DB
     .byte $FF
 
+;Zoomer on left wall.
 EnFrame5F:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -726,6 +752,7 @@ EnFrame5F:
     .byte $DB
     .byte $FF
 
+;Zoomer explode.
 EnFrame60:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CC
@@ -734,6 +761,7 @@ EnFrame60:
     .byte $DD
     .byte $FF
 
+;Explosion.
 EnFrame61:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $75
@@ -745,6 +773,7 @@ EnFrame61:
     .byte $75
     .byte $FF
 
+;Explosion.
 EnFrame62:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $FE
@@ -768,6 +797,7 @@ EnFrame62:
     .byte $3E
     .byte $FF
 
+;Rio.
 EnFrame63:
     .byte ($2 << 4) + _id_EnPlaceB, $08, $08
     .byte $E2
@@ -779,6 +809,7 @@ EnFrame63:
     .byte $E4
     .byte $FF
 
+;Rio.
 EnFrame64:
     .byte ($2 << 4) + _id_EnPlaceB, $08, $08
     .byte $E2
@@ -791,6 +822,7 @@ EnFrame64:
     .byte $E4
     .byte $FF
 
+;Rio explode (gfx looks wrong).
 EnFrame65:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $96
@@ -907,6 +939,7 @@ EnFrame75:
     .byte $D8
     .byte $FF
 
+;Missile pickup.
 EnFrame76:
 EnFrame77:
 EnFrame78:
@@ -925,11 +958,13 @@ EnFrame80:
     .byte $24
     .byte $FF
 
+;Small energy pickup.
 EnFrame81:
     .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF
 
+;Big energy pickup.
 EnFrame82:
 EnFrame83:
 EnFrame84:
@@ -942,6 +977,7 @@ EnFrame89:
     .byte $8A
     .byte $FF
 
+;Mellow.
 EnFrame8A:
 EnFrame8B:
 EnFrame8C:
@@ -955,6 +991,7 @@ EnFrame8F:
     .byte $EC
     .byte $FF
 
+;Mellow.
 EnFrame90:
     .byte ($3 << 4) + _id_EnPlaceF, $04, $08
     .byte $FD, $3

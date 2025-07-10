@@ -53,7 +53,7 @@ SeahorseAIRoutine:
 
 L9B4F:
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq L9B59
     jsr CommonJump_0A
 L9B59:

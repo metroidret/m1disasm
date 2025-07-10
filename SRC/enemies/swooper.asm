@@ -5,7 +5,7 @@ SwooperAIRoutine:
     lda #$08
     sta $01
     lda EnStatus,x
-    cmp #$01
+    cmp #enemyStatus_Resting
     bne L98EE
     lda EnData05,x
     and #$10
@@ -17,19 +17,19 @@ L98EE:
     jmp CommonEnemyJump_00_01_02
 L98F4:
     lda EnStatus,x
-    cmp #$02
+    cmp #enemyStatus_Active
     bne L9907
     .if BANK == 2
-        lda #$25
+        lda #EnAnim_25 - EnAnimTbl.b
     .elif BANK == 5
-        lda #$20
+        lda #EnAnim_20 - EnAnimTbl.b
     .endif
     ldy EnSpeedY,x
     bpl L9904
         .if BANK == 2
-            lda #$22
+            lda #EnAnim_22 - EnAnimTbl.b
         .elif BANK == 5
-            lda #$1D
+            lda #EnAnim_1D - EnAnimTbl.b
         .endif
     L9904:
     sta EnResetAnimIndex,x
@@ -45,7 +45,7 @@ SwooperAIRoutine2:
         cmp #$03
         beq SwooperExitB
         lda EnStatus,x
-        cmp #$01
+        cmp #enemyStatus_Resting
         bne L9923
         lda #$00
         jsr L9954

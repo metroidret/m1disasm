@@ -4,7 +4,7 @@ EnAnimTbl: ;($A406)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_03:
+EnAnim_FireballKilled:
     .byte _id_EnFrame02, $FF
 
 EnAnim_05:

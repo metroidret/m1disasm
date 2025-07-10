@@ -4,7 +4,7 @@ EnAnimTbl: ;($9B85)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_03:
+EnAnim_FireballKilled:
     .byte _id_EnFrame02, $FF
 
 EnAnim_05:
@@ -65,13 +65,17 @@ EnAnim_3E:
     .byte _id_EnFrame30, _id_EnFrame31, $FF
 
 EnAnim_41:
-    .byte _id_EnFrame31, _id_EnFrame32, $FF
+    .byte _id_EnFrame31
+EnAnim_42:
+    .byte _id_EnFrame32, $FF
 
 EnAnim_44:
     .byte _id_EnFrame33, _id_EnFrame34, $FF
 
 EnAnim_47:
-    .byte _id_EnFrame34, _id_EnFrame35, $FF
+    .byte _id_EnFrame34
+EnAnim_48:
+    .byte _id_EnFrame35, $FF
 
 EnAnim_4A:
     .byte _id_EnFrame58, _id_EnFrame59, $FF

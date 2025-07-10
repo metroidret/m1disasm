@@ -99,7 +99,7 @@ MetroidAIRoutine:
     
     ; check if metroid is frozen or not
     lda EnStatus,x
-    cmp #$04
+    cmp #enemyStatus_Frozen
     bne L9894
         ; metroid is frozen
         ; check if metroid was invincible

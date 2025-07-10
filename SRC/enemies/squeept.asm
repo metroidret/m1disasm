@@ -4,9 +4,9 @@ SqueeptAIRoutine:
     cmp #enemyStatus_Resting
     bne L9A88
     lda EnStatus,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq L9ACA
-    cmp #$02
+    cmp #enemyStatus_Active
     bne L9A88
     ldy EnMovementIndex,x
     lda L9AD2,y
