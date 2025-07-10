@@ -3966,10 +3966,10 @@ Lx075:
     jmp DrawBullet
 
 UpdateBullet_ExplodeIfHitSprite:
-    lda SamusIsHit,x
+    lda Projectile030A,x
     beq Exit5
     lda #$00
-    sta SamusIsHit,x
+    sta Projectile030A,x
 BulletExplode:
     lda #ObjAnim_1D - ObjectAnimIndexTbl.b
     ldy ObjAction,x
@@ -4576,54 +4576,72 @@ Lx116:
     jmp ElevScrollRoom
 
 SamusOnElevatorOrEnemy:
-    ;Assume Samus is not on an elevator or on a frozen enemy.
+    ;Default to Samus not being on an elevator or on a frozen enemy.
     lda #$00
     sta SamusOnElevator
     sta OnFrozenEnemy
     
+    ; set y to #$00, object slot of samus
     tay
-    ldx #$50
+    ldx #$50 ; prepare x for the loop
+    ; get samus position
     jsr GetObjectYSlotPosition
-Lx117:
-    lda EnStatus,x
-    cmp #enemyStatus_Frozen
-    bne Lx118
-    jsr GetEnemyXSlotPosition
-    jsr GetRadiusSumsOfEnXSlotAndObjYSlot
-    jsr CheckCollisionOfXSlotAndYSlot
-    bcs Lx118
-    jsr LD9BA
-    bne Lx118
-        inc OnFrozenEnemy               ;Samus is standing on a frozen enemy.
-        bne Lx119
-    Lx118:
-        jsr Xminus16
-        bpl Lx117
-    Lx119:
+    @loop:
+        ; branch if enemy is not frozen
+        lda EnStatus,x
+        cmp #enemyStatus_Frozen
+        bne @notOnEnemy
+        ; branch if samus is not touching enemy
+        jsr GetEnemyXSlotPosition
+        jsr GetRadiusSumsOfEnXSlotAndObjYSlot
+        jsr CheckCollisionOfXSlotAndYSlot
+        bcs @notOnEnemy
+        ; branch if samus is not on top of enemy
+        jsr @isSamusOnTop
+        bne @notOnEnemy
+            ;Samus is standing on a frozen enemy.
+            inc OnFrozenEnemy
+            bne @loopExit ; branch always
+        @notOnEnemy:
+            ; samus is not standing on that enemy
+            jsr Xminus16
+            bpl @loop
+    @loopExit:
+
+    ; exit if there is no elevator
     lda ElevatorStatus
-    beq RTS_X120
+    beq @RTS
+    ; exit if samus is not touching the elevator
     ldy #$00
     ldx #$20
     jsr LDC82
-    bcs RTS_X120
-    jsr LD9BA
-    bne RTS_X120
-    inc SamusOnElevator             ;Samus is standing on elevator.
-RTS_X120:
+    bcs @RTS
+    ; exit if samus is not on top of the elevator
+    jsr @isSamusOnTop
+    bne @RTS
+    ;Samus is standing on elevator.
+    inc SamusOnElevator
+@RTS:
     rts
 
-LD9BA:
-    lda $10
+@isSamusOnTop:
+    ; branch if samus is below the enemy
+    lda Temp10_DistHi
     and #$02
-    bne Lx121
-        ldy $11
+    bne @isSamusOnTop_no
+        ; exit if they overlap by one pixel on the y axis
+        ldy Temp11_DistY
         iny
-        cpy $04
+        cpy Temp04_YSlotRadY
         beq Exit8
-    Lx121:
+        ; they overlap by more than a pixel on the y axis
+        ; therefore, samus must be touching the sides of the enemy
+    @isSamusOnTop_no:
+    ; samus is not on top of enemy
+    ; update SamusIsHit to reflect collision with frozen enemy
     lda SamusIsHit
     and #$38
-    ora $10
+    ora Temp10_DistHi
     ora #$40
     sta SamusIsHit
 Exit8:
@@ -6525,7 +6543,7 @@ VertAccelerate:
         jsr StopVertMovement            ;($D147)Clear vertical movement data.
         stx ObjSpeedY                ;Set Samus vertical speed to max.
     @endIf_C:
-    
+
     ; apply sub-pixel speed to sub-pixel position
     lda SamusSubPixelY
     clc
@@ -8953,7 +8971,7 @@ Lx275:
         bne Lx280
     Lx279:
         jsr LDC82
-        jsr SamusHurtF311
+        jsr SamusHurt_F311
     Lx280:
         jsr Xminus16
         cmp #$C0
@@ -9088,90 +9106,115 @@ Xminus16:
 ; return carry clear if they do overlap
 CheckCollisionOfXSlotAndYSlot:
     ; difference high byte in $10
+    ; this is to set bit 2 in SamusIsHit for enemy frozen collision (why?)
     lda #$02
-    sta Temp10_DistYHi
+    sta Temp10_DistHi
     ; put horizontal/vertical room flag in $03
     and ScrollDir
     sta Temp03_ScrollDir
     
-    ;Load object 0 y coord.
+    ;subtract y slot entity's y position from x slot entity's y position
     lda Temp07_XSlotPositionY
-    ;Subtract object 1 y coord.
     sec
     sbc Temp06_YSlotPositionY
     ;Store difference in $00.
-    sta Temp00_DiffY
+    sta Temp00_Diff
     
     ; branch if room is horizontal
     lda Temp03_ScrollDir
-    bne @else_sameYHi
+    bne @else_sameHiY
     ; room is vertical
     ; branch if high bytes of y pos are equal
     lda Temp0B_XSlotPositionHi
     eor Temp0A_YSlotPositionHi
-    beq @else_sameYHi
+    beq @else_sameHiY
         ; high bytes are not equal
         ; this must be reflected in the difference
-        jsr LF262
-        lda Temp00_DiffY
+        jsr @positionHi_notEqual
+        ; compensate for the screen height being 240 instead of 256
+        lda Temp00_Diff
         sec
-        sbc #$10
-        sta Temp00_DiffY
+        sbc #$100-SCRN_VY.b
+        sta Temp00_Diff
         bcs @endIf_A
-            dec Temp01_DiffYHi
+            dec Temp01_DiffHi
         @endIf_A:
-        jmp @endIf_sameYHi
-    @else_sameYHi:
+        jmp @endIf_sameHiY
+    @else_sameHiY:
         ; high bytes are equal
         lda #$00
         sbc #$00
-        jsr LF266
-    @endIf_sameYHi:
+        jsr @positionHi_equal
+    @endIf_sameHiY:
     ; return carry set if y distance is greater or equal to $100
     sec
-    lda Temp01_DiffYHi
-    bne RTS_X285
+    lda Temp01_DiffHi
+    bne @RTS
 
-    lda Temp00_DiffY
+    lda Temp00_Diff
     sta Temp11_DistY
     ; return carry set if y distance is greater than both y radius combined
     cmp Temp04_YSlotRadY
-    bcs RTS_X285
+    bcs @RTS
 
     ; both things are overlapping on the y axis
-    asl Temp10_DistYHi
+    ; do the x axis
+    
+    ; multiply by 2.
+    ;  now bit7-3 is clear, bit 2 is set, bit 1 is dist hi y
+    ;  bit 0 will be dist hi x
+    asl Temp10_DistHi
+
+    ;subtract y slot entity's x position from x slot entity's x position
     lda Temp09_XSlotPositionX
     sec
     sbc Temp08_YSlotPositionX
-    sta $00
+    ;Store difference in $00.
+    sta Temp00_Diff
+
+    ; branch if room is vertical
     lda Temp03_ScrollDir
-    beq Lx284
+    beq @else_sameHiX
+    ; room is horizontal
+    ; branch if high bytes of x pos are equal
     lda Temp0B_XSlotPositionHi
     eor Temp0A_YSlotPositionHi
-    beq Lx284
-    jsr LF262
-    jmp LF256
-Lx284:
-    sbc #$00
-    jsr LF266
-LF256:
+    beq @else_sameHiX
+        ; high bytes are not equal
+        ; this must be reflected in the difference
+        jsr @positionHi_notEqual
+        jmp @endIf_sameHiX
+    @else_sameHiX:
+        ; high bytes are equal
+        sbc #$00
+        jsr @positionHi_equal
+    @endIf_sameHiX:
+    ; return set carry if x distance is greater or equal to $100
     sec
-    lda $01
-    bne RTS_X285
-    lda $00
-    sta $0F
-    cmp $05
-RTS_X285:
+    lda Temp01_DiffHi
+    bne @RTS
+
+    lda Temp00_Diff
+    sta Temp0F_DistX
+    ; return carry set if y distance is greater than both y radius combined
+    ; if not, return carry clear: both entities are overlapping
+    cmp Temp05_YSlotRadX
+@RTS:
     rts
 
-LF262:
+@positionHi_notEqual:
+    ; subtract y slot entity's hi position from x slot entity's hi position
     lda Temp0B_XSlotPositionHi
     sbc Temp0A_YSlotPositionHi
-LF266:
-    sta Temp01_DiffYHi
+@positionHi_equal:
+    sta Temp01_DiffHi
+    ; return if difference is not negative
     bpl RTS_X286
+    ; difference is negative
+    ; negate it to get the absolute distance
     jsr NegateTemp00Temp01
-    inc Temp10_DistYHi
+    ; set dist hi bit
+    inc Temp10_DistHi
 RTS_X286:
     rts
 
@@ -9183,11 +9226,11 @@ LF270:
 CollisionDetectionDoor_F277:
     bcs Exit17
 LF279:
-    lda $10
+    lda Temp10_DistHi
 LF27B:
     ora SamusIsHit,y
     sta SamusIsHit,y
-    Exit17:
+Exit17:
     rts
 
 CollisionDetectionEnemy_F282:
@@ -9244,7 +9287,7 @@ Lx292:
 Lx293:
     rts
 
-LF2DF:
+CollisionDetectionFireball_F2ED_F2DF:
     lda $10
     ora EnData04,y
     sta EnData04,y
@@ -9255,7 +9298,7 @@ LF2E8:
     bne Lx292
 CollisionDetectionFireball_F2ED:
     bcs RTS_X294
-    jsr LF2DF
+    jsr CollisionDetectionFireball_F2ED_F2DF
     tya
     pha
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
@@ -9275,7 +9318,7 @@ LF306:
 RTS_X294:
     rts
 
-SamusHurtF311:
+SamusHurt_F311:
     bcs Exit22
     lda #$E0
     sta SamusHurt010F
@@ -10867,7 +10910,7 @@ UpdateSkreeProjectile:
     bcc Lx386
     
     clc
-    jsr SamusHurtF311
+    jsr SamusHurt_F311
     ; deal 5 damage to Samus
     lda #$50
     sta HealthChange
@@ -11329,7 +11372,7 @@ UpdateTileBlast_Respawn:
     jsr CheckCollisionOfXSlotAndYSlot
     bcs Exit23
     
-    jsr SamusHurtF311
+    jsr SamusHurt_F311
     ; deal 5 damage to samus
     lda #$50
     sta HealthChange

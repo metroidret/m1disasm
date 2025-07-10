@@ -44,8 +44,8 @@
 ;-------------------------------------------[ Defines ]----------------------------------------------
 
 ; entity to entity collision detection
-Temp00_DiffY           = $00
-Temp01_DiffYHi         = $01
+Temp00_Diff            = $00
+Temp01_DiffHi          = $01
 Temp03_ScrollDir       = $03 ; #$00=vertical room, #$02=horizontal room
 Temp04_YSlotRadY       = $04
 Temp05_YSlotRadX       = $05
@@ -55,7 +55,8 @@ Temp08_YSlotPositionX  = $08
 Temp09_XSlotPositionX  = $09
 Temp0A_YSlotPositionHi = $0A
 Temp0B_XSlotPositionHi = $0B
-Temp10_DistYHi         = $10
+Temp0F_DistX           = $0F
+Temp10_DistHi          = $10
 Temp11_DistY           = $11
 
 ; LoadPositionFromTemp/StorePositionToTemp/ApplySpeedToPosition
@@ -464,7 +465,13 @@ ObjAnimIndex           = $0306   ;Current index into ObjectAnimIndexTbl.
 SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
 ObjSpeedY              = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
 ObjSpeedX              = $0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
-SamusIsHit             = $030A   ;Samus hit by enemy. bit 3: direction samus is hit
+SamusIsHit             = $030A   ;Samus hit by enemy.
+                                   ;$20: hit by bomb
+                                   ;$30: hit by enemy
+                                   ; +$08: hit towards the right
+                                   ;$44: touch frozen enemy
+                                   ; +$01: touch enemy from the right
+                                   ; +$02: touch enemy from the bottom
 ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
 ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
 ObjY                   = $030D   ;Object y position in room(not actual screen position).
