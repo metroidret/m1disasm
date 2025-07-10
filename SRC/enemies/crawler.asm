@@ -59,16 +59,16 @@ Crawler04:
     lda CrawlerAnimIndexTable,y
     jmp CommonJump_InitEnAnimIndex
 
-.if BANK == 1 || BANK == 4
+.if BANK == 1
     CrawlerAnimIndexTable:
-        .byte EnAnim_35 - EnAnimTbl
-        .byte EnAnim_35 - EnAnimTbl
-        .byte EnAnim_3E - EnAnimTbl
-        .byte EnAnim_38 - EnAnimTbl
-        .byte EnAnim_3B - EnAnimTbl
-        .byte EnAnim_3B - EnAnimTbl
-        .byte EnAnim_38 - EnAnimTbl
-        .byte EnAnim_3E - EnAnimTbl
+        .byte EnAnim_ZoomerOnFloor - EnAnimTbl
+        .byte EnAnim_ZoomerOnFloor - EnAnimTbl
+        .byte EnAnim_ZoomerOnLeftWall - EnAnimTbl
+        .byte EnAnim_ZoomerOnRightWall - EnAnimTbl
+        .byte EnAnim_ZoomerOnCeiling - EnAnimTbl
+        .byte EnAnim_ZoomerOnCeiling - EnAnimTbl
+        .byte EnAnim_ZoomerOnRightWall - EnAnimTbl
+        .byte EnAnim_ZoomerOnLeftWall - EnAnimTbl
 .elif BANK == 2
     CrawlerAnimIndexTable:
         .byte EnAnim_69 - EnAnimTbl
@@ -79,6 +79,16 @@ Crawler04:
         .byte EnAnim_6F - EnAnimTbl
         .byte EnAnim_6C - EnAnimTbl
         .byte EnAnim_72 - EnAnimTbl
+.elif BANK == 4
+    CrawlerAnimIndexTable:
+        .byte EnAnim_ZeelaOnFloor - EnAnimTbl
+        .byte EnAnim_ZeelaOnFloor - EnAnimTbl
+        .byte EnAnim_ZeelaOnLeftWall - EnAnimTbl
+        .byte EnAnim_ZeelaOnRightWall - EnAnimTbl
+        .byte EnAnim_ZeelaOnCeiling - EnAnimTbl
+        .byte EnAnim_ZeelaOnCeiling - EnAnimTbl
+        .byte EnAnim_ZeelaOnRightWall - EnAnimTbl
+        .byte EnAnim_ZeelaOnLeftWall - EnAnimTbl
 .elif BANK == 5
     CrawlerAnimIndexTable:
         .byte EnAnim_4A - EnAnimTbl

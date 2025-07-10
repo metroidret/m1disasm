@@ -18,9 +18,9 @@ RidleyBranch_Explode:
     beq RidleyBranch_Exit
 
 RidleyBranch_Normal:
-    lda #$0B
+    lda #EnAnim_0B - EnAnimTbl.b
     sta EnemyLFB88_85
-    lda #$0E
+    lda #EnAnim_0E - EnAnimTbl.b
     sta EnemyLFB88_85+1.b
     jsr CommonJump_09
     jsr RidleyTryToLaunchProjectile

@@ -122,7 +122,7 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballKilledAnimIndex:
-    .byte EnAnim_03 - EnAnimTbl
+    .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_77 - EnAnimTbl
 ; fireball rising?

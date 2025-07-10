@@ -119,9 +119,9 @@ AreaPalToggle:
 
     .byte $00
 AreaFireballKilledAnimIndex:
-    .byte EnAnim_03 - EnAnimTbl
+    .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_43 - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTbl
 
     .byte $00, $00
 AreaFireballFallingAnimIndex:
@@ -129,7 +129,7 @@ AreaFireballFallingAnimIndex:
 AreaFireballSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_69 - EnAnimTbl
+    .byte EnAnim_Mellow - EnAnimTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -157,16 +157,16 @@ EnemyDeathAnimIndex:
     .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl
     .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl
     .byte EnAnim_2D - EnAnimTbl, EnAnim_2B - EnAnimTbl
-    .byte EnAnim_31 - EnAnimTbl, EnAnim_2F - EnAnimTbl
-    .byte EnAnim_33 - EnAnimTbl, EnAnim_33 - EnAnimTbl
-    .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl
-    .byte EnAnim_4B - EnAnimTbl, EnAnim_4B - EnAnimTbl
-    .byte EnAnim_55 - EnAnimTbl, EnAnim_53 - EnAnimTbl
+    .byte EnAnim_RipperExplodeFacingRight - EnAnimTbl, EnAnim_RipperExplodeFacingLeft - EnAnimTbl
+    .byte EnAnim_SkreeExplode - EnAnimTbl, EnAnim_SkreeExplode - EnAnimTbl
+    .byte EnAnim_ZoomerExplode - EnAnimTbl, EnAnim_ZoomerExplode - EnAnimTbl
+    .byte EnAnim_RioExplode - EnAnimTbl, EnAnim_RioExplode - EnAnimTbl
+    .byte EnAnim_ZebExplodeFacingRight - EnAnimTbl, EnAnim_ZebExplodeFacingLeft - EnAnimTbl
     .byte EnAnim_72 - EnAnimTbl, EnAnim_74 - EnAnimTbl ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
@@ -179,16 +179,16 @@ EnemyRestingAnimIndex:
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
-    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
+    .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl
+    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl
+    .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl
+    .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl
     .byte EnAnim_59 - EnAnimTbl, EnAnim_57 - EnAnimTbl
     .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; unused enemy
     .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; unused enemy
     .byte EnAnim_62 - EnAnimTbl, EnAnim_67 - EnAnimTbl ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
@@ -198,16 +198,16 @@ EnemyActiveAnimIndex:
     .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
     .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
-    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl
-    .byte EnAnim_50 - EnAnimTbl, EnAnim_4D - EnAnimTbl
+    .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl
+    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl
+    .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl
+    .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl
+    .byte EnAnim_ZebFacingRight - EnAnimTbl, EnAnim_ZebFacingLeft - EnAnimTbl
     .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; unused enemy
     .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; unused enemy
     .byte EnAnim_5F - EnAnimTbl, EnAnim_64 - EnAnimTbl ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
@@ -316,7 +316,7 @@ L977B:
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte EnAnim_64 - EnAnimTbl, EnAnim_67 - EnAnimTbl
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
+    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
