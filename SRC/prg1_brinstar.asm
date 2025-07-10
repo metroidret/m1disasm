@@ -307,8 +307,13 @@ EnSpeedXTable:
     .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; Behavior-Related Table?
-; bit7: unused?
+; bit7: bit7 of EnData05 for pipe bug
 ; bit6: 0=enemy uses movement strings. 1=enemy uses acceleration and speed and subpixels.
+; bit4: 0=is not metroid, 1=is metroid
+; bit2-3: bit6-7 of EnData1F for resting enemies
+; bit1: toggle bit2 of EnData05 in EnemyIfMoveFailedDown/EnemyIfMoveFailedUp
+; bit0: toggle bit0 of EnData05 in EnemyIfMoveFailedRight/EnemyIfMoveFailedLeft
+
 L977B:
     .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 

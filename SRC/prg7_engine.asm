@@ -9561,17 +9561,19 @@ DoFrozenEnemy: ; ($F43E)
     Lx304:
     jmp LF416
 ;--------------------------------------
-DoEnemyPickup:
-LF483:
+DoEnemyPickup: ;($F483)
+    ; branch if samus is not touching the pickup
     lda EnData04,x
     and #$24
-    beq Lx310
+    beq @pickupWasNotTouched
+
+    ; delete pickup
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     
     ; if anim frame is #$80, it is a missile pickup
     ldy EnAnimFrame,x
-    cpy #$80
-    beq PickupMissile
+    cpy #_id_EnFrame80.b
+    beq @pickupMissile
     
     ; health pickup
     tya
@@ -9583,55 +9585,58 @@ LF483:
     ldx #$03
     pla
     ; branch if EnType is non-zero (health pickup from a metroid)
-    bne Lx306
-    ;Increase Health by 20.
-    dex
-    pla
-    ; branch if small health pickup
-    cmp #$81
-    bne Lx305
-    ;Increase Health by 5.
-    ldx #$00
-    ldy #$50
-Lx305:
-    pha
-Lx306:
+    bne @endIf_A
+        ; default to big health pickup
+        ;Increase Health by 20.
+        dex
+        pla
+        ; branch if not small health pickup
+        cmp #_id_EnFrame81.b
+        bne @endIf_B
+            ; small health pickup
+            ;Increase Health by 5.
+            ldx #$00
+            ldy #$50
+        @endIf_B:
+        pha
+    @endIf_A:
     pla
     sty HealthChange
     stx HealthChange+1.b
     jsr AddHealth                   ;($CEF9)Add health to Samus.
     jmp SFX_EnergyPickup
 
-PickupMissile:
+@pickupMissile:
     ; add 2 missiles
     lda #$02
     ; branch if EnType is zero (regular missile pickup)
     ldy EnType,x
-    beq Lx307
+    beq @endIf_C
         ; missile pickup from a metroid
         ; add 30 missiles
         lda #$1E
-    Lx307:
+    @endIf_C:
     clc
     adc MissileCount
-    bcs Lx308              ; can't have more than 255 missiles
+    bcs @capMissiles              ; can't have more than 255 missiles
     cmp MaxMissiles  ; can Samus hold this many missiles?
-    bcc Lx309            ; branch if yes
-Lx308:
+    bcc @dontCapMissiles            ; branch if yes
+@capMissiles:
     lda MaxMissiles  ; set to max. # of missiles allowed
-Lx309:
+@dontCapMissiles:
     sta MissileCount
     jmp SFX_MissilePickup
-Lx310:
+
+@pickupWasNotTouched:
     ; decrement pickup die delay every 4 frames
     lda FrameCount
     and #$03
-    bne Lx311
-    dec EnData0D,x
-    ; if die delay is 0, remove pickup
-    bne Lx311
-    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-Lx311:
+    bne @endIf_D
+        dec EnData0D,x
+        ; if die delay is 0, remove pickup
+        bne @endIf_D
+            jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
+    @endIf_D:
     ; flicker the color of the pickup
     lda FrameCount
     and #$02

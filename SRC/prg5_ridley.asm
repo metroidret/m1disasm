@@ -132,16 +132,16 @@ AreaPalToggle:
     .byte $06
 
     .byte $00
-AreaFireballAnimIndex:
+AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_58 - EnAnimTbl
 
-    .byte $44, $4A
+    .byte EnAnim_44 - EnAnimTbl, EnAnim_4A - EnAnimTbl
 AreaFireballFallingAnimIndex:
-    .byte $48, $4A
+    .byte EnAnim_48 - EnAnimTbl, EnAnim_4A - EnAnimTbl
 AreaFireballSplatterAnimIndex:
-    .byte $4A, $36
+    .byte EnAnim_4A - EnAnimTbl, EnAnim_36 - EnAnimTbl
 AreaMellowAnimIndex:
     .byte EnAnim_25 - EnAnimTbl
 
