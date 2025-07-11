@@ -227,7 +227,8 @@ RoomPal                = $68
 TempX                  = $69
 TempY                  = $6A
 ObjectCntrl            = $6B     ;Controls object properties such as mirroring and color-->
-                                   ;bits if bit 7 set. Bit 4 controls object horizontal mirroring.
+                                   ;bits. Bit 4 controls object horizontal mirroring.
+                                   ;If bit 7 set, these attributes apply:
                                    ;bit 5 is priority
                                    ;bit 0 and bit 1 is for the color palette
 
