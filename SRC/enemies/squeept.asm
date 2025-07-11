@@ -24,7 +24,7 @@ L9A88:
     beq L9ACA
     cmp #enemyStatus_Explode
     beq L9ACF
-    jsr CommonJump_12
+    jsr CommonJump_EnemyGetDeltaY_UsingAcceleration
     ldx PageIndex
     lda #$00
     sta $05
