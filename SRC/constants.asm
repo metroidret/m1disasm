@@ -226,8 +226,9 @@ RoomPal                = $68
 TempX                  = $69
 TempY                  = $6A
 ObjectCntrl            = $6B     ;Controls object properties such as mirroring and color-->
-                                   ;bits. Bit 4 controls object mirroring.
-                                   ; bit 0 and bit 1 is for the color palette
+                                   ;bits if bit 7 set. Bit 4 controls object horizontal mirroring.
+                                   ;bit 5 is priority
+                                   ;bit 0 and bit 1 is for the color palette
 
 DoorOnNameTable3       = $6C     ;The following two addresses are used to keep track of the-->
 DoorOnNameTable0       = $6D     ;doors loaded on the name tables. The information is used-->

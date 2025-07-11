@@ -2597,14 +2597,14 @@ SetSamusData:
         lda FrameCount                  ;
         lsr                             ;
         and #$03                        ;Every other frame, change Samus palette while screw-->
-        ora #$A0                        ;Attack is active.
+        ora #$80 | OAMDATA_PRIORITY.b   ;Attack is active.
         sta ObjectCntrl                 ;
     LCD7E:
     jsr CheckHealthStatus           ;($CDFA)Check if Samus hit, blinking or Health low.
     jsr LavaAndMoveCheck            ;($E269)Check if Samus is in lava or moving.
     lda MetroidOnSamus              ;Is a Metroid stuck to Samus?-->
     beq LCD8C                           ;If not, branch.
-        lda #$A1                        ;Metroid on Samus. Turn Samus blue.
+        lda #$81 | OAMDATA_PRIORITY.b   ;Metroid on Samus. Turn Samus blue.
         sta ObjectCntrl                 ;
     LCD8C:
     jsr SetMirrorCntrlBit           ;($CD92)Mirror Samus, if necessary.
@@ -5158,7 +5158,7 @@ GetSpriteCntrlData:
     
     ;Extract bit from control byte that controls the object mirroring.
     lda ObjectCntrl
-    and #$10
+    and #OAMDATA_HFLIP>>2.b
     ;Move it to the bit 6 position and use it to flip the horizontal mirroring of the sprite if set.
     asl
     asl
@@ -5478,7 +5478,7 @@ ObjDrawFrame:
     bne LDE60                           ;If not, branch.
 
     lda ObjectCntrl                 ;Ensure object mirroring bit is clear so Samus'-->
-    and #$EF                        ;sprite appears properly when going up and down-->
+    and #~(OAMDATA_HFLIP>>2).b      ;sprite appears properly when going up and down-->
     sta ObjectCntrl                 ;elevators.
 
 LDE60:
@@ -9465,7 +9465,7 @@ LF416:
     
     lda ObjectCntrl
     bmi Lx301
-    lda #$A3
+    lda #$83 | OAMDATA_PRIORITY.b
 LF423:
     sta ObjectCntrl
 Lx301:
@@ -9491,7 +9491,7 @@ DoFrozenEnemy: ; ($F43E)
     beq LF410
     bit ObjectCntrl
     bmi Lx302
-        lda #$A1
+        lda #$81 | OAMDATA_PRIORITY.b
         sta ObjectCntrl
     Lx302:
     lda FrameCount
@@ -9593,7 +9593,7 @@ Lx311:
     lda FrameCount
     and #$02
     lsr
-    ora #$A0
+    ora #$80 | OAMDATA_PRIORITY.b
     sta ObjectCntrl
     jmp LF416
 ;--------------------------------------------
