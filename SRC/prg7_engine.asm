@@ -21,7 +21,7 @@
 .include "macros.asm"
 
 .redef BANK = 7
-.SECTION "ROM Bank $007" BANK 7 SLOT "ROMFixedSlot" ORGA $C000 FORCE
+.section "ROM Bank $007" bank 7 slot "ROMFixedSlot" orga $C000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -11545,13 +11545,13 @@ TileBlastAnim9:  .byte $07,$06,$08,$FE
 ROMFIXED_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $007 - Vectors" BANK 7 SLOT "ROMFixedSlot" ORGA $FFFA FORCE
+.section "ROM Bank $007 - Vectors" bank 7 slot "ROMFixedSlot" orga $FFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMFIXED_RESET            ;($FFB0)Reset vector.
     .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
-.ENDS
+.ends
 

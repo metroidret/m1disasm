@@ -20,7 +20,7 @@
 .include "macros.asm"
 
 .redef BANK = 6
-.SECTION "ROM Bank $006" BANK 6 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $006" bank 6 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -418,13 +418,13 @@ GFX_Font:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $006 - Vectors" BANK 6 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $006 - Vectors" bank 6 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 
