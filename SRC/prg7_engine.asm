@@ -4717,18 +4717,24 @@ StatueAnimFrameTable:
     .byte _id_ObjFrame66 ; Ridley anim frame
 
 LDA3D:
+    ; exit if delay is negative (when is that?)
     lda ObjAnimDelay,x
     bmi RTS_X127
+
+    ; set delay to 1
     lda #$01
     sta ObjAnimDelay,x
+    ; exit if statue isn't moving
     lda KraidStatueY-$60,x
     and #$0F
     beq RTS_X127
+
     inc ObjAnimDelay,x
     dec KraidStatueY-$60,x
     lda KraidStatueY-$60,x
     and #$0F
     bne RTS_X127
+
     lda ObjAnimDelay,x
     ora #$80
     sta ObjAnimDelay,x
@@ -7898,7 +7904,7 @@ LEB6E:
     ldy EnType,x               ;Load A with index to enemy data.
     asl EnData05,x                     ;*2
     jsr LFB7B
-    jmp LF85A
+    jmp InitEnemyData0DAndHitPoints
 
 IsSlotTaken:
     lda EnStatus,x
@@ -10269,13 +10275,20 @@ CrawlerAIRoutine_ShouldCrawlerMove:
     ; if bits 0-1 are zero, the crawler does not move
     rts
 
-LF85A:
+InitEnemyData0DAndHitPoints:
     ldy EnType,x
+    
+    ; initialoze EnData0D
     lda EnemyData0DTbl,y
     sta EnData0D,x
+
+    ; initialize enemy's health
     lda EnemyHitPointTbl,y          ;($962B)
     ldy EnSpecialAttribs,x
-    bpl Lx353 ; Check MSB of enemyAttr, double health if set
+    ; Check MSB of enemyAttr, double health if set
+    ; (this is the reason powerful variants of rippers have 254 health,
+    ;  instead of being invincible (255 health) like their weaker variant)
+    bpl Lx353
         asl
     Lx353:
     sta EnHitPoints,x
@@ -10777,7 +10790,7 @@ UpdatePipeBugHole:
     ldy EnType,x
     jsr LFB7B
     ; init hit points and stuff
-    jmp LF85A
+    jmp InitEnemyData0DAndHitPoints
 
 @clearEnemySlot:
     sta EnType,x
@@ -10786,10 +10799,12 @@ UpdatePipeBugHole:
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 LFB7B:
+    ; rotate bit 7 of L977B into bit 7 of EnData05
     jsr LoadTableAt977B
     ror EnData05,x
-    lda EnemyInitDelayTbl,y         ;($96BB)Load initial delay for enemy movement.
-    sta EnDelay,x           ;
+    ; load initial delay for enemy movement.
+    lda EnemyInitDelayTbl,y
+    sta EnDelay,x
 
 Exit13:
     rts                             ;Exit from multiple routines.
@@ -10845,17 +10860,17 @@ UpdateAllSkreeProjectiles:
     lda #$40
     sta PageIndex
     ldx #(4-1)*4
-    Lx385:
+    @loop:
         jsr UpdateSkreeProjectile
         dex
         dex
         dex
         dex
-        bne Lx385
+        bne @loop
         ; fallthrough
 UpdateSkreeProjectile:
     lda SkreeProjectileDieDelay,x
-    beq RTS_X387
+    beq @RTS
     dec SkreeProjectileDieDelay,x
     
     ; y = x/2
@@ -10912,27 +10927,27 @@ UpdateSkreeProjectile:
     
     ; exit if samus is in i-frames
     lda SamusBlink
-    bne Lx386
+    bne @endIf_A
     ; exit if samus is not touching the skree projectile
     ldy #$00
     ldx #$40
     jsr AreObjectsTouching          ;($DC7F)
-    bcs Lx386
+    bcs @endIf_A
     ; exit if samus is doing the screw attack
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
     ldy #$00
-    bcc Lx386
-    
-    clc
-    jsr SamusHurt_F311
-    ; deal 5 damage to Samus
-    lda #$50
-    sta HealthChange
-    jsr SubtractHealth              ;($CE92)
-Lx386:
+    bcc @endIf_A
+        ; samus is being hit by the projectile
+        clc
+        jsr SamusHurt_F311
+        ; deal 5 damage to Samus
+        lda #$50
+        sta HealthChange
+        jsr SubtractHealth              ;($CE92)
+    @endIf_A:
     pla
     tax
-RTS_X387:
+@RTS:
     rts
 
 KillSkreeProjectile:
@@ -10951,7 +10966,7 @@ SkreeProjectileSpeedTable:
 UpdateAllMellows:
     ; exit if mellow handler enemy isn't there
     lda EnStatus+$F0
-    beq RTS_X390
+    beq @RTS
     
     ldx #$F0
     stx PageIndex
@@ -10965,21 +10980,22 @@ UpdateAllMellows:
     lda RandomNumber1
     sta Mellow8A
     lda #(4-1)*$08
-Lx389:
-    pha
-    tax
-    jsr UpdateMellow
-    pla
-    tax
-    lda MellowB6,x
-    and #$F8
-    sta MellowB6,x
-    txa
-    sec
-    sbc #$08
-    bpl Lx389
-RTS_X390:
+    @loop:
+        pha
+        tax
+        jsr UpdateMellow
+        pla
+        tax
+        lda MellowB6,x
+        and #$F8
+        sta MellowB6,x
+        txa
+        sec
+        sbc #$08
+        bpl @loop
+@RTS:
     rts
+
 RemoveMellowHandlerEnemy:
     jmp RemoveEnemy                   ;($FA18)Free enemy data slot.
 
@@ -11135,9 +11151,9 @@ UpdateMellow_FD84:
     lda MellowB6,x
     and #$04
     beq @RTS
-    lda #$03
-    sta MellowStatus,x
-@RTS:
+        lda #$03
+        sta MellowStatus,x
+    @RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -11160,78 +11176,79 @@ ApplySpeedToPosition:
     ; apply y speed to y position
     lda Temp04_SpeedY
     clc
-    bmi Lx405
+    bmi @else_A
         ; dont apply y speed if it is zero
-        beq LFDBF
+        beq @endIf_A
         ; positive y speed
         adc Temp08_PositionY
-        bcs Lx403
+        bcs @then_B
             cmp #$F0
-            bcc Lx404
-        Lx403:
+            bcc @endIf_B
+        @then_B:
             ; position is greater or equal to 240px, we must wrap around
             adc #$0F ; carry is set, so this adds #$10
             ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
             ldy Temp02_ScrollDir
-            bne ClcExit2
+            bne @exit_failure
             ; screen scrolls vertically, update high byte
             inc Temp0B_PositionHi
-        Lx404:
+        @endIf_B:
         ; save new y position
         sta Temp08_PositionY
-        jmp LFDBF
-    Lx405:
+        jmp @endIf_A
+    @else_A:
         ; negative y speed
         adc Temp08_PositionY
-        bcs Lx406
+        bcs @endIf_C
             ; position is lesser than 0px, we must wrap around
             sbc #$0F ; carry is set, so this subtracts #$10
             ; if screen scrolls horizontally, this movement has failed bc it would go out of bounds
             ldy Temp02_ScrollDir
-            bne ClcExit2
+            bne @exit_failure
             ; screen scrolls vertically, update high byte
             inc Temp0B_PositionHi
-        Lx406:
+        @endIf_C:
         ; save new y position
         sta Temp08_PositionY
-    LFDBF:
+    @endIf_A:
     
     ; apply x speed to x position
     lda Temp05_SpeedX
     clc
-    bmi Lx408
+    bmi @else_D
         ; dont apply x speed if it is zero
-        beq SecExit
+        beq @exit_success
         ; positive x speed
         adc Temp09_PositionX
-        bcc Lx407
+        bcc @endIf_E
             ; position is greater or equal to 256px, we must wrap around
             ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
             ldy Temp02_ScrollDir
-            beq ClcExit2
+            beq @exit_failure
             ; screen scrolls horizontally, update high byte
             inc Temp0B_PositionHi
-        Lx407:
+        @endIf_E:
         ; save new x position
-        jmp Lx409
-    Lx408:
+        jmp @endIf_F
+    @else_D:
         adc Temp09_PositionX
-        bcs Lx409
+        bcs @endIf_F
             ; position is lesser than 0px, we must wrap around
             ; if screen scrolls vertically, this movement has failed bc it would go out of bounds
             ldy Temp02_ScrollDir
-            beq ClcExit2
+            beq @exit_failure
             ; screen scrolls horizontally, update high byte
             inc Temp0B_PositionHi
-        Lx409:
+        @endIf_F:
         ; save new x position
         sta Temp09_PositionX
 
-SecExit:
+@exit_success:
     ; movement was successful, set carry
     sec
     rts
-ClcExit2:
+
+@exit_failure:
     ; movement has failed, clear carry
     clc
 RTS_X410:
@@ -11244,21 +11261,21 @@ UpdateTourianItems: ; $FDE3
     ; (it will have a value of 99.99 the first frame)
     lda EndTimer+1
     cmp #$99
-    bne Lx411
+    bne @endIf_A
     clc
     sbc EndTimer
-    bne Lx411                   ; On the first frame of the end timer:
+    bne @endIf_A                   ; On the first frame of the end timer:
         ; Add [mother brain defeated] to item history
         ; a is #$00, low byte of ui_MOTHERBRAIN
         sta $06
         lda #>ui_MOTHERBRAIN.b
         sta $07
         jsr LDC54
-    Lx411:
+    @endIf_A:
     
     ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
     ldx #$20
-    Lx412:
+    @loop:
         ; ($FE05) Update one zebetite
         jsr CheckZebetite
         ; Subtract 8 from x
@@ -11266,13 +11283,15 @@ UpdateTourianItems: ; $FDE3
         sec
         sbc #$08
         tax
-        bne Lx412
+        bne @loop
 
 CheckZebetite: ; $FE05
+    ; Exit if zebetite state != 2
     lda ZebetiteStatus,x
     sec
     sbc #$02
-    bne RTS_X410 ; Exit if zebetite state != 2
+    bne RTS_X410
+
     ; a is #$00, low byte of ui_ZEBETITE1
     sta $06
     ; Set zebetite state to 3
@@ -11287,11 +11306,11 @@ CheckZebetite: ; $FE05
 ; Tile degenerate/regenerate
 UpdateAllTileBlasts:
     ldx #$C0
-    Lx413:
+    @loop:
         jsr UpdateTileBlast
         ldx PageIndex
         jsr Xminus16
-        bne Lx413
+        bne @loop
 UpdateTileBlast:
     stx PageIndex
     lda TileBlastRoutine,x
