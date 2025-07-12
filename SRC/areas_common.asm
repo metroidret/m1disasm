@@ -24,8 +24,8 @@ CommonJump_01: ;$8003 (yes anim, no common AI)
     jmp LF438
 CommonJump_02: ;$8006 (no anim, no common AI)
     jmp LF416
-CommonJump_03: ;$8009
-    jmp LF852
+CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;$8009
+    jmp CrawlerAIRoutine_ShouldCrawlerMove
 CommonJump_UpdateEnemyAnim: ;$800C
     jmp UpdateEnemyAnim             ;($E094)
 CommonJump_InitEnAnimIndex: ;$800F

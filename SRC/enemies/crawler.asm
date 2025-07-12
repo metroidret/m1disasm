@@ -1,8 +1,10 @@
 ; Zoomer Routine (Crawler)
 CrawlerAIRoutine:
-    jsr CommonJump_03
+    ; move only 6 frames out of 8
+    jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
     beq Crawler03
+
     lda EnemyStatusPreAI
     .if BANK == 1 || BANK == 4
         cmp #enemyStatus_Resting

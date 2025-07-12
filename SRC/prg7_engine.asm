@@ -10251,13 +10251,22 @@ Lx352:
     tay
     rts
 
-LF852: ; accessed from CommonJump_03
+CrawlerAIRoutine_ShouldCrawlerMove:
+    ; load enemy slot into a
     txa
+    ; divide by 8
     lsr
     lsr
     lsr
+    ; add frame count
     adc FrameCount
+    ; divide by two
     lsr
+    ; this returns
+    ; enemy slot  %----7654
+    ; frame count %07654321
+    ; whenever this is called, only the bits 0-1 are used
+    ; if bits 0-1 are zero, the crawler does not move
     rts
 
 LF85A:

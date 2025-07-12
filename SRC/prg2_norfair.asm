@@ -497,10 +497,12 @@ L9963:
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
+
     jsr CommonJump_09
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
+
     jsr CommonJump_09
     lda #$06
     sta $00
@@ -509,11 +511,11 @@ L9963:
     bne L9993
     cmp EnStatus,x
     bne L9993
-    jsr CommonJump_03
+    jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
     bne L9993
-    jmp L984D
-L9993:
+        jmp L984D
+    L9993:
     jmp CommonEnemyJump_00_01_02
 
 ;-------------------------------------------------------------------------------
