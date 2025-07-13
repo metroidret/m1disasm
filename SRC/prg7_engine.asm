@@ -2624,6 +2624,8 @@ SetMirrorCntrlBit:
 
 ;------------------------------[ Check if screw attack is active ]-----------------------------------
 
+; return carry clear if screw attack is active
+; return carry set if no screw attack
 IsScrewAttackActive:
     ; default to screw attack inactive (carry flag set).
     sec
@@ -3355,8 +3357,8 @@ SearchOpenProjectileSlot:
 
 @slotFound:
     ; found open samus projectile slot
-    ; clear Projectile030A
-    sta Projectile030A,y
+    ; clear ProjectileIsHit
+    sta ProjectileIsHit,y
     ; return set zero flag if Samus is not shooting a missile
     lda MissileToggle
     beq @endIf_A
@@ -3966,11 +3968,14 @@ Lx075:
     jmp DrawBullet
 
 UpdateBullet_ExplodeIfHitSprite:
-    lda Projectile030A,x
+    ; exit if projectile didn't hit anything
+    lda ProjectileIsHit,x
     beq Exit5
+    ; clear projectile is hit flag
     lda #$00
-    sta Projectile030A,x
+    sta ProjectileIsHit,x
 BulletExplode:
+    ; explode the projectile
     lda #ObjAnim_1D - ObjectAnimIndexTbl.b
     ldy ObjAction,x
     cpy #wa_BulletExplode
@@ -4748,7 +4753,7 @@ StatueAnimFrameTable:
     .byte _id_ObjFrame66 ; Ridley anim frame
 
 UpdateStatue_Raise:
-    ; exit if status is raised
+    ; exit if statue is raised
     lda KraidStatueRaiseState-$60,x
     bmi RTS_X127
 
@@ -4928,15 +4933,21 @@ Exit0:
 ; Toggles between bullets/missiles (if Samus has any missiles).
 
 CheckMissileToggle:
+    ; exit if Samus has no missiles
     lda MissileCount
-    beq Exit0       ; exit if Samus has no missiles
+    beq Exit0
+    
+    ; exit if SELECT was not just pressed and was not auto-fired
     lda Joy1Change
     ora Joy1Retrig
     and #BUTTON_SELECT
-    beq Exit0       ; exit if SELECT not pressed
+    beq Exit0
+    
+    ; toggle missiles on/off
     lda MissileToggle
-    eor #$01        ; 0 = fire bullets, 1 = fire missiles
+    eor #$01
     sta MissileToggle
+    ; update samus's palette
     jmp SelectSamusPal
 
 ;-------------------------------------------------------------------------------
@@ -4947,10 +4958,10 @@ CheckMissileToggle:
 MakeBitMask:
     sec
     lda #$00
-    LDB32:
+    @loop:
         rol
         dey
-        bpl LDB32
+        bpl @loop
 RTS_DB36:
     rts
 
@@ -7990,7 +8001,7 @@ LEB4D:
     lda #$01                        ;
     sta EnStatus,x                  ;Indicate object slot is taken.
     lda #$00
-    sta EnData04,x
+    sta EnIsHit,x
     jsr GetNameTable                ;($EB85)Get name table to place enemy on.
     sta EnHi,x               ;Store name table.
 LEB6E:
@@ -8931,8 +8942,8 @@ CollisionDetection:
         lda SamusBlink
         bne Lx262
         ldy #$00
-        jsr CollisionDetectionMellow_F149
-        jsr CollisionDetectionMellow_F2B4
+        jsr CollisionDetectionMellow_CheckWithObjectYSlot
+        jsr CollisionDetectionMellow_ReactToCollisionWithSamus
     ; check for crash with samus's projectiles
     Lx262:
         ldy #$D0
@@ -8949,12 +8960,12 @@ CollisionDetection:
             beq Lx264
             cmp #wa_Missile
             bne Lx265
-        Lx264:
-            ; projectile is of the right type
-            ; hit mellow
-            jsr CollisionDetectionMellow_F149
-            jsr CollisionDetectionMellow_F32A
-        Lx265:
+            Lx264:
+                ; projectile is of the right type
+                ; hit mellow if they collided
+                jsr CollisionDetectionMellow_CheckWithObjectYSlot
+                jsr CollisionDetectionMellow_ReactToCollisionWithProjectile
+            Lx265:
             jsr Yplus16
             bne Lx263
     Lx266:
@@ -9015,11 +9026,11 @@ Lx269:
             beq Lx272
             cmp #wa_Missile
             bne Lx273
-        ; check if enemy is actually hit
-        Lx272:
-            jsr CollisionDetectionEnemy_F140
-            jsr CollisionDetectionEnemy_F2CA
-        Lx273:
+            ; check if enemy is actually hit
+            Lx272:
+                jsr CollisionDetectionEnemy_CheckWithObjectYSlot
+                jsr CollisionDetectionEnemy_ReactToCollisionWithProjectile
+            Lx273:
             jsr Yplus16          ; next projectile slot
             bne Lx271
     Lx274:
@@ -9031,8 +9042,8 @@ Lx269:
         jsr IsSamusDead
         beq NextEnemy
         ; enemy collide with samus
-        jsr CollisionDetectionEnemy_F140
-        jsr CollisionDetectionEnemy_F282
+        jsr CollisionDetectionEnemy_CheckWithObjectYSlot
+        jsr CollisionDetectionEnemy_ReactToCollisionWithSamus
         NextEnemy:
         jsr Xminus16
         bmi Lx275
@@ -9090,12 +9101,12 @@ GotoSubtractHealth:
     jmp SubtractHealth              ;($CE92)
 
 
-CollisionDetectionEnemy_F140:
+CollisionDetectionEnemy_CheckWithObjectYSlot:
     jsr GetRadiusSumsOfEnXSlotAndObjYSlot
     jsr GetObjectYSlotPosition
     jmp CheckCollisionOfXSlotAndYSlot
 
-CollisionDetectionMellow_F149:
+CollisionDetectionMellow_CheckWithObjectYSlot:
     jsr GetObjectYSlotPosition
     jsr AddObjectYSlotRadiusYOf4AndRadiusXOf8
     jmp CheckCollisionOfXSlotAndYSlot
@@ -9333,80 +9344,107 @@ LF270:
     rts
 
 CollisionDetectionDoor_F277:
+    ; exit if collision didn't happen
     bcs Exit17
-LF279:
+    
+SetProjectileIsHit:
     lda Temp10_DistHi
-LF27B:
+SetSamusIsHitFlags:
     ora SamusIsHit,y
     sta SamusIsHit,y
 Exit17:
     rts
 
-CollisionDetectionEnemy_F282:
+CollisionDetectionEnemy_ReactToCollisionWithSamus:
+    ; exit if collision didn't happen
     bcs Exit17
+    
     jsr LF2E8
-    jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
+    ;branch if screw attack is active.
+    jsr IsScrewAttackActive         
     ldy #$00
     bcc Lx289
+    
+    ; screw attack is not active
+    ; exit if enemy is frozen
     lda EnStatus,x
-    cmp #$04
+    cmp #enemyStatus_Frozen
     bcs Exit17
+    
+    ; enemy is not frozen
+    ; set SamusHurt010F to enemy type
     lda EnType,x
 Lx287:
     sta SamusHurt010F
+    
+    ; branch if enemy type bit 7 is set (when does this happen?)
     tay
     bmi Lx288
+        ; enemy type bit 7 is not set
+        ; exit if bit 4 of L968B is set
         lda L968B,y
         and #$10
         bne Exit17
     Lx288:
+    
     ldy #$00
-    jsr LF338
+    jsr SetSamusIsHitByEnemy
     jmp LF306
 Lx289:
     lda #wa_ScrewAttack
     sta EnWeaponAction,x
     bne Lx291 ; branch always
 
-CollisionDetectionMellow_F2B4:
+CollisionDetectionMellow_ReactToCollisionWithSamus:
+    ; exit if collision didn't happen
     bcs RTS_X290
-    jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
+    ; branch if screw attack is not active (samus got hit)
+    jsr IsScrewAttackActive
     ldy #$00
     lda #$C0
     bcs Lx287
-LF2BF:
-    lda MellowB6,x
+    ; screw attack was active
+CollisionDetectionMellow_Hit:
+    ; set mellow is hit flag
+    lda MellowIsHit,x
     and #$F8
-    ora $10
+    ora Temp10_DistHi
     eor #$03
-    sta MellowB6,x
+    sta MellowIsHit,x
 RTS_X290:
     rts
 
-CollisionDetectionEnemy_F2CA:
+CollisionDetectionEnemy_ReactToCollisionWithProjectile:
+    ; exit if collision didn't happen
     bcs Lx293
+    
+    ; save weapon action to enemy
     lda ObjAction,y
     sta EnWeaponAction,x
-    jsr LF279
+    ; set projectile is hit flag
+    jsr SetProjectileIsHit
 Lx291:
-    jsr LF332
+    ; set enemy is hit flag
+    jsr GetEnemyIsHitFlags
 Lx292:
-    ora EnData04,x
-    sta EnData04,x
+    ora EnIsHit,x
+    sta EnIsHit,x
 Lx293:
     rts
 
 CollisionDetectionFireball_F2ED_F2DF:
-    lda $10
-    ora EnData04,y
-    sta EnData04,y
+    lda Temp10_DistHi
+    ora EnIsHit,y
+    sta EnIsHit,y
     rts
 
 LF2E8:
     jsr LF340
     bne Lx292
 CollisionDetectionFireball_F2ED:
+    ; exit if collision didn't happen
     bcs RTS_X294
+    
     jsr CollisionDetectionFireball_F2ED_F2DF
     tya
     pha
@@ -9416,7 +9454,7 @@ CollisionDetectionFireball_F2ED:
     bcc RTS_X294
     lda #$80
     sta SamusHurt010F
-    jsr LF332
+    jsr GetEnemyIsHitFlags
     jsr LF270
 LF306:
     ; apply enemy base damage
@@ -9428,15 +9466,21 @@ RTS_X294:
     rts
 
 SamusHurt_F311:
+    ; exit if collision didn't happen
     bcs Exit22
+    ; set SamusHurt010F to #$E0
     lda #$E0
     sta SamusHurt010F
-    jsr LF338
-    lda $0F
+    ; set SamusIsHit depending on the direction samus was hit
+    jsr SetSamusIsHitByEnemy
+    ; set SamusKnockbackIsBomb to #$01 (vertical knockback) if samus and what hit her have the same x position
+    ; else, set SamusKnockbackIsBomb to #$00 (diagonal knockback)
+    lda Temp0F_DistX
     beq Lx295
-    lda #$01
-Lx295:
+        lda #$01
+    Lx295:
     sta SamusKnockbackIsBomb
+    ; fallthrough
 
 ClearHealthChange:
     lda #$00
@@ -9446,24 +9490,24 @@ ClearHealthChange:
 Exit22:
     rts                             ;Return for routine above and below.
 
-CollisionDetectionMellow_F32A:
+CollisionDetectionMellow_ReactToCollisionWithProjectile:
     bcs Exit22
-    jsr LF279
-    jmp LF2BF
+    jsr SetProjectileIsHit
+    jmp CollisionDetectionMellow_Hit
 
-LF332:
+GetEnemyIsHitFlags:
     jsr LF340
     jmp Amul8       ; * 8
 
-LF338:
-    lda $10
+SetSamusIsHitByEnemy:
+    lda Temp10_DistHi
     asl
     asl
     asl
-    jmp LF27B
+    jmp SetSamusIsHitFlags
 
 LF340:
-    lda $10
+    lda Temp10_DistHi
     eor #$03
     rts
 
@@ -9627,7 +9671,7 @@ Lx301:
     LF42D:
     ldx PageIndex
     lda #$00
-    sta EnData04,x
+    sta EnIsHit,x
     sta EnWeaponAction,x
     rts
 
@@ -9672,7 +9716,7 @@ DoFrozenEnemy: ; ($F43E)
 ;--------------------------------------
 DoEnemyPickup: ;($F483)
     ; branch if samus is not touching the pickup
-    lda EnData04,x
+    lda EnIsHit,x
     and #$24
     beq @pickupWasNotTouched
 
@@ -9813,7 +9857,7 @@ EnemyReactToSamusWeapon:
     lda EnSpecialAttribs,x
     sta $0A
     ; exit if enemy was not attacked?
-    lda EnData04,x
+    lda EnIsHit,x
     and #$20
     beq RTS_X315
     
@@ -10423,7 +10467,7 @@ SpawnFireball:
     bcs RTS_SpawnFireball_FindSlot
     
     ; a is #$00 here
-    sta EnData04,y
+    sta EnIsHit,y
     jsr SpawnFireball_F92C
     ; rotate horizontal facing dir flag into carry
     lda EnData05,x
@@ -10577,13 +10621,13 @@ Exit19:
     rts
 
 UpdateEnemyFireball_Resting:
-    jsr LFA5B
+    jsr EnemyBecomePickupIfHit
     jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
     bcs LF97C
     lda EnStatus,x
     beq Exit19
-    jsr LFA60
+    jsr EnemyBecomePickup
 LF97C:
     lda #$01
 AnimDrawEnemy:
@@ -10598,7 +10642,7 @@ LF987:
     beq Lx362
 
 UpdateEnemyFireball_Active:
-    jsr LFA5B
+    jsr EnemyBecomePickupIfHit
     lda EnData0A,x
     and #$FE
     tay
@@ -10725,12 +10769,13 @@ LoadEnemyPositionFromTemp:
 RTS_X370:
     rts
 
-LFA5B:
-    lda EnData04,x
+EnemyBecomePickupIfHit:
+    ; exit if not hit
+    lda EnIsHit,x
     beq Exit20
-LFA60:
+EnemyBecomePickup:
     lda #$00
-    sta EnData04,x
+    sta EnIsHit,x
     lda #enemyStatus_Pickup
     sta EnStatus,x
 Exit20:
@@ -10849,7 +10894,7 @@ UpdatePipeBugHole:
     @endIf_A:
     ; enemy slot is available, spawn pipe bug
     ; a is #$00 here
-    sta EnData04,x
+    sta EnIsHit,x
     ; check if the slot status needs to be cleared first
     ; (why must clearing be done on a different frame than spawning the pipe bug?)
     lda #$FF
@@ -11089,9 +11134,9 @@ UpdateAllMellows:
         jsr UpdateMellow
         pla
         tax
-        lda MellowB6,x
+        lda MellowIsHit,x
         and #$F8
-        sta MellowB6,x
+        sta MellowIsHit,x
         txa
         sec
         sbc #$08
@@ -11251,7 +11296,7 @@ UpdateMellow_LoadPositionFromTemp:
     rts
 
 UpdateMellow_FD84:
-    lda MellowB6,x
+    lda MellowIsHit,x
     and #$04
     beq @RTS
         lda #$03
@@ -11455,7 +11500,7 @@ UpdateTileBlast_LFE59:
     ldy TileBlastType,x
     lda TileBlastAnimIndexTable,y
     
-    SetTileAnim:
+SetTileAnim:
     sta TileBlastAnimIndex,x
     sta TileBlast0505,x
     lda #$00

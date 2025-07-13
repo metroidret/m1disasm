@@ -123,7 +123,7 @@ L9899:
     lda #enemyStatus_Frozen
     sta EnStatus,x
 L98A9:
-    lda EnData04,x
+    lda EnIsHit,x
     and #$20
     beq L990F
         ; check if metroid is latched onto Samus
@@ -168,7 +168,7 @@ L98A9:
         L98EF:
         ; let go of Samus
         lda #$00
-        sta EnData04,x
+        sta EnIsHit,x
         sta MetroidLatch0400,y
         sta EnSpeedSubPixelY,x
         sta EnSpeedSubPixelX,x
@@ -186,7 +186,7 @@ L98A9:
     bne L9932
         ; metroid is not latched
         ; check if metroid is touching Samus
-        lda EnData04,x
+        lda EnIsHit,x
         and #$04
         ; branch if metroid doesnt touch Samus
         beq L9964

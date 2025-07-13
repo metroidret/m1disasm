@@ -1672,7 +1672,7 @@ UpdateAllRinkaSpawners:
     ; init more rinka stuff idk
     lda #$00
     sta EnSpecialAttribs,x
-    sta EnData04,x
+    sta EnIsHit,x
     jsr CommonJump_0E
     ; set rinka frame to nothing (it will fade into view)
     lda #$F7

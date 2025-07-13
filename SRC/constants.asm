@@ -46,7 +46,7 @@
 ; entity to entity collision detection
 Temp00_Diff            = $00
 Temp01_DiffHi          = $01
-Temp03_ScrollDir       = $03 ; #$00=vertical room, #$02=horizontal room
+Temp03_ScrollDir       = $03     ; #$00=vertical room, #$02=horizontal room
 Temp04_YSlotRadY       = $04
 Temp05_YSlotRadX       = $05
 Temp06_YSlotPositionY  = $06
@@ -56,11 +56,13 @@ Temp09_XSlotPositionX  = $09
 Temp0A_YSlotPositionHi = $0A
 Temp0B_XSlotPositionHi = $0B
 Temp0F_DistX           = $0F
-Temp10_DistHi          = $10
+Temp10_DistHi          = $10     ;bit7-3 is clear, bit 2 is set
+                                   ;bit 1 is dist hi y (%0=y slot is above x slot, %1=y slot is below x slot)
+                                   ;bit 0 is dist hi x (%0=y slot is left of x slot, %1=y slot is right of x slot)
 Temp11_DistY           = $11
 
 ; LoadPositionFromTemp/StorePositionToTemp/ApplySpeedToPosition
-Temp02_ScrollDir       = $02 ; #$00=vertical room, #$02=horizontal room
+Temp02_ScrollDir       = $02     ; #$00=vertical room, #$02=horizontal room
 Temp04_SpeedY          = $04
 Temp05_SpeedX          = $05
 Temp08_PositionY       = $08
@@ -250,6 +252,7 @@ UpdatingProjectile     = $71     ;#$01=Projectile update in process. #$00=not in
 SamusKnockbackDir      = $72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
                                     ; i think there may something more to this variable, but im not sure what
 SamusKnockbackIsBomb   = $73     ;bit 7: 0=samus was hurt, 1=samus was bombed
+                                   ;bit 0: 0=diagonal knockback, 1=vertical knockback
 InArea                 = $74     ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12=Kraid hideout,-->
                                    ;#$13=Tourian, #$14=Ridley hideout.
 
@@ -345,8 +348,8 @@ MotherBrainIsHit       = $9E     ;Was mother brain hit by a missile? #$00=no, #$
 MotherBrainFlashDelay  = $9F     ;Delay until mother brain no longer flashes from being hit.
 
 ; when mother brain is dead
-MotherBrainDeathStringID     = $99     ;
-MotherBrainDeathInstrID     = $9A     ;
+MotherBrainDeathStringID = $99     ;
+MotherBrainDeathInstrID = $9A     ;
 
 ; 4 slots of 4 bytes each ($A0-$AF)
 SkreeProjectileDieDelay= $A0     ;Delay until projectile dies.
@@ -361,7 +364,7 @@ MellowX                = $B2
 MellowHi               = $B3
 MellowAttackState      = $B4
 MellowAttackTimer      = $B5
-MellowB6               = $B6
+MellowIsHit            = $B6
 ; $B7 is unused
 
 SpareMemB7             = $B7     ;Written to in title routine and accessed by unused routine.
@@ -440,7 +443,7 @@ EndTimerEnemyHi        = $010C
 EndTimerEnemyIsEnabled = $010D   ;the end timer in the "TIME BOMB SET" message. #$00=no, #$01=yes
 
 MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
-SamusHurt010F          = $010F
+SamusHurt010F          = $010F   ;never read. takes on different values depending on how samus was hit.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
@@ -541,7 +544,7 @@ ProjectileAnimFrame    = $0303   ;*2 = Index into FramePtrTable for current anim
 ProjectileAnimDelay    = $0304   ;Number of frames to delay between animation frames.
 ProjectileAnimResetIndex = $0305   ;Restart index-1 when AnimIndex finished with last frame.
 ProjectileAnimIndex    = $0306   ;Current index into ObjectAnimIndexTbl.
-Projectile030A         = $030A
+ProjectileIsHit        = $030A
 ProjectileDieDelay     = $030F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
@@ -564,12 +567,12 @@ EnY                    = $0400   ;Enemy y position in room.(not actual screen po
 EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
 EnSpeedY               = $0402   ; unknown - y speed?
 EnSpeedX               = $0403   ; unknown - x speed?
-EnData04               = $0404   ; unknown - hurt flag?
+EnIsHit                = $0404   ; unknown - hurt flag?
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
                                    ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
-                                   ;bit4: always set?
+                                   ;bit4: always set? (see L968B)
                                    ;bit5: when active, this bit being unset will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
