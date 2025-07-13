@@ -192,7 +192,7 @@ SamusMapPosX           = $50     ;Current x position on world map of the screen 
 SamusScrX              = $51     ;Samus x position on screen.
 SamusScrY              = $52     ;Samus y position on screen.
 WalkSoundDelay         = $53
-Statues54              = $54
+StatuesBridgeIsSpawned = $54     ;0=Bridge is not spawned, 1=Bridge is spawned and will build itself.
 IsSamus                = $55     ;1=Samus object being accessed, 0=not Samus.
 DoorEntryStatus        = $56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
                                    ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
@@ -513,8 +513,8 @@ StatueStatus           = $0360
 StatueAnimFrame        = $0363
 KraidStatueRaiseState  = $0364   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
 RidleyStatueRaiseState = $0365
-Statue0366             = $0366   ; is this even related to statues?
-; Statue0366+1           = $0367
+KraidStatueIsHit       = $0366   ;#$00=not hit, #$01=hit
+RidleyStatueIsHit      = $0367   ;#$00=not hit, #$01=hit
 StatueHi               = $036C
 StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
 StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.

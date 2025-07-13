@@ -2172,7 +2172,7 @@ UpdateWorld:
     jsr UpdateSamus                 ;($CC0D)Display/movement of Samus.
     jsr AreaRoutine                 ;($95C3)Area specific routine.
     jsr UpdateElevator              ;($D7B3)Display of elevators.
-    jsr UpdateStatues               ;($D9D4)Display of Ridley & Kraid statues.
+    jsr UpdateAllStatues            ;($D9D4)Display of Ridley & Kraid statues.
     jsr UpdateAllEnemyExplosions    ; destruction of enemies
     jsr UpdateAllMellows            ; update of Mellow/Memu enemies
     jsr UpdateAllEnemyFireballs
@@ -2190,10 +2190,10 @@ UpdateWorld:
 ;Clear remaining sprite RAM
     ldx SpritePagePos
     lda #$F4
-    Lx003:
+    @loop:
         sta SpriteRAM,x
         jsr Xplus4       ; X = X + 4
-        bne Lx003
+        bne @loop
     rts
 
 ;------------------------------------[ Select Samus palette ]----------------------------------------
@@ -3994,8 +3994,8 @@ Lx078:
     lda #$00
     beq Lx077   ; branch always
 
-GotoProjectileHitDoor:
-    jmp ProjectileHitDoor
+GotoProjectileHitDoorOrStatue:
+    jmp ProjectileHitDoorOrStatue
 
 ; bullet <--> background crash detection
 ; return carry clear if collided, set otherwise
@@ -4009,8 +4009,9 @@ UpdateBullet_CollisionWithBG:
     bcs UpdateBullet_Move
     ; tile is solid
     jsr GotoUpdateBullet_CollisionWithMotherBrain
+    ; branch if bullet hit solid blank tile
     cmp #$4E
-    beq GotoProjectileHitDoor
+    beq GotoProjectileHitDoorOrStatue
     jsr CheckBlastTile
     bcc RTS_X081
     clc
@@ -4647,50 +4648,80 @@ SamusOnElevatorOrEnemy:
 Exit8:
     rts
 
-; UpdateStatues
+; UpdateAllStatues
 ; =============
 
-UpdateStatues:
+UpdateAllStatues:
+    ; set page index to statues object slot
     lda #$60
     sta PageIndex
+    ; exit if no statue present
     ldy StatueStatus
-    beq Exit8          ; exit if no statue present
+    beq Exit8
+    
+    ; branch if statue status is not #$01
     dey
-    bne Lx122
+    bne @endIf_A
+        ; statue status is #$01
         ; put bg tiles for lowered statues
+        ; kraid statue
+        ; y is #$00 here
         jsr UpdateStatueBGTiles
+        
+        ; ridley statue
         ldy #$01
         jsr UpdateStatueBGTiles
-        bcs Lx122
+        
+        ; branch if bg tile update has failed
+        bcs @endIf_B
+            ; bg tile update was successful
+            ; increase statue status to #$02
             inc StatueStatus
-    Lx122:
+        @endIf_B:
+    @endIf_A:
+    
+    ; branch if statue status is not #$02
     ldy StatueStatus
     cpy #$02
-    bne Lx125
-    lda KraidStatueStatus
-    bpl Lx123
-        ; put bg tiles for kraid raised statue
-        ldy #$02
-        jsr UpdateStatueBGTiles
-    Lx123:
-    lda RidleyStatueStatus
-    bpl Lx124
-        ; put bg tiles for ridley raised statue
-        ldy #$03
-        jsr UpdateStatueBGTiles
-    Lx124:
-    bcs Lx125
-    inc StatueStatus
-Lx125:
+    bne @endIf_C
+        ; statue status is #$02
+        ; branch if kraid statue is not raised
+        lda KraidStatueStatus
+        bpl @endIf_D
+            ; put bg tiles for kraid raised statue
+            ldy #$02
+            jsr UpdateStatueBGTiles
+        @endIf_D:
+        
+        ; branch if ridley statue is not raised
+        lda RidleyStatueStatus
+        bpl @endIf_E
+            ; put bg tiles for ridley raised statue
+            ldy #$03
+            jsr UpdateStatueBGTiles
+        @endIf_E:
+        
+        ; branch if bg tile update has failed (or if no tile update occurred)
+        bcs @endIf_F
+            ; bg tile update was successful
+            ; increase statue status to #$03
+            inc StatueStatus
+        @endIf_F:
+    @endIf_C:
+    
+    ; update kraid statue
     ldx #(KraidStatueStatus-(KraidStatueStatus-$60)).b
-    jsr LDA1A
+    jsr UpdateStatue
+    ; update ridley statue
     ldx #(RidleyStatueStatus-(KraidStatueStatus-$60)).b
-    jsr LDA1A
-    jmp LDADA
+    jsr UpdateStatue
+    ; update bridge to tourian
+    jmp UpdateAllStatues_Bridge
 
-LDA1A:
-    jsr LDA3D
-    jsr LDA7C
+UpdateStatue:
+    jsr UpdateStatue_Raise
+    jsr UpdateStatue_StartRaising
+    ; set statue anim frame depending on which statue it is
     txa
     and #$01
     tay
@@ -4710,53 +4741,66 @@ Lx126:
     jmp ObjDrawFrame
 
 StatueXTable:
-    .byte $88 ; Kraid's X
-    .byte $68 ; Ridley's X
+    .byte $88 ; Kraid's X position
+    .byte $68 ; Ridley's X position
 StatueAnimFrameTable:
     .byte _id_ObjFrame65 ; Kraid anim frame
     .byte _id_ObjFrame66 ; Ridley anim frame
 
-LDA3D:
-    ; exit if delay is negative (when is that?)
-    lda ObjAnimDelay,x
+UpdateStatue_Raise:
+    ; exit if status is raised
+    lda KraidStatueRaiseState-$60,x
     bmi RTS_X127
 
-    ; set delay to 1
+    ; set raise state to not raised
     lda #$01
-    sta ObjAnimDelay,x
+    sta KraidStatueRaiseState-$60,x
     ; exit if statue isn't moving
     lda KraidStatueY-$60,x
     and #$0F
     beq RTS_X127
-
-    inc ObjAnimDelay,x
+    
+    ; set raise state to raising
+    inc KraidStatueRaiseState-$60,x
+    ; move statue upwards by one pixel
     dec KraidStatueY-$60,x
+    ; exit if statue isn't done moving
     lda KraidStatueY-$60,x
     and #$0F
     bne RTS_X127
 
-    lda ObjAnimDelay,x
+    ; statue is done moving
+    ; set raise state to raised
+    lda KraidStatueRaiseState-$60,x
     ora #$80
-    sta ObjAnimDelay,x
+    sta KraidStatueRaiseState-$60,x
+    ; set status to statue up
     sta KraidStatueStatus-$60,x
-    inc ObjAnimDelay,x
+    ; set raise state to raised (useless)
+    inc KraidStatueRaiseState-$60,x
+    ; push object slot to stack
     txa
     pha
+    ; push #$00 for kraid, #$01 for ridley to stack
     and #$01
     pha
+    ; put bg tiles for lowered statue (useless)
     tay
     jsr UpdateStatueBGTiles
+    ; put bg tiles for raised statue
     pla
     tay
     iny
     iny
     jsr UpdateStatueBGTiles
+    ; restore object slot to x
     pla
     tax
 RTS_X127:
     rts
 
-LDA7C:
+UpdateStatue_StartRaising:
+    ; set position of statue object to current statue's position
     lda KraidStatueY-$60,x
     sta StatueY
     txa
@@ -4764,36 +4808,56 @@ LDA7C:
     tay
     lda StatueXTable,y
     sta StatueX
+    ; branch if statue status is up or not blinking
     lda KraidStatueStatus-$60,x
-    beq Lx128
-    bmi Lx128
+    beq @exit
+    bmi @exit
+    
+    ; statue is blinking
+    ; branch if statue is raising or raised
     lda KraidStatueRaiseState-$60,x
     cmp #$01
-    bne Lx128
-    lda ObjAnimIndex,x
-    beq Lx128
-    dec KraidStatueY-$60,x
-    lda TriSFXFlag
-    ora #sfxTri_StatueRaise
-    sta TriSFXFlag
-Lx128:
+    bne @exit
+    
+    ; statue is not raised
+    ; branch if statue is not hit
+    lda KraidStatueIsHit-$60,x
+    beq @exit
+        ; statue is hit by samus's weapons
+        ; move statue up by one pixel for the first time
+        ; thanks to this, UpdateStatue_Raise will know that the statue is moving and will take over for the next 15 pixels
+        dec KraidStatueY-$60,x
+        ; play raise sfx
+        lda TriSFXFlag
+        ora #sfxTri_StatueRaise
+        sta TriSFXFlag
+    @exit:
+    ; clear statue is hit flag
     lda #$00
-    sta ObjAnimIndex,x
+    sta KraidStatueIsHit-$60,x
     rts
 
+; return carry clear if updated successfully
+; return carry set on failure
 UpdateStatueBGTiles:
+    ; set destination pointer low byte
     lda StatueTileBlastWRAMPtrLoTable,y
     sta TileBlastWRAMPtr+$C0
+    ; set destination pointer high byte
     lda StatueHi
     asl
     asl
     ora StatueTileBlastWRAMPtrHiTable,y
     sta TileBlastWRAMPtr+1+$C0
+    ; set 2x3 tile region of solid blank tiles
     lda #$09
     sta TileBlastAnimFrame+$C0
+    ; set page index to #$C0 (what is this parameter used for?)
     lda #$C0
     sta PageIndex
+    ; update bg tiles
     jsr DrawTileBlast
+    ; restore page index to statues object slot
     lda #$60
     sta PageIndex
     rts
@@ -4810,37 +4874,51 @@ StatueTileBlastWRAMPtrHiTable:
     .byte >$60F0
     .byte >$606C
 
-LDADA:
-    lda Statues54
+UpdateAllStatues_Bridge:
+    ; exit if the bridge is already spawned
+    lda StatuesBridgeIsSpawned
     bmi Exit0
+    
+    ; exit if samus is in a door
     lda DoorEntryStatus
     bne Exit0
+    
+    ; exit if either statue is not raised
     lda KraidStatueStatus
     and RidleyStatueStatus
     bpl Exit0
-    sta Statues54
+    
+    ; set StatuesBridgeIsSpawned flag to not spawn the bridge again
+    sta StatuesBridgeIsSpawned
+    
+    ; loop through all 8 blasts to create for the bridge
     ldx #$70
     ldy #$08
-Lx129:
-    lda #$03
-    sta TileBlastRoutine,x
-    tya
-    asl
-    sta TileBlastDelay,x
-    lda #$04
-    sta TileBlastType,x
-    lda StatueHi
-    asl
-    asl
-    ora #$62
-    sta TileBlastWRAMPtr+1,x
-    tya
-    asl
-    adc #$08
-    sta TileBlastWRAMPtr,x
-    jsr Xminus16
-    dey
-    bne Lx129
+    @loop:
+        ; set tile blast routine to await respawning
+        lda #$03
+        sta TileBlastRoutine,x
+        ; set respawn delay to y*2
+        tya
+        asl
+        sta TileBlastDelay,x
+        ; set tile blast animation to generic shot block
+        lda #$04
+        sta TileBlastType,x
+        ; set tile blast nametable pointer
+        lda StatueHi
+        asl
+        asl
+        ora #$62
+        sta TileBlastWRAMPtr+1,x
+        tya
+        asl
+        adc #$08
+        sta TileBlastWRAMPtr,x
+        ; continue looping if there are still more tile blasts to make
+        jsr Xminus16
+        dey
+        bne @loop
 Exit0:
     rts
 
@@ -6020,26 +6098,33 @@ SPRWriteDigit:
 ;Add energy tank to Samus' data display.
 
 AddOneTank:
-    lda #$17                        ;Y coord-1.
-    sta SpriteRAM,x                 ;
-    tya                             ;Tile value.
-    sta SpriteRAM+1,x               ;
-    lda #$01                        ;Palette #.
-    sta SpriteRAM+2,x               ;
-    lda $00                         ;X coord.
-    sta SpriteRAM+3,x               ;
-    sec                             ;
-    sbc #$0A                        ;Find x coord of next energy tank.
-    sta $00                         ;
+    ;Y coord-1.
+    lda #$17
+    sta SpriteRAM,x
+    ;Tile value.
+    tya
+    sta SpriteRAM+1,x
+    ;Palette #.
+    lda #$01
+    sta SpriteRAM+2,x
+    ;X coord.
+    lda $00
+    sta SpriteRAM+3,x
+    ;Find x coord of next energy tank.
+    sec
+    sbc #$0A
+    sta $00
+    ; fallthrough
 
 ;-----------------------------------------[ Add 4 to x ]---------------------------------------------
 
 Xplus4:
-    inx                             ;
-    inx                             ;
-    inx                             ;Add 4 to value stored in X.
-    inx                             ;
-    rts                             ;
+    ;Add 4 to value stored in X.
+    inx
+    inx
+    inx
+    inx
+    rts
 
 ;------------------------------------[ Convert hex to decimal ]--------------------------------------
 
@@ -6066,10 +6151,10 @@ DivideByRepeatedSubtraction: ;($E1AD)
     ldy #$00
     sec
     ;Loop and subtract value in $0A from A until carry flag is not set.
-    LE1B0:
+    @loop:
         iny
         sbc $0A
-        bcs LE1B0
+        bcs @loop
     ;the last subtraction made A negative
     ;undo last subtraction
     dey
@@ -7275,8 +7360,9 @@ LE7E6:
     jsr MakeCartRAMPtr              ;($E96A)Find object position in room RAM.
     ldy #$00
     lda (Temp04_CartRAMPtr),y     ; get tile value
+    ; branch if bullet hit solid blank tile
     cmp #$4E
-    beq ProjectileHitDoor
+    beq ProjectileHitDoorOrStatue
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     jsr CheckBlastTile
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
@@ -7309,7 +7395,8 @@ Exit16:
 
 ; bullet/missile hits a door
 
-ProjectileHitDoor:
+ProjectileHitDoorOrStatue:
+    ; exit if we aren't updating a samus projectile
     ldx UpdatingProjectile
     beq ClcExit
     ldx #$06
@@ -7354,11 +7441,17 @@ ProjectileHitDoor:
         dex
         dex
     bpl @loop
+    
+    ; if it wasn't a door, it was a statue
+    ; lowest nybble of pointer to kraid statue is #$0 or #$1
+    ; lowest nybble of pointer to ridley statue is #$C or #$D
+    ; therefore, by using bit 3 of the pointer, we can distinguish between the statues
     lda Temp04_CartRAMPtr
     jsr Adiv8       ; / 8
     and #$01
+    ; set statue is hit flag for appropriate statue
     tax
-    inc Statue0366,x
+    inc KraidStatueIsHit,x
 
 ClcExit:
     clc
@@ -8068,25 +8161,35 @@ SpawnElevatorRoutine:
 ; ===========
 
 LoadStatues:
+    ; set statues object hi position
     jsr GetNameTable                ;($EB85)
     sta StatueHi
+    
+    ; set kraid statue y position
     lda #$40
     ldx RidleyStatueStatus
     bpl @elseIf_A      ; branch if Ridley statue not hit
         lda #$30
     @elseIf_A:
     sta RidleyStatueY
+    
+    ; set ridley statue y position
     lda #$60
     ldx KraidStatueStatus
     bpl @elseIf_B      ; branch if Kraid statue not hit
         lda #$50
     @elseIf_B:
     sta KraidStatueY
-    sty Statues54 ; y is #$00
+    
+    ; clear StatuesBridgeIsSpawned
+    ; y is #$00 here
+    sty StatuesBridgeIsSpawned
+    ; set status to #$01 (first bg tile update batch)
     lda #$01
     sta StatueStatus
 Lx237:
     jmp EnemyLoop   ; do next room object
+
 
 LoadPipeBugHole:
     ; find first open pipe bug hole slot
@@ -11422,6 +11525,8 @@ GetTileBlastFramePtr:
 Exit23:
     rts
 
+; return carry clear if successfully drawn
+; return carry set if there is not enough space in the ppu string buffer
 DrawTileBlast: ;($FEDC)
     lda PPUStrIndex
     cmp #$1F
