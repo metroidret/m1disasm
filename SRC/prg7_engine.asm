@@ -5482,12 +5482,12 @@ DrawEnemy_NotBlank:
     iny
     lda (EnmyPlaceTblPtr),y
     sta Temp02_PlacePtr+1.b
-    ; branch if place is not EnPlace2
+    ; branch if place is not EnPlace1
     ldy #$00
-    cpx #$02
+    cpx #_id_EnPlace1*2.b
     bne Lx146
-        ; place is EnPlace2
-        ; therefore, this enemy is a miniboss or fake miniboss
+        ; place is EnPlace1
+        ; therefore, this enemy is exploding
         
         ; increment explosion timer
         ldx PageIndex
@@ -5617,7 +5617,7 @@ LDE60:
     beq LDEBC                           ;If not, branch.
 
 ;Special case for Samus exploding.
-    cpx #$0E                        ;Is Samus exploding?-->
+    cpx #_id_ObjPlace7*2.b          ;Is Samus exploding?-->
     bne LDEBC                           ;If not, branch to skip this section of code.
     ldx PageIndex                   ;X=0.
     inc ObjectCounter               ;Incremented every frame during explode sequence.-->
