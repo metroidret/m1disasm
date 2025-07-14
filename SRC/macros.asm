@@ -261,3 +261,32 @@
     .byte $FF
 .endm
 
+
+.macro FDSFileMacroPart1 args FDSFile_ID
+    .section "Side{FDSFile_Side}-FileNumber{%.2X{FDSFile_Number}}-Header" bank FDSFile_Bank slot "DummySlot"
+        .byte $03, FDSFile_Number, FDSFile_ID
+.endm
+
+.macro FDSFileMacroPart2 args FDSFile_Dest, FDSFile_Type
+        .word FDSFile_Dest, Side{FDSFile_Side}File{%.2X{FDSFile_Number}}_End - Side{FDSFile_Side}File{%.2X{FDSFile_Number}}_Start
+        .byte FDSFile_Type, $04
+    .ends
+    .redef FDSFile_Bank = FDSFile_Bank + 1
+
+    .if FDSFile_Type == 0
+        .section "Side{FDSFile_Side}-FileNumber{%.2X{FDSFile_Number}}-FileData" bank FDSFile_Bank slot "RAMDiskSysSlot" ORGA FDSFile_Dest FORCE
+    .else
+        .section "Side{FDSFile_Side}-FileNumber{%.2X{FDSFile_Number}}-FileData" bank FDSFile_Bank slot "DummySlot"
+    .endif
+    Side{FDSFile_Side}File{%.2X{FDSFile_Number}}_Start:
+.endm
+
+.macro FDSFileMacroPart3
+    Side{FDSFile_Side}File{%.2X{FDSFile_Number}}_End:
+    .ends
+    .redef FDSFile_Bank = FDSFile_Bank + 1
+    .redef FDSFile_Number = FDSFile_Number + 1
+.endm
+
+
+

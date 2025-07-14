@@ -1,0 +1,19 @@
+.MEMORYMAP
+    DEFAULTSLOT 0
+    SLOT 0 $0000 $FFDC "DummySlot"
+    SLOT 1 $0000 $0800 "RAMConsoleSlot"
+    SLOT 2 $6000 $8000 "RAMDiskSysSlot"
+    SLOT 3 $E000 $2000 "ROMFDSBIOSSlot"
+.ENDME
+
+.ROMBANKMAP
+    BANKSTOTAL $60
+    BANKSIZE $8000
+    BANKS $60
+.ENDRO
+
+
+.ASCIITABLE
+.ENDA
+
+.STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"

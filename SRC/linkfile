@@ -1,4 +1,3 @@
 [objects]
-out/sideA.o
-out/sideB.o
+out/main.o
 

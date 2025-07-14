@@ -1,6 +1,7 @@
 import os
 import subprocess
 import hashlib
+from scripts.rearrange_fdsfiles import rearrange_fdsfiles
 
 def run_or_exit(args, err):
     completed_process = subprocess.run(args, shell=True)
@@ -13,8 +14,7 @@ if not os.path.exists('out/'):
     os.mkdir('out/')
 
 banks = [
-    "sideA",
-    "sideB",
+    "main",
 ]
 
 class BuildTarget:
@@ -25,7 +25,7 @@ class BuildTarget:
 build_targets = {
     "FDS": BuildTarget(
         md5_hash_expected_hex="e4e3ccc654d47043e6d996ad2c7ca01b",
-        filename="out/M1_FDS.fds",
+        filename="out/M1_FDS_temp.fds",
     ),
 }
 
@@ -47,7 +47,11 @@ for bt, bto in build_targets.items():
         exit(completed_process.returncode)
     print('Success\n')
 
-    with open(bto.filename, "rb") as f:
+    print('Packing internal files in ROM filesystem')
+    rearrange_fdsfiles(bto.filename, "out/M1_FDS_temp.sym", "out/M1_FDS.fds")
+    print('Success\n')
+
+    with open("out/M1_FDS.fds", "rb") as f:
         md5_hash_generated = hashlib.md5(f.read())
     print('MD5 hash: ' + md5_hash_generated.hexdigest())
 
