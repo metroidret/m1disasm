@@ -18,12 +18,12 @@ SkreeAIRoutine:
     ; skree just landed on the ground
     ; set blow up delay to roughly 1 second
     lda #$3A
-    sta EnData1D,x
+    sta EnJumpDsplcmnt,x
     bne SkreeExit_Active
 
 SkreeBlowUpIntoProjectiles:
     ; decrement blow up delay
-    dec EnData1D,x
+    dec EnJumpDsplcmnt,x
     ; exit if delay is not zero
     bne SkreeExit_Active
 

@@ -927,7 +927,7 @@ EnSubPixelX            = $6AFD   ; Unknown
 EnAccelY               = $6AFE   ; Unknown
 EnAccelX               = $6AFF   ; Unknown
 EnData1C               = $6B00   ; Unknown
-EnData1D               = $6B01   ;Signed taxicab distance to wherever this variable was cleared; skree blow up delay
+EnJumpDsplcmnt         = $6B01   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
 EnType                 = $6B02   ;Enemy type used as index into enemy data tables.
 EnData1F               = $6B03   ; Unknown
 

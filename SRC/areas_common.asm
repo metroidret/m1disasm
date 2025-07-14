@@ -527,12 +527,12 @@ L82A2:
     rts
 
 ;---------------------------------------
-; Clear EnData1D, move on to next byte in the stream
+; Clear EnJumpDsplcmnt, move on to next byte in the stream
 EnemyGetDeltaY_CaseFD:
     inc EnMovementInstrIndex,x
     iny
     lda #$00
-    sta EnData1D,x
+    sta EnJumpDsplcmnt,x
     beq EnemyGetDeltaY_ReadByte ; Branch always
 
 ;---------------------------------------
@@ -854,7 +854,7 @@ L8429:
 L8441:
     lda EnData05,x
     bmi L8449
-        inc EnData1D,x
+        inc EnJumpDsplcmnt,x
     L8449:
     sec
 RTS_844A:
@@ -908,7 +908,7 @@ L8481:
 L849D:
     lda EnData05,x
     bmi L84A5
-        dec EnData1D,x
+        dec EnJumpDsplcmnt,x
     L84A5:
     sec
 RTS_84A6:
@@ -959,7 +959,7 @@ L84DA:
 L84F4:
     lda EnData05,x
     bpl L84FC
-        inc EnData1D,x
+        inc EnJumpDsplcmnt,x
     L84FC:
     sec
 RTS_84FD:
@@ -1017,7 +1017,7 @@ L8536:
 L8550:
     lda EnData05,x
     bpl L8558
-        dec EnData1D,x
+        dec EnJumpDsplcmnt,x
     L8558:
     sec
 RTS_8559:

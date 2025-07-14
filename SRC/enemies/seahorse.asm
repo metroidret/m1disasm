@@ -11,7 +11,7 @@ SeahorseAIRoutine:
 
     lda EnMovementInstrIndex,x
     beq L9B4F
-    lda EnData1D,x
+    lda EnJumpDsplcmnt,x
     bne L9B4F
     
     lda FrameCount

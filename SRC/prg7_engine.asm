@@ -9670,7 +9670,7 @@ DoRestingEnemy: ;($F3BE)
     asl
     bmi Lx299
         lda #$00
-        sta EnData1D,x
+        sta EnJumpDsplcmnt,x
         sta EnMovementInstrIndex,x
         sta EnData0A,x
         jsr DoEnemy_F6B9
@@ -10523,8 +10523,8 @@ SpawnFireball:
     ; branch if bit 7 of SpawnFireball_87 is unset
     lda SpawnFireball_87
     bpl Lx355
-        ; exit if EnData1D is zero
-        ldy EnData1D,x
+        ; exit if EnJumpDsplcmnt is zero
+        ldy EnJumpDsplcmnt,x
         bne RTS_X354
     Lx355:
     
@@ -11030,7 +11030,7 @@ Exit13:
 LFB88:
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection
-    lda EnData1D,x
+    lda EnJumpDsplcmnt,x
     inc EnData1F,x
     dec EnData1F,x
     bne Lx382
