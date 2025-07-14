@@ -5039,9 +5039,9 @@ CheckOneItem:
     iny                             ;Is item obtained a beam weapon?-->
     beq LDBC6                       ;If so, branch.
         lda PowerUpNameTable,x          ;
-        sta $08                         ;Temp storage of nametable and power-up type in $08-->
+        sta Temp08_ItemHi               ;Temp storage of nametable and power-up type in $08-->
         lda PowerUpType,x               ;and $09 respectively.
-        sta $09                         ;
+        sta Temp09_ItemType             ;
         jsr GetItemXYPos                ;($DC1C)Get proper X and Y coords of item, save in history.
     LDBC6:
     lda PowerUpType,x               ;Get power-up type byte again.
@@ -5099,56 +5099,74 @@ GetItemXYPos:
     lda SamusMapPosX
 MapScrollRoutine:
     ;Temp storage of Samus map position x and y in $07 and $06 respectively.
-    sta $07
+    ; note that SamusMapPosX and SamusMapPosY are the map position of the edge of the screen ->
+    ; that samus is scrolling the screen towards.
+    sta Temp07_ItemX
     lda SamusMapPosY
-    sta $06
+    sta Temp06_ItemY
+
     ;Load scroll direction and shift LSB into carry bit.
     lda ScrollDir
     lsr
-    php                             ;Temp storage of processor status.
-    beq LDC34                       ;Branch if scrolling up/down.
-    bcc LDC3C                       ;Branch if scrolling right.
+    ;Temp storage of zero flag (scroll vertically or horizontally)
+    php
+    ;Branch if scrolling up/down.
+    beq @else_A
+        ; scrolling horizontally
+        ;Branch if scrolling left.
+        bcc @endIf_A                       
+            ;Scrolling right.
+            ;Unless the scroll x offset is 0, the actual room x pos -->
+            ;needs to be decremented in order to be correct.
+            lda ScrollX
+            beq @endIf_A
+                dec Temp07_ItemX
+                bcs @endIf_A ;Branch always.
+    @else_A:
+        ; scrolling vertically
+        ; branch if scrolling up
+        bcc @endIf_A
+            ;Scrolling down.
+            ;Unless the scroll y offset is 0, the actual room y pos -->
+            ;needs to be decremented in order to be correct.
+            lda ScrollY
+            beq @endIf_A
+                dec Temp06_ItemY
+    @endIf_A:
 
-    ;Scrolling left.
-        lda ScrollX                     ;Unless the scroll x offset is 0, the actual room x pos-->
-        beq LDC3C                       ;needs to be decremented in order to be correct.
-        dec $07                         ;
-        bcs LDC3C                       ;Branch always.
+    ;now Temp07_ItemX and Temp06_ItemY contain the map position of the top-left corner of the camera
 
-    LDC34:
-        bcc LDC3C                       ;Branch if scrolling up.
-
-    ;Scrolling down.
-        lda ScrollY                     ;Unless the scroll y offset is 0, the actual room y pos-->
-        beq LDC3C                       ;needs to be decremented in order to be correct.
-        dec $06                         ;
-
-    LDC3C:
-    lda PPUCTRL_ZP                  ;If item is on the same nametable as current nametable,-->
-    eor $08                         ;then no further adjustment to item x and y position needed.
-    and #$01                        ;
-    plp                             ;Restore the processor status and clear the carry bit.
-    clc                             ;
-    beq LDC4D                       ;If Scrolling up/down, branch to adjust item y position.
-
-        adc $07                         ;Scrolling left/right. Make any necessary adjustments to-->
-        sta $07                         ;item x position before writing to unique item history.
-
-        jmp AddItemToHistory            ;($DC51)Add unique item to unique item history.
-
-    LDC4D:
-    adc $06                         ;Scrolling up/down. Make any necessary adjustments to-->
-    sta $06                         ;item y position before writing to unique item history.
-
+    ;If item is on the same nametable as the camera,-->
+    ;then no further adjustment to item x and y position needed.
+    lda PPUCTRL_ZP
+    eor Temp08_ItemHi
+    and #$01
+    ;Restore the zero flag and clear the carry bit.
+    plp
+    clc
+    ;If Scrolling up/down, branch to adjust item y position.
+    beq @else_B
+        ;Scrolling left/right. Make any necessary adjustments to-->
+        ;item x position before writing to unique item history.
+        adc Temp07_ItemX
+        sta Temp07_ItemX
+        jmp @endIf_B
+    @else_B:
+        ;Scrolling up/down. Make any necessary adjustments to-->
+        ;item y position before writing to unique item history.
+        adc Temp06_ItemY
+        sta Temp06_ItemY
+    @endIf_B:
+    
+    ;($DC67)Create an item ID to put into unique item history.
+    jsr CreateItemID
 AddItemToHistory:
-    jsr CreateItemID                ;($DC67)Create an item ID to put into unique item history.
-LDC54:
     ;Store number of unique items in Y.
     ldy NumberOfUniqueItems
     ;Store item ID in unique item history.
-    lda $06
+    lda Temp06_ItemID
     sta UniqueItemHistory,y
-    lda $07
+    lda Temp06_ItemID+1.b
     sta UniqueItemHistory+1,y
     ;Add 2 to Y. 2 bytes per unique item.
     iny
@@ -5165,21 +5183,31 @@ LDC54:
 ;IIIIIIXX XXXYYYYY. I = item type, X = X coordinate on world map, Y = Y coordinate
 ;on world map. See constants.asm for values of IIIIII.
 ;
-;The results are stored in $06(upper byte) and $07(lower byte).
+;The results are stored in $06(lower byte) and $07(upper byte).
 
 CreateItemID:
-    lda $07                         ;Load x map position of item.
-    jsr Amul32                      ;($C2C$)*32. Move lower 3 bytes to upper 3 bytes.
-    ora $06                         ;combine Y coordinates into data byte.
-    sta $06                         ;Lower data byte complete. Save in $06.
-    lsr $07                         ;
-    lsr $07                         ;Move upper two bits of X coordinate to LSBs.
-    lsr $07                         ;
-    lda $09                         ;Load item type bits.
-    asl                             ;Move the 6 bits of item type to upper 6 bits of byte.
-    asl                             ;
-    ora $07                         ;Add upper two bits of X coordinate to byte.
-    sta $07                         ;Upper data byte complete. Save in #$06.
+    ;Load x map position of item.
+    lda Temp07_ItemX
+    ;Move lower 3 bytes to upper 3 bytes.
+    jsr Amul32
+    ;combine Y coordinates into data byte.
+    ora Temp06_ItemY
+    ;Lower data byte complete. Save in $06.
+    sta Temp06_ItemID
+
+    ;Move upper two bits of X coordinate to LSBs.
+    lsr Temp07_ItemX
+    lsr Temp07_ItemX
+    lsr Temp07_ItemX
+    ;Load item type bits.
+    lda Temp09_ItemType
+    ;Move the 6 bits of item type to upper 6 bits of byte.
+    asl
+    asl
+    ;Add upper two bits of X coordinate to byte.
+    ora Temp07_ItemX
+    ;Upper data byte complete. Save in $07.
+    sta Temp06_ItemID+1.b
     rts
 
 ;-----------------------------------------------------------------------------------------------------
@@ -8492,66 +8520,105 @@ SpawnSqueept_exit:
 ;--------------------------------------[ Power-up Handler ]------------------------------------------
 
 SpawnPowerUp:
-    iny                             ;Prepare to store item type.
-    ldx #$00                        ;
-    lda #$FF                        ;
-    cmp PowerUpType+$00             ;Is first power-up item slot available?-->
-    beq LEE0F                           ;if yes, branch to load item.
-        ldx #$08                        ;Prepare to check second power-up item slot.
-        cmp PowerUpType+$08             ;Is second power-up item slot available?-->
-        bne LEE39                          ;If not, branch to exit.
-    LEE0F:
-    lda ($00),y                     ;Power-up item type.
-    jsr PrepareItemID               ;($EE3D)Get unique item ID.
-    jsr CheckForItem                ;($EE4A)Check if Samus already has item.
-    bcs LEE39                           ;Samus already has item. do not load it.
+    ; set y to 1, to prepare to load power-up item type
+    iny
+    ; find power up slot
+    ;Is first power-up item slot available? if yes, use the slot to load item.
+    ldx #$00
+    lda #$FF
+    cmp PowerUpType+$00
+    beq @endIf_A
+        ;Prepare to check second power-up item slot.
+        ;Is second power-up item slot available? If not, the power-up fails to spawn, branch to exit.
+        ldx #$08
+        cmp PowerUpType+$08
+        bne @exit
+        ; second slot is available. use the slot to load item.
+    @endIf_A:
 
-    ldy #$02                        ;Prepare to load item coordinates.
-    lda $09                         ;
-    sta PowerUpType,x               ;Store power-up type in available item slot.
-    lda ($00),y                     ;Load x and y screen positions of item.
-    tay                             ;Save position data for later processing.
-    and #$F0                        ;Extract Y coordinate.
-    ora #$08                        ;+ 8 to find  Y coordinate center.
-    sta PowerUpYCoord,x             ;Store center Y coord
-    tya                             ;Reload position data.
-    jsr Amul16                      ;($C2C5)*16. Move lower 4 bits to upper 4 bits.
-    ora #$08                        ;+ 8 to find X coordinate center.
-    sta PowerUpXCoord,x             ;Store center X coord
-    jsr GetNameTable                ;($EB85)Get name table to place item on.
-    sta PowerUpNameTable,x          ;Store name table Item is located on.
+    ;load power-up item type.
+    lda ($00),y
+    ;($EE3D)Get unique item ID.
+    jsr PrepareItemID
+    ; exit if Samus already has item.
+    jsr CheckForItem
+    bcs @exit
 
-LEE39:
-    lda #$03                        ;Get next data byte(Always #$00).
-    bne SpawnSqueept_exit           ;Branch always to exit handler routines.
+    ; set y to 2, to prepare to load x and y screen position of item.
+    ldy #$02
+    ;Store power-up type in available item slot.
+    lda Temp09_ItemType
+    sta PowerUpType,x
+    ; load x and y screen position of item.
+    lda ($00),y
+    ;Save position data for later processing.
+    tay
+    ;Extract Y coordinate. + 8 to find Y coordinate center.
+    and #$F0
+    ora #$08
+    ;Store center Y coord
+    sta PowerUpYCoord,x
+    ;Reload position data.
+    tya
+    ;Move lower 4 bits to upper 4 bits. + 8 to find X coordinate center.
+    jsr Amul16
+    ora #$08
+    ;Store center X coord
+    sta PowerUpXCoord,x
+    ;($EB85)Get name table to place item on.
+    ;Store name table Item is located on.
+    jsr GetNameTable
+    sta PowerUpNameTable,x
+@exit:
+    ;Get next data byte(Always #$00).
+    lda #$03
+    bne SpawnSqueept_exit ;Branch always to exit handler routines.
 
 PrepareItemID:
-    sta $09                         ;Store item type.
+    ;Store item type.
+    sta Temp09_ItemType
+
     lda SamusMapPosX
 LEE41:
-    sta $07                         ;Store item X coordinate.
-    lda SamusMapPosY
-    sta $06                         ;Store item Y coordinate.
-    jmp CreateItemID                ;($DC67)Get unique item ID.
+    ;Store item X coordinate.
+    sta Temp07_ItemX
 
+    lda SamusMapPosY
+    ;Store item Y coordinate.
+    sta Temp06_ItemY
+
+    ;($DC67)Get unique item ID.
+    jmp CreateItemID
+
+
+; return carry clear if samus doesnt have the item
+; return carry set if samus has the item
 CheckForItem:
-    ldy NumberOfUniqueItems         ;
-    beq LEE61                         ;Samus has no unique items. Load item and exit.
-    LEE4F:
-        lda $07                         ;
-        cmp NumberOfUniqueItems,y       ;Look for lower byte of unique item.
-        bne LEE5D                           ;
-        lda $06                         ;Look for upper byte of unique item.
-        cmp DataSlot,y                  ;
-        beq RTS_EE62                         ;Samus already has item. Branch to exit.
-    LEE5D:
-        dey                             ;
-        dey                             ;
-        bne LEE4F                          ;Loop until all Samus' unique items are checked.
-LEE61:
-    clc                             ;Samus does not have the item. It will be placed on screen.
-RTS_EE62:
-    rts                             ;
+    ; if Samus has no unique items, Load item and exit.
+    ldy NumberOfUniqueItems
+    beq @samusDoesNotHaveThisItem                         
+    @loop:
+        ;Look for upper byte of unique item. branch if it doesn't match
+        lda Temp06_ItemID+1.b
+        cmp UniqueItemHistory-1,y
+        bne @noMatch
+        ; upper byte matches
+        ;Look for lower byte of unique item.
+        lda Temp06_ItemID
+        cmp UniqueItemHistory-2,y
+        ;If lower byte matches, Samus already has item. Return carry set
+        beq @samusHasThisItem
+    @noMatch:
+        ; this item doesn't match
+        ;Loop until all Samus' unique items are checked.
+        dey
+        dey
+        bne @loop
+@samusDoesNotHaveThisItem:
+    ;Samus does not have the item. Return carry clear. It will be placed on screen.
+    clc
+@samusHasThisItem:
+    rts
 
 ;-----------------------------------------------------------------------------------------------------
 
@@ -8604,10 +8671,10 @@ SpawnCannon_exit:
 
 SpawnMotherBrain:
     jsr GotoSpawnMotherBrainRoutine
-    lda #$38
-    sta $07
-    lda #$00
-    sta $06
+    lda #>ui_MOTHERBRAIN.b
+    sta Temp06_ItemID+1.b
+    lda #<ui_MOTHERBRAIN.b
+    sta Temp06_ItemID
     jsr CheckForItem
     bcc SpawnMotherBrain_exit
         lda #$08
@@ -8616,18 +8683,18 @@ SpawnMotherBrain:
         sta MotherBrainQtyHits
     SpawnMotherBrain_exit:
     lda #$01
-    bne SpawnCannon_exit
+    bne SpawnCannon_exit ; branch always
 
 SpawnZebetite:
     jsr GotoSpawnZebetiteRoutine
     txa
     lsr
-    adc #$3C
-    sta $07
-    lda #$00
-    sta $06
+    adc #>ui_ZEBETITE1.b
+    sta Temp06_ItemID+1.b
+    lda #<ui_ZEBETITE1.b
+    sta Temp06_ItemID
     jsr CheckForItem
-    bcc Lx259
+    bcc @endIf_A
         ; Kill Zebetite
         lda #$81
         sta ZebetiteStatus,x
@@ -8635,7 +8702,7 @@ SpawnZebetite:
         sta ZebetiteIsHit,x
         lda #$07
         sta ZebetiteQtyHits,x
-    Lx259:
+    @endIf_A:
     jmp SpawnMotherBrain_exit
 
 SpawnRinkaSpawner:
@@ -11415,10 +11482,10 @@ UpdateTourianItems: ; $FDE3
     bne @endIf_A                   ; On the first frame of the end timer:
         ; Add [mother brain defeated] to item history
         ; a is #$00, low byte of ui_MOTHERBRAIN
-        sta $06
+        sta Temp06_ItemID
         lda #>ui_MOTHERBRAIN.b
-        sta $07
-        jsr LDC54
+        sta Temp06_ItemID+1.b
+        jsr AddItemToHistory
     @endIf_A:
     
     ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
@@ -11441,14 +11508,14 @@ CheckZebetite: ; $FE05
     bne RTS_X410
 
     ; a is #$00, low byte of ui_ZEBETITE1
-    sta $06
+    sta Temp06_ItemID
     ; Set zebetite state to 3
     inc ZebetiteStatus,x
     txa
     lsr                     ; A =  zebetite index * 4 (10, C, 8, 4, or 0)
     adc #>ui_ZEBETITE1.b      ;      + $3C
-    sta $07
-    jmp LDC54               ; Add zebetite to item history
+    sta Temp06_ItemID+1.b
+    jmp AddItemToHistory               ; Add zebetite to item history
 
 ;-------------------------------------------------------------------------------
 ; Tile degenerate/regenerate

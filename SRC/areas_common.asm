@@ -1260,9 +1260,9 @@ L8C1D:
     ; door is not a blue door, so it is a missile door
     ; save that the missile door was opened in the UniqueItemHistory
     lda #$0A
-    sta $09
+    sta Temp09_ItemType
     lda DoorHi,x
-    sta $08
+    sta Temp08_ItemHi
     ldy SamusMapPosX
     txa
     jsr Amul16

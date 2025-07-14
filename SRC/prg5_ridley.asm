@@ -505,20 +505,20 @@ CommonEnemyJump_00_01_02:
 
 StorePositionToTemp:
     lda EnY,x
-    sta $08
+    sta Temp08_PositionY
     lda EnX,x
-    sta $09
+    sta Temp09_PositionX
     lda EnHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     rts
 
 LoadPositionFromTemp:
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta EnHi,x
-    lda $08
+    lda Temp08_PositionY
     sta EnY,x
-    lda $09
+    lda Temp09_PositionX
     sta EnX,x
     rts
 
