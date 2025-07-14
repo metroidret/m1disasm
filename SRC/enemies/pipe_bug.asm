@@ -56,11 +56,11 @@ PipeBugApplySpeed:
     bne PipeBugExit
     
     ; get y speed
-    jsr CommonJump_12
+    jsr CommonJump_EnemyGetDeltaY_UsingAcceleration
     ; push y speed to stack
     pha
     ; get x speed
-    jsr CommonJump_13
+    jsr CommonJump_EnemyGetDeltaX_UsingAcceleration
     ; set x speed
     sta Temp05_SpeedX
     ; set y speed

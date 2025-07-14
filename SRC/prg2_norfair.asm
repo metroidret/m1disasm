@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 2
-.SECTION "ROM Bank $002" BANK 2 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $002" bank 2 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -497,10 +497,12 @@ L9963:
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
+
     jsr CommonJump_09
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
+
     jsr CommonJump_09
     lda #$06
     sta $00
@@ -509,11 +511,11 @@ L9963:
     bne L9993
     cmp EnStatus,x
     bne L9993
-    jsr CommonJump_03
+    jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
     bne L9993
-    jmp L984D
-L9993:
+        jmp L984D
+    L9993:
     jmp CommonEnemyJump_00_01_02
 
 ;-------------------------------------------------------------------------------
@@ -524,20 +526,20 @@ L9993:
 
 StorePositionToTemp:
     lda EnY,x
-    sta $08
+    sta Temp08_PositionY
     lda EnX,x
-    sta $09
+    sta Temp09_PositionX
     lda EnHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     rts
 
 LoadPositionFromTemp:
-    lda $0B
+    lda Temp0B_PositionHi
     and #$01
     sta EnHi,x
-    lda $08
+    lda Temp08_PositionY
     sta EnY,x
-    lda $09
+    lda Temp09_PositionX
     sta EnX,x
     rts
 
@@ -716,14 +718,14 @@ TileBlastFrame10:
     .byte $A5, $04, $CA, $F0, $05, $4A, $4A
 .endif
 
-.ENDS
+.ends
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC"
-    .SECTION "ROM Bank $002 - Music Engine" BANK 2 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+    .section "ROM Bank $002 - Music Engine" bank 2 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .SECTION "ROM Bank $002 - Music Engine" BANK 2 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+    .section "ROM Bank $002 - Music Engine" bank 2 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
 .include "music_engine.asm"
@@ -733,13 +735,13 @@ TileBlastFrame10:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $002 - Vectors" BANK 2 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $002 - Vectors" BANK 2 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 

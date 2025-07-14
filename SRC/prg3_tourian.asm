@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 3
-.SECTION "ROM Bank $003" BANK 3 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $003" bank 3 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -127,7 +127,7 @@ AreaPalToggle:
     .byte _id_Palette05+1
 
     .byte $00
-AreaFireballAnimIndex:
+AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_21 - EnAnimTbl
@@ -136,7 +136,7 @@ AreaExplosionAnimIndex:
 AreaFireballFallingAnimIndex:
     .byte $00, $00
 AreaFireballSplatterAnimIndex:
-    .byte $00, $10
+    .byte $00, EnAnim_10 - EnAnimTbl
 AreaMellowAnimIndex:
     .byte $00
 
@@ -1672,7 +1672,7 @@ UpdateAllRinkaSpawners:
     ; init more rinka stuff idk
     lda #$00
     sta EnSpecialAttribs,x
-    sta EnData04,x
+    sta EnIsHit,x
     jsr CommonJump_0E
     ; set rinka frame to nothing (it will fade into view)
     lda #$F7
@@ -2099,14 +2099,14 @@ TileBlastFrame10:
 .endif
 
 
-.ENDS
+.ends
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC"
-    .SECTION "ROM Bank $003 - Music Engine" BANK 3 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+    .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .SECTION "ROM Bank $003 - Music Engine" BANK 3 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+    .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
 .include "music_engine.asm"
@@ -2116,13 +2116,13 @@ TileBlastFrame10:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $003 - Vectors" BANK 3 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $003 - Vectors" bank 3 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 

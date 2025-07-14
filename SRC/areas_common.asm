@@ -24,16 +24,16 @@ CommonJump_01: ;$8003 (yes anim, no common AI)
     jmp LF438
 CommonJump_02: ;$8006 (no anim, no common AI)
     jmp LF416
-CommonJump_03: ;$8009
-    jmp LF852
+CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;$8009
+    jmp CrawlerAIRoutine_ShouldCrawlerMove
 CommonJump_UpdateEnemyAnim: ;$800C
     jmp UpdateEnemyAnim             ;($E094)
 CommonJump_InitEnAnimIndex: ;$800F
     jmp InitEnAnimIndex
 CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
-CommonJump_07: ;$8015
-    jmp LF85A
+CommonJump_InitEnemyData0DAndHitPoints: ;$8015 (unused?)
+    jmp InitEnemyData0DAndHitPoints
 CommonJump_08: ;$8018
     jmp LFBB9
 CommonJump_09: ;$801B
@@ -54,10 +54,10 @@ CommonJump_EnemyGetDeltaX: ;$8030
     jmp EnemyGetDeltaX
 CommonJump_EnemyBGCollideOrApplySpeed: ;$8033
     jmp EnemyBGCollideOrApplySpeed
-CommonJump_12: ;$8036
-    jmp EnemyGetDeltaY_Negative977B
-CommonJump_13: ;$8039
-    jmp EnemyGetDeltaX_Negative977B
+CommonJump_EnemyGetDeltaY_UsingAcceleration: ;$8036
+    jmp EnemyGetDeltaY_UsingAcceleration
+CommonJump_EnemyGetDeltaX_UsingAcceleration: ;$8039
+    jmp EnemyGetDeltaX_UsingAcceleration
 CommonJump_DrawEnemy: ;$803C
     jmp DrawEnemy
 CommonJump_DrawTileBlast: ;$803F
@@ -433,11 +433,13 @@ LoadEnemyMovementPtr:
 ;-------------------------------------------------------------------------------
 ; Determines and returns delta y for a given frame in $00
 EnemyGetDeltaY:
+    ; jump if enemy uses acceleration to move itself
     jsr LoadTableAt977B
     bpl L824C
-        jmp EnemyGetDeltaY_Negative977B
-
+        jmp EnemyGetDeltaY_UsingAcceleration
     L824C:
+
+    ; enemy uses movement strings to move itself
     lda EnData05,x
     and #$20
     eor #$20
@@ -633,12 +635,14 @@ EnemyGetDeltaY_CaseFA:
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related?
 EnemyGetDeltaX:
+    ; jump if enemy uses acceleration to move itself
     jsr LoadTableAt977B
     bpl L8320
-        jmp EnemyGetDeltaX_Negative977B
-
-    ; If bit 5 of EnData05 is clear, don't move horizontally
+        jmp EnemyGetDeltaX_UsingAcceleration
     L8320:
+    
+    ; enemy uses movement strings to move itself
+    ; If bit 5 of EnData05 is clear, don't move horizontally
     lda EnData05,x
     and #$20
     eor #$20
@@ -666,24 +670,36 @@ L833C:
     rts
 
 ;-------------------------------------------------------------------------------
-; Nonsense with counters and velocity to substitute for a lack of subpixels?
-; Vertical case?
-EnemyGetDeltaY_Negative977B:
+; apply acceleration to speed and return delta y for enemy
+EnemyGetDeltaY_UsingAcceleration:
+    ; default max speed at 14 px/f
     ldy #$0E
+    ; branch if enemy is accelerating to the left
     lda EnAccelY,x
-    bmi L835E
-    clc
-    adc EnSpeedSubPixelY,x
-    sta EnSpeedSubPixelY,x
-    lda EnSpeedY,x
-    adc #$00
-    sta EnSpeedY,x
-    bpl L8376
-    L8357:
-        jsr TwosComplement
-        ldy #$F2
-        bne L8376
-    L835E:
+    bmi @else_A
+        ; enemy is accelerating to the right
+        ; add acceleration to speed
+        clc
+        adc EnSpeedSubPixelY,x
+        sta EnSpeedSubPixelY,x
+        lda EnSpeedY,x
+        adc #$00
+        sta EnSpeedY,x
+        ; branch if speed is positive
+        bpl @endIf_B
+
+        ; common to both branches of if/else_A
+        @if_B:
+            ; enemy speed is negative
+            ; negate speed in a to get absolute speed
+            jsr TwosComplement
+            ; negate max speed in y
+            ldy #$F2
+            bne @endIf_B ; branch always
+
+    @else_A:
+        ; enemy is accelerating to the left
+        ; subtract absolute acceleration from speed
         jsr TwosComplement
         sec
         sta $00
@@ -693,34 +709,48 @@ EnemyGetDeltaY_Negative977B:
         lda EnSpeedY,x
         sbc #$00
         sta EnSpeedY,x
-        bmi L8357
-L8376:
+        ; branch if speed is negative
+        bmi @if_B
+    
+    @endIf_B:
+@endIf_A:
+    ; branch if absolute speed is below absolute max
     cmp #$0E
-    bcc L8383
+    bcc @endIf_C
+        ; speed is at or above max
+        ; cap speed at max
         lda #$00
         sta EnSpeedSubPixelY,x
         tya
         sta EnSpeedY,x
-    L8383:
+    @endIf_C:
+
+    ; apply sub-pixel speed to sub-pixel position
     lda EnSubPixelY,x
     clc
     adc EnSpeedSubPixelY,x
     sta EnSubPixelY,x
+    ; $00 stores temp copy of current delta y.
     lda #$00
     adc EnSpeedY,x
     sta $00
     rts
 
 ;-------------------------------------------------------------------------------
-; Nonsense with counters and velocity to substitute for a lack of subpixels?
-; Horizontal case?
-EnemyGetDeltaX_Negative977B:
+; apply acceleration to speed and return delta x for enemy
+; copy-pasted from HorzAccelerate for samus
+EnemyGetDeltaX_UsingAcceleration:
+    ; store max speed sub-pixels to temp
     lda #$00
     sta $00
     sta $02
+    ; store max speed pixels to temp
     lda #$0E
     sta $01
     sta $03
+
+    ; apply x acceleration to x speed
+    ; and save x speed in $04 and y
     lda EnSpeedSubPixelX,x
     clc
     adc EnAccelX,x
@@ -728,13 +758,16 @@ EnemyGetDeltaX_Negative977B:
     sta $04
     lda #$00
     ldy EnAccelX,x
-    bpl L83B6
+    bpl L83B6 ;Branch if enemy accelerating to the right.
         lda #$FF
     L83B6:
     adc EnSpeedX,x
     sta EnSpeedX,x
     tay
+    ;Branch if enemy is moving to the right.
     bpl L83D0
+        ; enemy is moving left
+        ; store negative x speed in $04 and y
         lda #$00
         sec
         sbc EnSpeedSubPixelX,x
@@ -742,22 +775,33 @@ EnemyGetDeltaX_Negative977B:
         lda #$00
         sbc EnSpeedX,x
         tay
+        ; negate max speed in temp $00-$01
         jsr NegateTemp00Temp01
     L83D0:
+    ;$04 and y now contain absolute x speed
+    ;temp $00-$01 now contain signed max x speed
+    ;temp $02-$03 now contain absolute max x speed
+
+    ; branch if absolute x speed is less than than absolute max x speed
     lda $04
     cmp $02
     tya
     sbc $03
     bcc L83E3
+        ; absolute x speed is greater than than absolute max x speed
+        ; cap signed x speed to signed max x speed
         lda $00
         sta EnSpeedSubPixelX,x
         lda $01
         sta EnSpeedX,x
     L83E3:
+
+    ; apply sub-pixel speed to sub-pixel position
     lda EnSubPixelX,x
     clc
     adc EnSpeedSubPixelX,x
     sta EnSubPixelX,x
+    ;$00 stores temp copy of current delta x.
     lda #$00
     adc EnSpeedX,x
     sta $00
@@ -1216,9 +1260,9 @@ L8C1D:
     ; door is not a blue door, so it is a missile door
     ; save that the missile door was opened in the UniqueItemHistory
     lda #$0A
-    sta $09
+    sta Temp09_ItemType
     lda DoorHi,x
-    sta $08
+    sta Temp08_ItemHi
     ldy SamusMapPosX
     txa
     jsr Amul16

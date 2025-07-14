@@ -65,3 +65,4 @@ for bt, bto in build_targets.items():
         print("Hash matches vanilla ROM.")
     else:
         print("Hash does not match vanilla ROM.")
+    print()

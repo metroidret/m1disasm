@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 4
-.SECTION "ROM Bank $004" BANK 4 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $004" bank 4 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -124,7 +124,7 @@ AreaPalToggle:
     .byte _id_Palette05+1
 
     .byte $00
-AreaFireballAnimIndex:
+AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_43 - EnAnimTbl
@@ -788,14 +788,14 @@ TileBlastFrame10:
     .byte $0E, $0C, $FF, $00, $CA, $F0, $05, $4A, $4A
 .endif
 
-.ENDS
+.ends
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC"
-    .SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+    .section "ROM Bank $004 - Music Engine" bank 4 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .SECTION "ROM Bank $004 - Music Engine" BANK 4 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+    .section "ROM Bank $004 - Music Engine" bank 4 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
 .include "music_engine.asm"
@@ -805,13 +805,13 @@ TileBlastFrame10:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $004 - Vectors" BANK 4 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $004 - Vectors" bank 4 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 

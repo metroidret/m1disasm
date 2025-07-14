@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 .def BANK = 0
-.SECTION "ROM Bank $000" BANK 0 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $000" bank 0 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -4740,14 +4740,14 @@ CopyMap:
     .byte $29, $03, $AA, $E8, $A5, $04, $CA, $F0, $05, $4A, $4A
 .endif
 
-.ENDS
+.ends
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC"
-    .SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+    .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .SECTION "ROM Bank $000 - Music Engine" BANK 0 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+    .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
 .include "music_engine.asm"
@@ -4757,13 +4757,13 @@ CopyMap:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $000 - Vectors" BANK 0 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $000 - Vectors" bank 0 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 

@@ -19,7 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 1
-.SECTION "ROM Bank $001" BANK 1 SLOT "ROMSwitchSlot" ORGA $8000 FORCE
+.section "ROM Bank $001" bank 1 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
@@ -234,6 +234,7 @@ L967B:
 ; Bit 7: Screw attack vulnerability?
 ; Bit 5: EnemyMovementInstr_FE failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
 ; Bits 0-4 are used when bit 5 is set
+; Bit 4: is enemy intangible (unsure of this)
 ; Bits 2-3: #$00,#$04=normal enemy hit sound, #$08=big enemy hit sound, #$0C=metroid hit sound
 ; Bit 0: can drop big energy
 L968B:
@@ -307,8 +308,13 @@ EnSpeedXTable:
     .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; Behavior-Related Table?
-; bit7: unused?
+; bit7: bit7 of EnData05 for pipe bug
 ; bit6: 0=enemy uses movement strings. 1=enemy uses acceleration and speed and subpixels.
+; bit4: 0=is not metroid, 1=is metroid
+; bit2-3: bit6-7 of EnData1F for resting enemies
+; bit1: toggle bit2 of EnData05 in EnemyIfMoveFailedDown/EnemyIfMoveFailedUp
+; bit0: toggle bit0 of EnData05 in EnemyIfMoveFailedRight/EnemyIfMoveFailedLeft
+
 L977B:
     .byte $64, $6C, $21, $01, $04, $00, $4C, $40, $04, $00, $00, $40, $40, $00, $00, $00
 
@@ -902,14 +908,14 @@ TileBlastFrame10:
 .endif
 
 
-.ENDS
+.ends
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC"
-    .SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B200 FORCE
+    .section "ROM Bank $001 - Music Engine" bank 1 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .SECTION "ROM Bank $001 - Music Engine" BANK 1 SLOT "ROMSwitchSlot" ORGA $B230 FORCE
+    .section "ROM Bank $001 - Music Engine" bank 1 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
 .include "music_engine.asm"
@@ -919,13 +925,13 @@ TileBlastFrame10:
 ROMSWITCH_RESET:
 .include "reset.asm"
 
-.ENDS
+.ends
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.SECTION "ROM Bank $001 - Vectors" BANK 1 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $001 - Vectors" bank 1 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
-.ENDS
+.ends
 
