@@ -1,6 +1,6 @@
 ; Zoomer Routine (Crawler)
 CrawlerAIRoutine:
-    ; move only 6 frames out of 8
+    ; move only 6 frames out of 8 (0.75px per frame)
     jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
     beq Crawler03
@@ -20,10 +20,13 @@ CrawlerAIRoutine:
     lda EnStatus,x
     cmp #enemyStatus_Explode
     beq Crawler03
+
     lda EnData0A,x
     and #$03
     cmp #$01
     bne Crawler01
+    ; crawler is on wall moving down
+    ; flip direction if it's near the bottom
     ldy EnY,x
     .if BANK == 1 || BANK == 4
         cpy #$E4
@@ -31,16 +34,18 @@ CrawlerAIRoutine:
         cpy #$EB
     .endif
     bne Crawler01
-    jsr Crawler06_else
+    jsr CrawlerFlipDirection
     lda #$03
     sta EnData0A,x
     bne Crawler02
 Crawler01:
+    ; move crawler in its direction
     jsr JumpByRTSToMovementRoutine
-    jsr Crawler06
+    jsr CrawlerInsideCornerCheck
 Crawler02:
-    jsr Crawler09
+    jsr CrawlerOutsideCornerCheck
 Crawler03:
+    ; change animation frame every 3 frames
     lda #$03
     jsr CommonJump_UpdateEnemyAnim
 CrawlerExit_Explode:
@@ -51,7 +56,8 @@ CrawlerExit_Explode:
         jmp CommonJump_01
 .endif
 
-Crawler04:
+CrawlerReorientSprite:
+    ; Y = orientation * 2 + direction
     lda EnData05,x
     lsr
     lda EnData0A,x
@@ -103,33 +109,39 @@ Crawler04:
         .byte EnAnim_53 - EnAnimTbl
 .endif
 
-Crawler06:
+CrawlerInsideCornerCheck:
+    ; inside corner check, check if collided with wall
     ldx PageIndex
     bcs RTS_Crawler06
+    ; flip direction if tried to move offscreen
     lda $00
-    bne Crawler06_else
+    bne CrawlerFlipDirection
+        ; at inside corner, stick to wall
         ldy EnData0A,x
         dey
         tya
         and #$03
         sta EnData0A,x
-        jmp Crawler04
-    Crawler06_else:
+        jmp CrawlerReorientSprite
+
+    CrawlerFlipDirection:
         lda EnData05,x
         eor #$01
         sta EnData05,x
     RTS_Crawler06:
         rts
 
-Crawler09:
+CrawlerOutsideCornerCheck:
+    ; outside corner check, check if there's no floor beneath the crawler
     jsr Crawler11
     jsr JumpByRTSToMovementRoutine
     ldx PageIndex
-    bcc RTS_Crawler09
+    bcc @RTS
+        ; at outside corner, stick to wall
         jsr Crawler11
         sta EnData0A,x
-        jsr Crawler04
-    RTS_Crawler09:
+        jsr CrawlerReorientSprite
+    @RTS:
     rts
 
 Crawler11:
@@ -140,6 +152,7 @@ Crawler11:
     rts
 
 JumpByRTSToMovementRoutine:
+    ; Y = orientation * 2 + direction
     ldy EnData05,x
     sty $00
     lsr $00
