@@ -3200,7 +3200,7 @@ SamusRoll:
         lda #$F5
         sta Temp04_SpeedY
         jsr ApplySpeedToPosition
-        jsr LD638
+        jsr LoadObjectPositionFromTemp
         jsr StopHorzMovement
         dec ObjAnimIndex
         jsr StopVertMovement
@@ -3372,12 +3372,12 @@ SearchOpenProjectileSlot:
 FireWeaponForwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
-    bne LD269
+    bne @exit
     
     ; search for open samus projectile slot
     jsr SearchOpenProjectileSlot
     ; exit if no slots are available
-    bne LD269
+    bne @exit
     
     
     jsr InitBullet
@@ -3393,6 +3393,7 @@ FireWeaponForwards:
     lda #$01
     sta ObjOnScreen,y
     jsr CheckHorizontalMissileLaunch
+    ; place bullet at arm cannon
     lda ObjAction,y
     asl
     ora SamusDir
@@ -3400,9 +3401,10 @@ FireWeaponForwards:
     tax
     lda BulletForwardsOffsetXTable,x
     sta Temp05_SpeedX
-    lda #$FA
+    lda #-$06
     sta Temp04_SpeedY
-    jsr BulletD306
+    jsr PlaceBulletAtArmCannon
+    ; set bit 7 of HasBeamSFX if Samus has long beam
     lda SamusGear
     and #gr_LONGBEAM
     lsr
@@ -3411,11 +3413,12 @@ FireWeaponForwards:
     ror
     ora HasBeamSFX
     sta HasBeamSFX
+    ; branch if not regular beam (sound played at CheckHorizontalWaveBulletFire or CheckIceBulletFire)
     ldx ObjAction,y
     dex
-    bne LD269
+    bne @exit
     jsr SFX_BulletFire
-LD269:
+@exit:
     ldy #ObjAnim_09 - ObjectAnimIndexTbl.b
 LD26B:
     tya
@@ -3430,12 +3433,12 @@ BulletSpeedXTable:
 FireWeaponUpwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
-    bne Lx044
+    bne @exit
     
     ; search for open samus projectile slot
     jsr SearchOpenProjectileSlot
     ; exit if no slots are available
-    bne Lx044
+    bne @exit
     
     jsr InitBullet
     jsr CheckVerticalWaveBulletFire
@@ -3449,6 +3452,7 @@ FireWeaponUpwards:
     lda #$01
     sta ObjOnScreen,y
     jsr CheckVerticalMissileLaunch
+    ; place bullet at arm cannon
     ldx SamusDir
     lda BulletUpwardsOffsetXTable,x
     sta Temp05_SpeedX
@@ -3457,7 +3461,8 @@ FireWeaponUpwards:
     tax
     lda BulletUpwardsOffsetYTable,x
     sta Temp04_SpeedY
-    jsr BulletD306
+    jsr PlaceBulletAtArmCannon
+    ; set bit 7 of HasBeamSFX if Samus has long beam
     lda SamusGear
     and #gr_LONGBEAM
     lsr
@@ -3466,16 +3471,17 @@ FireWeaponUpwards:
     ror
     ora HasBeamSFX
     sta HasBeamSFX
+    ; branch if not regular beam (sound played at CheckVerticalWaveBulletFire or CheckIceBulletFire)
     lda ObjAction,y
     cmp #$01
-    bne Lx044
+    bne @exit
     jsr SFX_BulletFire
-Lx044:
+@exit:
     ldx SamusDir
-    ldy Table09,x
+    ldy StandAimUpFireAnimTbl,x
     lda SamusAccelY
     beq Lx045
-        ldy Table09+2,x
+        ldy AimUpFireMidairAnimTbl,x
     Lx045:
     lda ObjAction
     cmp #$01
@@ -3484,8 +3490,9 @@ Lx044:
 
 ; Table used by above subroutine
 
-Table09:
+StandAimUpFireAnimTbl:
     .byte ObjAnim_26 - ObjectAnimIndexTbl, ObjAnim_26 - ObjectAnimIndexTbl
+AimUpFireMidairAnimTbl:
     .byte ObjAnim_34 - ObjectAnimIndexTbl, ObjAnim_34 - ObjectAnimIndexTbl
 
 BulletUpwardsOffsetXTable:
@@ -3511,7 +3518,7 @@ SetObjAnimIndex:
 RTS_X046:
     rts
 
-BulletD306:
+PlaceBulletAtArmCannon:
     ldx #$00
     jsr StoreObjectPositionToTemp
     tya
@@ -3519,7 +3526,7 @@ BulletD306:
     jsr ApplySpeedToPosition
     txa
     tay
-    jmp LD638
+    jmp LoadObjectPositionFromTemp
 
 CheckHorizontalMissileLaunch:
     lda MissileToggle
@@ -4032,7 +4039,7 @@ UpdateBullet_Move:
     jsr ApplySpeedToPosition
     ; delete bullet if out of bounds
     bcc Lx078
-LD638:
+LoadObjectPositionFromTemp:
     lda Temp08_PositionY
     sta ObjY,x
     lda Temp09_PositionX
@@ -4091,7 +4098,7 @@ Lx085:
 
 BombExplode:
     inc ProjectileDieDelay,x
-    jsr LD6A7
+    jsr BombExplosion_CollisionWithBG
     ldx PageIndex
     lda ObjAnimFrame,x
     sec
@@ -4101,73 +4108,89 @@ BombExplode:
 Lx086:
     jmp DrawBomb
 
-LD6A7:
+BombExplosion_CollisionWithBG:
     jsr GetObjCartRAMPtr
+    ; store bomb's cart ram pointer at $0B.$0A
     lda Temp04_CartRAMPtr
     sta $0A
     lda Temp04_CartRAMPtr+1.b
     sta $0B
+    ; bomb center if ProjectileDieDelay == 1
     ldx PageIndex
     ldy ProjectileDieDelay,x
     dey
     beq Lx088
     dey
     bne Lx089
-    lda #$40
-    jsr LD78B
-    txa
-    bne Lx087
-    lda Temp04_CartRAMPtr
-    and #$20
-    beq Exit6
-Lx087:
-    lda Temp04_CartRAMPtr+1.b
-    and #$03
-    cmp #$03
-    bne Lx088
-    lda Temp04_CartRAMPtr
-    cmp #$C0
-    bcc Lx088
-    lda ScrollDir
-    and #$02
-    bne Exit6
-    lda #$80
-    jsr LD78B
-Lx088:
-    jsr LD76A
+        ; ProjectileDieDelay == 2, bomb 2 tiles up
+        lda #$40
+        jsr LD78B
+        ; branch always
+        txa
+        bne Lx087
+            lda Temp04_CartRAMPtr
+            and #$20
+            beq Exit6
+        Lx087:
+        ; check if underflowed to attributes
+        lda Temp04_CartRAMPtr+1.b
+        and #$03
+        cmp #$03
+        bne Lx088
+        lda Temp04_CartRAMPtr
+        cmp #$C0
+        bcc Lx088
+            ; underflowed to attributes
+            ; exit if in horizontal room
+            lda ScrollDir
+            and #$02
+            bne Exit6
+            ; skip attributes and check opposite nametable
+            lda #$40+$40
+            jsr LD78B
+    Lx088:
+    jsr BombCurrentTile
 Exit6:
     rts
 
 Lx089:
     dey
     bne Lx092
-    lda #$40
-    jsr LD77F
-    txa
-    bne Lx090
-        lda Temp04_CartRAMPtr
-        and #$20
-        bne Exit6
-    Lx090:
-    lda Temp04_CartRAMPtr+1.b
-    and #$03
-    cmp #$03
-    bne Lx091
+        ; ProjectileDieDelay == 3, bomb 2 tiles down
+        lda #$40
+        jsr LD77F
+        ; branch always
+        txa
+        bne Lx090
+            lda Temp04_CartRAMPtr
+            and #$20
+            bne Exit6
+        Lx090:
+        ; check if overflowed to attributes
+        lda Temp04_CartRAMPtr+1.b
+        and #$03
+        cmp #$03
+        bne Lx091
         lda Temp04_CartRAMPtr
         cmp #$C0
         bcc Lx091
-        lda ScrollDir
-        and #$02
-        bne Exit6
-        lda #$80
-        jsr LD77F
-    Lx091:
-    jmp LD76A
-Lx092:
+            ; overflowed to attributes
+            ; exit if in horizontal room
+            lda ScrollDir
+            and #$02
+            bne Exit6
+            ; skip attributes and check opposite nametable
+            lda #$40+$40
+            jsr LD77F
+        Lx091:
+        jmp BombCurrentTile
+    Lx092:
     dey
     bne Lx095
+        ; ProjectileDieDelay == 4, bomb 2 tiles left
         lda #$02
         jsr LD78B
+        ; branch always
         txa
         bne Lx093
             lda Temp04_CartRAMPtr
@@ -4178,40 +4201,48 @@ Lx092:
         and #$1F
         cmp #$1E
         bcc Lx094
+            ; underflowed left
+            ; exit if in vertical room
             lda ScrollDir
             and #$02
             beq Exit7
-            lda #$1E
+            ; check opposite nametable
+            lda #$20-$02
             jsr LD77F
             lda Temp04_CartRAMPtr+1.b
             eor #$04
             sta Temp04_CartRAMPtr+1.b
         Lx094:
-        jmp LD76A
+        jmp BombCurrentTile
     Lx095:
     dey
     bne Exit7
-    lda #$02
-    jsr LD77F
-    txa
-    bne Lx096
+        ; ProjectileDieDelay == 5, bomb 2 tiles right
+        lda #$02
+        jsr LD77F
+        ; branch always
+        txa
+        bne Lx096
+            lda Temp04_CartRAMPtr
+            lsr
+            bcs Exit7
+        Lx096:
         lda Temp04_CartRAMPtr
-        lsr
-        bcs Exit7
-    Lx096:
-    lda Temp04_CartRAMPtr
-    and #$1F
-    cmp #$02
-    bcs LD76A
-    lda ScrollDir
-    and #$02
-    beq Exit7
-    lda #$1E
-    jsr LD78B
-    lda Temp04_CartRAMPtr+1.b
-    eor #$04
-    sta Temp04_CartRAMPtr+1.b
-LD76A:
+        and #$1F
+        cmp #$02
+        bcs BombCurrentTile
+            ; overflowed right
+            ; exit if in vertical room
+            lda ScrollDir
+            and #$02
+            beq Exit7
+            ; check opposite nametable
+            lda #$20-$02
+            jsr LD78B
+            lda Temp04_CartRAMPtr+1.b
+            eor #$04
+            sta Temp04_CartRAMPtr+1.b
+    BombCurrentTile:
     txa
     pha
     ldy #$00
@@ -4220,7 +4251,7 @@ LD76A:
     bcc Lx097
         cmp #$A0
         bcs Lx097
-        jsr LE9C2
+        jsr IsBlastTile_SkipCheckUpdatingProjectile
     Lx097:
     pla
     tax
@@ -4245,7 +4276,7 @@ LD78B:
     sbc #$00
 LD798:
     and #$07
-    ora #$60
+    ora #>RoomRAMA.b
     sta Temp04_CartRAMPtr+1.b
 RTS_X098:
     rts
@@ -7740,7 +7771,7 @@ ToggleNameTable:
 IsBlastTile:
     ldy UpdatingProjectile
     beq Exit18
-LE9C2:
+IsBlastTile_SkipCheckUpdatingProjectile:
     tay
     jsr GotoUpdateBullet_CollisionWithZebetiteAndMotherBrainGlass
     cpy #$98
