@@ -73,14 +73,14 @@ Crawler04:
         .byte EnAnim_ZoomerOnLeftWall - EnAnimTbl
 .elif BANK == 2
     CrawlerAnimIndexTable:
-        .byte EnAnim_69 - EnAnimTbl
-        .byte EnAnim_69 - EnAnimTbl
-        .byte EnAnim_72 - EnAnimTbl
-        .byte EnAnim_6C - EnAnimTbl
-        .byte EnAnim_6F - EnAnimTbl
-        .byte EnAnim_6F - EnAnimTbl
-        .byte EnAnim_6C - EnAnimTbl
-        .byte EnAnim_72 - EnAnimTbl
+        .byte EnAnim_NovaOnFloor - EnAnimTbl
+        .byte EnAnim_NovaOnFloor - EnAnimTbl
+        .byte EnAnim_NovaOnLeftWall - EnAnimTbl
+        .byte EnAnim_NovaOnRightWall - EnAnimTbl
+        .byte EnAnim_NovaOnCeiling - EnAnimTbl
+        .byte EnAnim_NovaOnCeiling - EnAnimTbl
+        .byte EnAnim_NovaOnRightWall - EnAnimTbl
+        .byte EnAnim_NovaOnLeftWall - EnAnimTbl
 .elif BANK == 4
     CrawlerAnimIndexTable:
         .byte EnAnim_ZeelaOnFloor - EnAnimTbl

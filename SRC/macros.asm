@@ -116,7 +116,7 @@
     .byte $FC
 .endm
 
-.macro EnemyMovementInstr_ClearEnData1D
+.macro EnemyMovementInstr_ClearEnJumpDsplcmnt
     .byte $FD
 .endm
 

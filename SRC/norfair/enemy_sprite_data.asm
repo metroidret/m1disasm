@@ -28,115 +28,115 @@ EnAnim_13:
 EnAnim_18:
     .byte _id_EnFrame10, _id_EnFrame11, _id_EnFrame12, _id_EnFrame13, $FF
 
-EnAnim_1D:
+EnAnim_SqueeptJumping:
     .byte _id_EnFrame15, _id_EnFrame14, $FF
 
-EnAnim_20:
+EnAnim_SqueeptFalling:
     .byte _id_EnFrame16, $FF
 
-EnAnim_22:
+EnAnim_GerutaIdle:
     .byte _id_EnFrame17, _id_EnFrame18, $FF
 
-EnAnim_25:
+EnAnim_GerutaSwooping:
     .byte _id_EnFrame19, _id_EnFrame1A, $FF
 
-EnAnim_28:
+EnAnim_GerutaExplode:
     .byte _id_EnFrame1B, $FF
 
-EnAnim_2A:
+EnAnim_RipperIIFacingRight:
     .byte _id_EnFrame1C, _id_EnFrame1D, $FF
 
-EnAnim_2D:
+EnAnim_RipperIIFacingLeft:
     .byte _id_EnFrame1E, _id_EnFrame1F, $FF
 
-EnAnim_30:
+EnAnim_RipperIIExplode:
     .byte _id_EnFrame20, $FF
 
-EnAnim_32:
+EnAnim_Mella:
     .byte _id_EnFrame21, _id_EnFrame22, $FF
 
-EnAnim_35:
+EnAnim_SqueeptExplode:
     .byte _id_EnFrame23, $FF
 
-EnAnim_37:
+EnAnim_MultiviolaSpinningCounterclockwise:
     .byte _id_EnFrame27, _id_EnFrame28, _id_EnFrame29, _id_EnFrame2A, $FF
 
-EnAnim_3C:
+EnAnim_MultiviolaSpinningClockwise:
     .byte _id_EnFrame2B, _id_EnFrame2C, _id_EnFrame2D, _id_EnFrame2E, $FF
 
-EnAnim_41:
+EnAnim_MultiviolaExplode:
     .byte _id_EnFrame2F, $FF
 
-EnAnim_43:
+EnAnim_DragonIdleFacingRight:
     .byte _id_EnFrame30, $FF
 
-EnAnim_45:
+EnAnim_DragonPrepareToSpitFacingRight:
     .byte _id_EnFrame31, $FF
 
-EnAnim_47:
+EnAnim_DragonIdleFacingLeft:
     .byte _id_EnFrame32, $FF
 
-EnAnim_49:
+EnAnim_DragonPrepareToSpitFacingLeft:
     .byte _id_EnFrame33, $FF
 
-EnAnim_4B:
+EnAnim_DragonExplode:
     .byte _id_EnFrame34, $FF
 
-EnAnim_4D:
+EnAnim_PolypRock:
     .byte _id_EnFrame42, $FF
 
-EnAnim_4F:
+EnAnim_PolypRockShatter:
     .byte _id_EnFrame43, _id_EnFrame44, $F7, $FF
 
-EnAnim_53:
+EnAnim_DragonFireballUpRight:
     .byte _id_EnFrame3B, $FF
 
-EnAnim_55:
+EnAnim_DragonFireballDownRight:
     .byte _id_EnFrame3C, $FF
 
-EnAnim_57:
+EnAnim_DragonFireballUpLeft:
     .byte _id_EnFrame3D, $FF
 
-EnAnim_59:
+EnAnim_DragonFireballDownLeft:
     .byte _id_EnFrame3E, $FF
 
-EnAnim_5B:
+EnAnim_DragonFireballSplatter:
     .byte _id_EnFrame3F, _id_EnFrame3F, _id_EnFrame3F, _id_EnFrame3F, _id_EnFrame3F, _id_EnFrame41, _id_EnFrame41, _id_EnFrame41, _id_EnFrame41, _id_EnFrame40, _id_EnFrame40, _id_EnFrame40, $F7, $FF
 
-EnAnim_69:
+EnAnim_NovaOnFloor:
     .byte _id_EnFrame58, _id_EnFrame59, $FF
 
-EnAnim_6C:
+EnAnim_NovaOnRightWall:
     .byte _id_EnFrame5A, _id_EnFrame5B, $FF
 
-EnAnim_6F:
+EnAnim_NovaOnCeiling:
     .byte _id_EnFrame5C, _id_EnFrame5D, $FF
 
-EnAnim_72:
+EnAnim_NovaOnLeftWall:
     .byte _id_EnFrame5E, _id_EnFrame5F, $FF
 
-EnAnim_75:
+EnAnim_NovaExplode:
     .byte _id_EnFrame60, $FF
 
-EnAnim_77:
+EnAnim_Explosion:
     .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
 
-EnAnim_7C:
+EnAnim_GametActiveFacingLeft:
     .byte _id_EnFrame66, _id_EnFrame67, $FF
 
-EnAnim_7F:
+EnAnim_GametActiveFacingRight:
     .byte _id_EnFrame69, _id_EnFrame6A, $FF
 
-EnAnim_82:
+EnAnim_GametExplodeFacingLeft:
     .byte _id_EnFrame68, $FF
 
-EnAnim_84:
+EnAnim_GametExplodeFacingRight:
     .byte _id_EnFrame6B, $FF
 
-EnAnim_86:
+EnAnim_GametRestingFacingLeft:
     .byte _id_EnFrame66, $FF
 
-EnAnim_88:
+EnAnim_GametRestingFacingRight:
     .byte _id_EnFrame69, $FF
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
@@ -346,6 +346,7 @@ EnPlaceD:
 
 ;Enemy frame drawing data.
 
+;Unused.
 EnFrame00:
     .byte ($0 << 4) + _id_EnPlace0, $02, $02
     .byte $14
@@ -356,6 +357,7 @@ EnFrame01:
     .byte $24
     .byte $FF
 
+;Fireball killed.
 EnFrame02:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
@@ -577,6 +579,7 @@ EnFrame13:
     .byte $FB
     .byte $FF
 
+;Squeept jumping.
 EnFrame14:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EA
@@ -588,6 +591,7 @@ EnFrame14:
     .byte $FB
     .byte $FF
 
+;Squeept jumping.
 EnFrame15:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EA
@@ -599,6 +603,7 @@ EnFrame15:
     .byte $FA
     .byte $FF
 
+;Squeept falling.
 EnFrame16:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EA
@@ -610,6 +615,7 @@ EnFrame16:
     .byte $EB
     .byte $FF
 
+;Geruta idle.
 EnFrame17:
     .byte ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $CE
@@ -622,6 +628,7 @@ EnFrame17:
     .byte $DF
     .byte $FF
 
+;Geruta idle.
 EnFrame18:
     .byte ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $CE
@@ -634,6 +641,7 @@ EnFrame18:
     .byte $DE
     .byte $FF
 
+;Geruta swooping.
 EnFrame19:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -647,6 +655,7 @@ EnFrame19:
     .byte $DF
     .byte $FF
 
+;Geruta swooping.
 EnFrame1A:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -660,6 +669,7 @@ EnFrame1A:
     .byte $DE
     .byte $FF
 
+;Geruta explode.
 EnFrame1B:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CE
@@ -668,36 +678,42 @@ EnFrame1B:
     .byte $DF
     .byte $FF
 
+;Ripper II facing right.
 EnFrame1C:
     .byte ($3 << 4) + _id_EnPlace9, $04, $08
     .byte $F6
     .byte $F7
     .byte $FF
 
+;Ripper II facing right.
 EnFrame1D:
     .byte ($3 << 4) + _id_EnPlace9, $04, $08
     .byte $E7
     .byte $F7
     .byte $FF
 
+;Ripper II facing left.
 EnFrame1E:
     .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace9, $04, $08
     .byte $F6
     .byte $F7
     .byte $FF
 
+;Ripper II facing left.
 EnFrame1F:
     .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace9, $04, $08
     .byte $E7
     .byte $F7
     .byte $FF
 
+;Ripper II explode.
 EnFrame20:
     .byte ($3 << 4) + _id_EnPlace1, $00, $00
     .byte $F6
     .byte $F7
     .byte $FF
 
+;Mella.
 EnFrame21:
     .byte ($2 << 4) + _id_EnPlace9, $04, $08
     .byte $E6
@@ -705,6 +721,7 @@ EnFrame21:
     .byte $E6
     .byte $FF
 
+;Mella.
 EnFrame22:
     .byte ($2 << 4) + _id_EnPlace9, $04, $08
     .byte $E5
@@ -712,6 +729,7 @@ EnFrame22:
     .byte $E5
     .byte $FF
 
+;Squeept explode.
 EnFrame23:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $EA
@@ -720,6 +738,7 @@ EnFrame23:
     .byte $EB
     .byte $FF
 
+;Multiviola spinning counterclockwise.
 EnFrame24:
 EnFrame25:
 EnFrame26:
@@ -733,6 +752,7 @@ EnFrame27:
     .byte $EF
     .byte $FF
 
+;Multiviola spinning counterclockwise.
 EnFrame28:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
@@ -744,6 +764,7 @@ EnFrame28:
     .byte $EF
     .byte $FF
 
+;Multiviola spinning counterclockwise.
 EnFrame29:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
@@ -755,6 +776,7 @@ EnFrame29:
     .byte $EE
     .byte $FF
 
+;Multiviola spinning counterclockwise.
 EnFrame2A:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
@@ -766,6 +788,7 @@ EnFrame2A:
     .byte $EF
     .byte $FF
 
+;Multiviola spinning clockwise.
 EnFrame2B:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $EE
@@ -776,6 +799,7 @@ EnFrame2B:
     .byte $EF
     .byte $FF
 
+;Multiviola spinning clockwise.
 EnFrame2C:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -787,6 +811,7 @@ EnFrame2C:
     .byte $EF
     .byte $FF
 
+;Multiviola spinning clockwise.
 EnFrame2D:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -798,6 +823,7 @@ EnFrame2D:
     .byte $EE
     .byte $FF
 
+;Multiviola spinning clockwise.
 EnFrame2E:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -809,6 +835,7 @@ EnFrame2E:
     .byte $EF
     .byte $FF
 
+;Multiviola explode.
 EnFrame2F:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $04, $00
@@ -818,6 +845,7 @@ EnFrame2F:
     .byte $EF
     .byte $FF
 
+;Dragon idle facing right.
 EnFrame30:
     .byte ($2 << 4) + _id_EnPlace4, $08, $08
     .byte $FC, $08, $00
@@ -831,6 +859,7 @@ EnFrame30:
     .byte $F9
     .byte $FF
 
+;Dragon prepare to spit facing right.
 EnFrame31:
     .byte ($2 << 4) + _id_EnPlace4, $08, $08
     .byte $FC, $08, $00
@@ -844,6 +873,7 @@ EnFrame31:
     .byte $F9
     .byte $FF
 
+;Dragon idle facing left.
 EnFrame32:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace4, $08, $08
     .byte $FC, $08, $00
@@ -857,6 +887,7 @@ EnFrame32:
     .byte $F9
     .byte $FF
 
+;Dragon prepare to spit facing left.
 EnFrame33:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace4, $08, $08
     .byte $FC, $08, $00
@@ -870,6 +901,7 @@ EnFrame33:
     .byte $F9
     .byte $FF
 
+;Dragon explode.
 EnFrame34:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $FC, $00
@@ -881,6 +913,7 @@ EnFrame34:
     .byte $E9
     .byte $FF
 
+;Dragon fireball up-right.
 EnFrame35:
 EnFrame36:
 EnFrame37:
@@ -895,6 +928,7 @@ EnFrame3B:
     .byte $F1
     .byte $FF
 
+;Dragon fireball down-right.
 EnFrame3C:
     .byte OAMDATA_VFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
@@ -903,6 +937,7 @@ EnFrame3C:
     .byte $F1
     .byte $FF
 
+;Dragon fireball up-left.
 EnFrame3D:
     .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
@@ -911,6 +946,7 @@ EnFrame3D:
     .byte $F1
     .byte $FF
 
+;Dragon fireball down-left.
 EnFrame3E:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
@@ -919,6 +955,7 @@ EnFrame3E:
     .byte $F1
     .byte $FF
 
+;Dragon fireball splatter.
 EnFrame3F:
     .byte ($3 << 4) + _id_EnPlace7, $00, $00
     .byte $E2
@@ -926,6 +963,7 @@ EnFrame3F:
     .byte $E2
     .byte $FF
 
+;Dragon fireball splatter.
 EnFrame40:
     .byte ($3 << 4) + _id_EnPlace8, $00, $00
     .byte $E2
@@ -933,6 +971,7 @@ EnFrame40:
     .byte $E2
     .byte $FF
 
+;Dragon fireball splatter.
 EnFrame41:
     .byte ($3 << 4) + _id_EnPlace8, $00, $00
     .byte $FE
@@ -942,17 +981,20 @@ EnFrame41:
     .byte $E2
     .byte $FF
 
+;Polyp rock.
 EnFrame42:
     .byte ($3 << 4) + _id_EnPlace0, $04, $04
     .byte $C0
     .byte $FF
 
+;Polyp rock shatter.
 EnFrame43:
     .byte ($3 << 4) + _id_EnPlace0, $00, $00
     .byte $FC, $F8, $00
     .byte $D0
     .byte $FF
 
+;Polyp rock shatter.
 EnFrame44:
     .byte ($3 << 4) + _id_EnPlace3, $00, $00
     .byte $D1
@@ -960,6 +1002,7 @@ EnFrame44:
     .byte $D1
     .byte $FF
 
+;Nova on floor.
 EnFrame45:
 EnFrame46:
 EnFrame47:
@@ -989,6 +1032,7 @@ EnFrame58:
     .byte $DD
     .byte $FF
 
+;Nova on floor.
 EnFrame59:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + $2
@@ -999,6 +1043,7 @@ EnFrame59:
     .byte $DD
     .byte $FF
 
+;Nova on right wall.
 EnFrame5A:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
@@ -1009,6 +1054,7 @@ EnFrame5A:
     .byte $DB
     .byte $FF
 
+;Nova on right wall.
 EnFrame5B:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -1019,6 +1065,7 @@ EnFrame5B:
     .byte $DB
     .byte $FF
 
+;Nova on ceiling.
 EnFrame5C:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
@@ -1029,6 +1076,7 @@ EnFrame5C:
     .byte $DD
     .byte $FF
 
+;Nova on ceiling.
 EnFrame5D:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
@@ -1039,6 +1087,7 @@ EnFrame5D:
     .byte $DD
     .byte $FF
 
+;Nova on left wall.
 EnFrame5E:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
@@ -1049,6 +1098,7 @@ EnFrame5E:
     .byte $DB
     .byte $FF
 
+;Nova on left wall.
 EnFrame5F:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
@@ -1059,6 +1109,7 @@ EnFrame5F:
     .byte $DB
     .byte $FF
 
+;Nova explode.
 EnFrame60:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CC
@@ -1067,6 +1118,7 @@ EnFrame60:
     .byte $DD
     .byte $FF
 
+;Explosion.
 EnFrame61:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $75
@@ -1078,6 +1130,7 @@ EnFrame61:
     .byte $75
     .byte $FF
 
+;Explosion.
 EnFrame62:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $FE
@@ -1101,6 +1154,7 @@ EnFrame62:
     .byte $3E
     .byte $FF
 
+;Gamet facing left.
 EnFrame63:
 EnFrame64:
 EnFrame65:
@@ -1112,6 +1166,7 @@ EnFrame66:
     .byte $D3
     .byte $FF
 
+;Gamet facing left.
 EnFrame67:
     .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -1120,6 +1175,7 @@ EnFrame67:
     .byte $D4
     .byte $FF
 
+;Gamet explode facing left.
 EnFrame68:
     .byte ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
@@ -1128,6 +1184,7 @@ EnFrame68:
     .byte $D4
     .byte $FF
 
+;Gamet facing right.
 EnFrame69:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -1136,6 +1193,7 @@ EnFrame69:
     .byte $D3
     .byte $FF
 
+;Gamet facing right.
 EnFrame6A:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -1144,6 +1202,7 @@ EnFrame6A:
     .byte $D4
     .byte $FF
 
+;Gamet explode facing right.
 EnFrame6B:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
@@ -1152,6 +1211,7 @@ EnFrame6B:
     .byte $D4
     .byte $FF
 
+;Missile pickup.
 EnFrame6C:
 EnFrame6D:
 EnFrame6E:
@@ -1178,11 +1238,13 @@ EnFrame80:
     .byte $24
     .byte $FF
 
+;Small energy pickup.
 EnFrame81:
     .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF
 
+;Big energy pickup.
 EnFrame82:
 EnFrame83:
 EnFrame84:

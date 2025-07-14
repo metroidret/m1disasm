@@ -18,97 +18,120 @@
 
 ;Tourian Palette Data
 
+;Room palette.
 Palette00:
     PPUString $3F00, \
         $0F, $20, $16, $00, $0F, $20, $11, $00, $0F, $16, $20, $00, $0F, $20, $10, $00, $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $27, $16, $30, $0F, $16, $2A, $37
     PPUStringEnd
 
+;Samus power suit palette.
 Palette01:
     PPUString $3F12, \
         $19, $27
     PPUStringEnd
 
+;Samus power suit with missiles selected palette.
 Palette03:
     PPUString $3F12, \
         $2C, $27
     PPUStringEnd
 
+;Samus varia suit palette.
 Palette02:
     PPUString $3F12, \
         $19, $35
     PPUStringEnd
 
+;Samus varia suit with missiles selected palette.
 Palette04:
     PPUString $3F12, \
         $2C, $24
     PPUStringEnd
 
+;Mother Brain hurt palettes.
 Palette05:
+Palette06:
     PPUString $3F0A, \
         $27
     PPUStringEnd
 
-Palette06:
+Palette07:
     PPUString $3F0A, \
         $20
     PPUStringEnd
 
-Palette07:
+;Mother Brain dying palettes.
+Palette08:
     PPUString $3F00, \
         $0F, $20, $16, $00, $0F, $20, $11, $00, $0F, $20, $16, $00, $0F, $20, $10, $00, $0F
     PPUStringEnd
 
-Palette08:
+Palette09:
     PPUString $3F00, \
         $20, $02, $16, $00, $20, $02, $11, $00, $20, $02, $16, $00, $20, $02, $10, $00, $20
     PPUStringEnd
 
-Palette09:
+;Time bomb explosion palette.
+Palette0A:
     PPUStringRepeat $3F00, \
         $20, $20
     PPUStringEnd
 
-Palette0A:
+;Samus fade in palettes. Same regardless of varia suit and suitless.
+Palette0B:
+Palette0C:
+Palette0D:
+Palette0E:
+Palette0F:
+Palette10:
+Palette11:
+Palette12:
+Palette13:
     PPUString $3F11, \
         $04, $09, $07
     PPUStringEnd
 
-Palette0B:
+Palette14:
     PPUString $3F11, \
         $05, $09, $17
     PPUStringEnd
 
-Palette0C:
+Palette15:
     PPUString $3F11, \
         $06, $0A, $26
     PPUStringEnd
 
-Palette0D:
+Palette16:
     PPUString $3F11, \
         $16, $19, $27
     PPUStringEnd
 
-Palette0E:
+;Unused?
+Palette17:
     PPUString $3F00, \
         $0F, $30, $30, $21
     PPUStringEnd
 
-Palette0F:
+;Suitless Samus power suit palette.
+Palette18:
     PPUString $3F10, \
         $0F, $15, $34, $17
     PPUStringEnd
 
-Palette10:
+;Suitless Samus varia suit palette.
+Palette19:
     PPUString $3F10, \
         $0F, $15, $34, $19
     PPUStringEnd
 
-Palette11:
+;Suitless Samus power suit with missiles selected palette.
+Palette1A:
     PPUString $3F10, \
         $0F, $15, $34, $28
     PPUStringEnd
 
-Palette12:
+;Suitless Samus varia suit with missiles selected palette.
+Palette1B:
     PPUString $3F10, \
         $0F, $15, $34, $29
     PPUStringEnd

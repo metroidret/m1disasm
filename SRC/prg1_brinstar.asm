@@ -35,34 +35,34 @@ GFX_BrinstarSprites:
 ;----------------------------------------------------------------------------------------------------
 
 PalPntrTbl:
-    .word Palette00                 ;($A271)
-    .word Palette01                 ;($A295)
-    .word Palette02                 ;($A2A1)
-    .word Palette03                 ;($A29B)
-    .word Palette04                 ;($A2A7)
-    .word Palette05                 ;($A2AD)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette06                 ;($A2D0)
-    .word Palette07                 ;($A2D7)
-    .word Palette08                 ;($A2DE)
-    .word Palette09                 ;($A2E5)
-    .word Palette0A                 ;($A2EC)
-    .word Palette0B                 ;($A2F4)
-    .word Palette0C                 ;($A2FC)
-    .word Palette0D                 ;($A304)
-    .word Palette0E                 ;($A30C)
+    PtrTableEntry PalPntrTbl, Palette00                 ;($A271)Default room palette.
+    PtrTableEntry PalPntrTbl, Palette01                 ;($A295)Samus power suit palette.
+    PtrTableEntry PalPntrTbl, Palette02                 ;($A2A1)Samus varia suit palette.
+    PtrTableEntry PalPntrTbl, Palette03                 ;($A29B)Samus power suit with missiles selected palette.
+    PtrTableEntry PalPntrTbl, Palette04                 ;($A2A7)Samus varia suit with missiles selected palette.
+    PtrTableEntry PalPntrTbl, Palette05                 ;($A2AD)Alternate room palette.
+    PtrTableEntry PalPntrTbl, Palette06                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette07                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette08                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette09                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0A                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0B                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0C                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0D                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0E                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette0F                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette10                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette11                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette12                 ;($A2D0)
+    PtrTableEntry PalPntrTbl, Palette13                 ;($A2D0)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntry PalPntrTbl, Palette14                 ;($A2D7)Samus fade in palette.
+    PtrTableEntry PalPntrTbl, Palette15                 ;($A2DE)Samus fade in palette.
+    PtrTableEntry PalPntrTbl, Palette16                 ;($A2E5)Samus fade in palette.
+    PtrTableEntry PalPntrTbl, Palette17                 ;($A2EC)Unused?
+    PtrTableEntry PalPntrTbl, Palette18                 ;($A2F4)Suitless Samus power suit palette.
+    PtrTableEntry PalPntrTbl, Palette19                 ;($A2FC)Suitless Samus varia suit palette.
+    PtrTableEntry PalPntrTbl, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntry PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
 
 AreaPointers:
     .word SpecItmsTbl               ;($A3D6)Beginning of special items table.
@@ -115,7 +115,7 @@ AreaSamusY:
     .byte $B0   ;Samus start vertical screen position.
 
 AreaPalToggle:
-    .byte $01
+    .byte _id_Palette00+1
 
     .byte $00
 AreaFireballKilledAnimIndex:
@@ -454,7 +454,7 @@ EnemyMovement05_R:
     SignMagSpeed $05,  2, -5
     SignMagSpeed $04,  2, -6
     SignMagSpeed $02,  2, -7
-    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_ClearEnJumpDsplcmnt
 
     SignMagSpeed $03,  2, -5
     SignMagSpeed $06,  2, -3
@@ -470,7 +470,7 @@ EnemyMovement05_R:
     SignMagSpeed $07,  2, -1
     SignMagSpeed $05,  2, -3
     SignMagSpeed $04,  2, -5
-    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_ClearEnJumpDsplcmnt
     EnemyMovementInstr_Restart
 
 EnemyMovement05_L:
@@ -496,7 +496,7 @@ EnemyMovement05_L:
     SignMagSpeed $05, -2, -5
     SignMagSpeed $04, -2, -6
     SignMagSpeed $02, -2, -7
-    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_ClearEnJumpDsplcmnt
 
     SignMagSpeed $03, -2, -5
     SignMagSpeed $06, -2, -3
@@ -512,7 +512,7 @@ EnemyMovement05_L:
     SignMagSpeed $07, -2, -1
     SignMagSpeed $05, -2, -3
     SignMagSpeed $04, -2, -5
-    EnemyMovementInstr_ClearEnData1D
+    EnemyMovementInstr_ClearEnJumpDsplcmnt
     EnemyMovementInstr_Restart
 
 ; ripper

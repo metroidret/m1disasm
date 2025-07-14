@@ -11,7 +11,7 @@ SeahorseAIRoutine:
 
     lda EnMovementInstrIndex,x
     beq L9B4F
-    lda EnData1D,x
+    lda EnJumpDsplcmnt,x
     bne L9B4F
     
     lda FrameCount
@@ -25,9 +25,9 @@ SeahorseAIRoutine:
         sta SpawnFireball_87
         lda #$00
         sta SpawnFireball_EnData0A
-        lda #EnAnim_43 - EnAnimTbl.b
+        lda #EnAnim_DragonIdleFacingRight - EnAnimTbl.b
         sta SpawnFireball_83
-        lda #EnAnim_47 - EnAnimTbl.b
+        lda #EnAnim_DragonIdleFacingLeft - EnAnimTbl.b
         sta SpawnFireball_83+1.b
         lda #$03
         sta SpawnFireball_AnimTableIndex
@@ -63,4 +63,4 @@ L9B59:
     jmp CommonEnemyJump_00_01_02
 
 SeahorseTable:
-    .byte EnAnim_45 - EnAnimTbl, EnAnim_49 - EnAnimTbl
+    .byte EnAnim_DragonPrepareToSpitFacingRight - EnAnimTbl, EnAnim_DragonPrepareToSpitFacingLeft - EnAnimTbl
