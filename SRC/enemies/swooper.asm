@@ -20,14 +20,14 @@ L98F4:
     cmp #enemyStatus_Active
     bne L9907
     .if BANK == 2
-        lda #EnAnim_25 - EnAnimTbl.b
+        lda #EnAnim_GerutaSwooping - EnAnimTbl.b
     .elif BANK == 5
         lda #EnAnim_20 - EnAnimTbl.b
     .endif
     ldy EnSpeedY,x
     bpl L9904
         .if BANK == 2
-            lda #EnAnim_22 - EnAnimTbl.b
+            lda #EnAnim_GerutaIdle - EnAnimTbl.b
         .elif BANK == 5
             lda #EnAnim_1D - EnAnimTbl.b
         .endif

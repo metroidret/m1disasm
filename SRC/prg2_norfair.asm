@@ -124,15 +124,15 @@ AreaPalToggle:
 AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_77 - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTbl
 ; fireball rising?
-    .byte EnAnim_53 - EnAnimTbl, EnAnim_57 - EnAnimTbl
+    .byte EnAnim_DragonFireballUpRight - EnAnimTbl, EnAnim_DragonFireballUpLeft - EnAnimTbl
 AreaFireballFallingAnimIndex:
-    .byte EnAnim_55 - EnAnimTbl, EnAnim_59 - EnAnimTbl
+    .byte EnAnim_DragonFireballDownRight - EnAnimTbl, EnAnim_DragonFireballDownLeft - EnAnimTbl
 AreaFireballSplatterAnimIndex:
-    .byte EnAnim_5B - EnAnimTbl, EnAnim_4F - EnAnimTbl
+    .byte EnAnim_DragonFireballSplatter - EnAnimTbl, EnAnim_PolypRockShatter - EnAnimTbl
 AreaMellowAnimIndex:
-    .byte EnAnim_32 - EnAnimTbl
+    .byte EnAnim_Mella - EnAnimTbl
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -156,20 +156,20 @@ ChooseEnemyAIRoutine:
         .word InvalidEnemy ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_28 - EnAnimTbl, EnAnim_28 - EnAnimTbl
-    .byte EnAnim_28 - EnAnimTbl, EnAnim_28 - EnAnimTbl
-    .byte EnAnim_30 - EnAnimTbl, EnAnim_30 - EnAnimTbl
+    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl
+    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl
+    .byte EnAnim_RipperIIExplode - EnAnimTbl, EnAnim_RipperIIExplode - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
-    .byte EnAnim_75 - EnAnimTbl, EnAnim_75 - EnAnimTbl
-    .byte EnAnim_84 - EnAnimTbl, EnAnim_82 - EnAnimTbl
+    .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl
+    .byte EnAnim_GametExplodeFacingRight - EnAnimTbl, EnAnim_GametExplodeFacingLeft - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl ; unused enemy
     .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_35 - EnAnimTbl, EnAnim_35 - EnAnimTbl
-    .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl
-    .byte EnAnim_4B - EnAnimTbl, EnAnim_4B - EnAnimTbl
+    .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl
+    .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl
+    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl
     .byte $00, $00 ; undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; unused enemy
 
@@ -177,38 +177,38 @@ EnemyHitPointTbl:
     .byte $08, $08, $FF, $01, $01, $01, $02, $01, $01, $20, $FF, $FF, $08, $06, $FF, $00
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_22 - EnAnimTbl, EnAnim_22 - EnAnimTbl
-    .byte EnAnim_22 - EnAnimTbl, EnAnim_22 - EnAnimTbl
-    .byte EnAnim_2A - EnAnimTbl, EnAnim_2D - EnAnimTbl
+    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl
+    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl
+    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte EnAnim_88 - EnAnimTbl, EnAnim_86 - EnAnimTbl
+    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl
+    .byte EnAnim_GametRestingFacingRight - EnAnimTbl, EnAnim_GametRestingFacingLeft - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; unused enemy
     .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_20 - EnAnimTbl, EnAnim_20 - EnAnimTbl
-    .byte EnAnim_3C - EnAnimTbl, EnAnim_37 - EnAnimTbl
-    .byte EnAnim_43 - EnAnimTbl, EnAnim_47 - EnAnimTbl
+    .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl
+    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl
     .byte $00, $00 ; undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; unused enemy
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_25 - EnAnimTbl, EnAnim_25 - EnAnimTbl
-    .byte EnAnim_25 - EnAnimTbl, EnAnim_25 - EnAnimTbl
-    .byte EnAnim_2A - EnAnimTbl, EnAnim_2D - EnAnimTbl
+    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl
+    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl
+    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_69 - EnAnimTbl
-    .byte EnAnim_7F - EnAnimTbl, EnAnim_7C - EnAnimTbl
+    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl
+    .byte EnAnim_GametActiveFacingRight - EnAnimTbl, EnAnim_GametActiveFacingLeft - EnAnimTbl
     .byte $00, $00 ; unused enemy
     .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; unused enemy
     .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl
-    .byte EnAnim_3C - EnAnimTbl, EnAnim_37 - EnAnimTbl
-    .byte EnAnim_43 - EnAnimTbl, EnAnim_47 - EnAnimTbl
+    .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl
+    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl
     .byte $00, $00 ; undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; unused enemy
 
@@ -296,8 +296,8 @@ L977B:
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_4D - EnAnimTbl, EnAnim_4D - EnAnimTbl
-    .byte EnAnim_53 - EnAnimTbl, EnAnim_57 - EnAnimTbl
+    .byte EnAnim_PolypRock - EnAnimTbl, EnAnim_PolypRock - EnAnimTbl
+    .byte EnAnim_DragonFireballUpRight - EnAnimTbl, EnAnim_DragonFireballUpLeft - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00

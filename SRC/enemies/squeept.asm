@@ -28,11 +28,11 @@ L9A88:
     ldx PageIndex
     lda #$00
     sta $05
-    lda #$1D
+    lda #EnAnim_SqueeptJumping - EnAnimTbl.b
     ldy $00
     sty $04
     bmi L9AAC
-        lda #$20
+        lda #EnAnim_SqueeptFalling - EnAnimTbl.b
     L9AAC:
     sta EnResetAnimIndex,x
     jsr StorePositionToTemp

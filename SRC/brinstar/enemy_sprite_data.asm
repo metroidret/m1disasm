@@ -831,6 +831,7 @@ EnFrame65:
     .byte $98
     .byte $FF
 
+;Zeb facing left.
 EnFrame66:
     .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -839,6 +840,7 @@ EnFrame66:
     .byte $D3
     .byte $FF
 
+;Zeb facing left.
 EnFrame67:
     .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -847,6 +849,7 @@ EnFrame67:
     .byte $D4
     .byte $FF
 
+;Zeb explode facing left.
 EnFrame68:
     .byte ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
@@ -855,6 +858,7 @@ EnFrame68:
     .byte $D4
     .byte $FF
 
+;Zeb facing right.
 EnFrame69:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -863,6 +867,7 @@ EnFrame69:
     .byte $D3
     .byte $FF
 
+;Zeb facing right.
 EnFrame6A:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
@@ -871,6 +876,7 @@ EnFrame6A:
     .byte $D4
     .byte $FF
 
+;Zeb explode facing right.
 EnFrame6B:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
