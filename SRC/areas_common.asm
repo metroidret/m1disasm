@@ -1288,7 +1288,7 @@ UpdateDoor_LetSamusIn:
     bcc L8CA7
     ; change the palette
     lda PalToggle
-    eor #$07
+    eor #(_id_Palette00+1)~(_id_Palette05+1).b
     sta PalToggle
     sta PalDataPending
 L8CA7:

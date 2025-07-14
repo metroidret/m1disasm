@@ -1063,11 +1063,6 @@ sa_PntJump             = 6
 sa_Dead                = 7
 sa_Dead2               = 8
 sa_Elevator            = 9
-sa_FadeIn0             = 20
-sa_FadeIn1             = 21
-sa_FadeIn2             = 22
-sa_FadeIn3             = 23
-sa_FadeIn4             = 24
 sa_Begin               = 255
 
 ;once i replace all usages of these constants by (ObjAnim_00 - ObjectAnimIndexTbl) expressions, ->

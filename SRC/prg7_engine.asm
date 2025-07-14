@@ -1574,7 +1574,7 @@ AreaInit:
 ;------------------------------------------[ MoreInit ]---------------------------------------------
 
 MoreInit:
-    ldy #$01                        ;
+    ldy #_id_Palette00+1.b          ;
     sty PalDataPending              ;Palette data pending = yes.
     ldx #$FF                        ;
     stx SpareMem75                  ;$75 Not referenced ever again in the game.
@@ -1709,7 +1709,7 @@ SamusInit:
     .endif
     sta Timer3
     jsr IntroMusic                  ;($CBFD)Start the intro music.
-    ldy #sa_FadeIn0                 ;
+    ldy #_id_Palette13+1.b          ;
     sty ObjAction                   ;Set Samus status as fading onto screen.
     ldx #$00
     stx SamusBlink
@@ -1907,7 +1907,7 @@ SamusIntro:
     LC9F2:
     cmp #$1F                        ;When 310 frames left of intro, display Samus.
     bcs Exit14                      ;Branch if not time to start drawing Samus.
-    cmp SamusFadeInTimeTbl-20,y     ;sa_FadeIn0 is beginning of table.
+    cmp SamusFadeInTimeTbl-(_id_Palette13+1),y     ;_id_Palette13+1 is beginning of table.
     bne LCA00                           ;Every time Timer3 equals one of the entries in the table-->
         inc ObjAction                   ;below, change the palette used to color Samus.
         sty PalDataPending              ;
@@ -2214,11 +2214,11 @@ SelectSamusPal: ;$CB73
     asl                             ;CF contains Varia status (1 = Samus has it)
     lda MissileToggle               ;A = 1 if Samus is firing missiles, else 0
     rol                             ;Bit 0 of A = 1 if Samus is wearing Varia
-    adc #$02
+    adc #_id_Palette01+1.b
     ldy JustInBailey                ;In suit?-->
     beq @endIf                           ;If so, Branch.
         clc
-        adc #$17                        ;Add #$17 to the pal # to reach "no suit"-palettes.
+        adc #_id_Palette18-_id_Palette01.b ;Add #$17 to the pal # to reach "no suit"-palettes.
     @endIf:
     sta PalDataPending              ;Palette will be written next NMI.
     
@@ -4478,13 +4478,13 @@ ElevatorD8BF:
     jsr IsEngineRunning
     ; toggle palette
     lda PalToggle
-    eor #$07
+    eor #(_id_Palette00+1)~(_id_Palette05+1).b
     sta PalToggle
-    ; if in tourian, load palette 1, else load palette PalToggle
+    ; if in tourian, load palette 0, else load palette PalToggle
     ldy InArea
     cpy #$12
     bcc @endIf_D
-        lda #$01
+        lda #_id_Palette00+1.b
     @endIf_D:
     sta PalDataPending
     jsr WaitNMIPass_
