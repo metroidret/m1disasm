@@ -1,4 +1,4 @@
-
+.include "hardware.asm"
 .include "constants.asm"
 .include "macros.asm"
 
@@ -83,7 +83,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $20
     .ascstr "BMENST", $00, $00
 FDSFileMacroPart2 $C000, $00
-    .incbin "fdspacker_output/side_1/bmenst.prg"
+    .include "fdspacker_output/side_1/bmenst.asm"
 FDSFileMacroPart3
 
 
