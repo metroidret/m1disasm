@@ -3,26 +3,30 @@ L6800:
     txa
     pha
     ldx #$0B
-L6804:
-    asl $28
-    rol $29
-    rol a
-    rol a
-    eor $28
-    rol a
-    eor $28
-    lsr a
-    lsr a
-    eor #$FF
-    and #$01
-    ora $28
-    sta $28
-    dex
-    bne L6804
+    L6804:
+        asl $28
+        rol $29
+        rol a
+        rol a
+        eor $28
+        rol a
+        eor $28
+        lsr a
+        lsr a
+        eor #$FF
+        and #$01
+        ora $28
+        sta $28
+        dex
+        bne L6804
     pla
     tax
     lda $28
     rts
+
+
+
+L6821:
     cld
 L6822:
     lda $2002
@@ -53,7 +57,7 @@ L683A:
     bne L683A
 L684F:
     jsr L69DF
-    jsr L6A1C
+    jsr EraseAllSprites
     ldy #$00
     sty $2005
     sty $2005
@@ -68,6 +72,9 @@ L684F:
     sta $4025
     sta $FB
     bne L68A7
+
+
+
 L6874:
     jsr L6AE4
     jsr L695F
@@ -78,8 +85,8 @@ L6874:
     lda $27
     and #$01
     beq L688A
-    ldx #$10
-L688A:
+        ldx #$10
+    L688A:
     lda $0183
     sta $0184
     lda $0182
@@ -90,19 +97,23 @@ L688A:
     sta $0181
     lda #$00
     sta $0180
-L68A7:
-    tay
-L68A8:
-    lda $1A
-    bne L68B7
-    iny
-    cpy #$09
-    bne L68A8
-    inc $0180
-    jmp L68A7
+    L68A7:
+        tay
+        L68A8:
+            lda $1A
+            bne L68B7
+            iny
+            cpy #$09
+            bne L68A8
+        inc $0180
+        jmp L68A7
 L68B7:
     jsr L6800
     jmp L6874
+
+
+
+L68BD:
     cli
     php
     pha
@@ -112,20 +123,20 @@ L68B7:
     pha
     lda $1A
     beq L68CB
-    sta $02FC
-L68CB:
+        sta $02FC
+    L68CB:
     lda $1F
     cmp #$15
     bcs L68E5
-    lda $5D
-    sta $0200
-    lda $5E
-    sta $0201
-    lda $5F
-    sta $0202
-    lda $60
-    sta $0203
-L68E5:
+        lda $5D
+        sta $0200
+        lda $5E
+        sta $0201
+        lda $5F
+        sta $0202
+        lda $60
+        sta $0203
+    L68E5:
     lda #$00
     sta $2003
     lda #$02
@@ -133,7 +144,7 @@ L68E5:
     lda $1A
     bne L694E
     jsr L6A45
-    jsr L6B5D
+    jsr CheckPPUWrite
     jsr L6CF1
     jsr L6A71
     lda $2002
@@ -148,17 +159,21 @@ L68E5:
     sta $2006
     lda $3F
     sta $FD
-    jsr L6B1C
+    jsr WriteScroll
     lda $43
     beq L694E
-L691E:
-    lda $2002
-    and #$40
-    bne L691E
+    L691E:
+        lda $2002
+        and #$40
+        bne L691E
     lda $1F
     cmp #$09
     bcc L693A
-    jsr L6A31
+    jsr RemoveIntroSprites
+
+
+
+L692E:
     lda #$04
     sta $040E
     jsr L868D
@@ -172,8 +187,12 @@ L693D:
     beq L693D
     lda $40
     sta $FD
-    jsr L6B1C
+    jsr WriteScroll
     jmp L6951
+
+
+
+
 L694E:
     jsr $DFF3
 L6951:
@@ -187,15 +206,23 @@ L6951:
     pla
     plp
     rti
+
+
+
 L695F:
     lda $1D
     beq L6966
     jmp L696D
+
+
+
 L6966:
     lda $1E
-    jsr L6AFA
+    jsr ChooseRoutine
     .byte $00, $6D
-    
+
+
+
 L696D:
     ldy $5B
     beq L6988
@@ -217,10 +244,14 @@ L6988:
     lda $1F
     cmp #$0A
     bcs L6999
-    jsr L6A31
+    jsr RemoveIntroSprites
     lda $1F
 L6999:
-    jsr L6AFA
+    jsr ChooseRoutine
+
+
+
+L699C:
     ora ($6D,x)
     adc #$6D
     sty $DF6D
@@ -248,11 +279,18 @@ L6999:
     .byte $47
     dey
     ora ($6D,x)
+
+
+
+L69D6:
     lda #$00
     sta $53
     sta $51
     inc $1F
     rts
+
+
+;ClearNameTables
 L69DF:
     jsr L69E6
     lda #$02
@@ -263,6 +301,7 @@ L69E8:
     sta $01
     lda #$FF
     sta $00
+    
     ldx $2002
     lda $FF
     and #$FB
@@ -270,49 +309,58 @@ L69E8:
     sta $2000
     ldx $01
     dex
-    lda L6A18,x
+    lda HiPPUTable,x
     sta $2006
     lda #$00
     sta $2006
     ldx #$04
     ldy #$00
     lda $00
-L6A0E:
-    sta $2007
-    dey
-    bne L6A0E
-    dex
-    bne L6A0E
+    L6A0E:
+            sta $2007
+            dey
+            bne L6A0E
+        dex
+        bne L6A0E
     rts
 
-L6A18:
+HiPPUTable: ;($6A18)
     .byte $20, $24, $28, $2C
 
-L6A1C:
-    ldy #$02
+
+
+EraseAllSprites: ;($6A1C)
+    ldy #>SpriteRAM.b
     sty $01
-    ldy #$00
+    ldy #<SpriteRAM.b
     sty $00
     ldy #$04
     lda #$F0
-L6A28:
-    sta ($00),y
-    iny
-    bne L6A28
+    @loop:
+        sta ($00),y
+        iny
+        bne @loop
     jmp L84D0
-    rts
-L6A31:
-    ldy #$02
+
+    rts ; unused?
+
+
+
+RemoveIntroSprites: ;($6A31)
+    ldy #>SpriteRAM.b
     sty $01
-    ldy #$00
+    ldy #<SpriteRAM.b
     sty $00
     ldy #$5F
     lda #$F4
-L6A3D:
-    sta ($00),y
-    dey
-    bpl L6A3D
+    @loop:
+        sta ($00),y
+        dey
+        bpl @loop
     jmp L84D0
+
+
+
 L6A45:
     lda $52
     bne L6A56
@@ -340,7 +388,7 @@ L6A5B:
 L6A6A:
     stx $00
     sty $01
-    jmp L6B9F
+    jmp ProcessPPUString
 L6A71:
     lda $59
     beq L6A78
@@ -387,28 +435,33 @@ L6AB1:
     cmp $00
     bne L6AC7
     dec $18,x
-    bne L6AC9
+    bne RTS_6AC9
     sta $16,x
     ldy #$10
 L6AC7:
     sty $18,x
-L6AC9:
+RTS_6AC9:
     rts
+
+
+
 L6ACA:
     ldy #$01
     sty $4016
     dey
     sty $4016
     ldy #$04
-L6AD5:
-    lda $4016
-    dey
-    bne L6AD5
+    L6AD5:
+        lda $4016
+        dey
+        bne L6AD5
     and #$03
-    beq L6AC9
+    beq RTS_6AC9
+    
     iny
     sty $5B
-    bne L6AC9
+    bne RTS_6AC9
+    
 L6AE4:
     ldx #$01
     dec $23
@@ -416,63 +469,87 @@ L6AE4:
     lda #$09
     sta $23
     ldx #$02
-L6AF0:
-    lda $24,x
-    beq L6AF6
-    dec $24,x
-L6AF6:
-    dex
-    bpl L6AF0
+    L6AF0:
+        lda $24,x
+        beq L6AF6
+            dec $24,x
+        L6AF6:
+        dex
+        bpl L6AF0
     rts
-L6AFA:
-    asl a
-    sty $0415
-    stx $0414
+
+
+
+ChooseRoutine: ;($6AFA)
+    ;* 2, each ptr is 2 bytes (16-bit).
+    asl
+    ;Temp storage. (not pushed to stack, because stack needs to be accessed)
+    sty TempY
+    stx TempX
+    ; y = a+1
     tay
     iny
+    ;load ptr table address from stack
     pla
-    sta $0C
+    sta CodePtr
     pla
-    sta $0D
-    lda ($0C),y
+    sta CodePtr+1.b
+    ;Low byte of routine ptr
+    lda (CodePtr),y
     tax
+    ;High byte of routine ptr.
     iny
-    lda ($0C),y
-    sta $0D
-    stx $0C
-    ldx $0414
-    ldy $0415
-    jmp ($000C)
-L6B1C:
-    lda $2002
-    lda $FD
-    sta $2005
-    lda $FC
-    sta $2005
+    lda (CodePtr),y
+    ; save routine ptr to CodePtr
+    sta CodePtr+1.b
+    stx CodePtr
+    ;Restore X and Y.
+    ldx TempX
+    ldy TempY
+    jmp (CodePtr)
+
+
+
+WriteScroll: ;($6B1C)
+    ;Reset scroll register flip/flop
+    lda PPUSTATUS
+    ;X and Y scroll offsets are loaded serially.
+    lda ScrollX
+    sta PPUSCROLL
+    lda ScrollY
+    sta PPUSCROLL
     rts
-L6B2A:
+
+
+AddYToPtr00: ;($6B2A)
     tya
     clc
     adc $00
     sta $00
-    bcc L6B34
-    inc $01
-L6B34:
+    bcc RTS_6B34
+        inc $01
+    RTS_6B34:
     rts
-L6B35:
+
+
+
+AddYToPtr02: ;($6B35)
     tya
     clc
     adc $02
     sta $02
-    bcc L6B3F
-    inc $03
-L6B3F:
+    bcc RTS_6B3F
+        inc $03
+    RTS_6B3F:
     rts
+
+
+L6B40:
     tya
     clc
     adc $04
     sta $04
-    bcc L6B3F
+    bcc RTS_6B3F
     inc $05
     rts
 L6B4B:
@@ -480,37 +557,56 @@ L6B4B:
     clc
     adc #$01
     rts
+
+
+
+Adiv32: ;($6B51)
     lsr a
-L6B52:
+Adiv16: ;($6B52)
     lsr a
-L6B53:
+Adiv8: ;($6B53)
     lsr a
     lsr a
     lsr a
     rts
+
+
+
+Amul32: ;($6B57)
     asl a
-L6B58:
+Amul16: ;($6B58)
     asl a
-L6B59:
+Amul8: ;($6B59)
     asl a
     asl a
     asl a
     rts
-L6B5D:
-    lda $1B
-    beq L6B76
-    lda #$A1
+
+
+
+CheckPPUWrite: ;($6B5D)
+    ;If zero no PPU data to write, branch to exit.
+    lda PPUDataPending
+    beq RTS_6B76
+    ;Sets up PPU writer to start at address $07A1.
+    ;$0000 = ptr to PPU data string ($07A1).
+    lda #<PPUDataString.b
     sta $00
-    lda #$07
+    lda #>PPUDataString.b
     sta $01
-    jsr L6B9F
+    ;($C30C)write it to PPU.
+    jsr ProcessPPUString
+    ;PPU data string has been written so the data stored for the write is now erased.
     lda #$00
-    sta $07A0
-    sta $07A1
-    sta $1B
-L6B76:
+    sta PPUStrIndex
+    sta PPUDataString
+    sta PPUDataPending
+RTS_6B76:
     rts
-L6B77:
+
+
+
+PPUWrite: ;($6B77)
     sta $2006
     iny
     lda ($00),y
@@ -534,13 +630,19 @@ L6B93:
     dex
     bne L6B90
     iny
-    jsr L6B2A
-L6B9F:
+    jsr AddYToPtr00
+
+
+
+ProcessPPUString: ;($6B9F)
     ldx $2002
     ldy #$00
     lda ($00),y
-    bne L6B77
-    jmp L6B1C
+    bne PPUWrite
+    jmp WriteScroll
+
+
+
 L6BAB:
     pha
     lda $FF
@@ -560,7 +662,7 @@ L6BBB:
     and #$0F
     sta $05
     lda ($02),y
-    jsr L6B52
+    jsr Adiv16
     sta $04
     ldx $07A0
 L6BD0:
@@ -580,7 +682,7 @@ L6BE1:
     stx $07A0
     sty $06
     ldy #$20
-    jsr L6B2A
+    jsr AddYToPtr00
     ldy $06
     dec $04
     bne L6BD0
@@ -634,7 +736,7 @@ L6C3F:
     bpl L6C4E
     ldy #$20
 L6C4E:
-    jsr L6B2A
+    jsr AddYToPtr00
     ldy $06
     dec $05
     bne L6C3A
@@ -833,7 +935,7 @@ L6D8C:
     lda ($02),y
     sta $00
     iny
-    jsr L6B35
+    jsr AddYToPtr02
     inc $62
     jmp L6C1D
 L6DB2:
@@ -1016,7 +1118,7 @@ L6EF1:
     lda ($02),y
     sta $00
     iny
-    jsr L6B35
+    jsr AddYToPtr02
     jmp L6BBB
 L6F17:
     inc $1F
@@ -1198,7 +1300,7 @@ L7051:
     beq L707E
     lda $0107
     tay
-    jsr L6B52
+    jsr Adiv16
     jsr L70A9
     jsr L70B0
     beq L707E
@@ -1208,7 +1310,7 @@ L7051:
     jsr L70B0
     beq L707E
     lda $0106
-    jsr L6B52
+    jsr Adiv16
     jsr L70A9
 L707E:
     ldy $0422
@@ -1316,7 +1418,7 @@ L7118:
     lda #$20
     sta $040D
     lda $040C
-    jsr L6B59
+    jsr Amul8
     bcs L712C
     ldy $040A
     cpy #$03
@@ -2258,7 +2360,7 @@ L81F1:
     rts
 L81F2:
     txa
-    jsr L6B53
+    jsr Adiv8
     tay
     lda $83F3,y
     sta $00
@@ -2289,7 +2391,7 @@ L8228:
     lda #$00
     sta $0489,x
     pla
-    jsr L6B52
+    jsr Adiv16
     jsr L8249
     sta $0486,x
     pla
@@ -2672,7 +2774,7 @@ L85E7:
     lda #$3F
     sta $01
     iny
-    jsr L6B35
+    jsr AddYToPtr02
     jmp L6C1D
     .byte $23
     stx $2D
@@ -3064,7 +3166,7 @@ L8750:
 L883B:
     jsr L6CD2
     jsr L69DF
-    jsr L6A1C
+    jsr EraseAllSprites
     jmp $CF1D
     lda #$FF
     sta $0102
@@ -3284,7 +3386,7 @@ L89A8:
     sty $37
     inc $1F
     jmp L8927
-    jsr L6A1C
+    jsr EraseAllSprites
     ldx #$30
     ldy #$58
     jsr L8C95
@@ -3551,7 +3653,7 @@ L8B80:
     sta $37
     inc $1F
     jmp L8927
-    jsr L6A1C
+    jsr EraseAllSprites
     ldx #$30
     ldy #$58
     jsr L8C95
@@ -3903,7 +4005,7 @@ L8E37:
 L8E39:
     stx $00
     sty $01
-    jmp L6B9F
+    jmp ProcessPPUString
 
 L8E40:
     stx $07A0
@@ -3937,7 +4039,7 @@ L8E6F:
 L8E70:
     tya
     pha
-    jsr L6B58
+    jsr Amul16
     tay
     lda $C5EB,y
     sta $0B
@@ -3955,7 +4057,7 @@ L8E85:
 L8E90:
     tya
     pha
-    jsr L6B58
+    jsr Amul16
     tay
     lda $C5ED,y
     sta $0B
@@ -4015,11 +4117,11 @@ L8EF0:
     adc #$0A
     sta $06
     lda $01
-    jsr L6B58
+    jsr Amul16
     ora $06
     sta $06
     lda $03
-    jsr L6B58
+    jsr Amul16
     ora $02
     sta $07
     rts
