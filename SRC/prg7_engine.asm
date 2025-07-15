@@ -389,9 +389,9 @@ HiPPUTable:
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
 EraseAllSprites:
-    ldy #$02                        ;
+    ldy #>SpriteRAM.b               ;
     sty $01                         ;Loads locations $00 and $01 with -->
-    ldy #$00                        ;#$00 and #$02 respectively
+    ldy #<SpriteRAM.b               ;#$00 and #$02 respectively
     sty $00                         ;
     ldy #$00                        ;
     lda #$F0                        ;
@@ -412,9 +412,9 @@ EraseAllSprites:
 ;sprite to the bottom right of the screen and uses a blank graphic for the sprite.
 
 RemoveIntroSprites:
-    ldy #$02                        ;Start at address $200.
+    ldy #>SpriteRAM.b               ;Start at address $200.
     sty $01                         ;
-    ldy #$00                        ;
+    ldy #<SpriteRAM.b               ;
     sty $00                         ;($00) = $0200 (sprite page)
     ldy #$5F                        ;Prepare to clear RAM $0200-$025F
     lda #$F4                        ;
