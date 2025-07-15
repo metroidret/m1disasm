@@ -173,7 +173,7 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; unused enemy
 
-EnemyHitPointTbl:
+EnemyHealthTbl:
     .byte $08, $08, $FF, $01, $01, $01, $02, $01, $01, $20, $FF, $FF, $08, $06, $FF, $00
 
 EnemyRestingAnimIndex:

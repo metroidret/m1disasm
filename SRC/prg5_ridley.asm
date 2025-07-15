@@ -183,7 +183,7 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; unused enemy
     .byte $00, $00 ; unused enemy
 
-EnemyHitPointTbl:
+EnemyHealthTbl:
     .byte $08, $08, $08, $08, $01, $01, $02, $01, $01, $8C, $FF, $FF, $08, $06, $FF, $00
 
 EnemyRestingAnimIndex:

@@ -103,17 +103,17 @@ MetroidAIRoutine:
     bne L9894
         ; metroid is frozen
         ; check if metroid was invincible
-        ldy EnHitPoints,x
+        ldy EnHealth,x
         iny
         bne L9899
-            ; if it was invincible, make it vincible with 5 hit points
+            ; if it was invincible, make it vincible with 5 health
             lda #$05
-            sta EnHitPoints,x
+            sta EnHealth,x
             bne L9899
     L9894:
         ; metroid is not frozen, metroid is invincible
         lda #$FF
-        sta EnHitPoints,x
+        sta EnHealth,x
 L9899:
     lda EnemyMovementPtr
     cmp #$06

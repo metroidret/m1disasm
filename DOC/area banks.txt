@@ -160,7 +160,7 @@ game engine that expects them to be at this location:
     95EB - Enemy AI Jump Table (used by the above routine) (16 entries)
     
     960B - Unknown enemy related table (32 bytes)
-    962B - Enemy hitpoint table (16 bytes)
+    962B - Enemy health table (16 bytes)
     963B - ResetAnimIndex table (32 bytes)
     965B - another ResetAnimIndex table ?? (32 bytes)
     967B - unknown table (16 bytes)
