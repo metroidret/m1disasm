@@ -81,10 +81,10 @@ SwooperExitB:
 
 L9954:
     sta EnType,x
-    lda EnHitPoints,x
+    lda EnHealth,x
     pha
     jsr CommonJump_0E
     pla
-    sta EnHitPoints,x
+    sta EnHealth,x
     rts
 

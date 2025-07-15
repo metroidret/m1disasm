@@ -8027,7 +8027,7 @@ Lx226:
 GetEnemyType: ; ($EB28)
     pha                             ;Store enemy type.
     and #$C0                        ;If MSB is set, the "tough" version of the enemy
-    sta EnSpecialAttribs,x          ;is to be loaded(more hit points, except rippers).
+    sta EnSpecialAttribs,x          ;is to be loaded(double health, except rippers).
     asl                             ;
     bpl Lx228                          ;If bit 6 is set, the enemy is either Kraid or Ridley.
         lda InArea                      ;Load current area Samus is in(to check if Kraid or-->
@@ -8067,7 +8067,7 @@ LEB6E:
     ldy EnType,x               ;Load A with index to enemy data.
     asl EnData05,x                     ;*2
     jsr LFB7B
-    jmp InitEnemyData0DAndHitPoints
+    jmp InitEnemyData0DAndHealth
 
 IsSlotTaken:
     lda EnStatus,x
@@ -9983,7 +9983,7 @@ EnemyReactToSamusWeapon:
     beq RTS_X315
     ; set hp to 5, and clear metroid latch
     lda #$05
-    sta EnHitPoints,x
+    sta EnHealth,x
     jmp GotoClearCurrentMetroidLatchAndMetroidOnSamus
 RTS_X315:
     rts
@@ -9999,7 +9999,7 @@ Lx316:
     jmp LF42D
 Lx317:
     ; branch if enemy is completely invulnerable to Samus's attacks
-    lda EnHitPoints,x
+    lda EnHealth,x
     cmp #$FF
     beq Lx316
     
@@ -10087,27 +10087,27 @@ Lx319:
     sta EnSpecialAttribs,x
     
     ; check attack type
-    ; if enemy is attacked by wave beam, damage enemy by 2 hit points
+    ; if enemy is attacked by wave beam, decrement health by 2
     cpy #wa_WaveBeam
     beq Lx324
-        ; if enemy is not a miniboss, damage enemy by 1 hit point
+        ; if enemy is not a miniboss, decrement health by 1
         bit $0A
         bvc Lx325
         ; enemy is a miniboss
-        ; if miniboss was not attacked by a missile, damage miniboss by 1 hit point
+        ; if miniboss was not attacked by a missile, decrement health by 1
         ldy EnWeaponAction,x
         cpy #wa_Missile
         bne Lx325
-        ; miniboss was attacked by a missile, damage miniboss by 4 hit points
-        dec EnHitPoints,x
+        ; miniboss was attacked by a missile, decrement health by 4
+        dec EnHealth,x
         beq ExplodeEnemy
-        dec EnHitPoints,x
+        dec EnHealth,x
         beq ExplodeEnemy
     Lx324:
-    dec EnHitPoints,x
+    dec EnHealth,x
     beq ExplodeEnemy
 Lx325:
-    dec EnHitPoints,x
+    dec EnHealth,x
     bne GetPageIndex
 ExplodeEnemy:
     ; the enemy has been killed by Samus's attacks
@@ -10520,7 +10520,7 @@ CrawlerAIRoutine_ShouldCrawlerMove:
     ; if bits 0-1 are zero, the crawler does not move
     rts
 
-InitEnemyData0DAndHitPoints:
+InitEnemyData0DAndHealth:
     ldy EnType,x
     
     ; initialoze EnData0D
@@ -10528,7 +10528,7 @@ InitEnemyData0DAndHitPoints:
     sta EnData0D,x
 
     ; initialize enemy's health
-    lda EnemyHitPointTbl,y          ;($962B)
+    lda EnemyHealthTbl,y          ;($962B)
     ldy EnSpecialAttribs,x
     ; Check MSB of enemyAttr, double health if set
     ; (this is the reason powerful variants of rippers have 254 health,
@@ -10536,7 +10536,7 @@ InitEnemyData0DAndHitPoints:
     bpl Lx353
         asl
     Lx353:
-    sta EnHitPoints,x
+    sta EnHealth,x
 RTS_X354:
     rts
 
@@ -11035,8 +11035,8 @@ UpdatePipeBugHole:
     ; set enemy delay
     ldy EnType,x
     jsr LFB7B
-    ; init hit points and stuff
-    jmp InitEnemyData0DAndHitPoints
+    ; init health and stuff
+    jmp InitEnemyData0DAndHealth
 
 @clearEnemySlot:
     sta EnType,x

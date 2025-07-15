@@ -32,8 +32,8 @@ CommonJump_InitEnAnimIndex: ;$800F
     jmp InitEnAnimIndex
 CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
-CommonJump_InitEnemyData0DAndHitPoints: ;$8015 (unused?)
-    jmp InitEnemyData0DAndHitPoints
+CommonJump_InitEnemyData0DAndHealth: ;$8015 (unused?)
+    jmp InitEnemyData0DAndHealth
 CommonJump_08: ;$8018
     jmp LFBB9
 CommonJump_09: ;$801B
