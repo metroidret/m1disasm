@@ -1,4 +1,4 @@
-    ; * = $C000
+LC000:
     cld
     ; wait for vblank
     LC001:

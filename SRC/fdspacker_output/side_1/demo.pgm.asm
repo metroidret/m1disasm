@@ -1,6729 +1,4101 @@
-          * = $6800
-L6800     TXA
-          PHA
-          LDX #$0B
-L6804     ASL $28
-          ROL $29
-          ROL A
-          ROL A
-          EOR $28
-          ROL A
-          EOR $28
-          LSR A
-          LSR A
-          EOR #$FF
-          AND #$01
-          ORA $28
-          STA $28
-          DEX
-          BNE L6804
-          PLA
-          TAX
-          LDA $28
-          RTS
-          CLD
-L6822     LDA $2002
-          BPL L6822
-          LDX #$00
-          STX $2000
-          STX $2001
-          DEX
-          TXS
-          LDY #$07
-          STY $01
-          LDY #$00
-          STY $00
-          TYA
-L683A     STA ($00),Y
-          INY
-          BNE L683A
-          DEC $01
-          BMI L684F
-          LDX $01
-          CPX #$01
-          BNE L683A
-          INY
-          INY
-          INY
-          INY
-          BNE L683A
-L684F     JSR L69DF
-          JSR L6A1C
-          LDY #$00
-          STY $2005
-          STY $2005
-          INY
-          STY $1D
-          LDA #$90
-          STA $2000
-          STA $FF
-          LDA #$02
-          STA $FE
-          LDA #$47
-          STA $4025
-          STA $FB
-          BNE L68A7
-L6874     JSR L6AE4
-          JSR L695F
-          INC $27
-          LDA #$00
-          STA $1A
-          LDX #$08
-          LDA $27
-          AND #$01
-          BEQ L688A
-          LDX #$10
-L688A     LDA $0183
-          STA $0184
-          LDA $0182
-          STA $0183
-          LDA $0181
-          STA $0182
-          LDA $0180
-          STA $0181
-          LDA #$00
-          STA $0180
-L68A7     TAY
-L68A8     LDA $1A
-          BNE L68B7
-          INY
-          CPY #$09
-          BNE L68A8
-          INC $0180
-          JMP L68A7
-L68B7     JSR L6800
-          JMP L6874
-          CLI
-          PHP
-          PHA
-          TXA
-          PHA
-          TYA
-          PHA
-          LDA $1A
-          BEQ L68CB
-          STA $02FC
-L68CB     LDA $1F
-          CMP #$15
-          BCS L68E5
-          LDA $5D
-          STA $0200
-          LDA $5E
-          STA $0201
-          LDA $5F
-          STA $0202
-          LDA $60
-          STA $0203
-L68E5     LDA #$00
-          STA $2003
-          LDA #$02
-          STA $4014
-          LDA $1A
-          BNE L694E
-          JSR L6A45
-          JSR L6B5D
-          JSR L6CF1
-          JSR L6A71
-          LDA $2002
-          LDA $FF
-          AND #$01
-          ASL A
-          ASL A
-          CLC
-          ADC #$20
-          STA $2006
-          LDA #$00
-          STA $2006
-          LDA $3F
-          STA $FD
-          JSR L6B1C
-          LDA $43
-          BEQ L694E
-L691E     LDA $2002
-          AND #$40
-          BNE L691E
-          LDA $1F
-          CMP #$09
-          BCC L693A
-          JSR L6A31
-          LDA #$04
-          STA $040E
-          JSR L868D
-          LDA $5C
-          BNE L693A
-L693A     JSR $DFF3
-L693D     LDA $2002
-          AND #$40
-          BEQ L693D
-          LDA $40
-          STA $FD
-          JSR L6B1C
-          JMP L6951
-L694E     JSR $DFF3
-L6951     LDA $4017
-          LDY #$01
-          STY $1A
-          PLA
-          TAY
-          PLA
-          TAX
-          PLA
-          PLP
-          RTI
-L695F     LDA $1D
-          BEQ L6966
-          JMP L696D
-L6966     LDA $1E
-          JSR L6AFA
-          BRK
-          ADC $5BA4
-          BEQ L6988
-          DEY
-          STY $5B
-          STY $59
-          STY $43
-          STY $3F
-          STY $40
-          LDA $FF
-          AND #$FC
-          STA $FF
-          LDA #$1B
-          STA $1F
-          BNE L6999
-L6988     JSR L8707
-          JSR L86BE
-          LDA $1F
-          CMP #$0A
-          BCS L6999
-          JSR L6A31
-          LDA $1F
-L6999     JSR L6AFA
-          ORA ($6D,X)
-          ADC #$6D
-          STY $DF6D
-          ADC $6DF5
-          LDY $006D,X
-          ROR $6E16
-          AND $6E,X
-          STY $6E
-          .BYTE $DC    ;%11011100
-          ADC #$DC
-          ADC #$E3
-          ROR $6F26
-          LSR $6F
-          ROR $6F
-          DEC $69,X
-          CMP ($6F),Y
-          .BYTE $1C    ;%00011100
-          BVS L69E5
-          BVS L69E7
-          BVS L6960
-          DEY
-          .BYTE $3C    ;%00111100 '<'
-          .BYTE $89    ;%10001001
-          DEC $F289
-          .BYTE $89    ;%10001001
-          LDA $8B
-          CMP $8B
-          .BYTE $47    ;%01000111 'G'
-          DEY
-          ORA ($6D,X)
-          LDA #$00
-          STA $53
-          STA $51
-          INC $1F
-          RTS
-L69DF     JSR L69E6
-          LDA #$02
-          BNE L69E8
-L69E6     LDA #$01
-L69E8     STA $01
-          LDA #$FF
-          STA $00
-          LDX $2002
-          LDA $FF
-          AND #$FB
-          STA $FF
-          STA $2000
-          LDX $01
-          DEX
-          LDA $6A18,X
-          STA $2006
-          LDA #$00
-          STA $2006
-          LDX #$04
-          LDY #$00
-          LDA $00
-L6A0E     STA $2007
-          DEY
-          BNE L6A0E
-          DEX
-          BNE L6A0E
-          RTS
-          JSR $2824
-          BIT $02A0
-          STY $01
-          LDY #$00
-          STY $00
-          LDY #$04
-          LDA #$F0
-L6A28     STA ($00),Y
-          INY
-          BNE L6A28
-          JMP L84D0
-          RTS
-L6A31     LDY #$02
-          STY $01
-          LDY #$00
-          STY $00
-          LDY #$5F
-          LDA #$F4
-L6A3D     STA ($00),Y
-          DEY
-          BPL L6A3D
-          JMP L84D0
-L6A45     LDA $52
-          BNE L6A56
-          LDY $1C
-          BNE L6A5B
-          LDA $1F
-          CMP #$15
-          BCS L6A5A
-          JMP L85DB
-L6A56     LDA #$00
-          STA $52
-L6A5A     RTS
-L6A5B     DEY
-          TYA
-          ASL A
-          TAY
-          LDX $77EC,Y
-          LDA $77ED,Y
-          TAY
-          LDA #$00
-          STA $1C
-L6A6A     STX $00
-          STY $01
-          JMP L6B9F
-L6A71     LDA $59
-          BEQ L6A78
-          JMP L6ACA
-L6A78     LDX #$00
-          STX $01
-          JSR L6A83
-          LDX $2B
-          INC $01
-L6A83     LDY #$01
-          STY $4016
-          DEY
-          STY $4016
-          LDY #$08
-L6A8E     PHA
-          LDA $4016,X
-          STA $00
-          LSR A
-          ORA $00
-          LSR A
-          PLA
-          ROL A
-          DEY
-          BNE L6A8E
-          LDX $01
-          LDY $14,X
-          STY $00
-          STA $14,X
-          EOR $00
-          BEQ L6AB1
-          LDA $00
-          AND #$BF
-          STA $00
-          EOR $14,X
-L6AB1     AND $14,X
-          STA $12,X
-          STA $16,X
-          LDY #$20
-          LDA $14,X
-          CMP $00
-          BNE L6AC7
-          DEC $18,X
-          BNE L6AC9
-          STA $16,X
-          LDY #$10
-L6AC7     STY $18,X
-L6AC9     RTS
-L6ACA     LDY #$01
-          STY $4016
-          DEY
-          STY $4016
-          LDY #$04
-L6AD5     LDA $4016
-          DEY
-          BNE L6AD5
-          AND #$03
-          BEQ L6AC9
-          INY
-          STY $5B
-          BNE L6AC9
-L6AE4     LDX #$01
-          DEC $23
-          BPL L6AF0
-          LDA #$09
-          STA $23
-          LDX #$02
-L6AF0     LDA $24,X
-          BEQ L6AF6
-          DEC $24,X
-L6AF6     DEX
-          BPL L6AF0
-          RTS
-L6AFA     ASL A
-          STY $0415
-          STX $0414
-          TAY
-          INY
-          PLA
-          STA $0C
-          PLA
-          STA $0D
-          LDA ($0C),Y
-          TAX
-          INY
-          LDA ($0C),Y
-          STA $0D
-          STX $0C
-          LDX $0414
-          LDY $0415
-          JMP ($000C)
-L6B1C     LDA $2002
-          LDA $FD
-          STA $2005
-          LDA $FC
-          STA $2005
-          RTS
-L6B2A     TYA
-          CLC
-          ADC $00
-          STA $00
-          BCC L6B34
-          INC $01
-L6B34     RTS
-L6B35     TYA
-          CLC
-          ADC $02
-          STA $02
-          BCC L6B3F
-          INC $03
-L6B3F     RTS
-          TYA
-          CLC
-          ADC $04
-          STA $04
-          BCC L6B3F
-          INC $05
-          RTS
-L6B4B     EOR #$FF
-          CLC
-          ADC #$01
-          RTS
-          LSR A
-L6B52     LSR A
-L6B53     LSR A
-          LSR A
-          LSR A
-          RTS
-          ASL A
-L6B58     ASL A
-L6B59     ASL A
-          ASL A
-          ASL A
-          RTS
-L6B5D     LDA $1B
-          BEQ L6B76
-          LDA #$A1
-          STA $00
-          LDA #$07
-          STA $01
-          JSR L6B9F
-          LDA #$00
-          STA $07A0
-          STA $07A1
-          STA $1B
-L6B76     RTS
-L6B77     STA $2006
-          INY
-          LDA ($00),Y
-          STA $2006
-          INY
-          LDA ($00),Y
-          ASL A
-          JSR L6BAB
-          ASL A
-          LDA ($00),Y
-          AND #$3F
-          TAX
-          BCC L6B90
-          INY
-L6B90     BCS L6B93
-          INY
-L6B93     LDA ($00),Y
-          STA $2007
-          DEX
-          BNE L6B90
-          INY
-          JSR L6B2A
-L6B9F     LDX $2002
-          LDY #$00
-          LDA ($00),Y
-          BNE L6B77
-          JMP L6B1C
-L6BAB     PHA
-          LDA $FF
-          ORA #$04
-          BCS L6BB4
-          AND #$FB
-L6BB4     STA $2000
-          STA $FF
-          PLA
-          RTS
-L6BBB     LDY #$01
-          STY $1B
-          DEY
-          LDA ($02),Y
-          AND #$0F
-          STA $05
-          LDA ($02),Y
-          JSR L6B52
-          STA $04
-          LDX $07A0
-L6BD0     LDA $01
-          JSR L6BFE
-          LDA $00
-          JSR L6BFE
-          LDA $05
-          STA $06
-          JSR L6BFE
-L6BE1     INY
-          LDA ($02),Y
-          JSR L6BFE
-          DEC $06
-          BNE L6BE1
-          STX $07A0
-          STY $06
-          LDY #$20
-          JSR L6B2A
-          LDY $06
-          DEC $04
-          BNE L6BD0
-          JSR L6C09
-L6BFE     STA $07A1,X
-L6C01     INX
-          CPX #$4F
-          BCC L6C10
-          LDX $07A0
-L6C09     LDA #$00
-          STA $07A1,X
-          PLA
-          PLA
-L6C10     RTS
-          STX $00
-          STY $01
-          LDX #$80
-          STX $02
-          LDX #$07
-          STX $03
-L6C1D     LDY #$01
-          STY $1B
-          DEY
-          BEQ L6C5B
-L6C24     STA $04
-          LDA $01
-          JSR L6BFE
-          LDA $00
-          JSR L6BFE
-          LDA $04
-          JSR L6C65
-          BIT $04
-          BVC L6C3A
-          INY
-L6C3A     BIT $04
-          BVS L6C3F
-          INY
-L6C3F     LDA ($02),Y
-          JSR L6BFE
-          STY $06
-          LDY #$01
-          BIT $04
-          BPL L6C4E
-          LDY #$20
-L6C4E     JSR L6B2A
-          LDY $06
-          DEC $05
-          BNE L6C3A
-          STX $07A0
-          INY
-L6C5B     LDX $07A0
-          LDA ($02),Y
-          BNE L6C24
-          JSR L6C09
-L6C65     STA $04
-          AND #$BF
-          STA $07A1,X
-          AND #$3F
-          STA $05
-          JMP L6C01
-          JSR L6CB6
-          ADC $01
-          CMP #$0A
-          BCC L6C7E
-          ADC #$05
-L6C7E     CLC
-          ADC $02
-          STA $02
-          LDA $03
-          AND #$F0
-          ADC $02
-          BCC L6C8F
-L6C8B     ADC #$5F
-          SEC
-          RTS
-L6C8F     CMP #$A0
-          BCS L6C8B
-          RTS
-          JSR L6CB6
-          SBC $01
-          STA $01
-          BCS L6CA7
-          ADC #$0A
-          STA $01
-          LDA $02
-          ADC #$0F
-          STA $02
-L6CA7     LDA $03
-          AND #$F0
-          SEC
-          SBC $02
-          BCS L6CB3
-          ADC #$A0
-          CLC
-L6CB3     ORA $01
-          RTS
-L6CB6     PHA
-          AND #$0F
-          STA $01
-          PLA
-          AND #$F0
-          STA $02
-          LDA $03
-          AND #$0F
-          RTS
-          JSR L6CCD
-L6CC8     LDA $1A
-          BEQ L6CC8
-          RTS
-L6CCD     LDA #$00
-          STA $1A
-          RTS
-L6CD2     LDA $FE
-          AND #$E7
-L6CD6     STA $FE
-          JSR L6CCD
-L6CDB     LDA $1A
-          BEQ L6CDB
-          RTS
-L6CE0     LDA $FF
-          AND #$F7
-          ORA #$10
-          STA $FF
-          STA $2000
-          LDA $FE
-          ORA #$1E
-          BNE L6CD6
-L6CF1     LDA $FF
-          STA $2000
-          LDA $FE
-          STA $2001
-          LDA $FB
-          STA $4025
-          RTS
-          LDY #$02
-          STY $57
-          STY $54
-          DEY
-          STY $56
-          STY $59
-          DEY
-          STY $58
-          STY $55
-          STY $5C
-          LDA #$D0
-          STA $5D
-          LDA #$02
-          STA $63
-          LDA #$19
-          STA $5E
-          LDA #$20
-          STA $5F
-          LDA #$B8
-          STA $60
-          STY $3F
-          STY $40
-          STY $49
-          STY $4A
-          STY $4B
-          STY $4C
-          STY $00
-          LDX #$60
-L6D37     STX $01
-          TXA
-          AND #$03
-          ASL A
-          TAY
-          STY $02
-          LDA $6D61,Y
-          LDY #$00
-L6D45     STA ($00),Y
-          INY
-          BEQ L6D57
-          CPY #$40
-          BNE L6D45
-          LDY $02
-          LDA $6D62,Y
-          LDY #$40
-          BPL L6D45
-L6D57     INX
-          CPX #$68
-          BNE L6D37
-          INC $1F
-          JMP L84EE
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          CPY #$C4
-          LDA #$10
-          STA $F0
-          STA $0684
-          JSR L6CD2
-          JSR L69DF
-          LDX #$34
-          LDY #$7B
-          JSR L6A6A
-          LDA #$01
-          STA $1C
-          STA $4D
-          INC $1F
-          LDA #$00
-          STA $62
-          JMP L6CE0
-          LDA $62
-          CMP #$0D
-          BCS L6DB2
-          ASL A
-          TAY
-          LDA $7DAF,Y
-          STA $02
-          LDA $7DB0,Y
-          STA $03
-          LDY #$00
-          LDA ($02),Y
-          STA $01
-          INY
-          LDA ($02),Y
-          STA $00
-          INY
-          JSR L6B35
-          INC $62
-          JMP L6C1D
-L6DB2     LDA #$08
-          STA $26
-          LSR A
-          STA $49
-          INC $1F
-          RTS
-          LDA $27
-          AND #$03
-          BNE L6DDE
-          LDA $49
-          AND #$03
-          STA $49
-          JSR L85A0
-          LDA $26
-          BNE L6DDE
-          LDA $49
-          CMP #$04
-          BNE L6DDE
-          INC $1F
-          JSR L8183
-          LDA #$18
-          STA $26
-L6DDE     RTS
-          LDA $26
-          BNE L6DF4
-          LDA $27
-          AND #$0F
-          BNE L6DF4
-          JSR L85A0
-          BNE L6DF4
-          LDA #$20
-          STA $26
-          INC $1F
-L6DF4     RTS
-          LDA $26
-          BNE L6DF4
-          LDA #$08
-          STA $26
-          INC $1F
-          RTS
-          LDA $26
-          BNE L6E15
-          LDA $048A
-          AND $049A
-          CMP #$01
-          BNE L6E12
-          INC $1F
-          BNE L6E15
-L6E12     JSR L81A7
-L6E15     RTS
-          LDA $27
-          AND #$07
-          BNE L6E34
-          LDA $4C
-          CMP #$04
-          BNE L6E31
-          JSR L826F
-          LDA #$08
-          STA $26
-          STA $44
-          LDA #$00
-          STA $47
-          INC $1F
-L6E31     JSR L8673
-L6E34     RTS
-          LDA $48
-          BEQ L6E3C
-          JSR L85BB
-L6E3C     LDA $26
-          BNE L6E83
-          LDA $048A
-          AND $049A
-          AND $04AA
-          AND $04BA
-          BEQ L6E7D
-          LDA #$01
-          CMP $47
-          BEQ L6E5E
-          INC $47
-          STA $4F
-          STA $48
-          LDA #$00
-          STA $4E
-L6E5E     AND $04CA
-          AND $04DA
-          AND $04EA
-          AND $04FA
-          BEQ L6E7D
-          LDA #$01
-          STA $4F
-          STA $48
-          JSR L84EE
-          LDA #$00
-          STA $4E
-          INC $1F
-          BNE L6E80
-L6E7D     JSR L82D6
-L6E80     JSR L834E
-L6E83     RTS
-          LDA $48
-          BEQ L6E8E
-          JSR L834E
-          JMP L85BB
-L6E8E     INC $1F
-          LDA #$60
-          STA $030D
-          LDA #$7C
-          STA $030E
-          LDA $0305
-          STA $0306
-          RTS
-          LDA #$01
-          STA $43
-          LDA #$04
-          STA $040E
-          STA $13
-          STA $15
-          STA $17
-          LDA #$03
-          STA $0300
-          STA $0400
-          INC $1F
-          RTS
-          LDA $0300
-          CMP #$04
-          BNE L6EE2
-          LDA #$00
-          STA $0300
-          LDA #$0B
-          STA $0305
-          LDA #$0C
-          STA $0306
-          LDA #$07
-          STA $0303
-          LDA #$08
-          STA $26
-          LDA #$00
-          STA $51
-          STA $53
-          INC $1F
-L6EE2     RTS
-          LDA $53
-          BNE L6EF1
-          LDA $27
-          AND #$0F
-          CMP #$01
-          BNE L6F25
-          STA $53
-L6EF1     LDA $51
-          CMP #$10
-          BEQ L6F17
-          INC $51
-          ASL A
-          TAY
-          LDA $7F44,Y
-          STA $02
-          LDA $7F45,Y
-          STA $03
-          LDY #$00
-          LDA ($02),Y
-          STA $01
-          INY
-          LDA ($02),Y
-          STA $00
-          INY
-          JSR L6B35
-          JMP L6BBB
-L6F17     INC $1F
-          LDA #$08
-          STA $26
-          LDA #$06
-          STA $4C
-          LDA #$00
-          STA $51
-L6F25     RTS
-          LDA $26
-          BNE L6F45
-          LDA $27
-          AND #$07
-          BNE L6F45
-          LDA $4C
-          CMP #$0B
-          BNE L6F42
-          LDA #$00
-          STA $4C
-          LDA #$30
-          STA $26
-          INC $1F
-          BNE L6F45
-L6F42     JSR L8673
-L6F45     RTS
-          LDA $26
-          BNE L6F65
-          LDA $27
-          AND #$07
-          BNE L6F65
-          LDA $4C
-          CMP #$05
-          BNE L6F62
-          LDA #$06
-          STA $4C
-          LDA #$00
-          STA $53
-          INC $1F
-          BNE L6F65
-L6F62     JSR L8673
-L6F65     RTS
-          LDA $53
-          BNE L6F74
-          LDA $27
-          AND #$0F
-          CMP #$01
-          BNE L6FB7
-          STA $53
-L6F74     LDA $51
-          CMP #$0C
-          BEQ L6F9E
-          INC $51
-          ASL A
-          TAY
-          LDA $7F44,Y
-          STA $04
-          LDA $7F45,Y
-          STA $05
-          LDY #$00
-          LDA ($04),Y
-          STA $01
-          INY
-          LDA ($04),Y
-          STA $00
-          LDA #$14
-          STA $02
-          LDA #$81
-          STA $03
-          JMP L6BBB
-L6F9E     LDA #$23
-          STA $01
-          LDA #$D0
-          STA $00
-          LDA #$81
-          STA $03
-          LDA #$2D
-          STA $02
-          JSR L6C1D
-          INC $1F
-          LDA #$10
-          STA $26
-L6FB7     RTS
-          LDA $26
-          BNE L6FD0
-          LDA $3F
-          BNE L6FD0
-          LDA $40
-          AND #$0F
-          BNE L6FD0
-          LDA #$01
-          STA $5A
-          LDA #$10
-          STA $26
-          INC $1F
-L6FD0     RTS
-          LDA $26
-          BNE L7018
-          STA $5A
-          STA $43
-          STA $0408
-          LDY #$1F
-L6FDE     STA $0300,Y
-          DEY
-          BPL L6FDE
-          LDA $FF
-          AND #$FC
-          STA $FF
-          INY
-          STY $3F
-          STY $40
-          STY $49
-          STY $4A
-          STY $4B
-          STY $4C
-          STY $55
-          STY $13
-          STY $15
-          STY $17
-          STY $62
-          INY
-          STY $56
-          INY
-          STY $54
-          STY $57
-          STY $1F
-          LDA $63
-          BNE L7019
-          LDA #$10
-          STA $0684
-          LDA #$02
-          STA $63
-L7018     RTS
-L7019     DEC $63
-          RTS
-          JSR L6CD2
-          INC $1F
-          RTS
-          RTS
-          LDA #$01
-          STA $0680
-          RTS
-          LSR $0416
-          LDA ($00),Y
-          AND #$C0
-          ORA $0416
-          STA $05
-          LDA $0416
-          ORA #$80
-          STA $0416
-          RTS
-          LDY #$00
-          LDX $040E
-L7043     LDA $70B5,Y
-          STA $0200,X
-          INX
-          BEQ L7051
-          INY
-          CPY #$1C
-          BNE L7043
-L7051     TXA
-          PHA
-          LDX $040E
-          JSR L70B0
-          BEQ L707E
-          LDA $0107
-          TAY
-          JSR L6B52
-          JSR L70A9
-          JSR L70B0
-          BEQ L707E
-          TYA
-          AND #$0F
-          JSR L70A9
-          JSR L70B0
-          BEQ L707E
-          LDA $0106
-          JSR L6B52
-          JSR L70A9
-L707E     LDY $0422
-          BEQ L7095
-          LDA $040E
-          CLC
-          ADC #$10
-          BEQ L7095
-          TAX
-          LDA $0421
-          CLC
-          ADC #$8B
-          STA $0201,X
-L7095     LDA $040E
-          CLC
-          ADC #$18
-          BCS L70A4
-          TAX
-          LDA $041E
-          JSR L70A9
-L70A4     PLA
-          STA $040E
-          RTS
-L70A9     CLC
-          ADC #$80
-          STA $0201,X
-          RTS
-L70B0     INX
-          INX
-          INX
-          INX
-          RTS
-          BPL L7041
-          BRK
-          CLC
-          BPL L70BA
-          BRK
-          JSR $FF10
-          BRK
-          PLP
-          BPL L70C2
-          BRK
-          BMI L70DE
-          .BYTE $FF    ;%11111111
-          BRK
-          CLC
-          CLC
-          STX $2800
-          CLC
-          .BYTE $FF    ;%11111111
-          BRK
-          BMI L7058
-          ASL $1084
-          LDX #$00
-          LDY #$08
-L70D9     LSR A
-          BCS L70E0
-          INX
-          DEY
-L70DE     BNE L70D9
-L70E0     TXA
-          LDY $10
-          LDX $0E
-L70E5     RTS
-          LDX $0409
-          BEQ L70E5
-          DEX
-          BNE L70F1
-          JMP L70F4
-L70F1     DEX
-          BNE L70FC
-L70F4     LDX $3F
-          BNE L7138
-          LDX #$05
-          BNE L7118
-L70FC     DEX
-          BNE L7102
-          JMP L7105
-L7102     DEX
-          BNE L7138
-L7105     LDX $FC
-          BNE L7138
-          STX $0417
-          STX $0418
-          INX
-          LDA $030E
-          BMI L7130
-          INX
-          BNE L7130
-L7118     LDA #$20
-          STA $040D
-          LDA $040C
-          JSR L6B59
-          BCS L712C
-          LDY $040A
-          CPY #$03
-          BCC L7130
-L712C     LDA #$47
-          BNE L7133
-L7130     JSR L7142
-L7133     STA $FB
-          STX $0409
-L7138     RTS
-          LDA $030C
-          EOR #$01
-          STA $030C
-          RTS
-L7142     LDA $0400
-          EOR #$03
-          STA $0400
-          LDA $FB
-          EOR #$08
-          RTS
-          BRK
-          ORA ($02,X)
-          .BYTE $FF    ;%11111111
-          .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          ORA $FF
-          .BYTE $13    ;%00010011
-          ASL $FF
-          .BYTE $07    ;%00000111
-          .BYTE $FF    ;%11111111
-          .BYTE $17    ;%00010111
-          PHP
-          .BYTE $FF    ;%11111111
-          AND ($FF,X)
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $FF    ;%11111111
-          ORA ($0F,X)
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          BPL L7168
-          .BYTE $13    ;%00010011
-          .BYTE $14    ;%00010100
-          ORA $16,X
-          .BYTE $FF    ;%11111111
-          .BYTE $17    ;%00010111
-          CLC
-          ORA $FF1A,Y
-          JSR $FF1F
-          BRK
-          .BYTE $13    ;%00010011
-          .BYTE $FF    ;%11111111
-          .BYTE $03    ;%00000011
-          .BYTE $17    ;%00010111
-          .BYTE $FF    ;%11111111
-          .BYTE $1B    ;%00011011
-          .BYTE $1C    ;%00011100
-          ORA $FF1E,X
-          ASL $1C1D,X
-          .BYTE $1B    ;%00011011
-          .BYTE $FF    ;%11111111
-          PLP
-          AND #$FF
-          ROL A
-          .BYTE $FF    ;%11111111
-          .BYTE $1F    ;%00011111
-          JSR $11FF
-          .BYTE $FF    ;%11111111
-          .BYTE $12    ;%00010010
-          .BYTE $FF    ;%11111111
-          ORA #$0A
-          .BYTE $0B    ;%00001011
-          .BYTE $FF    ;%11111111
-          .BYTE $0C    ;%00001100
-          ORA $FF0E
-          BIT $2CFF
-          BIT $2C2C
-          BIT $2C2C
-          BIT $2D2D
-          AND $2D2D
-          ROL $2E2E
-          .BYTE $2F    ;%00101111 '/'
-          .BYTE $2F    ;%00101111 '/'
-          .BYTE $FF    ;%11111111
-          .BYTE $2F    ;%00101111 '/'
-          .BYTE $2F    ;%00101111 '/'
-          ROL $2E2E
-          AND $2D2D
-          AND $2C2D
-          BIT $2C2C
-          BIT $2C2C
-          BIT $30FF
-          .BYTE $2B    ;%00101011 '+'
-          .BYTE $FF    ;%11111111
-          AND ($FF),Y
-          AND ($31),Y
-          AND ($31),Y
-          AND ($31),Y
-          AND ($31),Y
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $32    ;%00110010 '2'
-          AND ($31),Y
-          AND ($31),Y
-          AND ($31),Y
-          AND ($31),Y
-          .BYTE $FF    ;%11111111
-          AND $FF,X
-          .BYTE $37    ;%00110111 '7'
-          ROL $FF,X
-          AND $FF38,Y
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $3B    ;%00111011 ';'
-          .BYTE $FF    ;%11111111
-          .BYTE $3C    ;%00111100 '<'
-          .BYTE $F7    ;%11110111
-          EOR #$F7
-          .BYTE $FF    ;%11111111
-          AND $3F3E,X
-          .BYTE $FF    ;%11111111
-          RTI
-          EOR ($42,X)
-          .BYTE $FF    ;%11111111
-          .BYTE $43    ;%01000011 'C'
-          .BYTE $FF    ;%11111111
-          .BYTE $44    ;%01000100 'D'
-          .BYTE $FF    ;%11111111
-          EOR $FF
-          LSR $FF
-          .BYTE $47    ;%01000111 'G'
-          .BYTE $FF    ;%11111111
-          PHA
-          .BYTE $FF    ;%11111111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $FF    ;%11111111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $FF    ;%11111111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $07    ;%00000111
-          .BYTE $F7    ;%11110111
-          .BYTE $FF    ;%11111111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $F7    ;%11110111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $F7    ;%11110111
-          .BYTE $FF    ;%11111111
-          .BYTE $C3    ;%11000011
-          .BYTE $73    ;%01110011 's'
-          CMP ($73),Y
-          CPX #$73
-          INC $0073
-          .BYTE $74    ;%01110100 't'
-          .BYTE $13    ;%00010011
-          .BYTE $74    ;%01110100 't'
-          AND $74
-          AND $74,X
-          EOR $6174
-          .BYTE $74    ;%01110100 't'
-          .BYTE $6F    ;%01101111 'o'
-          .BYTE $74    ;%01110100 't'
-          ROR $8C74,X
-          .BYTE $74    ;%01110100 't'
-          .BYTE $9E    ;%10011110
-          .BYTE $74    ;%01110100 't'
-          LDA ($74),Y
-          .BYTE $C3    ;%11000011
-          .BYTE $74    ;%01110100 't'
-          BNE L72E3
-          SBC ($74,X)
-          INC $FF74
-          .BYTE $74    ;%01110100 't'
-          ORA #$75
-          .BYTE $13    ;%00010011
-          ADC $1D,X
-          ADC $27,X
-          ADC $31,X
-          ADC $3B,X
-          ADC $45,X
-          ADC $4F,X
-          ADC $5A,X
-          ADC $65,X
-          ADC $70,X
-          ADC $7B,X
-          ADC $8F,X
-          ADC $A3,X
-          ADC $B4,X
-          ADC $C9,X
-          ADC $D2,X
-          ADC $DC,X
-          ADC $E6,X
-          ADC $F0,X
-          ADC $FA,X
-          ADC $FF,X
-          ADC $04,X
-          ROR $09,X
-          ROR $1D,X
-          ROR $29,X
-          ROR $35,X
-          ROR $41,X
-          ROR $4D,X
-          ROR $61,X
-          ROR $6D,X
-          ROR $79,X
-          ROR $85,X
-          ROR $91,X
-          ROR $9E,X
-          ROR $AD,X
-          ROR $BC,X
-          ROR $CF,X
-          ROR $E2,X
-          ROR $E7,X
-          ROR $EC,X
-          ROR $FB,X
-          ROR $0B,X
-          .BYTE $77    ;%01110111 'w'
-          .BYTE $1C    ;%00011100
-          .BYTE $77    ;%01110111 'w'
-          BIT $4077
-          .BYTE $77    ;%01110111 'w'
-          EOR $77,X
-          ADC #$77
-          ADC $8A77,Y
-          .BYTE $77    ;%01110111 'w'
-          TXS
-          .BYTE $77    ;%01110111 'w'
-          LDX $C377
-          .BYTE $77    ;%01110111 'w'
-          .BYTE $D7    ;%11010111
-          .BYTE $77    ;%01110111 'w'
-          INC $77
-L72E3     .BYTE $F7    ;%11110111
-          .BYTE $72    ;%01110010 'r'
-          ORA $73,X
-          AND ($73,X)
-          AND $3573
-          .BYTE $73    ;%01110011 's'
-          .BYTE $3F    ;%00111111 '?'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $F3    ;%11110011
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $4B    ;%01001011 'K'
-          .BYTE $73    ;%01110011 's'
-          SBC #$FC
-          .BYTE $EB    ;%11101011
-          .BYTE $FC    ;%11111100
-          SBC ($F8),Y
-          SBC ($00),Y
-          SBC $F9F0,Y
-          SED
-          SBC $0100,Y
-          SED
-          ORA ($00,X)
-          ORA ($08,X)
-          ORA #$F8
-          ORA #$00
-          ORA #$08
-          SBC $F9F4,Y
-          INC $ED,X
-          .BYTE $F4    ;%11110100
-          .BYTE $EF    ;%11101111
-          .BYTE $F4    ;%11110100
-          .BYTE $F4    ;%11110100
-          SED
-          .BYTE $F4    ;%11110100
-          BRK
-          .BYTE $FC    ;%11111100
-          SED
-          .BYTE $FC    ;%11111100
-          BRK
-          .BYTE $04    ;%00000100
-          SED
-          .BYTE $04    ;%00000100
-          BRK
-          SBC $F9F6,Y
-          INC $06F9,X
-          ORA ($F6,X)
-          ORA ($FE,X)
-          ORA ($06,X)
-          .BYTE $FC    ;%11111100
-          BEQ L732C
-          SED
-          .BYTE $FC    ;%11111100
-          BRK
-          .BYTE $FC    ;%11111100
-          PHP
-          .BYTE $FC    ;%11111100
-          .BYTE $FC    ;%11111100
-          SED
-          SED
-          SED
-          BRK
-          BRK
-          SED
-          BRK
-          BRK
-          INX
-          BRK
-          BEQ L7343
-L7343     SED
-          BRK
-          BRK
-          BRK
-          PHP
-          BRK
-          BPL L734B
-L734B     .BYTE $80    ;%10000000
-          .BYTE $80    ;%10000000
-          STA ($81,X)
-          .BYTE $82    ;%10000010
-          .BYTE $82    ;%10000010
-          .BYTE $83    ;%10000011
-          .BYTE $83    ;%10000011
-          STY $84
-          STA $85
-          .BYTE $F4    ;%11110100
-          SED
-          .BYTE $F4    ;%11110100
-          BRK
-          .BYTE $FC    ;%11111100
-          SED
-          .BYTE $FC    ;%11111100
-          BRK
-          .BYTE $04    ;%00000100
-          SED
-          .BYTE $04    ;%00000100
-          BRK
-          .BYTE $FC    ;%11111100
-          SED
-          .BYTE $F4    ;%11110100
-          BEQ L7356
-          CPX $E8EA
-          .BYTE $E7    ;%11100111
-          INC $E6
-          SBC $E5
-          CPX $E4
-          .BYTE $E3    ;%11100011
-          SBC $E7
-          SBC #$EB
-          .BYTE $EF    ;%11101111
-          .BYTE $F3    ;%11110011
-          .BYTE $F7    ;%11110111
-L737A     .BYTE $FB    ;%11111011
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          INC $FAFC,X
-          SED
-          INC $F4,X
-          .BYTE $F2    ;%11110010
-          BEQ L737A
-          SBC $EAEB
-          SBC #$E8
-          .BYTE $E7    ;%11100111
-          INC $E6
-          INC $E6
-          INC $E8
-          NOP
-          CPX $00EE
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-L73A1     BRK
-          BRK
-          INC $FAFC,X
-          SED
-          .BYTE $F7    ;%11110111
-          INC $F5,X
-          .BYTE $F4    ;%11110100
-          .BYTE $F3    ;%11110011
-          .BYTE $F2    ;%11110010
-          SBC ($F1),Y
-          BEQ L73A1
-          .BYTE $EF    ;%11101111
-          .BYTE $EF    ;%11101111
-          .BYTE $EF    ;%11101111
-          .BYTE $EF    ;%11101111
-          .BYTE $EF    ;%11101111
-          .BYTE $EF    ;%11101111
-          BEQ L73A9
-          SBC ($F2),Y
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BPL L73CC
-          BRK
-          ORA ($FE,X)
-          BPL L73DC
-          JSR $FE21
-          INC $FF31,X
-          BRK
-          BPL L73DA
-          .BYTE $02    ;%00000010
-          .BYTE $03    ;%00000011
-          INC $1312,X
-          .BYTE $22    ;%00100010 '"'
-L73DA     .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L73E9
-          ORA $06
-          INC $1615,X
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L73F7
-          BRK
-          ORA ($FD,X)
-          JSR $41FE
-L73F7     RTI
-          SBC $2060,X
-          AND ($FE,X)
-          INC $FF31,X
-          RTI
-          BPL L7409
-          .BYTE $02    ;%00000010
-          .BYTE $03    ;%00000011
-          SBC $FE20,X
-          .BYTE $43    ;%01000011 'C'
-L7409     .BYTE $42    ;%01000010 'B'
-          SBC $2260,X
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L741C
-          ORA $06
-          SBC $FE20,X
-          EOR $44
-          SBC $2560,X
-          ROL $27
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L742E
-          .BYTE $0B    ;%00001011
-          .BYTE $0C    ;%00001100
-          INC $1C1B,X
-          .BYTE $2B    ;%00101011 '+'
-L742E     BIT $3BFE
-          .BYTE $3C    ;%00111100 '<'
-          INC $FF17,X
-          BRK
-          BPL L743E
-          ORA #$FD
-          RTS
-          ORA #$FD
-          JSR $19FE
-          SBC $1960,X
-          SBC $2920,X
-          ROL A
-          INC $FD39,X
-          RTS
-          AND $40FF,Y
-          BPL L7456
-          SBC $0E20,X
-          ORA $1EFE
-L7456     ORA $2D2E,X
-          INC $60FD,X
-          .BYTE $3B    ;%00111011 ';'
-          .BYTE $3C    ;%00111100 '<'
-          INC $FF17,X
-          BRK
-          BPL L746A
-          BRK
-          ORA ($46,X)
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          JSR $FE21
-          INC $FF31,X
-          BRK
-          BPL L7478
-          BRK
-          ORA ($46,X)
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          .BYTE $22    ;%00100010 '"'
-L7478     .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L7487
-          BRK
-          ORA ($46,X)
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L7495
-          BRK
-          ORA ($FD,X)
-          JSR $4A4B
-L7495     EOR #$FD
-          RTS
-          JSR $FE21
-          INC $FF31,X
-          RTI
-          BPL L74A7
-          BRK
-          ORA ($FD,X)
-          JSR $4A4B
-L74A7     EOR #$FD
-          RTS
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L74BA
-          BRK
-          ORA ($FD,X)
-          JSR $4A4B
-L74BA     EOR #$FD
-          RTS
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L74CC
-          BRK
-          ORA ($FE,X)
-          BPL L74DC
-          .BYTE $22    ;%00100010 '"'
-L74CC     .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L74D9
-          BRK
-          ORA ($FD,X)
-          JSR $41FE
-L74D9     RTI
-          SBC $2260,X
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L74EA
-          BRK
-          ORA ($46,X)
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          .BYTE $22    ;%00100010 '"'
-L74EA     .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L74F7
-          BRK
-          ORA ($FD,X)
-          JSR $4A4B
-L74F7     EOR #$FD
-          RTS
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          ORA ($10,X)
-          ASL $52
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $FF    ;%11111111
-          .BYTE $02    ;%00000010
-          BPL L7512
-          .BYTE $54    ;%01010100 'T'
-          EOR $56,X
-          .BYTE $64    ;%01100100 'd'
-          ADC $66
-L7512     .BYTE $FF    ;%11111111
-          CMP ($10,X)
-          ASL $52
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $FF    ;%11111111
-          .BYTE $C2    ;%11000010
-          BPL L7526
-          .BYTE $54    ;%01010100 'T'
-          EOR $56,X
-          .BYTE $64    ;%01100100 'd'
-          ADC $66
-L7526     .BYTE $FF    ;%11111111
-          EOR ($10,X)
-          ASL $52
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $FF    ;%11111111
-          .BYTE $42    ;%01000010 'B'
-          BPL L753A
-          .BYTE $54    ;%01010100 'T'
-          EOR $56,X
-          .BYTE $64    ;%01100100 'd'
-          ADC $66
-L753A     .BYTE $FF    ;%11111111
-          STA ($10,X)
-          ASL $52
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $FF    ;%11111111
-          .BYTE $82    ;%10000010
-          BPL L754E
-          .BYTE $54    ;%01010100 'T'
-          EOR $56,X
-          .BYTE $64    ;%01100100 'd'
-          ADC $66
-L754E     .BYTE $FF    ;%11111111
-          ORA ($08,X)
-          ASL $FC
-          .BYTE $02    ;%00000010
-          BRK
-          BVC L75A8
-          RTS
-          ADC ($FF,X)
-          STA ($08,X)
-          ASL $FC
-          INC $5000,X
-          EOR ($60),Y
-          ADC ($FF,X)
-          CMP ($08,X)
-          ASL $FC
-          INC $5000,X
-          EOR ($60),Y
-          ADC ($FF,X)
-          EOR ($08,X)
-          ASL $FC
-          .BYTE $02    ;%00000010
-          BRK
-          BVC L75C9
-          RTS
-          ADC ($FF,X)
-          ASL $10
-          ASL $69
-          INC $5958,X
-          INC $5B5A,X
-          SBC $2E60,X
-          AND $FDFE
-          JSR $3C3B
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $FE
-          ADC #$58
-          EOR $5AFE,Y
-          .BYTE $5B    ;%01011011 '['
-          SBC $2E60,X
-          AND $FDFE
-          JSR $3C3B
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L75AC
-          .BYTE $0B    ;%00001011
-          .BYTE $0C    ;%00001100
-L75A8     INC $1C1B,X
-          .BYTE $2B    ;%00101011 '+'
-L75AC     BIT $3BFE
-          .BYTE $3C    ;%00111100 '<'
-          INC $17FE,X
-          .BYTE $FF    ;%11111111
-          RTI
-          BPL L75BD
-          SBC $0E20,X
-          ORA $1EFE
-L75BD     ORA $2D2E,X
-          INC $60FD,X
-          .BYTE $3B    ;%00111011 ';'
-          .BYTE $3C    ;%00111100 '<'
-          INC $17FE,X
-          .BYTE $FF    ;%11111111
-L75C9     .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          PHP
-          INC $FD28,X
-          RTS
-          PLP
-          .BYTE $FF    ;%11111111
-          .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          BPL L75FE
-          SEC
-          SEC
-          SBC $2860,X
-          .BYTE $FF    ;%11111111
-          ORA ($10,X)
-          PHP
-          JMP $5C4D
-          EOR $6D6C,X
-          .BYTE $FF    ;%11111111
-          ORA ($10,X)
-          PHP
-          JMP $5C4D
-          EOR $5B5A,X
-          .BYTE $FF    ;%11111111
-          ORA ($10,X)
-          PHP
-          JMP $5C4D
-          EOR $6B6A,X
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          .BYTE $02    ;%00000010
-          .BYTE $02    ;%00000010
-          BMI L75FE
-          .BYTE $04    ;%00000100
-          .BYTE $02    ;%00000010
-          .BYTE $02    ;%00000010
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          BRK
-          BRK
-          .BYTE $04    ;%00000100
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $69
-          INC $20FD,X
-          .BYTE $7A    ;%01111010 'z'
-          ADC $78FE,Y
-          .BYTE $77    ;%01110111 'w'
-          ROL $FE2D
-          SBC $3B60,X
-          .BYTE $3C    ;%00111100 '<'
-          .BYTE $FF    ;%11111111
-          ADC $18,X
-          PHP
-          .BYTE $0F    ;%00001111
-          .BYTE $1F    ;%00011111
-          .BYTE $2F    ;%00101111 '/'
-          SBC $2FE3,X
-          .BYTE $1F    ;%00011111
-          .BYTE $0F    ;%00001111
-          .BYTE $FF    ;%11111111
-          ADC $18,X
-          PHP
-          EOR $6D5D
-          SBC $6DE3,X
-          EOR $FF4D,X
-          ADC $18,X
-          .BYTE $04    ;%00000100
-          ROR A
-          .BYTE $6B    ;%01101011 'k'
-          JMP ($E3FD)
-          JMP (L6A6B)
-          .BYTE $FF    ;%11111111
-          ADC $00,X
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          INC $FD4F,X
-          .BYTE $E3    ;%11100011
-          .BYTE $4F    ;%01001111 'O'
-          INC $FF3F,X
-          LSR $10
-          ASL $FE
-          ADC #$FD
-          JSR L797A
-          INC $7778,X
-          ROL $FE2D
-          SBC $3B60,X
-          .BYTE $3C    ;%00111100 '<'
-          .BYTE $FF    ;%11111111
-          AND $18,X
-          PHP
-          .BYTE $0F    ;%00001111
-          .BYTE $1F    ;%00011111
-          .BYTE $2F    ;%00101111 '/'
-          SBC $2FA3,X
-          .BYTE $1F    ;%00011111
-          .BYTE $0F    ;%00001111
-          .BYTE $FF    ;%11111111
-          AND $18,X
-          PHP
-          EOR $6D5D
-          SBC $6DA3,X
-          EOR $FF4D,X
-          AND $18,X
-          .BYTE $04    ;%00000100
-          ROR A
-          .BYTE $6B    ;%01101011 'k'
-          JMP ($A3FD)
-          JMP (L6A6B)
-          .BYTE $FF    ;%11111111
-          AND $00,X
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          INC $FD4F,X
-          .BYTE $A3    ;%10100011
-          .BYTE $4F    ;%01001111 'O'
-          INC $FF3F,X
-          .BYTE $07    ;%00000111
-          BRK
-          BRK
-          .BYTE $FC    ;%11111100
-          .BYTE $FC    ;%11111100
-          BRK
-          ORA #$09
-          ORA $2919,Y
-          ROL A
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $69
-          INC $5958,X
-          INC $5B5A,X
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $FE
-          ADC #$58
-          EOR $5AFE,Y
-          .BYTE $5B    ;%01011011 '['
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $69
-          SBC $FE20,X
-          .BYTE $7A    ;%01111010 'z'
-          ADC $78FE,Y
-          .BYTE $77    ;%01110111 'w'
-          SBC $2260,X
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $FE
-          ADC #$FD
-          JSR L797A
-          INC $7778,X
-          SBC $2260,X
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          .BYTE $04    ;%00000100
-          .BYTE $04    ;%00000100
-          BVS L76E6
-          .BYTE $14    ;%00010100
-          .BYTE $04    ;%00000100
-          .BYTE $04    ;%00000100
-          ADC ($FF),Y
-          .BYTE $04    ;%00000100
-          .BYTE $0C    ;%00001100
-          .BYTE $0C    ;%00001100
-          INC $FD74,X
-          RTS
-          .BYTE $74    ;%01110100 't'
-          SBC $74A0,X
-          SBC $74E0,X
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $69
-          INC $5958,X
-          INC $5B5A,X
-          JSR $FE21
-          INC $FF31,X
-          ASL $10
-          ASL $69
-          INC $5958,X
-          INC $5B5A,X
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $69
-          INC $5958,X
-          INC $5B5A,X
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $69
-          INC $20FD,X
-          .BYTE $7A    ;%01111010 'z'
-          ADC $78FE,Y
-          .BYTE $77    ;%01110111 'w'
-          SBC $2060,X
-          AND ($FE,X)
-          INC $FF31,X
-          LSR $10
-          ASL $69
-          INC $20FD,X
-          .BYTE $7A    ;%01111010 'z'
-          ADC $78FE,Y
-          .BYTE $77    ;%01110111 'w'
-          SBC $2260,X
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $69
-          INC $20FD,X
-          .BYTE $7A    ;%01111010 'z'
-          ADC $78FE,Y
-          .BYTE $77    ;%01110111 'w'
-          SBC $2560,X
-          ROL $27
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $FE
-          ADC #$58
-          EOR $5AFE,Y
-          .BYTE $5B    ;%01011011 '['
-          JSR $FE21
-          INC $FF31,X
-          ASL $10
-          ASL $FE
-          ADC #$58
-          EOR $5AFE,Y
-          .BYTE $5B    ;%01011011 '['
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          ASL $10
-          ASL $FE
-          ADC #$58
-          EOR $5AFE,Y
-          .BYTE $5B    ;%01011011 '['
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $FE
-          ADC #$FD
-          JSR L797A
-          INC $7778,X
-          SBC $2060,X
-          AND ($FE,X)
-          INC $FF31,X
-          LSR $10
-          ASL $FE
-          ADC #$FD
-          JSR L797A
-          INC $7778,X
-          SBC $2260,X
-          .BYTE $23    ;%00100011 '#'
-          INC $3332,X
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $FF    ;%11111111
-          LSR $10
-          ASL $FE
-          ADC #$FD
-          JSR L797A
-          INC $7778,X
-          SBC $2560,X
-          ROL $27
-          AND $36,X
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          .BYTE $0C    ;%00001100
-          .BYTE $0C    ;%00001100
-          INC $FD75,X
-          RTS
-          ADC $FD,X
-          LDY #$75
-          SBC $75E0,X
-          .BYTE $FF    ;%11111111
-          .BYTE $04    ;%00000100
-          .BYTE $04    ;%00000100
-          .BYTE $04    ;%00000100
-          TXA
-          .BYTE $FF    ;%11111111
-          BRK
-          BPL L7866
-          .BYTE $34    ;%00110100 '4'
-          SEI
-          CLI
-          SEI
-          .BYTE $7C    ;%01111100 '|'
-          SEI
-          LDY #$78
-          CPY $78
-          INX
-          SEI
-          .BYTE $0C    ;%00001100
-          ADC $7930,Y
-          .BYTE $54    ;%01010100 'T'
-          ADC $7978,Y
-          .BYTE $9C    ;%10011100
-          ADC $79C0,Y
-          CPX $79
-          PHP
-          .BYTE $7A    ;%01111010 'z'
-          BIT $507A
-          .BYTE $7A    ;%01111010 'z'
-          .BYTE $74    ;%01110100 't'
-          .BYTE $7A    ;%01111010 'z'
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          AND $14,X
-          .BYTE $04    ;%00000100
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-L7866     AND #$0F
-          AND $0929,Y
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          ROL $15,X
-          ASL $0F
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $27    ;%00100111 '''
-          AND ($12,X)
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          AND ($20),Y
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          ORA ($0F,X)
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          ORA ($01,X)
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $02    ;%00000010
-          .BYTE $02    ;%00000010
-          ORA ($0F,X)
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $02    ;%00000010
-          ORA ($01,X)
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $12    ;%00010010
-          .BYTE $12    ;%00010010
-          .BYTE $02    ;%00000010
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-L797A     JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          ORA ($02),Y
-          .BYTE $02    ;%00000010
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          AND ($11),Y
-          ORA ($0F,X)
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          .BYTE $12    ;%00010010
-          BMI L79EC
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          AND ($11),Y
-          ORA ($0F,X)
-          ASL $2A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $12    ;%00010010
-          BMI L79FC
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          BIT $2C
-          .BYTE $0F    ;%00001111
-          ORA $21,X
-          SEC
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-L79EC     AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $12    ;%00010010
-          .BYTE $02    ;%00000010
-          ORA ($0F,X)
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-L79FC     .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          .BYTE $02    ;%00000010
-          ORA ($0F,X)
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $280F
-          CLC
-          PHP
-          .BYTE $0F    ;%00001111
-          AND #$1B
-          .BYTE $1A    ;%00011010
-          .BYTE $0F    ;%00001111
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0F
-          ORA ($0F,X)
-          .BYTE $0F    ;%00001111
-          .BYTE $0F    ;%00001111
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $0F    ;%00001111
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          .BYTE $0F    ;%00001111
-          .BYTE $17    ;%00010111
-          AND ($37),Y
-          .BYTE $0F    ;%00001111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $2830
-          CLC
-          PHP
-          BMI L7A82
-          .BYTE $1B    ;%00011011
-          .BYTE $1A    ;%00011010
-          BMI L7A84
-          PLP
-          AND #$30
-          BMI L7A92
-          BMI L7A94
-          ASL $1A,X
-          .BYTE $27    ;%00100111 '''
-          BMI L7AA0
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $1B    ;%00011011
-          BMI L7A84
-          AND ($37),Y
-          BMI L7AA3
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $12    ;%00010010
-          BRK
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          .BYTE $04    ;%00000100
-          .BYTE $0F    ;%00001111
-          BMI L7AAA
-          AND ($00,X)
-          BRK
-          JSR $4000
-          BRK
-          RTS
-L7A82     .BYTE $FF    ;%11111111
-          JSR $2040
-          RTS
-          RTI
-          RTS
-          .BYTE $FF    ;%11111111
-          LDA $030D,X
-          STA $07
-          LDA $030E,X
-L7A92     STA $09
-L7A94     LDA $030C,X
-          STA $0B
-          RTS
-          LDA $030D,Y
-          STA $06
-          LDA $030E,Y
-          STA $08
-          LDA $030C,Y
-          STA $0A
-          RTS
-L7AAA     LDA $0301,X
-          CLC
-          ADC $0301,Y
-          STA $04
-          LDA $0302,X
-          CLC
-          ADC $0302,Y
-          STA $05
-          RTS
-          LDA #$02
-          STA $01
-          LDA $07
-          SEC
-          SBC $06
-          STA $02
-          LDA $03
-          BNE L7AE3
-          LDA $0B
-          EOR $0A
-          BEQ L7AE3
-          LDA $0B
-          SBC $0A
-          LSR A
-          LDA $0A
-          EOR $FF
-          AND #$01
-          ORA $01
-          STA $01
-          BNE L7AEC
-L7AE3     LDA #$00
-          SBC #$00
-          BPL L7AEB
-          INC $01
-L7AEB     LSR A
-L7AEC     LDA $02
-          BCC L7AF5
-          BEQ L7B33
-          JSR L6B4B
-L7AF5     STA $11
-          CMP $04
-          BCS L7B33
-          ASL $01
-          LDA $09
-          SEC
-          SBC $08
-          STA $02
-          LDA $03
-          BEQ L7B1F
-          LDA $0B
-          EOR $0A
-          BEQ L7B1F
-          LDA $0B
-          SBC $0A
-          LSR A
-          LDA $0A
-          EOR $FF
-          AND #$01
-          ORA $01
-          STA $01
-          BNE L7B26
-L7B1F     SBC #$00
-          BPL L7B25
-          INC $01
-L7B25     LSR A
-L7B26     LDA $02
-          BCC L7B2F
-          BEQ L7B33
-          JSR L6B4B
-L7B2F     STA $0F
-          CMP $05
-L7B33     RTS
-          .BYTE $1F    ;%00011111
-          BEQ L7B87
-          BRK
-          .BYTE $23    ;%00100011 '#'
-          CPY #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $23    ;%00100011 '#'
-          CPX #$20
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $27    ;%00100111 '''
-          CPY #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-L7B87     BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $27    ;%00100111 '''
-          CPX #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $22    ;%00100010 '"'
-          CPX #$20
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CPY $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CMP $FFFF
-          DEC $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CPY $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CMP $FFFF
-          DEC $23FF
-          BRK
-          JSR $C1C0
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          .BYTE $23    ;%00100011 '#'
-          JSR $C220
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $23    ;%00100011 '#'
-          RTI
-          JSR $C5C4
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          .BYTE $23    ;%00100011 '#'
-          RTS
-          JSR $C7C6
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $80    ;%10000000
-          JSR $C9C8
-          INY
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$23
-          LDY #$20
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          ROL $E0
-          JSR $FFFF
-          CPY $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CMP $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          DEC $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CPY $FFFF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $27    ;%00100111 '''
-          BRK
-          JSR $C1C0
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          CPY #$C1
-          .BYTE $27    ;%00100111 '''
-          JSR $C220
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $C3    ;%11000011
-          .BYTE $27    ;%00100111 '''
-          RTI
-          JSR $C5C4
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          CPY $C5
-          .BYTE $27    ;%00100111 '''
-          RTS
-          JSR $C7C6
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          DEC $C7
-          .BYTE $27    ;%00100111 '''
-          .BYTE $80    ;%10000000
-          JSR $C9C8
-          INY
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$C8
-          CMP #$27
-          LDY #$20
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          DEX
-          .BYTE $CB    ;%11001011
-          BRK
-          CMP #$7D
-          SBC $117D
-          ROR $7E35,X
-          EOR $757E,Y
-          ROR $7E91,X
-          LDA $C97E
-          ROR $7EE5,X
-          ORA ($7F,X)
-          ORA $327F,X
-          .BYTE $7F    ;%01111111
-          .BYTE $23    ;%00100011 '#'
-          CPY #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $23    ;%00100011 '#'
-          CPX #$20
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $27    ;%00100111 '''
-          CPY #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $27    ;%00100111 '''
-          CPX #$20
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          AND ($24,X)
-          CLC
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          ORA $06
-          .BYTE $07    ;%00000111
-          PHP
-          .BYTE $FF    ;%11111111
-          ASL A
-          .BYTE $0B    ;%00001011
-          .BYTE $0C    ;%00001100
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $0F    ;%00001111
-          BVS L7EDF
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $73    ;%01110011 's'
-          .BYTE $74    ;%01110100 't'
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          AND ($44,X)
-          CLC
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $12    ;%00010010
-          .BYTE $13    ;%00010011
-          .BYTE $14    ;%00010100
-          ORA $16,X
-          .BYTE $17    ;%00010111
-          CLC
-          .BYTE $FF    ;%11111111
-          .BYTE $1A    ;%00011010
-          .BYTE $1B    ;%00011011
-          .BYTE $1C    ;%00011100
-          ORA $1F1E,X
-          .BYTE $80    ;%10000000
-          STA ($82,X)
-          .BYTE $83    ;%10000011
-          STY $85
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          AND ($64,X)
-          CLC
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $23    ;%00100011 '#'
-          BIT $25
-          ROL $27
-          PLP
-          AND #$2A
-          .BYTE $2B    ;%00101011 '+'
-          BIT $2E2D
-          .BYTE $2F    ;%00101111 '/'
-          BCC L7E37
-          .BYTE $92    ;%10010010
-          .BYTE $93    ;%10010011
-          STY $95,X
-          STX $FF,Y
-          BRK
-          AND ($84,X)
-          CLC
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $33    ;%00110011 '3'
-          .BYTE $34    ;%00110100 '4'
-          AND $36,X
-          .BYTE $37    ;%00110111 '7'
-          SEC
-          AND $3B3A,Y
-          .BYTE $3C    ;%00111100 '<'
-          AND $3F3E,X
-          SEI
-          ADC $7B7A,Y
-          .BYTE $7C    ;%01111100 '|'
-          ADC $FF7E,X
-          BRK
-          AND ($A4,X)
-          CLC
-          .BYTE $FF    ;%11111111
-          EOR ($42,X)
-          .BYTE $43    ;%01000011 'C'
-          .BYTE $44    ;%01000100 'D'
-          EOR $46
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          EOR #$4A
-          .BYTE $4B    ;%01001011 'K'
-          JMP $4E4D
-          .BYTE $4F    ;%01001111 'O'
-          DEY
-          .BYTE $89    ;%10001001
-          TXA
-L7EDF     .BYTE $8B    ;%10001011
-          STY $8E8D
-          .BYTE $8F    ;%10001111
-          BRK
-          AND ($C4,X)
-          CLC
-          BVC L7F3B
-          .BYTE $52    ;%01010010 'R'
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $54    ;%01010100 'T'
-          EOR $56,X
-          .BYTE $57    ;%01010111 'W'
-          CLI
-          EOR $5B5A,Y
-          .BYTE $5C    ;%01011100 '\'
-          EOR $5F5E,X
-          TYA
-          STA $9B9A,Y
-          .BYTE $9C    ;%10011100
-          STA $9F9E,X
-          BRK
-          AND ($E4,X)
-          CLC
-          RTS
-          ADC ($62,X)
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $FF    ;%11111111
-          ADC $66
-          .BYTE $67    ;%01100111 'g'
-          .BYTE $FF    ;%11111111
-          ADC #$6A
-          .BYTE $6B    ;%01101011 'k'
-          JMP (L6E6D)
-          .BYTE $6F    ;%01101111 'o'
-          TAY
-          LDA #$AA
-          .BYTE $AB    ;%10101011
-          LDY $FFAD
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $22    ;%00100010 '"'
-          PLP
-          ORA ($B4),Y
-          TSX
-          LDX $B5,Y
-          .BYTE $FF    ;%11111111
-          LDX $A3,Y
-          .BYTE $B7    ;%10110111
-          CLV
-          .BYTE $A3    ;%10100011
-          .BYTE $FF    ;%11111111
-          LDA $A3BA,Y
-          .BYTE $A3    ;%10100011
-          LDX $A1
-          BRK
-          .BYTE $22    ;%00100010 '"'
-          ADC #$0E
-          LDY #$B0
-          LDA ($B2),Y
-          .BYTE $B3    ;%10110011
-          .BYTE $FF    ;%11111111
-L7F3B     LDA ($A2,X)
-          LDA ($A3,X)
-          LDY $A1
-          LDA $A6
-          BRK
-          .BYTE $64    ;%01100100 'd'
-          .BYTE $7F    ;%01111111
-          .BYTE $7F    ;%01111111
-          .BYTE $7F    ;%01111111
-          TXS
-          .BYTE $7F    ;%01111111
-          LDA $7F,X
-          BNE L7FCD
-          .BYTE $EB    ;%11101011
-          .BYTE $7F    ;%01111111
-          ASL $80
-          AND ($80,X)
-          .BYTE $3C    ;%00111100 '<'
-          .BYTE $80    ;%10000000
-          .BYTE $57    ;%01010111 'W'
-          .BYTE $80    ;%10000000
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $80    ;%10000000
-          STA $A880
-          .BYTE $80    ;%10000000
-          .BYTE $C3    ;%11000011
-          .BYTE $80    ;%10000000
-          DEC $F980,X
-          .BYTE $80    ;%10000000
-          JSR $46A4
-          .BYTE $D4    ;%11010100
-          ADC $D4,X
-          .BYTE $BF    ;%10111111
-          CMP ($FF),Y
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $64    ;%01100100 'd'
-          CMP $76,X
-          BNE L7F7D
-          ROR $20,X
-          TAX
-          LSR $D8
-          AND ($D0),Y
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          LDA $D902,X
-          .BYTE $FF    ;%11111111
-          .BYTE $CF    ;%11001111
-          .BYTE $FF    ;%11111111
-          JSR $46B0
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $FF    ;%11111111
-          ASL $4087
-          BNE L7F3B
-          .BYTE $FF    ;%11111111
-          JSR $46B6
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          PLA
-          .BYTE $FF    ;%11111111
-          .BYTE $77    ;%01110111 'w'
-L7FCD     .BYTE $D2    ;%11010010
-          CLD
-          .BYTE $FF    ;%11111111
-          AND ($24,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $D4    ;%11010100
-          .BYTE $D3    ;%11010011
-          BNE L8059
-          BNE L7FF3
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          AND ($2A,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-L7FF3     .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          BNE L8073
-          BNE L7FFD
-          ORA $FFD7
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          AND ($30,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          LDA $317F,X
-          BNE L808F
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          AND ($36,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          PLA
-          .BYTE $FF    ;%11111111
-          .BYTE $97    ;%10010111
-          .BYTE $D3    ;%11010011
-          BNE L8035
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          AND ($A4,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          ROR $19,X
-          LDX $FFFF,Y
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          AND ($AA,X)
-L8059     LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $FF    ;%11111111
-          .BYTE $BB    ;%10111011
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $D4    ;%11010100
-          ADC $D3,X
-          .BYTE $FF    ;%11111111
-          AND ($75),Y
-          AND ($B0,X)
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          LDY $FFFF,X
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          ORA #$D1
-          .BYTE $FF    ;%11111111
-          DEC $D0,X
-          .BYTE $D7    ;%11010111
-          AND ($B6,X)
-L808F     LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          STX $FF
-          .BYTE $A7    ;%10100111
-          LDX $AFB0
-          .BYTE $22    ;%00100010 '"'
-          BIT $46
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $22    ;%00100010 '"'
-          ROL A
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $22    ;%00100010 '"'
-          BMI L8127
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $22    ;%00100010 '"'
-          ROL $46,X
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          LSR $FF
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-L8127     .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          JSR $0000
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          EOR ($81),Y
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          ORA ($00,X)
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $02    ;%00000010
-          BRK
-          BRK
-          .BYTE $03    ;%00000011
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          ORA ($00,X)
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $02    ;%00000010
-          BRK
-          BRK
-          .BYTE $03    ;%00000011
-          ADC $7A81,Y
-          STA ($7D,X)
-          STA ($80,X)
-          STA ($00,X)
-          CLC
-          CPY $1800
-          CMP $1800
-          DEC $A200
-          ASL A
-L8185     LDA $819C,X
-          STA $0480,X
-          STA $0490,X
-          DEX
-          BPL L8185
-          LDA #$6B
-          STA $0490
-          LDA #$DC
-          STA $0493
-          RTS
-          EOR #$E1
-          ORA ($3D,X)
-          BRK
-          BRK
-          BRK
-          BRK
-          JSR $0000
-L81A7     LDX #$00
-          JSR L81AE
-          LDX #$10
-L81AE     JSR L81B1
-L81B1     LDA $0485,X
-          BNE L81B9
-          JSR L81F2
-L81B9     LDA $048A,X
-          BNE L81F1
-          DEC $0485,X
-          LDA $0486,X
-          CLC
-          ADC $0480,X
-          STA $0480,X
-          LDA $0487,X
-          CLC
-          ADC $0483,X
-          STA $0483,X
-          DEC $0488,X
-          BNE L81EE
-          LDA $0481,X
-          EOR #$03
-          STA $0481,X
-          LDA #$20
-          STA $0488,X
-          ASL A
-          EOR $0482,X
-          STA $0482,X
-L81EE     JMP L8253
-L81F1     RTS
-L81F2     TXA
-          JSR L6B53
-          TAY
-          LDA $83F3,Y
-          STA $00
-          LDA $83F4,Y
-          STA $01
-          LDY $0484,X
-          LDA ($00),Y
-          BPL L820D
-          LDA #$01
-          STA $0489,X
-L820D     BNE L8214
-          LDA #$01
-          STA $048A,X
-L8214     STA $0485,X
-          INY
-          LDA ($00),Y
-          DEC $0489,X
-          BMI L8228
-          LDA #$00
-          STA $0486,X
-          LDA ($00),Y
-          BMI L823F
-L8228     PHA
-          PHA
-          LDA #$00
-          STA $0489,X
-          PLA
-          JSR L6B52
-          JSR L8249
-          STA $0486,X
-          PLA
-          AND #$0F
-          JSR L8249
-L823F     STA $0487,X
-          INC $0484,X
-          INC $0484,X
-          RTS
-L8249     CMP #$08
-          BCC L8252
-          AND #$07
-          JSR L6B4B
-L8252     RTS
-L8253     LDA $0480,X
-          SEC
-          SBC #$01
-          STA $0210,X
-          LDA $0481,X
-          STA $0211,X
-          LDA $0482,X
-          STA $0212,X
-          LDA $0483,X
-          STA $0213,X
-          RTS
-L826F     LDA #$20
-          STA $45
-          LDX #$3F
-L8275     LDA $8296,X
-          CMP $FF
-          BEQ L8282
-          STA $0480,X
-          STA $04C0,X
-L8282     DEX
-          BPL L8275
-          LDA #$B8
-          STA $04E0
-          STA $04F0
-          LDA #$16
-          STA $04ED
-          STA $04FD
-          RTS
-          JSR L80E0
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $74    ;%01110100 't'
-          CLI
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $FF    ;%11111111
-          ORA $010E,X
-          ORA ($20,X)
-          CPX #$C0
-          SED
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $7C    ;%01111100 '|'
-          CLI
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $1F    ;%00011111
-          ASL $0180
-          INY
-          CPX #$00
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $74    ;%01110100 't'
-          RTS
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $FF    ;%11111111
-          ORA $011A,X
-          .BYTE $80    ;%10000000
-          INY
-          CPX #$40
-          SED
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $7C    ;%01111100 '|'
-          RTS
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          .BYTE $FF    ;%11111111
-          .BYTE $1F    ;%00011111
-          .BYTE $1A    ;%00011010
-          .BYTE $80    ;%10000000
-          .BYTE $80    ;%10000000
-L82D6     LDA $44
-          BEQ L830E
-          DEC $44
-          BNE L830E
-          ASL $048C
-          ASL $048D
-          ASL $049C
-          ASL $049D
-          ASL $04AC
-          ASL $04AD
-          ASL $04BC
-          ASL $04BD
-          ASL $04CC
-          ASL $04CD
-          ASL $04DC
-          ASL $04DD
-          ASL $04EC
-          ASL $04ED
-          ASL $04FC
-          ASL $04FD
-L830E     LDX #$00
-          JSR L833B
-          LDX #$10
-          JSR L833B
-          LDX #$20
-          JSR L833B
-          LDX #$30
-          LDA $45
-          BEQ L8327
-          DEC $45
-          BNE L833B
-L8327     JSR L833B
-          LDX #$40
-          JSR L833B
-          LDX #$50
-          JSR L833B
-          LDX #$60
-          JSR L833B
-          LDX #$70
-L833B     LDA $048A,X
-          BNE L834D
-          JSR L8387
-          BCS L834A
-          LDA #$01
-          STA $048A,X
-L834A     JMP L8253
-L834D     RTS
-L834E     LDA $4F
-          BEQ L8381
-          LDY $4E
-          CPY #$04
-          BCC L835E
-          BNE L8381
-          LDA #$00
-          STA $4F
-L835E     LDA $8382,Y
-          STA $00
-          LDY #$00
-L8365     LDX $848F,Y
-          INY
-L8369     LDA $848F,Y
-          STA $0200,X
-          INX
-          INY
-          TXA
-          AND #$03
-          BNE L8369
-          CPY $00
-          BNE L8365
-          LDA $27
-          LSR A
-          BCC L8381
-          INC $4E
-L8381     RTS
-          ORA $19
-          EOR ($19,X)
-          ORA $BD
-          STY $2004
-          .BYTE $DA    ;%11011010
-          .BYTE $83    ;%10000011
-          LDY $048E,X
-          BPL L8397
-          EOR #$FF
-          CLC
-          ADC #$01
-L8397     CLC
-          ADC $0483,X
-          STA $0483,X
-          SEC
-          SBC $0486,X
-          PHP
-          PLA
-          EOR $048E,X
-          LSR A
-          BCC L83CD
-          LDA $048D,X
-          JSR L83DA
-          LDY $048F,X
-          BPL L83BA
-          EOR #$FF
-          CLC
-          ADC #$01
-L83BA     CLC
-          ADC $0480,X
-          STA $0480,X
-          SEC
-          SBC $0487,X
-          PHP
-          PLA
-          EOR $048F,X
-          LSR A
-          BCS L83D9
-L83CD     LDA $0487,X
-          STA $0480,X
-          LDA $0486,X
-          STA $0483,X
-L83D9     RTS
-L83DA     STA $04
-          LDA #$08
-          STA $00
-L83E0     LSR $04
-          BCC L83EC
-          LDA $27
-          AND $00
-          BNE L83EC
-          INC $04
-L83EC     LSR $00
-          BNE L83E0
-          LDA $04
-          RTS
-          .BYTE $F7    ;%11110111
-          .BYTE $83    ;%10000011
-          AND $0184
-          BRK
-          ORA ($11,X)
-          ORA ($10,X)
-          ASL $11
-          .BYTE $07    ;%00000111
-          STA ($10),Y
-          ORA ($03,X)
-          BPL L8407
-          ORA $1001,Y
-          ORA ($19,X)
-          ORA ($10,X)
-          ORA ($19,X)
-          ORA #$11
-          .BYTE $04    ;%00000100
-          ORA ($02,X)
-          STA ($01),Y
-          BCC L8419
-          STA ($06),Y
-          BCC L841D
-          STA ($06),Y
-          BCC L8435
-          ORA ($06,X)
-          BPL L8425
-          ORA ($0E),Y
-          ORA ($08,X)
-          STA ($27),Y
-          ORA ($00,X)
-          BRK
-          ORA ($00,X)
-          PHP
-          ORA #$01
-          STA $0901,Y
-L8435     ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($09,X)
-          ORA ($99,X)
-          ORA ($19,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          ORA ($11,X)
-          ORA ($10,X)
-          .BYTE $02    ;%00000010
-          ORA ($01),Y
-          BPL L847B
-          ORA ($10),Y
-          ORA #$FF
-          .BYTE $EF    ;%11101111
-          ORA ($09),Y
-          .BYTE $FF    ;%11111111
-          .BYTE $F3    ;%11110011
-          .BYTE $1F    ;%00011111
-          ORA #$FF
-          CPX $090F
-          .BYTE $FF    ;%11111111
-          SBC $0916
-          BRK
-          BRK
-          BPL L84EB
-          SBC $00
-          ADC $5214,Y
-          .BYTE $E3    ;%11100011
-          BRK
-          ADC $5A18,Y
-          .BYTE $E7    ;%11100111
-          RTI
-          ADC ($1C),Y
-          .BYTE $5A    ;%01011010 'Z'
-          .BYTE $E7    ;%11100111
-          BRK
-          STA ($20,X)
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $E3    ;%11100011
-          .BYTE $80    ;%10000000
-          ADC $5214,Y
-          CPX $00
-          ADC $5A18,Y
-          INC $00
-          ADC ($1C),Y
-          .BYTE $5A    ;%01011010 'Z'
-          INC $00
-          STA ($20,X)
-          .BYTE $62    ;%01100010 'b'
-          CPX $00
-          ADC $4A24,Y
-          .BYTE $E3    ;%11100011
-          BRK
-          ADC $5A28,Y
-          .BYTE $E7    ;%11100111
-          RTI
-          ADC #$2C
-          .BYTE $5A    ;%01011010 'Z'
-          .BYTE $E7    ;%11100111
-          BRK
-          .BYTE $89    ;%10001001
-          BMI L8537
-          .BYTE $E3    ;%11100011
-          .BYTE $80    ;%10000000
-          ADC $50A5,Y
-          BEQ L84ED
-          LDA $27
-          LSR A
-          BCS L84ED
-          LDX #$9F
-L84DB     DEC $8500,X
-          DEC $0260,X
-          DEX
-          DEX
-          DEX
-          DEX
-          CPX #$FF
-          BNE L84DB
-          LDA #$00
-L84EB     STA $50
-L84ED     RTS
-L84EE     LDY #$9F
-L84F0     LDA $8500,Y
-          STA $0260,Y
-          DEY
-          CPY #$FF
-          BNE L84F0
-          LDA #$00
-          STA $50
-          RTS
-          .BYTE $73    ;%01110011 's'
-          CPY $F222
-          PHA
-          CMP $EE63
-          ROL A
-          DEC $DCA2
-          ROL $CF,X
-          .BYTE $E2    ;%11100010
-          DEC $11
-          CPY $B723
-          .BYTE $53    ;%01010011 'S'
-          CMP $A063
-          .BYTE $BB    ;%10111011
-          DEC $9AA2
-          .BYTE $0F    ;%00001111
-          .BYTE $CF    ;%11001111
-          .BYTE $E2    ;%11100010
-          .BYTE $8B    ;%10001011
-          STA $CC
-          .BYTE $E2    ;%11100010
-          BVS L84C2
-          CMP $6BA3
-          LDY #$CE
-          .BYTE $63    ;%01100011 'c'
-          CLI
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $CF    ;%11001111
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $4F    ;%01001111 'O'
-          ASL A
-          CPY $3922
-          .BYTE $1F    ;%00011111
-          CMP $2A23
-          .BYTE $7F    ;%01111111
-          DEC $1FA3
-          LSR $CF,X
-          LDX #$03
-          EOR $E3CC
-          .BYTE $AF    ;%10101111
-          ROL $63CD,X
-          .BYTE $2B    ;%00101011 '+'
-          ADC ($CE,X)
-          .BYTE $E2    ;%11100010
-          .BYTE $4F    ;%01001111 'O'
-          AND #$CF
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $6F    ;%01101111 'o'
-          TXA
-          CPY $8223
-          TYA
-          CMP $07A3
-          LDX $E2CE
-          DEX
-          LDX $CF,Y
-          .BYTE $63    ;%01100011 'c'
-          .BYTE $E3    ;%11100011
-          .BYTE $0F    ;%00001111
-          CPY $1862
-          .BYTE $1F    ;%00011111
-          CMP $3822
-          .BYTE $22    ;%00100010 '"'
-          DEC $5FA3
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $CF    ;%11001111
-          .BYTE $E2    ;%11100010
-          SEI
-          PHA
-          CPY $94E3
-          .BYTE $37    ;%00110111 '7'
-          CMP $B3A3
-          .BYTE $6F    ;%01101111 'o'
-          DEC $DCA3
-          SEI
-          .BYTE $CF    ;%11001111
-          .BYTE $22    ;%00100010 '"'
-          INC $CC83,X
-          .BYTE $62    ;%01100010 'b'
-          .BYTE $0B    ;%00001011
-          .BYTE $9F    ;%10011111
-          CMP $2623
-          LDY #$CE
-          .BYTE $62    ;%01100010 'b'
-          AND $CFBD,Y
-          LDX #$1C
-          .BYTE $07    ;%00000111
-          CPY $A4E3
-          .BYTE $87    ;%10000111
-          CMP $5D63
-          .BYTE $5A    ;%01011010 'Z'
-          DEC $4F62
-          SEC
-          .BYTE $CF    ;%11001111
-          .BYTE $23    ;%00100011 '#'
-          STA $A4
-          EOR #$B9
-          LDX $C985
-          .BYTE $FF    ;%11111111
-          BEQ L85AD
-          STA $1C
-          INC $49
-L85AD     RTS
-          .BYTE $02    ;%00000010
-          .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          ORA $06
-          .BYTE $07    ;%00000111
-          PHP
-          ORA #$0A
-          .BYTE $0B    ;%00001011
-          .BYTE $0C    ;%00001100
-          .BYTE $0C    ;%00001100
-          .BYTE $FF    ;%11111111
-L85BB     LDY $4A
-          LDA $85D1,Y
-          CMP #$FF
-          BNE L85CC
-          LDA #$00
-          STA $4A
-          STA $48
-          BEQ L85D0
-L85CC     STA $1C
-          INC $4A
-L85D0     RTS
-          ORA ($01),Y
-          ORA ($01),Y
-          ORA ($11),Y
-          ORA ($11,X)
-          ORA ($FF,X)
-L85DB     LDA $27
-          AND #$0F
-          BNE L85E6
-          LDA $07A0
-          BEQ L85E7
-L85E6     RTS
-L85E7     LDA #$19
-          STA $00
-          LDA #$3F
-          STA $01
-          LDA $4B
-          AND #$07
-          ASL A
-          TAY
-          LDA $8613,Y
-          STA $02
-          LDA $8614,Y
-          STA $03
-          INC $4B
-          JSR L6C1D
-          LDA #$1D
-          STA $00
-          LDA #$3F
-          STA $01
-          INY
-          JSR L6B35
-          JMP L6C1D
-          .BYTE $23    ;%00100011 '#'
-          STX $2D
-          STX $37
-          STX $41
-          STX $4B
-          STX $55
-          STX $5F
-          STX $69
-          STX $03
-          .BYTE $0F    ;%00001111
-          .BYTE $02    ;%00000010
-          .BYTE $13    ;%00010011
-          BRK
-          .BYTE $03    ;%00000011
-          BRK
-          .BYTE $34    ;%00110100 '4'
-          .BYTE $0F    ;%00001111
-          BRK
-          .BYTE $03    ;%00000011
-          ASL $01
-          .BYTE $23    ;%00100011 '#'
-          BRK
-          .BYTE $03    ;%00000011
-          .BYTE $0F    ;%00001111
-          .BYTE $34    ;%00110100 '4'
-          ORA #$00
-          .BYTE $03    ;%00000011
-          ASL $0F,X
-          .BYTE $23    ;%00100011 '#'
-          BRK
-          .BYTE $03    ;%00000011
-          .BYTE $0F    ;%00001111
-          BIT $1A
-          BRK
-          .BYTE $03    ;%00000011
-          .BYTE $17    ;%00010111
-          .BYTE $0F    ;%00001111
-          .BYTE $13    ;%00010011
-          BRK
-          .BYTE $03    ;%00000011
-          BRK
-          .BYTE $04    ;%00000100
-          PLP
-          BRK
-          .BYTE $03    ;%00000011
-          .BYTE $17    ;%00010111
-          ORA ($14,X)
-          BRK
-          .BYTE $03    ;%00000011
-          BPL L8662
-          PLP
-          BRK
-          .BYTE $03    ;%00000011
-          ASL $02,X
-          .BYTE $0F    ;%00001111
-          BRK
-          .BYTE $03    ;%00000011
-          BMI L866C
-          .BYTE $1A    ;%00011010
-          BRK
-          .BYTE $03    ;%00000011
-          ASL $12
-L8662     .BYTE $0F    ;%00001111
-          BRK
-          .BYTE $03    ;%00000011
-          BMI L866B
-          ORA #$00
-          .BYTE $03    ;%00000011
-          .BYTE $0F    ;%00001111
-L866B     .BYTE $12    ;%00010010
-L866C     .BYTE $14    ;%00010100
-          BRK
-          .BYTE $03    ;%00000011
-          BPL L8695
-          .BYTE $0F    ;%00001111
-          BRK
-L8673     LDY $4C
-          LDA $8681,Y
-          CMP #$FF
-          BEQ L8680
-          STA $1C
-          INC $4C
-L8680     RTS
-          ORA $0F0E
-          BPL L8687
-          .BYTE $FF    ;%11111111
-L8687     ORA ($10,X)
-          .BYTE $0F    ;%00001111
-          ASL $FF0D
-L868D     LDA $5C
-          BEQ L86BD
-          LDX #$01
-          LDA $13
-L8695     ASL A
-          BCS L869E
-          ASL A
-          BCC L86BD
-          INX
-          INX
-          INX
-L869E     LDY #$03
-          LDA $15
-          LSR A
-          BCS L86B5
-          LSR A
-          BCS L86B0
-          LDY #$00
-          LSR A
-          BCS L86B5
-          LSR A
-          BCC L86BD
-L86B0     TXA
-          JSR L6B4B
-          TAX
-L86B5     TXA
-          CLC
-          ADC $005D,Y
-          STA $005D,Y
-L86BD     RTS
-L86BE     LDA $59
-          BEQ L8706
-          LDA $55
-          DEC $56
-          BNE L86DA
-          PHA
-          LDY $57
-          LDA $873B,Y
-          STA $55
-          LDX $873C,Y
-          STX $56
-          INC $57
-          INC $57
-          PLA
-L86DA     LDX #$01
-          LDY $15
-          STY $00
-          STA $15
-          EOR $00
-          BEQ L86EE
-          LDA $00
-          AND #$BF
-          STA $00
-          EOR $15
-L86EE     AND $15
-          STA $13
-          STA $17
-          LDY #$20
-          LDA $15
-          CMP $00
-          BNE L8704
-          DEC $18,X
-          BNE L8706
-          STA $17
-          LDY #$10
-L8704     STY $18,X
-L8706     RTS
-L8707     LDA $58
-          BEQ L873A
-          LDX $57
-          LDA $15
-          CMP $873B,X
-          BEQ L8722
-          LDY $873C,X
-          BNE L872A
-          DEX
-          DEX
-          DEC $57
-          DEC $57
-          JMP L872A
-L8722     INC $873C,X
-          BNE L873A
-          DEC $873E,X
-L872A     STA $873D,X
-          INC $873E,X
-          INC $57
-          INC $57
-          BNE L873A
-          LDA #$00
-          STA $58
-L873A     RTS
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BCC L8750
-          .BYTE $0B    ;%00001011
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          LDA ($01),Y
-L8750     ROL $81,X
-          ORA $2B01,X
-          STA ($1E,X)
-          ORA ($2A,X)
-          STA ($1B,X)
-          ORA ($28,X)
-          STA ($1B,X)
-          ORA ($3A,X)
-          EOR ($06,X)
-          ORA ($05,X)
-          EOR ($06,X)
-          ORA ($05,X)
-          EOR ($05,X)
-          ORA ($06,X)
-          EOR ($06,X)
-          ORA ($07,X)
-          EOR ($03,X)
-          ORA ($06,X)
-          EOR ($06,X)
-          ORA ($06,X)
-          EOR ($04,X)
-          ORA ($06,X)
-          EOR ($05,X)
-          ORA ($06,X)
-          EOR ($05,X)
-          ORA ($06,X)
-          EOR ($06,X)
-          ORA ($1E,X)
-          STA ($17,X)
-          ORA ($25,X)
-          STA ($1D,X)
-          ORA ($25,X)
-          STA ($20,X)
-          ORA ($22,X)
-          STA ($25,X)
-          ORA ($1E,X)
-          STA ($20,X)
-          ORA ($21,X)
-          STA ($20,X)
-          ORA ($20,X)
-          STA ($1E,X)
-          ORA ($22,X)
-          STA ($29,X)
-          ORA ($32,X)
-          EOR ($08,X)
-          ORA ($05,X)
-          EOR ($06,X)
-          ORA ($05,X)
-          EOR ($07,X)
-          ORA ($04,X)
-          EOR ($06,X)
-          ORA ($05,X)
-          EOR ($06,X)
-          ORA ($2E,X)
-          EOR ($07,X)
-          ORA ($06,X)
-          EOR ($05,X)
-          ORA ($06,X)
-          EOR ($06,X)
-          ORA ($05,X)
-          EOR ($07,X)
-          ORA ($27,X)
-          STA ($21,X)
-          ORA ($23,X)
-          STA ($19,X)
-          ORA ($00,X)
-          ORA ($00,X)
-          ORA ($20,X)
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-L883B     JSR L6CD2
-          JSR L69DF
-          JSR L6A1C
-          JMP $CF1D
-          LDA #$FF
-          STA $0102
-          STA $0103
-          JSR L883B
-          LDA $39
-          BNE L8899
-          LDA $2002
-          LDA #$10
-          STA $2006
-          LDA #$00
-          STA $2006
-          STA $2F
-          TAY
-          TAX
-          LDA #$15
-          STA $2D
-          LDA #$C6
-          STA $2E
-L886F     LDA ($2D),Y
-          STA $2007
-          INC $2D
-          LDA $2D
-          BNE L887C
-          INC $2E
-L887C     INX
-          BNE L886F
-          INC $2F
-          LDA $2F
-          CMP #$08
-          BNE L886F
-L8887     LDA ($2D),Y
-          STA $2007
-          INC $2D
-          LDA $2D
-          BNE L8894
-          INC $2E
-L8894     INX
-          CPX #$20
-          BNE L8887
-L8899     LDA #$00
-          STA $39
-          LDX #$31
-          LDY #$8F
-          JSR L8E39
-          INC $36
-          JSR L8CF2
-          DEC $36
-          LDA $2002
-          LDY #$00
-L88B0     LDA $C5A0,Y
-          AND #$01
-          BEQ L8915
-          TYA
-          ASL A
-          TAX
-          JSR L8E70
-          JSR L8E90
-          LDA $8D43,X
-          STA $2006
-          LDA $8D44,X
-          CLC
-          ADC #$0F
-          STA $2006
-          LDA $C5DC,X
-          STA $2007
-          LDA $C5DD,X
-          JSR L892D
-          LDA $8D43,X
-          STA $2006
-          LDA $8D44,X
-          CLC
-          ADC #$24
-          STA $2006
-          LDA $C5D3,X
-          JSR L892D
-          LDA $C5D4,X
-          JSR L892D
-          LDA $C5D9,Y
-          BEQ L8915
-          PHA
-          LDA $8D43,X
-          STA $2006
-          LDA $8D44,X
-          CLC
-          ADC #$08
-          STA $2006
-          PLA
-          TAX
-L890D     LDA #$74
-          STA $2007
-          DEX
-          BNE L890D
-L8915     INY
-          CPY #$03
-          BNE L88B0
-          JSR L8C77
-          STY $38
-          LDA #$0D
-          STA $1C
-          LDA #$16
-          STA $1F
-L8927     JSR $CF27
-          JMP L6CE0
-L892D     PHA
-          LSR A
-          LSR A
-          LSR A
-          LSR A
-          STA $2007
-          PLA
-          AND #$0F
-          STA $2007
-          RTS
-          LDA $12
-          AND #$30
-          CMP #$10
-          BNE L8956
-          LDY $38
-          CPY #$03
-          BCC L8992
-          BEQ L8950
-          LDY #$19
-          BNE L8952
-L8950     LDY #$17
-L8952     STY $1F
-          BCS L896C
-L8956     CMP #$20
-          BNE L896C
-          LDY $38
-          INY
-          CPY #$05
-          BNE L8963
-          LDY #$00
-L8963     CPY #$03
-          BCS L896A
-          JSR L8C79
-L896A     STY $38
-L896C     LDY $38
-          LDA $898D,Y
-          STA $0200
-          LDA #$E8
-          STA $0201
-          LDA #$03
-          STA $0202
-          LDA #$18
-          STA $0203
-          LDX #$38
-          LDY #$28
-          JSR L8C95
-          JMP L8DB1
-          RTI
-          RTS
-          .BYTE $80    ;%10000000
-          LDY #$B8
-L8992     LDA $38
-          ASL A
-          ASL A
-          ASL A
-          ASL A
-          TAX
-          LDY $C5EE,X
-          BEQ L89A6
-          DEC $C5EE,X
-          LDA #$81
-          STA $C5F0,X
-L89A6     LDY #$00
-L89A8     LDA $C5E2,X
-          STA $B410,Y
-          INX
-          INY
-          CPY #$10
-          BNE L89A8
-          LDA $38
-          STA $B41F
-          TAX
-          LDA $C5A0,X
-          ORA $B41E
-          STA $B41E
-          AND #$01
-          STA $C5A0,X
-          JSR $CE35
-          JMP $CE66
-          JSR L883B
-          LDX #$42
-          LDY #$90
-          JSR L8E39
-          JSR L8D5E
-          JSR L8CF2
-          LDA #$00
-          STA $34
-          STA $35
-          LDA #$80
-          STA $33
-          JSR L8C86
-          STY $37
-          INC $1F
-          JMP L8927
-          JSR L6A1C
-          LDX #$30
-          LDY #$58
-          JSR L8C95
-          JSR L8DB1
-          LDY $37
-          LDA $12
-          AND #$30
-          CMP #$10
-          BNE L8A39
-          CPY #$03
-          BNE L8A39
-          LDA #$1B
-          STA $1F
-          INC $39
-          LDX #$00
-          LDY #$00
-L8A17     LDA #$00
-          STA $2D
-L8A1B     LDA $C5A3,Y
-          CMP #$FF
-          BEQ L8A2A
-          LDA $C5A0,X
-          ORA #$01
-          STA $C5A0,X
-L8A2A     INY
-          INC $2D
-          LDA $2D
-          CMP #$10
-          BNE L8A1B
-          INX
-          CPX #$03
-          BNE L8A17
-          RTS
-L8A39     CMP #$20
-          BNE L8A51
-          LDA #$80
-          STA $33
-          INY
-          CPY #$04
-          BNE L8A48
-          LDY #$00
-L8A48     CPY #$03
-          BEQ L8A4F
-          JSR L8C88
-L8A4F     STY $37
-L8A51     CPY #$03
-          BNE L8A58
-          JMP L8AE8
-L8A58     LDA $12
-          BPL L8AD5
-          LDX $07A0
-          TYA
-          ASL A
-          TAY
-          LDA $8B81,Y
-          JSR L8E5C
-          LDA $33
-          LSR A
-          LSR A
-          LSR A
-          ADC $8B82,Y
-          JSR L8E5C
-          LDA $34
-          ASL A
-          TAY
-          LDA $8FCF,Y
-          STA $2D
-          LDA $8FD0,Y
-          STA $2E
-          LDY $35
-          LDA ($2D),Y
-          PHA
-          PHA
-          CMP #$5B
-          BEQ L8A98
-          CMP #$5C
-          BEQ L8A98
-          LDA #$82
-          JSR L8E5C
-          LDA #$FF
-          BNE L8A9A
-L8A98     LDA #$01
-L8A9A     JSR L8E5C
-          PLA
-          JSR L8E5C
-          JSR L8E40
-          LDA $37
-          STA $2D
-          LDA $33
-          ASL A
-          LDX #$00
-L8AAD     ASL A
-          ROL $2D
-          INX
-          CPX #$04
-          BNE L8AAD
-          LDX $2D
-          PLA
-          CMP #$5B
-          BEQ L8AC5
-          CMP #$5C
-          BEQ L8AC5
-          STA $C5A3,X
-          LDA #$FF
-L8AC5     STA $C5AB,X
-          LDA $33
-          CLC
-          ADC #$08
-          CMP #$C0
-          BNE L8AD3
-          LDA #$80
-L8AD3     STA $33
-L8AD5     LDA $12
-          AND #$40
-          BEQ L8AE8
-          LDA $33
-          SEC
-          SBC #$08
-          CMP #$78
-          BNE L8AE6
-          LDA #$B8
-L8AE6     STA $33
-L8AE8     LDY $37
-          LDA $8B87,Y
-          STA $0200
-          LDA #$E8
-          STA $0201
-          LDA #$03
-          STA $0202
-          LDA #$40
-          STA $0203
-          CPY #$03
-          BEQ L8B80
-          LDA $27
-          AND #$08
-          BEQ L8B1E
-          LDA $8B87,Y
-          STA $0204
-          LDA #$EC
-          STA $0205
-          LDA #$20
-          STA $0206
-          LDA $33
-L8B1B     STA $0207
-L8B1E     LDX $34
-          LDY $35
-          LDA $16
-          AND #$0F
-          BEQ L8B64
-          LSR A
-          BCC L8B3D
-          INY
-          CPY #$15
-          BNE L8B3B
-          INX
-          CPX #$05
-          BNE L8B37
-          LDX #$00
-L8B37     STX $34
-          LDY #$00
-L8B3B     STY $35
-L8B3D     LSR A
-          BCC L8B4E
-          DEY
-          BPL L8B4C
-          DEX
-          BPL L8B48
-          LDX #$04
-L8B48     STX $34
-          LDY #$14
-L8B4C     STY $35
-L8B4E     LSR A
-          BCC L8B5A
-          INX
-          CPX #$05
-          BNE L8B58
-          LDX #$00
-L8B58     STX $34
-L8B5A     LSR A
-          BCC L8B64
-          DEX
-          BPL L8B62
-          LDX #$04
-L8B62     STX $34
-L8B64     LDA $27
-          AND #$08
-          BEQ L8B80
-          LDA $8B8B,X
-          STA $0208
-          LDA #$EC
-          STA $0209
-          LDA #$20
-          STA $020A
-          LDA $8B90,Y
-L8B7D     STA $020B
-L8B80     RTS
-          JSR $21C0
-          RTI
-          AND ($C0,X)
-          .BYTE $37    ;%00110111 '7'
-          .BYTE $57    ;%01010111 'W'
-          .BYTE $77    ;%01110111 'w'
-          .BYTE $8F    ;%10001111
-          .BYTE $A7    ;%10100111
-          .BYTE $AF    ;%10101111
-          .BYTE $B7    ;%10110111
-          .BYTE $BF    ;%10111111
-          .BYTE $C7    ;%11000111
-          JSR $3028
-          SEC
-          RTI
-          BVC L8BEF
-          RTS
-          PLA
-          BVS L8B1B
-          DEY
-          BCC L8B36
-          LDY #$B0
-          CLV
-          CPY #$C8
-          BNE L8B7D
-          JSR L883B
-          LDX #$42
-          LDY #$90
-          JSR L8E39
-          JSR L8D5E
-          LDX #$8E
-          LDY #$90
-          JSR L8E39
-          JSR L8CF2
-          LDA #$00
-          STA $37
-          INC $1F
-          JMP L8927
-          JSR L6A1C
-          LDX #$30
-          LDY #$58
-          JSR L8C95
-          JSR L8DB1
-          LDA $12
-          AND #$10
-          BEQ L8C41
-          LDY $37
-          CPY #$03
-          BNE L8BE3
-          LDY #$17
-          STY $1F
-          RTS
-L8BE3     LDA #$80
-          STA $C5A0,Y
-          TYA
-          PHA
-          PHA
-          ASL A
-          TAY
-          LDX $07A0
-          LDA $8D49,Y
-          JSR L8E5C
-          LDA $8D4A,Y
-          JSR L8C6A
-          LDA $8D49,Y
-          JSR L8E5C
-          LDA $8D4A,Y
-          SEC
-          SBC #$20
-          JSR L8C6A
-          JSR L8E40
-          PLA
-          ASL A
-          ASL A
-          ASL A
-          ASL A
-          TAY
-          LDX #$00
-L8C16     LDA #$FF
-          STA $C5A3,Y
-          LDA #$00
-          STA $C5E2,Y
-          INY
-          INX
-          CPX #$10
-          BNE L8C16
-          PLA
-          TAY
-          LDA #$00
-          STA $C5D9,Y
-          STA $C612,Y
-          TYA
-          ASL A
-          TAY
-          LDA #$00
-          STA $C5D3,Y
-          STA $C5D4,Y
-          STA $C5DC,Y
-          STA $C5DD,Y
-L8C41     LDA $12
-          AND #$20
-          BEQ L8C52
-          LDX $37
-          INX
-          CPX #$04
-          BNE L8C50
-          LDX #$00
-L8C50     STX $37
-L8C52     LDY $37
-          LDA $8B87,Y
-          STA $0200
-          LDA #$E8
-          STA $0201
-          LDA #$03
-          STA $0202
-          LDA #$40
-          STA $0203
-          RTS
-L8C6A     JSR L8E5C
-          LDA #$48
-          JSR L8E5C
-          LDA #$FF
-          JMP L8E5C
-L8C77     LDY #$00
-L8C79     LDA $C5A0,Y
-          AND #$01
-          BNE L8C85
-          INY
-          CPY #$03
-          BNE L8C79
-L8C85     RTS
-L8C86     LDY #$00
-L8C88     LDA $C5A0,Y
-          AND #$01
-          BEQ L8C94
-          INY
-          CPY #$03
-          BNE L8C88
-L8C94     RTS
-L8C95     STX $2D
-          STY $2E
-          LDX #$80
-          STX $2F
-L8C9D     LDY #$00
-L8C9F     LDA $8CD7,Y
-          CLC
-          ADC $2D
-          STA $0200,X
-          INX
-          INY
-          LDA $8CD7,Y
-          STA $0200,X
-          INY
-          INX
-          LDA #$00
-          STA $0200,X
-          INX
-          LDA $8CD7,Y
-          CLC
-          ADC $2E
-          STA $0200,X
-          INY
-          INX
-          CPY #$1B
-          BNE L8C9F
-          LDA $2D
-          CLC
-          ADC #$20
-          STA $2D
-          INC $2F
-          LDA $2F
-          CMP #$83
-          BNE L8C9D
-          RTS
-          BRK
-L8CD8     CMP #$00
-          BRK
-          DEX
-L8CDC     PHP
-          BRK
-          .BYTE $CB    ;%11001011
-          BPL L8CE9
-          CMP $0800,Y
-          .BYTE $DA    ;%11011010
-          PHP
-          PHP
-          .BYTE $DB    ;%11011011
-          BPL L8CFA
-          SBC #$00
-          BPL L8CD8
-          PHP
-          BPL L8CDC
-          BPL L8CA0
-          .BYTE $02    ;%00000010
-          JSR $00A9
-          TAY
-          STA $2D
-L8CFA     ASL A
-          PHA
-          TAX
-          LDA $36
-          BEQ L8D0D
-          LDA $8D43,X
-          STA $2E
-          LDA $8D44,X
-          STA $2F
-          BNE L8D17
-L8D0D     LDA $8D49,X
-          STA $2E
-          LDA $8D4A,X
-          STA $2F
-L8D17     LDA $2E
-          STA $2006
-          LDA $2F
-          STA $2006
-          JSR L8D4F
-          PLA
-          TAX
-          LDA $2F
-          SEC
-          SBC #$20
-          PHA
-          LDA $2E
-          SBC #$00
-          STA $2006
-          PLA
-          STA $2006
-          JSR L8D4F
-          INC $2D
-          LDA $2D
-          CMP #$03
-          BNE L8CFA
-          RTS
-          AND ($0A,X)
-          AND ($8A,X)
-          .BYTE $22    ;%00100010 '"'
-          ASL A
-          JSR $21F0
-          BVS L8D6F
-          BEQ L8CF2
-          BRK
-L8D51     LDA $C5A3,Y
-          STA $2007
-          INY
-          INX
-          CPX #$08
-          BNE L8D51
-          RTS
-L8D5E     LDA $2002
-          LDY #$00
-          TYA
-          STA $2D
-          STA $2E
-L8D68     ASL A
-          TAX
-          LDA $8DA7,X
-          STA $2006
-          LDA $8DA8,X
-          STA $2006
-L8D76     LDX #$00
-L8D78     LDA $8FD9,Y
-          STA $2007
-          INY
-          INX
-          CPX #$05
-          BNE L8D78
-          INC $2D
-          LDA $2D
-          CMP #$04
-          BEQ L8D93
-          LDA #$FF
-          STA $2007
-          BNE L8D76
-L8D93     LDA $8FD9,Y
-          STA $2007
-          INY
-          LDA #$00
-          STA $2D
-          INC $2E
-          LDA $2E
-          CMP #$05
-          BNE L8D68
-          RTS
-          .BYTE $22    ;%00100010 '"'
-          LDY $22
-          CPY $22
-          CPX $23
-          .BYTE $04    ;%00000100
-          .BYTE $23    ;%00100011 '#'
-          BIT $A5
-          .BYTE $1F    ;%00011111
-          CMP #$16
-          BNE L8DBD
-          LDY #$40
-          STY $30
-          BNE L8DC3
-L8DBD     LDY #$70
-          LDA #$00
-          STA $30
-L8DC3     STY $2F
-          LDY #$00
-          STY $2E
-          LDX #$00
-L8DCB     LDA $C5A0,Y
-          AND #$01
-          BEQ L8E13
-          LDA $C612,Y
-          STA $31
-          LDY #$00
-          STY $2D
-L8DDB     LDY $2E
-          LDA $8E33,Y
-          LDY $30
-          BEQ L8DE7
-          CLC
-          ADC #$08
-L8DE7     LDY $2D
-          CLC
-          ADC $8E36,Y
-          STA $0220,X
-          INX
-          LDA $31
-          ASL A
-          ASL A
-          ADC $2D
-          TAY
-          LDA $8E1C,Y
-          STA $0220,X
-          INX
-          LDA #$02
-          STA $0220,X
-          INX
-          LDA $2F
-          STA $0220,X
-          INX
-          INC $2D
-          LDY $2D
-          CPY #$03
-          BNE L8DDB
-L8E13     INC $2E
-          LDY $2E
-          CPY #$03
-          BNE L8DCB
-          RTS
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CPY #$D0
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          CMP ($D1,X)
-          .BYTE $FF    ;%11111111
-          .BYTE $C3    ;%11000011
-          .BYTE $C2    ;%11000010
-          .BYTE $D2    ;%11010010
-          .BYTE $FF    ;%11111111
-          CMP $C4
-          .BYTE $D4    ;%11010100
-          .BYTE $FF    ;%11111111
-          .BYTE $C7    ;%11000111
-          DEC $D6
-          BMI L8E85
-          BVS L8E37
-L8E37     PHP
-          BPL L8DC0
-          BRK
-          STY $01
-          JMP L6B9F
-L8E40     STX $07A0
-          LDA #$00
-          STA $07A1,X
-          LDA #$01
-          STA $1B
-          RTS
-          STA $32
-          AND #$F0
-          LSR A
-          LSR A
-          LSR A
-          LSR A
-          JSR L8E5C
-          LDA $32
-          AND #$0F
-L8E5C     STA $07A1,X
-          INX
-          TXA
-          CMP #$55
-          BCC L8E6F
-          LDX $07A0
-L8E68     LDA #$00
-          STA $07A1,X
-          BEQ L8E68
-L8E6F     RTS
-L8E70     TYA
-          PHA
-          JSR L6B58
-          TAY
-          LDA $C5EB,Y
-          STA $0B
-          LDA $C5EA,Y
-          STA $0A
-          JSR L8EBB
-          LDA $06
-L8E85     STA $C5DD,X
-          LDA $07
-          STA $C5DC,X
-          PLA
-          TAY
-          RTS
-L8E90     TYA
-          PHA
-          JSR L6B58
-          TAY
-          LDA $C5ED,Y
-          STA $0B
-          LDA $C5EC,Y
-          STA $0A
-          JSR L8EBB
-          LDA $06
-          STA $C5D4,X
-          LDA $07
-          STA $C5D3,X
-          LDA $C5E2,Y
-          PHA
-          TXA
-          LSR A
-          TAY
-          PLA
-          STA $C5D9,Y
-          PLA
-          TAY
-          RTS
-L8EBB     LDA #$FF
-          STA $01
-          STA $02
-          STA $03
-          SEC
-L8EC4     LDA $0A
-          SBC #$E8
-          STA $0A
-          LDA $0B
-          SBC #$03
-          STA $0B
-          INC $03
-          BCS L8EC4
-          LDA $0A
-          ADC #$E8
-          STA $0A
-          LDA $0B
-          ADC #$03
-          STA $0B
-          LDA $0A
-L8EE2     SEC
-L8EE3     SBC #$64
-          INC $02
-          BCS L8EE3
-          DEC $0B
-          BPL L8EE2
-          ADC #$64
-          SEC
-L8EF0     SBC #$0A
-          INC $01
-          BCS L8EF0
-          ADC #$0A
-          STA $06
-          LDA $01
-          JSR L6B58
-          ORA $06
-          STA $06
-          LDA $03
-          JSR L6B58
-          ORA $02
-          STA $07
-          RTS
-          .BYTE $3F    ;%00111111 '?'
-          BRK
-          JSR $2002
-          .BYTE $1B    ;%00011011
-          .BYTE $3A    ;%00111010 ':'
-          .BYTE $02    ;%00000010
-          JSR $0121
-          .BYTE $02    ;%00000010
-          BIT $2730
-          .BYTE $02    ;%00000010
-          ROL $31
-          .BYTE $17    ;%00010111
-          .BYTE $02    ;%00000010
-          ASL $19,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $02    ;%00000010
-          ASL $20,X
-          .BYTE $27    ;%00100111 '''
-          .BYTE $02    ;%00000010
-          ASL $20,X
-          ORA ($02),Y
-          ORA ($20,X)
-          AND ($00,X)
-          JSR $0175
-          .BYTE $5B    ;%01011011 '['
-          JSR $1785
-          .BYTE $6B    ;%01101011 'k'
-          .BYTE $FF    ;%11111111
-          .BYTE $3B    ;%00111011 ';'
-          .BYTE $FF    ;%11111111
-          .BYTE $57    ;%01010111 'W'
-          .BYTE $FF    ;%11111111
-          AND $FF,X
-          EOR ($FF,X)
-          AND $40FF,Y
-          .BYTE $FF    ;%11111111
-          AND $FF,X
-          AND $38FF,X
-          .BYTE $FF    ;%11111111
-          .BYTE $2F    ;%00101111 '/'
-          .BYTE $FF    ;%11111111
-          .BYTE $6B    ;%01101011 'k'
-          JSR $1CC2
-          BVS L8FC6
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $17    ;%00010111
-          ASL A
-          ASL $0E,X
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $72    ;%01110010 'r'
-          ASL $0E17
-          .BYTE $1B    ;%00011011
-          BPL L8F8A
-          .BYTE $72    ;%01110010 'r'
-          ORA $220A
-          .BYTE $72    ;%01110010 'r'
-          ADC ($20),Y
-          .BYTE $E2    ;%11100010
-          .BYTE $D2    ;%11010010
-          .BYTE $73    ;%01110011 's'
-          JSR $D2FD
-          .BYTE $73    ;%01110011 's'
-          AND ($12,X)
-          .BYTE $89    ;%10001001
-          .BYTE $6B    ;%01101011 'k'
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $6B    ;%01101011 'k'
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $6B    ;%01101011 'k'
-          AND ($18,X)
-          .BYTE $89    ;%10001001
-          .BYTE $6B    ;%01101011 'k'
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $6B    ;%01101011 'k'
-L8F8A     .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $6B    ;%01101011 'k'
-          .BYTE $22    ;%00100010 '"'
-          STA $08
-          .BYTE $42    ;%01000010 'B'
-          JMP $FF31
-          EOR ($30,X)
-          CLI
-          AND $22,X
-          SBC $09
-          .BYTE $14    ;%00010100
-          .BYTE $12    ;%00010010
-          ORA $15,X
-          .BYTE $FF    ;%11111111
-          ASL $18,X
-          ORA $230E
-          .BYTE $22    ;%00100010 '"'
-          ORA ($80,X)
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $5A    ;%01011010 'Z'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $23    ;%00100011 '#'
-          AND $8101,X
-          .BYTE $23    ;%00100011 '#'
-          CPY #$54
-          BRK
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $D4    ;%11010100
-          .BYTE $12    ;%00010010
-          .BYTE $04    ;%00000100
-          ORA $00
-          BRK
-          BRK
-          BRK
-          BRK
-          BRK
-          .BYTE $04    ;%00000100
-          ORA $00
-          BRK
-          BRK
-          BRK
-L8FC6     BRK
-          BRK
-          .BYTE $04    ;%00000100
-          ORA $23
-          INC $5A
-          BRK
-          BRK
-          CMP $EE8F,Y
-          .BYTE $8F    ;%10001111
-          .BYTE $03    ;%00000011
-          BCC L8FEE
-          BCC L9005
-          BCC L9008
-          .BYTE $2F    ;%00101111 '/'
-          BMI L900E
-          .BYTE $32    ;%00110010 '2'
-          .BYTE $47    ;%01000111 'G'
-          PHA
-          EOR #$4A
-          .BYTE $4B    ;%01001011 'K'
-          AND $26
-          .BYTE $27    ;%00100111 '''
-          PLP
-          AND #$0A
-          .BYTE $0B    ;%00001011
-          .BYTE $0C    ;%00001100
-          ORA $0F0E
-L8FEE     .BYTE $33    ;%00110011 '3'
-          .BYTE $34    ;%00110100 '4'
-          AND $36,X
-          .BYTE $37    ;%00110111 '7'
-          JMP $4E4D
-          .BYTE $4F    ;%01001111 'O'
-          BVC L9023
-          .BYTE $2B    ;%00101011 '+'
-          BIT $2DFF
-          BPL L9010
-          .BYTE $12    ;%00010010
-          .BYTE $13    ;%00010011
-          .BYTE $14    ;%00010100
-          ORA $38,X
-          AND $3B3A,Y
-          .BYTE $3C    ;%00111100 '<'
-L9008     EOR ($FF),Y
-          .BYTE $52    ;%01010010 'R'
-          .BYTE $FF    ;%11111111
-          .BYTE $53    ;%01010011 'S'
-          .BYTE $5B    ;%01011011 '['
-L900E     .BYTE $5C    ;%01011100 '\'
-          .BYTE $63    ;%01100011 'c'
-L9010     .BYTE $62    ;%01100010 'b'
-          PLA
-          ASL $17,X
-          CLC
-          ORA $1B1A,Y
-          AND $3F3E,X
-          RTI
-          EOR ($54,X)
-          EOR $56,X
-          .BYTE $57    ;%01010111 'W'
-          CLI
-          BRK
-L9023     ORA ($02,X)
-          .BYTE $03    ;%00000011
-          .BYTE $04    ;%00000100
-          .BYTE $1C    ;%00011100
-          ORA $1F1E,X
-          JSR $4221
-          .BYTE $43    ;%01000011 'C'
-          .BYTE $44    ;%01000100 'D'
-          EOR $46
-          EOR $FFFF,Y
-          BIT $5A
-          ORA $06
-          .BYTE $07    ;%00000111
-          PHP
-          ORA #$22
-          .BYTE $23    ;%00100011 '#'
-          ADC ($67,X)
-          ADC #$66
-          .BYTE $23    ;%00100011 '#'
-          CPY #$60
-          BRK
-          .BYTE $23    ;%00100011 '#'
-          CPX #$60
-          BRK
-          JSR $4780
-          .BYTE $72    ;%01110010 'r'
-          JSR $0D89
-          .BYTE $42    ;%01000010 'B'
-          .BYTE $FF    ;%11111111
-          JMP $31FF
-          .BYTE $FF    ;%11111111
-          EOR ($FF,X)
-          BMI L905A
-          CLI
-          .BYTE $FF    ;%11111111
-          AND $20,X
-          STA $7247,Y
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $4B    ;%01001011 'K'
-          PHP
-          EOR ($30,X)
-          CLI
-          AND $FF,X
-          .BYTE $32    ;%00110010 '2'
-          EOR $2256,Y
-          .BYTE $82    ;%10000010
-          ORA ($70,X)
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $83    ;%10000011
-          .BYTE $5A    ;%01011010 'Z'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $22    ;%00100010 '"'
-          STA $7101,X
-          .BYTE $22    ;%00100010 '"'
-          LDX #$C5
-          .BYTE $73    ;%01110011 's'
-          .BYTE $22    ;%00100010 '"'
-          LDA $73C5,X
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $42    ;%01000010 'B'
-          ORA ($80,X)
-          .BYTE $23    ;%00100011 '#'
-          .BYTE $43    ;%01000011 'C'
-          .BYTE $5A    ;%01011010 'Z'
-          .BYTE $72    ;%01110010 'r'
-          .BYTE $23    ;%00100011 '#'
-          EOR $8101,X
-          BRK
-          JSR $1287
-          .BYTE $14    ;%00010100
-          .BYTE $FF    ;%11111111
-          .BYTE $12    ;%00010010
-          .BYTE $FF    ;%11111111
-          ORA $FF,X
-          ORA $FF,X
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          .BYTE $FF    ;%11111111
-          ASL $FF,X
-          CLC
-          .BYTE $FF    ;%11111111
-          ORA $0EFF
-          .BYTE $22    ;%00100010 '"'
-          .BYTE $4B    ;%01001011 'K'
-          .BYTE $04    ;%00000100
-          .BYTE $14    ;%00010100
-          .BYTE $12    ;%00010010
-          ORA $15,X
-          BRK
-          ROR $00
-L90AD     STA $0066,Y
-          RTS
-          JSR L8EDB
-          EOR #$01
-          TAY
-          LDA #$00
-          BEQ L90AD
-          LDX #$B0
-L90BD     LDA $0300,X
-          BEQ L90CA
-          LDA $030B,X
-          BNE L90CA
-          STA $0300,X
-L90CA     JSR $A0E1
-          BMI L90BD
-          RTS
-          LDA $0300,X
-          CMP #$05
-          BCC L90E1
-          TYA
-          EOR $030C,X
-          LSR A
-          BCS L90E1
-          STA $0300,X
-L90E1     RTS
-          TYA
-          CMP $074B,X
-          BNE L90ED
-          LDA #$FF
-          STA $0748,X
-L90ED     RTS
-          LDA $B590
-          STA $00
-          LDA $B591
-          STA $01
-          LDY #$00
-          LDA ($00),Y
-          CMP $49
-          BEQ $9114
-          .END
 
-;auto-generated symbols and labels
- L6800      $6800
- L6804      $6804
- L6822      $6822
- L6874      $6874
- L6951      $6951
- L6960      $6960
- L6966      $6966
- L6988      $6988
- L6999      $6999
- L7018      $7018
- L7019      $7019
- L7041      $7041
- L7043      $7043
- L7051      $7051
- L7058      $7058
- L7095      $7095
- L7102      $7102
- L7105      $7105
- L7118      $7118
- L7130      $7130
- L7133      $7133
- L7138      $7138
- L7142      $7142
- L7168      $7168
- L7343      $7343
- L7356      $7356
- L7409      $7409
- L7456      $7456
- L7478      $7478
- L7487      $7487
- L7495      $7495
- L7512      $7512
- L7526      $7526
- L7866      $7866
- L8035      $8035
- L8059      $8059
- L8073      $8073
- L8127      $8127
- L8183      $8183
- L8185      $8185
- L8214      $8214
- L8228      $8228
- L8249      $8249
- L8252      $8252
- L8253      $8253
- L8275      $8275
- L8282      $8282
- L8327      $8327
- L8365      $8365
- L8369      $8369
- L8381      $8381
- L8387      $8387
- L8397      $8397
- L8407      $8407
- L8419      $8419
- L8425      $8425
- L8435      $8435
- L8537      $8537
- L8662      $8662
- L8673      $8673
- L8680      $8680
- L8687      $8687
- L8695      $8695
- L8704      $8704
- L8706      $8706
- L8707      $8707
- L8722      $8722
- L8750      $8750
- L8887      $8887
- L8894      $8894
- L8899      $8899
- L8915      $8915
- L8927      $8927
- L8950      $8950
- L8952      $8952
- L8956      $8956
- L8963      $8963
- L8992      $8992
- L9005      $9005
- L9008      $9008
- L9010      $9010
- L9023      $9023
- L683A      $683A
- L684F      $684F
- L69DF      $69DF
- L6A1C      $6A1C
- L68A7      $68A7
- L6AE4      $6AE4
- L695F      $695F
- L688A      $688A
- L68B7      $68B7
- L68A8      $68A8
- L68CB      $68CB
- L68E5      $68E5
- L694E      $694E
- L6A45      $6A45
- L6B5D      $6B5D
- L6CF1      $6CF1
- L6A71      $6A71
- L6B1C      $6B1C
- L691E      $691E
- L693A      $693A
- L6A31      $6A31
- L868D      $868D
- L693D      $693D
- L696D      $696D
- L6AFA      $6AFA
- L86BE      $86BE
- L69E5      $69E5
- L69E7      $69E7
- L69E6      $69E6
- L69E8      $69E8
- L6A0E      $6A0E
- L6A28      $6A28
- L84D0      $84D0
- L6A3D      $6A3D
- L6A56      $6A56
- L6A5B      $6A5B
- L6A5A      $6A5A
- L85DB      $85DB
- L6B9F      $6B9F
- L6A78      $6A78
- L6ACA      $6ACA
- L6A83      $6A83
- L6A8E      $6A8E
- L6AB1      $6AB1
- L6AC7      $6AC7
- L6AC9      $6AC9
- L6AD5      $6AD5
- L6AF0      $6AF0
- L6AF6      $6AF6
- L6B34      $6B34
- L6B3F      $6B3F
- L6B76      $6B76
- L6BAB      $6BAB
- L6B90      $6B90
- L6B93      $6B93
- L6B2A      $6B2A
- L6B77      $6B77
- L6BB4      $6BB4
- L6B52      $6B52
- L6BFE      $6BFE
- L6BE1      $6BE1
- L6BD0      $6BD0
- L6C09      $6C09
- L6C10      $6C10
- L6C5B      $6C5B
- L6C65      $6C65
- L6C3A      $6C3A
- L6C3F      $6C3F
- L6C4E      $6C4E
- L6C24      $6C24
- L6C01      $6C01
- L6CB6      $6CB6
- L6C7E      $6C7E
- L6C8F      $6C8F
- L6C8B      $6C8B
- L6CA7      $6CA7
- L6CB3      $6CB3
- L6CCD      $6CCD
- L6CC8      $6CC8
- L6CDB      $6CDB
- L6CD6      $6CD6
- L6D57      $6D57
- L6D45      $6D45
- L6D37      $6D37
- L84EE      $84EE
- L6CD2      $6CD2
- L6A6A      $6A6A
- L6CE0      $6CE0
- L6DB2      $6DB2
- L6B35      $6B35
- L6C1D      $6C1D
- L6DDE      $6DDE
- L85A0      $85A0
- L6DF4      $6DF4
- L6E15      $6E15
- L6E12      $6E12
- L81A7      $81A7
- L6E34      $6E34
- L6E31      $6E31
- L826F      $826F
- L6E3C      $6E3C
- L85BB      $85BB
- L6E83      $6E83
- L6E7D      $6E7D
- L6E5E      $6E5E
- L6E80      $6E80
- L82D6      $82D6
- L834E      $834E
- L6E8E      $6E8E
- L6EE2      $6EE2
- L6EF1      $6EF1
- L6F25      $6F25
- L6F17      $6F17
- L6BBB      $6BBB
- L6F45      $6F45
- L6F42      $6F42
- L6F65      $6F65
- L6F62      $6F62
- L6F74      $6F74
- L6FB7      $6FB7
- L6F9E      $6F9E
- L6FD0      $6FD0
- L6FDE      $6FDE
- L70B0      $70B0
- L707E      $707E
- L70A9      $70A9
- L70A4      $70A4
- L70BA      $70BA
- L70C2      $70C2
- L70DE      $70DE
- L70E0      $70E0
- L70D9      $70D9
- L70E5      $70E5
- L70F1      $70F1
- L70F4      $70F4
- L70FC      $70FC
- L6B59      $6B59
- L712C      $712C
- L72E3      $72E3
- L732C      $732C
- L734B      $734B
- L737A      $737A
- L73A1      $73A1
- L73A9      $73A9
- L73CC      $73CC
- L73DC      $73DC
- L73DA      $73DA
- L73E9      $73E9
- L73F7      $73F7
- L741C      $741C
- L742E      $742E
- L743E      $743E
- L746A      $746A
- L74A7      $74A7
- L74BA      $74BA
- L74CC      $74CC
- L74DC      $74DC
- L74D9      $74D9
- L74EA      $74EA
- L74F7      $74F7
- L753A      $753A
- L754E      $754E
- L75A8      $75A8
- L75C9      $75C9
- L75AC      $75AC
- L75BD      $75BD
- L75FE      $75FE
- L6A6B      $6A6B
- L797A      $797A
- L76E6      $76E6
- L79EC      $79EC
- L79FC      $79FC
- L7A82      $7A82
- L7A84      $7A84
- L7A92      $7A92
- L7A94      $7A94
- L7AA0      $7AA0
- L7AA3      $7AA3
- L7AAA      $7AAA
- L7AE3      $7AE3
- L7AEC      $7AEC
- L7AEB      $7AEB
- L7AF5      $7AF5
- L7B33      $7B33
- L6B4B      $6B4B
- L7B1F      $7B1F
- L7B26      $7B26
- L7B25      $7B25
- L7B2F      $7B2F
- L7B87      $7B87
- L7EDF      $7EDF
- L7E37      $7E37
- L7F3B      $7F3B
- L6E6D      $6E6D
- L7FCD      $7FCD
- L7F7D      $7F7D
- L7FF3      $7FF3
- L7FFD      $7FFD
- L808F      $808F
- L81AE      $81AE
- L81B1      $81B1
- L81B9      $81B9
- L81F2      $81F2
- L81F1      $81F1
- L81EE      $81EE
- L6B53      $6B53
- L820D      $820D
- L823F      $823F
- L80E0      $80E0
- L830E      $830E
- L833B      $833B
- L834D      $834D
- L834A      $834A
- L835E      $835E
- L83CD      $83CD
- L83DA      $83DA
- L83BA      $83BA
- L83D9      $83D9
- L83EC      $83EC
- L83E0      $83E0
- L841D      $841D
- L847B      $847B
- L84EB      $84EB
- L84ED      $84ED
- L84DB      $84DB
- L84F0      $84F0
- L84C2      $84C2
- L85AD      $85AD
- L85CC      $85CC
- L85D0      $85D0
- L85E6      $85E6
- L85E7      $85E7
- L866C      $866C
- L866B      $866B
- L86BD      $86BD
- L869E      $869E
- L86B5      $86B5
- L86B0      $86B0
- L86DA      $86DA
- L86EE      $86EE
- L873A      $873A
- L872A      $872A
- L883B      $883B
- L887C      $887C
- L886F      $886F
- L8E39      $8E39
- L8CF2      $8CF2
- L8E70      $8E70
- L8E90      $8E90
- L892D      $892D
- L890D      $890D
- L88B0      $88B0
- L8C77      $8C77
- L896C      $896C
- L896A      $896A
- L8C79      $8C79
- L8C95      $8C95
- L8DB1      $8DB1
- L89A6      $89A6
- L89A8      $89A8
- L8D5E      $8D5E
- L8C86      $8C86
- L8A39      $8A39
- L8A2A      $8A2A
- L8A1B      $8A1B
- L8A17      $8A17
- L8A51      $8A51
- L8A48      $8A48
- L8A4F      $8A4F
- L8C88      $8C88
- L8A58      $8A58
- L8AE8      $8AE8
- L8AD5      $8AD5
- L8E5C      $8E5C
- L8A98      $8A98
- L8A9A      $8A9A
- L8E40      $8E40
- L8AAD      $8AAD
- L8AC5      $8AC5
- L8AD3      $8AD3
- L8AE6      $8AE6
- L8B80      $8B80
- L8B1E      $8B1E
- L8B64      $8B64
- L8B3D      $8B3D
- L8B3B      $8B3B
- L8B37      $8B37
- L8B4E      $8B4E
- L8B4C      $8B4C
- L8B48      $8B48
- L8B5A      $8B5A
- L8B58      $8B58
- L8B62      $8B62
- L8BEF      $8BEF
- L8B1B      $8B1B
- L8B36      $8B36
- L8B7D      $8B7D
- L8C41      $8C41
- L8BE3      $8BE3
- L8C6A      $8C6A
- L8C16      $8C16
- L8C52      $8C52
- L8C50      $8C50
- L8C85      $8C85
- L8C94      $8C94
- L8C9F      $8C9F
- L8C9D      $8C9D
- L8CE9      $8CE9
- L8CFA      $8CFA
- L8CD8      $8CD8
- L8CDC      $8CDC
- L8CA0      $8CA0
- L8D0D      $8D0D
- L8D17      $8D17
- L8D4F      $8D4F
- L8D6F      $8D6F
- L8D51      $8D51
- L8D78      $8D78
- L8D93      $8D93
- L8D76      $8D76
- L8D68      $8D68
- L8DBD      $8DBD
- L8DC3      $8DC3
- L8E13      $8E13
- L8DE7      $8DE7
- L8DDB      $8DDB
- L8DCB      $8DCB
- L8E85      $8E85
- L8E37      $8E37
- L8DC0      $8DC0
- L8E6F      $8E6F
- L8E68      $8E68
- L6B58      $6B58
- L8EBB      $8EBB
- L8EC4      $8EC4
- L8EE3      $8EE3
- L8EE2      $8EE2
- L8EF0      $8EF0
- L8FC6      $8FC6
- L8F8A      $8F8A
- L8FEE      $8FEE
- L900E      $900E
- L905A      $905A
- L8EDB      $8EDB
- L90AD      $90AD
- L90CA      $90CA
- L90BD      $90BD
- L90E1      $90E1
- L90ED      $90ED
+L6800:
+    txa
+    pha
+    ldx #$0B
+L6804:
+    asl $28
+    rol $29
+    rol a
+    rol a
+    eor $28
+    rol a
+    eor $28
+    lsr a
+    lsr a
+    eor #$FF
+    and #$01
+    ora $28
+    sta $28
+    dex
+    bne L6804
+    pla
+    tax
+    lda $28
+    rts
+    cld
+L6822:
+    lda $2002
+    bpl L6822
+    ldx #$00
+    stx $2000
+    stx $2001
+    dex
+    txs
+    ldy #$07
+    sty $01
+    ldy #$00
+    sty $00
+    tya
+L683A:
+    sta ($00),y
+    iny
+    bne L683A
+    dec $01
+    bmi L684F
+    ldx $01
+    cpx #$01
+    bne L683A
+    iny
+    iny
+    iny
+    iny
+    bne L683A
+L684F:
+    jsr L69DF
+    jsr L6A1C
+    ldy #$00
+    sty $2005
+    sty $2005
+    iny
+    sty $1D
+    lda #$90
+    sta $2000
+    sta $FF
+    lda #$02
+    sta $FE
+    lda #$47
+    sta $4025
+    sta $FB
+    bne L68A7
+L6874:
+    jsr L6AE4
+    jsr L695F
+    inc $27
+    lda #$00
+    sta $1A
+    ldx #$08
+    lda $27
+    and #$01
+    beq L688A
+    ldx #$10
+L688A:
+    lda $0183
+    sta $0184
+    lda $0182
+    sta $0183
+    lda $0181
+    sta $0182
+    lda $0180
+    sta $0181
+    lda #$00
+    sta $0180
+L68A7:
+    tay
+L68A8:
+    lda $1A
+    bne L68B7
+    iny
+    cpy #$09
+    bne L68A8
+    inc $0180
+    jmp L68A7
+L68B7:
+    jsr L6800
+    jmp L6874
+    cli
+    php
+    pha
+    txa
+    pha
+    tya
+    pha
+    lda $1A
+    beq L68CB
+    sta $02FC
+L68CB:
+    lda $1F
+    cmp #$15
+    bcs L68E5
+    lda $5D
+    sta $0200
+    lda $5E
+    sta $0201
+    lda $5F
+    sta $0202
+    lda $60
+    sta $0203
+L68E5:
+    lda #$00
+    sta $2003
+    lda #$02
+    sta $4014
+    lda $1A
+    bne L694E
+    jsr L6A45
+    jsr L6B5D
+    jsr L6CF1
+    jsr L6A71
+    lda $2002
+    lda $FF
+    and #$01
+    asl a
+    asl a
+    clc
+    adc #$20
+    sta $2006
+    lda #$00
+    sta $2006
+    lda $3F
+    sta $FD
+    jsr L6B1C
+    lda $43
+    beq L694E
+L691E:
+    lda $2002
+    and #$40
+    bne L691E
+    lda $1F
+    cmp #$09
+    bcc L693A
+    jsr L6A31
+    lda #$04
+    sta $040E
+    jsr L868D
+    lda $5C
+    bne L693A
+L693A:
+    jsr $DFF3
+L693D:
+    lda $2002
+    and #$40
+    beq L693D
+    lda $40
+    sta $FD
+    jsr L6B1C
+    jmp L6951
+L694E:
+    jsr $DFF3
+L6951:
+    lda $4017
+    ldy #$01
+    sty $1A
+    pla
+    tay
+    pla
+    tax
+    pla
+    plp
+    rti
+L695F:
+    lda $1D
+    beq L6966
+    jmp L696D
+L6966:
+    lda $1E
+    jsr L6AFA
+    .byte $00, $6D
+    
+L696D:
+    ldy $5B
+    beq L6988
+    dey
+    sty $5B
+    sty $59
+    sty $43
+    sty $3F
+    sty $40
+    lda $FF
+    and #$FC
+    sta $FF
+    lda #$1B
+    sta $1F
+    bne L6999
+L6988:
+    jsr L8707
+    jsr L86BE
+    lda $1F
+    cmp #$0A
+    bcs L6999
+    jsr L6A31
+    lda $1F
+L6999:
+    jsr L6AFA
+    ora ($6D,x)
+    adc #$6D
+    sty $DF6D
+    adc $6DF5
+    ldy $006D.w,x
+    ror $6E16
+    and $6E,x
+    sty $6E
+    .byte $DC
+    adc #$DC
+    adc #$E3
+    ror $6F26
+    lsr $6F
+    ror $6F
+    dec $69,x
+    cmp ($6F),y
+    .byte $1C, $70, $22, $70, $22, $70, $99
+    dey
+    .byte $3C
+    .byte $89
+    dec $F289
+    .byte $89
+    lda $8B
+    cmp $8B
+    .byte $47
+    dey
+    ora ($6D,x)
+    lda #$00
+    sta $53
+    sta $51
+    inc $1F
+    rts
+L69DF:
+    jsr L69E6
+    lda #$02
+    bne L69E8
+L69E6:
+    lda #$01
+L69E8:
+    sta $01
+    lda #$FF
+    sta $00
+    ldx $2002
+    lda $FF
+    and #$FB
+    sta $FF
+    sta $2000
+    ldx $01
+    dex
+    lda L6A18,x
+    sta $2006
+    lda #$00
+    sta $2006
+    ldx #$04
+    ldy #$00
+    lda $00
+L6A0E:
+    sta $2007
+    dey
+    bne L6A0E
+    dex
+    bne L6A0E
+    rts
 
+L6A18:
+    .byte $20, $24, $28, $2C
+
+L6A1C:
+    ldy #$02
+    sty $01
+    ldy #$00
+    sty $00
+    ldy #$04
+    lda #$F0
+L6A28:
+    sta ($00),y
+    iny
+    bne L6A28
+    jmp L84D0
+    rts
+L6A31:
+    ldy #$02
+    sty $01
+    ldy #$00
+    sty $00
+    ldy #$5F
+    lda #$F4
+L6A3D:
+    sta ($00),y
+    dey
+    bpl L6A3D
+    jmp L84D0
+L6A45:
+    lda $52
+    bne L6A56
+    ldy $1C
+    bne L6A5B
+    lda $1F
+    cmp #$15
+    bcs L6A5A
+    jmp L85DB
+L6A56:
+    lda #$00
+    sta $52
+L6A5A:
+    rts
+L6A5B:
+    dey
+    tya
+    asl a
+    tay
+    ldx $77EC,y
+    lda $77ED,y
+    tay
+    lda #$00
+    sta $1C
+L6A6A:
+    stx $00
+    sty $01
+    jmp L6B9F
+L6A71:
+    lda $59
+    beq L6A78
+    jmp L6ACA
+L6A78:
+    ldx #$00
+    stx $01
+    jsr L6A83
+    ldx $2B
+    inc $01
+L6A83:
+    ldy #$01
+    sty $4016
+    dey
+    sty $4016
+    ldy #$08
+L6A8E:
+    pha
+    lda $4016,x
+    sta $00
+    lsr a
+    ora $00
+    lsr a
+    pla
+    rol a
+    dey
+    bne L6A8E
+    ldx $01
+    ldy $14,x
+    sty $00
+    sta $14,x
+    eor $00
+    beq L6AB1
+    lda $00
+    and #$BF
+    sta $00
+    eor $14,x
+L6AB1:
+    and $14,x
+    sta $12,x
+    sta $16,x
+    ldy #$20
+    lda $14,x
+    cmp $00
+    bne L6AC7
+    dec $18,x
+    bne L6AC9
+    sta $16,x
+    ldy #$10
+L6AC7:
+    sty $18,x
+L6AC9:
+    rts
+L6ACA:
+    ldy #$01
+    sty $4016
+    dey
+    sty $4016
+    ldy #$04
+L6AD5:
+    lda $4016
+    dey
+    bne L6AD5
+    and #$03
+    beq L6AC9
+    iny
+    sty $5B
+    bne L6AC9
+L6AE4:
+    ldx #$01
+    dec $23
+    bpl L6AF0
+    lda #$09
+    sta $23
+    ldx #$02
+L6AF0:
+    lda $24,x
+    beq L6AF6
+    dec $24,x
+L6AF6:
+    dex
+    bpl L6AF0
+    rts
+L6AFA:
+    asl a
+    sty $0415
+    stx $0414
+    tay
+    iny
+    pla
+    sta $0C
+    pla
+    sta $0D
+    lda ($0C),y
+    tax
+    iny
+    lda ($0C),y
+    sta $0D
+    stx $0C
+    ldx $0414
+    ldy $0415
+    jmp ($000C)
+L6B1C:
+    lda $2002
+    lda $FD
+    sta $2005
+    lda $FC
+    sta $2005
+    rts
+L6B2A:
+    tya
+    clc
+    adc $00
+    sta $00
+    bcc L6B34
+    inc $01
+L6B34:
+    rts
+L6B35:
+    tya
+    clc
+    adc $02
+    sta $02
+    bcc L6B3F
+    inc $03
+L6B3F:
+    rts
+    tya
+    clc
+    adc $04
+    sta $04
+    bcc L6B3F
+    inc $05
+    rts
+L6B4B:
+    eor #$FF
+    clc
+    adc #$01
+    rts
+    lsr a
+L6B52:
+    lsr a
+L6B53:
+    lsr a
+    lsr a
+    lsr a
+    rts
+    asl a
+L6B58:
+    asl a
+L6B59:
+    asl a
+    asl a
+    asl a
+    rts
+L6B5D:
+    lda $1B
+    beq L6B76
+    lda #$A1
+    sta $00
+    lda #$07
+    sta $01
+    jsr L6B9F
+    lda #$00
+    sta $07A0
+    sta $07A1
+    sta $1B
+L6B76:
+    rts
+L6B77:
+    sta $2006
+    iny
+    lda ($00),y
+    sta $2006
+    iny
+    lda ($00),y
+    asl a
+    jsr L6BAB
+    asl a
+    lda ($00),y
+    and #$3F
+    tax
+    bcc L6B90
+    iny
+L6B90:
+    bcs L6B93
+    iny
+L6B93:
+    lda ($00),y
+    sta $2007
+    dex
+    bne L6B90
+    iny
+    jsr L6B2A
+L6B9F:
+    ldx $2002
+    ldy #$00
+    lda ($00),y
+    bne L6B77
+    jmp L6B1C
+L6BAB:
+    pha
+    lda $FF
+    ora #$04
+    bcs L6BB4
+    and #$FB
+L6BB4:
+    sta $2000
+    sta $FF
+    pla
+    rts
+L6BBB:
+    ldy #$01
+    sty $1B
+    dey
+    lda ($02),y
+    and #$0F
+    sta $05
+    lda ($02),y
+    jsr L6B52
+    sta $04
+    ldx $07A0
+L6BD0:
+    lda $01
+    jsr L6BFE
+    lda $00
+    jsr L6BFE
+    lda $05
+    sta $06
+    jsr L6BFE
+L6BE1:
+    iny
+    lda ($02),y
+    jsr L6BFE
+    dec $06
+    bne L6BE1
+    stx $07A0
+    sty $06
+    ldy #$20
+    jsr L6B2A
+    ldy $06
+    dec $04
+    bne L6BD0
+    jsr L6C09
+L6BFE:
+    sta $07A1,x
+L6C01:
+    inx
+    cpx #$4F
+    bcc L6C10
+    ldx $07A0
+L6C09:
+    lda #$00
+    sta $07A1,x
+    pla
+    pla
+L6C10:
+    rts
+    stx $00
+    sty $01
+    ldx #$80
+    stx $02
+    ldx #$07
+    stx $03
+L6C1D:
+    ldy #$01
+    sty $1B
+    dey
+    beq L6C5B
+L6C24:
+    sta $04
+    lda $01
+    jsr L6BFE
+    lda $00
+    jsr L6BFE
+    lda $04
+    jsr L6C65
+    bit $04
+    bvc L6C3A
+    iny
+L6C3A:
+    bit $04
+    bvs L6C3F
+    iny
+L6C3F:
+    lda ($02),y
+    jsr L6BFE
+    sty $06
+    ldy #$01
+    bit $04
+    bpl L6C4E
+    ldy #$20
+L6C4E:
+    jsr L6B2A
+    ldy $06
+    dec $05
+    bne L6C3A
+    stx $07A0
+    iny
+L6C5B:
+    ldx $07A0
+    lda ($02),y
+    bne L6C24
+    jsr L6C09
+L6C65:
+    sta $04
+    and #$BF
+    sta $07A1,x
+    and #$3F
+    sta $05
+    jmp L6C01
+    jsr L6CB6
+    adc $01
+    cmp #$0A
+    bcc L6C7E
+    adc #$05
+L6C7E:
+    clc
+    adc $02
+    sta $02
+    lda $03
+    and #$F0
+    adc $02
+    bcc L6C8F
+L6C8B:
+    adc #$5F
+    sec
+    rts
+L6C8F:
+    cmp #$A0
+    bcs L6C8B
+    rts
+    jsr L6CB6
+    sbc $01
+    sta $01
+    bcs L6CA7
+    adc #$0A
+    sta $01
+    lda $02
+    adc #$0F
+    sta $02
+L6CA7:
+    lda $03
+    and #$F0
+    sec
+    sbc $02
+    bcs L6CB3
+    adc #$A0
+    clc
+L6CB3:
+    ora $01
+    rts
+L6CB6:
+    pha
+    and #$0F
+    sta $01
+    pla
+    and #$F0
+    sta $02
+    lda $03
+    and #$0F
+    rts
+    jsr L6CCD
+L6CC8:
+    lda $1A
+    beq L6CC8
+    rts
+L6CCD:
+    lda #$00
+    sta $1A
+    rts
+L6CD2:
+    lda $FE
+    and #$E7
+L6CD6:
+    sta $FE
+    jsr L6CCD
+L6CDB:
+    lda $1A
+    beq L6CDB
+    rts
+L6CE0:
+    lda $FF
+    and #$F7
+    ora #$10
+    sta $FF
+    sta $2000
+    lda $FE
+    ora #$1E
+    bne L6CD6
+L6CF1:
+    lda $FF
+    sta $2000
+    lda $FE
+    sta $2001
+    lda $FB
+    sta $4025
+    rts
+    ldy #$02
+    sty $57
+    sty $54
+    dey
+    sty $56
+    sty $59
+    dey
+    sty $58
+    sty $55
+    sty $5C
+    lda #$D0
+    sta $5D
+    lda #$02
+    sta $63
+    lda #$19
+    sta $5E
+    lda #$20
+    sta $5F
+    lda #$B8
+    sta $60
+    sty $3F
+    sty $40
+    sty $49
+    sty $4A
+    sty $4B
+    sty $4C
+    sty $00
+    ldx #$60
+L6D37:
+    stx $01
+    txa
+    and #$03
+    asl a
+    tay
+    sty $02
+    lda $6D61,y
+    ldy #$00
+L6D45:
+    sta ($00),y
+    iny
+    beq L6D57
+    cpy #$40
+    bne L6D45
+    ldy $02
+    lda $6D62,y
+    ldy #$40
+    bpl L6D45
+L6D57:
+    inx
+    cpx #$68
+    bne L6D37
+    inc $1F
+    jmp L84EE
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    cpy #$C4
+    lda #$10
+    sta $F0
+    sta $0684
+    jsr L6CD2
+    jsr L69DF
+    ldx #$34
+    ldy #$7B
+    jsr L6A6A
+    lda #$01
+    sta $1C
+    sta $4D
+    inc $1F
+    lda #$00
+    sta $62
+    jmp L6CE0
+
+
+L6D8C:
+    lda $62
+    cmp #$0D
+    bcs L6DB2
+    asl a
+    tay
+    lda $7DAF,y
+    sta $02
+    lda $7DB0,y
+    sta $03
+    ldy #$00
+    lda ($02),y
+    sta $01
+    iny
+    lda ($02),y
+    sta $00
+    iny
+    jsr L6B35
+    inc $62
+    jmp L6C1D
+L6DB2:
+    lda #$08
+    sta $26
+    lsr a
+    sta $49
+    inc $1F
+    rts
+    lda $27
+    and #$03
+    bne L6DDE
+    lda $49
+    and #$03
+    sta $49
+    jsr L85A0
+    lda $26
+    bne L6DDE
+    lda $49
+    cmp #$04
+    bne L6DDE
+    inc $1F
+    jsr L8183
+    lda #$18
+    sta $26
+L6DDE:
+    rts
+    lda $26
+    bne L6DF4
+    lda $27
+    and #$0F
+    bne L6DF4
+    jsr L85A0
+    bne L6DF4
+    lda #$20
+    sta $26
+    inc $1F
+L6DF4:
+    rts
+    lda $26
+    bne L6DF4
+    lda #$08
+    sta $26
+    inc $1F
+    rts
+    lda $26
+    bne L6E15
+    lda $048A
+    and $049A
+    cmp #$01
+    bne L6E12
+    inc $1F
+    bne L6E15
+L6E12:
+    jsr L81A7
+L6E15:
+    rts
+    lda $27
+    and #$07
+    bne L6E34
+    lda $4C
+    cmp #$04
+    bne L6E31
+    jsr L826F
+    lda #$08
+    sta $26
+    sta $44
+    lda #$00
+    sta $47
+    inc $1F
+L6E31:
+    jsr L8673
+L6E34:
+    rts
+    lda $48
+    beq L6E3C
+    jsr L85BB
+L6E3C:
+    lda $26
+    bne L6E83
+    lda $048A
+    and $049A
+    and $04AA
+    and $04BA
+    beq L6E7D
+    lda #$01
+    cmp $47
+    beq L6E5E
+    inc $47
+    sta $4F
+    sta $48
+    lda #$00
+    sta $4E
+L6E5E:
+    and $04CA
+    and $04DA
+    and $04EA
+    and $04FA
+    beq L6E7D
+    lda #$01
+    sta $4F
+    sta $48
+    jsr L84EE
+    lda #$00
+    sta $4E
+    inc $1F
+    bne L6E80
+L6E7D:
+    jsr L82D6
+L6E80:
+    jsr L834E
+L6E83:
+    rts
+    lda $48
+    beq L6E8E
+    jsr L834E
+    jmp L85BB
+L6E8E:
+    inc $1F
+    lda #$60
+    sta $030D
+    lda #$7C
+    sta $030E
+    lda $0305
+    sta $0306
+    rts
+    lda #$01
+    sta $43
+    lda #$04
+    sta $040E
+    sta $13
+    sta $15
+    sta $17
+    lda #$03
+    sta $0300
+    sta $0400
+    inc $1F
+    rts
+    lda $0300
+    cmp #$04
+    bne L6EE2
+    lda #$00
+    sta $0300
+    lda #$0B
+    sta $0305
+    lda #$0C
+    sta $0306
+    lda #$07
+    sta $0303
+    lda #$08
+    sta $26
+    lda #$00
+    sta $51
+    sta $53
+    inc $1F
+L6EE2:
+    rts
+    lda $53
+    bne L6EF1
+    lda $27
+    and #$0F
+    cmp #$01
+    bne L6F25
+    sta $53
+L6EF1:
+    lda $51
+    cmp #$10
+    beq L6F17
+    inc $51
+    asl a
+    tay
+    lda $7F44,y
+    sta $02
+    lda $7F45,y
+    sta $03
+    ldy #$00
+    lda ($02),y
+    sta $01
+    iny
+    lda ($02),y
+    sta $00
+    iny
+    jsr L6B35
+    jmp L6BBB
+L6F17:
+    inc $1F
+    lda #$08
+    sta $26
+    lda #$06
+    sta $4C
+    lda #$00
+    sta $51
+L6F25:
+    rts
+    lda $26
+    bne L6F45
+    lda $27
+    and #$07
+    bne L6F45
+    lda $4C
+    cmp #$0B
+    bne L6F42
+    lda #$00
+    sta $4C
+    lda #$30
+    sta $26
+    inc $1F
+    bne L6F45
+L6F42:
+    jsr L8673
+L6F45:
+    rts
+    lda $26
+    bne L6F65
+    lda $27
+    and #$07
+    bne L6F65
+    lda $4C
+    cmp #$05
+    bne L6F62
+    lda #$06
+    sta $4C
+    lda #$00
+    sta $53
+    inc $1F
+    bne L6F65
+L6F62:
+    jsr L8673
+L6F65:
+    rts
+    lda $53
+    bne L6F74
+    lda $27
+    and #$0F
+    cmp #$01
+    bne L6FB7
+    sta $53
+L6F74:
+    lda $51
+    cmp #$0C
+    beq L6F9E
+    inc $51
+    asl a
+    tay
+    lda $7F44,y
+    sta $04
+    lda $7F45,y
+    sta $05
+    ldy #$00
+    lda ($04),y
+    sta $01
+    iny
+    lda ($04),y
+    sta $00
+    lda #$14
+    sta $02
+    lda #$81
+    sta $03
+    jmp L6BBB
+L6F9E:
+    lda #$23
+    sta $01
+    lda #$D0
+    sta $00
+    lda #$81
+    sta $03
+    lda #$2D
+    sta $02
+    jsr L6C1D
+    inc $1F
+    lda #$10
+    sta $26
+L6FB7:
+    rts
+    lda $26
+    bne L6FD0
+    lda $3F
+    bne L6FD0
+    lda $40
+    and #$0F
+    bne L6FD0
+    lda #$01
+    sta $5A
+    lda #$10
+    sta $26
+    inc $1F
+L6FD0:
+    rts
+    lda $26
+    bne L7018
+    sta $5A
+    sta $43
+    sta $0408
+    ldy #$1F
+L6FDE:
+    sta $0300,y
+    dey
+    bpl L6FDE
+    lda $FF
+    and #$FC
+    sta $FF
+    iny
+    sty $3F
+    sty $40
+    sty $49
+    sty $4A
+    sty $4B
+    sty $4C
+    sty $55
+    sty $13
+    sty $15
+    sty $17
+    sty $62
+    iny
+    sty $56
+    iny
+    sty $54
+    sty $57
+    sty $1F
+    lda $63
+    bne L7019
+    lda #$10
+    sta $0684
+    lda #$02
+    sta $63
+L7018:
+    rts
+L7019:
+    dec $63
+    rts
+    jsr L6CD2
+    inc $1F
+    rts
+    rts
+    lda #$01
+    sta $0680
+    rts
+    lsr $0416
+    lda ($00),y
+    and #$C0
+    ora $0416
+    sta $05
+    lda $0416
+    ora #$80
+    sta $0416
+    rts
+    ldy #$00
+    ldx $040E
+L7043:
+    lda $70B5,y
+    sta $0200,x
+    inx
+    beq L7051
+    iny
+    cpy #$1C
+    bne L7043
+L7051:
+    txa
+    pha
+    ldx $040E
+    jsr L70B0
+    beq L707E
+    lda $0107
+    tay
+    jsr L6B52
+    jsr L70A9
+    jsr L70B0
+    beq L707E
+    tya
+    and #$0F
+    jsr L70A9
+    jsr L70B0
+    beq L707E
+    lda $0106
+    jsr L6B52
+    jsr L70A9
+L707E:
+    ldy $0422
+    beq L7095
+    lda $040E
+    clc
+    adc #$10
+    beq L7095
+    tax
+    lda $0421
+    clc
+    adc #$8B
+    sta $0201,x
+L7095:
+    lda $040E
+    clc
+    adc #$18
+    bcs L70A4
+    tax
+    lda $041E
+    jsr L70A9
+L70A4:
+    pla
+    sta $040E
+    rts
+L70A9:
+    clc
+    adc #$80
+    sta $0201,x
+    rts
+L70B0:
+    inx
+    inx
+    inx
+    inx
+    rts
+
+    .byte $10, $8A
+    .byte $00
+    clc
+    .byte $10, $FF
+    .byte $00
+    jsr $FF10
+    .byte $00
+    plp
+    .byte $10, $FF
+    .byte $00
+    bmi L70DE
+    .byte $FF
+    .byte $00
+    clc
+    clc
+    stx $2800
+    clc
+    .byte $FF
+    .byte $00
+    .byte $30, $86
+    asl $1084
+    ldx #$00
+    ldy #$08
+L70D9:
+    lsr a
+    bcs L70E0
+    inx
+    dey
+L70DE:
+    bne L70D9
+L70E0:
+    txa
+    ldy $10
+    ldx $0E
+L70E5:
+    rts
+    ldx $0409
+    beq L70E5
+    dex
+    bne L70F1
+    jmp L70F4
+L70F1:
+    dex
+    bne L70FC
+L70F4:
+    ldx $3F
+    bne L7138
+    ldx #$05
+    bne L7118
+L70FC:
+    dex
+    bne L7102
+    jmp L7105
+L7102:
+    dex
+    bne L7138
+L7105:
+    ldx $FC
+    bne L7138
+    stx $0417
+    stx $0418
+    inx
+    lda $030E
+    bmi L7130
+    inx
+    bne L7130
+L7118:
+    lda #$20
+    sta $040D
+    lda $040C
+    jsr L6B59
+    bcs L712C
+    ldy $040A
+    cpy #$03
+    bcc L7130
+L712C:
+    lda #$47
+    bne L7133
+L7130:
+    jsr L7142
+L7133:
+    sta $FB
+    stx $0409
+L7138:
+    rts
+    lda $030C
+    eor #$01
+    sta $030C
+    rts
+L7142:
+    lda $0400
+    eor #$03
+    sta $0400
+    lda $FB
+    eor #$08
+    rts
+
+L714F:
+    .byte $00, $01, $02, $FF, $03, $04, $05, $FF, $13, $06, $FF, $07, $FF, $17, $08, $FF
+    .byte $21, $FF, $22, $FF, $01, $0F, $FF, $04, $10, $FF, $13, $14, $15, $16, $FF, $17
+    .byte $18, $19, $1A, $FF, $20, $1F, $FF, $00, $13, $FF, $03, $17, $FF, $1B, $1C, $1D
+    .byte $1E, $FF, $1E, $1D, $1C, $1B, $FF, $28, $29, $FF, $2A, $FF, $1F, $20, $FF, $11
+    .byte $FF, $12, $FF, $09, $0A, $0B, $FF, $0C, $0D, $0E, $FF, $2C, $FF, $2C, $2C, $2C
+    .byte $2C, $2C, $2C, $2C, $2C, $2D, $2D, $2D, $2D, $2D, $2E, $2E, $2E, $2F, $2F, $FF
+    .byte $2F, $2F, $2E, $2E, $2E, $2D, $2D, $2D, $2D, $2D, $2C, $2C, $2C, $2C, $2C, $2C
+    .byte $2C, $2C, $FF, $30, $2B, $FF, $31, $FF, $31, $31, $31, $31, $31, $31, $31, $31
+    .byte $32, $32, $32, $32, $32, $33, $33, $33, $34, $34, $FF, $34, $34, $33, $33, $33
+    .byte $32, $32, $32, $32, $32, $31, $31, $31, $31, $31, $31, $31, $31, $FF, $35, $FF
+    .byte $37, $36, $FF, $39, $38, $FF, $3A, $3B, $FF, $3C, $F7, $49, $F7, $FF, $3D, $3E
+    .byte $3F, $FF, $40, $41, $42, $FF, $43, $FF, $44, $FF, $45, $FF, $46, $FF, $47, $FF
+    .byte $48, $FF, $07, $F7, $F7, $07, $F7, $F7, $F7, $07, $F7, $F7, $F7, $F7, $07, $F7
+    .byte $FF, $23, $F7, $F7, $23, $F7, $F7, $F7, $23, $F7, $F7, $F7, $F7, $23, $F7, $FF
+    .byte $07, $F7, $F7, $F7, $F7, $07, $F7, $F7, $F7, $07, $F7, $F7, $07, $F7, $FF, $23
+    .byte $F7, $F7, $F7, $F7, $23, $F7, $F7, $F7, $23, $F7, $F7, $23, $F7, $FF, $C3, $73
+    .byte $D1, $73, $E0, $73, $EE, $73, $00, $74, $13, $74, $25, $74, $35, $74, $4D, $74
+    .byte $61, $74, $6F, $74, $7E, $74, $8C, $74, $9E, $74, $B1, $74, $C3, $74, $D0, $74
+    .byte $E1, $74, $EE, $74, $FF, $74, $09, $75, $13, $75, $1D, $75, $27, $75, $31, $75
+    .byte $3B, $75, $45, $75, $4F, $75, $5A, $75, $65, $75, $70, $75, $7B, $75, $8F, $75
+    .byte $A3, $75, $B4, $75, $C9, $75, $D2, $75, $DC, $75, $E6, $75, $F0, $75, $FA, $75
+    .byte $FF, $75, $04, $76, $09, $76, $1D, $76, $29, $76, $35, $76, $41, $76, $4D, $76
+    .byte $61, $76, $6D, $76, $79, $76, $85, $76, $91, $76, $9E, $76, $AD, $76, $BC, $76
+    .byte $CF, $76, $E2, $76, $E7, $76, $EC, $76, $FB, $76, $0B, $77, $1C, $77, $2C, $77
+    .byte $40, $77, $55, $77, $69, $77, $79, $77, $8A, $77, $9A, $77, $AE, $77, $C3, $77
+    .byte $D7, $77, $E6, $77
+L72E3:
+    .byte $F7, $72
+    .byte $15, $73
+    .byte $21, $73
+    .byte $2D, $73
+    .byte $35, $73
+    .byte $3F, $73
+    .byte $F3, $72
+    .byte $4B, $73
+    
+    .byte $E9, $FC, $EB, $FC, $F1, $F8, $F1, $00, $F9, $F0, $F9, $F8, $F9, $00, $01, $F8
+    .byte $01, $00, $01, $08, $09, $F8, $09, $00, $09, $08, $F9, $F4, $F9, $F6, $ED, $F4
+    .byte $EF, $F4, $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00, $F9, $F6
+    .byte $F9, $FE, $F9, $06, $01, $F6, $01, $FE, $01, $06, $FC, $F0, $FC, $F8, $FC, $00
+    .byte $FC, $08, $FC, $FC, $F8, $F8, $F8, $00, $00, $F8, $00, $00, $E8, $00, $F0, $00
+
+L7343:
+    sed
+    .byte $00
+    .byte $00
+    .byte $00
+    php
+    .byte $00
+    bpl L734B
+L734B:
+    .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
+    .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
+    
+    .byte $FC, $F8, $F4, $F0, $EE, $EC, $EA, $E8
+    .byte $E7, $E6, $E6, $E5, $E5, $E4, $E4, $E3, $E5, $E7, $E9, $EB, $EF, $F3, $F7
+L737A:
+    .byte $FB, $00, $00, $00, $00, $00, $00, $00, $00, $FE, $FC, $FA, $F8, $F6, $F4, $F2
+    .byte $F0, $EE, $ED, $EB, $EA, $E9, $E8, $E7, $E6, $E6, $E6, $E6, $E6, $E8, $EA, $EC
+    .byte $EE, $00, $00, $00, $00, $00, $00
+L73A1:
+
+    .byte $00, $00, $FE, $FC, $FA, $F8, $F7, $F6, $F5, $F4, $F3, $F2, $F1, $F1, $F0, $F0
+    .byte $EF, $EF, $EF, $EF, $EF, $EF, $F0, $F0, $F1, $F2, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $10, $06, $00, $01, $FE, $10, $11, $20, $21, $FE, $FE, $31, $FF
+    .byte $00, $10, $06, $02, $03, $FE, $12, $13, $22
+L73DA:
+    .byte $23, $FE, $32, $33, $34, $FF, $00, $10, $06, $05, $06, $FE, $15, $16, $25, $26
+    .byte $27, $35, $36, $FF, $40, $10, $06, $00, $01, $FD, $20, $FE, $41, $40, $FD, $60
+    .byte $20, $21, $FE, $FE, $31, $FF, $40, $10, $06, $02, $03, $FD, $20, $FE, $43, $42
+    .byte $FD, $60, $22, $23, $FE, $32, $33, $34, $FF, $40, $10, $06, $05, $06, $FD, $20
+    .byte $FE, $45, $44, $FD, $60, $25, $26, $27, $35, $36, $FF, $00, $10, $06, $0B, $0C
+    .byte $FE, $1B, $1C, $2B, $2C, $FE, $3B, $3C, $FE, $17, $FF, $00, $10, $06, $09, $FD
+    .byte $60, $09, $FD, $20, $FE, $19, $FD, $60, $19, $FD, $20, $29, $2A, $FE, $39, $FD
+    .byte $60, $39, $FF, $40, $10, $06, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE
+    .byte $FD, $60, $3B, $3C, $FE, $17, $FF, $00, $10, $06, $00, $01, $46, $47, $48, $20
+    .byte $21, $FE, $FE, $31, $FF, $00, $10, $06, $00, $01, $46, $47, $48, $22
+L7478:
+
+    .byte $23, $FE, $32, $33, $34, $FF, $00, $10, $06, $00, $01, $46, $47, $48, $25, $26
+    .byte $27, $35, $36, $FF, $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60
+    .byte $20, $21, $FE, $FE, $31, $FF, $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49
+    .byte $FD, $60, $22, $23, $FE, $32, $33, $34, $FF, $40, $10, $06, $00, $01, $FD, $20
+    .byte $4B, $4A, $49, $FD, $60, $25, $26, $27, $35, $36, $FF, $00, $10, $06, $00, $01
+    .byte $FE, $10, $11, $22, $07, $08, $32, $FF, $40, $10, $06, $00, $01, $FD, $20, $FE
+    .byte $41, $40, $FD, $60, $22, $07, $08, $32, $FF, $00, $10, $06, $00, $01, $46, $47
+    .byte $48, $22, $07, $08, $32, $FF, $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49
+    .byte $FD, $60, $22, $07, $08, $32, $FF, $01, $10, $06, $52, $53, $62, $63, $72, $73
+    .byte $FF, $02, $10, $06, $54, $55, $56, $64, $65, $66, $FF, $C1, $10, $06, $52, $53
+    .byte $62, $63, $72, $73, $FF, $C2, $10, $06, $54, $55, $56, $64, $65, $66, $FF, $41
+    .byte $10, $06, $52, $53, $62, $63, $72, $73, $FF, $42, $10, $06, $54, $55, $56, $64
+    .byte $65, $66, $FF, $81, $10, $06, $52, $53, $62, $63, $72, $73, $FF, $82, $10, $06
+    .byte $54, $55, $56, $64, $65, $66, $FF, $01, $08, $06, $FC, $02, $00, $50, $51, $60
+    .byte $61, $FF, $81, $08, $06, $FC, $FE, $00, $50, $51, $60, $61, $FF, $C1, $08, $06
+    .byte $FC, $FE, $00, $50, $51, $60, $61, $FF, $41, $08, $06, $FC, $02, $00, $50, $51
+    .byte $60, $61, $FF, $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $FD, $60, $2E
+    .byte $2D, $FE, $FD, $20, $3B, $3C, $FF, $06, $10, $06, $FE, $69, $58, $59, $FE, $5A
+    .byte $5B, $FD, $60, $2E, $2D, $FE, $FD, $20, $3B, $3C, $FF, $00, $10, $06, $0B, $0C
+    .byte $FE, $1B, $1C, $2B, $2C, $FE, $3B, $3C, $FE, $FE, $17, $FF, $40, $10, $06, $FD
+    .byte $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B, $3C, $FE, $FE, $17
+    .byte $FF, $03, $04, $08, $FE, $28, $FD, $60, $28, $FF, $03, $04, $10, $28, $38, $38
+    .byte $FD, $60, $28, $FF, $01, $10, $08, $4C, $4D, $5C, $5D, $6C, $6D, $FF, $01, $10
+    .byte $08, $4C, $4D, $5C, $5D, $5A, $5B, $FF, $01, $10, $08, $4C, $4D, $5C, $5D, $6A
+    .byte $6B, $FF, $04, $02, $02, $30, $FF, $04, $02, $02, $37, $FF, $04, $00, $00, $04
+    .byte $FF, $46, $10, $06, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE
+    .byte $FD, $60, $3B, $3C, $FF, $75, $18, $08, $0F, $1F, $2F, $FD, $E3, $2F, $1F, $0F
+    .byte $FF, $75, $18, $08, $4D, $5D, $6D, $FD, $E3, $6D, $5D, $4D, $FF, $75, $18, $04
+    .byte $6A, $6B, $6C, $FD, $E3, $6C, $6B, $6A, $FF, $75, $00, $00, $3F, $FE, $4F, $FD
+    .byte $E3, $4F, $FE, $3F, $FF, $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE, $78
+    .byte $77, $2E, $2D, $FE, $FD, $60, $3B, $3C, $FF, $35, $18, $08, $0F, $1F, $2F, $FD
+    .byte $A3, $2F, $1F, $0F, $FF, $35, $18, $08, $4D, $5D, $6D, $FD, $A3, $6D, $5D, $4D
+    .byte $FF, $35, $18, $04, $6A, $6B, $6C, $FD, $A3, $6C, $6B, $6A, $FF, $35, $00, $00
+    .byte $3F, $FE, $4F, $FD, $A3, $4F, $FE, $3F, $FF, $07, $00, $00, $FC, $FC, $00, $09
+    .byte $09, $19, $19, $29, $2A, $FF, $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B
+    .byte $22, $07, $08, $32, $FF, $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $22
+    .byte $07, $08, $32, $FF, $46, $10, $06, $69, $FD, $20, $FE, $7A, $79, $FE, $78, $77
+    .byte $FD, $60, $22, $07, $08, $32, $FF, $46, $10, $06, $FE, $69, $FD, $20, $7A, $79
+    .byte $FE, $78, $77, $FD, $60, $22, $07, $08, $32, $FF, $04, $04, $04, $70, $FF, $14
+    .byte $04, $04, $71, $FF, $04, $0C, $0C, $FE, $74, $FD, $60, $74, $FD, $A0, $74, $FD
+    .byte $E0, $74, $FF, $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $20, $21, $FE
+    .byte $FE, $31, $FF, $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $22, $23, $FE
+    .byte $32, $33, $34, $FF, $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $25, $26
+    .byte $27, $35, $36, $FF, $46, $10, $06, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77
+    .byte $FD, $60, $20, $21, $FE, $FE, $31, $FF, $46, $10, $06, $69, $FE, $FD, $20, $7A
+    .byte $79, $FE, $78, $77, $FD, $60, $22, $23, $FE, $32, $33, $34, $FF, $46, $10, $06
+    .byte $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26, $27, $35, $36
+    .byte $FF, $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $20, $21, $FE, $FE, $31
+    .byte $FF, $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $22, $23, $FE, $32, $33
+    .byte $34, $FF, $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $25, $26, $27, $35
+    .byte $36, $FF, $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60
+    .byte $20, $21, $FE, $FE, $31, $FF, $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE
+    .byte $78, $77, $FD, $60, $22, $23, $FE, $32, $33, $34, $FF, $46, $10, $06, $FE, $69
+    .byte $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26, $27, $35, $36, $FF, $04
+    .byte $0C, $0C, $FE, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF, $04, $04
+    .byte $04, $8A, $FF, $00, $10, $78, $34, $78, $58, $78, $7C, $78, $A0, $78, $C4, $78
+    .byte $E8, $78, $0C, $79, $30, $79, $54, $79, $78, $79, $9C, $79, $C0, $79, $E4, $79
+    .byte $08, $7A, $2C, $7A, $50, $7A, $74, $7A, $3F, $00, $20, $0F, $28, $18, $08, $0F
+    .byte $29, $1B, $1A, $0F, $27, $28, $29, $0F, $0F, $0F, $0F, $0F, $16, $1A, $27, $0F
+    .byte $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12, $00, $3F, $00, $20, $0F
+    .byte $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $35, $14, $04, $0F
+    .byte $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12, $00
+    .byte $3F, $00, $20, $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $28
+L7866:
+    and #$0F
+    and $0929,y
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    rol $15,x
+    asl $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $27
+    and ($12,x)
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    and ($20),y
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    ora ($0F,x)
+    .byte $0F
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    ora ($01,x)
+    .byte $0F
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $02
+    .byte $02
+    ora ($0F,x)
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $02
+    ora ($01,x)
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $12
+    .byte $12
+    .byte $02
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+L797A:
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    ora ($02),y
+    .byte $02
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    and ($11),y
+    ora ($0F,x)
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    .byte $12
+    bmi L79EC
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    and ($11),y
+    ora ($0F,x)
+    asl $2A,x
+    .byte $27
+    .byte $0F
+    .byte $12
+    bmi L79FC
+    .byte $0F
+    .byte $27
+    bit $2C
+    .byte $0F
+    ora $21,x
+    sec
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+L79EC:
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $12
+    .byte $02
+    ora ($0F,x)
+    asl $1A,x
+    .byte $27
+    .byte $0F
+L79FC:
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    .byte $02
+    ora ($0F,x)
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $280F
+    clc
+    php
+    .byte $0F
+    and #$1B
+    .byte $1A
+    .byte $0F
+    .byte $27
+    plp
+    and #$0F
+    ora ($0F,x)
+    .byte $0F
+    .byte $0F
+    asl $1A,x
+    .byte $27
+    .byte $0F
+    .byte $37
+    .byte $3A
+    .byte $1B
+    .byte $0F
+    .byte $17
+    and ($37),y
+    .byte $0F
+    .byte $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    jsr $2830
+    clc
+    php
+    bmi L7A82
+    .byte $1B
+    .byte $1A
+    bmi L7A84
+    plp
+    and #$30
+    bmi L7A92
+    bmi L7A94
+    asl $1A,x
+    .byte $27, $30, $37
+    .byte $3A
+    .byte $1B
+    bmi L7A84
+    and ($37),y
+    .byte $30, $32
+    .byte $22
+    .byte $12
+    .byte $00
+    .byte $3F
+    .byte $00
+    .byte $04
+    .byte $0F
+    bmi L7AAA
+    and ($00,x)
+    .byte $00
+    jsr $4000
+    .byte $00
+    rts
+L7A82:
+    .byte $FF, $20
+L7A84:
+    .byte $40, $20
+    rts
+    rti
+    rts
+    .byte $FF
+    lda $030D,x
+    sta $07
+    lda $030E,x
+L7A92:
+    sta $09
+L7A94:
+    lda $030C,x
+    sta $0B
+    rts
+    lda $030D,y
+    sta $06
+    lda $030E,y
+    sta $08
+    lda $030C,y
+    sta $0A
+    rts
+L7AAA:
+    lda $0301,x
+    clc
+    adc $0301,y
+    sta $04
+    lda $0302,x
+    clc
+    adc $0302,y
+    sta $05
+    rts
+    lda #$02
+    sta $01
+    lda $07
+    sec
+    sbc $06
+    sta $02
+    lda $03
+    bne L7AE3
+    lda $0B
+    eor $0A
+    beq L7AE3
+    lda $0B
+    sbc $0A
+    lsr a
+    lda $0A
+    eor $FF
+    and #$01
+    ora $01
+    sta $01
+    bne L7AEC
+L7AE3:
+    lda #$00
+    sbc #$00
+    bpl L7AEB
+    inc $01
+L7AEB:
+    lsr a
+L7AEC:
+    lda $02
+    bcc L7AF5
+    beq L7B33
+    jsr L6B4B
+L7AF5:
+    sta $11
+    cmp $04
+    bcs L7B33
+    asl $01
+    lda $09
+    sec
+    sbc $08
+    sta $02
+    lda $03
+    beq L7B1F
+    lda $0B
+    eor $0A
+    beq L7B1F
+    lda $0B
+    sbc $0A
+    lsr a
+    lda $0A
+    eor $FF
+    and #$01
+    ora $01
+    sta $01
+    bne L7B26
+L7B1F:
+    sbc #$00
+    bpl L7B25
+    inc $01
+L7B25:
+    lsr a
+L7B26:
+    lda $02
+    bcc L7B2F
+    beq L7B33
+    jsr L6B4B
+L7B2F:
+    sta $0F
+    cmp $05
+L7B33:
+    rts
+    .byte $1F
+    beq L7B87
+    .byte $00
+    .byte $23
+    cpy #$20
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $23
+    cpx #$20
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $27
+    cpy #$20
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+L7B87:
+
+
+
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $E0, $20, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $22, $E0, $20
+    .byte $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
+    .byte $23, $00, $20, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0
+    .byte $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0
+    .byte $C1, $C0, $C1, $23, $20, $20, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
+    .byte $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
+    .byte $C2, $C3, $C2, $C3, $C2, $C3, $23, $40, $20, $C4, $C5, $C4, $C5, $C4, $C5, $C4
+    .byte $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4
+    .byte $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $23, $60, $20, $C6, $C7, $C6, $C7
+    .byte $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
+    .byte $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $23, $80, $20, $C8
+    .byte $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8
+    .byte $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $23
+    .byte $A0, $20, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
+    .byte $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
+    .byte $CA, $CB, $26, $E0, $20, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $CD, $FF, $FF, $FF, $FF, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $CC, $FF, $FF, $FF, $FF, $27, $00, $20, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
+    .byte $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
+    .byte $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $27, $20, $20, $C2, $C3, $C2, $C3, $C2
+    .byte $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2
+    .byte $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $27, $40, $20, $C4, $C5
+    .byte $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
+    .byte $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $27, $60
+    .byte $20, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6
+    .byte $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6
+    .byte $C7, $27, $80, $20, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
+    .byte $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
+    .byte $C8, $C9, $C8, $C9, $27, $A0, $20, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA
+    .byte $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA
+    .byte $CB, $CA, $CB, $CA, $CB, $CA, $CB, $00, $C9, $7D, $ED, $7D, $11, $7E, $35, $7E
+    .byte $59, $7E, $75, $7E, $91, $7E, $AD, $7E, $C9, $7E, $E5, $7E, $01, $7F, $1D, $7F
+    .byte $32, $7F, $23, $C0, $20, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $00, $23, $E0, $20, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $C0, $20, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $E0
+    .byte $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $21, $24, $18, $FF, $FF, $FF, $03, $04, $05, $06, $07, $08, $FF, $0A
+    .byte $0B, $0C, $FF, $FF, $0F, $70, $71, $72, $73, $74, $FF, $FF, $FF, $00, $21, $44
+    .byte $18, $FF, $FF, $12, $13, $14, $15, $16, $17, $18, $FF, $1A, $1B, $1C, $1D, $1E
+    .byte $1F, $80, $81, $82, $83, $84, $85, $FF, $FF, $00, $21, $64, $18, $FF, $FF, $FF
+    .byte $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $90, $91, $92
+    .byte $93, $94, $95, $96, $FF, $00, $21, $84, $18, $FF, $FF, $32, $33, $34, $35, $36
+    .byte $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $78, $79, $7A, $7B, $7C, $7D, $7E
+    .byte $FF, $00, $21, $A4, $18, $FF, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A
+    .byte $4B, $4C, $4D, $4E, $4F, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $00, $21, $C4
+    .byte $18, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E
+    .byte $5F, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $00, $21, $E4, $18, $60, $61, $62
+    .byte $63, $FF, $65, $66, $67, $FF, $69, $6A, $6B, $6C, $6D, $6E, $6F, $A8, $A9, $AA
+    .byte $AB, $AC, $AD, $FF, $FF, $00, $22, $28, $11, $B4, $BA, $B6, $B5, $FF, $B6, $A3
+    .byte $B7, $B8, $A3, $FF, $B9, $BA, $A3, $A3, $A6, $A1, $00, $22, $69, $0E, $A0, $B0
+    .byte $B1, $B2, $B3, $FF, $A1, $A2, $A1, $A3, $A4, $A1, $A5, $A6, $00, $64, $7F, $7F
+    .byte $7F, $9A, $7F, $B5, $7F, $D0, $7F, $EB, $7F, $06, $80, $21, $80, $3C, $80, $57
+    .byte $80, $72, $80, $8D, $80, $A8, $80, $C3, $80, $DE, $80, $F9, $80, $20, $A4, $46
+    .byte $D4, $75, $D4, $BF, $D1, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $BB, $64, $D5, $76, $D0, $FF, $76, $20, $AA, $46, $D8, $31, $D0, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $FF, $FF, $FF, $BD, $02, $D9
+    .byte $FF, $CF, $FF, $20, $B0, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $0E, $87, $40, $D0, $87, $FF, $20, $B6
+    .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $68, $FF, $77, $D2, $D8, $FF, $21, $24, $46, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $D4, $D3, $D0, $76, $D0, $0E, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $21, $2A, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $BB, $D0, $77, $D0, $FF, $0D, $D7, $FF, $FF, $FF, $FF, $FF, $FF, $21
+    .byte $30, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $FF, $FF, $FF, $BD, $7F
+    .byte $31, $D0, $75, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $21, $36, $46, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $68, $FF, $97, $D3, $D0, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $21, $A4, $46, $FF, $FF, $FF, $FF, $FF, $FF, $76, $19
+    .byte $BE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $21, $AA, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB
+    .byte $FF, $BB, $FF, $FF, $FF, $D4, $75, $D3, $FF, $31, $75, $21, $B0, $46, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BC, $FF, $FF, $FF, $FF, $FF
+    .byte $09, $D1, $FF, $D6, $D0, $D7, $21, $B6, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $86, $FF, $A7, $AE, $B0
+    .byte $AF, $22, $24, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $22, $2A, $46, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $22, $30, $46, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $22, $36, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $46, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $51, $81, $00, $00, $00, $00, $00, $00
+    .byte $01, $00, $00, $00, $00, $00, $02, $00, $00, $03, $00, $00, $00, $00, $00, $00
+    .byte $01, $00, $00, $00, $00, $00, $02, $00, $00, $03, $79, $81, $7A, $81, $7D, $81
+    .byte $80, $81, $00, $18, $CC, $00, $18, $CD, $00, $18, $CE, $00
+
+
+L8183:
+    ldx #$0A
+    L8185:
+        lda L819C,x
+        sta $0480,x
+        sta $0490,x
+        dex
+        bpl L8185
+    lda #$6B
+    sta $0490
+    lda #$DC
+    sta $0493
+    rts
+
+L819C:
+    eor #$E1
+    ora ($3D,x)
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    jsr $0000
+L81A7:
+    ldx #$00
+    jsr L81AE
+    ldx #$10
+L81AE:
+    jsr L81B1
+L81B1:
+    lda $0485,x
+    bne L81B9
+    jsr L81F2
+L81B9:
+    lda $048A,x
+    bne L81F1
+    dec $0485,x
+    lda $0486,x
+    clc
+    adc $0480,x
+    sta $0480,x
+    lda $0487,x
+    clc
+    adc $0483,x
+    sta $0483,x
+    dec $0488,x
+    bne L81EE
+    lda $0481,x
+    eor #$03
+    sta $0481,x
+    lda #$20
+    sta $0488,x
+    asl a
+    eor $0482,x
+    sta $0482,x
+L81EE:
+    jmp L8253
+L81F1:
+    rts
+L81F2:
+    txa
+    jsr L6B53
+    tay
+    lda $83F3,y
+    sta $00
+    lda $83F4,y
+    sta $01
+    ldy $0484,x
+    lda ($00),y
+    bpl L820D
+    lda #$01
+    sta $0489,x
+L820D:
+    bne L8214
+    lda #$01
+    sta $048A,x
+L8214:
+    sta $0485,x
+    iny
+    lda ($00),y
+    dec $0489,x
+    bmi L8228
+    lda #$00
+    sta $0486,x
+    lda ($00),y
+    bmi L823F
+L8228:
+    pha
+    pha
+    lda #$00
+    sta $0489,x
+    pla
+    jsr L6B52
+    jsr L8249
+    sta $0486,x
+    pla
+    and #$0F
+    jsr L8249
+L823F:
+    sta $0487,x
+    inc $0484,x
+    inc $0484,x
+    rts
+L8249:
+    cmp #$08
+    bcc L8252
+    and #$07
+    jsr L6B4B
+L8252:
+    rts
+L8253:
+    lda $0480,x
+    sec
+    sbc #$01
+    sta $0210,x
+    lda $0481,x
+    sta $0211,x
+    lda $0482,x
+    sta $0212,x
+    lda $0483,x
+    sta $0213,x
+    rts
+L826F:
+    lda #$20
+    sta $45
+    ldx #$3F
+L8275:
+    lda $8296,x
+    cmp $FF
+    beq L8282
+    sta $0480,x
+    sta $04C0,x
+L8282:
+    dex
+    bpl L8275
+    lda #$B8
+    sta $04E0
+    sta $04F0
+    lda #$16
+    sta $04ED
+    sta $04FD
+    rts
+
+    .byte $20, $E0, $80
+    .byte $00
+    .byte $FF
+    .byte $FF
+    .byte $74
+    cli
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $FF
+    ora $010E,x
+    ora ($20,x)
+    cpx #$C0
+    sed
+    .byte $FF
+    .byte $FF
+    .byte $7C
+    cli
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $FF
+    .byte $1F
+    asl $0180
+    iny
+    cpx #$00
+    .byte $00
+    .byte $FF
+    .byte $FF
+    .byte $74
+    rts
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $FF
+    ora $011A,x
+    .byte $80
+    iny
+    cpx #$40
+    sed
+    .byte $FF
+    .byte $FF
+    .byte $7C
+    rts
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $FF
+    .byte $1F
+    .byte $1A
+    .byte $80
+    .byte $80
+L82D6:
+    lda $44
+    beq L830E
+    dec $44
+    bne L830E
+    asl $048C
+    asl $048D
+    asl $049C
+    asl $049D
+    asl $04AC
+    asl $04AD
+    asl $04BC
+    asl $04BD
+    asl $04CC
+    asl $04CD
+    asl $04DC
+    asl $04DD
+    asl $04EC
+    asl $04ED
+    asl $04FC
+    asl $04FD
+L830E:
+    ldx #$00
+    jsr L833B
+    ldx #$10
+    jsr L833B
+    ldx #$20
+    jsr L833B
+    ldx #$30
+    lda $45
+    beq L8327
+    dec $45
+    bne L833B
+L8327:
+    jsr L833B
+    ldx #$40
+    jsr L833B
+    ldx #$50
+    jsr L833B
+    ldx #$60
+    jsr L833B
+    ldx #$70
+L833B:
+    lda $048A,x
+    bne L834D
+    jsr L8387
+    bcs L834A
+    lda #$01
+    sta $048A,x
+L834A:
+    jmp L8253
+L834D:
+    rts
+L834E:
+    lda $4F
+    beq L8381
+    ldy $4E
+    cpy #$04
+    bcc L835E
+    bne L8381
+    lda #$00
+    sta $4F
+L835E:
+    lda L8382,y
+    sta $00
+    ldy #$00
+L8365:
+    ldx $848F,y
+    iny
+L8369:
+    lda $848F,y
+    sta $0200,x
+    inx
+    iny
+    txa
+    and #$03
+    bne L8369
+    cpy $00
+    bne L8365
+    lda $27
+    lsr a
+    bcc L8381
+    inc $4E
+L8381:
+    rts
+    
+L8382:
+    .byte $05, $19, $41, $19, $05
+    
+L8387:
+    lda $048C,x
+    jsr L83DA
+    ldy $048E,x
+    bpl L8397
+    eor #$FF
+    clc
+    adc #$01
+L8397:
+    clc
+    adc $0483,x
+    sta $0483,x
+    sec
+    sbc $0486,x
+    php
+    pla
+    eor $048E,x
+    lsr a
+    bcc L83CD
+    lda $048D,x
+    jsr L83DA
+    ldy $048F,x
+    bpl L83BA
+    eor #$FF
+    clc
+    adc #$01
+L83BA:
+    clc
+    adc $0480,x
+    sta $0480,x
+    sec
+    sbc $0487,x
+    php
+    pla
+    eor $048F,x
+    lsr a
+    bcs L83D9
+L83CD:
+    lda $0487,x
+    sta $0480,x
+    lda $0486,x
+    sta $0483,x
+L83D9:
+    rts
+L83DA:
+    sta $04
+    lda #$08
+    sta $00
+L83E0:
+    lsr $04
+    bcc L83EC
+    lda $27
+    and $00
+    bne L83EC
+    inc $04
+L83EC:
+    lsr $00
+    bne L83E0
+    lda $04
+    rts
+
+L83F3:
+    .byte $F7, $83, $2D, $84, $01, $00, $01, $11, $01, $10, $06, $11, $07, $91, $10, $01
+    .byte $03, $10, $01, $19, $01, $10, $01, $19, $01, $10, $01, $19, $09, $11, $04, $01
+    .byte $02, $91, $01, $90, $01, $91, $06, $90, $01, $91, $06, $90, $15, $01, $06, $10
+    .byte $01, $11, $0E, $01, $08, $91, $27, $01, $00, $00, $01, $00, $08, $09, $01, $99
+    .byte $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99
+    .byte $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99
+    .byte $01, $09, $01, $99, $01, $19, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11
+    .byte $01, $10, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11
+    .byte $01, $10, $02, $11, $01, $10, $01, $11, $10, $09, $FF, $EF, $11, $09, $FF, $F3
+    .byte $1F, $09, $FF, $EC, $0F, $09, $FF, $ED, $16, $09, $00, $00, $10, $5A, $E5, $00
+    .byte $79, $14, $52, $E3, $00, $79, $18, $5A, $E7, $40, $71, $1C, $5A, $E7, $00, $81
+    .byte $20, $62, $E3, $80, $79, $14, $52, $E4, $00, $79, $18, $5A, $E6, $00, $71, $1C
+    .byte $5A, $E6, $00, $81, $20, $62, $E4, $00, $79, $24, $4A, $E3, $00, $79, $28, $5A
+    .byte $E7, $40, $69, $2C, $5A, $E7, $00, $89, $30, $6A, $E3, $80, $79
+
+L84D0:
+    lda $50
+    beq L84ED
+    lda $27
+    lsr a
+    bcs L84ED
+    ldx #$9F
+    L84DB:
+        dec $8500,x
+        dec $0260,x
+        dex
+        dex
+        dex
+        dex
+        cpx #$FF
+        bne L84DB
+    lda #$00
+L84EB:
+    sta $50
+L84ED:
+    rts
+L84EE:
+    ldy #$9F
+L84F0:
+    lda $8500,y
+    sta $0260,y
+    dey
+    cpy #$FF
+    bne L84F0
+    lda #$00
+    sta $50
+    rts
+
+L8500:
+    .byte $73, $CC, $22, $F2, $48, $CD, $63, $EE, $2A, $CE, $A2, $DC, $36, $CF, $E2, $C6
+    .byte $11, $CC, $23, $B7, $53, $CD, $63, $A0, $BB, $CE, $A2, $9A, $0F, $CF, $E2, $8B
+    .byte $85, $CC, $E2, $70, $9D, $CD, $A3, $6B, $A0, $CE, $63, $58, $63, $CF, $23, $4F
+    .byte $0A, $CC, $22, $39, $1F, $CD, $23, $2A, $7F, $CE, $A3, $1F, $56, $CF, $A2, $03
+    .byte $4D, $CC, $E3, $AF, $3E, $CD, $63, $2B, $61, $CE, $E2, $4F, $29, $CF, $62, $6F
+    .byte $8A, $CC, $23, $82, $98, $CD, $A3, $07, $AE, $CE, $E2, $CA, $B6, $CF, $63, $E3
+    .byte $0F, $CC, $62, $18, $1F, $CD, $22, $38, $22, $CE, $A3, $5F, $53, $CF, $E2, $78
+    .byte $48, $CC, $E3, $94, $37, $CD, $A3, $B3, $6F, $CE, $A3, $DC, $78, $CF, $22, $FE
+    .byte $83, $CC, $62, $0B, $9F, $CD, $23, $26, $A0, $CE, $62, $39, $BD, $CF, $A2, $1C
+    .byte $07, $CC, $E3, $A4, $87, $CD, $63, $5D, $5A, $CE, $62, $4F, $38, $CF, $23, $85
+    
+L85A0:
+    ldy $49
+    lda L85AE,y
+    cmp #$FF
+    beq L85AD
+        sta $1C
+        inc $49
+    L85AD:
+    rts
+
+L85AE:
+    .byte $02
+    .byte $03
+    .byte $04
+    ora $06
+    .byte $07
+    php
+    ora #$0A
+    .byte $0B
+    .byte $0C
+    .byte $0C
+    .byte $FF
+L85BB:
+    ldy $4A
+    lda $85D1,y
+    cmp #$FF
+    bne L85CC
+    lda #$00
+    sta $4A
+    sta $48
+    beq L85D0
+L85CC:
+    sta $1C
+    inc $4A
+L85D0:
+    rts
+    ora ($01),y
+    ora ($01),y
+    ora ($11),y
+    ora ($11,x)
+    ora ($FF,x)
+L85DB:
+    lda $27
+    and #$0F
+    bne L85E6
+    lda $07A0
+    beq L85E7
+L85E6:
+    rts
+L85E7:
+    lda #$19
+    sta $00
+    lda #$3F
+    sta $01
+    lda $4B
+    and #$07
+    asl a
+    tay
+    lda $8613,y
+    sta $02
+    lda $8614,y
+    sta $03
+    inc $4B
+    jsr L6C1D
+    lda #$1D
+    sta $00
+    lda #$3F
+    sta $01
+    iny
+    jsr L6B35
+    jmp L6C1D
+    .byte $23
+    stx $2D
+    stx $37
+    stx $41
+    stx $4B
+    stx $55
+    stx $5F
+    stx $69
+    stx $03
+    .byte $0F
+    .byte $02
+    .byte $13
+    .byte $00
+    .byte $03
+    .byte $00
+    .byte $34
+    .byte $0F
+    .byte $00
+    .byte $03
+    asl $01
+    .byte $23
+    .byte $00
+    .byte $03
+    .byte $0F
+    .byte $34
+    ora #$00
+    .byte $03
+    asl $0F,x
+    .byte $23
+    .byte $00
+    .byte $03
+    .byte $0F
+    bit $1A
+    .byte $00
+    .byte $03
+    .byte $17
+    .byte $0F
+    .byte $13
+    .byte $00
+    .byte $03
+    .byte $00
+    .byte $04
+    plp
+    .byte $00
+    .byte $03
+    .byte $17
+    ora ($14,x)
+    .byte $00
+    .byte $03
+    bpl L8662
+    plp
+    .byte $00
+    .byte $03
+    asl $02,x
+    .byte $0F
+    .byte $00
+    .byte $03
+    bmi L866C
+    .byte $1A
+    .byte $00
+    .byte $03
+    asl $12
+L8662:
+    .byte $0F
+    .byte $00
+    .byte $03
+    bmi L866B
+    ora #$00
+    .byte $03
+    .byte $0F
+L866B:
+    .byte $12
+L866C:
+    .byte $14
+    .byte $00
+    .byte $03
+    bpl L8695
+    .byte $0F
+    .byte $00
+L8673:
+    ldy $4C
+    lda $8681,y
+    cmp #$FF
+    beq L8680
+    sta $1C
+    inc $4C
+L8680:
+    rts
+    ora $0F0E
+    bpl L8687
+    .byte $FF
+L8687:
+    ora ($10,x)
+    .byte $0F
+    asl $FF0D
+L868D:
+    lda $5C
+    beq L86BD
+    ldx #$01
+    lda $13
+L8695:
+    asl a
+    bcs L869E
+    asl a
+    bcc L86BD
+    inx
+    inx
+    inx
+L869E:
+    ldy #$03
+    lda $15
+    lsr a
+    bcs L86B5
+    lsr a
+    bcs L86B0
+    ldy #$00
+    lsr a
+    bcs L86B5
+    lsr a
+    bcc L86BD
+L86B0:
+    txa
+    jsr L6B4B
+    tax
+L86B5:
+    txa
+    clc
+    adc $005D,y
+    sta $005D,y
+L86BD:
+    rts
+L86BE:
+    lda $59
+    beq L8706
+    lda $55
+    dec $56
+    bne L86DA
+    pha
+    ldy $57
+    lda $873B,y
+    sta $55
+    ldx $873C,y
+    stx $56
+    inc $57
+    inc $57
+    pla
+L86DA:
+    ldx #$01
+    ldy $15
+    sty $00
+    sta $15
+    eor $00
+    beq L86EE
+    lda $00
+    and #$BF
+    sta $00
+    eor $15
+L86EE:
+    and $15
+    sta $13
+    sta $17
+    ldy #$20
+    lda $15
+    cmp $00
+    bne L8704
+    dec $18,x
+    bne L8706
+    sta $17
+    ldy #$10
+L8704:
+    sty $18,x
+L8706:
+    rts
+L8707:
+    lda $58
+    beq L873A
+    ldx $57
+    lda $15
+    cmp $873B,x
+    beq L8722
+    ldy $873C,x
+    bne L872A
+    dex
+    dex
+    dec $57
+    dec $57
+    jmp L872A
+L8722:
+    inc $873C,x
+    bne L873A
+    dec $873E,x
+L872A:
+    sta $873D,x
+    inc $873E,x
+    inc $57
+    inc $57
+    bne L873A
+    lda #$00
+    sta $58
+L873A:
+    rts
+    .byte $FF
+    .byte $FF
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    bcc L8750
+    .byte $0B
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    lda ($01),y
+L8750:
+    rol $81,x
+    ora $2B01,x
+    sta ($1E,x)
+    ora ($2A,x)
+    sta ($1B,x)
+    ora ($28,x)
+    sta ($1B,x)
+    ora ($3A,x)
+    eor ($06,x)
+    ora ($05,x)
+    eor ($06,x)
+    ora ($05,x)
+    eor ($05,x)
+    ora ($06,x)
+    eor ($06,x)
+    ora ($07,x)
+    eor ($03,x)
+    ora ($06,x)
+    eor ($06,x)
+    ora ($06,x)
+    eor ($04,x)
+    ora ($06,x)
+    eor ($05,x)
+    ora ($06,x)
+    eor ($05,x)
+    ora ($06,x)
+    eor ($06,x)
+    ora ($1E,x)
+    sta ($17,x)
+    ora ($25,x)
+    sta ($1D,x)
+    ora ($25,x)
+    sta ($20,x)
+    ora ($22,x)
+    sta ($25,x)
+    ora ($1E,x)
+    sta ($20,x)
+    ora ($21,x)
+    sta ($20,x)
+    ora ($20,x)
+    sta ($1E,x)
+    ora ($22,x)
+    sta ($29,x)
+    ora ($32,x)
+    eor ($08,x)
+    ora ($05,x)
+    eor ($06,x)
+    ora ($05,x)
+    eor ($07,x)
+    ora ($04,x)
+    eor ($06,x)
+    ora ($05,x)
+    eor ($06,x)
+    ora ($2E,x)
+    eor ($07,x)
+    ora ($06,x)
+    eor ($05,x)
+    ora ($06,x)
+    eor ($06,x)
+    ora ($05,x)
+    eor ($07,x)
+    ora ($27,x)
+    sta ($21,x)
+    ora ($23,x)
+    sta ($19,x)
+    ora ($00,x)
+    ora ($00,x)
+    ora ($20,x)
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+L883B:
+    jsr L6CD2
+    jsr L69DF
+    jsr L6A1C
+    jmp $CF1D
+    lda #$FF
+    sta $0102
+    sta $0103
+    jsr L883B
+    lda $39
+    bne L8899
+    lda $2002
+    lda #$10
+    sta $2006
+    lda #$00
+    sta $2006
+    sta $2F
+    tay
+    tax
+    lda #$15
+    sta $2D
+    lda #$C6
+    sta $2E
+L886F:
+    lda ($2D),y
+    sta $2007
+    inc $2D
+    lda $2D
+    bne L887C
+    inc $2E
+L887C:
+    inx
+    bne L886F
+    inc $2F
+    lda $2F
+    cmp #$08
+    bne L886F
+L8887:
+    lda ($2D),y
+    sta $2007
+    inc $2D
+    lda $2D
+    bne L8894
+    inc $2E
+L8894:
+    inx
+    cpx #$20
+    bne L8887
+L8899:
+    lda #$00
+    sta $39
+    ldx #$31
+    ldy #$8F
+    jsr L8E39
+    inc $36
+    jsr L8CF2
+    dec $36
+    lda $2002
+    ldy #$00
+L88B0:
+    lda $C5A0,y
+    and #$01
+    beq L8915
+    tya
+    asl a
+    tax
+    jsr L8E70
+    jsr L8E90
+    lda $8D43,x
+    sta $2006
+    lda $8D44,x
+    clc
+    adc #$0F
+    sta $2006
+    lda $C5DC,x
+    sta $2007
+    lda $C5DD,x
+    jsr L892D
+    lda $8D43,x
+    sta $2006
+    lda $8D44,x
+    clc
+    adc #$24
+    sta $2006
+    lda $C5D3,x
+    jsr L892D
+    lda $C5D4,x
+    jsr L892D
+    lda $C5D9,y
+    beq L8915
+    pha
+    lda $8D43,x
+    sta $2006
+    lda $8D44,x
+    clc
+    adc #$08
+    sta $2006
+    pla
+    tax
+L890D:
+    lda #$74
+    sta $2007
+    dex
+    bne L890D
+L8915:
+    iny
+    cpy #$03
+    bne L88B0
+    jsr L8C77
+    sty $38
+    lda #$0D
+    sta $1C
+    lda #$16
+    sta $1F
+L8927:
+    jsr $CF27
+    jmp L6CE0
+L892D:
+    pha
+    lsr a
+    lsr a
+    lsr a
+    lsr a
+    sta $2007
+    pla
+    and #$0F
+    sta $2007
+    rts
+    lda $12
+    and #$30
+    cmp #$10
+    bne L8956
+    ldy $38
+    cpy #$03
+    bcc L8992
+    beq L8950
+    ldy #$19
+    bne L8952
+L8950:
+    ldy #$17
+L8952:
+    sty $1F
+    bcs L896C
+L8956:
+    cmp #$20
+    bne L896C
+    ldy $38
+    iny
+    cpy #$05
+    bne L8963
+    ldy #$00
+L8963:
+    cpy #$03
+    bcs L896A
+    jsr L8C79
+L896A:
+    sty $38
+L896C:
+    ldy $38
+    lda $898D,y
+    sta $0200
+    lda #$E8
+    sta $0201
+    lda #$03
+    sta $0202
+    lda #$18
+    sta $0203
+    ldx #$38
+    ldy #$28
+    jsr L8C95
+    jmp L8DB1
+
+
+    rti
+    rts
+    .byte $80
+    ldy #$B8
+L8992:
+    lda $38
+    asl a
+    asl a
+    asl a
+    asl a
+    tax
+    ldy $C5EE,x
+    beq L89A6
+    dec $C5EE,x
+    lda #$81
+    sta $C5F0,x
+L89A6:
+    ldy #$00
+L89A8:
+    lda $C5E2,x
+    sta $B410,y
+    inx
+    iny
+    cpy #$10
+    bne L89A8
+    lda $38
+    sta $B41F
+    tax
+    lda $C5A0,x
+    ora $B41E
+    sta $B41E
+    and #$01
+    sta $C5A0,x
+    jsr $CE35
+    jmp $CE66
+    jsr L883B
+    ldx #$42
+    ldy #$90
+    jsr L8E39
+    jsr L8D5E
+    jsr L8CF2
+    lda #$00
+    sta $34
+    sta $35
+    lda #$80
+    sta $33
+    jsr L8C86
+    sty $37
+    inc $1F
+    jmp L8927
+    jsr L6A1C
+    ldx #$30
+    ldy #$58
+    jsr L8C95
+    jsr L8DB1
+    ldy $37
+    lda $12
+    and #$30
+    cmp #$10
+    bne L8A39
+    cpy #$03
+    bne L8A39
+    lda #$1B
+    sta $1F
+    inc $39
+    ldx #$00
+    ldy #$00
+L8A17:
+    lda #$00
+    sta $2D
+L8A1B:
+    lda $C5A3,y
+    cmp #$FF
+    beq L8A2A
+    lda $C5A0,x
+    ora #$01
+    sta $C5A0,x
+L8A2A:
+    iny
+    inc $2D
+    lda $2D
+    cmp #$10
+    bne L8A1B
+    inx
+    cpx #$03
+    bne L8A17
+    rts
+L8A39:
+    cmp #$20
+    bne L8A51
+    lda #$80
+    sta $33
+    iny
+    cpy #$04
+    bne L8A48
+    ldy #$00
+L8A48:
+    cpy #$03
+    beq L8A4F
+    jsr L8C88
+L8A4F:
+    sty $37
+L8A51:
+    cpy #$03
+    bne L8A58
+    jmp L8AE8
+L8A58:
+    lda $12
+    bpl L8AD5
+    ldx $07A0
+    tya
+    asl a
+    tay
+    lda $8B81,y
+    jsr L8E5C
+    lda $33
+    lsr a
+    lsr a
+    lsr a
+    adc $8B82,y
+    jsr L8E5C
+    lda $34
+    asl a
+    tay
+    lda $8FCF,y
+    sta $2D
+    lda $8FD0,y
+    sta $2E
+    ldy $35
+    lda ($2D),y
+    pha
+    pha
+    cmp #$5B
+    beq L8A98
+    cmp #$5C
+    beq L8A98
+    lda #$82
+    jsr L8E5C
+    lda #$FF
+    bne L8A9A
+L8A98:
+    lda #$01
+L8A9A:
+    jsr L8E5C
+    pla
+    jsr L8E5C
+    jsr L8E40
+    lda $37
+    sta $2D
+    lda $33
+    asl a
+    ldx #$00
+L8AAD:
+    asl a
+    rol $2D
+    inx
+    cpx #$04
+    bne L8AAD
+    ldx $2D
+    pla
+    cmp #$5B
+    beq L8AC5
+    cmp #$5C
+    beq L8AC5
+    sta $C5A3,x
+    lda #$FF
+L8AC5:
+    sta $C5AB,x
+    lda $33
+    clc
+    adc #$08
+    cmp #$C0
+    bne L8AD3
+    lda #$80
+L8AD3:
+    sta $33
+L8AD5:
+    lda $12
+    and #$40
+    beq L8AE8
+    lda $33
+    sec
+    sbc #$08
+    cmp #$78
+    bne L8AE6
+    lda #$B8
+L8AE6:
+    sta $33
+L8AE8:
+    ldy $37
+    lda $8B87,y
+    sta $0200
+    lda #$E8
+    sta $0201
+    lda #$03
+    sta $0202
+    lda #$40
+    sta $0203
+    cpy #$03
+    beq L8B80
+    lda $27
+    and #$08
+    beq L8B1E
+    lda $8B87,y
+    sta $0204
+    lda #$EC
+    sta $0205
+    lda #$20
+    sta $0206
+    lda $33
+L8B1B:
+    sta $0207
+L8B1E:
+    ldx $34
+    ldy $35
+    lda $16
+    and #$0F
+    beq L8B64
+    lsr a
+    bcc L8B3D
+    iny
+    cpy #$15
+    bne L8B3B
+    inx
+    cpx #$05
+    bne L8B37
+    .byte $A2
+L8B36:
+    .byte $00
+L8B37:
+    stx $34
+    ldy #$00
+L8B3B:
+    sty $35
+L8B3D:
+    lsr a
+    bcc L8B4E
+    dey
+    bpl L8B4C
+    dex
+    bpl L8B48
+    ldx #$04
+L8B48:
+    stx $34
+    ldy #$14
+L8B4C:
+    sty $35
+L8B4E:
+    lsr a
+    bcc L8B5A
+    inx
+    cpx #$05
+    bne L8B58
+    ldx #$00
+L8B58:
+    stx $34
+L8B5A:
+    lsr a
+    bcc L8B64
+    dex
+    bpl L8B62
+    ldx #$04
+L8B62:
+    stx $34
+L8B64:
+    lda $27
+    and #$08
+    beq L8B80
+    lda $8B8B,x
+    sta $0208
+    lda #$EC
+    sta $0209
+    lda #$20
+    sta $020A
+    lda $8B90,y
+L8B7D:
+    sta $020B
+L8B80:
+    rts
+    jsr $21C0
+    rti
+    and ($C0,x)
+    .byte $37
+    .byte $57
+    .byte $77
+    .byte $8F
+    .byte $A7
+    .byte $AF
+    .byte $B7
+    .byte $BF
+    .byte $C7
+    jsr $3028
+    sec
+    rti
+    .byte $50, $58
+    rts
+    pla
+    bvs L8B1B
+    dey
+    bcc L8B36
+    ldy #$B0
+    clv
+    cpy #$C8
+    bne L8B7D
+    jsr L883B
+    ldx #$42
+    ldy #$90
+    jsr L8E39
+    jsr L8D5E
+    ldx #$8E
+    ldy #$90
+    jsr L8E39
+    jsr L8CF2
+    lda #$00
+    sta $37
+    inc $1F
+    jmp L8927
+    jsr L6A1C
+    ldx #$30
+    ldy #$58
+    jsr L8C95
+    jsr L8DB1
+    lda $12
+    and #$10
+    beq L8C41
+    ldy $37
+    cpy #$03
+    bne L8BE3
+    ldy #$17
+    sty $1F
+    rts
+L8BE3:
+    lda #$80
+    sta $C5A0,y
+    tya
+    pha
+    pha
+    asl a
+    tay
+    ldx $07A0
+    lda $8D49,y
+    jsr L8E5C
+    lda $8D4A,y
+    jsr L8C6A
+    lda $8D49,y
+    jsr L8E5C
+    lda $8D4A,y
+    sec
+    sbc #$20
+    jsr L8C6A
+    jsr L8E40
+    pla
+    asl a
+    asl a
+    asl a
+    asl a
+    tay
+    ldx #$00
+L8C16:
+    lda #$FF
+    sta $C5A3,y
+    lda #$00
+    sta $C5E2,y
+    iny
+    inx
+    cpx #$10
+    bne L8C16
+    pla
+    tay
+    lda #$00
+    sta $C5D9,y
+    sta $C612,y
+    tya
+    asl a
+    tay
+    lda #$00
+    sta $C5D3,y
+    sta $C5D4,y
+    sta $C5DC,y
+    sta $C5DD,y
+L8C41:
+    lda $12
+    and #$20
+    beq L8C52
+    ldx $37
+    inx
+    cpx #$04
+    bne L8C50
+    ldx #$00
+L8C50:
+    stx $37
+L8C52:
+    ldy $37
+    lda $8B87,y
+    sta $0200
+    lda #$E8
+    sta $0201
+    lda #$03
+    sta $0202
+    lda #$40
+    sta $0203
+    rts
+L8C6A:
+    jsr L8E5C
+    lda #$48
+    jsr L8E5C
+    lda #$FF
+    jmp L8E5C
+L8C77:
+    ldy #$00
+L8C79:
+    lda $C5A0,y
+    and #$01
+    bne L8C85
+    iny
+    cpy #$03
+    bne L8C79
+L8C85:
+    rts
+L8C86:
+    ldy #$00
+L8C88:
+    lda $C5A0,y
+    and #$01
+    beq L8C94
+    iny
+    cpy #$03
+    bne L8C88
+L8C94:
+    rts
+L8C95:
+    stx $2D
+    sty $2E
+    ldx #$80
+    stx $2F
+L8C9D:
+    ldy #$00
+L8C9F:
+    lda L8CD7,y
+    clc
+    adc $2D
+    sta $0200,x
+    inx
+    iny
+    lda L8CD7,y
+    sta $0200,x
+    iny
+    inx
+    lda #$00
+    sta $0200,x
+    inx
+    lda L8CD7,y
+    clc
+    adc $2E
+    sta $0200,x
+    iny
+    inx
+    cpy #$1B
+    bne L8C9F
+    lda $2D
+    clc
+    adc #$20
+    sta $2D
+    inc $2F
+    lda $2F
+    cmp #$83
+    bne L8C9D
+    rts
+
+L8CD7:
+    .byte $00, $C9, $00, $00, $CA, $08, $00, $CB, $10, $08, $D9, $00, $08, $DA, $08, $08
+    .byte $DB, $10, $10, $E9, $00, $10, $EA, $08, $10, $EB, $10
+
+
+L8CF2:
+    lda $2002
+    lda #$00
+    tay
+    sta $2D
+L8CFA:
+    asl a
+    pha
+    tax
+    lda $36
+    beq L8D0D
+    lda $8D43,x
+    sta $2E
+    lda $8D44,x
+    sta $2F
+    bne L8D17
+L8D0D:
+    lda $8D49,x
+    sta $2E
+    lda $8D4A,x
+    sta $2F
+L8D17:
+    lda $2E
+    sta $2006
+    lda $2F
+    sta $2006
+    jsr L8D4F
+    pla
+    tax
+    lda $2F
+    sec
+    sbc #$20
+    pha
+    lda $2E
+    sbc #$00
+    sta $2006
+    pla
+    sta $2006
+    jsr L8D4F
+    inc $2D
+    lda $2D
+    cmp #$03
+    bne L8CFA
+    rts
+
+L8D43:
+    .byte $21, $0A, $21, $8A, $22, $0A, $20, $F0, $21, $70, $21, $F0
+
+
+L8D4F:
+    ldx #$00
+L8D51:
+    lda $C5A3,y
+    sta $2007
+    iny
+    inx
+    cpx #$08
+    bne L8D51
+    rts
+L8D5E:
+    lda $2002
+    ldy #$00
+    tya
+    sta $2D
+    sta $2E
+L8D68:
+    asl a
+    tax
+    lda $8DA7,x
+    sta $2006
+    lda $8DA8,x
+    sta $2006
+L8D76:
+    ldx #$00
+L8D78:
+    lda $8FD9,y
+    sta $2007
+    iny
+    inx
+    cpx #$05
+    bne L8D78
+    inc $2D
+    lda $2D
+    cmp #$04
+    beq L8D93
+    lda #$FF
+    sta $2007
+    bne L8D76
+L8D93:
+    lda $8FD9,y
+    sta $2007
+    iny
+    lda #$00
+    sta $2D
+    inc $2E
+    lda $2E
+    cmp #$05
+    bne L8D68
+    rts
+    .byte $22
+    ldy $22
+    cpy $22
+    cpx $23
+    .byte $04
+    .byte $23
+    .byte $24
+
+L8DB1:
+    lda $1F
+    cmp #$16
+    bne L8DBD
+    ldy #$40
+    sty $30
+    bne L8DC3
+L8DBD:
+    ldy #$70
+    lda #$00
+    sta $30
+L8DC3:
+    sty $2F
+    ldy #$00
+    sty $2E
+    ldx #$00
+L8DCB:
+    lda $C5A0,y
+    and #$01
+    beq L8E13
+    lda $C612,y
+    sta $31
+    ldy #$00
+    sty $2D
+L8DDB:
+    ldy $2E
+    lda $8E33,y
+    ldy $30
+    beq L8DE7
+    clc
+    adc #$08
+L8DE7:
+    ldy $2D
+    clc
+    adc $8E36,y
+    sta $0220,x
+    inx
+    lda $31
+    asl a
+    asl a
+    adc $2D
+    tay
+    lda $8E1C,y
+    sta $0220,x
+    inx
+    lda #$02
+    sta $0220,x
+    inx
+    lda $2F
+    sta $0220,x
+    inx
+    inc $2D
+    ldy $2D
+    cpy #$03
+    bne L8DDB
+L8E13:
+    inc $2E
+    ldy $2E
+    cpy #$03
+    bne L8DCB
+    rts
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    .byte $FF
+    cpy #$D0
+    .byte $FF
+    .byte $FF
+    cmp ($D1,x)
+    .byte $FF
+    .byte $C3
+    .byte $C2
+    .byte $D2
+    .byte $FF
+    cmp $C4
+    .byte $D4
+    .byte $FF
+    .byte $C7
+    dec $D6
+    bmi L8E85
+    bvs L8E37
+L8E37:
+    .byte $08, $10
+
+L8E39:
+    stx $00
+    sty $01
+    jmp L6B9F
+
+L8E40:
+    stx $07A0
+    lda #$00
+    sta $07A1,x
+    lda #$01
+    sta $1B
+    rts
+    sta $32
+    and #$F0
+    lsr a
+    lsr a
+    lsr a
+    lsr a
+    jsr L8E5C
+    lda $32
+    and #$0F
+L8E5C:
+    sta $07A1,x
+    inx
+    txa
+    cmp #$55
+    bcc L8E6F
+    ldx $07A0
+L8E68:
+    lda #$00
+    sta $07A1,x
+    beq L8E68
+L8E6F:
+    rts
+L8E70:
+    tya
+    pha
+    jsr L6B58
+    tay
+    lda $C5EB,y
+    sta $0B
+    lda $C5EA,y
+    sta $0A
+    jsr L8EBB
+    lda $06
+L8E85:
+    sta $C5DD,x
+    lda $07
+    sta $C5DC,x
+    pla
+    tay
+    rts
+L8E90:
+    tya
+    pha
+    jsr L6B58
+    tay
+    lda $C5ED,y
+    sta $0B
+    lda $C5EC,y
+    sta $0A
+    jsr L8EBB
+    lda $06
+    sta $C5D4,x
+    lda $07
+    sta $C5D3,x
+    lda $C5E2,y
+    pha
+    txa
+    lsr a
+    tay
+    pla
+    sta $C5D9,y
+    pla
+    tay
+    rts
+L8EBB:
+    lda #$FF
+    sta $01
+    sta $02
+    sta $03
+    sec
+L8EC4:
+    lda $0A
+    sbc #$E8
+    sta $0A
+    lda $0B
+    sbc #$03
+    sta $0B
+    inc $03
+    bcs L8EC4
+    lda $0A
+    adc #$E8
+    sta $0A
+    lda $0B
+    adc #$03
+    sta $0B
+    lda $0A
+L8EE2:
+    sec
+L8EE3:
+    sbc #$64
+    inc $02
+    bcs L8EE3
+    dec $0B
+    bpl L8EE2
+    adc #$64
+    sec
+L8EF0:
+    sbc #$0A
+    inc $01
+    bcs L8EF0
+    adc #$0A
+    sta $06
+    lda $01
+    jsr L6B58
+    ora $06
+    sta $06
+    lda $03
+    jsr L6B58
+    ora $02
+    sta $07
+    rts
+
+
+L8F0D:
+    .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
+    .byte $26, $31, $17, $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02
+    .byte $01, $20, $21, $00, $20, $75, $01, $5B, $20, $85, $17, $6B, $FF, $3B, $FF, $57
+    .byte $FF, $35, $FF, $41, $FF, $39, $FF, $40, $FF, $35, $FF, $3D, $FF, $38, $FF, $2F
+    .byte $FF, $6B, $20, $C2, $1C, $70, $72, $72, $72, $72, $72, $72, $72, $72, $72, $17
+    .byte $0A, $16, $0E, $72, $72, $0E, $17, $0E, $1B, $10, $22, $72, $0D, $0A, $22, $72
+    .byte $71, $20, $E2, $D2, $73, $20, $FD, $D2, $73, $21, $12, $89, $6B, $FF, $FF, $FF
+    .byte $6B, $FF, $FF, $FF, $6B, $21, $18, $89, $6B, $FF, $FF, $FF, $6B, $FF, $FF, $FF
+    .byte $6B, $22, $85, $08, $42, $4C, $31, $FF, $41, $30, $58, $35, $22, $E5, $09, $14
+    .byte $12, $15, $15, $FF, $16, $18, $0D, $0E, $23, $22, $01, $80, $23, $23, $5A, $72
+    .byte $23, $3D, $01, $81, $23, $C0, $54, $00, $23, $D4, $12, $04, $05, $00, $00, $00
+    .byte $00, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $04, $05, $23, $E6, $5A
+    .byte $00, $00, $D9, $8F, $EE, $8F, $03, $90, $18, $90, $2D, $90, $2E, $2F, $30, $31
+    .byte $32, $47, $48, $49, $4A, $4B, $25, $26, $27, $28, $29, $0A, $0B, $0C, $0D, $0E
+    .byte $0F, $33, $34, $35, $36, $37, $4C, $4D, $4E, $4F, $50, $2A, $2B, $2C, $FF, $2D
+    .byte $10, $11, $12, $13, $14, $15, $38, $39, $3A, $3B, $3C, $51, $FF, $52, $FF, $53
+    .byte $5B, $5C, $63, $62, $68, $16, $17, $18, $19, $1A, $1B, $3D, $3E, $3F, $40, $41
+    .byte $54, $55, $56, $57, $58, $00, $01, $02, $03, $04, $1C, $1D, $1E, $1F, $20, $21
+    .byte $42, $43, $44, $45, $46, $59, $FF, $FF, $24, $5A, $05, $06, $07, $08, $09, $22
+    .byte $23, $61, $67, $69, $66, $23, $C0, $60, $00, $23, $E0, $60, $00, $20, $80, $47
+    .byte $72, $20, $89, $0D, $42, $FF, $4C, $FF, $31, $FF, $41, $FF, $30, $FF, $58, $FF
+    .byte $35, $20, $99, $47, $72, $22, $4B, $08, $41, $30, $58, $35, $FF, $32, $59, $56
+    .byte $22, $82, $01, $70, $22, $83, $5A, $72, $22, $9D, $01, $71, $22, $A2, $C5, $73
+    .byte $22, $BD, $C5, $73, $23, $42, $01, $80, $23, $43, $5A, $72, $23, $5D, $01, $81
+    .byte $00, $20, $87, $12, $14, $FF, $12, $FF, $15, $FF, $15, $FF, $FF, $FF, $FF, $16
+    .byte $FF, $18, $FF, $0D, $FF, $0E, $22, $4B, $04, $14, $12, $15, $15, $00, $66, $00
+
+L90AD:
+    sta $0066,y
+    rts
+    jsr $8EDB
+    eor #$01
+    tay
+    lda #$00
+    beq L90AD
+    ldx #$B0
+L90BD:
+    lda $0300,x
+    beq L90CA
+    lda $030B,x
+    bne L90CA
+    sta $0300,x
+L90CA:
+    jsr $A0E1
+    bmi L90BD
+    rts
+    lda $0300,x
+    cmp #$05
+    bcc L90E1
+    tya
+    eor $030C,x
+    lsr a
+    bcs L90E1
+    sta $0300,x
+L90E1:
+    rts
+    tya
+    cmp $074B,x
+    bne L90ED
+    lda #$FF
+    sta $0748,x
+L90ED:
+    rts
+    lda $B590
+    sta $00
+    lda $B591
+    sta $01
+    ldy #$00
+    lda ($00),y
+    cmp $49
+    beq L9114
+
+.def L9114 = $9114

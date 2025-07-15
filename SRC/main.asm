@@ -54,7 +54,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PGM"
 FDSFileMacroPart2 $6800, $00
-    .incbin "fdspacker_output/side_1/demo.pgm.prg"
+    .include "fdspacker_output/side_1/demo.pgm.asm"
 FDSFileMacroPart3
 
 
