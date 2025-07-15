@@ -431,12 +431,12 @@ RemoveIntroSprites:
 ;The routine below clears RAM associated with rooms and enemies.
 
 ClearRAM_33_DF:
-    ldx #$33                        ;
+    ldx #RoomPtr                    ;
     lda #$00                        ;
     LC1D8:
         sta $00,x                       ;Clear RAM addresses $33 through $DF.
         inx                             ;
-        cpx #$E0                        ;
+        cpx #SoundE0                    ;
         bcc LC1D8                       ;Loop until all desired addresses are cleared.
     rts
 
