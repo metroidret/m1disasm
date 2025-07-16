@@ -148,8 +148,8 @@ AreaMellowAnimIndex:
 ChooseEnemyAIRoutine:
     lda EnType,x
     jsr CommonJump_ChooseRoutine
-        .word SwooperAIRoutine ; 00 - swooper
-        .word SwooperAIRoutine2 ; 01 - becomes swooper ?
+        .word SwooperAIRoutine00 ; 00 - swooper has not seen samus
+        .word SwooperAIRoutine01 ; 01 - swooper targetting samus
         .word SidehopperFloorAIRoutine ; 02 - dessgeegas
         .word SidehopperCeilingAIRoutine ; 03 - ceiling dessgeegas
         .word InvalidEnemy ; 04 - disappears

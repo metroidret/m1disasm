@@ -32,7 +32,7 @@ SkreeBlowUpIntoProjectiles:
     sta EnStatus,x
     ; spawn 4 projectiles
     ldy #(4-1)*4
-    SkreeLoop:
+    @loop:
         ; projectile is alive for 10 frames
         lda #$0A
         sta SkreeProjectileDieDelay,y
@@ -48,7 +48,7 @@ SkreeBlowUpIntoProjectiles:
         dey
         dey
         dey
-        bpl SkreeLoop
+        bpl @loop
 
 SkreeExit_Active:
     ; skree is active

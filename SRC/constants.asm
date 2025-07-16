@@ -580,8 +580,8 @@ EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
                                    ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
-                                   ;bit4: always set? (see L968B)
-                                   ;bit5: when active, this bit being unset will trigger a resting period
+                                   ;bit4: idk (see L968B). swooper sets and unsets this via DoEnemy_F75B
+                                   ;bit5: when active, this bit being set will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
 EnMovementInstrIndex   = $0406   ;Counts such things as explosion time.

@@ -9722,7 +9722,7 @@ DoActiveEnemy: ; LF3E6
     asl
     bmi DoActiveEnemy_BranchB
 
-    ; Branch if bit 5 is set
+    ; Branch if bit 5 is clear
     lda EnData05,x
     and #$20
     beq DoActiveEnemy_BranchA
