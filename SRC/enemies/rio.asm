@@ -51,3 +51,4 @@ RioExit_Resting:
     ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_01
+

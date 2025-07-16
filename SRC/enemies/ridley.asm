@@ -157,5 +157,7 @@ RidleyTryToLaunchProjectile_FoundEnemySlot:
     ; set projectile's position to its initial position
     jsr LoadPositionFromTemp
     jmp CommonJump_0E
+
 RidleyProjectileOffsetX:
     .byte $08, -$08
+

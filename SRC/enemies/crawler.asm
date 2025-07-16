@@ -164,3 +164,4 @@ JumpByRTSToMovementRoutine:
     lda CrawlerMovementRoutinesTable,y
     pha
     rts
+

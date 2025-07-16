@@ -315,7 +315,7 @@ ClearMetroidSpeed:
     sta EnSpeedX,x
     sta EnSpeedSubPixelX,x
     sta EnSpeedSubPixelY,x
-ClearRinkaSomething: ; referenced in rinka.asm
+ClearRinkaAcceleration: ; referenced in rinka.asm
     sta EnAccelX,x
     sta EnAccelY,x
     rts
@@ -366,3 +366,4 @@ GetMetroidRepelSpeed:
     rts
 
     .byte $F8, $08, $30, $D0, $60, $A0, $02, $04, $00, $00, $00, $00, $00, $00
+

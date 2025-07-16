@@ -10,3 +10,4 @@ WaverAIRoutine:
         jsr CommonJump_09
     L99F7:
     jmp CommonEnemyStub2
+

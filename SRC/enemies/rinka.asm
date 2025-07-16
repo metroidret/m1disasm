@@ -12,9 +12,11 @@ RinkaAIRoutine:
 
     ; EnemyMovementPtr is #$01
     ; that means the rinka's speed vector needs to be initialized
-    ; clear some stuff (what stuff exactly?)
+    ; clear rinka acceleration
+    ; (this is useless, because rinka isn't using the acceleration movement system)
     lda #$00
-    jsr ClearRinkaSomething ; in metroid.asm
+    jsr ClearRinkaAcceleration ; in metroid.asm
+    ; clear rinka sub-pixel position
     sta EnSubPixelY,x
     sta EnSubPixelX,x
 
@@ -120,6 +122,7 @@ L9A7A:
         sbc EnSpeedY,x
         sta EnSpeedY,x
     endIf9AB0:
+
 L9AB0:
     ; branch if bit 6 of EnData05 is set (30FPS)
     lda EnData05,x
@@ -208,3 +211,4 @@ Amul16_:
     asl
     asl
     rts
+

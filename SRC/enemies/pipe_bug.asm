@@ -94,3 +94,4 @@ PipeBugSpeedXTable:
 .else ; Norfair, Kraid, Ridley
     .byte $08, -$08
 .endif
+

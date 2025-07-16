@@ -10,3 +10,4 @@ MultiviolaAIRoutine:
     sta $00
     sta $01
     jmp CommonEnemyJump_00_01_02
+

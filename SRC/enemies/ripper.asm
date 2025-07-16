@@ -15,3 +15,4 @@ RipperAIRoutine:
         sta $01
         jmp CommonEnemyJump_00_01_02
     .endif
+

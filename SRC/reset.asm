@@ -75,5 +75,3 @@ RESET: ;($BFB0)
     .endif
 .endif
 
-
-

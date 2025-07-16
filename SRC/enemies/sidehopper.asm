@@ -29,3 +29,4 @@ SidehopperCeilingAIRoutine:
         lda #EnAnim_48 - EnAnimTbl.b
     .endif
     jmp Sidehopper_Common
+
