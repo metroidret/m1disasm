@@ -246,7 +246,7 @@ L968B:
 EnemyData0DTbl:
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $28, $10, $00, $00, $00, $01, $00, $00
 
-L96AB:
+EnemyDistanceToSamusThreshold:
     .byte $05, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $86, $00, $00
 
 EnemyInitDelayTbl:

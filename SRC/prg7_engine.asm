@@ -9705,7 +9705,7 @@ DoRestingEnemy: ;($F3BE)
         sta EnMovementInstrIndex,x
         sta EnData0A,x
         jsr DoEnemy_F6B9
-        jsr DoEnemy_F75B
+        jsr DoEnemy_EnData05DistanceToSamusThreshold
         jsr InitEnRestingAnimIndex
         jsr DoRestingEnemy_F676
 
@@ -9737,7 +9737,7 @@ DoActiveEnemy: ; LF3E6
 
 DoActiveEnemy_BranchA: ; LF401
     jsr DoEnemy_F6B9
-    jsr DoEnemy_F75B
+    jsr DoEnemy_EnData05DistanceToSamusThreshold
     jsr RemoveEnemyIfItIsInLava
 DoActiveEnemy_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
@@ -10247,7 +10247,7 @@ DoEnemy_F6B9:
 
     ; clear bit 0 of EnData05
     lda #~$01
-    jsr LF7B3
+    jsr AndEnData05
 
     lda ScrollDir
     cmp #$02
@@ -10277,7 +10277,7 @@ DoEnemy_F6B9:
 Lx337:
     ; clear bit 2 of EnData05
     lda #~$04
-    jsr LF7B3
+    jsr AndEnData05
 
     lda ScrollDir
     cmp #$02
@@ -10333,56 +10333,91 @@ LF752:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_F75B:
-    lda #$E7
+DoEnemy_EnData05DistanceToSamusThreshold:
+    ; default to masking out bit 4 and bit 3 of EnData05
+    lda #~$18
     sta $06
+    ; set bit 4 and bit 3 of EnData05
     lda #$18
     jsr OrEnData05
+    ; exit if EnemyDistanceToSamusThreshold is zero
     ldy EnType,x
-    lda L96AB,y
+    lda EnemyDistanceToSamusThreshold,y
     beq RTS_X346
+    
+    ; push to y
     tay
+    ; unset bit 4 and bit 3 of EnData05 and exit if enemy is invisible
     lda EnData05,x
     and #$02
     beq Lx345
+    
+    ; pop from y
     tya
-    ldy #$F7
+    ; mask out bit 3 from EnData05
+    ldy #~$08
+    ; branch if bit 7 of EnemyDistanceToSamusThreshold is set
     asl
     bcs Lx342
-        ldy #$EF
+        ; bit 7 of EnemyDistanceToSamusThreshold is not set
+        ; mask out bit 4 from EnData05
+        ldy #~$10
     Lx342:
+    ; save EnemyDistanceToSamusThreshold & #$7F to $02
     lsr
     sta $02
+    ; save mask to $06
     sty $06
+    
+    ; check y axis
     lda ObjY
     sta $00
     ldy EnY,x
+    ; branch if bit 7 of EnData05 is set
     lda EnData05,x
     bmi Lx343
+        ; bit 7 of EnData05 is not set
+        ; check x axis
         ldy ObjX
         sty $00
         ldy EnX,x
     Lx343:
+    
+    ; rotate samus hi bit into bit 7 of her position
     lda ObjHi
     lsr
     ror $00
+    ; rotate enemy hi bit into bit 7 of its position
     lda EnHi,x
     lsr
     tya
     ror
+    ; get enemy pos relative to samus pos
     sec
     sbc $00
+    ; branch if enemy is to the right of samus
     bpl Lx344
+        ; enemy is to the left of samus
+        ; negate pos
         jsr TwosComplement              ;($C3D4)
     Lx344:
+    ; now a contains absolute distance between enemy and samus on a specific axis, divided by 2
+    
+    ; divide further by 8
     lsr
     lsr
     lsr
+    ; now it's divided by 16
+    ; compare with EnemyDistanceToSamusThreshold & #$7F
     cmp $02
+    ; exit if the distance is smaller than the threshold
     bcc RTS_X346
+    ; the distance is greater than the threshold
+    ; we must unset the proper bit of EnData05
 Lx345:
+    ; apply mask to EnData05
     lda $06
-LF7B3:
+AndEnData05:
     and EnData05,x
     sta EnData05,x
 RTS_X346:
@@ -10484,7 +10519,7 @@ DoRestingEnemy_TryBecomingActive:
     Lx351:
     ; clear bit 5 of EnData05
     lda #~$20
-    jmp LF7B3
+    jmp AndEnData05
 
 GetEnemyTypeTimes2PlusFacingDirectionBit0:
     lda EnData05,x

@@ -244,8 +244,11 @@ L968B:
 EnemyData0DTbl:
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $20, $01, $01, $01, $40, $00, $00, $00
 
-; Some table referenced when loading an enemy
-L96AB:
+; Update EnData05 bit 4 or bit 3 depending on whether samus is close enough to the enemy
+; bit 7: 0=EnData05 bit 4, 1=EnData05 bit 3
+; bit 4-6: zero
+; bit 0-3: number of blocks distance threshold in the axis indicated by EnData05 bit 7
+EnemyDistanceToSamusThreshold:
     .byte $00, $00, $06, $00, $83, $00, $88, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyInitDelayTbl:

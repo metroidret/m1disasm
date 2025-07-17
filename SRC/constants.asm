@@ -580,7 +580,9 @@ EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
                                    ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
-                                   ;bit4: idk (see L968B). swooper sets and unsets this via DoEnemy_F75B
+                                   ;bit4: is samus close enough to the enemy (EnemyDistanceToSamusThreshold). 0=no, 1=yes
+                                   ;  depending on the threshold, bit 3 may be used instead, which will allow -->
+                                   ;  the enemy to become active when samus gets close.
                                    ;bit5: when active, this bit being set will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
