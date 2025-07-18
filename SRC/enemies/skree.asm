@@ -1,5 +1,8 @@
 ; SkreeRoutine
 SkreeAIRoutine:
+    ; skree uses EnemyDistanceToSamusThreshold to see if samus is close enough on the x axis to start falling
+    ; when samus gets close enough, bit 3 of EnData05 will get set, which will make the skree active
+    
     ; branch if enemy is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
