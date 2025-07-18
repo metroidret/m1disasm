@@ -9704,7 +9704,7 @@ DoRestingEnemy: ;($F3BE)
         sta EnJumpDsplcmnt,x
         sta EnMovementInstrIndex,x
         sta EnData0A,x
-        jsr DoEnemy_F6B9
+        jsr DoEnemy_ForceSpeedTowardsSamus
         jsr DoEnemy_EnData05DistanceToSamusThreshold
         jsr InitEnRestingAnimIndex
         jsr DoRestingEnemy_F676
@@ -9736,7 +9736,7 @@ DoActiveEnemy: ; LF3E6
     bne DoActiveEnemy_BranchB ; Branch always
 
 DoActiveEnemy_BranchA: ; LF401
-    jsr DoEnemy_F6B9
+    jsr DoEnemy_ForceSpeedTowardsSamus
     jsr DoEnemy_EnData05DistanceToSamusThreshold
     jsr RemoveEnemyIfItIsInLava
 DoActiveEnemy_BranchB: ; LF40A
@@ -10216,7 +10216,7 @@ Exit12:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_F6B9:
+DoEnemy_ForceSpeedTowardsSamus:
     ; clear $82
     lda #$00
     sta Enemy82
@@ -10228,6 +10228,7 @@ DoEnemy_F6B9:
     lda EnStatus,x
     cmp #enemyStatus_Active
     bne Lx333
+        ; enemy is active
         ; if bit 1 of L968B[EnType] is not set, exit
         tya
         and #$02
@@ -10238,76 +10239,116 @@ DoEnemy_F6B9:
     dec EnData0D,x
     bne Exit12
 
+    ; write EnData0D from table
     pha
     ldy EnType,x
     lda EnemyData0DTbl,y
     sta EnData0D,x
     pla
+    ; branch if bit 7 of L968B[EnType] is not set
     bpl Lx337
 
-    ; clear bit 0 of EnData05
+    ; x axis
+
+    ; clear bit 0 of EnData05 (x axis flip)
     lda #~$01
     jsr AndEnData05
 
+    ; branch if room is vertical
     lda ScrollDir
     cmp #$02
     bcc Lx334
 
-    jsr LF752
+    ; room is horizontal
+    ; branch if samus is in the same nametable as the enemy
+    jsr LoadEnHiToYAndLoadEorHiToCarry
     bcc Lx334
-
+    
+    ; samus is in the other nametable
+    ; load (EnHi != PPUCTRL_ZP) into a
     tya
     eor PPUCTRL_ZP
-    bcs Lx336
+    bcs Lx336 ; branch always
+    
     Lx334:
+        ; samus is in the same nametable as the enemy on the x axis
+        ; compare enemy pos to samus pos
         lda EnX,x
         cmp ObjX
         bne Lx335
+            ; samus x position is the same as enemy x position
+            ; set bit 0 of Enemy82
             inc Enemy82
         Lx335:
+        ; carry contains whether or not the enemy is to the right of samus
+        ; rotate carry into bit 0
         rol
     Lx336:
+    ; set bit 0 as bit 0 of EnData05
     and #$01
     jsr OrEnData05
+    ; move bit 0 to bit 7
     lsr
     ror
+    ; branch if it matches sign bit of x speed (enemy moves towards samus)
     eor EnSpeedX,x
     bpl Lx337
+    ; it doesnt match
+    ; force x speed to point the right direction
     jsr L81DA
 Lx337:
-    ; clear bit 2 of EnData05
+
+    ; y axis
+
+    ; clear bit 2 of EnData05 (y axis flip)
     lda #~$04
     jsr AndEnData05
 
+    ; branch if room is horizontal
     lda ScrollDir
     cmp #$02
     bcs Lx338
 
-    jsr LF752
+    ; room is vertical
+    ; branch if samus is in the same nametable as the enemy
+    jsr LoadEnHiToYAndLoadEorHiToCarry
     bcc Lx338
 
+    ; samus is in the other nametable
+    ; load (EnHi != PPUCTRL_ZP) into a
     tya
     eor PPUCTRL_ZP
-    bcs Lx340
+    bcs Lx340 ; branch always
+    
     Lx338:
+        ; samus is in the same nametable as the enemy on the y axis
+        ; compare enemy pos to samus pos
         lda EnY,x
         cmp ObjY
         bne Lx339
+            ; samus y position is the same as enemy y position
+            ; set bit 1 of Enemy82
             inc Enemy82
             inc Enemy82
         Lx339:
+        ; carry contains whether or not the enemy is under samus
+        ; rotate carry into bit 0
         rol
     Lx340:
+    ; set bit 0 as bit 2 of EnData05
     and #$01
     asl
     asl
     jsr OrEnData05
+    ; move bit 2 to bit 7
     lsr
     lsr
     lsr
     ror
+    ; branch if it matches sign bit of y speed (enemy moves towards samus)
     eor EnSpeedY,x
     bpl RTS_X341
+    ; force y speed to point the right direction
     jmp L820F
 
 ;-------------------------------------------------------------------------------
@@ -10325,7 +10366,7 @@ ReadTableAt968B: ; LF74B
 
 ;-------------------------------------------------------------------------------
 
-LF752:
+LoadEnHiToYAndLoadEorHiToCarry:
     lda EnHi,x
     tay
     eor ObjHi

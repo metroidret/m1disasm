@@ -348,27 +348,35 @@ SetBit5OfEnData05_AndClearEnAccelX:
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related
 EnemyIfMoveFailedHorizontal81FC:
+    ; exit if bit 5 of L968B is set
     jsr LoadBit5ofTableAt968B
     bne RTS_81F5
+    
+    ; flip facing direction on the x axis
     lda #$01
     jsr XorEnData05
 L81D1: ;referenced in bank 7
+    ; negate acceleration
     lda EnAccelX,x
     jsr TwosComplement
     sta EnAccelX,x
 
 L81DA: ;referenced in bank 7
+    ; exit if bit 5 of L968B is set
     jsr LoadBit5ofTableAt968B
     bne RTS_81F5
+    
+    ; branch if uses movement strings
     jsr LoadTableAt977B
     sec
     bpl L81ED
-; Decrement EnSpeedSubPixelX
-    lda #$00
-    sbc EnSpeedSubPixelX,x
-    sta EnSpeedSubPixelX,x
-; Decrement EnSpeedX (if carry is set)
-L81ED:
+        ; enemy uses acceleration
+        ; Negate sub-pixel speed
+        lda #$00
+        sbc EnSpeedSubPixelX,x
+        sta EnSpeedSubPixelX,x
+    L81ED:
+    ; Negate speed
     lda #$00
     sbc EnSpeedX,x
     sta EnSpeedX,x
@@ -385,26 +393,35 @@ LoadBit5ofTableAt968B:
 ;-------------------------------------------------------------------------------
 ; Vertical Movement Related
 EnemyIfMoveFailedVertical81FC:
+     ; Exit if bit 5 is set
     jsr LoadBit5ofTableAt968B
-    bne RTS_81F5 ; Exit if bit 5 is set
+    bne RTS_81F5
+    
+    ; flip facing direction on the y axis
     lda #$04
     jsr XorEnData05
 L8206: ;referenced in bank 7
+    ; negate acceleration
     lda EnAccelY,x
     jsr TwosComplement
     sta EnAccelY,x
+    
 L820F: ;referenced in bank 7
+    ; Exit if bit 5 is set
     jsr LoadBit5ofTableAt968B
-    bne RTS_822A ; Exit if bit 5 is set
+    bne RTS_822A
+    
+    ; branch if uses movement strings
     jsr LoadTableAt977B
     sec
     bpl L8222
-; Decrement EnSpeedSubPixelY
-    lda #$00
-    sbc EnSpeedSubPixelY,x
-    sta EnSpeedSubPixelY,x
-; Decrement EnSpeedY (if EnSpeedSubPixelY rolls over)
-L8222:
+        ; enemy uses acceleration
+        ; Negate sub-pixel speed
+        lda #$00
+        sbc EnSpeedSubPixelY,x
+        sta EnSpeedSubPixelY,x
+    L8222:
+    ; Negate speed
     lda #$00
     sbc EnSpeedY,x
     sta EnSpeedY,x
