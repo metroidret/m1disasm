@@ -23,8 +23,10 @@
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
+NMIStatus              = $1A     ;0=NMI in progress. anything else, NMI not in progress.
 PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
 
+FDS_CTRL_ZP            = $FB
 ScrollY                = $FC     ;Y value loaded into scroll register.
 ScrollX                = $FD     ;X value loaded into scroll register.
 PPUMASK_ZP             = $FE     ;Data byte to be loaded into PPU control register 1.
