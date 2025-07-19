@@ -38,14 +38,14 @@ SkreeBlowUpIntoProjectiles:
     @loop:
         ; projectile is alive for 10 frames
         lda #$0A
-        sta SkreeProjectileDieDelay,y
+        sta SkreeProjectiles.1.dieDelay,y
         ; set projectile position to skree position
         lda EnY,x
-        sta SkreeProjectileY,y
+        sta SkreeProjectiles.1.y,y
         lda EnX,x
-        sta SkreeProjectileX,y
+        sta SkreeProjectiles.1.x,y
         lda EnHi,x
-        sta SkreeProjectileHi,y
+        sta SkreeProjectiles.1.hi,y
         ; move to next projectile slot
         dey
         dey
