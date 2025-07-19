@@ -1720,8 +1720,8 @@ SamusInit:
     stx PipeBugHoleStatus+$10
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
-    stx RinkaSpawnerStatus
-    stx RinkaSpawnerStatus+3.b
+    stx RinkaSpawners.1.status
+    stx RinkaSpawners.1.status+3.b
     ldy #$27
     lda InArea
     and #$0F
@@ -8338,11 +8338,11 @@ UpdateRoomSpriteInfo:
     ldx #$18
     @loop_mellows:
         tya
-        eor MellowHi,x
+        eor Mellows.1.hi,x
         lsr
         bcs @dontDeleteMellow
             lda #$00
-            sta MellowStatus,x
+            sta Mellows.1.status,x
         @dontDeleteMellow:
         txa
         sec
@@ -8674,18 +8674,18 @@ SpawnMellows_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
 SpawnMellow:
-    lda MellowStatus,x
+    lda Mellows.1.status,x
     bne @RTS
     txa
     adc Mellow8A
     and #$7F
-    sta MellowY,x
+    sta Mellows.1.y,x
     adc RandomNumber2
-    sta MellowX,x
+    sta Mellows.1.x,x
     jsr GetNameTable                ;($EB85)
-    sta MellowHi,x
+    sta Mellows.1.hi,x
     lda #$01
-    sta MellowStatus,x
+    sta Mellows.1.status,x
     rol Mellow8A
 @RTS:
     rts
@@ -9030,11 +9030,11 @@ CollisionDetection:
     ldx #$18
     Lx261:
         ; branch if no Mellow in slot
-        lda MellowStatus,x
+        lda Mellows.1.status,x
         beq Lx266
         cmp #$03
         beq Lx266
-        jsr GetMellowXSlotPosition
+        jsr GetMellows.1.xSlotPosition
         jsr IsSamusDead
         beq Lx262
         lda SamusBlink
@@ -9249,12 +9249,12 @@ GetYSlotPosition_Common:
     sta Temp0A_YSlotPositionHi
     rts
 
-GetMellowXSlotPosition:
-    lda MellowY,x
+GetMellows.1.xSlotPosition:
+    lda Mellows.1.y,x
     sta Temp07_XSlotPositionY
-    lda MellowX,x
+    lda Mellows.1.x,x
     sta Temp09_XSlotPositionX
-    lda MellowHi,x
+    lda Mellows.1.hi,x
     jmp GetXSlotPosition_Common
 
 GetRadiusSumsOfObjXSlotAndObjYSlot:
@@ -9504,11 +9504,11 @@ CollisionDetectionMellow_ReactToCollisionWithSamus:
     ; screw attack was active
 CollisionDetectionMellow_Hit:
     ; set mellow is hit flag
-    lda MellowIsHit,x
+    lda Mellows.1.isHit,x
     and #$F8
     ora Temp10_DistHi
     eor #$03
-    sta MellowIsHit,x
+    sta Mellows.1.isHit,x
 RTS_X290:
     rts
 
@@ -11191,9 +11191,9 @@ UpdateAllSkreeProjectiles:
         bne @loop
         ; fallthrough
 UpdateSkreeProjectile:
-    lda SkreeProjectileDieDelay,x
+    lda SkreeProjectiles.1.dieDelay,x
     beq @RTS
-    dec SkreeProjectileDieDelay,x
+    dec SkreeProjectiles.1.dieDelay,x
     
     ; y = x/2
     txa
@@ -11208,13 +11208,13 @@ UpdateSkreeProjectile:
     lda SkreeProjectileSpeedTable+1,y
     sta Temp05_SpeedX
     ; y pos
-    lda SkreeProjectileY,x
+    lda SkreeProjectiles.1.y,x
     sta Temp08_PositionY
     ; x pos
-    lda SkreeProjectileX,x
+    lda SkreeProjectiles.1.x,x
     sta Temp09_PositionX
     ; nametable
-    lda SkreeProjectileHi,x
+    lda SkreeProjectiles.1.hi,x
     sta Temp0B_PositionHi
     
     ; apply speed to position in parameters
@@ -11225,19 +11225,19 @@ UpdateSkreeProjectile:
     ; save the new position from parameters to skree projectile variables
     ; y pos
     lda Temp08_PositionY
-    sta SkreeProjectileY,x
+    sta SkreeProjectiles.1.y,x
     sta PowerUpY
     ; x pos
     lda Temp09_PositionX
-    sta SkreeProjectileX,x
+    sta SkreeProjectiles.1.x,x
     sta PowerUpX
     ; nametable
     lda Temp0B_PositionHi
     and #$01
-    sta SkreeProjectileHi,x
+    sta SkreeProjectiles.1.hi,x
     sta PowerUpHi
     ; oops this write is redundant
-    lda SkreeProjectileHi,x
+    lda SkreeProjectiles.1.hi,x
     sta PowerUpHi
     
     ;Save index to find object animation.
@@ -11274,7 +11274,7 @@ UpdateSkreeProjectile:
 
 KillSkreeProjectile:
     lda #$00
-    sta SkreeProjectileDieDelay,x
+    sta SkreeProjectiles.1.dieDelay,x
     rts
 
 ; Table used by above subroutine
@@ -11308,9 +11308,9 @@ UpdateAllMellows:
         jsr UpdateMellow
         pla
         tax
-        lda MellowIsHit,x
+        lda Mellows.1.isHit,x
         and #$F8
-        sta MellowIsHit,x
+        sta Mellows.1.isHit,x
         txa
         sec
         sbc #$08
@@ -11322,7 +11322,7 @@ RemoveMellowHandlerEnemy:
     jmp RemoveEnemy                   ;($FA18)Free enemy data slot.
 
 UpdateMellow:
-    lda MellowStatus,x
+    lda Mellows.1.status,x
     jsr ChooseRoutine
         .word ExitSub       ;($C45C) rts
         .word UpdateMellow_Resting
@@ -11342,22 +11342,22 @@ UpdateMellow_Active:
 
 UpdateMellow_Explode:
     lda #$00
-    sta MellowStatus,x
+    sta Mellows.1.status,x
     jmp SFX_EnemyHit
 
 UpdateMellow_RunAI:
     jsr UpdateMellow_StorePositionToTemp
-    lda MellowAttackState,x
+    lda Mellows.1.attackState,x
     cmp #$02
     bcs Lx392
     ldy Temp08_PositionY
     cpy ObjY
     bcc Lx392
     ora #$02
-    sta MellowAttackState,x
+    sta Mellows.1.attackState,x
 Lx392:
     ldy #$01
-    lda MellowAttackState,x
+    lda Mellows.1.attackState,x
     lsr
     bcc Lx393
         ldy #$FF
@@ -11365,36 +11365,36 @@ Lx392:
     sty Temp05_SpeedX
     ldy #$04
     lsr
-    lda MellowAttackTimer,x
+    lda Mellows.1.attackTimer,x
     bcc Lx394
         ldy #$FD
     Lx394:
     sty Temp04_SpeedY
-    inc MellowAttackTimer,x
+    inc Mellows.1.attackTimer,x
     jsr ApplySpeedToPosition
     bcs Lx395
-        lda MellowAttackState,x
+        lda Mellows.1.attackState,x
         ora #$02
-        sta MellowAttackState,x
+        sta Mellows.1.attackState,x
     Lx395:
     bcc Lx396
         jsr UpdateMellow_LoadPositionFromTemp
     Lx396:
-    lda MellowAttackTimer,x
+    lda Mellows.1.attackTimer,x
     cmp #$50
     bcc RTS_X397
     lda #$01
-    sta MellowStatus,x
+    sta Mellows.1.status,x
 RTS_X397:
     rts
 
 UpdateMellow_FD08:
     lda #$00
-    sta MellowAttackTimer,x
+    sta Mellows.1.attackTimer,x
     tay
     lda ObjX
     sec
-    sbc MellowX,x
+    sbc Mellows.1.x,x
     bpl Lx398
         iny
         jsr TwosComplement              ;($C3D4)
@@ -11402,9 +11402,9 @@ UpdateMellow_FD08:
     cmp #$10
     bcs RTS_X399
     tya
-    sta MellowAttackState,x
+    sta Mellows.1.attackState,x
     lda #$02
-    sta MellowStatus,x
+    sta Mellows.1.status,x
 RTS_X399:
     rts
 
@@ -11448,33 +11448,33 @@ MellowSpeedTable:
     .byte  $02
 
 UpdateMellow_StorePositionToTemp:
-    lda MellowHi,x
+    lda Mellows.1.hi,x
     sta Temp0B_PositionHi
-    lda MellowY,x
+    lda Mellows.1.y,x
     sta Temp08_PositionY
-    lda MellowX,x
+    lda Mellows.1.x,x
     sta Temp09_PositionX
     rts
 
 UpdateMellow_LoadPositionFromTemp:
     lda Temp08_PositionY
-    sta MellowY,x
+    sta Mellows.1.y,x
     sta EnY+$F0
     lda Temp09_PositionX
-    sta MellowX,x
+    sta Mellows.1.x,x
     sta EnX+$F0
     lda Temp0B_PositionHi
     and #$01
-    sta MellowHi,x
+    sta Mellows.1.hi,x
     sta EnHi+$F0
     rts
 
 UpdateMellow_FD84:
-    lda MellowIsHit,x
+    lda Mellows.1.isHit,x
     and #$04
     beq @RTS
         lda #$03
-        sta MellowStatus,x
+        sta Mellows.1.status,x
     @RTS:
     rts
 
