@@ -127,7 +127,7 @@ TitleRoutine           = $1F     ;Stores title routine number currently running.
 NextRoutine            = $20     ;Stores next routine to jump to after WaitTimer expires.
 CurrentBank            = $23     ;0 thru 7. current memory page in lower memory block.
 SwitchPending          = $24     ;Switch memory page. Page # = SwitchPending - 1.
-MMCReg0Cntrl           = $25     ;Stores bits to be loaded into MMC1 Register 0.
+MMC1CTRL_ZP            = $25     ;Stores bits to be loaded into MMC1 Register 0.
 SwitchUpperBits        = $28     ;Used to store bits 3 and 4 for MMC1 register 3.  Bits-->
                                    ;3 and 4 should always be 0 under normal conditions.
 

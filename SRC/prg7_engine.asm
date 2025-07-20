@@ -31,6 +31,8 @@
 ;behind after it is killed.
 
 RandomNumbers: ;$C000
+    ;RandomNumber1 is increased by #$19 every frame
+    ;RandomNumber2 is increased by #$5F every frame.
     txa
     pha
     ldx #$05
@@ -38,11 +40,13 @@ RandomNumbers: ;$C000
         lda RandomNumber1
         clc
         adc #$05
-        sta RandomNumber1               ;2E is increased by #$19 every frame and-->
-        lda RandomNumber2               ;2F is increased by #$5F every frame.
+        sta RandomNumber1
+        
+        lda RandomNumber2
         clc
         adc #$13
         sta RandomNumber2
+        
         dex
         bne @loop
     pla
@@ -54,17 +58,17 @@ RandomNumbers: ;$C000
 
 Startup:
     lda #$00
-    sta MMC1Reg1                    ;Clear bit 0. MMC1 is serial controlled
-    sta MMC1Reg1                    ;Clear bit 1
-    sta MMC1Reg1                    ;Clear bit 2
-    sta MMC1Reg1                    ;Clear bit 3
-    sta MMC1Reg1                    ;Clear bit 4
-    sta MMC1Reg2                    ;Clear bit 0
-    sta MMC1Reg2                    ;Clear bit 1
-    sta MMC1Reg2                    ;Clear bit 2
-    sta MMC1Reg2                    ;Clear bit 3
-    sta MMC1Reg2                    ;Clear bit 4
-    jsr MMCWriteReg3                ;($C4FA)Swap to PRG bank #0 at $8000
+    sta MMC1CHR0                    ;Clear bit 0. MMC1 is serial controlled
+    sta MMC1CHR0                    ;Clear bit 1
+    sta MMC1CHR0                    ;Clear bit 2
+    sta MMC1CHR0                    ;Clear bit 3
+    sta MMC1CHR0                    ;Clear bit 4
+    sta MMC1CHR1                    ;Clear bit 0
+    sta MMC1CHR1                    ;Clear bit 1
+    sta MMC1CHR1                    ;Clear bit 2
+    sta MMC1CHR1                    ;Clear bit 3
+    sta MMC1CHR1                    ;Clear bit 4
+    jsr MMCWritePrgBank             ;($C4FA)Swap to PRG bank #0 at $8000
     dex                             ;X = $FF
     txs                             ;S points to end of stack page
 
@@ -106,8 +110,8 @@ LC057:
     ;Switch low PRGROM area during a page switch.
     ;16KB PRGROM switching enabled.
     ;8KB CHRROM switching enabled.
-    lda #MMC1_0_MIRROR_VERTI | MMC1_0_PRGFIXED_C000 | MMC1_0_PRGBANK_16K | MMC1_0_CHRBANK_8K.b
-    sta MMCReg0Cntrl
+    lda #MMC1CTRL_MIRROR_VERTI | MMC1CTRL_PRGFIXED_C000 | MMC1CTRL_PRGBANK_16K | MMC1CTRL_CHRBANK_8K.b
+    sta MMC1CTRL_ZP
 
     lda #$00                        ;Clear bits 3 and 4 of MMC1 register 3.
     sta SwitchUpperBits             ;
@@ -140,22 +144,28 @@ LC057:
     lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR.b
     sta PPUMASK_ZP
 
-    lda #$47                        ;
-    sta MirrorCntrl                 ;Prepare to set PPU to vertical mirroring.
-    jsr PrepVertMirror              ;($C4B2)
+    ;Prepare to set PPU to vertical mirroring.
+    lda #$47
+    sta MirrorCntrl
+    jsr PrepVertMirror
 
-    lda #$00                        ;
-    sta DMC_RAW                     ;PCM volume = 0 - disables DMC channel
-    lda #$0F                        ;
-    sta SND_CHN             ;Enable sound channel 0,1,2,3
+    ;PCM volume = 0 - disables DMC channel
+    lda #$00
+    sta DMC_RAW
+    ;Enable sound channel 0,1,2,3
+    lda #SND_CHN_SQ1 | SND_CHN_SQ2 | SND_CHN_TRI | SND_CHN_NOISE.b
+    sta SND_CHN
 
-    ldy #$00                        ;
-    sty TitleRoutine                ;Set title routine and and main routine function-->
-    sty MainRoutine                 ;pointers equal to 0.
-    lda #$11                        ;
-    sta RandomNumber1               ;Initialize RandomNumber1 to #$11
-    lda #$FF                        ;
-    sta RandomNumber2               ;Initialize RandomNumber2 to #$FF
+    ;Set title routine and and main routine function pointers equal to 0.
+    ldy #$00
+    sty TitleRoutine
+    sty MainRoutine
+    ;Initialize RandomNumber1 to #$11
+    lda #$11
+    sta RandomNumber1
+    ;Initialize RandomNumber2 to #$FF
+    lda #$FF
+    sta RandomNumber2
 
     iny                             ;Y = 1
     sty SwitchPending               ;Prepare to switch page 0 into lower PRGROM.
@@ -355,36 +365,47 @@ LC16F:
     sta $00                         ;Value to fill with.
 
 ClearNameTable:
-    ldx PPUSTATUS                   ;Reset PPU address latch.
-    lda PPUCTRL_ZP                  ;
-    and #$FB                        ;PPU increment = 1.
-    sta PPUCTRL_ZP                  ;
-    sta PPUCTRL                     ;Store control bits in PPU.
-    ldx $01                         ;
-    dex                             ;Name table = X - 1.
-    lda HiPPUTable,x                ;get high PPU address.  pointer table at $C19F.
-    sta PPUADDR                     ;
-    lda #$00                        ;Set PPU start address (High byte first).
-    sta PPUADDR                     ;
-    ldx #$04                        ;Prepare to loop 4 times.
-    ldy #$00                        ;Inner loop value.
-    lda $00                         ;Fill-value.
-    LC195:
-        sta PPUDATA                     ;
-        dey                             ;
-        bne LC195                       ;Loops until the desired name table is cleared.-->
-        dex                             ;It also clears the associated attribute table.
-        bne LC195                       ;
+    ;Reset PPU address latch.
+    ldx PPUSTATUS
+    ;PPU increment = 1.
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_INCR_DOWN.b
+    sta PPUCTRL_ZP
+    ;Store control bits in PPU.
+    sta PPUCTRL
+    ;Name table = X - 1.
+    ldx $01
+    dex
+    ;get high PPU address.  pointer table at $C19F.
+    lda HiPPUTable,x
+    ;Set PPU start address (High byte first).
+    sta PPUADDR
+    lda #$00
+    sta PPUADDR
+    ;Prepare to loop 4 times.
+    ldx #$04
+    ;Inner loop value.
+    ldy #$00
+    ;Fill-value.
+    lda $00
+    @loop_outer:
+        @loop_inner:
+            ;Loops until the desired name table is cleared.
+            ;It also clears the associated attribute table.
+            sta PPUDATA
+            dey
+            bne @loop_inner
+        dex
+        bne @loop_outer
     rts
 
 ;The following table is used by the above routine for finding
 ;the high byte of the proper name table to clear.
-
 HiPPUTable:
-    .byte $20                       ;Name table 0.
-    .byte $24                       ;Name table 1.
-    .byte $28                       ;Name table 2.
-    .byte $2C                       ;Name table 3.
+    .byte >$2000                       ;Name table 0.
+    .byte >$2400                       ;Name table 1.
+    .byte >$2800                       ;Name table 2.
+    .byte >$2C00                       ;Name table 3.
 
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
@@ -1069,31 +1090,37 @@ SetTimer:
 
 ;-----------------------------------[ PPU mirroring routines ]---------------------------------------
 
-PrepVertMirror:
-    nop                             ;
-    nop                             ;Prepare to set PPU for vertical mirroring (again).
-    lda #$47                        ;
+PrepVertMirror: ;($C4B2)
+    ;Prepare to set PPU for vertical mirroring (again).
+    nop
+    nop
+    lda #$47
 
 SetPPUMirror:
-    lsr                             ;
-    lsr                             ;Move bit 3 to bit 0 position.
-    lsr                             ;
-    and #$01                        ;Remove all other bits.
-    sta $00                         ;Store at address $00.
-    lda MMCReg0Cntrl                ;
-    and #$FE                        ;Load MMCReg0Cntrl and remove bit 0.
-    ora $00                         ;Replace bit 0 with stored bit at $00.
-    sta MMCReg0Cntrl                ;
-    sta MMC1Reg0                    ;
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    lsr                             ;Load new configuration data serially-->
-    sta MMC1Reg0                    ;into MMC1Reg0.
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    rts                             ;
+    ;Move bit 3 to bit 0 position.
+    lsr
+    lsr
+    lsr
+    ;Remove all other bits. Store at address $00.
+    and #$01
+    sta $00
+    ;Load MMC1CTRL_ZP and remove bit 0.
+    lda MMC1CTRL_ZP
+    and #$FE
+    ;Replace bit 0 with stored bit at $00.
+    ora $00
+    sta MMC1CTRL_ZP
+    ;Load new configuration data serially into MMC1CTRL.
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    rts
 
 PrepPPUMirror:
     lda MirrorCntrl                 ;Load MirrorCntrl into A.
@@ -1117,32 +1144,44 @@ CheckSwitch:
     jmp GoBankInit
 
 SwitchOK:
-    lda #$00                        ;Reset(so that the bank switch won't be performed-->
-    sta SwitchPending               ;every succeeding frame too).
-    dey                             ;Y now contains the bank to switch to.
-    sty CurrentBank                 ;
+    ; clear SwitchPending (so that the bank switch won't be performed every succeeding frame too).
+    lda #$00
+    sta SwitchPending
+    ;Y now contains the bank to switch to.
+    dey
+    sty CurrentBank
 
 ROMSwitch:
-    tya                             ;
-    sta $00                         ;Bank to switch to is stored at location $00.
-    lda SwitchUpperBits             ;Load upper two bits for Reg 3 (they should always be 0).
-    and #$18                        ;Extract bits 3 and 4 and add them to the current-->
-    ora $00                         ;bank to switch to.
-    sta SwitchUpperBits             ;Store any new bits set in 3 or 4(there should be none).
+    ;Bank to switch to is stored at location $00.
+    tya
+    sta $00
+    ;Load upper two bits for Reg 3 (they should always be 0).
+    lda SwitchUpperBits
+    ;Extract bits 3 and 4 and add them to the current bank to switch to.
+    and #$18
+    ora $00
+    ;Store any new bits set in 3 or 4(there should be none).
+    sta SwitchUpperBits
 
 ;Loads the lower memory page with the bank specified in A.
 
-MMCWriteReg3:
-    sta MMC1Reg3                    ;Write bit 0 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 1 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 2 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 3 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 4 of ROM bank #.
-    lda $00                         ;Restore A with current bank number before exiting.
+MMCWritePrgBank:
+    ;Write bit 0 of ROM bank #.
+    sta MMC1PRG
+    ;Write bit 1 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 2 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 3 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 4 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Restore A with current bank number before exiting.
+    lda $00
 RTS_C50F:
     rts
 

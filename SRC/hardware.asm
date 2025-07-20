@@ -103,6 +103,12 @@ JOY2                   = $4017   ;Joypad2/APU common control 2 register.
     BUTTONBIT_B           = 6
     BUTTONBIT_A           = 7
     
+    SND_CHN_SQ1           = %00000001
+    SND_CHN_SQ2           = %00000010
+    SND_CHN_TRI           = %00000100
+    SND_CHN_NOISE         = %00001000
+    SND_CHN_DMC           = %00010000
+    
     APU_4STEP             = %00000000
     APU_5STEP             = %10000000
     APU_IRQENABLE         = %00000000
@@ -111,21 +117,21 @@ JOY2                   = $4017   ;Joypad2/APU common control 2 register.
 ;----------------------------------------------------------------------------------------------------
 
 ;Writing to any of these addresses or any address in between will write configuration bits to the MMC chip.
-MMC1Reg0               = $8000
-MMC1Reg1               = $A000
-MMC1Reg2               = $C000
-MMC1Reg3               = $E000
+MMC1CTRL               = $8000
+MMC1CHR0               = $A000
+MMC1CHR1               = $C000
+MMC1PRG                = $E000
 
-    MMC1_0_MIRROR_1LOWER   = %00000
-    MMC1_0_MIRROR_1UPPER   = %00001
-    MMC1_0_MIRROR_VERTI    = %00010
-    MMC1_0_MIRROR_HORIZ    = %00011
-    MMC1_0_PRGFIXED_8000   = %00000
-    MMC1_0_PRGFIXED_C000   = %00100
-    MMC1_0_PRGBANK_32K     = %00000
-    MMC1_0_PRGBANK_16K     = %01000
-    MMC1_0_CHRBANK_8K      = %00000
-    MMC1_0_CHRBANK_4K      = %10000
+    MMC1CTRL_MIRROR_1LOWER   = %00000
+    MMC1CTRL_MIRROR_1UPPER   = %00001
+    MMC1CTRL_MIRROR_VERTI    = %00010
+    MMC1CTRL_MIRROR_HORIZ    = %00011
+    MMC1CTRL_PRGFIXED_8000   = %00000
+    MMC1CTRL_PRGFIXED_C000   = %00100
+    MMC1CTRL_PRGBANK_32K     = %00000
+    MMC1CTRL_PRGBANK_16K     = %01000
+    MMC1CTRL_CHRBANK_8K      = %00000
+    MMC1CTRL_CHRBANK_4K      = %10000
 
 ;----------------------------------------------------------------------------------------------------
 
