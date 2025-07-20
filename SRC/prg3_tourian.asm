@@ -777,17 +777,17 @@ UpdateRoomSpriteInfo_Tourian:
 
 UpdateRoomSpriteInfo_Tourian_RinkaSpawner:
     ; exit if rinka spawner doesn't exist
-    lda RinkaSpawnerStatus,x
+    lda RinkaSpawners.0.status,x
     bmi @RTS
     ; exit if rinka is in the current nametable
-    lda RinkaSpawnerHi,x
+    lda RinkaSpawners.0.hi,x
     eor $02
     lsr
     bcs @RTS
         ; rinka is in the opposite nametable
         ; clear status
         lda #$FF
-        sta RinkaSpawnerStatus,x
+        sta RinkaSpawners.0.status,x
     @RTS:
     rts
 
@@ -897,13 +897,13 @@ SpawnRinkaSpawnerRoutine:
         bmi RTS_9D87
         ldx #$00
     L9D75:
-    lda RinkaSpawnerStatus,x
+    lda RinkaSpawners.0.status,x
     bpl RTS_9D87
     lda ($00),y
     jsr Adiv16_
-    sta RinkaSpawnerStatus,x
+    sta RinkaSpawners.0.status,x
     jsr GetNameTable_
-    sta RinkaSpawnerHi,x
+    sta RinkaSpawners.0.hi,x
     lda #$FF
 RTS_9D87:
     rts
@@ -1638,12 +1638,12 @@ UpdateAllRinkaSpawners:
     sty PageIndex
     
     ; exit if rinka spawner is inactive
-    lda RinkaSpawnerStatus,y
+    lda RinkaSpawners.0.status,y
     bmi RTS_A15D
     
-    ; exit if RinkaSpawnerHi == bit 0 of FrameCount
+    ; exit if RinkaSpawners.0.hi == bit 0 of FrameCount
     ; (maybe to alternate which rinka spawner is processed each frame?)
-    lda RinkaSpawnerHi,y
+    lda RinkaSpawners.0.hi,y
     eor FrameCount
     lsr
     bcc RTS_A15D
@@ -1694,23 +1694,23 @@ UpdateAllRinkaSpawners:
     sta EnAnimFrame,x
     ; init rinka position
     ldy PageIndex
-    lda RinkaSpawnerHi,y
+    lda RinkaSpawners.0.hi,y
     sta EnHi,x
-    lda RinkaSpawnerPosIndex,y
+    lda RinkaSpawners.0.posIndex,y
     asl
-    ora RinkaSpawnerStatus,y
+    ora RinkaSpawners.0.status,y
     tay
     lda RinkaSpawnPosTbl,y
     jsr SpawnRinka_InitPositionXY
     ; increment rinka spawner position id
     ldx PageIndex
-    inc RinkaSpawnerPosIndex,x
-    lda RinkaSpawnerPosIndex,x
+    inc RinkaSpawners.0.posIndex,x
+    lda RinkaSpawners.0.posIndex,x
     cmp #$06
     bne RTS_A1DA
     lda #$00
 LA1D8:
-    sta RinkaSpawnerPosIndex,x
+    sta RinkaSpawners.0.posIndex,x
 RTS_A1DA:
     rts
 
