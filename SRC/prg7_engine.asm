@@ -2167,7 +2167,7 @@ UpdateWorld:
     ldx #$00                        ;Set start of sprite RAM to $0200.
     stx SpritePagePos               ;
 
-    jsr UpdateEnemies               ;($F345)Display of enemies.
+    jsr UpdateAllEnemies            ;($F345)Display of enemies.
     jsr UpdateProjectiles           ;($D4BF)Display of bullets/missiles/bombs.
     jsr UpdateSamus                 ;($CC0D)Display/movement of Samus.
     jsr AreaRoutine                 ;($95C3)Area specific routine.
@@ -9610,17 +9610,17 @@ LF340:
     rts
 
 ;-------------------------------------------------------------------------------
-UpdateEnemies: ; LF345
+UpdateAllEnemies: ; LF345
     ldx #$50                ;Load x with #$50
     @loop:
-        jsr DoOneEnemy                  ;($F351)
+        jsr UpdateEnemy                  ;($F351)
         ldx PageIndex
         jsr Xminus16
         bne @loop
-    ; After loop, DoOneEnemy for the case X=$00
+    ; After loop, UpdateEnemy for the case X=$00
 
 ;-------------------------------------------------------------------------------
-DoOneEnemy: ;LF351
+UpdateEnemy: ;LF351
     stx PageIndex                   ;PageIndex starts at $50 and is subtracted by #$0F each-->
                                     ;iteration. There is a max of 6 enemies at a time.
     ldy EnStatus,x
@@ -9628,27 +9628,27 @@ DoOneEnemy: ;LF351
         cpy #enemyStatus_Active+1.b
         bcs @endIf
             ; enemy status is enemyStatus_Resting or enemyStatus_Active here
-            jsr DoOneEnemy_CheckIfVisible
+            jsr UpdateEnemy_CheckIfVisible
     @endIf:
-    jsr DoOneEnemy_UpdateEnData05Bit6
+    jsr UpdateEnemy_UpdateEnData05Bit6
     lda EnStatus,x
     sta EnemyStatusPreAI
     cmp #enemyStatus_Hurt+1.b
     bcs @invalidStatus
     jsr ChooseRoutine
         .word ExitSub ; 00 ($C45C) rts
-        .word DoRestingEnemy ; 01 Resting (Offscreen or Inactive)
-        .word DoActiveEnemy ; 02 Active
-        .word LF40D ; 03 Exploding ?
-        .word DoFrozenEnemy ; 04 Frozen
-        .word DoEnemyPickup ; 05 Pickup
-        .word DoHurtEnemy ; 06 Hurt
+        .word UpdateEnemy_Resting ; 01 Resting (Offscreen or Inactive)
+        .word UpdateEnemy_Active ; 02 Active
+        .word UpdateEnemy_Explode ; 03 Exploding ?
+        .word UpdateEnemy_Frozen ; 04 Frozen
+        .word UpdateEnemy_Pickup ; 05 Pickup
+        .word UpdateEnemy_Hurt ; 06 Hurt
 
 @invalidStatus:
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 ;-------------------------------------------------------------------------------
-DoOneEnemy_CheckIfVisible:
+UpdateEnemy_CheckIfVisible:
     lda EnData05,x
     and #$02
     bne @exit
@@ -9668,7 +9668,7 @@ DoOneEnemy_CheckIfVisible:
         txa
         bne @exit
             ; enemy is not visible
-            ; double return, returns from DoOneEnemy entirely
+            ; double return, returns from UpdateEnemy entirely
             pla
             pla
     @exit:
@@ -9676,7 +9676,7 @@ DoOneEnemy_CheckIfVisible:
     rts
 
 ; toggle bit 6 of EnData05
-DoOneEnemy_UpdateEnData05Bit6:
+UpdateEnemy_UpdateEnData05Bit6:
     ; shift bit 6 of EnData05 into carry
     lda EnData05,x ;76543210
     asl ;6543210-
@@ -9695,7 +9695,7 @@ DoOneEnemy_UpdateEnData05Bit6:
     rts
 
 ;---------------------------------------------
-DoRestingEnemy: ;($F3BE)
+UpdateEnemy_Resting: ;($F3BE)
     ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
@@ -9704,28 +9704,28 @@ DoRestingEnemy: ;($F3BE)
         sta EnJumpDsplcmnt,x
         sta EnMovementInstrIndex,x
         sta EnData0A,x
-        jsr DoEnemy_ForceSpeedTowardsSamus
-        jsr DoEnemy_EnData05DistanceToSamusThreshold
+        jsr UpdateEnemy_ForceSpeedTowardsSamus
+        jsr UpdateEnemy_EnData05DistanceToSamusThreshold
         jsr InitEnRestingAnimIndex
-        jsr DoRestingEnemy_F676
+        jsr UpdateEnemy_Resting_UpdateEnData1F
 
         ; branch if delay is zero
         lda EnDelay,x
         beq Lx299
-            jsr DoRestingEnemy_TryBecomingActive
+            jsr UpdateEnemy_Resting_TryBecomingActive
     Lx299:
-    jmp DoActiveEnemy_BranchB
+    jmp UpdateEnemy_Active_BranchB
 ;------------------------------------------
-DoActiveEnemy: ; LF3E6
+UpdateEnemy_Active: ; LF3E6
     ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
-    bmi DoActiveEnemy_BranchB
+    bmi UpdateEnemy_Active_BranchB
 
     ; Branch if bit 5 is clear
     lda EnData05,x
     and #$20
-    beq DoActiveEnemy_BranchA
+    beq UpdateEnemy_Active_BranchA
 
     ; Set enemy delay
     ldy EnType,x
@@ -9733,15 +9733,15 @@ DoActiveEnemy: ; LF3E6
     sta EnDelay,x
     ; Decrement status from active to resting
     dec EnStatus,x
-    bne DoActiveEnemy_BranchB ; Branch always
+    bne UpdateEnemy_Active_BranchB ; Branch always
 
-DoActiveEnemy_BranchA: ; LF401
-    jsr DoEnemy_ForceSpeedTowardsSamus
-    jsr DoEnemy_EnData05DistanceToSamusThreshold
+UpdateEnemy_Active_BranchA: ; LF401
+    jsr UpdateEnemy_ForceSpeedTowardsSamus
+    jsr UpdateEnemy_EnData05DistanceToSamusThreshold
     jsr RemoveEnemyIfItIsInLava
-DoActiveEnemy_BranchB: ; LF40A
+UpdateEnemy_Active_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
-LF40D:
+UpdateEnemy_Explode:
     jmp ChooseEnemyAIRoutine
 ;-------------------------------------------
 ; This procedure is called by a lot of enemy AI routines, with three different
@@ -9778,7 +9778,7 @@ LF438:
     jsr UpdateEnemyAnim
     jmp LF416
 ;-------------------------------------------
-DoFrozenEnemy: ; ($F43E)
+UpdateEnemy_Frozen: ; ($F43E)
     jsr EnemyReactToSamusWeapon
     lda EnStatus,x
     cmp #$03
@@ -9812,7 +9812,7 @@ DoFrozenEnemy: ; ($F43E)
     Lx304:
     jmp LF416
 ;--------------------------------------
-DoEnemyPickup: ;($F483)
+UpdateEnemy_Pickup: ;($F483)
     ; branch if samus is not touching the pickup
     lda EnIsHit,x
     and #$24
@@ -9896,7 +9896,7 @@ DoEnemyPickup: ;($F483)
     sta ObjectCntrl
     jmp LF416
 ;--------------------------------------------
-DoHurtEnemy:
+UpdateEnemy_Hurt:
     dec EnSpecialAttribs,x
     bne Lx313
     ; Preserve upper two bits of EnSpecialAttribs
@@ -10169,11 +10169,14 @@ GetPageIndex:
     ldx PageIndex
     rts
 
-DoRestingEnemy_F676:
+UpdateEnemy_Resting_UpdateEnData1F:
+    ; load L977B entry * 2
     jsr LoadTableAt977B
+    ; move bits 2-3 of L977B entry to bits 6-7
     asl
     asl
     asl
+    ; isolate them and save to EnData1F
     and #$C0
     sta EnData1F,x
     rts
@@ -10216,7 +10219,7 @@ Exit12:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_ForceSpeedTowardsSamus:
+UpdateEnemy_ForceSpeedTowardsSamus:
     ; clear $82
     lda #$00
     sta Enemy82
@@ -10374,7 +10377,7 @@ LoadEnHiToYAndLoadEorHiToCarry:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_EnData05DistanceToSamusThreshold:
+UpdateEnemy_EnData05DistanceToSamusThreshold:
     ; default to masking out bit 4 and bit 3 of EnData05
     lda #~$18
     sta $06
@@ -10464,7 +10467,7 @@ AndEnData05:
 RTS_X346:
     rts
 
-DoRestingEnemy_TryBecomingActive:
+UpdateEnemy_Resting_TryBecomingActive:
     ; decrement delay until next action
     dec EnDelay,x
     ; exit if delay is not zero
@@ -10569,8 +10572,8 @@ GetEnemyTypeTimes2PlusFacingDirectionBit0:
 GetEnemyTypeTimes2PlusFacingDirection:
     lda EnData05,x
     bpl Lx352
-    lsr
-    lsr
+        lsr
+        lsr
 Lx352:
     lsr
     lda EnType,x
@@ -11134,39 +11137,56 @@ Exit13:
 ;-------------------------------------------------------------------------------
 ; Sidehopper AI ?
 ; Wavers, too?
-LFB88:
+EnemyFlipAfterDisplacement:
+    ; load (enemy type * 2 + horizontal facing direction) into y
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection
+    
     lda EnJumpDsplcmnt,x
+    ; branch if EnData1F is zero
     inc EnData1F,x
     dec EnData1F,x
     bne Lx382
+        ; EnData1F is not zero
+        ; set negative flag for EnJumpDsplcmnt
         pha
         pla
     Lx382:
+    ; branch if EnData1F is zero or if EnJumpDsplcmnt is positive
     bpl Lx383
+        ; EnData1F is not zero and EnJumpDsplcmnt is negative
+        ; negate EnJumpDsplcmnt to get the absolute distance
         jsr TwosComplement              ;($C3D4)
     Lx383:
+    ; branch if displacement is less than 8 pixels
     cmp #$08
     bcc Lx384
+        ; exit if displacement is greater or equal to 16 pixels
         cmp #$10
         bcs Exit13
+        ; displacement is between 8 and 15 pixels inclusive
+        ; set y to horizontal facing direction
         tya
         and #$01
         tay
-        lda EnemyLFB88_85,y
+        ; exit if enemy animation is facing the correct way
+        lda EnemyFlipAfterDisplacementAnimIndex,y
         cmp EnResetAnimIndex,x
         beq Exit13
+        ; enemy is facing the wrong way, init anim index
         sta EnAnimIndex,x
         dec EnAnimIndex,x
-    LFBB9:
+InitEnResetAnimIndex: ; referenced in areas_common.asm
         sta EnResetAnimIndex,x
         jmp ClearEnAnimDelay
     Lx384:
-    lda EnemyRestingAnimIndex,y
-    cmp EnResetAnimIndex,x
-    beq Exit13
-    jmp InitEnAnimIndex
+        ; displacement is less than 8 pixels
+        ; exit if enemy is doing its resting animation 
+        lda EnemyRestingAnimIndex,y
+        cmp EnResetAnimIndex,x
+        beq Exit13
+        ; set enemy animation to resting animation
+        jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
 
 LFBCA:

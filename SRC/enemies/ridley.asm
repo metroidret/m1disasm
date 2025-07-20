@@ -19,10 +19,10 @@ RidleyBranch_Explode:
 
 RidleyBranch_Normal:
     lda #EnAnim_0B - EnAnimTbl.b
-    sta EnemyLFB88_85
+    sta EnemyFlipAfterDisplacementAnimIndex
     lda #EnAnim_0E - EnAnimTbl.b
-    sta EnemyLFB88_85+1.b
-    jsr CommonJump_09
+    sta EnemyFlipAfterDisplacementAnimIndex+1.b
+    jsr CommonJump_EnemyFlipAfterDisplacement
     jsr RidleyTryToLaunchProjectile
 
 RidleyBranch_Exit:

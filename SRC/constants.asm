@@ -303,8 +303,8 @@ WaveSpriteCounter      = $84     ;Stores length of wave sprite data (#$10).
 
 ;----------------------------------------------------------------------------------------------------
 
-; 2 bytes ($85-$86)
-EnemyLFB88_85          = $85
+EnemyFlipAfterDisplacementAnimIndex = $85     ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
+; EnemyFlipAfterDisplacementAnimIndex+1 = $86     ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
 
 SpawnFireball_83       = $83     ;right facing anim index for enemy that shoots the fireball
 ; SpawnFireball_83+1     = $84     ;left facing anim index for enemy that shoots the fireball

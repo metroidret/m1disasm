@@ -34,10 +34,10 @@ CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
 CommonJump_InitEnemyData0DAndHealth: ;$8015 (unused?)
     jmp InitEnemyData0DAndHealth
-CommonJump_08: ;$8018
-    jmp LFBB9
-CommonJump_09: ;$801B
-    jmp LFB88
+CommonJump_InitEnResetAnimIndex: ;$8018 (unused?)
+    jmp InitEnResetAnimIndex
+CommonJump_EnemyFlipAfterDisplacement: ;$801B
+    jmp EnemyFlipAfterDisplacement
 CommonJump_0A: ;$801E
     jmp LFBCA
 CommonJump_SpawnFireball: ;$8021
