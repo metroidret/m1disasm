@@ -416,10 +416,10 @@ EraseAllSprites:
     sty $00                         ;
     ldy #$00                        ;
     lda #$F0                        ;
-    LC1AF:
+    @loop:
         sta ($00),y                     ;Stores #$F0 in memory addresses $0200 thru $02FF.
         iny                             ;
-        bne LC1AF                       ;Loop while more sprite RAM to clear.
+        bne @loop                       ;Loop while more sprite RAM to clear.
     lda GameMode                    ;
     beq Exit101                     ;Exit subroutine if GameMode=Play(#$00)
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
@@ -1322,129 +1322,174 @@ InitEndGFX:
     jmp InitGFX6                    ;($C6C2)Load end game GFX.
 
 InitTitleGFX:
-    ldy #$15                        ;Entry 21 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Title.b
+    jsr LoadGFX
 
 LoadSamusGFX:
-    ldy #$00                        ;Entry 0 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    lda JustInBailey                ;
-    beq LC5EB                           ;Branch if wearing suit
-        ldy #$1B                        ;Entry 27 in GFXInfo table.
-        jsr LoadGFX                     ;($C7AB)Switch to girl gfx
-    LC5EB:
-    ldy #$14                        ;Entry 20 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$17                        ;Entry 23 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$18                        ;Entry 24 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Samus.b
+    jsr LoadGFX
+    
+    ;Branch if wearing suit
+    lda JustInBailey
+    beq @endIf_A
+        ;Switch to girl gfx
+        ldy #_id_GFX_SamusSuitless.b
+        jsr LoadGFX
+    @endIf_A:
+    
+    ldy #_id_GFX_IntroSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Complete.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Hud.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitBrinstarGFX:
-    ldy #$03                        ;Entry 3 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$06                        ;Entry 6 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_BrinBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BrinstarSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitNorfairGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$07                        ;Entry 7 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$08                        ;Entry 8 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$09                        ;Entry 9 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfairSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitTourianGFX:
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0B                        ;Entry 11 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0C                        ;Entry 12 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0D                        ;Entry 13 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0E                        ;Entry 14 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$1A                        ;Entry 26 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$1C                        ;Entry 28 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Zebetite.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourianFont.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourianSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Tourian.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_ExclamationPoint.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitKraidGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0F                        ;Entry 15 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$10                        ;Entry 16 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$11                        ;Entry 17 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraiBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraiBG3.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraidSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitRidleyGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$12                        ;Entry 18 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$13                        ;Entry 19 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_RidlBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_RidleySprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitGFX6:
-    ldy #$01                        ;Entry 1 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$02                        ;Entry 2 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_EndingSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TheEndFont.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitGFX7: ; Load Password Font
-    ldy #$17                        ;Entry 23 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Font_Complete.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 ;The table below contains info for each tile data block in the ROM.
 ;Each entry is 7 bytes long. The format is as follows:
@@ -1454,64 +1499,79 @@ InitGFX7: ; Load Password Font
 ;byte 5-6: data length (16-bit).
 
 GFXInfo:
-    .byte bank(GFX_Samus)          ;[SPR]Samus, items.             Entry 0.
-        .word GFX_Samus, $0000, $09A0
-    .byte bank(GFX_EndingSprites)  ;[SPR]Samus in ending.          Entry 1.
-        .word GFX_EndingSprites, $0000, $0520
-    .byte bank(GFX_TheEndFont)     ;[BGR]Partial font, "The End".  Entry 2.
-        .word GFX_TheEndFont, $1000, $0400
-    .byte bank(GFX_BrinBG1)        ;[BGR]Brinstar rooms.           Entry 3.
-        .word GFX_BrinBG1, $1000, $0150
-    .byte bank(GFX_CREBG1)         ;[BGR]Common Room Elements      Entry 4.
-        .word GFX_CREBG1, $1200, $0450
-    .byte bank(GFX_CREBG2)         ;[BGR]More CRE                  Entry 5.
-        .word GFX_CREBG2, $1800, $0800
-    .byte bank(GFX_BrinstarSprites);[SPR]Brinstar enemies.         Entry 6.
-        .word GFX_BrinstarSprites, $0C00, $0400
-    .byte bank(GFX_NorfBG1)        ;[BGR]Norfair rooms.            Entry 7.
-        .word GFX_NorfBG1, $1000, $0260
-    .byte bank(GFX_NorfBG2)        ;[BGR]More Norfair rooms.       Entry 8.
-        .word GFX_NorfBG2, $1700, $0070
-    .byte bank(GFX_NorfairSprites) ;[SPR]Norfair enemies.          Entry 9.
-        .word GFX_NorfairSprites, $0C00, $0400
-    .byte bank(GFX_BossBG)         ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
-        .word GFX_BossBG, $1000, $02E0
-    .byte bank(GFX_TourBG)         ;[BGR]Tourian rooms.            Entry 11. (0B)
-        .word GFX_TourBG, $1200, $0600
-    .byte bank(GFX_Zebetite)       ;[BGR]Mother Brain room.        Entry 12. (0C)
-        .word GFX_Zebetite, $1900, $0090
-    .byte bank(GFX_TourianFont)    ;[BGR]Misc. object.             Entry 13. (0D)
-        .word GFX_TourianFont, $1D00, $0300
-    .byte bank(GFX_TourianSprites) ;[SPR]Tourian enemies.          Entry 14. (0E)
-        .word GFX_TourianSprites, $0C00, $0400
-    .byte bank(GFX_KraiBG2)        ;[BGR]More Kraid Rooms          Entry 15. (0F)
-        .word GFX_KraiBG2, $1700, $00C0
-    .byte bank(GFX_KraiBG3)        ;[BGR]More Kraid Rooms          Entry 16. (10)
-        .word GFX_KraiBG3, $1E00, $0200
-    .byte bank(GFX_KraidSprites)   ;[SPR]Miniboss I enemies.       Entry 17. (11)
-        .word GFX_KraidSprites, $0C00, $0400
-    .byte bank(GFX_RidlBG)         ;[BGR]More Ridley Rooms         Entry 18. (12)
-        .word GFX_RidlBG, $1700, $00C0
-    .byte bank(GFX_RidleySprites)  ;[SPR]Miniboss II enemies.      Entry 19. (13)
-        .word GFX_RidleySprites, $0C00, $0400
-    .byte bank(GFX_IntroSprites)   ;[SPR]Intro/End sprites.        Entry 20. (14)
-        .word GFX_IntroSprites, $0C00, $0100
-    .byte bank(GFX_Title)          ;[BGR]Title.                    Entry 21. (15)
-        .word GFX_Title, $1400, $0500
-    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 22. (16)
-        .word GFX_Solid, $1FC0, $0040
-    .byte bank(GFX_Font)           ;[BGR]Complete font.            Entry 23. (17)
-        .word GFX_Font, $1000, $0400
-    .byte bank(GFX_Font)           ;[BGR]Ingame HUD font.          Entry 24. (18)
-        .word GFX_Font, $0A00, $00A0
-    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 25. (19)
-        .word GFX_Solid, $0FC0, $0040
-    .byte bank(GFX_Font)           ;[BGR]Tourian font.             Entry 26. (1A)
-        .word GFX_Font, $1D00, $02A0
-    .byte bank(GFX_SamusSuitless)  ;[SPR]Suitless Samus.           Entry 27. (1B)
-        .word GFX_SamusSuitless, $0000, $07B0
-    .byte bank(GFX_ExclamationPoint)  ;[BGR]Exclaimation point.       Entry 28. (1C)
-        .word GFX_ExclamationPoint, $1F40, $0010
+    ;[SPR]Samus, items.             Entry 0.
+    GFXInfoEntry GFX_Samus, $0000
+    ;[SPR]Samus in ending.          Entry 1.
+    GFXInfoEntry GFX_EndingSprites, $0000
+    ;[BGR]Partial font, "The End".  Entry 2.
+    GFXInfoEntry GFX_TheEndFont, $1000
+    ;[BGR]Brinstar rooms.           Entry 3.
+    GFXInfoEntry GFX_BrinBG1, $1000
+    ;[BGR]Common Room Elements      Entry 4.
+    GFXInfoEntry GFX_CREBG1, $1200
+    ;[BGR]More CRE                  Entry 5.
+    GFXInfoEntry GFX_CREBG2, $1800
+    ;[SPR]Brinstar enemies.         Entry 6.
+    GFXInfoEntry GFX_BrinstarSprites, $0C00
+    ;[BGR]Norfair rooms.            Entry 7.
+    GFXInfoEntry GFX_NorfBG1, $1000
+    ;[BGR]More Norfair rooms.       Entry 8.
+    GFXInfoEntry GFX_NorfBG2, $1700
+    ;[SPR]Norfair enemies.          Entry 9.
+    GFXInfoEntry GFX_NorfairSprites, $0C00
+    ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
+    GFXInfoEntry GFX_BossBG, $1000
+    ;[BGR]Tourian rooms.            Entry 11. (0B)
+    GFXInfoEntry GFX_TourBG, $1200
+    ;[BGR]Mother Brain room.        Entry 12. (0C)
+    GFXInfoEntry GFX_Zebetite, $1900
+    ;[BGR]Misc. object.             Entry 13. (0D)
+    GFXInfoEntry GFX_TourianFont, $1D00
+    ;[SPR]Tourian enemies.          Entry 14. (0E)
+    GFXInfoEntry GFX_TourianSprites, $0C00
+    ;[BGR]More Kraid Rooms          Entry 15. (0F)
+    GFXInfoEntry GFX_KraiBG2, $1700
+    ;[BGR]More Kraid Rooms          Entry 16. (10)
+    GFXInfoEntry GFX_KraiBG3, $1E00
+    ;[SPR]Miniboss I enemies.       Entry 17. (11)
+    GFXInfoEntry GFX_KraidSprites, $0C00
+    ;[BGR]More Ridley Rooms         Entry 18. (12)
+    GFXInfoEntry GFX_RidlBG, $1700
+    ;[SPR]Miniboss II enemies.      Entry 19. (13)
+    GFXInfoEntry GFX_RidleySprites, $0C00
+    ;[SPR]Intro/End sprites.        Entry 20. (14)
+    GFXInfoEntry GFX_IntroSprites, $0C00
+    ;[BGR]Title.                    Entry 21. (15)
+    GFXInfoEntry GFX_Title, $1400
+    ;[BGR]Solid tiles.              Entry 22. (16)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Solid_1FC0 = _entryNumber_GFXInfo export
+    .byte bank(GFX_Solid)
+    .word GFX_Solid, $1FC0, _sizeof_GFX_Solid
+    ;[BGR]Complete font.            Entry 23. (17)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Complete = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $1000, $0400
+    ;[BGR]Ingame HUD font.          Entry 24. (18)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Hud = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $0A00, $00A0
+    ;[SPR]Solid tiles.              Entry 25. (19)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Solid_0FC0 = _entryNumber_GFXInfo export
+    .byte bank(GFX_Solid)
+    .word GFX_Solid, $0FC0, _sizeof_GFX_Solid
+    ;[BGR]Tourian font.             Entry 26. (1A)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Tourian = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $1D00, $02A0
+    ;[SPR]Suitless Samus.           Entry 27. (1B)
+    GFXInfoEntry GFX_SamusSuitless, $0000
+    ;[BGR]Exclaimation point.       Entry 28. (1C)
+    GFXInfoEntry GFX_ExclamationPoint, $1F40
 
 ;--------------------------------[ Pattern table loading routines ]---------------------------------
 

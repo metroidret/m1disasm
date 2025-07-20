@@ -34,6 +34,7 @@ GFX_IntroSprites:
 
 ; Garbage data
 ; (part of areas_common.asm from L6_8AA0 to L6_8BDF (sprite data, Samus door routines))
+GFX_Garbage8AA0:
     .byte $FF, $04, $00, $00, $5A, $FF, $13, $00, $00, $B0, $B1, $B2, $B3, $FF, $13, $00
     .byte $00, $B4, $B5, $B6, $B7, $B8, $B6, $B9, $B3, $FF, $13, $00, $00, $B3, $BA, $BA
     .byte $FE, $80, $80, $FF, $1E, $00, $08, $FA, $FB, $FA, $FB, $FC, $00, $04, $C5, $C6
@@ -65,6 +66,7 @@ GFX_ExclamationPoint:
     .incbin "common_chr/exclamation_point.chr" ; 9890 - Exclamation point
 
 ; Garbage data (leftovers from Ridley's bank)
+GFX_Garbage98A0:
     .byte $B9, $D5, $98, $9D, $03, $04, $BD, $05, $04, $0A, $30, $1E, $BD, $F4, $6A, $C9
     .byte $02, $D0, $17, $20, $36, $80, $48, $20, $39, $80, $85, $05, $68, $85, $04, $20
     .byte $E1, $9A, $20, $27, $80, $90, $08, $20, $F1, $9A, $A9, $03, $4C, $03, $80, $A9
@@ -85,6 +87,7 @@ GFX_Solid:
     .incbin "common_chr/solid.chr"
 
 ; Garbage data (leftovers from Ridley's bank)
+GFX_Garbage99C0:
     .byte $53, $4D, $50, $50, $4D, $53, $A6, $4B, $B0, $19, $A5, $00, $D0, $0D, $BC, $0A
     .byte $04, $88, $98, $29, $03, $9D, $0A, $04, $4C, $AD, $99, $BD, $05, $04, $49, $01
     .byte $9D, $05, $04, $60, $20, $F8, $99, $20, $00, $9A, $A6, $4B, $90, $09, $20, $F8
@@ -176,6 +179,7 @@ GFX_RidlBG:
     .incbin "ridley/bg_chr.chr" ; B3F0 - More Ridley BG CHR
 
 ;Not used.
+GFX_GarbageB4B0:
 .if BUILDTARGET == "NES_NTSC"
     .byte $65, $06, $DD, $60, $06, $D0, $05, $A9, $00, $9D, $65, $06, $60, $8D, $4D, $06
 .elif BUILDTARGET == "NES_PAL"
@@ -186,6 +190,7 @@ GFX_RidlBG:
 GFX_Font:
     .incbin "common_chr/font.chr" ; B4C0 - Font (upper and lowercase)
 
+GFX_GarbageB8C0:
 .incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
 
 ; Garbage data (Half of the music engine)
