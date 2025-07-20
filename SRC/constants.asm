@@ -345,7 +345,7 @@ ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
     Mellow8A               db
 
     ; 2 slots of 3 bytes each ($8B-$90)
-    RinkaSpawners          instanceof RinkaSpawner 2
+    RinkaSpawners          instanceof RinkaSpawner 2 startfrom 0
 .nextu
     ;--------------------------------------[ End routine specific ]--------------------------------------
 
@@ -406,11 +406,11 @@ MotherBrainStatus      db        ;#$00=Mother brain not in room, #$01=Mother bra
 .endu
 
 ; 4 slots of 4 bytes each ($A0-$AF)
-SkreeProjectiles       instanceof SkreeProjectile 4
+SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0
 
 .union
     ; 4 slots of 8 bytes each ($B0-$CF)
-    Mellows            instanceof Mellow 4
+    Mellows            instanceof Mellow 4 startfrom 0
 .nextu
     ; $B7 is unused
 
