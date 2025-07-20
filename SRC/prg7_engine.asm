@@ -31,6 +31,8 @@
 ;behind after it is killed.
 
 RandomNumbers: ;$C000
+    ;RandomNumber1 is increased by #$19 every frame
+    ;RandomNumber2 is increased by #$5F every frame.
     txa
     pha
     ldx #$05
@@ -38,11 +40,13 @@ RandomNumbers: ;$C000
         lda RandomNumber1
         clc
         adc #$05
-        sta RandomNumber1               ;2E is increased by #$19 every frame and-->
-        lda RandomNumber2               ;2F is increased by #$5F every frame.
+        sta RandomNumber1
+        
+        lda RandomNumber2
         clc
         adc #$13
         sta RandomNumber2
+        
         dex
         bne @loop
     pla
@@ -54,17 +58,17 @@ RandomNumbers: ;$C000
 
 Startup:
     lda #$00
-    sta MMC1Reg1                    ;Clear bit 0. MMC1 is serial controlled
-    sta MMC1Reg1                    ;Clear bit 1
-    sta MMC1Reg1                    ;Clear bit 2
-    sta MMC1Reg1                    ;Clear bit 3
-    sta MMC1Reg1                    ;Clear bit 4
-    sta MMC1Reg2                    ;Clear bit 0
-    sta MMC1Reg2                    ;Clear bit 1
-    sta MMC1Reg2                    ;Clear bit 2
-    sta MMC1Reg2                    ;Clear bit 3
-    sta MMC1Reg2                    ;Clear bit 4
-    jsr MMCWriteReg3                ;($C4FA)Swap to PRG bank #0 at $8000
+    sta MMC1CHR0                    ;Clear bit 0. MMC1 is serial controlled
+    sta MMC1CHR0                    ;Clear bit 1
+    sta MMC1CHR0                    ;Clear bit 2
+    sta MMC1CHR0                    ;Clear bit 3
+    sta MMC1CHR0                    ;Clear bit 4
+    sta MMC1CHR1                    ;Clear bit 0
+    sta MMC1CHR1                    ;Clear bit 1
+    sta MMC1CHR1                    ;Clear bit 2
+    sta MMC1CHR1                    ;Clear bit 3
+    sta MMC1CHR1                    ;Clear bit 4
+    jsr MMCWritePrgBank             ;($C4FA)Swap to PRG bank #0 at $8000
     dex                             ;X = $FF
     txs                             ;S points to end of stack page
 
@@ -106,8 +110,8 @@ LC057:
     ;Switch low PRGROM area during a page switch.
     ;16KB PRGROM switching enabled.
     ;8KB CHRROM switching enabled.
-    lda #MMC1_0_MIRROR_VERTI | MMC1_0_PRGFIXED_C000 | MMC1_0_PRGBANK_16K | MMC1_0_CHRBANK_8K.b
-    sta MMCReg0Cntrl
+    lda #MMC1CTRL_MIRROR_VERTI | MMC1CTRL_PRGFIXED_C000 | MMC1CTRL_PRGBANK_16K | MMC1CTRL_CHRBANK_8K.b
+    sta MMC1CTRL_ZP
 
     lda #$00                        ;Clear bits 3 and 4 of MMC1 register 3.
     sta SwitchUpperBits             ;
@@ -140,22 +144,28 @@ LC057:
     lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR.b
     sta PPUMASK_ZP
 
-    lda #$47                        ;
-    sta MirrorCntrl                 ;Prepare to set PPU to vertical mirroring.
-    jsr PrepVertMirror              ;($C4B2)
+    ;Prepare to set PPU to vertical mirroring.
+    lda #$47
+    sta MirrorCntrl
+    jsr PrepVertMirror
 
-    lda #$00                        ;
-    sta DMC_RAW                     ;PCM volume = 0 - disables DMC channel
-    lda #$0F                        ;
-    sta SND_CHN             ;Enable sound channel 0,1,2,3
+    ;PCM volume = 0 - disables DMC channel
+    lda #$00
+    sta DMC_RAW
+    ;Enable sound channel 0,1,2,3
+    lda #SND_CHN_SQ1 | SND_CHN_SQ2 | SND_CHN_TRI | SND_CHN_NOISE.b
+    sta SND_CHN
 
-    ldy #$00                        ;
-    sty TitleRoutine                ;Set title routine and and main routine function-->
-    sty MainRoutine                 ;pointers equal to 0.
-    lda #$11                        ;
-    sta RandomNumber1               ;Initialize RandomNumber1 to #$11
-    lda #$FF                        ;
-    sta RandomNumber2               ;Initialize RandomNumber2 to #$FF
+    ;Set title routine and and main routine function pointers equal to 0.
+    ldy #$00
+    sty TitleRoutine
+    sty MainRoutine
+    ;Initialize RandomNumber1 to #$11
+    lda #$11
+    sta RandomNumber1
+    ;Initialize RandomNumber2 to #$FF
+    lda #$FF
+    sta RandomNumber2
 
     iny                             ;Y = 1
     sty SwitchPending               ;Prepare to switch page 0 into lower PRGROM.
@@ -355,36 +365,47 @@ LC16F:
     sta $00                         ;Value to fill with.
 
 ClearNameTable:
-    ldx PPUSTATUS                   ;Reset PPU address latch.
-    lda PPUCTRL_ZP                  ;
-    and #$FB                        ;PPU increment = 1.
-    sta PPUCTRL_ZP                  ;
-    sta PPUCTRL                     ;Store control bits in PPU.
-    ldx $01                         ;
-    dex                             ;Name table = X - 1.
-    lda HiPPUTable,x                ;get high PPU address.  pointer table at $C19F.
-    sta PPUADDR                     ;
-    lda #$00                        ;Set PPU start address (High byte first).
-    sta PPUADDR                     ;
-    ldx #$04                        ;Prepare to loop 4 times.
-    ldy #$00                        ;Inner loop value.
-    lda $00                         ;Fill-value.
-    LC195:
-        sta PPUDATA                     ;
-        dey                             ;
-        bne LC195                       ;Loops until the desired name table is cleared.-->
-        dex                             ;It also clears the associated attribute table.
-        bne LC195                       ;
+    ;Reset PPU address latch.
+    ldx PPUSTATUS
+    ;PPU increment = 1.
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_INCR_DOWN.b
+    sta PPUCTRL_ZP
+    ;Store control bits in PPU.
+    sta PPUCTRL
+    ;Name table = X - 1.
+    ldx $01
+    dex
+    ;get high PPU address.  pointer table at $C19F.
+    lda HiPPUTable,x
+    ;Set PPU start address (High byte first).
+    sta PPUADDR
+    lda #$00
+    sta PPUADDR
+    ;Prepare to loop 4 times.
+    ldx #$04
+    ;Inner loop value.
+    ldy #$00
+    ;Fill-value.
+    lda $00
+    @loop_outer:
+        @loop_inner:
+            ;Loops until the desired name table is cleared.
+            ;It also clears the associated attribute table.
+            sta PPUDATA
+            dey
+            bne @loop_inner
+        dex
+        bne @loop_outer
     rts
 
 ;The following table is used by the above routine for finding
 ;the high byte of the proper name table to clear.
-
 HiPPUTable:
-    .byte $20                       ;Name table 0.
-    .byte $24                       ;Name table 1.
-    .byte $28                       ;Name table 2.
-    .byte $2C                       ;Name table 3.
+    .byte >$2000                       ;Name table 0.
+    .byte >$2400                       ;Name table 1.
+    .byte >$2800                       ;Name table 2.
+    .byte >$2C00                       ;Name table 3.
 
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
@@ -395,10 +416,10 @@ EraseAllSprites:
     sty $00                         ;
     ldy #$00                        ;
     lda #$F0                        ;
-    LC1AF:
+    @loop:
         sta ($00),y                     ;Stores #$F0 in memory addresses $0200 thru $02FF.
         iny                             ;
-        bne LC1AF                       ;Loop while more sprite RAM to clear.
+        bne @loop                       ;Loop while more sprite RAM to clear.
     lda GameMode                    ;
     beq Exit101                     ;Exit subroutine if GameMode=Play(#$00)
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
@@ -1069,31 +1090,37 @@ SetTimer:
 
 ;-----------------------------------[ PPU mirroring routines ]---------------------------------------
 
-PrepVertMirror:
-    nop                             ;
-    nop                             ;Prepare to set PPU for vertical mirroring (again).
-    lda #$47                        ;
+PrepVertMirror: ;($C4B2)
+    ;Prepare to set PPU for vertical mirroring (again).
+    nop
+    nop
+    lda #$47
 
 SetPPUMirror:
-    lsr                             ;
-    lsr                             ;Move bit 3 to bit 0 position.
-    lsr                             ;
-    and #$01                        ;Remove all other bits.
-    sta $00                         ;Store at address $00.
-    lda MMCReg0Cntrl                ;
-    and #$FE                        ;Load MMCReg0Cntrl and remove bit 0.
-    ora $00                         ;Replace bit 0 with stored bit at $00.
-    sta MMCReg0Cntrl                ;
-    sta MMC1Reg0                    ;
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    lsr                             ;Load new configuration data serially-->
-    sta MMC1Reg0                    ;into MMC1Reg0.
-    lsr                             ;
-    sta MMC1Reg0                    ;
-    rts                             ;
+    ;Move bit 3 to bit 0 position.
+    lsr
+    lsr
+    lsr
+    ;Remove all other bits. Store at address $00.
+    and #$01
+    sta $00
+    ;Load MMC1CTRL_ZP and remove bit 0.
+    lda MMC1CTRL_ZP
+    and #$FE
+    ;Replace bit 0 with stored bit at $00.
+    ora $00
+    sta MMC1CTRL_ZP
+    ;Load new configuration data serially into MMC1CTRL.
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    lsr
+    sta MMC1CTRL
+    rts
 
 PrepPPUMirror:
     lda MirrorCntrl                 ;Load MirrorCntrl into A.
@@ -1117,32 +1144,44 @@ CheckSwitch:
     jmp GoBankInit
 
 SwitchOK:
-    lda #$00                        ;Reset(so that the bank switch won't be performed-->
-    sta SwitchPending               ;every succeeding frame too).
-    dey                             ;Y now contains the bank to switch to.
-    sty CurrentBank                 ;
+    ; clear SwitchPending (so that the bank switch won't be performed every succeeding frame too).
+    lda #$00
+    sta SwitchPending
+    ;Y now contains the bank to switch to.
+    dey
+    sty CurrentBank
 
 ROMSwitch:
-    tya                             ;
-    sta $00                         ;Bank to switch to is stored at location $00.
-    lda SwitchUpperBits             ;Load upper two bits for Reg 3 (they should always be 0).
-    and #$18                        ;Extract bits 3 and 4 and add them to the current-->
-    ora $00                         ;bank to switch to.
-    sta SwitchUpperBits             ;Store any new bits set in 3 or 4(there should be none).
+    ;Bank to switch to is stored at location $00.
+    tya
+    sta $00
+    ;Load upper two bits for Reg 3 (they should always be 0).
+    lda SwitchUpperBits
+    ;Extract bits 3 and 4 and add them to the current bank to switch to.
+    and #$18
+    ora $00
+    ;Store any new bits set in 3 or 4(there should be none).
+    sta SwitchUpperBits
 
 ;Loads the lower memory page with the bank specified in A.
 
-MMCWriteReg3:
-    sta MMC1Reg3                    ;Write bit 0 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 1 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 2 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 3 of ROM bank #.
-    lsr                             ;
-    sta MMC1Reg3                    ;Write bit 4 of ROM bank #.
-    lda $00                         ;Restore A with current bank number before exiting.
+MMCWritePrgBank:
+    ;Write bit 0 of ROM bank #.
+    sta MMC1PRG
+    ;Write bit 1 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 2 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 3 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Write bit 4 of ROM bank #.
+    lsr
+    sta MMC1PRG
+    ;Restore A with current bank number before exiting.
+    lda $00
 RTS_C50F:
     rts
 
@@ -1283,129 +1322,174 @@ InitEndGFX:
     jmp InitGFX6                    ;($C6C2)Load end game GFX.
 
 InitTitleGFX:
-    ldy #$15                        ;Entry 21 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Title.b
+    jsr LoadGFX
 
 LoadSamusGFX:
-    ldy #$00                        ;Entry 0 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    lda JustInBailey                ;
-    beq LC5EB                           ;Branch if wearing suit
-        ldy #$1B                        ;Entry 27 in GFXInfo table.
-        jsr LoadGFX                     ;($C7AB)Switch to girl gfx
-    LC5EB:
-    ldy #$14                        ;Entry 20 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$17                        ;Entry 23 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$18                        ;Entry 24 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Samus.b
+    jsr LoadGFX
+    
+    ;Branch if wearing suit
+    lda JustInBailey
+    beq @endIf_A
+        ;Switch to girl gfx
+        ldy #_id_GFX_SamusSuitless.b
+        jsr LoadGFX
+    @endIf_A:
+    
+    ldy #_id_GFX_IntroSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Complete.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Hud.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitBrinstarGFX:
-    ldy #$03                        ;Entry 3 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$06                        ;Entry 6 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_BrinBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BrinstarSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitNorfairGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$07                        ;Entry 7 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$08                        ;Entry 8 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$09                        ;Entry 9 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_NorfairSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitTourianGFX:
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0B                        ;Entry 11 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0C                        ;Entry 12 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0D                        ;Entry 13 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0E                        ;Entry 14 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$1A                        ;Entry 26 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$1C                        ;Entry 28 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Zebetite.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourianFont.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TourianSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Font_Tourian.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_ExclamationPoint.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitKraidGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0F                        ;Entry 15 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$10                        ;Entry 16 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$11                        ;Entry 17 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraiBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraiBG3.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_KraidSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitRidleyGFX:
-    ldy #$04                        ;Entry 4 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$05                        ;Entry 5 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$0A                        ;Entry 10 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$12                        ;Entry 18 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$13                        ;Entry 19 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_CREBG1.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_CREBG2.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_BossBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_RidlBG.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_RidleySprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitGFX6:
-    ldy #$01                        ;Entry 1 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$02                        ;Entry 2 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$19                        ;Entry 25 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_EndingSprites.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_TheEndFont.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_0FC0.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 InitGFX7: ; Load Password Font
-    ldy #$17                        ;Entry 23 in GFXInfo table.
-    jsr LoadGFX                     ;($C7AB)Load pattern table GFX.
-    ldy #$16                        ;Entry 22 in GFXInfo table.
-    jmp LoadGFX                     ;($C7AB)Load pattern table GFX.
+    ldy #_id_GFX_Font_Complete.b
+    jsr LoadGFX
+    
+    ldy #_id_GFX_Solid_1FC0.b
+    jmp LoadGFX
 
 ;The table below contains info for each tile data block in the ROM.
 ;Each entry is 7 bytes long. The format is as follows:
@@ -1415,64 +1499,79 @@ InitGFX7: ; Load Password Font
 ;byte 5-6: data length (16-bit).
 
 GFXInfo:
-    .byte bank(GFX_Samus)          ;[SPR]Samus, items.             Entry 0.
-        .word GFX_Samus, $0000, $09A0
-    .byte bank(GFX_EndingSprites)  ;[SPR]Samus in ending.          Entry 1.
-        .word GFX_EndingSprites, $0000, $0520
-    .byte bank(GFX_TheEndFont)     ;[BGR]Partial font, "The End".  Entry 2.
-        .word GFX_TheEndFont, $1000, $0400
-    .byte bank(GFX_BrinBG1)        ;[BGR]Brinstar rooms.           Entry 3.
-        .word GFX_BrinBG1, $1000, $0150
-    .byte bank(GFX_CREBG1)         ;[BGR]Common Room Elements      Entry 4.
-        .word GFX_CREBG1, $1200, $0450
-    .byte bank(GFX_CREBG2)         ;[BGR]More CRE                  Entry 5.
-        .word GFX_CREBG2, $1800, $0800
-    .byte bank(GFX_BrinstarSprites);[SPR]Brinstar enemies.         Entry 6.
-        .word GFX_BrinstarSprites, $0C00, $0400
-    .byte bank(GFX_NorfBG1)        ;[BGR]Norfair rooms.            Entry 7.
-        .word GFX_NorfBG1, $1000, $0260
-    .byte bank(GFX_NorfBG2)        ;[BGR]More Norfair rooms.       Entry 8.
-        .word GFX_NorfBG2, $1700, $0070
-    .byte bank(GFX_NorfairSprites) ;[SPR]Norfair enemies.          Entry 9.
-        .word GFX_NorfairSprites, $0C00, $0400
-    .byte bank(GFX_BossBG)         ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
-        .word GFX_BossBG, $1000, $02E0
-    .byte bank(GFX_TourBG)         ;[BGR]Tourian rooms.            Entry 11. (0B)
-        .word GFX_TourBG, $1200, $0600
-    .byte bank(GFX_Zebetite)       ;[BGR]Mother Brain room.        Entry 12. (0C)
-        .word GFX_Zebetite, $1900, $0090
-    .byte bank(GFX_TourianFont)    ;[BGR]Misc. object.             Entry 13. (0D)
-        .word GFX_TourianFont, $1D00, $0300
-    .byte bank(GFX_TourianSprites) ;[SPR]Tourian enemies.          Entry 14. (0E)
-        .word GFX_TourianSprites, $0C00, $0400
-    .byte bank(GFX_KraiBG2)        ;[BGR]More Kraid Rooms          Entry 15. (0F)
-        .word GFX_KraiBG2, $1700, $00C0
-    .byte bank(GFX_KraiBG3)        ;[BGR]More Kraid Rooms          Entry 16. (10)
-        .word GFX_KraiBG3, $1E00, $0200
-    .byte bank(GFX_KraidSprites)   ;[SPR]Miniboss I enemies.       Entry 17. (11)
-        .word GFX_KraidSprites, $0C00, $0400
-    .byte bank(GFX_RidlBG)         ;[BGR]More Ridley Rooms         Entry 18. (12)
-        .word GFX_RidlBG, $1700, $00C0
-    .byte bank(GFX_RidleySprites)  ;[SPR]Miniboss II enemies.      Entry 19. (13)
-        .word GFX_RidleySprites, $0C00, $0400
-    .byte bank(GFX_IntroSprites)   ;[SPR]Intro/End sprites.        Entry 20. (14)
-        .word GFX_IntroSprites, $0C00, $0100
-    .byte bank(GFX_Title)          ;[BGR]Title.                    Entry 21. (15)
-        .word GFX_Title, $1400, $0500
-    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 22. (16)
-        .word GFX_Solid, $1FC0, $0040
-    .byte bank(GFX_Font)           ;[BGR]Complete font.            Entry 23. (17)
-        .word GFX_Font, $1000, $0400
-    .byte bank(GFX_Font)           ;[BGR]Ingame HUD font.          Entry 24. (18)
-        .word GFX_Font, $0A00, $00A0
-    .byte bank(GFX_Solid)          ;[BGR]Solid tiles.              Entry 25. (19)
-        .word GFX_Solid, $0FC0, $0040
-    .byte bank(GFX_Font)           ;[BGR]Tourian font.             Entry 26. (1A)
-        .word GFX_Font, $1D00, $02A0
-    .byte bank(GFX_SamusSuitless)  ;[SPR]Suitless Samus.           Entry 27. (1B)
-        .word GFX_SamusSuitless, $0000, $07B0
-    .byte bank(GFX_ExclamationPoint)  ;[BGR]Exclaimation point.       Entry 28. (1C)
-        .word GFX_ExclamationPoint, $1F40, $0010
+    ;[SPR]Samus, items.             Entry 0.
+    GFXInfoEntry GFX_Samus, $0000
+    ;[SPR]Samus in ending.          Entry 1.
+    GFXInfoEntry GFX_EndingSprites, $0000
+    ;[BGR]Partial font, "The End".  Entry 2.
+    GFXInfoEntry GFX_TheEndFont, $1000
+    ;[BGR]Brinstar rooms.           Entry 3.
+    GFXInfoEntry GFX_BrinBG1, $1000
+    ;[BGR]Common Room Elements      Entry 4.
+    GFXInfoEntry GFX_CREBG1, $1200
+    ;[BGR]More CRE                  Entry 5.
+    GFXInfoEntry GFX_CREBG2, $1800
+    ;[SPR]Brinstar enemies.         Entry 6.
+    GFXInfoEntry GFX_BrinstarSprites, $0C00
+    ;[BGR]Norfair rooms.            Entry 7.
+    GFXInfoEntry GFX_NorfBG1, $1000
+    ;[BGR]More Norfair rooms.       Entry 8.
+    GFXInfoEntry GFX_NorfBG2, $1700
+    ;[SPR]Norfair enemies.          Entry 9.
+    GFXInfoEntry GFX_NorfairSprites, $0C00
+    ;[BGR]Boss areas (Kr, Rd, Tr)   Entry 10. (0A)
+    GFXInfoEntry GFX_BossBG, $1000
+    ;[BGR]Tourian rooms.            Entry 11. (0B)
+    GFXInfoEntry GFX_TourBG, $1200
+    ;[BGR]Mother Brain room.        Entry 12. (0C)
+    GFXInfoEntry GFX_Zebetite, $1900
+    ;[BGR]Misc. object.             Entry 13. (0D)
+    GFXInfoEntry GFX_TourianFont, $1D00
+    ;[SPR]Tourian enemies.          Entry 14. (0E)
+    GFXInfoEntry GFX_TourianSprites, $0C00
+    ;[BGR]More Kraid Rooms          Entry 15. (0F)
+    GFXInfoEntry GFX_KraiBG2, $1700
+    ;[BGR]More Kraid Rooms          Entry 16. (10)
+    GFXInfoEntry GFX_KraiBG3, $1E00
+    ;[SPR]Miniboss I enemies.       Entry 17. (11)
+    GFXInfoEntry GFX_KraidSprites, $0C00
+    ;[BGR]More Ridley Rooms         Entry 18. (12)
+    GFXInfoEntry GFX_RidlBG, $1700
+    ;[SPR]Miniboss II enemies.      Entry 19. (13)
+    GFXInfoEntry GFX_RidleySprites, $0C00
+    ;[SPR]Intro/End sprites.        Entry 20. (14)
+    GFXInfoEntry GFX_IntroSprites, $0C00
+    ;[BGR]Title.                    Entry 21. (15)
+    GFXInfoEntry GFX_Title, $1400
+    ;[BGR]Solid tiles.              Entry 22. (16)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Solid_1FC0 = _entryNumber_GFXInfo export
+    .byte bank(GFX_Solid)
+    .word GFX_Solid, $1FC0, _sizeof_GFX_Solid
+    ;[BGR]Complete font.            Entry 23. (17)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Complete = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $1000, $0400
+    ;[BGR]Ingame HUD font.          Entry 24. (18)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Hud = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $0A00, $00A0
+    ;[SPR]Solid tiles.              Entry 25. (19)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Solid_0FC0 = _entryNumber_GFXInfo export
+    .byte bank(GFX_Solid)
+    .word GFX_Solid, $0FC0, _sizeof_GFX_Solid
+    ;[BGR]Tourian font.             Entry 26. (1A)
+    .redef _entryNumber_GFXInfo = _entryNumber_GFXInfo + 1
+    .def _id_GFX_Font_Tourian = _entryNumber_GFXInfo export
+    .byte bank(GFX_Font)
+    .word GFX_Font, $1D00, $02A0
+    ;[SPR]Suitless Samus.           Entry 27. (1B)
+    GFXInfoEntry GFX_SamusSuitless, $0000
+    ;[BGR]Exclaimation point.       Entry 28. (1C)
+    GFXInfoEntry GFX_ExclamationPoint, $1F40
 
 ;--------------------------------[ Pattern table loading routines ]---------------------------------
 
@@ -2167,7 +2266,7 @@ UpdateWorld:
     ldx #$00                        ;Set start of sprite RAM to $0200.
     stx SpritePagePos               ;
 
-    jsr UpdateEnemies               ;($F345)Display of enemies.
+    jsr UpdateAllEnemies            ;($F345)Display of enemies.
     jsr UpdateProjectiles           ;($D4BF)Display of bullets/missiles/bombs.
     jsr UpdateSamus                 ;($CC0D)Display/movement of Samus.
     jsr AreaRoutine                 ;($95C3)Area specific routine.
@@ -9610,17 +9709,17 @@ LF340:
     rts
 
 ;-------------------------------------------------------------------------------
-UpdateEnemies: ; LF345
+UpdateAllEnemies: ; LF345
     ldx #$50                ;Load x with #$50
     @loop:
-        jsr DoOneEnemy                  ;($F351)
+        jsr UpdateEnemy                  ;($F351)
         ldx PageIndex
         jsr Xminus16
         bne @loop
-    ; After loop, DoOneEnemy for the case X=$00
+    ; After loop, UpdateEnemy for the case X=$00
 
 ;-------------------------------------------------------------------------------
-DoOneEnemy: ;LF351
+UpdateEnemy: ;LF351
     stx PageIndex                   ;PageIndex starts at $50 and is subtracted by #$0F each-->
                                     ;iteration. There is a max of 6 enemies at a time.
     ldy EnStatus,x
@@ -9628,27 +9727,27 @@ DoOneEnemy: ;LF351
         cpy #enemyStatus_Active+1.b
         bcs @endIf
             ; enemy status is enemyStatus_Resting or enemyStatus_Active here
-            jsr DoOneEnemy_CheckIfVisible
+            jsr UpdateEnemy_CheckIfVisible
     @endIf:
-    jsr DoOneEnemy_UpdateEnData05Bit6
+    jsr UpdateEnemy_UpdateEnData05Bit6
     lda EnStatus,x
     sta EnemyStatusPreAI
     cmp #enemyStatus_Hurt+1.b
     bcs @invalidStatus
     jsr ChooseRoutine
         .word ExitSub ; 00 ($C45C) rts
-        .word DoRestingEnemy ; 01 Resting (Offscreen or Inactive)
-        .word DoActiveEnemy ; 02 Active
-        .word LF40D ; 03 Exploding ?
-        .word DoFrozenEnemy ; 04 Frozen
-        .word DoEnemyPickup ; 05 Pickup
-        .word DoHurtEnemy ; 06 Hurt
+        .word UpdateEnemy_Resting ; 01 Resting (Offscreen or Inactive)
+        .word UpdateEnemy_Active ; 02 Active
+        .word UpdateEnemy_Explode ; 03 Exploding ?
+        .word UpdateEnemy_Frozen ; 04 Frozen
+        .word UpdateEnemy_Pickup ; 05 Pickup
+        .word UpdateEnemy_Hurt ; 06 Hurt
 
 @invalidStatus:
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 ;-------------------------------------------------------------------------------
-DoOneEnemy_CheckIfVisible:
+UpdateEnemy_CheckIfVisible:
     lda EnData05,x
     and #$02
     bne @exit
@@ -9668,7 +9767,7 @@ DoOneEnemy_CheckIfVisible:
         txa
         bne @exit
             ; enemy is not visible
-            ; double return, returns from DoOneEnemy entirely
+            ; double return, returns from UpdateEnemy entirely
             pla
             pla
     @exit:
@@ -9676,7 +9775,7 @@ DoOneEnemy_CheckIfVisible:
     rts
 
 ; toggle bit 6 of EnData05
-DoOneEnemy_UpdateEnData05Bit6:
+UpdateEnemy_UpdateEnData05Bit6:
     ; shift bit 6 of EnData05 into carry
     lda EnData05,x ;76543210
     asl ;6543210-
@@ -9695,7 +9794,7 @@ DoOneEnemy_UpdateEnData05Bit6:
     rts
 
 ;---------------------------------------------
-DoRestingEnemy: ;($F3BE)
+UpdateEnemy_Resting: ;($F3BE)
     ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
@@ -9704,28 +9803,28 @@ DoRestingEnemy: ;($F3BE)
         sta EnJumpDsplcmnt,x
         sta EnMovementInstrIndex,x
         sta EnData0A,x
-        jsr DoEnemy_ForceSpeedTowardsSamus
-        jsr DoEnemy_EnData05DistanceToSamusThreshold
+        jsr UpdateEnemy_ForceSpeedTowardsSamus
+        jsr UpdateEnemy_EnData05DistanceToSamusThreshold
         jsr InitEnRestingAnimIndex
-        jsr DoRestingEnemy_F676
+        jsr UpdateEnemy_Resting_UpdateEnData1F
 
         ; branch if delay is zero
         lda EnDelay,x
         beq Lx299
-            jsr DoRestingEnemy_TryBecomingActive
+            jsr UpdateEnemy_Resting_TryBecomingActive
     Lx299:
-    jmp DoActiveEnemy_BranchB
+    jmp UpdateEnemy_Active_BranchB
 ;------------------------------------------
-DoActiveEnemy: ; LF3E6
+UpdateEnemy_Active: ; LF3E6
     ; Branch if bit 6 is set (30FPS)
     lda EnData05,x
     asl
-    bmi DoActiveEnemy_BranchB
+    bmi UpdateEnemy_Active_BranchB
 
     ; Branch if bit 5 is clear
     lda EnData05,x
     and #$20
-    beq DoActiveEnemy_BranchA
+    beq UpdateEnemy_Active_BranchA
 
     ; Set enemy delay
     ldy EnType,x
@@ -9733,15 +9832,15 @@ DoActiveEnemy: ; LF3E6
     sta EnDelay,x
     ; Decrement status from active to resting
     dec EnStatus,x
-    bne DoActiveEnemy_BranchB ; Branch always
+    bne UpdateEnemy_Active_BranchB ; Branch always
 
-DoActiveEnemy_BranchA: ; LF401
-    jsr DoEnemy_ForceSpeedTowardsSamus
-    jsr DoEnemy_EnData05DistanceToSamusThreshold
+UpdateEnemy_Active_BranchA: ; LF401
+    jsr UpdateEnemy_ForceSpeedTowardsSamus
+    jsr UpdateEnemy_EnData05DistanceToSamusThreshold
     jsr RemoveEnemyIfItIsInLava
-DoActiveEnemy_BranchB: ; LF40A
+UpdateEnemy_Active_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
-LF40D:
+UpdateEnemy_Explode:
     jmp ChooseEnemyAIRoutine
 ;-------------------------------------------
 ; This procedure is called by a lot of enemy AI routines, with three different
@@ -9778,7 +9877,7 @@ LF438:
     jsr UpdateEnemyAnim
     jmp LF416
 ;-------------------------------------------
-DoFrozenEnemy: ; ($F43E)
+UpdateEnemy_Frozen: ; ($F43E)
     jsr EnemyReactToSamusWeapon
     lda EnStatus,x
     cmp #$03
@@ -9812,7 +9911,7 @@ DoFrozenEnemy: ; ($F43E)
     Lx304:
     jmp LF416
 ;--------------------------------------
-DoEnemyPickup: ;($F483)
+UpdateEnemy_Pickup: ;($F483)
     ; branch if samus is not touching the pickup
     lda EnIsHit,x
     and #$24
@@ -9896,7 +9995,7 @@ DoEnemyPickup: ;($F483)
     sta ObjectCntrl
     jmp LF416
 ;--------------------------------------------
-DoHurtEnemy:
+UpdateEnemy_Hurt:
     dec EnSpecialAttribs,x
     bne Lx313
     ; Preserve upper two bits of EnSpecialAttribs
@@ -10169,11 +10268,14 @@ GetPageIndex:
     ldx PageIndex
     rts
 
-DoRestingEnemy_F676:
+UpdateEnemy_Resting_UpdateEnData1F:
+    ; load L977B entry * 2
     jsr LoadTableAt977B
+    ; move bits 2-3 of L977B entry to bits 6-7
     asl
     asl
     asl
+    ; isolate them and save to EnData1F
     and #$C0
     sta EnData1F,x
     rts
@@ -10216,7 +10318,7 @@ Exit12:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_ForceSpeedTowardsSamus:
+UpdateEnemy_ForceSpeedTowardsSamus:
     ; clear $82
     lda #$00
     sta Enemy82
@@ -10374,7 +10476,7 @@ LoadEnHiToYAndLoadEorHiToCarry:
     rts
 
 ;-------------------------------------------------------------------------------
-DoEnemy_EnData05DistanceToSamusThreshold:
+UpdateEnemy_EnData05DistanceToSamusThreshold:
     ; default to masking out bit 4 and bit 3 of EnData05
     lda #~$18
     sta $06
@@ -10464,7 +10566,7 @@ AndEnData05:
 RTS_X346:
     rts
 
-DoRestingEnemy_TryBecomingActive:
+UpdateEnemy_Resting_TryBecomingActive:
     ; decrement delay until next action
     dec EnDelay,x
     ; exit if delay is not zero
@@ -10569,8 +10671,8 @@ GetEnemyTypeTimes2PlusFacingDirectionBit0:
 GetEnemyTypeTimes2PlusFacingDirection:
     lda EnData05,x
     bpl Lx352
-    lsr
-    lsr
+        lsr
+        lsr
 Lx352:
     lsr
     lda EnType,x
@@ -11134,39 +11236,56 @@ Exit13:
 ;-------------------------------------------------------------------------------
 ; Sidehopper AI ?
 ; Wavers, too?
-LFB88:
+EnemyFlipAfterDisplacement:
+    ; load (enemy type * 2 + horizontal facing direction) into y
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection
+    
     lda EnJumpDsplcmnt,x
+    ; branch if EnData1F is zero
     inc EnData1F,x
     dec EnData1F,x
     bne Lx382
+        ; EnData1F is not zero
+        ; set negative flag for EnJumpDsplcmnt
         pha
         pla
     Lx382:
+    ; branch if EnData1F is zero or if EnJumpDsplcmnt is positive
     bpl Lx383
+        ; EnData1F is not zero and EnJumpDsplcmnt is negative
+        ; negate EnJumpDsplcmnt to get the absolute distance
         jsr TwosComplement              ;($C3D4)
     Lx383:
+    ; branch if displacement is less than 8 pixels
     cmp #$08
     bcc Lx384
+        ; exit if displacement is greater or equal to 16 pixels
         cmp #$10
         bcs Exit13
+        ; displacement is between 8 and 15 pixels inclusive
+        ; set y to horizontal facing direction
         tya
         and #$01
         tay
-        lda EnemyLFB88_85,y
+        ; exit if enemy animation is facing the correct way
+        lda EnemyFlipAfterDisplacementAnimIndex,y
         cmp EnResetAnimIndex,x
         beq Exit13
+        ; enemy is facing the wrong way, init anim index
         sta EnAnimIndex,x
         dec EnAnimIndex,x
-    LFBB9:
+InitEnResetAnimIndex: ; referenced in areas_common.asm
         sta EnResetAnimIndex,x
         jmp ClearEnAnimDelay
     Lx384:
-    lda EnemyRestingAnimIndex,y
-    cmp EnResetAnimIndex,x
-    beq Exit13
-    jmp InitEnAnimIndex
+        ; displacement is less than 8 pixels
+        ; exit if enemy is doing its resting animation 
+        lda EnemyRestingAnimIndex,y
+        cmp EnResetAnimIndex,x
+        beq Exit13
+        ; set enemy animation to resting animation
+        jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
 
 LFBCA:
