@@ -1,4 +1,4 @@
-LC000:
+BMENST_RESET: ;($C000)
     cld
     ; wait for vblank
     LC001:
@@ -39,13 +39,13 @@ LC02E:
     sty $1D
     lda #$90
     sta PPUCTRL
-    sta $FF
+    sta PPUCTRL_ZP
     lda #$02
-    sta $FE
+    sta PPUMASK_ZP
     lda #$47
     sta FDS_CTRL
     sta $73
-    sta $FB
+    sta FDS_CTRL_ZP
     sta $28
     jmp $9388
 

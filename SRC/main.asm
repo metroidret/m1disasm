@@ -54,7 +54,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PGM"
 FDSFileMacroPart2 $6800, $00
-    .include "fdspacker_output/side_1/demo.pgm.asm"
+    .include "sideA/demo.pgm.asm"
 FDSFileMacroPart3
 
 
@@ -72,9 +72,9 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "DEMO.VEC"
 FDSFileMacroPart2 $DFFA, $00
-    .word $68BD
-    .word $6821
-    .word $6821
+    .word DEMO_NMI
+    .word DEMO_RESET
+    .word DEMO_RESET
 FDSFileMacroPart3
 
 
@@ -83,7 +83,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $20
     .ascstr "BMENST", $00, $00
 FDSFileMacroPart2 $C000, $00
-    .include "fdspacker_output/side_1/bmenst.asm"
+    .include "sideA/bmenst.asm"
 FDSFileMacroPart3
 
 
@@ -93,8 +93,8 @@ FDSFileMacroPart1 $20
     .ascstr "MAIN.VEC"
 FDSFileMacroPart2 $DFFA, $00
     .word $9396
-    .word $C000
-    .word $C000
+    .word BMENST_RESET
+    .word BMENST_RESET
 FDSFileMacroPart3
 
 

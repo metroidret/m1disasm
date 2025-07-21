@@ -26,14 +26,14 @@ L6800:
 
 
 
-L6821:
+DEMO_RESET: ;($6821)
     cld
-L6822:
-    lda $2002
-    bpl L6822
+    L6822:
+        lda PPUSTATUS
+        bpl L6822
     ldx #$00
-    stx $2000
-    stx $2001
+    stx PPUCTRL
+    stx PPUMASK
     dex
     txs
     ldy #$07
@@ -41,37 +41,37 @@ L6822:
     ldy #$00
     sty $00
     tya
-L683A:
-    sta ($00),y
-    iny
-    bne L683A
-    dec $01
-    bmi L684F
-    ldx $01
-    cpx #$01
-    bne L683A
-    iny
-    iny
-    iny
-    iny
-    bne L683A
+    L683A:
+            sta ($00),y
+            iny
+            bne L683A
+            dec $01
+            bmi L684F
+            ldx $01
+            cpx #$01
+            bne L683A
+        iny
+        iny
+        iny
+        iny
+        bne L683A
 L684F:
     jsr L69DF
     jsr EraseAllSprites
     ldy #$00
-    sty $2005
-    sty $2005
+    sty PPUSCROLL
+    sty PPUSCROLL
     iny
     sty $1D
     lda #$90
-    sta $2000
-    sta $FF
+    sta PPUCTRL
+    sta PPUCTRL_ZP
     lda #$02
-    sta $FE
+    sta PPUMASK_ZP
     lda #$47
-    sta $4025
-    sta $FB
-    bne L68A7
+    sta FDS_CTRL
+    sta FDS_CTRL_ZP
+    bne L68A7 ; branch always
 
 
 
@@ -97,23 +97,23 @@ L6874:
     sta $0181
     lda #$00
     sta $0180
-    L68A7:
-        tay
-        L68A8:
-            lda $1A
-            bne L68B7
-            iny
-            cpy #$09
-            bne L68A8
-        inc $0180
-        jmp L68A7
+L68A7:
+    tay
+    L68A8:
+        lda $1A
+        bne L68B7
+        iny
+        cpy #$09
+        bne L68A8
+    inc $0180
+    jmp L68A7
 L68B7:
     jsr L6800
     jmp L6874
 
 
 
-L68BD:
+DEMO_NMI: ;($68BD)
     cli
     php
     pha
