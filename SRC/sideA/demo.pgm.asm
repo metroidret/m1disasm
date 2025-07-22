@@ -218,8 +218,8 @@ L695F:
 
 L6966:
     lda $1E
-    jsr ChooseRoutine
-    .byte $00, $6D
+    jsr DEMO_ChooseRoutine
+        .word RTS_6D00
 
 
 
@@ -247,7 +247,7 @@ L6988:
     jsr RemoveIntroSprites
     lda $1F
 L6999:
-    jsr ChooseRoutine
+    jsr DEMO_ChooseRoutine
 
 
 
@@ -485,7 +485,7 @@ L6AE4:
 
 
 
-ChooseRoutine: ;($6AFA)
+DEMO_ChooseRoutine: ;($6AFA)
     ;* 2, each ptr is 2 bytes (16-bit).
     asl
     ;Temp storage. (not pushed to stack, because stack needs to be accessed)
@@ -888,6 +888,7 @@ WritePPUCtrl:
     sta PPUMASK
     lda FDS_CTRL_ZP
     sta FDS_CTRL
+RTS_6D00:
     rts
 
 

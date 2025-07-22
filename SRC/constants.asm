@@ -17,6 +17,7 @@
 .ENDA
 
 .STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"
+.STRINGMAPTABLE charmap "SRC/charmap.tbl"
 
 ;-------------------------------------------[ Defines ]----------------------------------------------
 

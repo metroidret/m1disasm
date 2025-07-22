@@ -56,6 +56,8 @@
 .endm
 
 .macro PPUStringRepeat args ppuAddress, ppuByte, repetitions
+    assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
+    
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
     .if (\?2 == ARG_IMMEDIATE) || (\?2 == ARG_NUMBER)

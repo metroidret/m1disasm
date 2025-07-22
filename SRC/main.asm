@@ -139,7 +139,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EE
     .ascstr "ENDPGM", $00, $00
 FDSFileMacroPart2 $6000, $00
-    .incbin "fdspacker_output/side_1/endpgm.prg"
+    .include "sideA/endpgm.asm"
 FDSFileMacroPart3
 
 
@@ -148,9 +148,9 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EE
     .ascstr "ENDVEC", $00, $00
 FDSFileMacroPart2 $DFFA, $00
-    .word $60D9
-    .word $6000
-    .word $6143
+    .word ENDPGM_NMI
+    .word ENDPGM_RESET
+    .word ENDPGM_IRQ
 FDSFileMacroPart3
 
 
