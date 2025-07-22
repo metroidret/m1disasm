@@ -27,6 +27,9 @@ CodePtr                = $0C     ;Points to address to jump to when choosing-->
 NMIStatus              = $1A     ;0=NMI in progress. anything else, NMI not in progress.
 PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
 
+RandomNumber1          = $28        ;Random numbers used-->
+RandomNumber2          = $29        ;throughout the game.
+
 FDS_CTRL_ZP            = $FB
 ScrollY                = $FC     ;Y value loaded into scroll register.
 ScrollX                = $FD     ;X value loaded into scroll register.

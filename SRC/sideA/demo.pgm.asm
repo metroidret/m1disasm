@@ -1,27 +1,27 @@
 
-L6800:
+RandomNumbers: ;($6800)
     txa
     pha
     ldx #$0B
-    L6804:
-        asl $28
-        rol $29
+    @loop:
+        asl RandomNumber1
+        rol RandomNumber2
         rol a
         rol a
-        eor $28
+        eor RandomNumber1
         rol a
-        eor $28
+        eor RandomNumber1
         lsr a
         lsr a
         eor #$FF
         and #$01
-        ora $28
-        sta $28
+        ora RandomNumber1
+        sta RandomNumber1
         dex
-        bne L6804
+        bne @loop
     pla
     tax
-    lda $28
+    lda RandomNumber1
     rts
 
 
@@ -100,7 +100,7 @@ L6874:
 L68A7:
     tay
     L68A8:
-        lda $1A
+        lda NMIStatus
         bne L68B7
         iny
         cpy #$09
@@ -108,7 +108,7 @@ L68A7:
     inc $0180
     jmp L68A7
 L68B7:
-    jsr L6800
+    jsr RandomNumbers
     jmp L6874
 
 
@@ -248,37 +248,35 @@ L6988:
     lda $1F
 L6999:
     jsr DEMO_ChooseRoutine
-
-
-
-L699C:
-    ora ($6D,x)
-    adc #$6D
-    sty $DF6D
-    adc $6DF5
-    ldy $006D.w,x
-    ror $6E16
-    and $6E,x
-    sty $6E
-    .byte $DC
-    adc #$DC
-    adc #$E3
-    ror $6F26
-    lsr $6F
-    ror $6F
-    dec $69,x
-    cmp ($6F),y
-    .byte $1C, $70, $22, $70, $22, $70, $99
-    dey
-    .byte $3C
-    .byte $89
-    dec $F289
-    .byte $89
-    lda $8B
-    cmp $8B
-    .byte $47
-    dey
-    ora ($6D,x)
+        .word L6D01
+        .word L6D69
+        .word L6D8C
+        .word L6DDF
+        .word L6DF5
+        .word L6DBC
+        .word L6E00
+        .word L6E16
+        .word L6E35
+        .word L6E84
+        .word L69DC
+        .word L69DC
+        .word L6EE3
+        .word L6F26
+        .word L6F46
+        .word L6F66
+        .word L69D6
+        .word L6FD1
+        .word L701C
+        .word RTS_7022
+        .word RTS_7022
+        .word L8899
+        .word L893C
+        .word L89CE
+        .word L89F2
+        .word L8BA5
+        .word L8BC5
+        .word L8847
+        .word L6D01
 
 
 
@@ -286,6 +284,7 @@ L69D6:
     lda #$00
     sta $53
     sta $51
+L69DC:
     inc $1F
     rts
 
@@ -947,13 +946,20 @@ L6D57:
     bne L6D37
     inc $1F
     jmp L84EE
+
+L6D61:
     .byte $00
     .byte $00
     .byte $00
     .byte $00
     .byte $00
     .byte $00
-    cpy #$C4
+    .byte $C0
+    .byte $C4
+
+
+
+L6D69:
     lda #$10
     sta $F0
     sta $0684
@@ -998,54 +1004,74 @@ L6DB2:
     sta $49
     inc $1F
     rts
+
+
+
+L6DBC:
     lda $27
     and #$03
-    bne L6DDE
+    bne RTS_6DDE
     lda $49
     and #$03
     sta $49
     jsr L85A0
     lda $26
-    bne L6DDE
+    bne RTS_6DDE
     lda $49
     cmp #$04
-    bne L6DDE
+    bne RTS_6DDE
     inc $1F
     jsr L8183
     lda #$18
     sta $26
-L6DDE:
+RTS_6DDE:
     rts
+
+
+
+L6DDF:
     lda $26
-    bne L6DF4
+    bne RTS_6DF4
     lda $27
     and #$0F
-    bne L6DF4
+    bne RTS_6DF4
     jsr L85A0
-    bne L6DF4
+    bne RTS_6DF4
     lda #$20
     sta $26
     inc $1F
-L6DF4:
+RTS_6DF4:
     rts
+
+
+
+L6DF5:
     lda $26
-    bne L6DF4
+    bne RTS_6DF4
     lda #$08
     sta $26
     inc $1F
     rts
+
+
+
+L6E00:
     lda $26
-    bne L6E15
+    bne RTS_6E15
     lda $048A
     and $049A
     cmp #$01
     bne L6E12
     inc $1F
-    bne L6E15
+    bne RTS_6E15
 L6E12:
     jsr L81A7
-L6E15:
+RTS_6E15:
     rts
+
+
+
+L6E16:
     lda $27
     and #$07
     bne L6E34
@@ -1063,6 +1089,10 @@ L6E31:
     jsr L8673
 L6E34:
     rts
+
+
+
+L6E35:
     lda $48
     beq L6E3C
     jsr L85BB
@@ -1102,6 +1132,10 @@ L6E80:
     jsr L834E
 L6E83:
     rts
+
+
+
+L6E84:
     lda $48
     beq L6E8E
     jsr L834E
@@ -1129,7 +1163,7 @@ L6E8E:
     rts
     lda $0300
     cmp #$04
-    bne L6EE2
+    bne RTS_6EE2
     lda #$00
     sta $0300
     lda #$0B
@@ -1144,14 +1178,18 @@ L6E8E:
     sta $51
     sta $53
     inc $1F
-L6EE2:
+RTS_6EE2:
     rts
+
+
+
+L6EE3:
     lda $53
     bne L6EF1
     lda $27
     and #$0F
     cmp #$01
-    bne L6F25
+    bne RTS_6F25
     sta $53
 L6EF1:
     lda $51
@@ -1181,13 +1219,17 @@ L6F17:
     sta $4C
     lda #$00
     sta $51
-L6F25:
+RTS_6F25:
     rts
+
+
+
+L6F26:
     lda $26
-    bne L6F45
+    bne RTS_6F45
     lda $27
     and #$07
-    bne L6F45
+    bne RTS_6F45
     lda $4C
     cmp #$0B
     bne L6F42
@@ -1196,16 +1238,20 @@ L6F25:
     lda #$30
     sta $26
     inc $1F
-    bne L6F45
+    bne RTS_6F45
 L6F42:
     jsr L8673
-L6F45:
+RTS_6F45:
     rts
+
+
+
+L6F46:
     lda $26
-    bne L6F65
+    bne RTS_6F65
     lda $27
     and #$07
-    bne L6F65
+    bne RTS_6F65
     lda $4C
     cmp #$05
     bne L6F62
@@ -1214,17 +1260,21 @@ L6F45:
     lda #$00
     sta $53
     inc $1F
-    bne L6F65
+    bne RTS_6F65
 L6F62:
     jsr L8673
-L6F65:
+RTS_6F65:
     rts
+
+
+
+L6F66:
     lda $53
     bne L6F74
     lda $27
     and #$0F
     cmp #$01
-    bne L6FB7
+    bne RTS_6FB7
     sta $53
 L6F74:
     lda $51
@@ -1261,22 +1311,26 @@ L6F9E:
     inc $1F
     lda #$10
     sta $26
-L6FB7:
+RTS_6FB7:
     rts
     lda $26
-    bne L6FD0
+    bne RTS_6FD0
     lda $3F
-    bne L6FD0
+    bne RTS_6FD0
     lda $40
     and #$0F
-    bne L6FD0
+    bne RTS_6FD0
     lda #$01
     sta $5A
     lda #$10
     sta $26
     inc $1F
-L6FD0:
+RTS_6FD0:
     rts
+
+
+
+L6FD1:
     lda $26
     bne L7018
     sta $5A
@@ -1319,10 +1373,22 @@ L7018:
 L7019:
     dec $63
     rts
+
+
+
+L701C:
     jsr ScreenOff
     inc $1F
     rts
+
+
+
+RTS_7022:
     rts
+
+
+
+L7023:
     lda #$01
     sta $0680
     rts
@@ -3274,11 +3340,18 @@ L8750:
     .byte $00
     .byte $00
     .byte $00
+
+
+
 L883B:
     jsr ScreenOff
     jsr L69DF
     jsr EraseAllSprites
     jmp $CF1D
+
+
+
+L8847:
     lda #$FF
     sta $0102
     sta $0103
@@ -3402,6 +3475,10 @@ L892D:
     and #$0F
     sta $2007
     rts
+
+
+
+L893C:
     lda $12
     and #$30
     cmp #$10
@@ -3482,6 +3559,10 @@ L89A8:
     sta $C5A0,x
     jsr $CE35
     jmp $CE66
+
+
+
+L89CE:
     jsr L883B
     ldx #$42
     ldy #$90
@@ -3497,6 +3578,10 @@ L89A8:
     sty $37
     inc $1F
     jmp L8927
+
+
+
+L89F2:
     jsr EraseAllSprites
     ldx #$30
     ldy #$58
@@ -3751,6 +3836,10 @@ L8B80:
     clv
     cpy #$C8
     bne L8B7D
+
+
+
+L8BA5:
     jsr L883B
     ldx #$42
     ldy #$90
@@ -3764,6 +3853,10 @@ L8B80:
     sta $37
     inc $1F
     jmp L8927
+
+
+
+L8BC5:
     jsr EraseAllSprites
     ldx #$30
     ldy #$58
