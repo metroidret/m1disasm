@@ -63,7 +63,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PG2"
 FDSFileMacroPart2 $C5A0, $00
-    .incbin "fdspacker_output/side_1/demo.pg2.prg"
+    .include "sideA/demo.pg2.asm"
 FDSFileMacroPart3
 
 

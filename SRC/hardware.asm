@@ -179,6 +179,8 @@ MMC1Reg3               = $E000
 
 ;FDS BIOS routines
 
+FDSBIOS_EnPFObj = $E16B
+
 FDSBIOS_LoadFiles = $E1F8
 FDSBIOS_AppendFile = $E237
 FDSBIOS_WriteFile = $E239
