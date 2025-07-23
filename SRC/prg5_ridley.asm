@@ -147,7 +147,7 @@ AreaMellowAnimIndex:
     .byte EnAnim_25 - EnAnimTbl
 
 ChooseEnemyAIRoutine:
-    lda EnType,x
+    lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
         .word SwooperAIRoutine00 ; 00 - swooper has not seen samus
         .word SwooperAIRoutine01 ; 01 - swooper targetting samus
@@ -478,7 +478,7 @@ EnemyFireballMovement3:
 ;-------------------------------------------------------------------------------
 InvalidEnemy:
     lda #$00
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     rts
 
 CommonEnemyJump_00_01_02:
@@ -524,14 +524,14 @@ StorePositionToTemp:
     sta Temp08_PositionY
     lda EnX,x
     sta Temp09_PositionX
-    lda EnHi,x
+    lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
     rts
 
 LoadPositionFromTemp:
     lda Temp0B_PositionHi
     and #$01
-    sta EnHi,x
+    sta EnsExtra.0.hi,x
     lda Temp08_PositionY
     sta EnY,x
     lda Temp09_PositionX

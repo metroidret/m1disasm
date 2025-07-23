@@ -21,18 +21,18 @@ SkreeAIRoutine:
     ; skree just landed on the ground
     ; set blow up delay to roughly 1 second
     lda #$3A
-    sta EnJumpDsplcmnt,x
+    sta EnsExtra.0.jumpDsplcmnt,x
     bne SkreeExit_Active
 
 SkreeBlowUpIntoProjectiles:
     ; decrement blow up delay
-    dec EnJumpDsplcmnt,x
+    dec EnsExtra.0.jumpDsplcmnt,x
     ; exit if delay is not zero
     bne SkreeExit_Active
 
     ; remove skree
     lda #enemyStatus_NoEnemy
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     ; spawn 4 projectiles
     ldy #(4-1)*4
     @loop:
@@ -44,7 +44,7 @@ SkreeBlowUpIntoProjectiles:
         sta SkreeProjectiles.0.y,y
         lda EnX,x
         sta SkreeProjectiles.0.x,y
-        lda EnHi,x
+        lda EnsExtra.0.hi,x
         sta SkreeProjectiles.0.hi,y
         ; move to next projectile slot
         dey

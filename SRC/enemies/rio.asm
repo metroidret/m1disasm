@@ -10,7 +10,7 @@ RioAIRoutine:
 
     ; set gravity to negative #$80 (gravity pulls towards ceiling)
     lda #$80
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     ; branch if y speed is negative
     lda EnSpeedY,x
     bmi RioExitA
@@ -37,7 +37,7 @@ RioAIRoutine:
     ; Samus is vertically aligned with the enemy
     ; stop applying gravity to enemy speed
     lda #$00
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
 
 RioExitA:
     ; change animation frame every 3 frames

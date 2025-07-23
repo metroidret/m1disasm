@@ -2,7 +2,7 @@
 
 PipeBugAIRoutine:
     ; branch if pipe bug is not active
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne PipeBugApplySpeed
 
@@ -10,8 +10,8 @@ PipeBugAIRoutine:
     lda EnSpeedX,x
     bne PipeBugApplySpeed
 
-    ; if EnAccelY is in effect, we need to check if y speed became positive
-    lda EnAccelY,x
+    ; if EnsExtra.0.accelY is in effect, we need to check if y speed became positive
+    lda EnsExtra.0.accelY,x
     bne PipeBugCheckIfGoForwards
 
     ; branch if pipe bug is more than #$40 pixels (4 blocks) below Samus
@@ -22,10 +22,10 @@ PipeBugAIRoutine:
     cmp #$40
     bcs PipeBugApplySpeed
 
-    ; set EnAccelY to #$7F
+    ; set EnsExtra.0.accelY to #$7F
     ; eventually, this gravity will make y speed positive
     lda #$7F
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     bne PipeBugApplySpeed ; branch always
 
 PipeBugCheckIfGoForwards:
@@ -37,7 +37,7 @@ PipeBugCheckIfGoForwards:
         lda #$00
         sta EnSpeedY,x
         sta EnSpeedSubPixelY,x
-        sta EnAccelY,x
+        sta EnsExtra.0.accelY,x
         ; set pipe bug x speed depending on its facing direction
         lda EnData05,x
         and #$01
@@ -51,7 +51,7 @@ PipeBugApplySpeed:
     bmi PipeBugExit
     
     ; exit if pipe bug is not active
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne PipeBugExit
     
@@ -85,7 +85,7 @@ PipeBugExit:
 PipeBugDelete:
     ; Set enemy status to 0
     lda #enemyStatus_NoEnemy
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     rts
 
 PipeBugSpeedXTable:

@@ -4,7 +4,7 @@ WaverAIRoutine:
     sta EnemyFlipAfterDisplacementAnimIndex
     lda #EnAnim_1E - EnAnimTbl.b
     sta EnemyFlipAfterDisplacementAnimIndex+1.b
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq L99F7
         jsr CommonJump_EnemyFlipAfterDisplacement

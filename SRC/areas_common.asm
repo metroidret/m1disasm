@@ -91,7 +91,7 @@ CommonEnemyAI:
     bmi @RTS
     
     ; Exit if enemy is not active
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne @RTS
 
@@ -155,7 +155,7 @@ CommonEnemyAI:
 ;-------------------------------------------------------------------------------
 ; A = TableAtL977B[EnemyType]*2
 LoadTableAt977B: ; L80B0
-    ldy EnType,x
+    ldy EnsExtra.0.type,x
     lda L977B,y
     asl                             ;*2
     rts
@@ -176,7 +176,7 @@ L80C1:
 L80C7:
     jsr LoadTableAt977B
     bpl L80EA
-    lda EnData1F,x
+    lda EnsExtra.0.data1F,x
     beq L80C1
 
     bpl L80D8
@@ -221,7 +221,7 @@ L8104:
 L810A:
     jsr LoadTableAt977B
     bpl L8123
-    lda EnData1F,x
+    lda EnsExtra.0.data1F,x
     beq L8104
     bpl L8120
     clc
@@ -259,7 +259,7 @@ L8142:
     jsr EnemyIfMoveFailedHorizontal81FC
     jmp L8169
 L8148:
-    lda EnData1F,x
+    lda EnsExtra.0.data1F,x
     beq L8142
     bpl L8159
     clc
@@ -297,7 +297,7 @@ L817C:
     jsr EnemyIfMoveFailedHorizontal81FC
     jmp L81AC
 L8182:
-    lda EnData1F,x
+    lda EnsExtra.0.data1F,x
     beq L817C
     bpl L818E
         jsr SetBit5OfEnData05_AndClearEnAccelX
@@ -329,7 +329,7 @@ RTS_81B0:
 ;-------------------------------------------------------------------------------
 SetBit5OfEnData05_AndClearEnAccelY:
     jsr SetBit5OfEnData05
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     rts
 
 ;-------------------------------------------------------------------------------
@@ -342,7 +342,7 @@ SetBit5OfEnData05:
 ;-------------------------------------------------------------------------------
 SetBit5OfEnData05_AndClearEnAccelX:
     jsr SetBit5OfEnData05
-    sta EnAccelX,x
+    sta EnsExtra.0.accelX,x
     rts
 
 ;-------------------------------------------------------------------------------
@@ -357,9 +357,9 @@ EnemyIfMoveFailedHorizontal81FC:
     jsr XorEnData05
 L81D1: ;referenced in bank 7
     ; negate acceleration
-    lda EnAccelX,x
+    lda EnsExtra.0.accelX,x
     jsr TwosComplement
-    sta EnAccelX,x
+    sta EnsExtra.0.accelX,x
 
 L81DA: ;referenced in bank 7
     ; exit if bit 5 of L968B is set
@@ -402,9 +402,9 @@ EnemyIfMoveFailedVertical81FC:
     jsr XorEnData05
 L8206: ;referenced in bank 7
     ; negate acceleration
-    lda EnAccelY,x
+    lda EnsExtra.0.accelY,x
     jsr TwosComplement
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     
 L820F: ;referenced in bank 7
     ; Exit if bit 5 is set
@@ -544,12 +544,12 @@ L82A2:
     rts
 
 ;---------------------------------------
-; Clear EnJumpDsplcmnt, move on to next byte in the stream
+; Clear EnsExtra.0.jumpDsplcmnt, move on to next byte in the stream
 EnemyGetDeltaY_CaseFD:
     inc EnMovementInstrIndex,x
     iny
     lda #$00
-    sta EnJumpDsplcmnt,x
+    sta EnsExtra.0.jumpDsplcmnt,x
     beq EnemyGetDeltaY_ReadByte ; Branch always
 
 ;---------------------------------------
@@ -565,13 +565,13 @@ EnemyGetDeltaY_CaseFB:
 ;---------------------------------------
 ; Repeat Previous Movement Until Vertical Movement Fails
 EnemyGetDeltaY_CaseFC:
-    ; If bit 7 of EnData1F is set, then check if you can move up and then jump ahead
-    lda EnData1F,x
+    ; If bit 7 of EnsExtra.0.data1F is set, then check if you can move up and then jump ahead
+    lda EnsExtra.0.data1F,x
     bpl L82BE
         jsr EnemyCheckMoveUp
         jmp L82C3
     L82BE:
-        ; If EnData1F is non-zero, check if you can move down and then jump ahead
+        ; If EnsExtra.0.data1F is non-zero, check if you can move down and then jump ahead
         beq L82D2
         jsr EnemyCheckMoveDown
     L82C3:
@@ -582,7 +582,7 @@ EnemyGetDeltaY_CaseFC:
     ldy EnMovementInstrIndex,x
     iny
     lda #$00
-    sta EnData1F,x
+    sta EnsExtra.0.data1F,x
     beq L82D7 ; Branch always
 
 L82D2:
@@ -608,7 +608,7 @@ EnemyGetDeltaY_CaseFE:
     tya
     sta EnMovementInstrIndex,x
     ; Then do some other stuff
-    lda EnData1F,x
+    lda EnsExtra.0.data1F,x
     bpl L82EF
         jsr EnemyCheckMoveUp
         jmp L82F4
@@ -626,7 +626,7 @@ EnemyGetDeltaY_CaseFE:
 L82FB:
     ; movement check failed
     ; branch if bit 5 of L968B entry is unset
-    ldy EnType,x
+    ldy EnsExtra.0.type,x
     lda L968B,y
     and #$20
     beq EnemyGetDeltaY_CaseFA
@@ -692,7 +692,7 @@ EnemyGetDeltaY_UsingAcceleration:
     ; default max speed at 14 px/f
     ldy #$0E
     ; branch if enemy is accelerating to the left
-    lda EnAccelY,x
+    lda EnsExtra.0.accelY,x
     bmi @else_A
         ; enemy is accelerating to the right
         ; add acceleration to speed
@@ -743,10 +743,10 @@ EnemyGetDeltaY_UsingAcceleration:
     @endIf_C:
 
     ; apply sub-pixel speed to sub-pixel position
-    lda EnSubPixelY,x
+    lda EnsExtra.0.subPixelY,x
     clc
     adc EnSpeedSubPixelY,x
-    sta EnSubPixelY,x
+    sta EnsExtra.0.subPixelY,x
     ; $00 stores temp copy of current delta y.
     lda #$00
     adc EnSpeedY,x
@@ -770,11 +770,11 @@ EnemyGetDeltaX_UsingAcceleration:
     ; and save x speed in $04 and y
     lda EnSpeedSubPixelX,x
     clc
-    adc EnAccelX,x
+    adc EnsExtra.0.accelX,x
     sta EnSpeedSubPixelX,x
     sta $04
     lda #$00
-    ldy EnAccelX,x
+    ldy EnsExtra.0.accelX,x
     bpl L83B6 ;Branch if enemy accelerating to the right.
         lda #$FF
     L83B6:
@@ -814,10 +814,10 @@ EnemyGetDeltaX_UsingAcceleration:
     L83E3:
 
     ; apply sub-pixel speed to sub-pixel position
-    lda EnSubPixelX,x
+    lda EnsExtra.0.subPixelX,x
     clc
     adc EnSpeedSubPixelX,x
-    sta EnSubPixelX,x
+    sta EnsExtra.0.subPixelX,x
     ;$00 stores temp copy of current delta x.
     lda #$00
     adc EnSpeedX,x
@@ -831,7 +831,7 @@ EnemyMoveOnePixelUp:
     ldx PageIndex
     lda EnY,x
     sec
-    sbc EnRadY,x
+    sbc EnsExtra.0.radY,x
     and #$07
     sec
     bne L8406
@@ -857,7 +857,7 @@ L8429:
     dey
     tya
     sta EnY,x
-    cmp EnRadY,x
+    cmp EnsExtra.0.radY,x
     bne L8441
 
     lda ScrollY
@@ -871,7 +871,7 @@ L8429:
 L8441:
     lda EnData05,x
     bmi L8449
-        inc EnJumpDsplcmnt,x
+        inc EnsExtra.0.jumpDsplcmnt,x
     L8449:
     sec
 RTS_844A:
@@ -883,7 +883,7 @@ EnemyMoveOnePixelDown:
     ldx PageIndex
     lda EnY,x
     clc
-    adc EnRadY,x
+    adc EnsExtra.0.radY,x
     and #$07
     sec
     bne L845C
@@ -911,7 +911,7 @@ L8481:
     tya
     sta EnY,x
     clc
-    adc EnRadY,x
+    adc EnsExtra.0.radY,x
     cmp #$EF
     bne L849D
     lda ScrollY
@@ -925,7 +925,7 @@ L8481:
 L849D:
     lda EnData05,x
     bmi L84A5
-        dec EnJumpDsplcmnt,x
+        dec EnsExtra.0.jumpDsplcmnt,x
     L84A5:
     sec
 RTS_84A6:
@@ -937,7 +937,7 @@ EnemyMoveOnePixelLeft:
     ldx PageIndex
     lda EnX,x
     sec
-    sbc EnRadX,x
+    sbc EnsExtra.0.radX,x
     and #$07
     sec
     bne L84B8
@@ -963,7 +963,7 @@ EnemyMoveOnePixelLeft:
 L84DA:
     dec EnX,x
     lda EnX,x
-    cmp EnRadX,x
+    cmp EnsExtra.0.radX,x
     bne L84F4
     lda ScrollX
     beq L84EE
@@ -976,7 +976,7 @@ L84DA:
 L84F4:
     lda EnData05,x
     bpl L84FC
-        inc EnJumpDsplcmnt,x
+        inc EnsExtra.0.jumpDsplcmnt,x
     L84FC:
     sec
 RTS_84FD:
@@ -989,7 +989,7 @@ EnemyMoveOnePixelRight:
 ; if ((xpos + xrad) % 8) == 0, then EnemyCheckMoveRight()
     lda EnX,x
     clc
-    adc EnRadX,x
+    adc EnsExtra.0.radX,x
     and #$07
     sec
     bne L850F
@@ -1019,7 +1019,7 @@ EnemyMoveOnePixelRight:
 L8536:
     lda EnX,x
     clc
-    adc EnRadX,x
+    adc EnsExtra.0.radX,x
     cmp #$FF
     bne L8550
     lda ScrollX
@@ -1034,7 +1034,7 @@ L8536:
 L8550:
     lda EnData05,x
     bpl L8558
-        dec EnJumpDsplcmnt,x
+        dec EnsExtra.0.jumpDsplcmnt,x
     L8558:
     sec
 RTS_8559:
@@ -1042,15 +1042,15 @@ RTS_8559:
 
 ;-------------------------------------------------------------------------------
 SwitchEnemyNameTable: ; L855A
-    lda EnHi,x
+    lda EnsExtra.0.hi,x
     eor #$01
-    sta EnHi,x
+    sta EnsExtra.0.hi,x
     rts
 
 ;-------------------------------------------------------------------------------
 ; Returns the index to the other nametable in A
 GetOtherNameTableIndex: ; L8562
-    lda EnHi,x
+    lda EnsExtra.0.hi,x
     eor PPUCTRL_ZP
     and #$01
     rts

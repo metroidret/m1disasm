@@ -1,5 +1,5 @@
 RipperAIRoutine:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq Ripper01
         ; enemy is not exploding, call CommonJump_0A

@@ -8,7 +8,7 @@ SwooperAIRoutine00:
     sta $01
     
     ; branch if swooper is not resting
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
     bne @draw
     
@@ -26,7 +26,7 @@ SwooperAIRoutine00:
     jmp CommonEnemyJump_00_01_02
 
 UpdateSwooperAnim:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne RTS_9907
     
@@ -47,7 +47,7 @@ UpdateSwooperAnim:
             lda #EnAnim_1D - EnAnimTbl.b
         .endif
     L9904:
-    sta EnResetAnimIndex,x
+    sta EnsExtra.0.resetAnimIndex,x
 RTS_9907:
     rts
 
@@ -65,7 +65,7 @@ SwooperAIRoutine01:
     beq SwooperExit_Explode
     
     ; branch if current status is not resting
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
     bne L9923
         ; status changed from active to resting
@@ -82,7 +82,7 @@ SwooperExit_Resting:
 L9923:
     ; set gravity to negative #$80 (gravity pulls towards ceiling)
     lda #$80
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     ; branch if y speed is negative (swooper is moving upwards)
     lda EnSpeedY,x
     bmi L9949
@@ -109,7 +109,7 @@ L9923:
         ; Samus is vertically aligned with the enemy
         ; stop applying gravity to enemy speed
         lda #$00
-        sta EnAccelY,x
+        sta EnsExtra.0.accelY,x
 L9949:
     jsr UpdateSwooperAnim
     ; change animation frame every 3 frames for active swooper
@@ -121,7 +121,7 @@ SwooperExit_Explode:
 
 SwooperChangeEnemyType:
     ; set enemy type (either #$00 or #$01)
-    sta EnType,x
+    sta EnsExtra.0.type,x
     
     ; push current health
     lda EnHealth,x

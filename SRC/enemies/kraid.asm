@@ -2,7 +2,7 @@
 
 ; Kraid Routine
 KraidAIRoutine:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bcc KraidBranch_Normal ; 0, 1, 2
     beq KraidBranch_Explode ; 3
@@ -14,11 +14,11 @@ KraidAIRoutine:
 KraidBranch_Explode:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
-    sta EnStatus+$10
-    sta EnStatus+$20
-    sta EnStatus+$30
-    sta EnStatus+$40
-    sta EnStatus+$50
+    sta EnsExtra.1.status
+    sta EnsExtra.2.status
+    sta EnsExtra.3.status
+    sta EnsExtra.4.status
+    sta EnsExtra.5.status
     beq KraidBranch_Exit
 
 KraidBranch_Normal:
@@ -41,14 +41,14 @@ KraidLintAIRoutine:
     and #$02
     beq KraidLintRemove
     ; branch if lint is not exploding
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bne KraidLintMain
 
 KraidLintRemove:
     ; lint is dead, clear enemy slot
     lda #enemyStatus_NoEnemy
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     beq KraidLintDraw ; branch always
 
 KraidLintMain:
@@ -57,7 +57,7 @@ KraidLintMain:
     asl
     bmi KraidLintDraw
     ; exit if lint is not active
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne KraidLintDraw
 
@@ -78,7 +78,7 @@ KraidLintMain:
     ; movement has failed either because lint hit a wall or went out of bounds
     ; lint dies
     lda #enemyStatus_Explode
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
 
 KraidLintDraw:
     ; draw lint
@@ -108,11 +108,11 @@ KraidUpdateAllProjectiles: ; L9B2F
 ; Kraid Subroutine 1.1
 KraidUpdateProjectile:
     ; remove projectile if it doesn't exist (a bit odd, but ok)
-    ldy EnStatus,x
+    ldy EnsExtra.0.status,x
     beq KraidUpdateProjectile_Remove
     
     ; exit if projectile is not lint or nail
-    lda EnType,x
+    lda EnsExtra.0.type,x
     cmp #$0A
     beq KraidUpdateProjectile_BranchA
     cmp #$09
@@ -142,7 +142,7 @@ KraidUpdateProjectile_BranchA:
 
 KraidUpdateProjectile_Remove:
     lda #enemyStatus_NoEnemy ; #$00
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     sta EnSpecialAttribs,x
     jsr CommonJump_0E
 
@@ -167,7 +167,7 @@ KraidUpdateProjectile_Resting:
     sta Temp04_SpeedY
     ; get projectile type from table
     lda KraidProjectileType-1,y
-    sta EnType,x
+    sta EnsExtra.0.type,x
     ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
     tya
     plp
@@ -203,9 +203,9 @@ KraidUpdateProjectile_Resting:
     ; exit if initial position for projectile is out of bounds
     bcc KraidUpdateProjectile_Exit
     ; set projectile status to enemyStatus_Resting if it was enemyStatus_NoEnemy
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     bne LoadPositionFromTemp
-    inc EnStatus,x
+    inc EnsExtra.0.status,x
     ; save as projectile's position
     ; fallthrough
 
@@ -216,7 +216,7 @@ LoadPositionFromTemp:
     sta EnX,x
     lda Temp0B_PositionHi
     and #$01
-    sta EnHi,x
+    sta EnsExtra.0.hi,x
 
 KraidUpdateProjectile_Exit:
     rts
@@ -226,7 +226,7 @@ StorePositionToTemp:
     sta Temp08_PositionY
     lda EnX,x
     sta Temp09_PositionX
-    lda EnHi,x
+    lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
     rts
 
@@ -271,17 +271,17 @@ KraidTryToLaunchLint:
     lda #enemyStatus_Resting
     ; branch if first lint is resting
     ldx #$10
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq KraidTryToLaunchLint_PrimeLintForLaunch
     
     ; branch if second lint is resting
     ldx #$20
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq KraidTryToLaunchLint_PrimeLintForLaunch
     
     ; branch if third lint is resting
     ldx #$30
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq KraidTryToLaunchLint_PrimeLintForLaunch
     
     ; all lints are currently launched
@@ -325,12 +325,12 @@ KraidTryToLaunchNail:
     lda #enemyStatus_Resting
     ; branch if first nail is resting
     ldx #$40
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq KraidTryToLaunchNail_PrimeNailForLaunch
     
     ; branch if second nail is resting
     ldx #$50
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq KraidTryToLaunchNail_PrimeNailForLaunch
     
     ; all nails are currently launched

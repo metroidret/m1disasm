@@ -1,6 +1,6 @@
 ; Ridley Routine
 RidleyAIRoutine:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bcc RidleyBranch_Normal
     beq RidleyBranch_Explode
@@ -10,11 +10,11 @@ RidleyAIRoutine:
 RidleyBranch_Explode:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
-    sta EnStatus+$10
-    sta EnStatus+$20
-    sta EnStatus+$30
-    sta EnStatus+$40
-    sta EnStatus+$50
+    sta EnsExtra.1.status
+    sta EnsExtra.2.status
+    sta EnsExtra.3.status
+    sta EnsExtra.4.status
+    sta EnsExtra.5.status
     beq RidleyBranch_Exit
 
 RidleyBranch_Normal:
@@ -66,7 +66,7 @@ RidleyProjectileAIRoutine:
 @RemoveProjectile:
     ; remove projectile
     lda #$00
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
 @RTS:
     rts
 
@@ -99,7 +99,7 @@ RidleyTryToLaunchProjectile:
     ldx #$50
     L9A94:
         ; branch if no projectile in enemy slot
-        lda EnStatus,x
+        lda EnsExtra.0.status,x
         beq RidleyTryToLaunchProjectile_FoundEnemySlot
         ; branch if projectile is invisible
         lda EnData05,x
@@ -150,10 +150,10 @@ RidleyTryToLaunchProjectile_FoundEnemySlot:
     sta EnSpecialAttribs,x
     ; set enemy type to ridley projectile
     lda #$0A
-    sta EnType,x
+    sta EnsExtra.0.type,x
     ; set enemy status to resting
     lda #enemyStatus_Resting
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
     ; set projectile's position to its initial position
     jsr LoadPositionFromTemp
     jmp CommonJump_0E

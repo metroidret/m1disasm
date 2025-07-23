@@ -69,6 +69,37 @@
     unused           db
 .endst
 
+.struct EnExtra
+    status           db ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
+                          ;#$04=Enemy frozen.
+    radY             db ;Distance in pixels from middle of enemy to top or botom.
+    radX             db ;Distance in pixels from middle of enemy to left or right.
+    animFrame        db ;Index into enemy animation frame data.
+    animDelay        db ;Number of frames to delay between animation frames.
+    resetAnimIndex   db ;Index to beginning of animation sequence.
+    animIndex        db ;Index to current animation.
+    hi               db ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
+    subPixelY        db ; Unknown
+    subPixelX        db ; Unknown
+    accelY           db ; Unknown
+    accelX           db ; Unknown
+    data1C           db ; Unused
+    jumpDsplcmnt     db ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
+    type             db ;Enemy type used as index into enemy data tables.
+    data1F           db ; Unknown
+.endst
+
+.struct Cannon
+    status           db
+    y                db
+    x                db
+    hi               db
+    instrListID      db
+    angle            db
+    instrDelay       db
+    instrID          db
+.endst
+
 ;-------------------------------------------[ Defines ]----------------------------------------------
 ;--------------------------------------------[ Zeropage ]--------------------------------------------
 
@@ -519,7 +550,7 @@ SpriteRAM              = $0200   ;$0200 thru $02FF
 ; 16 slots of 16 bytes each ($0300-$03FF)
 ; slot 0 to 1 is for samus
 ; slot 2 is for elevator
-; slot 4 is for power-up
+; slot 4 is for drawing power-ups and skree projectiles
 ; slot 6 to 7 is for tourian bridge
 ; slot 8 to B is for doors
 ; slot D to F is for samus projectiles
@@ -570,11 +601,11 @@ ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
                                    ;#$4=Norfair/Ridley
                                    ;elevator type #$8F is for the ending elevator
 
-;Power-up item RAM.
-PowerUpAnimFrame       = $0343   ;*2 = Index into FramePtrTable for current animation.
-PowerUpHi              = $034C   ;Name table power up item is located on.
-PowerUpY               = $034D   ;Room Y coord of power up item.
-PowerUpX               = $034E   ;Room x coord of power up item.
+;Power-up item temp RAM for drawing.
+PowerUpDrawAnimFrame   = $0343   ;*2 = Index into FramePtrTable for current animation.
+PowerUpDrawHi          = $034C   ;Name table power up item is located on.
+PowerUpDrawY           = $034D   ;Room Y coord of power up item.
+PowerUpDrawX           = $034E   ;Room x coord of power up item.
 
 ;Statues and bridge RAM
 StatueStatus           = $0360
@@ -904,42 +935,46 @@ UnusedIntro684A        = $684A   ;Unused. Would have contained a 16bit hex numbe
 UnusedIntro684C        = $684C   ;Unused. Would have contained a 16bit hex number to be converted -->
 ; UnusedIntro684C+1      = $684C   ;to decimal by UnusedIntroRoutine8.
 
-EndingType             = $6872   ;1=worst ending, 5=best ending
+.enum $6872
 
-SamusDataIndex         = $6875   ;Index for Samus saved game stats(not used). #$00, #$10, #$20.
+EndingType             db        ;1=worst ending, 5=best ending
 
-SamusStat00            = $6876   ;Unused memory address for storing Samus info.
-TankCount              = $6877   ;Number of energy tanks.
-SamusGear              = $6878   ;Stores power-up items Samus has.
-MissileCount           = $6879   ;Stores current number of missiles.
-MaxMissiles            = $687A   ;Maximum amount of missiles Samus can carry
-KraidStatueStatus      = $687B   ;bit 0 set, the statues blink, -->
-RidleyStatueStatus     = $687C   ;bit 7 set, statues are up.
-SamusAge               = $687D   ;Low byte of Samus' age.
+SpareMem6873           ds 2
+
+SamusDataIndex         db        ;Index for Samus saved game stats(not used). #$00, #$10, #$20.
+
+SamusStat00            db        ;Unused memory address for storing Samus info.
+TankCount              db        ;Number of energy tanks.
+SamusGear              db        ;Stores power-up items Samus has.
+MissileCount           db        ;Stores current number of missiles.
+MaxMissiles            db        ;Maximum amount of missiles Samus can carry
+KraidStatueStatus      db        ;bit 0 set, the statues blink, -->
+RidleyStatueStatus     db        ;bit 7 set, statues are up.
+SamusAge               ds 3      ;Low byte of Samus' age.
 ; SamusAge+1             = $687E   ;Mid byte of Samus' age.
 ; SamusAge+2             = $687F   ;High byte of Samus' age.
-SamusStat0A            = $6880   ;Unused memory address for storing Samus info.
-SamusStat0B            = $6881   ;SamusStat0B keeps track of how many times Samus has-->
+SamusStat0A            db        ;Unused memory address for storing Samus info.
+SamusStat0B            dw        ;SamusStat0B keeps track of how many times Samus has-->
 ; SamusStat0B+1          = $6882   ;died, but this info is never accessed anywhere in the game.
 
-AtEnding               = $6883   ;1=End scenes playing, 0=Not at ending.
+AtEnding               db        ;1=End scenes playing, 0=Not at ending.
 
-EraseGame              = $6884   ;MSB set=erase selected saved game(not used in password carts).
+EraseGame              db        ;MSB set=erase selected saved game(not used in password carts).
 
-DataSlot               = $6885   ;#$00 thru #$02. Stored Samus data to load.
+DataSlot               db        ;#$00 thru #$02. Stored Samus data to load.
                                    ;Unused leftover from the original FDS version of the game.
 
-NumberOfUniqueItems    = $6886   ;Counts number of power-ups and red doors-->
+NumberOfUniqueItems    db        ;Counts number of power-ups and red doors-->
                                    ;opened.  Does not count different beams-->
                                    ;picked up (ice, long, wave). increments by 2.
 
-UniqueItemHistory      = $6887   ;Thru $68FC. History of Unique items collected.-->
-EndItemHistory         = $68FC   ;Two bytes per item.
+UniqueItemHistory      ds $100   ;Thru $68FC. History of Unique items collected.-->
+;EndItemHistory         = $68FC   ;Two bytes per item.
 
-KraidRidleyPresent     = $6987   ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
+KraidRidleyPresent     db        ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
 
 ; 18 bytes ($6988-$6999)
-PasswordByte           = $6988
+PasswordByte           ds $12
 ; PasswordByte+$00       = $6988   ;Stores status of items 0 thru 7.
 ; PasswordByte+$01       = $6989   ;Stores status of items 8 thru 15.
 ; PasswordByte+$02       = $698A   ;Stores status of items 16 thru 23.
@@ -963,57 +998,30 @@ PasswordByte           = $6988
 ;These 24 memory addresses store the 24 characters
 ;of the password to be displayed on the screen.
 ;Upper two bits of PasswordChar bytes will always be %00.
-PasswordChar           = $699A
+PasswordChar           ds $18
 
-NARPASSWORD            = $69B2   ;0 = invinsible Samus not active, 1 = invinsible Samus active.
-JustInBailey           = $69B3   ;0 = Samus has suit, 1 = Samus is without suit.
-ItemHistory            = $69B4   ;Thru $6A73. Unique item history saved game data (not used).
+NARPASSWORD            db        ;0 = invinsible Samus not active, 1 = invinsible Samus active.
+JustInBailey           db        ;0 = Samus has suit, 1 = Samus is without suit.
+ItemHistory            ds $100   ;Thru $6A73. Unique item history saved game data (not used).
+
+SpareMem6A74           ds $40
 
 ;---------------------------------------[ More enemy RAM ]-------------------------------------------
 
 ; 16 slots of 16 bytes each ($6AF4-$6BF3)
-EnStatus               = $6AF4   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
-                                   ;#$04=Enemy frozen.
-EnRadY                 = $6AF5   ;Distance in pixels from middle of enemy to top or botom.
-EnRadX                 = $6AF6   ;Distance in pixels from middle of enemy to left or right.
-EnAnimFrame            = $6AF7   ;Index into enemy animation frame data.
-EnAnimDelay            = $6AF8   ;Number of frames to delay between animation frames.
-EnResetAnimIndex       = $6AF9   ;Index to beginning of animation sequence.
-EnAnimIndex            = $6AFA   ;Index to current animation.
-EnHi                   = $6AFB   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
-EnSubPixelY            = $6AFC   ; Unknown
-EnSubPixelX            = $6AFD   ; Unknown
-EnAccelY               = $6AFE   ; Unknown
-EnAccelX               = $6AFF   ; Unknown
-EnData1C               = $6B00   ; Unknown
-EnJumpDsplcmnt         = $6B01   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
-EnType                 = $6B02   ;Enemy type used as index into enemy data tables.
-EnData1F               = $6B03   ; Unknown
-
-; 4 slots of 8 bytes each ($6BB4-$6BD3)
-EnExplosionStatus      = $6AF4
-EnExplosion6BB5        = $6AF5
-EnExplosion6BB6        = $6AF6
-EnExplosion6BB7        = $6AF7
-EnExplosion6BB8        = $6AF8
-EnExplosion6BB9        = $6AF9
-EnExplosion6BBA        = $6AFA
-EnExplosionHi          = $6AFB
+EnsExtra               instanceof EnExtra $10 startfrom 0
 
 ; 16 slots of 8 bytes each ($6BF4-$6C73)
-CannonStatus           = $6BF4
-CannonY                = $6BF5
-CannonX                = $6BF6
-CannonHi               = $6BF7
-CannonInstrListID      = $6BF8   ;Type of cannon: determines where it aims and when it shoots.
-CannonAngle            = $6BF9
-CannonInstrDelay       = $6BFA   ;Number of frames to delay between parsing instructions.
-CannonInstrID          = $6BFB
+Cannons                instanceof Cannon $10 startfrom 0
+
+SpareRAM6C74           ds $18C
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 
 ; 40 slots of 4 bytes each ($6E00-$6E9F)
-IntroStarSprite        = $6E00   ;RAM used for storing intro star sprite data.
+IntroStarSprite        db        ;RAM used for storing intro star sprite data.
+
+.ende
 
 ; 8 slots of 16 bytes each ($6EA0-$6F1F)
 ;Intro sprite 0 and sparkle sprite.
@@ -1042,15 +1050,19 @@ IntroSprYDir           = $6EAF   ;MSB set=decrease sprite y pos, else increase s
 
 WorldMapRAM            = $7000   ;Thru $73FF. The map is 1Kb in size (1024 bytes).
 
-MetroidRepelSpeed      = $77F0   ;$77F0 for negative, $77F1 for positive
-MetroidAccel           = $77F2   ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
-MetroidMaxSpeed        = $77F6   ;$77F6 for red metroid, $77F7 for green metroid
-MetroidLatch0400       = $77F8   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
-MetroidLatch0410       = $77F9     ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
-MetroidLatch0420       = $77FA     ;bit 7 is sign of x speed
-MetroidLatch0430       = $77FB
-MetroidLatch0440       = $77FC
-MetroidLatch0450       = $77FD
+.enum $77F0
+
+MetroidRepelSpeed      dw        ;$77F0 for negative, $77F1 for positive
+MetroidAccel           ds 4      ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
+MetroidMaxSpeed        dw        ;$77F6 for red metroid, $77F7 for green metroid
+MetroidLatch0400       db        ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
+MetroidLatch0410       db          ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
+MetroidLatch0420       db          ;bit 7 is sign of x speed
+MetroidLatch0430       db     
+MetroidLatch0440       db     
+MetroidLatch0450       db     
+
+.ende
 
 ; 3 slots of 16 bytes each ($77FE-$782D)
 ;Samus saved game data (not used).
@@ -1080,7 +1092,7 @@ it_Squeept             = $1
 it_PowerUp             = $2
 it_Mellow              = $3
 it_Elevator            = $4
-it_Cannon              = $5   ;High nibble is CannonInstrListID
+it_Cannon              = $5   ;High nibble is Cannons.0.instrListID
 it_MotherBrain         = $6
 it_Zebetite            = $7   ;High nibble is Zebetite slot ID
 it_RinkaSpawner        = $8

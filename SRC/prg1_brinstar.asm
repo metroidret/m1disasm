@@ -133,7 +133,7 @@ AreaMellowAnimIndex:
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
-    lda EnType,x
+    lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorAIRoutine ; 00 - Sidehopper
         .word SidehopperCeilingAIRoutine ; 01 - Ceiling sidehopper
@@ -330,7 +330,7 @@ EnSpeedXTable:
 ; bit7: bit7 of EnData05 for pipe bug
 ; bit6: 0=enemy uses movement strings. 1=enemy uses acceleration and speed and subpixels.
 ; bit4: 0=is not metroid, 1=is metroid
-; bit2-3: bit6-7 of EnData1F for resting enemies
+; bit2-3: bit6-7 of EnsExtra.0.data1F for resting enemies
 ; bit1: toggle bit2 of EnData05 in EnemyIfMoveFailedDown/EnemyIfMoveFailedUp
 ; bit0: toggle bit0 of EnData05 in EnemyIfMoveFailedRight/EnemyIfMoveFailedLeft
 L977B:
