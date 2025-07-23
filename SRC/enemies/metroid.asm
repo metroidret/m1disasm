@@ -4,7 +4,7 @@ MetroidAIRoutine:
     iny
     beq L9804
         lda #$00
-        sta EnStatus,x
+        sta EnsExtra.0.status,x
     L9804:
     
     ; prepare CommonEnemyJump_00_01_02 parameters
@@ -17,7 +17,7 @@ MetroidAIRoutine:
     asl
     bmi CommonEnemyJump_00_01_02
     ; branch if metroid is exploding
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq CommonEnemyJump_00_01_02
     
@@ -89,16 +89,16 @@ MetroidAIRoutine:
     pha
     ; get horizontal acceleration
     jsr GetMetroidAccel
-    sta EnAccelX,x
+    sta EnsExtra.0.accelX,x
     pla
     ; get vertical acceleration
     lsr
     lsr
     jsr GetMetroidAccel
-    sta EnAccelY,x
+    sta EnsExtra.0.accelY,x
     
     ; check if metroid is frozen or not
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
     bne L9894
         ; metroid is frozen
@@ -118,10 +118,10 @@ L9899:
     lda EnemyMovementPtr
     cmp #$06
     bne L98A9
-    cmp EnStatus,x
+    cmp EnsExtra.0.status,x
     beq L98A9
     lda #enemyStatus_Frozen
-    sta EnStatus,x
+    sta EnsExtra.0.status,x
 L98A9:
     lda EnIsHit,x
     and #$20
@@ -160,7 +160,7 @@ L98A9:
             ora EnSpecialAttribs,x
             sta EnPrevStatus,x
             lda #enemyStatus_Hurt
-            sta EnStatus,x
+            sta EnsExtra.0.status,x
             lda #$20
             sta EnSpecialAttribs,x
             lda #$01
@@ -173,10 +173,10 @@ L98A9:
         sta EnSpeedSubPixelY,x
         sta EnSpeedSubPixelX,x
         ; set repel speed
-        lda EnAccelY,x
+        lda EnsExtra.0.accelY,x
         jsr GetMetroidRepelSpeed
         sta EnSpeedY,x
-        lda EnAccelX,x
+        lda EnsExtra.0.accelX,x
         jsr GetMetroidRepelSpeed
         sta EnSpeedX,x
     L990F:
@@ -248,7 +248,7 @@ L9964:
     jsr ClearCurrentMetroidLatch
 L9967:
     ; if metroid just died, clear metroid latch
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bne L9971
         jsr ClearCurrentMetroidLatch
@@ -284,7 +284,7 @@ L999E:
     sty MetroidOnSamus
     lda ObjectCntrl
     bmi L99AB
-        lda EnType,x
+        lda EnsExtra.0.type,x
         ora #$82 | OAMDATA_PRIORITY.b
         sta ObjectCntrl
     L99AB:
@@ -316,8 +316,8 @@ ClearMetroidSpeed:
     sta EnSpeedSubPixelX,x
     sta EnSpeedSubPixelY,x
 ClearRinkaAcceleration: ; referenced in rinka.asm
-    sta EnAccelX,x
-    sta EnAccelY,x
+    sta EnsExtra.0.accelX,x
+    sta EnsExtra.0.accelY,x
     rts
 
 MetroidLatchOffsetY:
@@ -341,7 +341,7 @@ LoadPositionFromTemp:
     sta EnY,x
     lda Temp0B_PositionHi
     and #$01
-    sta EnHi,x
+    sta EnsExtra.0.hi,x
     rts
 
 GetMetroidAccel:

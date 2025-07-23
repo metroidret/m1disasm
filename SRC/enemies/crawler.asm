@@ -17,7 +17,7 @@ CrawlerAIRoutine:
         cmp #enemyStatus_Explode
         beq CrawlerExit_Explode
     .endif
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq Crawler03
 

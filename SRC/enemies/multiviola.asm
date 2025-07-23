@@ -1,5 +1,5 @@
 MultiviolaAIRoutine:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne L9AE0
         ; enemy is active, call CommonJump_0A

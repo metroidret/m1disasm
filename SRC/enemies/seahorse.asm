@@ -1,6 +1,6 @@
 ; Lava Seahorse Routine
 SeahorseAIRoutine:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
     bne L9AF5
         lda #$E8
@@ -11,7 +11,7 @@ SeahorseAIRoutine:
 
     lda EnMovementInstrIndex,x
     beq L9B4F
-    lda EnJumpDsplcmnt,x
+    lda EnsExtra.0.jumpDsplcmnt,x
     bne L9B4F
     
     lda FrameCount
@@ -52,7 +52,7 @@ SeahorseAIRoutine:
     jmp L9B59
 
 L9B4F:
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq L9B59
     jsr CommonJump_0A

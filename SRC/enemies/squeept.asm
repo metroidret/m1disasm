@@ -7,7 +7,7 @@ SqueeptAIRoutine:
     
     ; previous status is resting
     ; exit if current status is explode
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq SqueeptExit_Resting
     
@@ -23,13 +23,13 @@ SqueeptAIRoutine:
         sta EnSpeedY,x
         ; set jump gravity
         lda #$40
-        sta EnAccelY,x
+        sta EnsExtra.0.accelY,x
         ; clear sub-pixel speed
         lda #$00
         sta EnSpeedSubPixelY,x
 L9A88:
     ; exit if current status is explode
-    lda EnStatus,x
+    lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq SqueeptExit_Resting
     
@@ -62,7 +62,7 @@ L9A88:
         ; use falling animation
         lda #EnAnim_SqueeptFalling - EnAnimTbl.b
     L9AAC:
-    sta EnResetAnimIndex,x
+    sta EnsExtra.0.resetAnimIndex,x
     
     ; apply speed
     jsr StorePositionToTemp

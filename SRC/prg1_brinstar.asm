@@ -133,7 +133,7 @@ AreaMellowAnimIndex:
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
-    lda EnType,x
+    lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorAIRoutine ; 00 - Sidehopper
         .word SidehopperCeilingAIRoutine ; 01 - Ceiling sidehopper
@@ -330,7 +330,7 @@ EnSpeedXTable:
 ; bit7: bit7 of EnData05 for pipe bug
 ; bit6: 0=enemy uses movement strings. 1=enemy uses acceleration and speed and subpixels.
 ; bit4: 0=is not metroid, 1=is metroid
-; bit2-3: bit6-7 of EnData1F for resting enemies
+; bit2-3: bit6-7 of EnsExtra.0.data1F for resting enemies
 ; bit1: toggle bit2 of EnData05 in EnemyIfMoveFailedDown/EnemyIfMoveFailedUp
 ; bit0: toggle bit0 of EnData05 in EnemyIfMoveFailedRight/EnemyIfMoveFailedLeft
 L977B:
@@ -472,7 +472,7 @@ EnemyMovement05_R:
     SignMagSpeed $05,  2, -5
     SignMagSpeed $04,  2, -6
     SignMagSpeed $02,  2, -7
-    EnemyMovementInstr_ClearEnJumpDsplcmnt
+    EnemyMovementInstr_ClearEnsExtra.0.jumpDsplcmnt
 
     SignMagSpeed $03,  2, -5
     SignMagSpeed $06,  2, -3
@@ -488,7 +488,7 @@ EnemyMovement05_R:
     SignMagSpeed $07,  2, -1
     SignMagSpeed $05,  2, -3
     SignMagSpeed $04,  2, -5
-    EnemyMovementInstr_ClearEnJumpDsplcmnt
+    EnemyMovementInstr_ClearEnsExtra.0.jumpDsplcmnt
     EnemyMovementInstr_Restart
 
 EnemyMovement05_L:
@@ -514,7 +514,7 @@ EnemyMovement05_L:
     SignMagSpeed $05, -2, -5
     SignMagSpeed $04, -2, -6
     SignMagSpeed $02, -2, -7
-    EnemyMovementInstr_ClearEnJumpDsplcmnt
+    EnemyMovementInstr_ClearEnsExtra.0.jumpDsplcmnt
 
     SignMagSpeed $03, -2, -5
     SignMagSpeed $06, -2, -3
@@ -530,7 +530,7 @@ EnemyMovement05_L:
     SignMagSpeed $07, -2, -1
     SignMagSpeed $05, -2, -3
     SignMagSpeed $04, -2, -5
-    EnemyMovementInstr_ClearEnJumpDsplcmnt
+    EnemyMovementInstr_ClearEnsExtra.0.jumpDsplcmnt
     EnemyMovementInstr_Restart
 
 ; ripper

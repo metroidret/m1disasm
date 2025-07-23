@@ -1,6 +1,6 @@
 RinkaAIRoutine:
     ; branch if enemy is not active
-    ldy EnStatus,x
+    ldy EnsExtra.0.status,x
     cpy #enemyStatus_Active
     bne L9AB0
 
@@ -17,8 +17,8 @@ RinkaAIRoutine:
     lda #$00
     jsr ClearRinkaAcceleration ; in metroid.asm
     ; clear rinka sub-pixel position
-    sta EnSubPixelY,x
-    sta EnSubPixelX,x
+    sta EnsExtra.0.subPixelY,x
+    sta EnsExtra.0.subPixelX,x
 
     ; save Samus x pos relative to enemy in $01
     lda ObjX
@@ -133,8 +133,8 @@ L9AB0:
         ; apply y sub-pixel speed to sub-pixel position
         lda EnSpeedSubPixelY,x
         clc
-        adc EnSubPixelY,x
-        sta EnSubPixelY,x
+        adc EnsExtra.0.subPixelY,x
+        sta EnsExtra.0.subPixelY,x
         ; if sub-pixel position overflowed, add 1 to temp speed
         lda EnSpeedY,x
         adc #$00
@@ -143,8 +143,8 @@ L9AB0:
         ; apply x sub-pixel speed to sub-pixel position
         lda EnSpeedSubPixelX,x
         clc
-        adc EnSubPixelX,x
-        sta EnSubPixelX,x
+        adc EnsExtra.0.subPixelX,x
+        sta EnsExtra.0.subPixelX,x
         ; if sub-pixel position overflowed, add 1 to temp speed
         lda EnSpeedX,x
         adc #$00
@@ -155,7 +155,7 @@ L9AB0:
         sta Temp08_PositionY
         lda EnX,x
         sta Temp09_PositionX
-        lda EnHi,x
+        lda EnsExtra.0.hi,x
         sta Temp0B_PositionHi
         ; apply speed
         jsr CommonJump_ApplySpeedToPosition
@@ -163,7 +163,7 @@ L9AB0:
         bcs L9AF1
             ; movement failed, remove rinka
             lda #$00
-            sta EnStatus,x
+            sta EnsExtra.0.status,x
         L9AF1:
         jsr LoadPositionFromTemp
     L9AF4:

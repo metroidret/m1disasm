@@ -2,8 +2,8 @@
 PolypAIRoutine:
     ; set radius to 0
     lda #$00
-    sta EnRadY,x
-    sta EnRadX,x
+    sta EnsExtra.0.radY,x
+    sta EnsExtra.0.radX,x
     ; set EnData05 to #$10
     ; the enemy is invisible and will remain resting
     lda #$10
