@@ -10,11 +10,11 @@ RidleyAIRoutine:
 RidleyBranch_Explode:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
-    sta EnsExtra.0.status+$10
-    sta EnsExtra.0.status+$20
-    sta EnsExtra.0.status+$30
-    sta EnsExtra.0.status+$40
-    sta EnsExtra.0.status+$50
+    sta EnsExtra.1.status
+    sta EnsExtra.2.status
+    sta EnsExtra.3.status
+    sta EnsExtra.4.status
+    sta EnsExtra.5.status
     beq RidleyBranch_Exit
 
 RidleyBranch_Normal:

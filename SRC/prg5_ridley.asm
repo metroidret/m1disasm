@@ -439,7 +439,7 @@ EnemyMovement11_R:
 EnemyMovement11_L:
     SignMagSpeed $14,  0, -1
     SignMagSpeed $0A,  0,  0
-    EnemyMovementInstr_ClearEnsExtra.0.jumpDsplcmnt
+    EnemyMovementInstr_ClearEnJumpDsplcmnt
     SignMagSpeed $30,  0,  0
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_StopMovementSeahorse

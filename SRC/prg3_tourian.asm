@@ -641,13 +641,13 @@ DrawCannon_Normal:
     ldy Cannons.0.angle,x
     lda CannonAnimFrameTable,y
 DrawCannon_Escape:
-    sta EnsExtra.0.animFrame+$E0
+    sta EnsExtra.14.animFrame
     lda Cannons.0.y,x
     sta EnY+$E0
     lda Cannons.0.x,x
     sta EnX+$E0
     lda Cannons.0.hi,x
-    sta EnsExtra.0.hi+$E0
+    sta EnsExtra.14.hi
     lda #$E0
     sta PageIndex
     jmp CommonJump_DrawEnemy
@@ -1374,7 +1374,7 @@ MotherBrain_DrawSprites:
     sta PageIndex
     ; set mother brain enemy pos to hardcoded constants
     lda MotherBrainHi
-    sta EnsExtra.0.hi+$E0
+    sta EnsExtra.14.hi
     lda #$70
     sta EnY+$E0
     lda #$48
@@ -1382,7 +1382,7 @@ MotherBrain_DrawSprites:
     ; update mother brain anim frame
     ldy MotherBrainAnimFrameTableID
     lda MotherBrainAnimFrameTable,y
-    sta EnsExtra.0.animFrame+$E0
+    sta EnsExtra.14.animFrame
     ; draw mother brain enemy
     jsr CommonJump_DrawEnemy
     
@@ -1392,7 +1392,7 @@ MotherBrain_DrawSprites:
         ; bit 7 is not set, eyes are open
         ; draw the eyes of mother brain
         lda MotherBrainAnimFrameTable+4
-        sta EnsExtra.0.animFrame+$E0
+        sta EnsExtra.14.animFrame
         jsr CommonJump_DrawEnemy
     @endIf_A:
     rts
@@ -1788,13 +1788,13 @@ DrawEndTimerEnemy:
 
     ; attempt to draw end timer enemy sprite
     lda EndTimerEnemyHi
-    sta EnsExtra.0.hi+$E0
+    sta EnsExtra.14.hi
     lda #$84
     sta EnY+$E0
     lda #$64
     sta EnX+$E0
     lda #_id_EnFrame1A.b
-    sta EnsExtra.0.animFrame+$E0
+    sta EnsExtra.14.animFrame
     lda #$E0
     sta PageIndex
     ; remember page pos for later

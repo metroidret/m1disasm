@@ -1824,7 +1824,7 @@ SamusInit:
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
     stx RinkaSpawners.0.status
-    stx RinkaSpawners.0.status+3.b
+    stx RinkaSpawners.1.status
     ldy #$27
     lda InArea
     and #$0F
@@ -8769,10 +8769,10 @@ SpawnMellows:
         tax
         bpl @loop
     lda AreaMellowAnimIndex
-    sta EnsExtra.0.resetAnimIndex+$F0
-    sta EnsExtra.0.animIndex+$F0
+    sta EnsExtra.15.resetAnimIndex
+    sta EnsExtra.15.animIndex
     lda #$01
-    sta EnsExtra.0.status+$F0
+    sta EnsExtra.15.status
 SpawnMellows_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
@@ -11410,13 +11410,13 @@ SkreeProjectileSpeedTable:
 
 UpdateAllMellows:
     ; exit if mellow handler enemy isn't there
-    lda EnsExtra.0.status+$F0
+    lda EnsExtra.15.status
     beq @RTS
     
     ldx #$F0
     stx PageIndex
     ; delete mellow handler enemy if ???
-    lda EnsExtra.0.resetAnimIndex+$F0
+    lda EnsExtra.15.resetAnimIndex
     cmp AreaMellowAnimIndex
     bne RemoveMellowHandlerEnemy
     
@@ -11589,7 +11589,7 @@ UpdateMellow_LoadPositionFromTemp:
     lda Temp0B_PositionHi
     and #$01
     sta Mellows.0.hi,x
-    sta EnsExtra.0.hi+$F0
+    sta EnsExtra.15.hi
     rts
 
 UpdateMellow_FD84:
