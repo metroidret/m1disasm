@@ -43,6 +43,13 @@
 
 ;-------------------------------------------[ Structs ]----------------------------------------------
 
+.struct OAMSprite
+    y       db
+    tileID  db
+    attrib  db
+    x       db
+.endst
+
 .struct RinkaSpawner
     status     db       ;#$00=use even indices to RinkaSpawnPosTbl,-->
                                   ;#$01=use odd indices to RinkaSpawnPosTbl,-->
@@ -543,7 +550,12 @@ SamusHurt010F          db        ;never read. takes on different values dependin
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
-SpriteRAM              = $0200   ;$0200 thru $02FF
+.enum $0200
+
+;$0200 thru $02FF
+SpriteRAM              instanceof OAMSprite $40 startfrom 0
+
+.ende
 
 ;-----------------------------------------[ Object RAM ]---------------------------------------------
 

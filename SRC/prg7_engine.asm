@@ -410,20 +410,24 @@ HiPPUTable:
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
 EraseAllSprites:
-    ldy #>SpriteRAM.b               ;
-    sty $01                         ;Loads locations $00 and $01 with -->
-    ldy #<SpriteRAM.b               ;#$00 and #$02 respectively
-    sty $00                         ;
-    ldy #$00                        ;
-    lda #$F0                        ;
+    ; load SpriteRAM address into $00-01
+    ldy #>SpriteRAM.b
+    sty $01
+    ldy #<SpriteRAM.b
+    sty $00
+    ;Stores #$F0 in memory addresses $0200 thru $02FF.
+    ldy #$00
+    lda #$F0
     @loop:
-        sta ($00),y                     ;Stores #$F0 in memory addresses $0200 thru $02FF.
-        iny                             ;
-        bne @loop                       ;Loop while more sprite RAM to clear.
-    lda GameMode                    ;
-    beq Exit101                     ;Exit subroutine if GameMode=Play(#$00)
+        sta ($00),y
+        iny
+        ;Loop while more sprite RAM to clear.
+        bne @loop
+    ;Exit subroutine if GameMode=Play(#$00)
+    lda GameMode
+    beq Exit101
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
-    Exit101:
+Exit101:
     rts                             ;Return used by subroutines above and below.
 
 ;---------------------------------------[ Remove intro sprites ]-------------------------------------
@@ -433,18 +437,22 @@ EraseAllSprites:
 ;sprite to the bottom right of the screen and uses a blank graphic for the sprite.
 
 RemoveIntroSprites:
-    ldy #>SpriteRAM.b               ;Start at address $200.
-    sty $01                         ;
-    ldy #<SpriteRAM.b               ;
-    sty $00                         ;($00) = $0200 (sprite page)
-    ldy #$5F                        ;Prepare to clear RAM $0200-$025F
-    lda #$F4                        ;
-    LC1C8:
-        sta ($00),y                     ;
-        dey                             ;Loop unitl $200 thru $25F is filled with #$F4.
-        bpl LC1C8                       ;
-    lda GameMode                    ;
-    beq Exit101                     ; branch if mode = Play.
+    ;Start at address $200. ($00) = $0200 (sprite page)
+    ldy #>SpriteRAM.b
+    sty $01
+    ldy #<SpriteRAM.b
+    sty $00
+    ;Prepare to clear RAM $0200-$025F
+    ldy #$5F
+    lda #$F4
+    @loop:
+        sta ($00),y
+        dey
+        ;Loop unitl $200 thru $25F is filled with #$F4.
+        bpl @loop
+    ; branch if mode = Play.
+    lda GameMode
+    beq Exit101
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
 
 ;-------------------------------------[Clear RAM $33 thru $DF]---------------------------------------
@@ -452,13 +460,15 @@ RemoveIntroSprites:
 ;The routine below clears RAM associated with rooms and enemies.
 
 ClearRAM_33_DF:
-    ldx #RoomPtr                    ;
-    lda #$00                        ;
-    LC1D8:
-        sta $00,x                       ;Clear RAM addresses $33 through $DF.
-        inx                             ;
-        cpx #SoundE0                    ;
-        bcc LC1D8                       ;Loop until all desired addresses are cleared.
+    ldx #RoomPtr
+    lda #$00
+    @loop:
+        ;Clear RAM addresses $33 through $DF.
+        sta $00,x
+        inx
+        ;Loop until all desired addresses are cleared.
+        cpx #SoundE0
+        bcc @loop
     rts
 
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
@@ -2294,7 +2304,7 @@ UpdateWorld:
     ldx SpritePagePos
     lda #$F4
     @loop:
-        sta SpriteRAM,x
+        sta SpriteRAM.0.y,x
         jsr Xplus4       ; X = X + 4
         bne @loop
     rts
@@ -5156,7 +5166,7 @@ CheckOneItem:
     bne LDBA5                       ;If not, branch.
     LDB9F:
         tya                             ;Transfer color data to A.
-        sta SpriteRAM+($01<<2)+2,x             ;Store power up color for beam weapon.
+        sta SpriteRAM.1.attrib,x             ;Store power up color for beam weapon.
         lda #$FF                        ;Indicate power up obtained is a beam weapon.
 
     LDBA5:
@@ -5831,23 +5841,23 @@ WriteSpriteRAM: ;($DEE6)
     ldy Temp0F_PlaceIndex           ;Load index for placement data.
     jsr YDisplacement               ;($DF6B)Get displacement for y direction.
     adc Temp10_ScreenY              ;Add initial Y position.
-    sta SpriteRAM,x               ;Store sprite Y coord.
-    dec SpriteRAM,x               ;Because PPU uses Y + 1 as real Y coord.
+    sta SpriteRAM.0.y,x               ;Store sprite Y coord.
+    dec SpriteRAM.0.y,x               ;Because PPU uses Y + 1 as real Y coord.
     inc Temp0F_PlaceIndex           ;Increment index to next byte of placement data.
     ldy Temp11_FrameIndex           ;Get index to frame data.
     lda (Temp00_FramePtr),y         ;Tile value.
-    sta SpriteRAM+1,x             ;Store tile value in sprite RAM.
+    sta SpriteRAM.0.tileID,x             ;Store tile value in sprite RAM.
     lda ObjectCntrl                 ;
     asl                             ;Move horizontal mirror control byte to bit 6 and-->
     asl                             ;discard all other bits.
     and #OAMDATA_HFLIP                        ;
     eor Temp05_Cntrl              ;Use it to override sprite horz mirror bit.
-    sta SpriteRAM+2,x             ;Store sprite control byte in sprite RAM.
+    sta SpriteRAM.0.attrib,x             ;Store sprite control byte in sprite RAM.
     inc Temp11_FrameIndex           ;Increment to next byte of frame data.
     ldy Temp0F_PlaceIndex           ;Load index for placement data.
     jsr XDisplacement               ;($DFA3)Get displacement for x direction.
     adc Temp0E_ScreenX              ;Add initial X pos
-    sta SpriteRAM+3,x             ;Store sprite X coord
+    sta SpriteRAM.0.x,x             ;Store sprite X coord
     inc Temp0F_PlaceIndex           ;Increment to next placement data byte.
     inx                             ;
     inx                             ;
@@ -6160,14 +6170,16 @@ DisplayBar:
     ldy #$00                        ;Reset data index.
     lda SpritePagePos               ;Load current sprite index.
     pha                             ;save sprite page pos.
-    tax                             ;
-    LE0C7:
-        lda DataDisplayTbl,y            ;
-        sta SpriteRAM,x               ;Stor contents of DataDisplayTbl in sprite RAM.
-        inx                             ;
-        iny                             ;
-        cpy #$28                        ;10*4. At end of DataDisplayTbl? If not, loop to-->
-        bne LE0C7                           ;load next byte from table.
+    tax
+    @loop:
+        ;Store contents of DataDisplayTbl in sprite RAM.
+        lda DataDisplayTbl,y
+        sta SpriteRAM,x
+        inx
+        iny
+        ;At end of DataDisplayTbl? If not, loop to load next byte from table.
+        cpy #10*4.b
+        bne @loop
 
 ;Display 2-digit health count.
     stx SpritePagePos               ;Save new location in sprite RAM.
@@ -6201,10 +6213,10 @@ LE10A:
     lda #$FF                        ;"Blank" tile.
     cpx #$F4                        ;If at last 3 sprites, branch to skip.
     bcs LE14A                          ;
-    sta SpriteRAM+($03<<2)+1,x             ;Erase left half of missile.
+    sta SpriteRAM.3.tileID,x             ;Erase left half of missile.
     cpx #$F0                        ;If at last 4 sprites, branch to skip.
     bcs LE14A                          ;
-    sta SpriteRAM+($04<<2)+1,x             ;Erase right half of missile.
+    sta SpriteRAM.4.tileID,x             ;Erase right half of missile.
     bne LE14A                          ;Branch always.
 
 ;Display 3-digit end sequence timer.
@@ -6219,13 +6231,13 @@ LE11C:
     jsr Adiv16                      ;($C2BF)Lower timer digit.
     jsr SPRWriteDigit               ;($E173)Display digit on screen.
     lda #$58                        ;"TI" sprite(left half of "TIME").
-    sta SpriteRAM+1,x             ;
-    inc SpriteRAM+2,x             ;Change color of sprite.
+    sta SpriteRAM.0.tileID,x             ;
+    inc SpriteRAM.0.attrib,x             ;Change color of sprite.
     cpx #$FC                        ;If at last sprite, branch to skip.
     bcs LE14A                           ;
     lda #$59                        ;"ME" sprite(right half of "TIME").
-    sta SpriteRAM+($01<<2)+1,x             ;
-    inc SpriteRAM+($01<<2)+2,x             ;Change color of sprite.
+    sta SpriteRAM.1.tileID,x             ;
+    inc SpriteRAM.1.attrib,x             ;Change color of sprite.
 
 LE14A:
     ldx SpritePagePos               ;Restore initial sprite page pos.
@@ -6263,7 +6275,7 @@ RTS_E172:
 
 SPRWriteDigit:
     ora #$A0                        ;#$A0 is index into pattern table for numbers.
-    sta SpriteRAM+1,x             ;Store proper nametable pattern in sprite RAM.
+    sta SpriteRAM.0.tileID,x             ;Store proper nametable pattern in sprite RAM.
     jmp Xplus4                      ;Find next sprite pattern table byte.
 
 ;----------------------------------[ Add energy tank to display ]------------------------------------
@@ -6273,16 +6285,16 @@ SPRWriteDigit:
 AddOneTank:
     ;Y coord-1.
     lda #$17
-    sta SpriteRAM,x
+    sta SpriteRAM.0.y,x
     ;Tile value.
     tya
-    sta SpriteRAM+1,x
+    sta SpriteRAM.0.tileID,x
     ;Palette #.
     lda #$01
-    sta SpriteRAM+2,x
+    sta SpriteRAM.0.attrib,x
     ;X coord.
     lda $00
-    sta SpriteRAM+3,x
+    sta SpriteRAM.0.x,x
     ;Find x coord of next energy tank.
     sec
     sbc #$0A
