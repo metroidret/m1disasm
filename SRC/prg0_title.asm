@@ -2609,7 +2609,7 @@ PrepareEraseTiles:
     ldy #>TileSize.b
     stx $02
     sty $03
-    jmp EraseTile                   ;($C328)Erase the selected tiles.
+    jmp WriteTileBlast              ;($C328)Erase the selected tiles.
 
 ;---------------------------------------[ Unused intro routines ]------------------------------------
 

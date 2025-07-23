@@ -770,8 +770,8 @@ SetPPUInc:
     pla                             ;Restore A.
     rts                             ;
 
-;Erase blasted tile on nametable.  Each screen is 16 tiles across and 15 tiles down.
-EraseTile:
+;Write blasted tile to nametable.  Each screen is 16 tiles across and 15 tiles down.
+WriteTileBlast:
     ldy #$01                        ;
     sty PPUDataPending              ;data pending = YES.
     dey                             ;
@@ -8172,7 +8172,7 @@ LEB4D:
     jsr Amul16                      ;*16 to extract enemy x position.
     ora #$0C                        ;Add 12 pixels to x position so enemy is always on screen.
     sta EnX,x                ;Store enemy x position.
-    lda #$01                        ;
+    lda #enemyStatus_Resting        ;
     sta EnsExtra.0.status,x                  ;Indicate object slot is taken.
     lda #$00
     sta EnIsHit,x
@@ -9867,7 +9867,7 @@ LF410:
     jsr CommonEnemyAI
 ; Entry Point 2 ; CommonJump_02
 LF416:
-    ; check if enemy is miniboss
+    ; check if enemy is tough
     ldx PageIndex
     lda EnSpecialAttribs,x
     bpl Lx301
@@ -11771,19 +11771,21 @@ UpdateAllTileBlasts:
 UpdateTileBlast:
     stx PageIndex
     lda TileBlastRoutine,x
-    beq RTS_X414          ; exit if tile not active
+    beq SetTileAnim@RTS          ; exit if tile not active
     jsr ChooseRoutine
         .word ExitSub       ;($C45C) rts
         .word UpdateTileBlast_Init
-        .word UpdateTileBlast_LFE54
-        .word UpdateTileBlast_LFE59
-        .word UpdateTileBlast_LFE54
-        .word UpdateTileBlast_Respawn
+        .word UpdateTileBlast_Animating ; spawning
+        .word UpdateTileBlast_WaitToRespawn
+        .word UpdateTileBlast_Animating ; respawning
+        .word UpdateTileBlast_Respawned
 
 UpdateTileBlast_Init:
     inc TileBlastRoutine,x
-    lda #$00
+    ; set anim to blasting
+    lda #TileBlastAnim0 - TileBlastAnim.b
     jsr SetTileAnim
+    ; tile respawns after 320 frames
     lda #$50
     sta TileBlastDelay,x
     lda TileBlastWRAMPtr,x     ; low WRAM addr of blasted tile
@@ -11791,66 +11793,73 @@ UpdateTileBlast_Init:
     lda TileBlastWRAMPtr+1,x     ; high WRAM addr
     sta $01
 
-UpdateTileBlast_LFE54:
+UpdateTileBlast_Animating:
+    ; anim every 2 frames
     lda #$02
     jmp UpdateTileBlastAnim
 
-UpdateTileBlast_LFE59:
+UpdateTileBlast_WaitToRespawn:
     ; only update tile timer every 4th frame
     lda FrameCount
     and #$03
-    bne RTS_X414
+    bne SetTileAnim@RTS
     
     ; exit if timer not reached zero
     dec TileBlastDelay,x
-    bne RTS_X414
+    bne SetTileAnim@RTS
     
     inc TileBlastRoutine,x
     ldy TileBlastType,x
-    lda TileBlastAnimIndexTable,y
+    lda TileBlastRespawnAnimIndexTable,y
     
 SetTileAnim:
     sta TileBlastAnimIndex,x
     sta TileBlast0505,x
     lda #$00
     sta TileBlastAnimDelay,x
-RTS_X414:
+@RTS:
     rts
 
-; Table used for indexing the animations in TileBlastAnim (see below)
-TileBlastAnimIndexTable:
-    .byte TileBlastAnim6 - TileBlastAnim
-    .byte TileBlastAnim7 - TileBlastAnim
-    .byte TileBlastAnim8 - TileBlastAnim
-    .byte TileBlastAnim0 - TileBlastAnim
-    .byte TileBlastAnim1 - TileBlastAnim
-    .byte TileBlastAnim2 - TileBlastAnim
-    .byte TileBlastAnim3 - TileBlastAnim
-    .byte TileBlastAnim4 - TileBlastAnim
-    .byte TileBlastAnim9 - TileBlastAnim
-    .byte TileBlastAnim5 - TileBlastAnim
+; Table used for indexing the respawining animations in TileBlastAnim (see below)
+; Why aren't these in area banks?
+TileBlastRespawnAnimIndexTable:
+    .byte TileBlastAnim6 - TileBlastAnim ; tile #$70
+    .byte TileBlastAnim7 - TileBlastAnim ; tile #$74
+    .byte TileBlastAnim8 - TileBlastAnim ; tile #$78 (also tile #$76 in Norfair)
+    .byte TileBlastAnim0 - TileBlastAnim ; tile #$7C
+    .byte TileBlastAnim1 - TileBlastAnim ; tile #$80
+    .byte TileBlastAnim2 - TileBlastAnim ; tile #$84
+    .byte TileBlastAnim3 - TileBlastAnim ; tile #$88
+    .byte TileBlastAnim4 - TileBlastAnim ; tile #$8C
+    .byte TileBlastAnim9 - TileBlastAnim ; tile #$90
+    .byte TileBlastAnim5 - TileBlastAnim ; tile #$94
 
-UpdateTileBlast_Respawn:
+UpdateTileBlast_Respawned:
+    ; delete tile blast
     lda #$00
-    sta TileBlastRoutine,x       ; tile = respawned
+    sta TileBlastRoutine,x
+    ; ($03, $02) = position of center of tile
     lda TileBlastWRAMPtr,x
     clc
     adc #$21
     sta $00
     lda TileBlastWRAMPtr+1,x
     sta $01
-    jsr LFF3C
+    jsr GetPosAtNameTableAddr
+    ; check if colliding with Samus
     lda $02
-    sta $07
+    sta Temp07_XSlotPositionY
     lda $03
-    sta $09
+    sta Temp09_XSlotPositionX
     lda $01
     lsr
     lsr
     and #$01
-    sta $0B
+    sta Temp0B_XSlotPositionHi
+    ; get Samus's position
     ldy #$00
     jsr GetObjectYSlotPosition
+    ; 8x8 hitbox
     lda #$04
     clc
     adc ObjRadY
@@ -11860,8 +11869,9 @@ UpdateTileBlast_Respawn:
     adc ObjRadX
     sta Temp05_YSlotRadX
     jsr CheckCollisionOfXSlotAndYSlot
-    bcs Exit23
+    bcs GetTileBlastFramePtr@RTS
     
+    ; tile hit Samus
     jsr SamusHurt_F311
     ; deal 5 damage to samus
     lda #$50
@@ -11876,7 +11886,7 @@ GetTileBlastFramePtr:
     sta $02
     lda TileBlastFramePtrTable+1,y
     sta $03
-Exit23:
+@RTS:
     rts
 
 ; return carry clear if successfully drawn
@@ -11884,61 +11894,80 @@ Exit23:
 DrawTileBlast: ;($FEDC)
     lda PPUStrIndex
     cmp #$1F
-    bcs Exit23
+    bcs GetTileBlastFramePtr@RTS
     ldx PageIndex
+    ; $01.$00 = TileBlastWRAMPtr
     lda TileBlastWRAMPtr,x
     sta $00
     lda TileBlastWRAMPtr+1,x
     sta $01
     jsr GetTileBlastFramePtr
+    ; $11 = room RAM index = 0
     ldy #$00
     sty $11
+    ; header: hhhhwwww
     lda ($02),y
     tax
+    ; $04 = height (high nybble)
     jsr Adiv16       ; / 16
     sta $04
     txa
+    ; $05 = width (low nybble)
     and #$0F
     sta $05
+    ; $10 = frame index = 1
     iny
     sty $10
-    Lx415:
+    @loop_rows:
         ldx $05
-        Lx416:
+        @loop_columns:
+            ; write tile
+            ; read src and increment frame index
             ldy $10
             lda ($02),y
             inc $10
+            ; write to room RAM and increment room RAM index
             ldy $11
             sta ($00),y
             inc $11
+            ; loop if there are columns remaining
             dex
-            bne Lx416
+            bne @loop_columns
+        ; next row
         lda $11
         clc
         adc #$20
+        ; to compenate for incrementing room RAM index by writing the previous row
         sec
         sbc $05
         sta $11
+        ; loop if there are rows remaining
         dec $04
-        bne Lx415
+        bne @loop_rows
+    ; $01.$00 = PPU address to write tile blast
+    ; branch if in RoomRAMA
     lda $01
     and #$04
-    beq Lx417
+    beq @inNameTable0
+        ; write to nametable 3
         lda $01
         ora #$0C
         sta $01
-    Lx417:
+    @inNameTable0:
     lda $01
     and #$2F
     sta $01
-    jsr EraseTile
+    jsr WriteTileBlast
     clc
     rts
 
-LFF3C:
+GetPosAtNameTableAddr:
+    ; $01.$00 = ------yy yyyxxxxx (nametable address)
+    ; $02 = yyyyy000 (Y position)
+    ; $03 = xxxxx000 (X position)
     lda $00
     tay
-    and #$E0
+    and #%11100000
     sta $02
     lda $01
     lsr
@@ -11946,7 +11975,7 @@ LFF3C:
     lsr
     ror $02
     tya
-    and #$1F
+    and #%00011111
     jsr Amul8       ; * 8
     sta $03
     rts
@@ -11954,44 +11983,53 @@ LFF3C:
 UpdateTileBlastAnim:
     ldx PageIndex
     ldy TileBlastAnimDelay,x
-    beq Lx418
+    beq @update
         dec TileBlastAnimDelay,x
-        bne RTS_X419
-    Lx418:
+        bne @RTS
+    @update:
+    ; TileBlastAnimDelay = A
     sta TileBlastAnimDelay,x
+    ; get frame index
     ldy TileBlastAnimIndex,x
     lda TileBlastAnim,y
     cmp #$FE            ; end of "tile-blast" animation?
-    beq Lx420
+    beq @end
+    ; set frame
     sta TileBlastAnimFrame,x
+    ; inc anim index
     iny
     tya
     sta TileBlastAnimIndex,x
+    ; try to draw it
     jsr DrawTileBlast
-    bcc RTS_X419
+    bcc @RTS
+    ; Failed to draw, retry drawing it next frame.
+    ; BUG: TileBlastAnimDelay should be set to 0 or 1 here.
     ldx PageIndex
     dec TileBlastAnimIndex,x
-RTS_X419:
+@RTS:
     rts
-Lx420:
+@end:
+    ; TileBlastRoutine = wait to respawn
     inc TileBlastRoutine,x
+    ; Quit updating remaining tile blasts and return (bug)
     pla
     pla
     rts
 
-; Frame data for tile blasts
+; Frame data for tile blasts (why aren't these in area banks?)
 
 TileBlastAnim:
-TileBlastAnim0:  .byte $06,$07,$00,$FE
-TileBlastAnim1:  .byte $07,$06,$01,$FE
-TileBlastAnim2:  .byte $07,$06,$02,$FE
-TileBlastAnim3:  .byte $07,$06,$03,$FE
-TileBlastAnim4:  .byte $07,$06,$04,$FE
-TileBlastAnim5:  .byte $07,$06,$05,$FE
-TileBlastAnim6:  .byte $07,$06,$09,$FE
-TileBlastAnim7:  .byte $07,$06,$0A,$FE
-TileBlastAnim8:  .byte $07,$06,$0B,$FE
-TileBlastAnim9:  .byte $07,$06,$08,$FE
+TileBlastAnim0:  .byte $06,$07,$00,$FE ; blasting tile or respawning tile #$7C
+TileBlastAnim1:  .byte $07,$06,$01,$FE ; respawning tile #$80
+TileBlastAnim2:  .byte $07,$06,$02,$FE ; respawning tile #$84
+TileBlastAnim3:  .byte $07,$06,$03,$FE ; respawning tile #$88
+TileBlastAnim4:  .byte $07,$06,$04,$FE ; respawning tile #$8C
+TileBlastAnim5:  .byte $07,$06,$05,$FE ; respawning tile #$94
+TileBlastAnim6:  .byte $07,$06,$09,$FE ; respawning tile #$70
+TileBlastAnim7:  .byte $07,$06,$0A,$FE ; respawning tile #$74
+TileBlastAnim8:  .byte $07,$06,$0B,$FE ; respawning tile #$78
+TileBlastAnim9:  .byte $07,$06,$08,$FE ; respawning tile #$90
 
 .if BUILDTARGET == "NES_NTSC"
     .byte $00, $00
