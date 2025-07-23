@@ -10237,7 +10237,7 @@ Lx327:
     ; find first open enemy explosion slot
     ldx #$C0
     Lx328:
-        lda EnExplosionStatus,x
+        lda EnsExtra.0.status,x
         beq Lx329
         txa
         clc
@@ -10254,7 +10254,7 @@ Lx329:
     jsr InitEnAnimIndex
     lda #$0A
     sta EnExplosionAnimDelay,x
-    inc EnExplosionStatus,x
+    inc EnsExtra.0.status,x
     lda #$00
     bit $0A
     bvc Lx330
@@ -10267,7 +10267,7 @@ Lx329:
     lda EnX,y
     sta EnExplosionX,x
     lda EnsExtra.0.hi,y
-    sta EnExplosionHi,x
+    sta EnsExtra.0.hi,x
 GetPageIndex:
     ldx PageIndex
     rts
@@ -11093,7 +11093,7 @@ UpdateAllEnemyExplosions:
     ldx #$C0
     @loop:
         stx PageIndex
-        lda EnExplosionStatus,x
+        lda EnsExtra.0.status,x
         beq @endIf
             jsr UpdateEnemyExplosion
         @endIf:

@@ -1014,22 +1014,14 @@ EnsExtra               instanceof EnExtra $10 startfrom 0
 ; 16 slots of 8 bytes each ($6BF4-$6C73)
 Cannons                instanceof Cannon $10 startfrom 0
 
-.ende
-
-; 4 slots of 8 bytes each ($6BB4-$6BD3)
-EnExplosionStatus      = EnsExtra.0.status
-EnExplosion6BB5        = EnsExtra.0.radY
-EnExplosion6BB6        = EnsExtra.0.radX
-EnExplosion6BB7        = EnsExtra.0.animFrame
-EnExplosion6BB8        = EnsExtra.0.animDelay
-EnExplosion6BB9        = EnsExtra.0.resetAnimIndex
-EnExplosion6BBA        = EnsExtra.0.animIndex
-EnExplosionHi          = EnsExtra.0.hi
+SpareRAM6C74           ds $18C
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 
 ; 40 slots of 4 bytes each ($6E00-$6E9F)
-IntroStarSprite        = $6E00   ;RAM used for storing intro star sprite data.
+IntroStarSprite        db        ;RAM used for storing intro star sprite data.
+
+.ende
 
 ; 8 slots of 16 bytes each ($6EA0-$6F1F)
 ;Intro sprite 0 and sparkle sprite.
