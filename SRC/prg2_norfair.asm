@@ -508,17 +508,17 @@ CommonEnemyJump_00_01_02:
 ;-------------------------------------------------------------------------------
 ; is this unused?
 L9963:
-    jsr CommonJump_09
+    jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
 
-    jsr CommonJump_09
+    jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
     jmp CommonEnemyJump_00_01_02
 
-    jsr CommonJump_09
+    jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
     lda EnemyMovementPtr

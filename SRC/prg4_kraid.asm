@@ -32,6 +32,7 @@ GFX_EndingSprites:
     .incbin "ending/sprite_tiles.chr"
 
 ;Unused tile patterns (needed so the Palette Pointer Table, etc. below are properly aligned)
+GFX_KraiUnused:
     .incbin "kraid/unused_tiles.chr"
 
 GFX_KraiBG3:

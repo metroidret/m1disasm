@@ -193,7 +193,7 @@ SpareMem21             dw
 
 CurrentBank            db        ;0 thru 7. current memory page in lower memory block.
 SwitchPending          db        ;Switch memory page. Page # = SwitchPending - 1.
-MMCReg0Cntrl           db        ;Stores bits to be loaded into MMC1 Register 0.
+MMC1CTRL_ZP            db        ;Stores bits to be loaded into MMC1 Register 0.
 
 SpareMem26             dw
 
@@ -366,8 +366,8 @@ ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
     SpawnFireball_83       dw        ;right facing anim index for enemy that shoots the fireball
     ; SpawnFireball_83+1     = $84     ;left facing anim index for enemy that shoots the fireball
     SpawnFireball_AnimTableIndex .db       ;index into EnemyFireballRisingAnimIndexTable
-    ; 2 bytes ($85-$86)
-    EnemyLFB88_85          dw
+    EnemyFlipAfterDisplacementAnimIndex          dw     ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
+    ; EnemyFlipAfterDisplacementAnimIndex+1 = $86     ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
     SpawnFireball_87       db        ;fireball status?
     SpawnFireball_EnData0A db   
 

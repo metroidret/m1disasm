@@ -85,6 +85,13 @@
     .word ptr
 .endm
 
+.macro GFXInfoEntry args gfx, dest
+    .byte bank(gfx)
+    PtrTableEntry GFXInfo gfx
+    .word dest
+    .word _sizeof_\1
+.endm
+
 .macro EnemyMovementChoiceEntry ; args enemyMovementIndexList
     assertMsg NARGS >= 1 && NARGS <= 256, "number of choices must be from 1 to 256 inclusive"
     

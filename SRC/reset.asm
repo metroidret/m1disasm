@@ -38,10 +38,10 @@ RESET: ;($BFB0)
     
     ;Reset MMC1 chip. (MSB is set).
     ora #$FF
-    sta MMC1Reg0
-    sta MMC1Reg1
-    sta MMC1Reg2
-    sta MMC1Reg3
+    sta MMC1CTRL
+    sta MMC1CHR0
+    sta MMC1CHR1
+    sta MMC1PRG
     
     ;($C01A)Does preliminary housekeeping.
     jmp Startup

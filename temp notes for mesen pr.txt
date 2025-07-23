@@ -17,6 +17,7 @@ trying to import will silently ignore your request
             // so i just guess and hope i'm right
             // (did the mesen devs deliberately choose not to implement nes sym import because of this?)
             // (will fds games have labels from all files active simultaneously bc there's only 1 bank of prg ram?)
+            // investigate DebugApi.GetMemorySize
             uint16 bankSize = 0;
             switch(absAddr.Type) {
                 case MemoryType.NesPrgRom:
