@@ -24,7 +24,7 @@ class BuildTarget:
 
 build_targets = {
     "FDS": BuildTarget(
-        md5_hash_expected_hex="e4e3ccc654d47043e6d996ad2c7ca01b",
+        md5_hash_expected_hex="d68f36d25a3474663bb1decfe0fcb395",
         filename="out/M1_FDS_temp.fds",
     ),
 }

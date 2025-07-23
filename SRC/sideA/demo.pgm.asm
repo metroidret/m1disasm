@@ -983,9 +983,9 @@ L6D8C:
     bcs L6DB2
     asl a
     tay
-    lda $7DAF,y
+    lda L7DAF,y
     sta $02
-    lda $7DB0,y
+    lda L7DAF+1,y
     sta $03
     ldy #$00
     lda ($02),y
@@ -1198,9 +1198,9 @@ L6EF1:
     inc $51
     asl a
     tay
-    lda $7F44,y
+    lda L7F44,y
     sta $02
-    lda $7F45,y
+    lda L7F44+1,y
     sta $03
     ldy #$00
     lda ($02),y
@@ -1283,9 +1283,9 @@ L6F74:
     inc $51
     asl a
     tay
-    lda $7F44,y
+    lda L7F44,y
     sta $04
-    lda $7F45,y
+    lda L7F44+1,y
     sta $05
     ldy #$00
     lda ($04),y
@@ -2296,185 +2296,255 @@ L7B2F:
     cmp $05
 L7B33:
     rts
-    .byte $1F
-    beq L7B87
-    .byte $00
-    .byte $23
-    cpy #$20
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $23
-    cpx #$20
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $27
-    cpy #$20
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-L7B87:
 
+L7B34:
+    PPUStringRepeat $1FF0, undefined, $00, $10
+    
+    PPUString $23C0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    PPUString $23E0, undefined, \
+        $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    
+    PPUString $27C0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUString $27E0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    
+    PPUString $22E0, undefined, \
+        $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
+    PPUString $2300, undefined, \
+        $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
+    PPUString $2320, undefined, \
+        $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
+    PPUString $2340, undefined, \
+        $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
+    PPUString $2360, undefined, \
+        $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
+    PPUString $2380, undefined, \
+        $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
+    PPUString $23A0, undefined, \
+        $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
+    
+    PPUString $26E0, undefined, \
+        $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $FF, $FF, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF
+    PPUString $2700, undefined, \
+        $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
+    PPUString $2720, undefined, \
+        $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
+    PPUString $2740, undefined, \
+        $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
+    PPUString $2760, undefined, \
+        $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
+    PPUString $2780, undefined, \
+        $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
+    PPUString $27A0, undefined, \
+        $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
+    
+    PPUStringEnd
 
+L7DAF:
+    .word L7DAF_7DC9
+    .word L7DAF_7DED
+    .word L7DAF_7E11
+    .word L7DAF_7E35
+    .word L7DAF_7E59
+    .word L7DAF_7E75
+    .word L7DAF_7E91
+    .word L7DAF_7EAD
+    .word L7DAF_7EC9
+    .word L7DAF_7EE5
+    .word L7DAF_7F01
+    .word L7DAF_7F1D
+    .word L7DAF_7F32
 
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $E0, $20, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $22, $E0, $20
-    .byte $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
-    .byte $23, $00, $20, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0
-    .byte $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0
-    .byte $C1, $C0, $C1, $23, $20, $20, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
-    .byte $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
-    .byte $C2, $C3, $C2, $C3, $C2, $C3, $23, $40, $20, $C4, $C5, $C4, $C5, $C4, $C5, $C4
-    .byte $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4
-    .byte $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $23, $60, $20, $C6, $C7, $C6, $C7
-    .byte $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
-    .byte $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $23, $80, $20, $C8
-    .byte $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8
-    .byte $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $23
-    .byte $A0, $20, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
-    .byte $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
-    .byte $CA, $CB, $26, $E0, $20, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $CD, $FF, $FF, $FF, $FF, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $CC, $FF, $FF, $FF, $FF, $27, $00, $20, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
-    .byte $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
-    .byte $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $27, $20, $20, $C2, $C3, $C2, $C3, $C2
-    .byte $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2
-    .byte $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $27, $40, $20, $C4, $C5
-    .byte $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
-    .byte $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $27, $60
-    .byte $20, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6
-    .byte $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6
-    .byte $C7, $27, $80, $20, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
-    .byte $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
-    .byte $C8, $C9, $C8, $C9, $27, $A0, $20, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA
-    .byte $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA
-    .byte $CB, $CA, $CB, $CA, $CB, $CA, $CB, $00, $C9, $7D, $ED, $7D, $11, $7E, $35, $7E
-    .byte $59, $7E, $75, $7E, $91, $7E, $AD, $7E, $C9, $7E, $E5, $7E, $01, $7F, $1D, $7F
-    .byte $32, $7F, $23, $C0, $20, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $00, $23, $E0, $20, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $C0, $20, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $27, $E0
-    .byte $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $21, $24, $18, $FF, $FF, $FF, $03, $04, $05, $06, $07, $08, $FF, $0A
-    .byte $0B, $0C, $FF, $FF, $0F, $70, $71, $72, $73, $74, $FF, $FF, $FF, $00, $21, $44
-    .byte $18, $FF, $FF, $12, $13, $14, $15, $16, $17, $18, $FF, $1A, $1B, $1C, $1D, $1E
-    .byte $1F, $80, $81, $82, $83, $84, $85, $FF, $FF, $00, $21, $64, $18, $FF, $FF, $FF
-    .byte $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $90, $91, $92
-    .byte $93, $94, $95, $96, $FF, $00, $21, $84, $18, $FF, $FF, $32, $33, $34, $35, $36
-    .byte $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $78, $79, $7A, $7B, $7C, $7D, $7E
-    .byte $FF, $00, $21, $A4, $18, $FF, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A
-    .byte $4B, $4C, $4D, $4E, $4F, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $00, $21, $C4
-    .byte $18, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E
-    .byte $5F, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $00, $21, $E4, $18, $60, $61, $62
-    .byte $63, $FF, $65, $66, $67, $FF, $69, $6A, $6B, $6C, $6D, $6E, $6F, $A8, $A9, $AA
-    .byte $AB, $AC, $AD, $FF, $FF, $00, $22, $28, $11, $B4, $BA, $B6, $B5, $FF, $B6, $A3
-    .byte $B7, $B8, $A3, $FF, $B9, $BA, $A3, $A3, $A6, $A1, $00, $22, $69, $0E, $A0, $B0
-    .byte $B1, $B2, $B3, $FF, $A1, $A2, $A1, $A3, $A4, $A1, $A5, $A6, $00, $64, $7F, $7F
-    .byte $7F, $9A, $7F, $B5, $7F, $D0, $7F, $EB, $7F, $06, $80, $21, $80, $3C, $80, $57
-    .byte $80, $72, $80, $8D, $80, $A8, $80, $C3, $80, $DE, $80, $F9, $80, $20, $A4, $46
-    .byte $D4, $75, $D4, $BF, $D1, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $BB, $64, $D5, $76, $D0, $FF, $76, $20, $AA, $46, $D8, $31, $D0, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $FF, $FF, $FF, $BD, $02, $D9
-    .byte $FF, $CF, $FF, $20, $B0, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $0E, $87, $40, $D0, $87, $FF, $20, $B6
-    .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $68, $FF, $77, $D2, $D8, $FF, $21, $24, $46, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $D4, $D3, $D0, $76, $D0, $0E, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $21, $2A, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $BB, $D0, $77, $D0, $FF, $0D, $D7, $FF, $FF, $FF, $FF, $FF, $FF, $21
-    .byte $30, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB, $FF, $FF, $FF, $FF, $BD, $7F
-    .byte $31, $D0, $75, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $21, $36, $46, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $68, $FF, $97, $D3, $D0, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $21, $A4, $46, $FF, $FF, $FF, $FF, $FF, $FF, $76, $19
-    .byte $BE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $21, $AA, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BB
-    .byte $FF, $BB, $FF, $FF, $FF, $D4, $75, $D3, $FF, $31, $75, $21, $B0, $46, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BC, $FF, $FF, $FF, $FF, $FF
-    .byte $09, $D1, $FF, $D6, $D0, $D7, $21, $B6, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $86, $FF, $A7, $AE, $B0
-    .byte $AF, $22, $24, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $22, $2A, $46, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $22, $30, $46, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $22, $36, $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $46, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $51, $81, $00, $00, $00, $00, $00, $00
-    .byte $01, $00, $00, $00, $00, $00, $02, $00, $00, $03, $00, $00, $00, $00, $00, $00
-    .byte $01, $00, $00, $00, $00, $00, $02, $00, $00, $03, $79, $81, $7A, $81, $7D, $81
-    .byte $80, $81, $00, $18, $CC, $00, $18, $CD, $00, $18, $CE, $00
+L7DAF_7DC9:
+    PPUString $23C0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+    PPUStringEnd
+L7DAF_7DED:
+    PPUString $23E0, undefined, \
+        $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUStringEnd
+L7DAF_7E11:
+    PPUString $27C0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUStringEnd
+L7DAF_7E35:
+    PPUString $27E0, undefined, \
+        $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    PPUStringEnd
+L7DAF_7E59:
+    PPUString $2124, undefined, \
+        $FF, $FF, $FF, $03, $04, $05, $06, $07, $08, $FF, $0A, $0B, $0C, $FF, $FF, $0F, $70, $71, $72, $73, $74, $FF, $FF, $FF
+    PPUStringEnd
+L7DAF_7E75:
+    PPUString $2144, undefined, \
+        $FF, $FF, $12, $13, $14, $15, $16, $17, $18, $FF, $1A, $1B, $1C, $1D, $1E, $1F, $80, $81, $82, $83, $84, $85, $FF, $FF
+    PPUStringEnd
+L7DAF_7E91:
+    PPUString $2164, undefined, \
+        $FF, $FF, $FF, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $90, $91, $92, $93, $94, $95, $96, $FF
+    PPUStringEnd
+L7DAF_7EAD:
+    PPUString $2184, undefined, \
+        $FF, $FF, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $78, $79, $7A, $7B, $7C, $7D, $7E, $FF
+    PPUStringEnd
+L7DAF_7EC9:
+    PPUString $21A4, undefined, \
+        $FF, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F
+    PPUStringEnd
+L7DAF_7EE5:
+    PPUString $21C4, undefined, \
+        $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
+    PPUStringEnd
+L7DAF_7F01:
+    PPUString $21E4, undefined, \
+        $60, $61, $62, $63, $FF, $65, $66, $67, $FF, $69, $6A, $6B, $6C, $6D, $6E, $6F, $A8, $A9, $AA, $AB, $AC, $AD, $FF, $FF
+    PPUStringEnd
+L7DAF_7F1D:
+    PPUString $2228, charmap_title, \
+        "PUSH START BUTTON"
+    PPUStringEnd
+L7DAF_7F32:
+    PPUString $2269, charmap_title, \
+        "©1986 NINTENDO"
+    PPUStringEnd
+
+L7F44:
+    .word L7F44_7F64
+    .word L7F44_7F7F
+    .word L7F44_7F9A
+    .word L7F44_7FB5
+    .word L7F44_7FD0
+    .word L7F44_7FEB
+    .word L7F44_8006
+    .word L7F44_8021
+    .word L7F44_803C
+    .word L7F44_8057
+    .word L7F44_8072
+    .word L7F44_808D
+    .word L7F44_80A8
+    .word L7F44_80C3
+    .word L7F44_80DE
+    .word L7F44_80F9
+
+L7F44_7F64:
+    .byte $20, $A4, $46
+    .stringmap charmap_title, "キンキュウ "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "     ゛"
+    .stringmap charmap_title, "ワクセイ セ"
+L7F44_7F7F:
+    .byte $20, $AA, $46
+    .stringmap charmap_title, "シレイ   "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, " ゛    "
+    .stringmap charmap_title, "-へス ノ "
+L7F44_7F9A:
+    .byte $20, $B0, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "    ゛ "
+    .stringmap charmap_title, "メトロイト "
+L7F44_7FB5:
+    .byte $20, $B6, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "ヲ タオシ "
+L7F44_7FD0:
+    .byte $21, $24, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "キカイセイメ"
+    .stringmap charmap_title, "      "
+L7F44_7FEB:
+    .byte $21, $2A, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "     ゛"
+    .stringmap charmap_title, "イタイ マサ"
+    .stringmap charmap_title, "      "
+L7F44_8006:
+    .byte $21, $30, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, " ゛    "
+    .stringmap charmap_title, "-フレイン "
+    .stringmap charmap_title, "      "
+L7F44_8021:
+    .byte $21, $36, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "ヲ ハカイ "
+    .stringmap charmap_title, "      "
+L7F44_803C:
+    .byte $21, $A4, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "セヨ!   "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+L7F44_8057:
+    .byte $21, $AA, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "゛ ゛   "
+    .stringmap charmap_title, "キンカ レン"
+L7F44_8072:
+    .byte $21, $B0, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "゜     "
+    .stringmap charmap_title, "ホウ ケイサ"
+L7F44_808D:
+    .byte $21, $B6, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "ツ M510"
+L7F44_80A8:
+    .byte $22, $24, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+L7F44_80C3:
+    .byte $22, $2A, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+L7F44_80DE:
+    .byte $22, $30, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+L7F44_80F9:
+    .byte $22, $36, $46
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+    .stringmap charmap_title, "      "
+
+L8114:
+    .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $51, $81, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00, $00, $03, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00, $00, $03
+
+L8171:
+    .word L8171_8179
+    .word L8171_817A
+    .word L8171_817D
+    .word L8171_8180
+
+L8171_8179:
+    .byte $00
+L8171_817A:
+    .byte $18, $CC
+    .byte $00
+L8171_817D:
+    .byte $18, $CD
+    .byte $00
+L8171_8180:
+    .byte $18, $CE
+    .byte $00
 
 
 L8183:
@@ -3347,7 +3417,7 @@ L883B:
     jsr ScreenOff
     jsr L69DF
     jsr EraseAllSprites
-    jmp $CF1D
+    jmp LCF1D
 
 
 
@@ -3407,7 +3477,7 @@ L8899:
     lda $2002
     ldy #$00
 L88B0:
-    lda $C5A0,y
+    lda SaveGame_C5A0,y
     and #$01
     beq L8915
     tya
@@ -3462,7 +3532,7 @@ L8915:
     lda #$16
     sta $1F
 L8927:
-    jsr $CF27
+    jsr LCF27
     jmp L6CE0
 L892D:
     pha
@@ -3552,13 +3622,13 @@ L89A8:
     lda $38
     sta $B41F
     tax
-    lda $C5A0,x
+    lda SaveGame_C5A0,x
     ora $B41E
     sta $B41E
     and #$01
-    sta $C5A0,x
-    jsr $CE35
-    jmp $CE66
+    sta SaveGame_C5A0,x
+    jsr LCE35
+    jmp LCE66
 
 
 
@@ -3603,12 +3673,12 @@ L8A17:
     lda #$00
     sta $2D
 L8A1B:
-    lda $C5A3,y
+    lda SaveGame_C5A3,y
     cmp #$FF
     beq L8A2A
-    lda $C5A0,x
+    lda SaveGame_C5A0,x
     ora #$01
-    sta $C5A0,x
+    sta SaveGame_C5A0,x
 L8A2A:
     iny
     inc $2D
@@ -3696,7 +3766,7 @@ L8AAD:
     beq L8AC5
     cmp #$5C
     beq L8AC5
-    sta $C5A3,x
+    sta SaveGame_C5A3,x
     lda #$FF
 L8AC5:
     sta $C5AB,x
@@ -3873,7 +3943,7 @@ L8BC5:
     rts
 L8BE3:
     lda #$80
-    sta $C5A0,y
+    sta SaveGame_C5A0,y
     tya
     pha
     pha
@@ -3900,7 +3970,7 @@ L8BE3:
     ldx #$00
 L8C16:
     lda #$FF
-    sta $C5A3,y
+    sta SaveGame_C5A3,y
     lda #$00
     sta $C5E2,y
     iny
@@ -3951,7 +4021,7 @@ L8C6A:
 L8C77:
     ldy #$00
 L8C79:
-    lda $C5A0,y
+    lda SaveGame_C5A0,y
     and #$01
     bne L8C85
     iny
@@ -3962,7 +4032,7 @@ L8C85:
 L8C86:
     ldy #$00
 L8C88:
-    lda $C5A0,y
+    lda SaveGame_C5A0,y
     and #$01
     beq L8C94
     iny
@@ -4066,7 +4136,7 @@ L8D43:
 L8D4F:
     ldx #$00
 L8D51:
-    lda $C5A3,y
+    lda SaveGame_C5A3,y
     sta $2007
     iny
     inx
@@ -4138,7 +4208,7 @@ L8DC3:
     sty $2E
     ldx #$00
 L8DCB:
-    lda $C5A0,y
+    lda SaveGame_C5A0,y
     and #$01
     beq L8E13
     lda $C612,y

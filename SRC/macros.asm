@@ -29,8 +29,10 @@
     .undef absXSpd, absYSpd, signXSpd, signYSpd
 .endm
 
-.macro PPUString args ppuAddress ; , ppuString
+.macro PPUString args ppuAddress ; , charmap , ppuString
     .byte >ppuAddress, <ppuAddress
+    .def charmap = "\2"
+    .shift
     .shift
     
     .byte @PPUString\@_end - @PPUString\@_start
@@ -48,6 +50,8 @@
     .endr
     @PPUString\@_end:
     
+    .undef charmap
+    
     .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
         .print @PPUString\@_end - @PPUString\@_start, "\n"
         .fail "PPUString: bad string length"
@@ -55,17 +59,17 @@
     
 .endm
 
-.macro PPUStringRepeat args ppuAddress, ppuByte, repetitions
+.macro PPUStringRepeat args ppuAddress, charmap, ppuByte, repetitions
     assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
     
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
-    .if (\?2 == ARG_IMMEDIATE) || (\?2 == ARG_NUMBER)
+    .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
         .db ppuByte
-    .elif \?2 == ARG_STRING
+    .elif \?3 == ARG_STRING
         .stringmap charmap, ppuByte
     .else
-        .print \?2, "\n"
+        .print \?3, "\n"
         .fail "PPUString: bad data argument type"
     .endif
 .endm

@@ -1,8 +1,8 @@
 
 ; related to save games
-LC5A0:
+SaveGame_C5A0:
     .byte $80, $80, $80
-LC5A3:
+SaveGame_C5A3:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -258,32 +258,36 @@ LCEDC:
 
 ; "ERR --" message (disk error)
 LCF03:
-    PPUString $21F3, \
+    PPUString $21F3, undefined, \
         $B3, $BA, $BA, $FF, $21, $21
     PPUStringEnd
 
 ; "おまちください" message (waiting during disk access)
 LCF0D:
-    PPUString $21CC, \
+    PPUString $21CC, undefined, \
         $0B, $0C, $1B, $1C, $2B, $2C, $3F
-    PPUString $23DB, \
+    PPUString $23DB, undefined, \
         $00, $00
     PPUStringEnd
 
 LCF1D:
+    ; turn v-blank nmi off and set ppu increment to 1
     lda PPUCTRL_ZP
-    and #$7B
+    and #~(PPUCTRL_VBLKNMI_ON | PPUCTRL_INCR_DOWN).b
 LCF21:
     sta PPUCTRL
     sta PPUCTRL_ZP
     rts
 
 LCF27:
-    lda PPUSTATUS
-    and #PPUSTATUS_VBLK
-    bne LCF27
+    ; wait for v-blank
+    @loop:
+        lda PPUSTATUS
+        and #PPUSTATUS_VBLK
+        bne @loop
+    ; turn v-blank nmi on
     lda PPUCTRL_ZP
-    ora #$80
+    ora #PPUCTRL_VBLKNMI_ON
     bne LCF21 ; branch always
 
 LCF34:

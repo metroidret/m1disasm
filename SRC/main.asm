@@ -11,7 +11,36 @@
 
 ; disk info block
 .section "Side{FDSFile_Side}-DiskInfo" bank FDSFile_Bank slot "DummySlot"
-    .byte $01, $2A, $4E, $49, $4E, $54, $45, $4E, $44, $4F, $2D, $48, $56, $43, $2A, $01, $4D, $45, $54, $20, $02, $00, $00, $00, $00, $0F, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $0F
+    .byte $01
+    .ascstr "*NINTENDO-HVC*"
+    .byte $01
+    .ascstr "MET"
+    .ascstr " "
+    .byte $02
+    .byte FDSFile_Side
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $0F
+    .byte $FF, $FF, $FF, $FF, $FF
+    .byte $61, $09, $09
+    .byte $49
+    .byte $61
+    .byte $00
+    .byte $00, $02
+    .byte $00, $1A, $00, $10, $00
+    .byte $61, $09, $09
+    .byte $FF
+    .byte $FF
+    .byte $FF, $FF
+    .byte $FF
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $00
+    
+    .byte $02
+    .byte $0F
 .ends
 .redef FDSFile_Bank = FDSFile_Bank + 1
 
@@ -155,11 +184,11 @@ FDSFileMacroPart3
 
 
 
-; file $0E - \u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001
-FDSFileMacroPart1 $0E
-    .ascstr $01, $01, $01, $01, $01, $01, $01, $01
+; file $0E - savedata
+FDSFileMacroPart1 $0F
+    .ascstr "SAVEDATA"
 FDSFileMacroPart2 $C5A0, $00
-    .incbin "fdspacker_output/side_1/u0001.prg"
+    .incbin "fdspacker_output/side_1/savedata.prg"
 FDSFileMacroPart3
 
 
@@ -170,7 +199,36 @@ FDSFileMacroPart3
 
 ; disk info block
 .section "Side{FDSFile_Side}-DiskInfo" bank FDSFile_Bank
-    .byte $01, $2A, $4E, $49, $4E, $54, $45, $4E, $44, $4F, $2D, $48, $56, $43, $2A, $01, $4D, $45, $54, $20, $02, $01, $00, $00, $00, $0F, $FF, $FF, $FF, $FF, $FF, $00, $68, $43, $4F, $4E, $20, $62, $79, $20, $68, $61, $6C, $39, $39, $39, $39, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $1C
+    .byte $01
+    .ascstr "*NINTENDO-HVC*"
+    .byte $01
+    .ascstr "MET"
+    .ascstr " "
+    .byte $02
+    .byte FDSFile_Side
+    .byte $00
+    .byte $00
+    .byte $00
+    .byte $0F
+    .byte $FF, $FF, $FF, $FF, $FF
+    .byte $61, $09, $10
+    .byte $49
+    .byte $61
+    .byte $00
+    .byte $00, $02
+    .byte $00, $59, $02, $12, $00
+    .byte $61, $09, $10
+    .byte $FF
+    .byte $FF
+    .byte $FF, $FF
+    .byte $FF
+    .byte $00
+    .byte $01
+    .byte $00
+    .byte $00
+    
+    .byte $02
+    .byte $1C
 .ends
 .redef FDSFile_Bank = FDSFile_Bank + 1
 
@@ -418,13 +476,12 @@ FDSFileMacroPart3
 
 
 
-; file $1B - \u0002\u0002\u0002\u0002\u0002\u0002\u0002\u0002
+; file $1B - mensave
 FDSFileMacroPart1 $EF
-    .ascstr $02, $02, $02, $02, $02, $02, $02, $02
+    .ascstr "MENSAVE", $00
 FDSFileMacroPart2 $C000, $00
-    .incbin "fdspacker_output/side_2/u0002.prg"
+    .incbin "fdspacker_output/side_2/mensave.prg"
 FDSFileMacroPart3
-
 
 
 
