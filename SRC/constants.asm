@@ -550,7 +550,7 @@ SpriteRAM              = $0200   ;$0200 thru $02FF
 ; 16 slots of 16 bytes each ($0300-$03FF)
 ; slot 0 to 1 is for samus
 ; slot 2 is for elevator
-; slot 4 is for power-up
+; slot 4 is for drawing power-ups and skree projectiles
 ; slot 6 to 7 is for tourian bridge
 ; slot 8 to B is for doors
 ; slot D to F is for samus projectiles
@@ -601,11 +601,11 @@ ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
                                    ;#$4=Norfair/Ridley
                                    ;elevator type #$8F is for the ending elevator
 
-;Power-up item RAM.
-PowerUpAnimFrame       = $0343   ;*2 = Index into FramePtrTable for current animation.
-PowerUpHi              = $034C   ;Name table power up item is located on.
-PowerUpY               = $034D   ;Room Y coord of power up item.
-PowerUpX               = $034E   ;Room x coord of power up item.
+;Power-up item temp RAM for drawing.
+PowerUpDrawAnimFrame   = $0343   ;*2 = Index into FramePtrTable for current animation.
+PowerUpDrawHi          = $034C   ;Name table power up item is located on.
+PowerUpDrawY           = $034D   ;Room Y coord of power up item.
+PowerUpDrawX           = $034E   ;Room x coord of power up item.
 
 ;Statues and bridge RAM
 StatueStatus           = $0360

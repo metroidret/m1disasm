@@ -2910,7 +2910,7 @@ IsSamusDead:
     cmp #sa_Dead2
     beq Exit3
     ;Samus not dead. Clear zero flag.
-    cmp #$FF
+    cmp #sa_Begin
 Exit3:
     rts                             ;Exit for routines above and below.
 
@@ -5102,7 +5102,7 @@ RTS_DB36:
 ;------------------------------------------[ Update items ]-----------------------------------------
 
 UpdateItems:
-    lda #$40                        ;PowerUp RAM starts at $0340.
+    lda #$40                        ;PowerUp drawing RAM starts at $0340.
     sta PageIndex                   ;
     ldx #$00                        ;Check first item slot.
     jsr CheckOneItem                ;($DB42)Check current item slot.
@@ -5115,11 +5115,11 @@ CheckOneItem:
     beq RTS_DB36                           ;If so, branch to exit.
 
     lda PowerUpYCoord,x             ;
-    sta PowerUpY                    ;
+    sta PowerUpDrawY                ;
     lda PowerUpXCoord,x             ;Store y, x and name table coordinates of power up item.
-    sta PowerUpX                    ;
+    sta PowerUpDrawX                ;
     lda PowerUpNameTable,x          ;
-    sta PowerUpHi                   ;
+    sta PowerUpDrawHi               ;
     jsr GetObjCartRAMPtr                ;($D79F)Find object position in room RAM.
     ldx ItemIndex                   ;Index to proper power up item.
     ldy #$00                        ;Reset index.
@@ -5129,7 +5129,7 @@ CheckOneItem:
     lda PowerUpType,x               ;
     and #$0F                        ;Load power up type byte and keep only bits 0 thru 3.
     ora #_id_ObjFrame50.b           ;Set bits 4 and 6.
-    sta PowerUpAnimFrame            ;Save index to find object animation.
+    sta PowerUpDrawAnimFrame        ;Save index to find object animation.
     lda FrameCount                  ;
     lsr                             ;Color affected every other frame.
     and #$03                        ;the 2 LSBs of object control byte change palette of object.
@@ -11349,23 +11349,23 @@ UpdateSkreeProjectile:
     ; y pos
     lda Temp08_PositionY
     sta SkreeProjectiles.0.y,x
-    sta PowerUpY
+    sta PowerUpDrawY
     ; x pos
     lda Temp09_PositionX
     sta SkreeProjectiles.0.x,x
-    sta PowerUpX
+    sta PowerUpDrawX
     ; nametable
     lda Temp0B_PositionHi
     and #$01
     sta SkreeProjectiles.0.hi,x
-    sta PowerUpHi
+    sta PowerUpDrawHi
     ; oops this write is redundant
     lda SkreeProjectiles.0.hi,x
-    sta PowerUpHi
+    sta PowerUpDrawHi
     
     ;Save index to find object animation.
     lda #_id_ObjFrame5A.b
-    sta PowerUpAnimFrame
+    sta PowerUpDrawAnimFrame
     txa
     pha
     jsr ObjDrawFrame
