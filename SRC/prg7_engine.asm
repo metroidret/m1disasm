@@ -1767,11 +1767,11 @@ MoreInit:
 
 CopyAreaPointers:
     ldx #$0D
-    LCopyAreaPointers:
+    @loop:
         lda AreaPointers+2,x
         sta RoomPtrTable,x
         dex
-        bpl LCopyAreaPointers
+        bpl @loop
     rts
 
 ; DestroyEnemies
@@ -1781,12 +1781,12 @@ DestroyEnemies: ; LC8BB
     lda #$00
     tax
     @loop:
-        cpx #$48
+        cpx #(SoundE0-1)-CannonIndex.b
         bcs @endIf_A
-            ; clear $97-$DE
+            ; clear $97-$DE (should clear $DF, off-by-one bug?)
             sta CannonIndex,x
         @endIf_A:
-        ; clear enemy ram ($0300-$03FF)
+        ; status for all enemies = enemyStatus_NoEnemy
         sta EnsExtra.0.status,x
         pha
         pla
