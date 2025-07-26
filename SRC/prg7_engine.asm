@@ -1786,7 +1786,7 @@ DestroyEnemies: ; LC8BB
             ; clear $97-$DE (should clear $DF, off-by-one bug?)
             sta CannonIndex,x
         @endIf_A:
-        ; status for all enemies = enemyStatus_NoEnemy
+        ; clear extra enemy RAM, including status
         sta EnsExtra.0.status,x
         pha
         pla
