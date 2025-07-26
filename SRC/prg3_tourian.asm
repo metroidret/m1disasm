@@ -830,7 +830,7 @@ SpawnCannonRoutine:
     sta Cannons.0.x,x
     
     ; set nametable for edge of the screen that scrolls in
-    jsr GetNameTable_
+    jsr GetNameTableAtScrollDir_
     sta Cannons.0.hi,x
 @RTS:
     rts
@@ -840,13 +840,13 @@ SpawnCannonRoutine:
 SpawnMotherBrainRoutine:
     lda #$01
     sta MotherBrainStatus
-    jsr GetNameTable_
+    jsr GetNameTableAtScrollDir_
     sta MotherBrainHi
     eor #$01
     tax
     lda L9D3C
-    ora DoorOnNameTable3,x
-    sta DoorOnNameTable3,x
+    ora ScrollBlockOnNameTable3,x
+    sta ScrollBlockOnNameTable3,x
     lda #$20
     sta MotherBrainAnimBrainDelay
     sta MotherBrainAnimEyeDelay
@@ -883,7 +883,7 @@ SpawnZebetiteRoutine:
     rts
 
 GetVRAMPtrHi:
-    jsr GetNameTable_
+    jsr GetNameTableAtScrollDir_
     asl
     asl
     ora #$21+$40
@@ -902,13 +902,13 @@ SpawnRinkaSpawnerRoutine:
     lda ($00),y
     jsr Adiv16_
     sta RinkaSpawners.0.status,x
-    jsr GetNameTable_
+    jsr GetNameTableAtScrollDir_
     sta RinkaSpawners.0.hi,x
     lda #$FF
 RTS_9D87:
     rts
 
-GetNameTable_:
+GetNameTableAtScrollDir_:
     lda PPUCTRL_ZP
     eor ScrollDir
     and #$01

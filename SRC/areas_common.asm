@@ -1090,7 +1090,7 @@ SamusEnterDoor:
     and #$01                        ;Erase name table door data for new room.
     tay                             ;
     lsr                             ;
-    sta DoorOnNameTable3,y          ;
+    sta ScrollBlockOnNameTable3,y   ;
     lda ScrollDir                   ;
     and #$02                        ;Is Samus scrolling horizontally?-->
     bne L8B4B                       ;If so, branch.
