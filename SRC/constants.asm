@@ -320,8 +320,8 @@ ObjectCntrl            db        ;Controls object properties such as mirroring a
                                    ;bit 5 is priority
                                    ;bit 0 and bit 1 is for the color palette
 
-DoorOnNameTable3       db        ;The following two addresses are used to keep track of the-->
-DoorOnNameTable0       db        ;doors loaded on the name tables. The information is used-->
+ScrollBlockOnNameTable3 db         ;The following two addresses are used to keep track of the-->
+ScrollBlockOnNameTable0 db         ;doors loaded on the name tables. The information is used-->
                                    ;in the GetRoomNum routine to prevent the loading of a-->
                                    ;room behind a door when scrolling horizontally. This has-->
                                    ;the effect of stopping scrolling until Samus walks through-->

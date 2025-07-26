@@ -1715,8 +1715,8 @@ MoreInit:
     jsr EraseAllSprites             ;($C1A3)Erase all sprites from sprite RAM.
     jsr DestroyEnemies              ;($C8BB)
 
-    stx DoorOnNameTable3            ;Clear data about doors on the name tables.
-    stx DoorOnNameTable0            ;
+    stx ScrollBlockOnNameTable3     ;Clear data about doors on the name tables.
+    stx ScrollBlockOnNameTable0     ;
     inx                             ;X=1.
     stx SpareMem30                  ;Not accessed by game.
     inx                             ;X=2.
@@ -3707,7 +3707,8 @@ Lx048:
 
 CheckVerticalWaveBulletFire:
     lda #$02
-    bne LD35B
+    bne LD35B ; branch always
+
 CheckIceBulletFire:
     lda MissileToggle
     bne Exit4
@@ -3867,7 +3868,7 @@ LD48C:
         sbc #$20
         tax
         bpl Lx065
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     tay
     ldx #$18
     Lx066:
@@ -6420,8 +6421,8 @@ LE20C:
 VerticalRoomCentered: ; ($E21B)
     ldx ScrollY                     ;Has room been centered on screen?-->
     bne Exit15                      ;If not, branch to exit.
-    stx DoorOnNameTable3            ;
-    stx DoorOnNameTable0            ;Erase door nametable data.
+    stx ScrollBlockOnNameTable3     ;
+    stx ScrollBlockOnNameTable0     ;Erase door nametable data.
     inx                             ;X=1.
     lda ObjX                        ;Did Samus enter in the right hand door?-->
     bmi LE241                       ;If so, branch.
@@ -7103,7 +7104,7 @@ WRAMAddrs:
     .byte >RoomRAMB         ;High byte of RoomRAMB(cart RAM).
 
 GetNameAddrs:
-    jsr GetNameTable                ;($EB85)Get current name table number.
+    jsr GetNameTableAtScrollDir     ;($EB85)Get current name table number.
     and #$01                        ;Update name table 0 or 3.
     tay                             ;
     lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
@@ -7414,7 +7415,7 @@ GetRoomNum:
     pha                             ;Save A.
     jsr OnNameTable0                ;($EC93)Y=1 if name table=0, Y=0 if name table=3.
     pla                             ;Restore A.
-    and DoorOnNameTable3,y          ;
+    and ScrollBlockOnNameTable3,y   ;
     sec                             ;
     bne RTS_E76F                    ;Can't load room, a door is in the way. This has the-->
                                     ;effect of stopping the scrolling until Samus walks-->
@@ -7931,7 +7932,7 @@ Exit18:
 ;------------------------------------------[ Select room RAM ]---------------------------------------
 
 SelectRoomRAM:
-    jsr GetNameTable                ;($EB85)Find name table to draw room on.
+    jsr GetNameTableAtScrollDir     ;($EB85)Find name table to draw room on.
     asl                             ;
     asl                             ;
     ora #$60                        ;A=#$64 for name table 3, A=#$60 for name table 0.
@@ -8176,7 +8177,7 @@ LEB4D:
     sta EnsExtra.0.status,x                  ;Indicate object slot is taken.
     lda #$00
     sta EnIsHit,x
-    jsr GetNameTable                ;($EB85)Get name table to place enemy on.
+    jsr GetNameTableAtScrollDir       ;($EB85)Get name table to place enemy on.
     sta EnsExtra.0.hi,x               ;Store name table.
 LEB6E:
     ldy EnsExtra.0.type,x               ;Load A with index to enemy data.
@@ -8228,7 +8229,7 @@ IsSlotTaken:
 ;well. Since Samus can only travel between 2 name tables and not 4, the name table placement for
 ;objects is simplified.  The following code determines which name table to use next:
 
-GetNameTable:
+GetNameTableAtScrollDir:
     lda PPUCTRL_ZP                   ;
     eor ScrollDir                   ;Store #$01 if object should be loaded onto name table 3-->
     and #$01                        ;store #$00 if it should be loaded onto name table 0.
@@ -8250,6 +8251,7 @@ SpawnDoorRoutine:
     pha
     jsr Amul16      ; CF = door side (0=right, 1=left)
     php
+    ; get color on checkerboard (white square = SamusMapPosX + SamusMapPosY even, black square = vice versa)
     lda SamusMapPosX
     clc
     adc SamusMapPosY
@@ -8257,7 +8259,7 @@ SpawnDoorRoutine:
     rol
     and #$03
     tay
-    ldx LEC00,y
+    ldx DoorSlots,y
     pla          ; retrieve door info
     and #$03
     sta DoorType,x     ; door type
@@ -8265,56 +8267,62 @@ SpawnDoorRoutine:
     pha
     lda DoorType,x
     cmp #$01
-    beq Lx232
+    beq @if_B
     cmp #$03
-    beq Lx232
+    beq @if_B
+    ; missile door, check item ID
     lda #$0A
     sta $09
     ldy SamusMapPosX
     txa
     jsr Amul16       ; * 16
-    bcc Lx231
+    bcc @endif_A
+        ; left door, Y = SamusMapPosX - 1 so adjacent doors stay open
         dey
-    Lx231:
+    @endif_A:
     tya
     jsr LEE41
     jsr CheckForItem
-    bcs Lx233
-    Lx232:
+    ; branch if door opened
+    bcs @endIf_B
+    @if_B:
+        ; blue door or unopened missile door, set door action to init
         lda #$01
         sta ObjAction,x
-    Lx233:
+    @endIf_B:
     pla
     and #$01        ; A = door side (0=right, 1=left)
     tay
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     sta ObjHi,x
     lda DoorXs,y    ; get door's X coordinate
     sta ObjX,x
     lda #$68        ; door Y coord is always #$68
     sta ObjY,x
-    lda LEBFE,y
+    ; block scroll at nametable the door is in
+    lda DoorScrollBlocks,y
     tay
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     eor #$01
     tax
     tya
-    ora DoorOnNameTable3,x
-    sta DoorOnNameTable3,x
+    ora ScrollBlockOnNameTable3,x
+    sta ScrollBlockOnNameTable3,x
+
     lda #$02
     rts
 
 DoorXs:
     .byte $F0        ; X coord of RIGHT door
     .byte $10        ; X coord of LEFT door
-LEBFE:
-    .byte $02
-    .byte $01
-LEC00:
-    .byte $80
-    .byte $B0
-    .byte $A0
-    .byte $90
+DoorScrollBlocks:
+    .byte $02        ; right
+    .byte $01        ; left
+DoorSlots:
+    .byte $80        ; right on white square
+    .byte $B0        ; left on white square
+    .byte $A0        ; right on black square
+    .byte $90        ; left on black square
 
 ; LoadElevator
 ; ============
@@ -8333,7 +8341,7 @@ SpawnElevatorRoutine:
     sty ObjY+$20.w       ; elevator Y coord
     lda #$80
     sta ObjX+$20       ; elevator X coord
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     sta ObjHi+$20       ; high Y coord
     lda #_id_ObjFrame23.b
     sta ObjAnimFrame+$20       ; elevator frame
@@ -8347,7 +8355,7 @@ SpawnElevatorRoutine:
 
 LoadStatues:
     ; set statues object hi position
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     sta StatueHi
     
     ; set kraid statue y position
@@ -8411,7 +8419,7 @@ LoadPipeBugHole:
     jsr Amul16       ; * 16
     ora #$00
     sta PipeBugHoleX,x
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     sta PipeBugHoleHi,x
 @exit:
     lda #$03
@@ -8427,15 +8435,18 @@ OnNameTable0:
 
 ; Despawn offscreen room sprites to make room for new room sprites.
 UpdateRoomSpriteInfo:
+    ; This seems useless because it's already cleared when starting door transition
+    ; X = 0 if ScrollDir = down, 1 if left, 2 if right, 3 if up
     ldx ScrollDir
     dex
     ldy #$00
     jsr UpdateDoorData              ;($ED51)Update name table 0 door data.
     iny
     jsr UpdateDoorData              ;($ED51)Update name table 3 door data.
+
     ; If the enemy is in the opposite nametable and is offscreen, delete it.
     ldx #$50
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir     ;($EB85)
     tay
     @loop_enemies:
         tya
@@ -8466,8 +8477,8 @@ UpdateRoomSpriteInfo:
         bpl @loop_mellows
     ; doors
     jsr LED65
-    jsr LED5B
-    jsr GetNameTable                ;(EB85)
+    jsr EraseScrollBlockOnNameTableAtScrollDir
+    jsr GetNameTableAtScrollDir     ;(EB85)
     asl
     asl
     tay
@@ -8543,19 +8554,21 @@ UpdateRoomSpriteInfo:
     jmp GotoUpdateRoomSpriteInfo_Tourian
 
 UpdateDoorData:
+    ; 3 if ScrollDir = down, 2 if left, 1 if right, 0 if up
     txa                             ;
     eor #$03                        ;
-    and DoorOnNameTable3,y                     ;Moves door info from one name table to the next-->
+    and ScrollBlockOnNameTable3,y   ;Moves door info from one name table to the next-->
 LED57:
-    sta DoorOnNameTable3,y                     ;when the room is transferred across name tables.
+    sta ScrollBlockOnNameTable3,y   ;when the room is transferred across name tables.
     rts
 
-LED5B:
-    jsr GetNameTable                ;($EB85)
+EraseScrollBlockOnNameTableAtScrollDir:
+    jsr GetNameTableAtScrollDir     ;($EB85)
     eor #$01
     tay
     lda #$00
     beq LED57
+
 LED65:
     ldx #$B0
     Lx252:
@@ -8645,9 +8658,9 @@ ChooseSpawningRoutine:
     and #$0F                        ;Object handling routine index stored in 4 LSBs.
     jsr ChooseRoutine               ;($C27C)Load proper handling routine from table below.
         .word ExitSub               ;($C45C)rts.
-        .word SpawnSqueept          ;($EDF8)Some squeepts.
-        .word SpawnPowerUp          ;($EDFE)power-ups.
-        .word SpawnMellows          ;($EE63)Special enemies(Mellows, Melias and Memus).
+        .word SpawnMapEnemy         ;($EDF8)Enemies, used by some squeepts.
+        .word SpawnPowerUp          ;($EDFE)Power-ups.
+        .word SpawnMellows          ;($EE63)Mellows, Mellas and Memus.
         .word SpawnElevator         ;($EEA1)Elevators.
         .word SpawnCannon           ;($EEA6)Mother brain room cannons.
         .word SpawnMotherBrain      ;($EEAE)Mother brain.
@@ -8658,9 +8671,9 @@ ChooseSpawningRoutine:
 
 ;---------------------------------------[ Squeept handler ]------------------------------------------
 
-SpawnSqueept:
+SpawnMapEnemy:
     jsr GetEnemyData                ;($EB0C)Load Squeept data.
-SpawnSqueept_exit:
+@exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
 ;--------------------------------------[ Power-up Handler ]------------------------------------------
@@ -8713,12 +8726,12 @@ SpawnPowerUp:
     sta PowerUpXCoord,x
     ;($EB85)Get name table to place item on.
     ;Store name table Item is located on.
-    jsr GetNameTable
+    jsr GetNameTableAtScrollDir
     sta PowerUpNameTable,x
 @exit:
     ;Get next data byte(Always #$00).
     lda #$03
-    bne SpawnSqueept_exit ;Branch always to exit handler routines.
+    bne SpawnMapEnemy@exit ;Branch always to exit handler routines.
 
 PrepareItemID:
     ;Store item type.
@@ -8797,7 +8810,7 @@ SpawnMellow:
     sta Mellows.0.y,x
     adc RandomNumber2
     sta Mellows.0.x,x
-    jsr GetNameTable                ;($EB85)
+    jsr GetNameTableAtScrollDir      ;($EB85)
     sta Mellows.0.hi,x
     lda #$01
     sta Mellows.0.status,x
