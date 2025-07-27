@@ -74,7 +74,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "MET.HEX", $00
 FDSFileMacroPart2 $D000, $00
-    .incbin "fdspacker_output/side_1/met.hex.prg"
+    .include "sideA/met.hex.asm"
 FDSFileMacroPart3
 
 
