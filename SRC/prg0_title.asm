@@ -1494,7 +1494,7 @@ SamusHasItem:
     sty NumberOfUniqueItems         ;Keeps a running total of unique items.
     rts
 
-CheckPassword:
+CheckPassword: ;($8C5E)
     jsr ConsolidatePassword         ;($8F60)Convert password characters to password bytes.
     jsr ValidatePassword            ;($8DDE)Verify password is correct.
     ;Branch if incorrect password.
@@ -2377,11 +2377,12 @@ InitializeGame:
     jsr ClearRAM_33_DF              ;($C1D4)Clear RAM.
     jsr ClearSamusStats             ;($C578)Reset Samus stats for a new game.
     jsr LoadPasswordData            ;($8D12)Load data from password.
-    ldy #$00                        ;
-    sty SpritePagePos               ;
-    sty PageIndex                   ;Clear object data.
-    sty ObjectCntrl                 ;
-    sty ObjHi                       ;
+    ;Clear object data.
+    ldy #$00
+    sty SpritePagePos
+    sty PageIndex
+    sty ObjectCntrl
+    sty ObjHi
     jsr SilenceMusic                ;($CB8E)Turn off music.
     lda #_id_ObjFrame5A.b           ;
     sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
@@ -2484,12 +2485,14 @@ L937F:
     PPUStringEnd
 
 WaitForSTART:
-    lda Joy1Change                  ;Waits for START to be ressed proceed-->
-    and #$10                        ;past the GAME OVER screen.
-    beq RTS_939D                       ;If start not pressed, branch.
-        jmp CheckPassword               ;($8C5E)Check if password is correct.
-
-    RTS_939D:
+    ;Waits for START to be ressed proceed past the GAME OVER screen.
+    lda Joy1Change
+    and #BUTTON_START
+    ;If start not pressed, branch.
+    beq @RTS
+        ;Check if password is correct.
+        jmp CheckPassword
+    @RTS:
     rts
 
 GameOver:

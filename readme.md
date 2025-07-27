@@ -5,7 +5,8 @@ A full disassembly of Metroid 1 for the NES, with sections of varying completene
 Based on the prior work of SnowBro (Kent Hansen), Dirty McDingus, and the metconst wiki. ZaneDubya's MMC3 mapper port was also a useful resource in making this. Figurative fork of alex-west's [met1disasm](https://github.com/alex-west/met1disasm) GitHub repository.
 
 The code has been manually reworked multiple times in a laborious journey to find the assembler fit for the job. (Ophis -> asm6f -> ca65 -> WLA-DX)
-Versions of WLA-DX prior to v10.7 will not work.
+
+Versions of WLA-DX prior to v10.7 will not work. The latest release, v10.6 back in late 2023, does not have the newest features like the `substring` function, which are used in this disassembly. Because v10.7 is not yet released, you must compile WLA-DX v10.7 from [its source code](https://github.com/vhelin/wla-dx). Instructions on how to compile can be found in WLA-DX's README.
 
 To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together. Right now, there is nothing to ensure multi-bank labels have consistent NES memory locations in every bank they're in. This may change eventually.
 

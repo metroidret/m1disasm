@@ -8955,14 +8955,16 @@ LEF3F:
     asl                             ;A=macro number * 4. Each macro is 4 bytes long.
     sta $11                         ;Store macro index.
     ldx #$03                        ;Prepare to copy four tile numbers.
-LEF4B:
-    ldy $11                         ;Macro index loaded into Y.
-    lda (MacroPtr),y                ;Get tile number.
-    inc $11                         ;Increase macro index
-    ldy TilePosTable,x              ;get tile position in macro.
-    sta ($00),y                     ;Write tile number to room RAM.
-    dex                             ;Done four tiles yet?-->
-    bpl LEF4B                       ;If not, loop to do another.
+    @loop:
+        ldy $11                         ;Macro index loaded into Y.
+        lda (MacroPtr),y                ;Get tile number.
+        inc $11                         
+        ;Write tile number to room RAM.
+        ldy TilePosTable,x
+        sta ($00),y
+        ;Done four tiles yet? If not, loop to do another.
+        dex
+        bpl @loop
     jsr UpdateAttrib                ;($EF9E)Update attribute table if necessary
     ldy #$02                        ;Macro width(in tiles).
     jsr AddYToPtr00                 ;($C2A8)Add 2 to pointer to move to next macro.
