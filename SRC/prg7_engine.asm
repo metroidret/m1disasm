@@ -3739,7 +3739,7 @@ SamusDoor:
         bne Lx055
     Lx049:
     jsr LD48C
-    jsr LED65
+    jsr Doors_RemoveIfOffScreen
     jsr GotoClearAllMetroidLatches ; if it is defined in the current bank
     lda ItemRoomMusicStatus
     beq Lx051
@@ -8069,30 +8069,40 @@ DrawRoom:
 ;-------------------------------------[ Add A to room pointer ]--------------------------------------
 
 AddToRoomPtr:
-    clc                             ;Prepare to add index in A to room pointer.
-    adc RoomPtr                     ;
-    sta RoomPtr                     ;
-    bcc RTS_EAC9                           ;Did carry occur? If not branch to exit.
-        inc RoomPtr+1.b                   ;Increment high byte of room pointer if carry occured.
+    ;add index in A to low byte of room pointer.
+    clc
+    adc RoomPtr
+    sta RoomPtr
+    ;Did carry occur? If not branch to exit.
+    bcc RTS_EAC9
+        ;Increment high byte of room pointer if carry occured.
+        inc RoomPtr+1.b
     RTS_EAC9:
     rts
 
 ;----------------------------------------------------------------------------------------------------
 
 EndOfObjs:
-    lda RoomPtr                     ;
-    sta $00                         ;Store room pointer in $0000.
-    lda RoomPtr+1.b                   ;
-    sta $01                         ;
-    lda #$01                        ;Prepare to increment to enemy/door data.
+    ;Store room pointer in $0000.
+    lda RoomPtr
+    sta $00
+    lda RoomPtr+1.b
+    sta $01
+    ;Prepare to increment to enemy/door data.
+    lda #$01
 
 EnemyLoop:
-    jsr AddToPtr00                  ;($EF09)Add A to pointer at $0000.
-    ldy #$00                        ;
-    lda ($00),y                     ;Get first byte of enemy/door data.
-    cmp #$FF                        ;End of enemy/door data?-->
-    beq EndOfRoom                   ;If so, branch to finish room setup.
-    and #$0F                        ;Discard upper four bits of data.
+    ;Add A to pointer at $0000.
+    jsr AddToPtr00
+    ;Get first byte of enemy/door data.
+    ldy #$00
+    lda ($00),y
+    ;End of enemy/door data? If so, branch to finish room setup.
+    cmp #$FF
+    beq EndOfRoom
+    
+    ;Discard upper four bits of data.
+    and #$0F
     jsr ChooseRoutine               ;Jump to proper enemy/door handling routine.
         .word ExitSub                   ;($C45C)Rts.
         .word LoadEnemy                 ;($EB06)Room enemies.
@@ -8101,7 +8111,7 @@ EnemyLoop:
         .word LoadElevator              ;($EC04)Elevator.
         .word ExitSub                   ;($C45C)Rts.
         .word LoadStatues               ;($EC2F)Kraid & Ridley statues.
-        .word LoadPipeBugHole                   ;($EC57)Regenerating enemies(such as Zeb).
+        .word LoadPipeBugHole           ;($EC57)Regenerating enemies(such as Zeb).
 
 EndOfRoom:
     ;Prepare for PPU attribute table write.
@@ -8137,8 +8147,9 @@ GetEnemyData:
     Lx225:
         pla
 Lx226:
-    lda #$03                        ;Number of bytes to add to ptr to find next room item.
-    rts                             ;
+    ;Number of bytes to add to ptr to find next room item.
+    lda #$03
+    rts
 
 GetEnemyType: ; ($EB28)
     pha                             ;Store enemy type.
@@ -8162,7 +8173,7 @@ GetEnemyType: ; ($EB28)
     pla                             ;Restore enemy type data.
     and #$3F                        ;Keep 6 lower bits to use as index for enemy data tables.
     sta EnsExtra.0.type,x               ;Store index byte.
-    rts                             ;
+    rts
 
 LEB4D:
     tay                             ;Save enemy position data in Y.
@@ -8476,7 +8487,7 @@ UpdateRoomSpriteInfo:
         tax
         bpl @loop_mellows
     ; doors
-    jsr LED65
+    jsr Doors_RemoveIfOffScreen
     jsr EraseScrollBlockOnNameTableAtScrollDir
     jsr GetNameTableAtScrollDir     ;(EB85)
     asl
@@ -8500,11 +8511,11 @@ UpdateRoomSpriteInfo:
     tay
     ; non-beam projectiles
     ldx #$D0
-    jsr LED7A
+    jsr Projectile_RemoveIfOffScreen
     ldx #$E0
-    jsr LED7A
+    jsr Projectile_RemoveIfOffScreen
     ldx #$F0
-    jsr LED7A
+    jsr Projectile_RemoveIfOffScreen
     tya
     ; elevator
     sec
@@ -8547,9 +8558,9 @@ UpdateRoomSpriteInfo:
         bpl Lx250
     ; power-ups
     ldx #$00
-    jsr LED8C
+    jsr PowerUp_RemoveIfOffScreen
     ldx #$08
-    jsr LED8C
+    jsr PowerUp_RemoveIfOffScreen
     ; tourian stuff
     jmp GotoUpdateRoomSpriteInfo_Tourian
 
@@ -8567,37 +8578,55 @@ EraseScrollBlockOnNameTableAtScrollDir:
     eor #$01
     tay
     lda #$00
-    beq LED57
+    beq LED57 ; branch always
 
-LED65:
+Doors_RemoveIfOffScreen:
+    ; loop through all doors
     ldx #$B0
-    Lx252:
-        lda ObjAction,x
-        beq Lx253
-        lda ObjOnScreen,x
-        bne Lx253
-        sta ObjAction,x
-    Lx253:
+    @loop:
+        ; branch if door doesn't exist
+        lda DoorStatus,x
+        beq @endIf_A
+        ; branch if door is on screen
+        lda DoorOnScreen,x
+        bne @endIf_A
+            ; door exists but is not on screen
+            ; remove door
+            sta DoorStatus,x
+        @endIf_A:
+        ; check next door
         jsr Xminus16
-        bmi Lx252
+        bmi @loop
     rts
 
-LED7A:
-    lda ObjAction,x
+; y = current nametable
+Projectile_RemoveIfOffScreen:
+    ; exit if projectile doesn't exist or is a beam
+    lda ProjectileStatus,x
     cmp #wa_BulletExplode+1.b
-    bcc RTS_X254
+    bcc @RTS
+    
+    ; exit if projectile is in current nametable
     tya
-    eor ObjHi,x
+    eor ProjectileHi,x
+    ; shift bit 0 into carry
     lsr
-    bcs RTS_X254
-    sta ObjAction,x
-RTS_X254:
+    bcs @RTS
+    
+    ; projectile exists but is not on screen
+    ; remove projectile
+    sta ProjectileStatus,x
+@RTS:
     rts
 
-LED8C:
+; y = current nametable
+PowerUp_RemoveIfOffScreen:
+    ; exit if power-up is in the current nametable
     tya
     cmp PowerUpNameTable,x
     bne Exit11
+    
+    ; remove power-up
     lda #$FF
     sta PowerUpType,x
 Exit11:
@@ -8644,9 +8673,12 @@ ScanItemX:
     beq LEDD4                       ;If so, then load object.
     bcs Exit11                      ;Exit if item pos X > Samus Pos X.
 
-    iny                             ;
-    jsr AnotherItem                 ;($EF00)Check for another item on same Y pos.
-    jmp ScanItemX                   ;Try next X coord.
+    iny
+    ;Check for another item on same Y pos.
+    ;This will double return if there are no more items (from AnotherItem routine and from this routine)
+    jsr AnotherItem
+    ;Try next X coord.
+    jmp ScanItemX
 
 LEDD4:
     lda #$02                        ;Move ahead two bytes to find item data.
@@ -8782,17 +8814,22 @@ CheckForItem:
 ;-----------------------------------------------------------------------------------------------------
 
 SpawnMellows:
-    ldx #$18
+    ; try to spawn a mellow in all available mellow slots
+    ldx #(4-1)*$08
+    ; store random number in MellowRandomNumber
     lda RandomNumber1
     adc FrameCount
-    sta Mellow8A
+    sta MellowRandomNumber
     @loop:
+        ; spawn a mellow in that slot if possible
         jsr SpawnMellow
+        ; move to next slot
         txa
         sec
         sbc #$08
         tax
         bpl @loop
+    ;
     lda AreaMellowAnimIndex
     sta EnsExtra.15.resetAnimIndex
     sta EnsExtra.15.animIndex
@@ -8802,19 +8839,27 @@ SpawnMellows_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
 SpawnMellow:
+    ; exit if slot is occupied
     lda Mellows.0.status,x
     bne @RTS
+    
+    ; slot is available, spawn mellow
+    ; set y pos to random number
     txa
-    adc Mellow8A
+    adc MellowRandomNumber
     and #$7F
     sta Mellows.0.y,x
+    ; set x pos to random number
     adc RandomNumber2
     sta Mellows.0.x,x
+    ; set nametable
     jsr GetNameTableAtScrollDir      ;($EB85)
     sta Mellows.0.hi,x
+    ; set status to resting
     lda #$01
     sta Mellows.0.status,x
-    rol Mellow8A
+    ; rotate random number
+    rol MellowRandomNumber
 @RTS:
     rts
 
@@ -8877,22 +8922,24 @@ SpawnPalette:
     sta DoorPalChangeDir
     bne SpawnMotherBrain_exit
 
-AnotherItem:
-    lda ($00),y                     ;Is there another item with same Y pos?-->
-    cmp #$FF                        ;If so, A is amount to add to ptr. to find X pos.
-    bne AddToPtr00                  ;($EF09)
-    pla                             ;
-    pla                             ;No more items to check. Pull last subroutine-->
-    rts                             ;off stack and exit.
+AnotherItem: ;($EF00)
+    ;Is there another item with same Y pos? If so, A is amount to add to ptr. to find X pos.
+    lda ($00),y
+    cmp #$FF
+    bne AddToPtr00
+    ;No more items to check. Pull last subroutine off stack and exit.
+    pla
+    pla
+    rts
 
-AddToPtr00:
+AddToPtr00: ;($EF09)
     ;A is added to the 16 bit address stored in $0000.
     clc
     adc $00
     sta $00
-    bcc RTS_X260
+    bcc @RTS
         inc $01
-    RTS_X260:
+    @RTS:
     rts
 
 ;----------------------------------[ Draw structure routines ]----------------------------------------
@@ -11450,7 +11497,7 @@ UpdateAllMellows:
     lda #$03
     jsr UpdateEnemyAnim
     lda RandomNumber1
-    sta Mellow8A
+    sta MellowRandomNumber
     lda #(4-1)*$08
     @loop:
         pha
@@ -11563,9 +11610,9 @@ UpdateMellow_FD25:
     lsr
     lsr
     lsr
-    adc Mellow8A
-    sta Mellow8A
-    lsr Mellow8A
+    adc MellowRandomNumber
+    sta MellowRandomNumber
+    lsr MellowRandomNumber
     and #$03
     tay
     lda MellowSpeedTable,y

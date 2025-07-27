@@ -376,11 +376,11 @@ ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
     EnemyFlipAfterDisplacementAnimIndex          dw     ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
     ; EnemyFlipAfterDisplacementAnimIndex+1 = $86     ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
     SpawnFireball_87       db        ;fireball status?
-    SpawnFireball_EnData0A db   
+    SpawnFireball_EnData0A db
 
     SpareMem89             db
 
-    Mellow8A               db
+    MellowRandomNumber     db
 
     ; 2 slots of 3 bytes each ($8B-$90)
     RinkaSpawners          instanceof RinkaSpawner 2 startfrom 0
@@ -448,7 +448,7 @@ SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0
 
 .union
     ; 4 slots of 8 bytes each ($B0-$CF)
-    Mellows            instanceof Mellow 4 startfrom 0
+    Mellows                instanceof Mellow 4 startfrom 0
 .nextu
     ; $B7 is unused
 
@@ -540,7 +540,7 @@ PowerUpDelayFlag       db        ;Initiate power up music and delay after item p
 EndTimer               dw        ;Lower byte of end game escape timer.
 ; EndTimer+1             = $010B   ;Upper byte of end game escape timer.
 
-EndTimerEnemyHi        db     
+EndTimerEnemyHi        db
 EndTimerEnemyIsEnabled db        ;the end timer in the "TIME BOMB SET" message. #$00=no, #$01=yes
 
 MissileToggle          db        ;0=fire bullets, 1=fire missiles.
@@ -639,6 +639,7 @@ DoorAnimIndex          = $0306
 DoorType               = $0307   ;#$00=red door, #$01=blue door, #$02=10-missile door
                                    ;#$03=blue door that changes the music
 DoorIsHit              = $030A   ; bit 2 indicates if the door was hit or not
+DoorOnScreen           = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
 DoorHi                 = $030C
 DoorX                  = $030E
 DoorHitPoints          = $030F   ;used as re-close delay for blue doors
@@ -653,6 +654,7 @@ ProjectileAnimDelay    = $0304   ;Number of frames to delay between animation fr
 ProjectileAnimResetIndex = $0305   ;Restart index-1 when AnimIndex finished with last frame.
 ProjectileAnimIndex    = $0306   ;Current index into ObjectAnimIndexTbl.
 ProjectileIsHit        = $030A
+ProjectileHi           = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
 ProjectileDieDelay     = $030F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
