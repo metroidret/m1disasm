@@ -32,6 +32,9 @@ PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
 RandomNumber1          = $28        ;Random numbers used-->
 RandomNumber2          = $29        ;throughout the game.
 
+FDSBase                = $EE     ;Low byte of base address for FDS music data
+; FDSBase+1              = $EF     ;High byte of base address for FDS music data
+
 FDS_CTRL_ZP            = $FB
 ScrollY                = $FC     ;Y value loaded into scroll register.
 ScrollX                = $FD     ;X value loaded into scroll register.

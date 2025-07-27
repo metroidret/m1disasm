@@ -159,7 +159,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EE
     .ascstr "MMEEE", $00, $00, $00
 FDSFileMacroPart2 $CC00, $00
-    .incbin "fdspacker_output/side_1/mmeee.prg"
+    .include "sideA/mmeee.asm"
 FDSFileMacroPart3
 
 
