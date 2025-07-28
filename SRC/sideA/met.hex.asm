@@ -579,7 +579,7 @@ LD4BD:
     sta $4086
     rts
     jsr LD293
-    bne LD503
+    bne RTS_D503
 LD4F3:
     lda #$80
     sta $4080
@@ -587,7 +587,7 @@ LD4F3:
     lda #$00
     sta $0656
     sta $0606
-LD503:
+RTS_D503:
     rts
 
 DataDD0E_D504:
@@ -609,7 +609,7 @@ LD522:
     adc #$12
     sta $0672
     sta $4082
-LD52E:
+RTS_D52E:
     rts
 
 DataDD0E_D52F:
@@ -620,11 +620,13 @@ DataDD0E_D52F:
 LD53C:
     lda $068A
     and #$1C
-    bne LD52E
+    bne RTS_D52E
     lda #$0E
     ldx #<DataDD0E_D52F.b
     ldy #>DataDD0E_D52F.b
     jmp LDD0E
+
+
 
 LD54C:
     lda $067C
@@ -632,6 +634,8 @@ LD54C:
     lda $067D
     sta $4083
     rts
+
+
 
 LD559:
     clc
@@ -642,6 +646,9 @@ LD559:
     adc $067F
     sta $067D
     rts
+
+
+
 LD56D:
     sec
     lda $067C
@@ -651,6 +658,9 @@ LD56D:
     sbc $067F
     sta $067D
     rts
+
+
+
 LD581:
     lda #$7F
     sta $0648
@@ -658,21 +668,27 @@ LD581:
     stx $0628
     sty $0629
     rts
+
+
+
 LD590:
     lda $0640
     cmp #$01
     bne LD59A
-    sta $066A
-LD59A:
+        sta $066A
+    LD59A:
     lda $0641
     cmp #$01
-    bne LD5A4
-    sta $066B
-LD5A4:
+    bne @RTS
+        sta $066B
+    @RTS:
     rts
+
+
+
 LD5A5:
     lda $0607
-    beq LD5C1
+    beq @RTS
     lda #$00
     sta $0607
     lda $0648
@@ -681,17 +697,21 @@ LD5A5:
     sta $4002
     lda $0601
     sta $4003
-LD5C1:
+@RTS:
     rts
+
+
+
 LD5C2:
     ldx #$00
     jsr LD5CC
     inx
     jsr LD5CC
     rts
+
 LD5CC:
     lda $062E,x
-    beq LD616
+    beq RTS_D616
     sta $EB
     jsr LD5A5
     lda $066C,x
@@ -724,11 +744,11 @@ LD608:
     inc $066A,x
 LD60B:
     lda $0653,x
-    bne LD616
+    bne RTS_D616
     txa
     beq LD617
     sty $4004
-LD616:
+RTS_D616:
     rts
 LD617:
     sty $4000

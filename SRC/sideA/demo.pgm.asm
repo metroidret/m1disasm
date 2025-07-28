@@ -3491,8 +3491,8 @@ L8894:
 L6999_8899:
     lda #$00
     sta $39
-    ldx #$31
-    ldy #$8F
+    ldx #<L8F31.b
+    ldy #>L8F31.b
     jsr L8E39
     inc $36
     jsr L8CF2
@@ -4443,19 +4443,60 @@ L8EF0:
 
 
 L8F0D:
-    .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
-    .byte $26, $31, $17, $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02
-    .byte $01, $20, $21, $00, $20, $75, $01, $5B, $20, $85, $17, $6B, $FF, $3B, $FF, $57
-    .byte $FF, $35, $FF, $41, $FF, $39, $FF, $40, $FF, $35, $FF, $3D, $FF, $38, $FF, $2F
-    .byte $FF, $6B, $20, $C2, $1C, $70, $72, $72, $72, $72, $72, $72, $72, $72, $72, $17
-    .byte $0A, $16, $0E, $72, $72, $0E, $17, $0E, $1B, $10, $22, $72, $0D, $0A, $22, $72
-    .byte $71, $20, $E2, $D2, $73, $20, $FD, $D2, $73, $21, $12, $89, $6B, $FF, $FF, $FF
-    .byte $6B, $FF, $FF, $FF, $6B, $21, $18, $89, $6B, $FF, $FF, $FF, $6B, $FF, $FF, $FF
-    .byte $6B, $22, $85, $08, $42, $4C, $31, $FF, $41, $30, $58, $35, $22, $E5, $09, $14
-    .byte $12, $15, $15, $FF, $16, $18, $0D, $0E, $23, $22, $01, $80, $23, $23, $5A, $72
-    .byte $23, $3D, $01, $81, $23, $C0, $54, $00, $23, $D4, $12, $04, $05, $00, $00, $00
-    .byte $00, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $04, $05, $23, $E6, $5A
-    .byte $00, $00, $D9, $8F, $EE, $8F, $03, $90, $18, $90, $2D, $90, $2E, $2F, $30, $31
+    .byte $3F, $00, $20
+    .byte $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17
+    .byte $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
+    .byte $00
+    
+L8F31:
+    PPUString $2075, charmap_savemenu, \
+        "゛"
+    PPUString $2085, charmap_savemenu, \
+        $6B, " セ レ ク ト シ テ ク タ サ イ ", $6B
+    PPUString $20C2, charmap_savemenu, \
+        "┌─────────NAME──ENERGY─DAY─┐"
+    PPUStringRepeatVertical $20E2, charmap_savemenu, "│", $12
+    PPUStringRepeatVertical $20FD, charmap_savemenu, "│", $12
+    PPUStringVertical $2112, charmap_savemenu, \
+        $6B, \
+        " ", \
+        " ", \
+        " ", \
+        $6B, \
+        " ", \
+        " ", \
+        " ", \
+        $6B
+    PPUStringVertical $2118, charmap_savemenu, \
+        $6B, \
+        " ", \
+        " ", \
+        " ", \
+        $6B, \
+        " ", \
+        " ", \
+        " ", \
+        $6B
+    PPUString $2285, charmap_savemenu, \
+        "ナマエ トウロク"
+    PPUString $22E5, charmap_savemenu, \
+        "KILL MODE"
+    PPUString $2322, charmap_savemenu, \
+        "└"
+    PPUStringRepeat $2323, charmap_savemenu, "─", $1A
+    PPUString $233D, charmap_savemenu, \
+        "┘"
+    
+    PPUStringRepeat $23C0, undefined, $00, $14
+    PPUString $23D4, undefined, \
+        $04, $05, $00, $00, $00, $00, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, \
+        $04, $05
+    PPUStringRepeat $23E6, undefined, $00, $1A
+    
+    PPUStringEnd
+
+L8FCF:
+    .byte $D9, $8F, $EE, $8F, $03, $90, $18, $90, $2D, $90, $2E, $2F, $30, $31
     .byte $32, $47, $48, $49, $4A, $4B, $25, $26, $27, $28, $29, $0A, $0B, $0C, $0D, $0E
     .byte $0F, $33, $34, $35, $36, $37, $4C, $4D, $4E, $4F, $50, $2A, $2B, $2C, $FF, $2D
     .byte $10, $11, $12, $13, $14, $15, $38, $39, $3A, $3B, $3C, $51, $FF, $52, $FF, $53

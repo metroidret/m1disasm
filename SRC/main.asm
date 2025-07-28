@@ -47,6 +47,7 @@
 
 
 ; file $00 - kyodaku-
+; Copyright screen necessary for any FDS game to boot properly
 FDSFileMacroPart1 $00
     .ascstr "KYODAKU-"
 FDSFileMacroPart2 $2800, $02
@@ -62,6 +63,7 @@ FDSFileMacroPart3
 
 
 ; file $01 - demo.chr
+; Tile data for title screen
 FDSFileMacroPart1 $00
     .ascstr "DEMO.CHR"
 FDSFileMacroPart2 $0000, $01
@@ -71,6 +73,7 @@ FDSFileMacroPart3
 
 
 ; file $02 - met.hex
+;
 FDSFileMacroPart1 $00
     .ascstr "MET.HEX", $00
 FDSFileMacroPart2 $D000, $00
@@ -237,7 +240,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $81
     .ascstr "HMBG1A", $00, $00
 FDSFileMacroPart2 $1000, $01
-    .incbin "fdspacker_output/side_2/hmbg1a.chr"
+    .incbin "sideB/hmbg1a.chr"
 FDSFileMacroPart3
 
 
@@ -246,7 +249,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $90
     .ascstr "HMBG1B", $00, $00
 FDSFileMacroPart2 $1200, $01
-    .incbin "fdspacker_output/side_2/hmbg1b.chr"
+    .incbin "sideB/hmbg1b.chr"
 FDSFileMacroPart3
 
 
@@ -255,7 +258,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $91
     .ascstr "HMBG1C", $00, $00
 FDSFileMacroPart2 $1800, $01
-    .incbin "fdspacker_output/side_2/hmbg1c.chr"
+    .incbin "sideB/hmbg1c.chr"
 FDSFileMacroPart3
 
 
@@ -264,7 +267,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $81
     .ascstr "HMOB1B", $00, $00
 FDSFileMacroPart2 $0C00, $01
-    .incbin "fdspacker_output/side_2/hmob1b.chr"
+    .incbin "sideB/hmob1b.chr"
 FDSFileMacroPart3
 
 
@@ -273,7 +276,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $84
     .ascstr "HMBG4A", $00, $00
 FDSFileMacroPart2 $1000, $01
-    .incbin "fdspacker_output/side_2/hmbg4a.chr"
+    .incbin "sideB/hmbg4a.chr"
 FDSFileMacroPart3
 
 
@@ -282,7 +285,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $84
     .ascstr "HMBG4B", $00, $00
 FDSFileMacroPart2 $1700, $01
-    .incbin "fdspacker_output/side_2/hmbg4b.chr"
+    .incbin "sideB/hmbg4b.chr"
 FDSFileMacroPart3
 
 
@@ -291,7 +294,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $84
     .ascstr "HMOB4A", $00, $00
 FDSFileMacroPart2 $0C00, $01
-    .incbin "fdspacker_output/side_2/hmob4a.chr"
+    .incbin "sideB/hmob4a.chr"
 FDSFileMacroPart3
 
 
@@ -300,7 +303,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $92
     .ascstr "HMBG6C", $00, $00
 FDSFileMacroPart2 $1000, $01
-    .incbin "fdspacker_output/side_2/hmbg6c.chr"
+    .incbin "sideB/hmbg6c.chr"
 FDSFileMacroPart3
 
 
@@ -309,7 +312,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $85
     .ascstr "HMBG5B", $00, $00
 FDSFileMacroPart2 $1200, $01
-    .incbin "fdspacker_output/side_2/hmbg5b.chr"
+    .incbin "sideB/hmbg5b.chr"
 FDSFileMacroPart3
 
 
@@ -318,7 +321,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $85
     .ascstr "HMBG5C", $00, $00
 FDSFileMacroPart2 $1900, $01
-    .incbin "fdspacker_output/side_2/hmbg5c.chr"
+    .incbin "sideB/hmbg5c.chr"
 FDSFileMacroPart3
 
 
@@ -327,7 +330,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $85
     .ascstr "HMBG5D", $00, $00
 FDSFileMacroPart2 $1D00, $01
-    .incbin "fdspacker_output/side_2/hmbg5d.chr"
+    .incbin "sideB/hmbg5d.chr"
 FDSFileMacroPart3
 
 
@@ -336,7 +339,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $85
     .ascstr "HMOB5A", $00, $00
 FDSFileMacroPart2 $0C00, $01
-    .incbin "fdspacker_output/side_2/hmob5a.chr"
+    .incbin "sideB/hmob5a.chr"
 FDSFileMacroPart3
 
 
@@ -345,7 +348,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $86
     .ascstr "HMBG6A", $00, $00
 FDSFileMacroPart2 $1700, $01
-    .incbin "fdspacker_output/side_2/hmbg6a.chr"
+    .incbin "sideB/hmbg6a.chr"
 FDSFileMacroPart3
 
 
@@ -354,7 +357,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $86
     .ascstr "HMBG6B", $00, $00
 FDSFileMacroPart2 $1E00, $01
-    .incbin "fdspacker_output/side_2/hmbg6b.chr"
+    .incbin "sideB/hmbg6b.chr"
 FDSFileMacroPart3
 
 
@@ -363,7 +366,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $86
     .ascstr "HMOB6A", $00, $00
 FDSFileMacroPart2 $0C00, $01
-    .incbin "fdspacker_output/side_2/hmob6a.chr"
+    .incbin "sideB/hmob6a.chr"
 FDSFileMacroPart3
 
 
@@ -372,7 +375,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $87
     .ascstr "HMBG7A", $00, $00
 FDSFileMacroPart2 $1700, $01
-    .incbin "fdspacker_output/side_2/hmbg7a.chr"
+    .incbin "sideB/hmbg7a.chr"
 FDSFileMacroPart3
 
 
@@ -381,7 +384,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $87
     .ascstr "HMOB7A", $00, $00
 FDSFileMacroPart2 $0C00, $01
-    .incbin "fdspacker_output/side_2/hmob7a.chr"
+    .incbin "sideB/hmob7a.chr"
 FDSFileMacroPart3
 
 

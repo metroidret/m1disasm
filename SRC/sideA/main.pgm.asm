@@ -32,41 +32,64 @@ L6800:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16, $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-L6C00:
+CommonJump_6C00: ;($6C00)
     jmp LA2FD
+CommonJump_6C03: ;($6C03)
     jmp LA325
+CommonJump_6C06: ;($6C06)
     jmp LA303
+CommonJump_6C09: ;($6C09)
     jmp LA73F
+CommonJump_6C0C: ;($6C0C)
     jmp L840B
+CommonJump_6C0F: ;($6C0F)
     jmp LA57A
+CommonJump_6C12: ;($6C12)
     jmp LA72B
+CommonJump_6C15: ;($6C15)
     jmp LA747
+CommonJump_6C18: ;($6C18)
     jmp LAAA6
+CommonJump_6C1B: ;($6C1B)
     jmp LAA75
+CommonJump_6C1E: ;($6C1E)
     jmp LAAB7
+CommonJump_6C21: ;($6C21)
     jmp LA75D
+CommonJump_ChooseRoutine: ;($6C24)
     jmp MAIN_ChooseRoutine
+CommonJump_6C27: ;($6C27)
     jmp LAC7C
+CommonJump_6C2A: ;($6C2A)
     jmp L8EC4
+CommonJump_6C2D: ;($6C2D)
     jmp LAEF4
+CommonJump_6C30: ;($6C30)
     jmp LAFC8
+CommonJump_6C33: ;($6C33)
     jmp LA90B
+CommonJump_6C36: ;($6C36)
     jmp LAFEF
+CommonJump_6C39: ;($6C39)
     jmp LB045
+CommonJump_6C3C: ;($6C3C)
     jmp L8107
+CommonJump_6C3F: ;($6C3F)
     jmp L9E4F
+CommonJump_6C42: ;($6C42)
     jmp L7246
+CommonJump_6C45: ;($6C45)
     jmp L9568
 
-L6C48:
-    .word LB1AE-1
-    .word LB157-1
-    .word LB0FB-1
-    .word LB0FB-1
-    .word LB157-1
-    .word LB1AE-1
-    .word LB0A5-1
-    .word LB0A5-1
+CrawlerMovementRoutinesTable: ;($6C48)
+    .word EnemyMoveOnePixelRight-1
+    .word EnemyMoveOnePixelLeft-1
+    .word EnemyMoveOnePixelDown-1
+    .word EnemyMoveOnePixelDown-1
+    .word EnemyMoveOnePixelLeft-1
+    .word EnemyMoveOnePixelRight-1
+    .word EnemyMoveOnePixelUp-1
+    .word EnemyMoveOnePixelUp-1
 
 L6C58:
     ldy #$01
@@ -351,7 +374,7 @@ L6E64:
     sta $0200
 L6E7C:
     tya
-    bpl L6E92
+    bpl RTS_6E92
     inc $B41A
     bne L6E87
     inc $B41B
@@ -363,7 +386,7 @@ L6E87:
     rts
 L6E90:
     inc $1E
-L6E92:
+RTS_6E92:
     rts
     .byte $64
     sty $785C
@@ -387,7 +410,7 @@ L6E99:
     sta $1E
 L6EBE:
     cmp #$1F
-    bcs L6E92
+    bcs RTS_6E92
     cmp $6ECB,y
     bne L6ECC
     inc $0300
@@ -395,7 +418,7 @@ L6EBE:
 L6ECC:
     lda $27
     lsr a
-    bcc L6E92
+    bcc RTS_6E92
     lda #$04
     jsr L731F
     lda #$00
@@ -8465,7 +8488,7 @@ LAD08:
     jsr L8001
     sta $60
 LAD23:
-    jsr LB0A5
+    jsr EnemyMoveOnePixelUp
     jsr LAD68
     dec $60
     bne LAD23
@@ -8473,7 +8496,7 @@ LAD2D:
     beq LAD3B
     sta $60
 LAD31:
-    jsr LB0FB
+    jsr EnemyMoveOnePixelDown
     jsr LADAB
     dec $60
     bne LAD31
@@ -8484,7 +8507,7 @@ LAD3B:
     jsr L8001
     sta $60
 LAD47:
-    jsr LB157
+    jsr EnemyMoveOnePixelLeft
     jsr LAE1E
     dec $60
     bne LAD47
@@ -8492,7 +8515,7 @@ LAD51:
     beq LAD5F
     sta $60
 LAD55:
-    jsr LB1AE
+    jsr EnemyMoveOnePixelRight
     jsr LADE4
     dec $60
     bne LAD55
@@ -8958,7 +8981,7 @@ LB093:
 
 
 
-LB0A5:
+EnemyMoveOnePixelUp: ;($B0A5)
     ldx $45
     lda $0400,x
     sec
@@ -9009,7 +9032,7 @@ RTS_B0FA:
 
 
 
-LB0FB:
+EnemyMoveOnePixelDown: ;($B0FB)
     ldx $45
     lda $0400,x
     clc
@@ -9063,7 +9086,7 @@ RTS_B156:
 
 
 
-LB157:
+EnemyMoveOnePixelLeft: ;($B157)
     ldx $45
     lda $0401,x
     sec
@@ -9114,7 +9137,7 @@ RTS_B1AD:
 
 
 
-LB1AE:
+EnemyMoveOnePixelRight: ;($B1AE)
     ldx $45
     lda $0401,x
     clc

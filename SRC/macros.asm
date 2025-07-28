@@ -74,6 +74,51 @@
     .endif
 .endm
 
+.macro PPUStringVertical args ppuAddress ; , charmap , ppuString
+    .byte >ppuAddress, <ppuAddress
+    .def charmap = "\2"
+    .shift
+    .shift
+    
+    .byte (@PPUString\@_end - @PPUString\@_start) | $80
+    @PPUString\@_start:
+    .repeat NARGS
+        .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
+            .db \1
+        .elif \?1 == ARG_STRING
+            .stringmap charmap, \1
+        .else
+            .print \?1, "\n"
+            .fail "PPUString: bad data argument type"
+        .endif
+        .shift
+    .endr
+    @PPUString\@_end:
+    
+    .undef charmap
+    
+    .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
+        .print @PPUString\@_end - @PPUString\@_start, "\n"
+        .fail "PPUString: bad string length"
+    .endif
+    
+.endm
+
+.macro PPUStringRepeatVertical args ppuAddress, charmap, ppuByte, repetitions
+    assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
+    
+    .byte >ppuAddress, <ppuAddress
+    .byte repetitions | $40 | $80
+    .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
+        .db ppuByte
+    .elif \?3 == ARG_STRING
+        .stringmap charmap, ppuByte
+    .else
+        .print \?3, "\n"
+        .fail "PPUString: bad data argument type"
+    .endif
+.endm
+
 .macro PPUStringEnd
     .byte $00
 .endm
