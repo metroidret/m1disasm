@@ -2307,6 +2307,8 @@ L7B2F:
 L7B33:
     rts
 
+
+
 L7B34:
     PPUStringRepeat $1FF0, undefined, $00, $10
     
@@ -2557,14 +2559,15 @@ L8171_8180:
     .byte $00
 
 
+
 L8183:
     ldx #$0A
-    L8185:
+    @loop:
         lda L819C,x
         sta $0480,x
         sta $0490,x
         dex
-        bpl L8185
+        bpl @loop
     lda #$6B
     sta $0490
     lda #$DC
@@ -2662,13 +2665,17 @@ L823F:
     inc $0484,x
     inc $0484,x
     rts
+
 L8249:
     cmp #$08
-    bcc L8252
+    bcc @RTS
     and #$07
     jsr L6B4B
-L8252:
+@RTS:
     rts
+
+
+
 L8253:
     lda $0480,x
     sec
@@ -2681,19 +2688,22 @@ L8253:
     lda $0483,x
     sta $0213,x
     rts
+
+
+
 L826F:
     lda #$20
     sta $45
     ldx #$3F
-L8275:
-    lda $8296,x
-    cmp $FF
-    beq L8282
-    sta $0480,x
-    sta $04C0,x
-L8282:
-    dex
-    bpl L8275
+    @loop:
+        lda L8296,x
+        cmp $FF
+        beq @endIf_A
+            sta $0480,x
+            sta $04C0,x
+        @endIf_A:
+        dex
+        bpl @loop
     lda #$B8
     sta $04E0
     sta $04F0
@@ -2702,58 +2712,12 @@ L8282:
     sta $04FD
     rts
 
-    .byte $20, $E0, $80
-    .byte $00
-    .byte $FF
-    .byte $FF
-    .byte $74
-    cli
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $FF
-    ora $010E,x
-    ora ($20,x)
-    cpx #$C0
-    sed
-    .byte $FF
-    .byte $FF
-    .byte $7C
-    cli
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $FF
-    .byte $1F
-    asl $0180
-    iny
-    cpx #$00
-    .byte $00
-    .byte $FF
-    .byte $FF
-    .byte $74
-    rts
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $FF
-    ora $011A,x
-    .byte $80
-    iny
-    cpx #$40
-    sed
-    .byte $FF
-    .byte $FF
-    .byte $7C
-    rts
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $FF
-    .byte $1F
-    .byte $1A
-    .byte $80
-    .byte $80
+L8296:
+    .byte $20, $E0, $80, $00, $FF, $FF, $74, $58, $FF, $FF, $00, $FF, $1D, $0E, $01, $01
+    .byte $20, $E0, $C0, $F8, $FF, $FF, $7C, $58, $FF, $FF, $00, $FF, $1F, $0E, $80, $01
+    .byte $C8, $E0, $00, $00, $FF, $FF, $74, $60, $FF, $FF, $00, $FF, $1D, $1A, $01, $80
+    .byte $C8, $E0, $40, $F8, $FF, $FF, $7C, $60, $FF, $FF, $00, $FF, $1F, $1A, $80, $80
+
 L82D6:
     lda $44
     beq L830E
@@ -2809,11 +2773,11 @@ L834D:
     rts
 L834E:
     lda $4F
-    beq L8381
+    beq RTS_8381
     ldy $4E
     cpy #$04
     bcc L835E
-    bne L8381
+    bne RTS_8381
     lda #$00
     sta $4F
 L835E:
@@ -2835,14 +2799,14 @@ L8369:
     bne L8365
     lda $27
     lsr a
-    bcc L8381
-    inc $4E
-L8381:
+    bcc RTS_8381
+        inc $4E
+    RTS_8381:
     rts
-    
+
 L8382:
     .byte $05, $19, $41, $19, $05
-    
+
 L8387:
     lda $048C,x
     jsr L83DA
@@ -2879,13 +2843,13 @@ L83BA:
     pla
     eor $048F,x
     lsr a
-    bcs L83D9
+    bcs RTS_83D9
 L83CD:
     lda $0487,x
     sta $0480,x
     lda $0486,x
     sta $0483,x
-L83D9:
+RTS_83D9:
     rts
 L83DA:
     sta $04
@@ -2920,92 +2884,120 @@ L83F3:
     .byte $5A, $E6, $00, $81, $20, $62, $E4, $00, $79, $24, $4A, $E3, $00, $79, $28, $5A
     .byte $E7, $40, $69, $2C, $5A, $E7, $00, $89, $30, $6A, $E3, $80, $79
 
+
+
 L84D0:
     lda $50
-    beq L84ED
+    beq @RTS
     lda $27
     lsr a
-    bcs L84ED
+    bcs @RTS
     ldx #$9F
-    L84DB:
-        dec $8500,x
+    @loop:
+        dec L8500,x
         dec $0260,x
         dex
         dex
         dex
         dex
         cpx #$FF
-        bne L84DB
+        bne @loop
     lda #$00
-L84EB:
     sta $50
-L84ED:
+@RTS:
     rts
+
 L84EE:
     ldy #$9F
-L84F0:
-    lda $8500,y
-    sta $0260,y
-    dey
-    cpy #$FF
-    bne L84F0
+    L84F0:
+        lda L8500,y
+        sta $0260,y
+        dey
+        cpy #$FF
+        bne L84F0
     lda #$00
     sta $50
     rts
 
 L8500:
-    .byte $73, $CC, $22, $F2, $48, $CD, $63, $EE, $2A, $CE, $A2, $DC, $36, $CF, $E2, $C6
-    .byte $11, $CC, $23, $B7, $53, $CD, $63, $A0, $BB, $CE, $A2, $9A, $0F, $CF, $E2, $8B
-    .byte $85, $CC, $E2, $70, $9D, $CD, $A3, $6B, $A0, $CE, $63, $58, $63, $CF, $23, $4F
-    .byte $0A, $CC, $22, $39, $1F, $CD, $23, $2A, $7F, $CE, $A3, $1F, $56, $CF, $A2, $03
-    .byte $4D, $CC, $E3, $AF, $3E, $CD, $63, $2B, $61, $CE, $E2, $4F, $29, $CF, $62, $6F
-    .byte $8A, $CC, $23, $82, $98, $CD, $A3, $07, $AE, $CE, $E2, $CA, $B6, $CF, $63, $E3
-    .byte $0F, $CC, $62, $18, $1F, $CD, $22, $38, $22, $CE, $A3, $5F, $53, $CF, $E2, $78
-    .byte $48, $CC, $E3, $94, $37, $CD, $A3, $B3, $6F, $CE, $A3, $DC, $78, $CF, $22, $FE
-    .byte $83, $CC, $62, $0B, $9F, $CD, $23, $26, $A0, $CE, $62, $39, $BD, $CF, $A2, $1C
-    .byte $07, $CC, $E3, $A4, $87, $CD, $63, $5D, $5A, $CE, $62, $4F, $38, $CF, $23, $85
-    
+    .byte $73, $CC, $22, $F2
+    .byte $48, $CD, $63, $EE
+    .byte $2A, $CE, $A2, $DC
+    .byte $36, $CF, $E2, $C6
+    .byte $11, $CC, $23, $B7
+    .byte $53, $CD, $63, $A0
+    .byte $BB, $CE, $A2, $9A
+    .byte $0F, $CF, $E2, $8B
+    .byte $85, $CC, $E2, $70
+    .byte $9D, $CD, $A3, $6B
+    .byte $A0, $CE, $63, $58
+    .byte $63, $CF, $23, $4F
+    .byte $0A, $CC, $22, $39
+    .byte $1F, $CD, $23, $2A
+    .byte $7F, $CE, $A3, $1F
+    .byte $56, $CF, $A2, $03
+    .byte $4D, $CC, $E3, $AF
+    .byte $3E, $CD, $63, $2B
+    .byte $61, $CE, $E2, $4F
+    .byte $29, $CF, $62, $6F
+    .byte $8A, $CC, $23, $82
+    .byte $98, $CD, $A3, $07
+    .byte $AE, $CE, $E2, $CA
+    .byte $B6, $CF, $63, $E3
+    .byte $0F, $CC, $62, $18
+    .byte $1F, $CD, $22, $38
+    .byte $22, $CE, $A3, $5F
+    .byte $53, $CF, $E2, $78
+    .byte $48, $CC, $E3, $94
+    .byte $37, $CD, $A3, $B3
+    .byte $6F, $CE, $A3, $DC
+    .byte $78, $CF, $22, $FE
+    .byte $83, $CC, $62, $0B
+    .byte $9F, $CD, $23, $26
+    .byte $A0, $CE, $62, $39
+    .byte $BD, $CF, $A2, $1C
+    .byte $07, $CC, $E3, $A4
+    .byte $87, $CD, $63, $5D
+    .byte $5A, $CE, $62, $4F
+    .byte $38, $CF, $23, $85
+
+
+
 L85A0:
     ldy $49
     lda L85AE,y
     cmp #$FF
-    beq L85AD
+    beq @RTS
         sta $1C
         inc $49
-    L85AD:
+    @RTS:
     rts
 
 L85AE:
-    .byte $02
-    .byte $03
-    .byte $04
-    ora $06
-    .byte $07
-    php
-    ora #$0A
-    .byte $0B
-    .byte $0C
-    .byte $0C
-    .byte $FF
+    .byte $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0C, $FF
+
+
+
 L85BB:
     ldy $4A
-    lda $85D1,y
+    lda L85D1,y
     cmp #$FF
-    bne L85CC
-    lda #$00
-    sta $4A
-    sta $48
-    beq L85D0
-L85CC:
-    sta $1C
-    inc $4A
-L85D0:
+    bne @else_A
+        lda #$00
+        sta $4A
+        sta $48
+        beq @endIf_A ; branch always
+    @else_A:
+        sta $1C
+        inc $4A
+    @endIf_A:
     rts
-    ora ($01),y
-    ora ($01),y
-    ora ($11),y
-    ora ($11,x)
-    ora ($FF,x)
+
+L85D1:
+    .byte $11, $01, $11, $01, $11, $11, $01, $11, $01, $FF
+
+
+
 L85DB:
     lda $27
     and #$0F
@@ -4109,8 +4101,15 @@ L8C9F:
     rts
 
 L8CD7:
-    .byte $00, $C9, $00, $00, $CA, $08, $00, $CB, $10, $08, $D9, $00, $08, $DA, $08, $08
-    .byte $DB, $10, $10, $E9, $00, $10, $EA, $08, $10, $EB, $10
+    .byte $00, $C9, $00
+    .byte $00, $CA, $08
+    .byte $00, $CB, $10
+    .byte $08, $D9, $00
+    .byte $08, $DA, $08
+    .byte $08, $DB, $10
+    .byte $10, $E9, $00
+    .byte $10, $EA, $08
+    .byte $10, $EB, $10
 
 
 L8CF2:
@@ -4496,28 +4495,76 @@ L8F31:
     PPUStringEnd
 
 L8FCF:
-    .byte $D9, $8F, $EE, $8F, $03, $90, $18, $90, $2D, $90, $2E, $2F, $30, $31
-    .byte $32, $47, $48, $49, $4A, $4B, $25, $26, $27, $28, $29, $0A, $0B, $0C, $0D, $0E
-    .byte $0F, $33, $34, $35, $36, $37, $4C, $4D, $4E, $4F, $50, $2A, $2B, $2C, $FF, $2D
-    .byte $10, $11, $12, $13, $14, $15, $38, $39, $3A, $3B, $3C, $51, $FF, $52, $FF, $53
-    .byte $5B, $5C, $63, $62, $68, $16, $17, $18, $19, $1A, $1B, $3D, $3E, $3F, $40, $41
-    .byte $54, $55, $56, $57, $58, $00, $01, $02, $03, $04, $1C, $1D, $1E, $1F, $20, $21
-    .byte $42, $43, $44, $45, $46, $59, $FF, $FF, $24, $5A, $05, $06, $07, $08, $09, $22
-    .byte $23, $61, $67, $69, $66, $23, $C0, $60, $00, $23, $E0, $60, $00, $20, $80, $47
-    .byte $72, $20, $89, $0D, $42, $FF, $4C, $FF, $31, $FF, $41, $FF, $30, $FF, $58, $FF
-    .byte $35, $20, $99, $47, $72, $22, $4B, $08, $41, $30, $58, $35, $FF, $32, $59, $56
-    .byte $22, $82, $01, $70, $22, $83, $5A, $72, $22, $9D, $01, $71, $22, $A2, $C5, $73
-    .byte $22, $BD, $C5, $73, $23, $42, $01, $80, $23, $43, $5A, $72, $23, $5D, $01, $81
-    .byte $00, $20, $87, $12, $14, $FF, $12, $FF, $15, $FF, $15, $FF, $FF, $FF, $FF, $16
-    .byte $FF, $18, $FF, $0D, $FF, $0E, $22, $4B, $04, $14, $12, $15, $15, $00, $66, $00
+    .word L8FCF_8FD9
+    .word L8FCF_8FEE
+    .word L8FCF_9003
+    .word L8FCF_9018
+    .word L8FCF_902D
 
+L8FCF_8FD9:
+    .stringmap charmap_savemenu, "アイウエオ"
+    .stringmap charmap_savemenu, "ハヒフへホ"
+    .stringmap charmap_savemenu, "ァィゥェォ"
+    .stringmap charmap_savemenu, "ABCDEF"
+L8FCF_8FEE:
+    .stringmap charmap_savemenu, "カキクケコ"
+    .stringmap charmap_savemenu, "マミムメモ"
+    .stringmap charmap_savemenu, "ャュョ ッ"
+    .stringmap charmap_savemenu, "GHIJKL"
+L8FCF_9003:
+    .stringmap charmap_savemenu, "サシスセソ"
+    .stringmap charmap_savemenu, "ヤ ユ ヨ"
+    .stringmap charmap_savemenu, "゛゜-=+"
+    .stringmap charmap_savemenu, "MNOPQR"
+L8FCF_9018:
+    .stringmap charmap_savemenu, "タチツテト"
+    .stringmap charmap_savemenu, "ラリルレロ"
+    .stringmap charmap_savemenu, "01234"
+    .stringmap charmap_savemenu, "STUVWX"
+L8FCF_902D:
+    .stringmap charmap_savemenu, "ナ二ヌネノ"
+    .stringmap charmap_savemenu, "ワ  ヲン"
+    .stringmap charmap_savemenu, "56789"
+    .stringmap charmap_savemenu, "YZ.?/!"
+
+L9042:
+    PPUStringRepeat $23C0, undefined, $00, $20
+    PPUStringRepeat $23E0, undefined, $00, $20
+    
+    PPUStringRepeat $2080, charmap_savemenu, "─", $07
+    PPUString $2089, charmap_savemenu, \
+        "ナ マ エ ト ウ ロ ク"
+    PPUStringRepeat $2099, charmap_savemenu, "─", $07
+    PPUString $224B, charmap_savemenu, \
+        "トウロク オワル"
+    PPUString $2282, charmap_savemenu, \
+        "┌"
+    PPUStringRepeat $2283, charmap_savemenu, "─", $1A
+    PPUString $229D, charmap_savemenu, \
+        "┐"
+    PPUStringRepeatVertical $22A2, charmap_savemenu, "│", $05
+    PPUStringRepeatVertical $22BD, charmap_savemenu, "│", $05
+    PPUString $2342, charmap_savemenu, \
+        "└"
+    PPUStringRepeat $2343, charmap_savemenu, "─", $1A
+    PPUString $235D, charmap_savemenu, \
+        "┘"
+    
+    PPUStringEnd
+
+L908E:
+    PPUString $2087, charmap_savemenu, \
+        "K I L L    M O D E"
+    PPUString $224B, charmap_savemenu, \
+        "KILL"
+    PPUStringEnd
 
 ; unreferenced(?) partial duplicate of routines in main.pgm file in side A
-;($90AD-$90FF)
-    .byte $99, $66, $00, $60, $20, $DB, $8E, $49, $01, $A8, $A9, $00, $F0, $F2, $A2, $B0
-    .byte $BD, $00, $03, $F0, $08, $BD, $0B, $03, $D0, $03, $9D, $00, $03, $20, $E1, $A0
-    .byte $30, $EE, $60, $BD, $00, $03, $C9, $05, $90, $0A, $98, $5D, $0C, $03, $4A, $B0
-    .byte $03, $9D, $00, $03, $60, $98, $DD, $4B, $07, $D0, $05, $A9, $FF, $9D, $48, $07
-    .byte $60, $AD, $90, $B5, $85, $00, $AD, $91, $B5, $85, $01, $A0, $00, $B1, $00, $C5
-    .byte $49, $F0, $14
+;($90AB-$90FF)
+    .byte $66, $00, $99, $66, $00
+    .byte $60, $20, $DB, $8E, $49, $01, $A8, $A9, $00, $F0, $F2, $A2, $B0, $BD, $00, $03
+    .byte $F0, $08, $BD, $0B, $03, $D0, $03, $9D, $00, $03, $20, $E1, $A0, $30, $EE, $60
+    .byte $BD, $00, $03, $C9, $05, $90, $0A, $98, $5D, $0C, $03, $4A, $B0, $03, $9D, $00
+    .byte $03, $60, $98, $DD, $4B, $07, $D0, $05, $A9, $FF, $9D, $48, $07, $60, $AD, $90
+    .byte $B5, $85, $00, $AD, $91, $B5, $85, $01, $A0, $00, $B1, $00, $C5, $49, $F0, $14
 
