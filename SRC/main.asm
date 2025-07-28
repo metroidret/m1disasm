@@ -65,7 +65,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $00
     .ascstr "DEMO.CHR"
 FDSFileMacroPart2 $0000, $01
-    .incbin "fdspacker_output/side_1/demo.chr.chr"
+    .incbin "sideA/demo.chr.chr"
 FDSFileMacroPart3
 
 
@@ -132,7 +132,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $20
     .ascstr "MAIN.PGM"
 FDSFileMacroPart2 $6800, $00
-    .incbin "fdspacker_output/side_1/main.pgm.prg"
+    .include "sideA/main.pgm.asm"
 FDSFileMacroPart3
 
 
@@ -141,7 +141,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EE
     .ascstr "ENDOBJ", $00, $00
 FDSFileMacroPart2 $0000, $01
-    .incbin "fdspacker_output/side_1/endobj.chr"
+    .incbin "sideA/endobj.chr"
 FDSFileMacroPart3
 
 
@@ -150,7 +150,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EE
     .ascstr "ENDBG", $00, $00, $00
 FDSFileMacroPart2 $1000, $01
-    .incbin "fdspacker_output/side_1/endbg.chr"
+    .incbin "sideA/endbg.chr"
 FDSFileMacroPart3
 
 
@@ -188,7 +188,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $0F
     .ascstr "SAVEDATA"
 FDSFileMacroPart2 $C5A0, $00
-    .incbin "fdspacker_output/side_1/savedata.prg"
+    .include "sideA/savedata.asm"
 FDSFileMacroPart3
 
 
