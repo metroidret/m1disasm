@@ -1086,9 +1086,20 @@ LD898:
     bne LD882 ; branch always
 
 LD89C:
-    .byte $41, $8F, $34, $27, $1A, $0D, $00, $82, $68, $75, $4E, $5B, $03, $D9, $F1, $D8
-    .byte $10, $D9, $AF, $DE, $D8, $D2, $D8, $D2, $D1, $DF, $B8, $DF, $00, $D9, $EE, $D8
-    .byte $EE, $D8, $EE, $D8, $FD, $D8, $FA, $D8, $EE, $D8, $FD, $D8
+    .byte $41, $8F, $34, $27, $1A, $0D, $00, $82, $68, $75, $4E, $5B
+    .word LD903
+    .word LD8F1
+    .word LD910
+    .word LDEAF
+    .byte $D8, $D2, $D8, $D2, $D1, $DF, $B8, $DF
+    .word LD900
+    .word LD8EE
+    .word LD8EE
+    .word LD8EE
+    .word LD8FD
+    .word LD8FA
+    .word LD8EE
+    .word LD8FD
 
 LD8C8:
     lda $065D
@@ -1109,20 +1120,33 @@ LD8E5:
     sta $068D
 LD8ED:
     rts
+
+LD8EE:
     jmp LD934
+
+LD8F1:
     jsr LD92E
     ldx #$3A
     ldy #$D9
     bne LD90A
+LD8FA:
     jmp LD92A
+
+LD8FD:
     jmp LD926
+
+LD900:
     jmp LD919
+
+LD903:
     jsr LD926
     ldx #$49
     ldy #$D9
 LD90A:
     jsr LD8E5
     jmp LD785
+
+LD910:
     jsr LD92E
     ldx #$00
     ldy #$CC
@@ -1136,16 +1160,20 @@ LD91D:
     jsr LD581
     jsr LDE4B
     jmp LD630
+
 LD926:
     lda #$34
     bne LD91B
+
 LD92A:
     lda #$F4
     bne LD91B
+
 LD92E:
     ldx #$F5
     ldy #$F6
     bne LD91D
+
 LD934:
     ldx #$92
     ldy #$96
@@ -1383,13 +1411,18 @@ LDE70:
 
 LDE88:
     .byte $81, $2C, $22, $1C, $2C, $22, $1C, $85, $2C, $04, $81, $2E, $24, $1E, $2E, $24
-    .byte $1E, $85, $2E, $04, $81, $32, $28, $22, $72, $DF, $2C, $DB, $AE, $DB, $17, $40
-    .byte $80, $80, $00, $02, $00, $83, $46
+    .byte $1E, $85, $2E, $04, $81, $32, $28, $22
+
+LDEA0:
+    .word LDF72
+    .word LDB2C
+    .word LDBAE
+    .byte $17, $40, $80, $80, $00, $02, $00, $83, $46
 
 LDEAF:
     jsr LD934
-    ldx #$A0
-    ldy #$DE
+    ldx #<LDEA0.b
+    ldy #>LDEA0.b
     jmp LD90A
 
 LDEB9:
@@ -1404,7 +1437,9 @@ LDEB9:
     .byte $60, $5E, $5C, $54, $60, $5C, $56, $C2, $34, $48, $46, $44, $3C, $48, $44, $3E
     .byte $FF, $C2, $B2, $34, $B1, $42, $B5, $4C, $FF, $C2, $B2, $2C, $B1, $3A, $B5, $48
     .byte $FF, $C2, $B2, $1E, $B1, $2C, $B5, $36, $FF, $C4, $B2, $20, $B1, $2E, $B5, $38
-    .byte $FF, $E0, $B6, $2A, $B1, $2A, $B1, $02, $FF, $D0, $B6, $06, $B2, $02, $FF, $C8
+    .byte $FF, $E0, $B6, $2A, $B1, $2A, $B1, $02, $FF
+LDF72:
+    .byte $D0, $B6, $06, $B2, $02, $FF, $C8
     .byte $B4, $02, $FF, $B2, $24, $26, $2A, $2E, $34, $38, $3C, $3E, $B6, $42, $B1, $3E
     .byte $3C, $B6, $3E, $B1, $3C, $38, $B6, $34, $B2, $42, $B4, $4C, $B3, $44, $42, $3E
     .byte $3C, $B6, $38, $B2, $3C, $B6, $42, $B2, $4C, $B6, $38, $B2, $3C, $B4, $34, $B3

@@ -421,7 +421,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $1F
     .ascstr "MMKBOS", $00, $00
 FDSFileMacroPart2 $DEA0, $00
-    .incbin "fdspacker_output/side_2/mmkbos.prg"
+    .include "sideB/mmkbos.asm"
 FDSFileMacroPart3
 
 
