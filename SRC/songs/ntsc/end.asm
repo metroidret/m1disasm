@@ -523,8 +523,8 @@ SongEndSQ2:
         SongNote "A4"
         SongNote "D5"
         SongNote "G4"
-        SongRepeat
-        SongRepeatSetup $2
+    SongRepeat
+    SongRepeatSetup $2
         SongNote "A6"
         SongNote "G6"
         SongNote "F#6"
