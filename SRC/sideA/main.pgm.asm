@@ -5037,6 +5037,7 @@ L8F64:
 L8F82:
     lda #$02
     rts
+L8F85:
     jsr L8EDB
     sta $036C
     lda #$40
@@ -5226,22 +5227,25 @@ L90CA:
 L90D0:
     lda $0300,x
     cmp #$05
-    bcc L90E1
+    bcc RTS_90E1
     tya
     eor $030C,x
     lsr a
-    bcs L90E1
+    bcs RTS_90E1
     sta $0300,x
-L90E1:
+RTS_90E1:
     rts
 L90E2:
     tya
     cmp $074B,x
-    bne L90ED
+    bne RTS_90ED
     lda #$FF
     sta $0748,x
-L90ED:
+RTS_90ED:
     rts
+
+
+
 L90EE:
     lda $B590
     sta $00
@@ -5252,17 +5256,18 @@ L90F6:
     lda ($00),y
     cmp $49
     beq L9114
-    bcs L90ED
+    bcs RTS_90ED
     iny
     lda ($00),y
     tax
     iny
     and ($00),y
     cmp #$FF
-    beq L90ED
+    beq RTS_90ED
     lda ($00),y
     stx $00
     jmp L90F6
+
 L9114:
     lda #$03
     jsr L925F
@@ -5271,7 +5276,7 @@ L9119:
     lda ($00),y
     cmp $4A
     beq L912A
-    bcs L90ED
+    bcs RTS_90ED
     iny
     jsr L9256
     jmp L9119
@@ -5283,10 +5288,28 @@ L912C:
     lda ($00),y
     and #$0F
     jsr MAIN_ChooseRoutine
-    .byte $7F, $D0, $4E, $91, $54, $91, $B9, $91, $F7, $91, $FC, $91, $04, $92, $20, $92
-    .byte $44, $92, $4A, $92, $50, $92, $20, $61, $8E
+        .word $D07F
+        .word L914E
+        .word L9154
+        .word L91B9
+        .word L91F7
+        .word L91FC
+        .word L9204
+        .word L9220
+        .word L9244
+        .word L924A
+        .word L9250
+
+
+
+L914E:
+    jsr $8E61
 L9151:
     jmp L912C
+
+
+
+L9154:
     iny
     ldx #$00
     lda #$FF
@@ -5317,7 +5340,10 @@ L9189:
     sta $074B,x
 L918F:
     lda #$03
-    bne L9151
+    bne L9151 ; branch always
+
+
+
 L9193:
     sta $09
     lda $4A
@@ -5344,6 +5370,10 @@ L91B7:
     clc
 L91B8:
     rts
+
+
+
+L91B9:
     ldx #$18
     lda $28
     adc $27
@@ -5362,9 +5392,12 @@ L91C1:
     sta $B550
 L91D9:
     jmp L912C
+
+
+
 L91DC:
     lda $B0,x
-    bne L91F6
+    bne RTS_91F6
     txa
     adc $85
     and #$7F
@@ -5376,14 +5409,23 @@ L91DC:
     lda #$01
     sta $B0,x
     rol $85
-L91F6:
+RTS_91F6:
     rts
+
+
+
+L91F7:
     jsr L8F5F
     bne L91D9
+L91FC:
     jsr $B5A9
     lda #$02
 L9201:
     jmp L912C
+
+
+
+L9204:
     jsr $B5AC
     lda #$38
     sta $07
@@ -5398,6 +5440,10 @@ L9201:
 L921C:
     lda #$01
     bne L9201
+
+
+
+L9220:
     jsr $B5AF
     txa
     lsr a
@@ -5415,13 +5461,28 @@ L921C:
     sta $075B,x
 L9241:
     jmp L921C
+
+
+
+L9244:
     jsr $B5B2
     jmp L921C
+
+
+
+L924A:
     jsr L8EE8
     jmp L912C
+
+
+
+L9250:
     lda $43
     sta $8C
     bne L921C
+
+
+
 L9256:
     lda ($00),y
     cmp #$FF
@@ -5433,9 +5494,9 @@ L925F:
     clc
     adc $00
     sta $00
-    bcc L9268
+    bcc RTS_9268
     inc $01
-L9268:
+RTS_9268:
     rts
 L9269:
     and #$0F

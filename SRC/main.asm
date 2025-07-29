@@ -73,7 +73,7 @@ FDSFileMacroPart3
 
 
 ; file $02 - met.hex
-;
+; Music engine
 FDSFileMacroPart1 $00
     .ascstr "MET.HEX", $00
 FDSFileMacroPart2 $D000, $00
@@ -83,6 +83,7 @@ FDSFileMacroPart3
 
 
 ; file $03 - demo.pgm
+; Title screen code - part 1
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PGM"
 FDSFileMacroPart2 $6800, $00
@@ -92,6 +93,7 @@ FDSFileMacroPart3
 
 
 ; file $04 - demo.pg2
+; Title screen code - part 2
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PG2"
 FDSFileMacroPart2 $C5A0, $00

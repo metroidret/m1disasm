@@ -40,14 +40,16 @@ LD039:
     lda $14,x
     cmp $00
     bne LD04F
-    dec $18,x
-    bne LD051
-    sta $16,x
-    ldy #$10
-LD04F:
+        dec $18,x
+        bne RTS_D051
+        sta $16,x
+        ldy #$10
+    LD04F:
     sty $18,x
-LD051:
+RTS_D051:
     rts
+
+LD052:
     lda $FE
     and #$E7
 LD056:
@@ -275,10 +277,10 @@ LD293:
     inc $0665,x
     lda $0665,x
     cmp $0660,x
-    bne LD2A6
+    bne RTS_D2A6
     lda #$00
     sta $0665,x
-LD2A6:
+RTS_D2A6:
     rts
 LD2A7:
     sta $064D
@@ -360,12 +362,12 @@ LD32D:
     jmp LD246
 LD330:
     jsr LD293
-    bne LD33D
+    bne RTS_D33D
 LD335:
     jsr LD28C
     lda #$10
     sta $400C
-LD33D:
+RTS_D33D:
     rts
 LD33E:
     lda #$03
@@ -375,7 +377,7 @@ LD33E:
     lsr $3E46,x
     .byte $00
     jsr LD293
-    bne LD367
+    bne RTS_D367
     ldy $0671
     lda $D344,y
     bne LD35B
@@ -385,24 +387,26 @@ LD35B:
     lda $D0A0
     sta $4003
     inc $0671
-LD367:
+RTS_D367:
     rts
+LD368:
     lda #$05
     ldy #$9D
     bne LD3BB
     jsr LD293
-    bne LD367
+    bne RTS_D367
     inc $0671
     lda $0671
     cmp #$03
     beq LD38D
     ldy #$99
     jmp LD151
+LD382:
     lda #$06
     ldy #$99
     bne LD3BB
     jsr LD293
-    bne LD367
+    bne RTS_D367
 LD38D:
     lda #$10
     sta $4000
@@ -411,6 +415,7 @@ LD38D:
     jsr LD28C
     inc $0607
     rts
+LD39E:
     lda #$0C
     ldy #$A9
     bne LD3BB
@@ -419,7 +424,7 @@ LD38D:
     bne LD3BB
     lda $0689
     and #$CC
-    bne LD367
+    bne RTS_D367
     lda #$06
     ldy #$A5
     bne LD3BB
@@ -427,6 +432,7 @@ LD38D:
     ldy #$A1
 LD3BB:
     jmp LD246
+LD3BE:
     lda #$16
     ldy #$B1
     bne LD3BB
@@ -434,7 +440,7 @@ LD3BB:
     ldy #$B5
     bne LD3BB
     jsr LD293
-    bne LD3E1
+    bne RTS_D3E1
     inc $0671
     lda $0671
     cmp #$02
@@ -443,12 +449,12 @@ LD3BB:
 LD3DC:
     ldy #$B9
     jsr LD151
-LD3E1:
+RTS_D3E1:
     rts
 
 LD3E2:
     lda $0615
-    bne LD3E1
+    bne RTS_D3E1
     lda $28
     and #$03
     ora #$03
@@ -495,17 +501,19 @@ LD43A:
 
 LD444:
     lda $0615
-    bne LD451
+    bne RTS_D451
     lda $0686
     beq LD41B
     lsr a
     bcs LD43A
-LD451:
+RTS_D451:
     rts
+
+LD452:
     lda $0686
     beq LD472
     lsr a
-    bcc LD451
+    bcc RTS_D451
     jsr LD293
     bne LD462
 LD45F:
@@ -844,7 +852,7 @@ LD6A7:
     clc
     adc $062B
     tay
-    lda $DE29,y
+    lda NoteLengthsTbl,y
     sta $0620,x
     tay
     txa
@@ -978,13 +986,14 @@ LD7AD:
     sta $0615
     lda #$80
     sta $4080
-LD7B7:
+RTS_D7B7:
     rts
+
 LD7B8:
     lda $0615
-    beq LD7B7
+    beq RTS_D7B7
     dec $060A
-    bne LD7B7
+    bne RTS_D7B7
 LD7C2:
     ldy $060C
     inc $060C
@@ -1023,7 +1032,7 @@ LD7FC:
     clc
     adc $0614
     tay
-    lda $DE29,y
+    lda NoteLengthsTbl,y
     sta $060B
     ldy $060C
     inc $060C
@@ -1032,10 +1041,10 @@ LD7FC:
 LD81A:
     lda #$00
     sta $EA
-    lda $DCAF,y
+    lda LDCAE+1,y
     beq LD82F
     sta $061D
-    lda $DCAE,y
+    lda LDCAE,y
     sta $061E
     jmp LD833
 LD82F:
@@ -1081,6 +1090,7 @@ LD891:
     lda $060B
     sta $060A
     rts
+
 LD898:
     lda #$80
     bne LD882 ; branch always
@@ -1111,14 +1121,17 @@ LD8D4:
     jsr LD2A7
     jsr LDD8E
     jmp ($00E2)
+
+LD8DD:
     lda $068D
-    beq LD8ED
+    beq RTS_D8ED
     jmp LD630
+
 LD8E5:
     lda $068D
     ora #$F0
     sta $068D
-LD8ED:
+RTS_D8ED:
     rts
 
 LD8EE:
@@ -1275,6 +1288,7 @@ LDC2E:
     .byte $2F, $2E, $2D, $2C, $2B, $2A, $29, $28, $27, $26, $25, $24, $23, $22, $21, $20
     .byte $1F, $1E, $1D, $1C, $1B, $1A, $19, $18, $17, $16, $15, $14, $13, $12, $11, $10
     .byte $0F, $0E, $0D, $0C, $0B, $0A, $09, $08, $07, $06, $05, $04, $03, $02, $01, $00
+LDCAE:
     .byte $07, $F0, $00, $00, $00, $A2, $00, $AC, $00, $C1, $00, $CC, $00, $D8, $00, $E5
     .byte $00, $F3, $01, $01, $01, $11, $01, $21, $01, $32, $01, $44, $01, $58, $01, $6C
     .byte $01, $82, $01, $99, $01, $B1, $01, $CB, $01, $E6, $02, $03, $02, $22, $02, $42
@@ -1288,7 +1302,7 @@ LDD0E:
     sty $E1
     lda $068A
     and #$FC
-    bne LDD61
+    bne @RTS
     ldy #$00
     jsr LDD62
     tay
@@ -1319,44 +1333,51 @@ LDD0E:
     sta $0654
     lda #$05
     sta $0656
-LDD61:
+@RTS:
     rts
+
 LDD62:
     lda ($E0),y
     tax
     iny
     lda ($E0),y
     rts
+
 LDD69:
     stx $4086
     sta $4087
     rts
+
 LDD70:
     stx $4084
     sty $4084
     sta $4085
     rts
+
 LDD7A:
     stx $4080
     sta $4080
     rts
+
 LDD81:
     stx $4082
     stx $067C
     sta $4083
     sta $067D
     rts
+
 LDD8E:
     lda #$FF
     sta $065E
     lda $064D
-    beq LDD9E
-LDD98:
-    inc $065E
-    asl a
-    bcc LDD98
-LDD9E:
+    beq @RTS
+    @loop:
+        inc $065E
+        asl a
+        bcc @loop
+    @RTS:
     rts
+
 LDD9F:
     lda $065E
     clc
@@ -1365,18 +1386,128 @@ LDD9F:
     rts
 
 
-LDDA9:
-    .byte $07, $F0, $00, $00, $06, $4E, $05, $F3, $05, $4D, $05, $01, $04, $B9, $04, $75
-    .byte $04, $35, $03, $F8, $03, $BF, $03, $89, $03, $57, $03, $27, $02, $F9, $02, $CF
-    .byte $02, $A6, $02, $80, $02, $5C, $02, $3A, $02, $1A, $01, $FC, $01, $DF, $01, $C4
-    .byte $01, $AB, $01, $93, $01, $7C, $01, $67, $01, $52, $01, $3F, $01, $2D, $01, $1C
-    .byte $01, $0C, $00, $FD, $00, $EE, $00, $E1, $00, $D4, $00, $C8, $00, $BD, $00, $B2
-    .byte $00, $A8, $00, $9F, $00, $96, $00, $8D, $00, $85, $00, $7E, $00, $76, $00, $70
-    .byte $00, $69, $00, $63, $00, $5E, $00, $58, $00, $53, $00, $4F, $00, $4A, $00, $46
-    .byte $00, $42, $00, $3E, $00, $3A, $00, $37, $00, $34, $00, $31, $00, $2E, $00, $27
-    .byte $04, $08, $10, $20, $40, $18, $30, $0C, $0B, $05, $02, $06, $0C, $18, $30, $60
-    .byte $24, $48, $12, $10, $08, $03, $10, $07, $0E, $1C, $38, $70, $2A, $54, $15, $12
-    .byte $02, $03
+
+;The following table contains the musical notes used by the music player.  The first byte is
+;the period high information(3 bits) and the second byte is the period low information(8 bits).
+;The formula for figuring out the frequency is as follows: 1790000/16/(hhhllllllll + 1)
+;Note that on PAL consoles, the CPU clock speed is a bit slower, which affects the pitch.
+;The formula for PAL is 1663000/16/(hhhllllllll + 1), so all notes play roughly a semitone flat (-128 cents).
+MusicNotesTbl: ;($DDA9)
+    .byte $07,$F0                       ;55.0Hz (A1)    Index #$00 (Not used)
+    .byte $00,$00                       ;No sound       Index #$02
+    .byte $06,$4E                       ;69.3Hz (C#2)   Index #$04
+    .byte $05,$F3                       ;73.4Hz (D2)    Index #$06
+    .byte $05,$4D                       ;82.4Hz (E2)    Index #$08
+    .byte $05,$01                       ;87.3Hz (F2)    Index #$0A
+    .byte $04,$B9                       ;92.5Hz (F#2)   Index #$0C
+    .byte $04,$75                       ;98.0Hz (G2)    Index #$0E
+    .byte $04,$35                       ;103.8Hz (Ab2)  Index #$10
+    .byte $03,$F8                       ;110.0Hz (A2)   Index #$12
+    .byte $03,$BF                       ;116.5Hz (A#2)  Index #$14
+    .byte $03,$89                       ;123.5Hz (B2)   Index #$16
+    .byte $03,$57                       ;130.7Hz (C3)   Index #$18
+    .byte $03,$27                       ;138.5Hz (C#3)  Index #$1A
+    .byte $02,$F9                       ;146.8Hz (D3)   Index #$1C
+    .byte $02,$CF                       ;155.4Hz (D#3)  Index #$1E
+    .byte $02,$A6                       ;164.8Hz (E3)   Index #$20
+    .byte $02,$80                       ;174.5Hz (F3)   Index #$22
+    .byte $02,$5C                       ;184.9Hz (F#3)  Index #$24
+    .byte $02,$3A                       ;196.0Hz (G3)   Index #$26
+    .byte $02,$1A                       ;207.6Hz (Ab3)  Index #$28
+    .byte $01,$FC                       ;219.8Hz (A3)   Index #$2A
+    .byte $01,$DF                       ;233.1Hz (A#3)  Index #$2C
+    .byte $01,$C4                       ;247.0Hz (B3)   Index #$2E
+    .byte $01,$AB                       ;261.4Hz (C4)   Index #$30
+    .byte $01,$93                       ;276.9Hz (C#4)  Index #$32
+    .byte $01,$7C                       ;293.6Hz (D4)   Index #$34
+    .byte $01,$67                       ;310.8Hz (D#4)  Index #$36
+    .byte $01,$52                       ;330.0Hz (E4)   Index #$38
+    .byte $01,$3F                       ;349.6Hz (F4)   Index #$3A
+    .byte $01,$2D                       ;370.4Hz (F#4)  Index #$3C
+    .byte $01,$1C                       ;392.5Hz (G4)   Index #$3E
+    .byte $01,$0C                       ;415.9Hz (Ab4)  Index #$40
+    .byte $00,$FD                       ;440.4Hz (A4)   Index #$42
+    .byte $00,$EE                       ;468.1Hz (A#4)  Index #$44
+    .byte $00,$E1                       ;495.0Hz (B4)   Index #$46
+    .byte $00,$D4                       ;525.2Hz (C5)   Index #$48
+    .byte $00,$C8                       ;556.6Hz (C#5)  Index #$4A
+    .byte $00,$BD                       ;588.8Hz (D5)   Index #$4C
+    .byte $00,$B2                       ;625.0Hz (D#5)  Index #$4E
+    .byte $00,$A8                       ;662.0Hz (E5)   Index #$50
+    .byte $00,$9F                       ;699.2Hz (F5)   Index #$52
+    .byte $00,$96                       ;740.9Hz (F#5)  Index #$54
+    .byte $00,$8D                       ;787.9Hz (G5)   Index #$56
+    .byte $00,$85                       ;834.9Hz (Ab5)  Index #$58
+    .byte $00,$7E                       ;880.9HZ (A5)   Index #$5A
+    .byte $00,$76                       ;940.1Hz (A#5)  Index #$5C
+    .byte $00,$70                       ;990.0Hz (B5)   Index #$5E
+    .byte $00,$69                       ;1055Hz (C6)    Index #$60
+    .byte $00,$63                       ;1118Hz (C#6)   Index #$62
+    .byte $00,$5E                       ;1178Hz (D6)    Index #$64
+    .byte $00,$58                       ;1257Hz (D#6)   Index #$66
+    .byte $00,$53                       ;1332Hz (E6)    Index #$68
+    .byte $00,$4F                       ;1398Hz (F6)    Index #$6A
+    .byte $00,$4A                       ;1492Hz (F#6)   Index #$6C
+    .byte $00,$46                       ;1576Hz (G6)    Index #$6E
+    .byte $00,$42                       ;1670Hz (Ab6)   Index #$70
+    .byte $00,$3E                       ;1776Hz (A6)    Index #$72
+    .byte $00,$3A                       ;1896Hz (A#6)   Index #$74
+    .byte $00,$37                       ;1998Hz (B6)    Index #$76
+    .byte $00,$34                       ;2111Hz (C7)    Index #$78
+    .byte $00,$31                       ;2238Hz (C#7)   Index #$7A
+    .byte $00,$2E                       ;2380Hz (D7)    Index #$7C
+    .byte $00,$27                       ;2796Hz (F7)    Index #$7E
+
+;The following tables are used to load the music frame count addresses ($0640 thru $0643). The
+;larger the number, the longer the music will play a solid note.  The number represents how
+;many frames the note will play.  There is a small discrepancy in time length because the
+;Nintendo runs at 60 frames pers second and I am using 64 frames per second to make the
+;numbers below divide more evenly.
+
+NoteLengthsTbl: ;($DE29)
+    ;Used by power up music and Kraid area music.
+    @4:
+        .byte $04                       ;About    1/16 seconds ($B0)
+        .byte $08                       ;About    1/8  seconds ($B1)
+        .byte $10                       ;About    1/4  seconds ($B2)
+        .byte $20                       ;About    1/2  seconds ($B3)
+        .byte $40                       ;About 1       seconds ($B4)
+        .byte $18                       ;About    3/8  seconds ($B5)
+        .byte $30                       ;About    3/4  seconds ($B6)
+        .byte $0C                       ;About    3/16 seconds ($B7)
+        .byte $0B                       ;About   11/64 seconds ($B8)
+        .byte $05                       ;About    5/64 seconds ($B9)
+        .byte $02                       ;About    1/32 seconds ($BA)
+
+    ;Used by item room, fade in, Brinstar music, Ridley area music, Mother brain music,
+    ;escape music, Norfair music and Tourian music.
+    @6:
+        .byte $06                       ;About    3/32 seconds ($B0)
+        .byte $0C                       ;About    3/16 seconds ($B1)
+        .byte $18                       ;About    3/8  seconds ($B2)
+        .byte $30                       ;About    3/4  seconds ($B3)
+        .byte $60                       ;About 1  1/2  seconds ($B4)
+        .byte $24                       ;About    9/16 seconds ($B5)
+        .byte $48                       ;About 1  3/16 seconds ($B6)
+        .byte $12                       ;About    9/32 seconds ($B7)
+        .byte $10                       ;About    1/4  seconds ($B8)
+        .byte $08                       ;About    1/8  seconds ($B9)
+        .byte $03                       ;About    3/64 seconds ($BA)
+        .byte $10                       ;About    1/4  seconds ($BB)
+
+    ;Used by intro and end game music.
+    @7:
+        .byte $07                       ;About    7/64 seconds ($B0)
+        .byte $0E                       ;About    7/32 seconds ($B1)
+        .byte $1C                       ;About    7/16 seconds ($B2)
+        .byte $38                       ;About    7/8  seconds ($B3)
+        .byte $70                       ;About 1 13/16 seconds ($B4)
+        .byte $2A                       ;About   21/32 seconds ($B5)
+        .byte $54                       ;About 1  5/16 seconds ($B6)
+        .byte $15                       ;About   21/64 seconds ($B7)
+        .byte $12                       ;About    9/32 seconds ($B8)
+        .byte $02                       ;About    1/32 seconds ($B9)
+        .byte $03                       ;About    3/64 seconds ($BA)
 
 
 LDE4B:
