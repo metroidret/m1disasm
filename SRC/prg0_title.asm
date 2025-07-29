@@ -849,8 +849,8 @@ InitCrossMissiles:
 
     L889D:
         lda InitCrossMissile0and4Tbl,x        ;Load data from tables below.
-        cmp $FF                         ;If #$FF, skip loading that byte and move to next item.
-        beq L88AA                       ;
+        cmp PPUCTRL_ZP                  ;BUG: supposed to be #$FF. Expected behavior:-->
+        beq L88AA                       ;if #$FF, skip loading that byte and move to next item.
             sta IntroSprYCoord,x            ;Store initial values for sprites 0 thru 3.
             sta IntroSprYCoord+$40,x        ;Store initial values for sprites 4 thru 7.
         L88AA:
