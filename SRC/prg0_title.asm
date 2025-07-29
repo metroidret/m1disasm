@@ -1952,18 +1952,26 @@ PasswordBitmaskTbl:
 ;on world map. See constants.asm for values of IIIIII.
 
 ItemData: ; $9029
+    ItemData_MaruMari:
     .word ui_MARUMARI    + ($02 << 5) + $0E  ;Maru Mari at coord 02,0E                    (Item 0)
+
     .word ui_MISSILES    + ($12 << 5) + $0B  ;Missiles at coord 12,0B                     (Item 1)
     .word ui_MISSILEDOOR + ($07 << 5) + $05  ;Red door to long beam at coord 07,05        (Item 2)
     .word ui_MISSILEDOOR + ($04 << 5) + $02  ;Red door to Tourian elevator at coord 05,02 (Item 3)
     .word ui_ENERGYTANK  + ($19 << 5) + $07  ;Energy tank at coord 19,07                  (Item 4)
     .word ui_MISSILEDOOR + ($19 << 5) + $05  ;Red door to bombs at coord 1A,05            (Item 5)
+
+    ItemData_Bombs:
     .word ui_BOMBS       + ($19 << 5) + $05  ;Bombs at coord 19,05                        (Item 6)
+
     .word ui_MISSILEDOOR + ($13 << 5) + $09  ;Red door to ice beam at coord 13,09         (Item 7)
     .word ui_MISSILES    + ($18 << 5) + $03  ;Missiles at coord 18,03                     (Item 8)
     .word ui_ENERGYTANK  + ($1B << 5) + $03  ;Energy tank at coord 1B,03                  (Item 9)
     .word ui_MISSILEDOOR + ($0F << 5) + $02  ;Red door to varia suit at coord 0F,02       (Item 10)
+
+    ItemData_Varia:
     .word ui_VARIA       + ($0F << 5) + $02  ;Varia suit at coord 0F,02                   (Item 11)
+
     .word ui_ENERGYTANK  + ($09 << 5) + $0E  ;Energy tank at coord 09,0E                  (Item 12)
     .word ui_MISSILES    + ($12 << 5) + $0E  ;Missiles at coord 12,0E                     (Item 13)
     .word ui_MISSILES    + ($11 << 5) + $0F  ;Missiles at coord 11,0F                     (Item 14)
@@ -1976,9 +1984,15 @@ ItemData: ; $9029
     .word ui_MISSILES    + ($14 << 5) + $0F  ;Missiles at coord 14,0F                     (Item 21)
     .word ui_MISSILES    + ($13 << 5) + $0F  ;Missiles at coord 13,0F                     (Item 22)
     .word ui_MISSILEDOOR + ($1B << 5) + $11  ;Red door to high jump at coord 1C,11        (Item 23)
+
+    ItemData_HighJump:
     .word ui_HIGHJUMP    + ($1B << 5) + $11  ;High jump at coord 1B,11                    (Item 24)
+
     .word ui_MISSILEDOOR + ($0F << 5) + $10  ;Red door to screw attack at coord 0E,10     (Item 25)
+
+    ItemData_ScrewAttack:
     .word ui_SCREWATTACK + ($0F << 5) + $10  ;Screw attack at coord 0D,1D                 (Item 26)
+
     .word ui_MISSILES    + ($13 << 5) + $16  ;Missiles at coord 13,16                     (Item 27)
     .word ui_MISSILES    + ($14 << 5) + $16  ;Misslies at coord 14,16                     (Item 28)
     .word ui_MISSILEDOOR + ($12 << 5) + $15  ;Red door to wave beam at coord 1C,15        (Item 29)
@@ -3177,10 +3191,10 @@ Restart:
     ;Erase PasswordByte00 thru PasswordByte11.
     ldy #$11
     lda #$00
-    L9A43:
+    @loop_erasePassword:
         sta PasswordByte,y
         dey
-        bpl L9A43
+        bpl @loop_erasePassword
     
     ;Erase Unique item history.
     iny ;Y = #$00.
@@ -3189,41 +3203,52 @@ Restart:
         iny
         bne L9A4A
     
+    ;If Samus does not have Maru Mari, branch.-->
     lda SamusGear
     and #gr_MARUMARI
-    beq L9A5C                       ;If Samus does not have Maru Mari, branch.-->
-        lda #$01                        ;Else load Maru Mari data into PasswordByte00.
-        sta PasswordByte              ;
+    beq L9A5C
+        ;Else load Maru Mari data into PasswordByte00.
+        lda #1<<(((ItemData_MaruMari-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData_MaruMari-ItemData)/2)/8)
     L9A5C:
     
+    ;If Samus does not have bombs, branch.-->
     lda SamusGear
     and #gr_BOMBS
-    beq L9A6B                       ;If Samus does not have bombs, branch.-->
-        lda PasswordByte              ;Else load bomb data into PasswordByte00.
-        ora #$40                        ;
-        sta PasswordByte              ;
+    beq L9A6B
+        ;Else load bomb data into PasswordByte00.
+        lda PasswordByte+(((ItemData_Bombs-ItemData)/2)/8)
+        ora #1<<(((ItemData_Bombs-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData_Bombs-ItemData)/2)/8)
     L9A6B:
     
+    ;If Samus does not have varia suit, branch.-->
     lda SamusGear
     and #gr_VARIA
-    beq L9A77                       ;If Samus does not have varia suit, branch.-->
-        lda #$08                        ;Else load varia suit data into PasswordByte01.
-        sta PasswordByte+$01              ;
+    beq L9A77
+        ;Else load varia suit data into PasswordByte01.
+        lda #1<<(((ItemData_Varia-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData_Varia-ItemData)/2)/8)
     L9A77:
     
+    ;If Samus does not have high jump, branch.-->
     lda SamusGear
     and #gr_HIGHJUMP
-    beq L9A83                       ;If Samus does not have high jump, branch.-->
-        lda #$01                        ;Else load high jump data into PasswordByte03.
-        sta PasswordByte+$03              ;
+    beq L9A83
+        ;Else load high jump data into PasswordByte03.
+        lda #1<<(((ItemData_HighJump-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData_HighJump-ItemData)/2)/8)
     L9A83:
     
-    lda SamusGear                   ;
-    and #gr_MARUMARI                        ;If Samus does not have Maru Mari, branch.-->
-    beq L9A92                       ;Else load screw attack data into PasswordByte03.-->
-        lda PasswordByte+$03              ;A programmer error?  Should check for screw-->
-        ora #$04                        ;attack data.
-        sta PasswordByte+$03              ;
+    ;If Samus does not have Maru Mari, branch.
+    lda SamusGear
+    ;A programmer error?  Should check for screw attack data.
+    and #gr_MARUMARI
+    beq L9A92
+        ;Else load screw attack data into PasswordByte03.
+        lda PasswordByte+(((ItemData_ScrewAttack-ItemData)/2)/8)
+        ora #1<<(((ItemData_ScrewAttack-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData_ScrewAttack-ItemData)/2)/8)
     L9A92:
     
     lda SamusGear                   ;
