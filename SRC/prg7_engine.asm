@@ -3295,7 +3295,7 @@ SamusRoll:
         clc
         adc #$08
         sta ObjRadY
-        jsr CheckMoveUp
+        jsr ObjectCheckMoveUp
         bcc Lx032     ; branch if not possible to stand up
         ldx #$00
         jsr StoreObjectPositionToTemp
@@ -6761,7 +6761,7 @@ VertAccelerate:
     and #$07
     bne @endIf_A
         ;Branch if Samus is obstructed downwards
-        jsr CheckMoveDown               
+        jsr ObjectCheckMoveDown               
         bcc @dontStartFalling
     @endIf_A:
     jsr SamusOnElevatorOrEnemy      ;($D976)Calculate if Samus standing on elevator or enemy.
@@ -6911,7 +6911,7 @@ MoveSamusUp:
     sbc ObjRadY                     ;Subtract Samus' vertical radius.
     and #$07                        ;Check if result is a multiple of 8. If so, branch to-->
     bne Lx150                       ;Only call crash detection every 8th pixel.
-        jsr CheckMoveUp                 ;($E7A2)Check if Samus obstructed UPWARDS.-->
+        jsr ObjectCheckMoveUp                 ;($E7A2)Check if Samus obstructed UPWARDS.-->
         bcc RTS_X156                     ;If so, branch to exit(can't move any further).
     Lx150:
     lda ObjAction                   ;
@@ -6956,7 +6956,7 @@ MoveSamusDown:
     adc ObjRadY
     and #$07
     bne Lx157              ; only call crash detection every 8th pixel
-        jsr CheckMoveDown       ; check if Samus obstructed DOWNWARDS
+        jsr ObjectCheckMoveDown       ; check if Samus obstructed DOWNWARDS
         bcc RTS_X163      ; exit if yes
     Lx157:
     lda ObjAction
@@ -7455,6 +7455,7 @@ RTS_E76F:
 
 EnemyCheckMoveUp:
     ldx PageIndex
+    ; Y radius + 8 to check block directly above
     lda EnsExtra.0.radY,x
     clc
     adc #$08
@@ -7462,13 +7463,14 @@ EnemyCheckMoveUp:
 
 EnemyCheckMoveDown:
     ldx PageIndex
+    ; check block directly below
     lda #$00
     sec
     sbc EnsExtra.0.radY,x
     ; fallthrough
 
 LE783:
-    sta $02
+    sta Temp02_DistToCenterY
     lda #$08
     sta $04
     jsr StoreEnemyPositionToTemp
@@ -7477,56 +7479,63 @@ LE783:
 
 StoreEnemyPositionToTemp:
     lda EnX,x
-    sta $09     ; X coord
+    sta Temp09_PositionX     ; X coord
     lda EnY,x
-    sta $08     ; Y coord
+    sta Temp08_PositionY     ; Y coord
     lda EnsExtra.0.hi,x
-    sta $0B     ; hi coord
+    sta Temp0B_PositionHi     ; hi coord
     rts
 
-CheckMoveUp:; For Samus, et al
+ObjectCheckMoveUp:; For Samus, et al
     ldx PageIndex
+    ; Y radius + 8 to check block directly above
     lda ObjRadY,x
     clc
     adc #$08
     jmp Lx197
 
-CheckMoveDown: ; For Samus
+ObjectCheckMoveDown: ; For Samus
     ldx PageIndex
+    ; check block directly below
     lda #$00
     sec
     sbc ObjRadY,x
 Lx197:
-    sta $02
+    sta Temp02_DistToCenterY
     jsr StoreObjectPositionToTemp
     lda ObjRadX,x
 
 LE7BD:
     bne Lx198
+        ; Skip collision if X radius = 0
         sec
         rts
     Lx198:
-    sta $03
+    sta Temp03_DistToCenterX
     tay
     ldx #$00
+    ; A = left boundary
     lda Temp09_PositionX
     sec
-    sbc $03
+    sbc Temp03_DistToCenterX
+    ; check for left remainder
     and #$07
     beq Lx199
+        ; there's a left remainder
         inx
     Lx199:
-    jsr LE8CE
-    sta $04
-    jsr LE90F
-    ldx #$00
-    ldy #$08
-    lda $00
+    jsr GetNumBlocksToCheck
+    sta Temp04_NumBlocksToCheck
+    jsr CalculateFirstBGCollisionPoint
+    ldx #$00 ; Temp06_NextPointYOffset = 0
+    ldy #$08 ; Temp07_NextPointXOffset = 8
+    lda Temp00_CollisionPointYMod8
 LE7DE:
+    ; skip collision if object boundary is not at block boundary
     bne Lx202
-    stx $06
-    sty $07
-    ldx $04
+    stx Temp06_NextPointYOffset
+    sty Temp07_NextPointXOffset
+    ldx Temp04_NumBlocksToCheck
 
 ; object<-->background crash detection
 
@@ -7560,7 +7569,7 @@ Lx200:
 Lx201:
     dex
     beq Lx202
-    jsr LE98E
+    jsr CalculateNextBGCollisionPoint
     jmp LE7E6
 Lx202:
     sec          ; no crash
@@ -7649,7 +7658,7 @@ ObjectCheckMoveRight:
     ; fallthrough
 
 ObjectCheckMoveHorizontalBranch:
-    sta $03
+    sta Temp03_DistToCenterX
     jsr StoreObjectPositionToTemp
     ldy ObjRadY,x
 
@@ -7658,20 +7667,20 @@ CheckMoveVertical:
         sec
         rts
     Lx208:
-    sty $02
+    sty Temp02_DistToCenterY
     ldx #$00
     lda Temp08_PositionY
     sec
-    sbc $02
+    sbc Temp02_DistToCenterY
     and #$07
     beq Lx209
         inx
     Lx209:
-    jsr LE8CE
-    sta $04
-    jsr LE90F
-    ldx #$08
-    ldy #$00
+    jsr GetNumBlocksToCheck
+    sta Temp04_NumBlocksToCheck
+    jsr CalculateFirstBGCollisionPoint
+    ldx #$08 ; Temp06_NextPointYOffset = 8
+    ldy #$00 ; Temp07_NextPointXOffset = 0
     lda $01
     jmp LE7DE
 
@@ -7685,32 +7694,44 @@ StoreObjectPositionToTemp:
     rts
 
 ;--------------------------------------------------------
-LE8CE:
+; Visualizations: (| is block boundary, l is left remainder, c is center, r is right remainder)
+; |  ll|cccc|cccc|rr  | object spans 4 blocks and there are left and right remainders
+; |cccc| object spans 1 block and there's no left nor right remainders
+; |  ll|rr  | object spans 2 blocks and there are left and right remainders
+; |  ll| object spans 1 block and right/bottom is at a block boundary
+; |rr  | object spans 1 block and left/top is at a block boundary
+GetNumBlocksToCheck:
+    ; $04 = left remainder size
     eor #$FF
     clc
     adc #$01
     and #$07
-    sta $04
+    sta Temp04_NumBlocksToCheck
+    ; center
+    ; diameter without left remainder
     tya
     asl
     sec
-    sbc $04
+    sbc Temp04_NumBlocksToCheck
     bcs Lx210
+        ; | cc | Special case: object spans 1 block and doesn't touch any block boundary
         adc #$08
     Lx210:
     tay
     lsr
     lsr
     lsr
-    sta $04
+    sta Temp04_NumBlocksToCheck
+    ; check for right remainder
     tya
     and #$07
     beq Lx211
+        ; there's a right remainder
         inx
     Lx211:
     txa
     clc
-    adc $04
+    adc Temp04_NumBlocksToCheck
     rts
 ;-----------------------------------------------------------
 
@@ -7728,72 +7749,89 @@ EnemyCheckMoveRight:
     sbc EnsExtra.0.radX,x
 
 EnemyCheckMoveHorizontalBranch:
-    sta $03
+    sta Temp03_DistToCenterX
     jsr StoreEnemyPositionToTemp
     ldy EnsExtra.0.radY,x
     jmp CheckMoveVertical
 
 ;----------------------------------------------
-; $02 stores some sort of adjusted temp hitbox radius ?
-LE90F:
-    lda $02
+; Like ApplySpeedToPosition but no bounds checking (wraps around)
+CalculateFirstBGCollisionPoint:
+    ; Y
+    lda Temp02_DistToCenterY
     bpl Lx213
+        ; check bottom boundary
         jsr LE95F
         bcs Lx212
         cpx #$F0
         bcc Lx214
     Lx212:
+        ; bottom boundary >= 240, adjust
         txa
         adc #$0F
         jmp LE934
     Lx213:
+    ; check top boundary
     jsr LE95F
-    lda $08
+    lda Temp08_PositionY
     sec
-    sbc $02
+    sbc Temp02_DistToCenterY
     tax
     and #$07
-    sta $00
+    sta Temp00_CollisionPointYMod8
     bcs Lx214
+        ; bottom boundary < 0, adjust
         txa
         sbc #$0F
     LE934:
         tax
+        ; branch if scrolling horizontally (allows Samus to wrap around)
         lda ScrollDir
         and #$02
         bne Lx214
-        inc $0B
+        ; move to next nametable
+        inc Temp0B_PositionHi
     Lx214:
-    stx $02
+    ; store Y position of collision point
+    stx Temp02_PositionY
+    ; X
+    ; messy code to check for X wraparound, involving carry
     ldx #$00
-    lda $03
+    lda Temp03_DistToCenterX
     bmi Lx215
+        ; checking left boundary
         dex
     Lx215:
-    lda $09
+    ; calculate X position of collision point
+    lda Temp09_PositionX
     sec
-    sbc $03
-    sta $03
+    sbc Temp03_DistToCenterX
+    sta Temp03_PositionX
     and #$07
-    sta $01
+    sta Temp01_CollisionPointXMod8
     txa
     adc #$00
     beq RTS_X216
+    ; X wrapped around, adjust
+    ; return if scrolling vertically (allows Samus to wrap around)
     lda ScrollDir
     and #$02
     beq RTS_X216
-    inc $0B
+    ; move to next nametable
+    inc Temp0B_PositionHi
 RTS_X216:
     rts
 
 ;---------------------------------------------
 LE95F:
-    lda $08
+    ; X = bottom boundary
+    ; A = $00 = bottom boundary % 8
+    lda Temp08_PositionY
     sec
-    sbc $02
+    sbc Temp02_DistToCenterY
     tax
     and #$07
-    sta $00
+    sta Temp00_CollisionPointYMod8
     rts
 
 ;------------------------------------[ Object pointer into cart RAM ]-------------------------------
@@ -7840,29 +7878,37 @@ MakeCartRAMPtr:
 
 ;---------------------------------------------------------------------------------------------------
 
-LE98E:
-    lda $02
+CalculateNextBGCollisionPoint:
+    ; point Y += next point Y offset
+    lda Temp02_PositionY
     clc
-    adc $06
-    sta $02
+    adc Temp06_NextPointYOffset
+    sta Temp02_PositionY
     cmp #$F0
     bcc Lx217
+    ; point Y >= 240, adjust
     adc #$0F
-    sta $02
+    sta Temp02_PositionY
+    ; branch if scrolling horizontally (allows Samus to wrap around)
     lda ScrollDir
     and #$02
     bne Lx217
-    inc $0B
+    ; move to next nametable
+    inc Temp0B_PositionHi
 Lx217:
-    lda $03
+    ; point X += next point X offset
+    lda Temp03_PositionX
     clc
-    adc $07
-    sta $03
+    adc Temp07_NextPointXOffset
+    sta Temp03_PositionX
     bcc RTS_X218
+    ; point X >= 256, adjust
+    ; return if scrolling vertically (allows Samus to wrap around)
     lda ScrollDir
     and #$02
     beq RTS_X218
-    inc $0B
+    ; move to next nametable
+    inc Temp0B_PositionHi
 RTS_X218:
     rts
 
