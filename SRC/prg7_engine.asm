@@ -8138,7 +8138,7 @@ GetEnemyType: ; ($EB28)
         and #$06                        ;Ridley is alive or dead).
         lsr                             ;Use InArea to find status of Kraid/Ridley statue.
         tay                             ;
-        lda MaxMissiles,y               ;Load status of Kraid/Ridley statue.
+        lda KraidStatueStatus-1,y       ;Load status of Kraid/Ridley statue.
         beq Lx227                           ;Branch if Kraid or Ridley needs to be loaded.
             pla                             ;
             pla                             ;Mini boss is dead so pull enemy info and last address off-->
