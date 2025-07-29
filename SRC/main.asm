@@ -399,10 +399,11 @@ FDSFileMacroPart3
 
 
 ; file $12 - mmfire
+; Norfair Song
 FDSFileMacroPart1 $11
     .ascstr "MMFIRE", $00, $00
 FDSFileMacroPart2 $DEA0, $00
-    .incbin "fdspacker_output/side_2/mmfire.prg"
+    .include "sideB/mmfire.asm"
 FDSFileMacroPart3
 
 
@@ -474,7 +475,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $EF
     .ascstr "MENSAVE2"
 FDSFileMacroPart2 $C3F0, $00
-    .incbin "fdspacker_output/side_2/mensave2.prg"
+    .include "sideB/mensave2.asm"
 FDSFileMacroPart3
 
 

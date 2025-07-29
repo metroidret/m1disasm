@@ -5816,17 +5816,20 @@ L94B0:
     iny
     jsr L9467
 L94BC:
-    ldx $2002
+    ldx PPUSTATUS
     ldy #$00
     lda ($00),y
     bne L9494
 L94C5:
-    lda $2002
-    lda $FD
-    sta $2005
-    lda $FC
-    sta $2005
+    lda PPUSTATUS
+    lda ScrollX
+    sta PPUSCROLL
+    lda ScrollY
+    sta PPUSCROLL
     rts
+
+
+
 L94D3:
     pha
     lda $FF
@@ -9353,12 +9356,15 @@ LB322:
     bcs LB319
     pla
     bne LB316
-LB32C:
+RTS_B32C:
     rts
+
+
+
 LB32D:
     lda $1E
     cmp #$03
-    beq LB32C
+    beq RTS_B32C
     jsr L6EE4
     ldx #$59
     ldy #$B3
