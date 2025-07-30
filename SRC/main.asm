@@ -161,6 +161,7 @@ FDSFileMacroPart3
 
 
 ; file $0B - mmeee
+; Ending Song
 FDSFileMacroPart1 $EE
     .ascstr "MMEEE", $00, $00, $00
 FDSFileMacroPart2 $CC00, $00
@@ -411,15 +412,17 @@ FDSFileMacroPart3
 
 
 ; file $13 - mmkiti
+; Escape Song
 FDSFileMacroPart1 $13
     .ascstr "MMKITI", $00, $00
 FDSFileMacroPart2 $DEA0, $00
-    .incbin "fdspacker_output/side_2/mmkiti.prg"
+    .include "sideB/mmkiti.asm"
 FDSFileMacroPart3
 
 
 
 ; file $14 - mmkbos
+; Kraid and Ridley Songs
 FDSFileMacroPart1 $1F
     .ascstr "MMKBOS", $00, $00
 FDSFileMacroPart2 $DEA0, $00

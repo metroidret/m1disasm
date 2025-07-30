@@ -1,4 +1,4 @@
-DataDD0E_DEA0:
+MMKBOS_DataDD0E_DEA0:
     .word LDB4D
     .word LDBAE
     .byte $82
@@ -11,10 +11,10 @@ DataDD0E_DEA0:
     .byte $48
     .byte $03
 
-LDEAD:
+MMKBOS_LDEAD:
     lda #$28
-    ldx #<DataDD0E_DEA0.b
-    ldy #>DataDD0E_DEA0.b
+    ldx #<MMKBOS_DataDD0E_DEA0.b
+    ldy #>MMKBOS_DataDD0E_DEA0.b
     jsr LDD0E
     lda #$16
     sta $067E
@@ -35,6 +35,7 @@ LDEC6:
     lda $0672
     sta $4086
     rts
+
 
 
 SongRidleyTri: ;($DEDE)
