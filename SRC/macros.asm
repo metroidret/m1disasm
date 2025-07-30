@@ -30,6 +30,8 @@
 .endm
 
 .macro PPUString args ppuAddress ; , charmap , ppuString
+    assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
+    
     .byte >ppuAddress, <ppuAddress
     .def charmap = "\2"
     .shift
@@ -61,6 +63,7 @@
 
 .macro PPUStringRepeat args ppuAddress, charmap, ppuByte, repetitions
     assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
+    assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
@@ -75,6 +78,8 @@
 .endm
 
 .macro PPUStringVertical args ppuAddress ; , charmap , ppuString
+    assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
+    
     .byte >ppuAddress, <ppuAddress
     .def charmap = "\2"
     .shift
@@ -106,6 +111,7 @@
 
 .macro PPUStringRepeatVertical args ppuAddress, charmap, ppuByte, repetitions
     assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
+    assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40 | $80
