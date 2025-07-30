@@ -393,10 +393,11 @@ FDSFileMacroPart3
 
 
 ; file $11 - mmrock
+; Brinstar Song
 FDSFileMacroPart1 $10
     .ascstr "MMROCK", $00, $00
 FDSFileMacroPart2 $DEA0, $00
-    .incbin "fdspacker_output/side_2/mmrock.prg"
+    .include "sideB/mmrock.asm"
 FDSFileMacroPart3
 
 
