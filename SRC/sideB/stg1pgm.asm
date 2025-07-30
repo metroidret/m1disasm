@@ -672,7 +672,6 @@ AreaRoutineStub:
 
 
 
-
 .include "sideB/brinstar/enemy_sprite_data.asm"
 
 
