@@ -1420,31 +1420,31 @@ WriteDoorBGTiles_Air:
     lda #$FF ; air blank tile
     bne WriteDoorBGTiles_Common ; branch always
 WriteDoorBGTiles_Solid:
-    lda #$4E ; solid blank tile
+    lda #$4E ; door tile
 WriteDoorBGTiles_Common:
     ; get cart ram pointer of door
     pha
     ; door y coordinate
     lda #$50
-    sta $02
+    sta Temp02_PositionY
     ; door x coordinate (depends on bit 4 of object slot address)
     txa
     jsr Adiv16
     and #$01
     tay
     lda DoorXTable,y
-    sta $03
+    sta Temp03_PositionX
     ; door nametable
     lda ObjHi,x
-    sta $0B
+    sta Temp0B_PositionHi
     ; call
     jsr MakeCartRAMPtr
     ldy #$00 ; init y for loop
     pla
     ; cart ram pointer of door is now in $04-$05
-    ; write 6 air or solid blank tiles in a vertical line to cart ram
+    ; write 6 air or door tiles in a vertical line to cart ram
     @loop:
-        sta ($04),y
+        sta (Temp04_CartRAMPtr),y
         tax
         tya
         clc
@@ -1458,9 +1458,9 @@ WriteDoorBGTiles_Common:
     jsr Adiv8
     and #$06
     tay
-    lda $04
+    lda Temp04_CartRAMPtr
     sta DoorCartRAMPtr,y
-    lda $05
+    lda Temp04_CartRAMPtr+1.b
     sta DoorCartRAMPtr+1,y
     rts
 

@@ -172,6 +172,15 @@ Temp07_ItemX           = $07
 Temp08_ItemHi          = $08
 Temp09_ItemType        = $09
 
+; BG collision
+Temp00_CollisionPointYMod8 = $00
+Temp01_CollisionPointXMod8 = $01
+Temp02_DistToCenterY   = $02
+Temp03_DistToCenterX   = $03
+Temp04_NumBlocksToCheck = $04
+Temp06_NextPointYOffset = $06    ; either 0 or 8 when checking vertically and horizontally respectively
+Temp07_NextPointXOffset = $07    ; either 8 or 0 when checking vertically and horizontally respectively
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
