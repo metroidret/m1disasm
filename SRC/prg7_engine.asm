@@ -7587,6 +7587,7 @@ ProjectileHitDoorOrStatue:
     ldx #$06
     ; go through all doors
     @loop:
+        ; check if projectile tile column is the same as door tile column otherwise check next door
         lda Temp04_CartRAMPtr+1.b
         eor DoorCartRAMPtr+1.b,x
         and #$04
@@ -7595,16 +7596,20 @@ ProjectileHitDoorOrStatue:
         eor DoorCartRAMPtr,x
         and #$1F
         bne @next
+        ; get obj slot
         txa
         jsr Amul8       ; * 8
         ora #$80
         tay
+        ; check next door if it doesn't exist
         lda DoorStatus,y
         beq @next
         lda DoorType,y
         lsr
         bcs @blueDoor
+            ; missile door
             ldx PageIndex
+            ; check if projectile is a missile or missile explosion
             lda ObjAction,x
             eor #wa_Missile         ; eor to preserve carry clear?
             beq @hitByMissile
@@ -7619,6 +7624,7 @@ ProjectileHitDoorOrStatue:
             ora #sfxTri_SamusBall
             sta TriSFXFlag
         @blueDoor:
+        ; set door is hit
         lda #$04
         sta DoorIsHit,y
         bne ClcExit
