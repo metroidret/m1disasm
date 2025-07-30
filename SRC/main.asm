@@ -445,7 +445,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $11
     .ascstr "STG4PGM", $00
 FDSFileMacroPart2 $B560, $00
-    .incbin "fdspacker_output/side_2/stg4pgm.prg"
+    .include "sideB/stg4pgm.asm"
 FDSFileMacroPart3
 
 
@@ -454,7 +454,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $13
     .ascstr "STG5PGM", $00
 FDSFileMacroPart2 $B560, $00
-    .incbin "fdspacker_output/side_2/stg5pgm.prg"
+    .include "sideB/stg5pgm.asm"
 FDSFileMacroPart3
 
 
@@ -463,7 +463,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $12
     .ascstr "STG6PGM", $00
 FDSFileMacroPart2 $B560, $00
-    .incbin "fdspacker_output/side_2/stg6pgm.prg"
+    .include "sideB/stg6pgm.asm"
 FDSFileMacroPart3
 
 
@@ -472,7 +472,7 @@ FDSFileMacroPart3
 FDSFileMacroPart1 $14
     .ascstr "STG7PGM", $00
 FDSFileMacroPart2 $B560, $00
-    .incbin "fdspacker_output/side_2/stg7pgm.prg"
+    .include "sideB/stg7pgm.asm"
 FDSFileMacroPart3
 
 
