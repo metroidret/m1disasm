@@ -1120,7 +1120,7 @@ SetDoorEntryInfo:
     jsr Amul16                      ;($C2C5)*16. Move scroll toggle data to upper 4 bits.
     ora ObjAction                   ;Keep Samus action so she will appear the same comming-->
     sta SamusDoorData               ;out of the door as she did going in.
-    lda #$05                        ;
+    lda #sa_Door                    ;
     sta ObjAction                   ;Indicate Samus is in a door.
 RTS_8B6C:
     rts

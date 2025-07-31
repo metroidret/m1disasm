@@ -12,64 +12,64 @@
 ObjectAnimIndexTbl:
 
 ;Samus run animation.
-ObjAnim_00: ;$00
+ObjAnim_SamusRun: ;$00
     .byte _id_ObjFrame03, _id_ObjFrame04, _id_ObjFrame05, $FF
 
 ;Samus front animation.
-ObjAnim_04: ;$04
+ObjAnim_SamusFront: ;$04
     .byte _id_ObjFrame07, $FF
 
 ;Samus jump out of ball animation.
-ObjAnim_06: ;$06
+ObjAnim_Unroll: ;$06
     .byte _id_ObjFrame17
 ;Samus Stand animation.
-ObjAnim_07: ;$07
+ObjAnim_SamusStand: ;$07
     .byte _id_ObjFrame08, $FF
 
 ;Samus stand and fire animation.
-ObjAnim_09: ;$09
+ObjAnim_SamusStandFire: ;$09
     .byte _id_ObjFrame22, $FF
 
 ;Samus stand and jump animation.
-ObjAnim_0B: ;$0B
+ObjAnim_SamusJumpTransition: ;$0B
     .byte _id_ObjFrame04
 ;Samus Jump animation.
-ObjAnim_0C: ;$0C
+ObjAnim_SamusJump: ;$0C
     .byte _id_ObjFrame10, $FF
 
 ;Samus somersault animation.
-ObjAnim_0E: ;$0E
+ObjAnim_SamusSalto: ;$0E
     .byte _id_ObjFrame17, _id_ObjFrame18, _id_ObjFrame19, _id_ObjFrame1A, $FF
 
 ;Samus run and jump animation.
-ObjAnim_13: ;$13
+ObjAnim_SamusRunJump: ;$13
     .byte _id_ObjFrame03, _id_ObjFrame17, $FF
 
 ;Samus roll animation.
-ObjAnim_16: ;$16
+ObjAnim_SamusRoll: ;$16
     .byte _id_ObjFrame1E, _id_ObjFrame1D, _id_ObjFrame1C, _id_ObjFrame1B, $FF
 
 ;Bullet animation.
-ObjAnim_1B: ;$1B
+ObjAnim_RegularBullet: ;$1B
     .byte _id_ObjFrame28, $FF
 
 ;Bullet hit animation.
-ObjAnim_1D: ;$1D
+ObjAnim_BulletHit: ;$1D
     .byte _id_ObjFrame2A, $F7, $FF
 
 ;Samus jump and fire animation.
-ObjAnim_20: ;$20
+ObjAnim_SamusJumpFire: ;$20
     .byte _id_ObjFrame12, $FF
 
 ;Samus run and fire animation.
-ObjAnim_22: ;$22
+ObjAnim_SamusRunFire: ;$22
     .byte _id_ObjFrame0C, _id_ObjFrame0D, _id_ObjFrame0E, $FF
 
 ;Samus point up and shoot animation.
-ObjAnim_26: ;$26
+ObjAnim_SamusPntUpFire: ;$26
     .byte _id_ObjFrame30
 ;Samus point up animation.
-ObjAnim_27: ;$27
+ObjAnim_SamusPntUp: ;$27
     .byte _id_ObjFrame2B, $FF
 
 ;Door open animation.
@@ -89,25 +89,25 @@ ObjAnim_SamusExplode: ;$32
     .byte _id_ObjFrame35, $FF
 
 ;Samus jump and point up animation.
-ObjAnim_34: ;$34
+ObjAnim_SamusJumpPntUpFire: ;$34
     .byte _id_ObjFrame39
-ObjAnim_35: ;$35
+ObjAnim_SamusJumpPntUp: ;$35
     .byte _id_ObjFrame38, $FF
 
 ;Samus run and point up animation.
-ObjAnim_37: ;$37
+ObjAnim_SamusRunPntUp: ;$37
     .byte _id_ObjFrame40, _id_ObjFrame41, _id_ObjFrame42, $FF
 
 ;Samus run, point up and shoot animation 1.
-ObjAnim_3B: ;$3B
+ObjAnim_SamusRunPntUpFire1: ;$3B
     .byte _id_ObjFrame46, $FF
 
 ;Samus run, point up and shoot animation 2.
-ObjAnim_3D: ;$3D
+ObjAnim_SamusRunPntUpFire2: ;$3D
     .byte _id_ObjFrame47, $FF
 
 ;Samus run, point up and shoot animation 3.
-ObjAnim_3F: ;$3F
+ObjAnim_SamusRunPntUpFire3: ;$3F
     .byte _id_ObjFrame48, $FF
 
 ;Samus front fade out of old area. (plays for only one frame on NES)

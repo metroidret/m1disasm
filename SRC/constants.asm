@@ -1177,29 +1177,6 @@ sa_Dead2               = 8
 sa_Elevator            = 9
 sa_Begin               = 255
 
-;once i replace all usages of these constants by (ObjAnim_00 - ObjectAnimIndexTbl) expressions, ->
-;i will rename the ObjAnim to match the names of these constants, and then delete the constants.
-;an_SamusRun            = $00
-;an_SamusFront          = $04
-;an_SamusStand          = $07
-;an_SamusJump           = $0C
-;an_SamusSalto          = $0E
-;an_SamusRunJump        = $13
-;an_SamusRoll           = $16
-;an_Bullet              = $1B
-;an_SamusFireJump       = $20
-;an_SamusFireRun        = $22
-;an_SamusPntUp          = $27
-;an_Explode             = $32
-;an_SamusJumpPntUp      = $35
-;an_SamusRunPntUp       = $37
-;an_WaveBeam            = $7D
-;an_BombTick            = $7F
-;an_BombExplode         = $82
-;an_MissileLeft         = $8B
-;an_MissileRight        = $8D
-;an_MissileExplode      = $91
-
 ;Weapon action handlers.
 wa_RegularBeam         = $01
 wa_WaveBeam            = $02
