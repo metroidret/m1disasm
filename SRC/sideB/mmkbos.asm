@@ -1,6 +1,6 @@
 MMKBOS_DataDD0E_DEA0:
     .word LDB4D
-    .word LDBAE
+    .word FDSWaveform_DBAE
     .byte $82
     .byte $50
     .byte $00

@@ -464,17 +464,17 @@ LD3E2:
 
 DataDD0E_D3F4:
     .word LDB2C
-    .word LDBAE
+    .word FDSWaveform_DBAE
     .byte $00, $A0, $00, $07, $00, $A0, $A0, $A8, $02
 
 DataDD0E_D401:
     .word LDB2C
-    .word LDB6E
+    .word FDSWaveform_DB6E
     .byte $A0, $A0, $00, $10, $00, $A0, $0A, $E0, $01
 
 DataDD0E_D40E:
     .word LDB2C
-    .word LDC2E
+    .word FDSWaveform_DC2E
     .byte $82, $47, $00, $06, $00, $87, $87, $02, $00
 
 LD41B:
@@ -544,7 +544,7 @@ LD483:
 
 DataDD0E_D493:
     .word LDB2C
-    .word LDC2E
+    .word FDSWaveform_DC2E
     .byte $82, $4A, $00, $70, $00, $80, $60, $10, $00
 
 LD4A0:
@@ -562,7 +562,7 @@ LD4AE:
 
 DataDD0E_D4B6:
     .word LDB4D
-    .word LDB6E
+    .word FDSWaveform_DB6E
     .byte $82, $50, $00
 
 LD4BD:
@@ -600,7 +600,7 @@ RTS_D503:
 
 DataDD0E_D504:
     .word LDB2C
-    .word LDBAE
+    .word FDSWaveform_DBAE
     .byte $9B, $07, $00, $71, $00, $00, $A0, $F8, $02
 
 LD511:
@@ -622,7 +622,7 @@ RTS_D52E:
 
 DataDD0E_D52F:
     .word LDB2C
-    .word LDBEE
+    .word FDSWaveform_DBEE
     .byte $00, $A0, $00, $27, $00, $00, $8B, $FF, $07
 
 LD53C:
@@ -958,6 +958,8 @@ LD769:
     sta $400F
 LD782:
     jmp LD733
+
+
 LD785:
     stx $E0
     sty $E1
@@ -1041,10 +1043,10 @@ LD7FC:
 LD81A:
     lda #$00
     sta $EA
-    lda LDCAE+1,y
+    lda MusicNotesTblFDS+1,y
     beq LD82F
     sta $061D
-    lda LDCAE,y
+    lda MusicNotesTblFDS,y
     sta $061E
     jmp LD833
 LD82F:
@@ -1139,8 +1141,8 @@ LD8EE:
 
 LD8F1:
     jsr LD92E
-    ldx #$3A
-    ldy #$D9
+    ldx #<DataD785_SongPowerUp.b
+    ldy #>DataD785_SongPowerUp.b
     bne LD90A
 LD8FA:
     jmp LD92A
@@ -1153,16 +1155,16 @@ LD900:
 
 LD903:
     jsr LD926
-    ldx #$49
-    ldy #$D9
+    ldx #<DataD785_SongFadeIn.b
+    ldy #>DataD785_SongFadeIn.b
 LD90A:
     jsr LD8E5
     jmp LD785
 
 LD910:
     jsr LD92E
-    ldx #$00
-    ldy #$CC
+    ldx #<DataD785_SongEnd.b
+    ldy #>DataD785_SongEnd.b
     bne LD90A
 LD919:
     lda #$B3
@@ -1192,35 +1194,297 @@ LD934:
     ldy #$96
     bne LD91D
 
-LD93A:
-    .byte $93, $DA, $2C, $DB, $6E, $DC, $00, $F3, $80, $80, $00, $13, $00, $86, $44, $BC
-    .byte $DA, $2C, $DB, $6E, $DC, $0B, $F4, $80, $80, $00, $12, $00, $84, $48, $60, $D9
-    .byte $6B, $D9, $75, $D9, $80, $D9, $01, $02, $02, $03, $03, $04, $05, $06, $07, $08
-    .byte $FF, $02, $04, $05, $06, $07, $08, $07, $06, $05, $FF, $00, $0D, $09, $07, $06
-    .byte $05, $05, $05, $04, $04, $FF, $02, $06, $07, $07, $07, $06, $06, $06, $06, $05
-    .byte $05, $05, $04, $04, $04, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $02
-    .byte $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $01, $01, $01, $F0, $0B
-    .byte $FF, $F5, $00, $00, $A4, $DF, $A6, $DF, $79, $DF, $00, $00, $0B, $FF, $00, $02
-    .byte $02, $EE, $DE, $C4, $DE, $1A, $DF, $72, $DF, $0B, $FF, $F0, $04, $04, $A0, $DE
-    .byte $C6, $DE, $F7, $DE, $2B, $DF, $00, $FF, $F0, $00, $00, $1D, $DF, $1F, $DF, $88
-    .byte $DF, $00, $00, $0B, $FF, $03, $00, $00, $52, $DA, $54, $DA, $45, $DA, $00, $00
-    .byte $0B, $FF, $F0, $01, $01, $00, $DF, $0F, $DF, $DE, $DE, $00, $00, $17, $00, $00
-    .byte $03, $01, $CE, $CD, $C5, $CE, $FE, $CC, $64, $CF, $17, $00, $F0, $04, $04, $B9
-    .byte $DE, $BB, $DE, $2F, $DF, $CE, $DF, $0B, $00, $F0, $01, $01, $A2, $DA, $AB, $DA
-    .byte $B4, $DA, $00, $00, $00, $00, $F0, $02, $02, $6F, $DA, $7F, $DA, $8E, $DA, $00
-    .byte $00, $0B, $FF, $00, $02, $03, $A0, $DE, $F7, $DE, $61, $DF, $CB, $DF, $0B, $FF
-    .byte $03, $00, $00, $D6, $DA, $C4, $DA, $DF, $DA, $00, $00, $C8, $B0, $38, $3A, $3C
-    .byte $3E, $40, $3E, $3C, $3A, $B6, $02, $FF, $B8, $02, $B3, $02, $B2, $74, $02, $6A
-    .byte $02, $72, $02, $62, $B4, $02, $B2, $60, $02, $6C, $02, $76, $B3, $02, $B2, $7E
-    .byte $02, $7C, $B3, $02, $00, $B3, $52, $42, $B2, $48, $3E, $38, $3E, $B2, $44, $4C
-    .byte $B3, $4C, $B4, $38, $00, $B3, $48, $3A, $B2, $3E, $38, $30, $38, $B2, $3E, $44
-    .byte $B3, $42, $B4, $3C, $B4, $2C, $2A, $1E, $1C, $B2, $22, $2C, $30, $34, $38, $30
-    .byte $26, $30, $3A, $34, $2C, $26, $B4, $2A, $B3, $3E, $42, $3A, $38, $B4, $34, $34
-    .byte $00, $B3, $30, $30, $2C, $26, $20, $B4, $24, $24, $B3, $36, $34, $30, $2A, $B4
-    .byte $1C, $1C, $B3, $34, $3A, $34, $30, $B4, $2A, $2A, $B4, $12, $B3, $10, $18, $16
-    .byte $0A, $B4, $14, $12, $B3, $10, $06, $0E, $04, $B4, $0C, $00, $E0, $B0, $54, $4E
-    .byte $48, $42, $48, $4E, $FF, $E0, $B3, $02, $B0, $3C, $40, $44, $4A, $4E, $54, $58
-    .byte $5C, $62, $66, $6C, $70, $74, $7A, $B3, $02, $FF
+
+DataD785_SongPowerUp:
+    .word SongPowerUpFDS
+    .word LDB2C
+    .word FDSWaveform_DC6E
+    .byte $00, $F3, $80, $80, $00, $13, $00, $86, $44
+
+DataD785_SongFadeIn:
+    .word SongFadeInFDS
+    .word LDB2C
+    .word FDSWaveform_DC6E
+    .byte $0B, $F4, $80, $80, $00, $12, $00, $84, $48
+
+
+VolumeEnvelopePtrTable:
+    .word VolumeEnvelope1, VolumeEnvelope2, VolumeEnvelope3, VolumeEnvelope4
+
+VolumeEnvelope1:
+    .byte $01, $02, $02, $03, $03, $04, $05, $06, $07, $08, $FF
+
+VolumeEnvelope2:
+    .byte $02, $04, $05, $06, $07, $08, $07, $06, $05, $FF
+
+VolumeEnvelope3:
+    .byte $00, $0D, $09, $07, $06, $05, $05, $05, $04, $04, $FF
+
+VolumeEnvelope4:
+    .byte $02, $06, $07, $07, $07, $06, $06, $06, $06, $05, $05, $05, $04, $04, $04, $03
+    .byte $03, $03, $03, $02, $03, $03, $03, $03, $03, $02, $02, $02, $02, $02, $02, $02
+    .byte $02, $02, $02, $01, $01, $01, $01, $01, $F0
+
+
+
+SongHeaders:
+
+SongMthrBrnRoomHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $F5, $00, $00
+    .word SongMthrBrnRoomSQ1, SongMthrBrnRoomSQ2, SongMthrBrnRoomTri, $0000
+
+SongEscapeHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $00, $02, $02
+    .word SongEscapeSQ1, SongEscapeSQ2, SongEscapeTri, SongEscapeNoise
+
+SongNorfairHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $F0, $04, $04
+    .word SongNorfairSQ1, SongNorfairSQ2, SongNorfairTri, SongNorfairNoise
+
+SongKraidHeader:
+    SongHeader NoteLengthsTbl@4, $FF, $F0, $00, $00
+    .word SongKraidSQ1, SongKraidSQ2, SongKraidTri, $0000
+
+SongItemRoomHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
+    .word SongItemRoomSQ1, SongItemRoomSQ2, SongItemRoomTri, $0000
+
+SongRidleyHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $F0, $01, $01
+    .word SongRidleySQ1, SongRidleySQ2, SongRidleyTri, $0000
+
+SongEndHeader:
+    SongHeader NoteLengthsTbl@7, $00, $00, $03, $01
+    .word SongEndSQ1, SongEndSQ2, SongEndTri, SongEndNoise
+
+SongIntroHeader:
+    SongHeader NoteLengthsTbl@7, $00, $F0, $04, $04
+    .word SongIntroSQ1, SongIntroSQ2, SongIntroTri, SongIntroNoise
+
+SongFadeInHeader:
+    SongHeader NoteLengthsTbl@6, $00, $F0, $01, $01
+    .word SongFadeInSQ1, SongFadeInSQ2, SongFadeInTri, $0000
+
+SongPowerUpHeader:
+    SongHeader NoteLengthsTbl@4, $00, $F0, $02, $02
+    .word SongPowerUpSQ1, SongPowerUpSQ2, SongPowerUpTri, $0000
+
+SongBrinstarHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $00, $02, $03
+    .word SongBrinstarSQ1, SongBrinstarSQ2, SongBrinstarTri, SongBrinstarNoise
+
+SongTourianHeader:
+    SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
+    .word SongTourianSQ1, SongTourianSQ2, SongTourianTri, $0000
+
+
+SongItemRoomTri:
+    SongRepeatSetup $8
+        SongNoteLength $0 ;3/32 seconds
+        SongNote "E4"
+        SongNote "F4"
+        SongNote "F#4"
+        SongNote "G4"
+        SongNote "Ab4"
+        SongNote "G4"
+        SongNote "F#4"
+        SongNote "F4"
+        SongNoteLength $6 ;1 3/16 seconds
+        SongRest
+    SongRepeat
+
+SongItemRoomSQ1:
+    SongNoteLength $8 ;1/4 seconds
+    SongRest
+
+SongItemRoomSQ2:
+    SongNoteLength $3 ;3/4 seconds
+    SongRest
+    SongNoteLength $2 ;3/8 seconds
+    SongNote "A#6"
+    SongRest
+    SongNote "F6"
+    SongRest
+    SongNote "A6"
+    SongRest
+    SongNote "C#6"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongRest
+    SongNoteLength $2 ;3/8 seconds
+    SongNote "C6"
+    SongRest
+    SongNote "F#6"
+    SongRest
+    SongNote "B6"
+    SongNoteLength $3 ;3/4 seconds
+    SongRest
+    SongNoteLength $2 ;3/8 seconds
+    SongNote "F7"
+    SongRest
+    SongNote "D7"
+    SongNoteLength $3 ;3/4 seconds
+    SongRest
+    SongEnd ;End item room music.
+
+
+SongPowerUpSQ1:
+    SongNoteLength $3 ;1/2 seconds
+    SongNote "F5"
+    SongNote "A4"
+    SongNoteLength $2 ;1/4 seconds
+    SongNote "C5"
+    SongNote "G4"
+    SongNote "E4"
+    SongNote "G4"
+    SongNoteLength $2 ;1/4 seconds
+    SongNote "Bb4"
+    SongNote "D5"
+    SongNoteLength $3 ;1/2 seconds
+    SongNote "D5"
+    SongNoteLength $4 ;1 second
+    SongNote "E4"
+    SongEnd
+
+SongPowerUpSQ2:
+    SongNoteLength $3 ;1/2 seconds
+    SongNote "C5"
+    SongNote "F4"
+    SongNoteLength $2 ;1/4 seconds
+    SongNote "G4"
+    SongNote "E4"
+    SongNote "C4"
+    SongNote "E4"
+    SongNoteLength $2 ;1/4 seconds
+    SongNote "G4"
+    SongNote "Bb4"
+    SongNoteLength $3 ;1/2 seconds
+    SongNote "A4"
+    SongNoteLength $4 ;1 second
+    SongNote "F#4"
+
+SongPowerUpTri:
+    SongNoteLength $4 ;1 second
+    SongNote "A#3"
+    SongNote "A3"
+    SongNote "D#3"
+    SongNote "D3"
+
+SongPowerUpFDS:
+    SongNoteLength $2 ;1/4 seconds
+    SongNote "F3"
+    SongNote "A#3"
+    SongNote "C4"
+    SongNote "D4"
+    SongNote "E4"
+    SongNote "C4"
+    SongNote "G3"
+    SongNote "C4"
+    SongNote "F4"
+    SongNote "D4"
+    SongNote "A#3"
+    SongNote "G3"
+    SongNoteLength $4 ;1 second
+    SongNote "A3"
+
+
+SongFadeInSQ1:
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "G4"
+    SongNote "A4"
+    SongNote "F4"
+    SongNote "E4"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "D4"
+    SongNote "D4"
+    .byte $00
+
+SongFadeInSQ2:
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "C4"
+    SongNote "C4"
+    SongNote "Bb3"
+    SongNote "G3"
+    SongNote "E3"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "F#3"
+    SongNote "F#3"
+
+SongFadeInTri:
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "D#4"
+    SongNote "D4"
+    SongNote "C4"
+    SongNote "A3"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "D3"
+    SongNote "D3"
+
+SongFadeInFDS:
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "D4"
+    SongNote "F4"
+    SongNote "D4"
+    SongNote "C4"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "A3"
+    SongNote "A3"
+
+
+SongTourianSQ2:
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "A2"
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "G#2"
+    SongNote "C3"
+    SongNote "B2"
+    SongNote "F2"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "A#2"
+    SongNote "A2"
+    SongNoteLength $3 ;3/4 seconds
+    SongNote "G#2"
+    SongNote "D2"
+    SongNote "G2"
+    SongNote "C#2"
+    SongNoteLength $4 ;1 1/2 seconds
+    SongNote "F#2"
+    SongEnd ;End Tourian music.
+
+SongTourianSQ1:
+    SongRepeatSetup $20
+        SongNoteLength $0 ;3/32 seconds
+        SongNote "F#5"
+        SongNote "D#5"
+        SongNote "C5"
+        SongNote "A4"
+        SongNote "C5"
+        SongNote "D#5"
+    SongRepeat
+
+SongTourianTri:
+    SongRepeatSetup $20
+        SongNoteLength $3 ;3/4 seconds
+        SongRest
+        SongNoteLength $0 ;3/32 seconds
+        SongNote "F#4"
+        SongNote "G#4"
+        SongNote "A#4"
+        SongNote "C#5"
+        SongNote "D#5"
+        SongNote "F#5"
+        SongNote "G#5"
+        SongNote "A#5"
+        SongNote "C#6"
+        SongNote "D#6"
+        SongNote "F#6"
+        SongNote "G#6"
+        SongNote "A#6"
+        SongNote "C#7"
+        SongNoteLength $3 ;3/4 seconds
+        SongRest
+    SongRepeat
+
+
 
 LDAF4:
     lda #$80
@@ -1255,6 +1519,8 @@ LDB1C:
     sta $4089
     rts
 
+
+
 LDB2C:
     .byte $07, $07, $07, $07, $07, $07, $07, $07, $01, $01, $01, $01, $01, $01, $01, $01
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $07, $07, $07, $07, $07, $07, $07, $07
@@ -1264,37 +1530,87 @@ LDB4D:
     .byte $05, $05, $05, $03, $03, $03, $03, $05, $05, $05, $03, $03, $05, $05, $03, $01
     .byte $FF
 
-LDB6E:
+
+FDSWaveform_DB6E:
     .byte $00, $02, $04, $06, $08, $0A, $0C, $0E, $10, $12, $14, $16, $18, $1A, $1C, $1E
     .byte $1F, $21, $23, $25, $27, $29, $2B, $2D, $2F, $31, $33, $35, $37, $39, $3B, $3D
     .byte $3F, $3D, $3B, $39, $37, $35, $33, $31, $2F, $2D, $2B, $29, $26, $24, $22, $20
     .byte $1E, $1C, $1A, $18, $16, $14, $12, $10, $0E, $0C, $0A, $08, $06, $04, $02, $00
-LDBAE:
+FDSWaveform_DBAE:
     .byte $00, $08, $0E, $13, $17, $1B, $20, $24, $27, $29, $2B, $27, $22, $1E, $1B, $18
     .byte $1D, $24, $2C, $30, $31, $30, $2D, $2B, $29, $28, $27, $26, $25, $24, $23, $22
     .byte $21, $20, $19, $11, $0B, $12, $19, $12, $23, $20, $2F, $34, $37, $3A, $3E, $3F
     .byte $3E, $3A, $34, $30, $2D, $27, $23, $1E, $1B, $16, $13, $0F, $0B, $08, $04, $00
-LDBEE:
+FDSWaveform_DBEE:
     .byte $00, $03, $08, $0B, $0F, $13, $17, $1B, $1E, $23, $27, $2B, $2F, $33, $37, $3B
     .byte $3F, $3B, $37, $33, $2F, $2B, $27, $23, $20, $2B, $18, $14, $10, $0C, $08, $04
     .byte $00, $04, $08, $0C, $10, $14, $18, $1C, $20, $24, $28, $2B, $2F, $33, $37, $3B
     .byte $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $3F, $3F, $3F
-LDC2E:
+FDSWaveform_DC2E:
     .byte $00, $3F, $3F, $00, $00, $3F, $3F, $00, $00, $3F, $3F, $00, $00, $3F, $3F, $00
     .byte $00, $3F, $3F, $00, $00, $3F, $3F, $00, $00, $3F, $3F, $00, $00, $3F, $3F, $00
     .byte $00, $3B, $3B, $00, $33, $33, $00, $00, $00, $2D, $2D, $00, $00, $23, $23, $00
     .byte $00, $1C, $1C, $00, $00, $14, $14, $00, $00, $0C, $0C, $00, $00, $04, $04, $00
+FDSWaveform_DC6E:
     .byte $00, $3E, $3D, $3C, $3B, $3A, $38, $37, $36, $36, $35, $34, $33, $32, $31, $30
     .byte $2F, $2E, $2D, $2C, $2B, $2A, $29, $28, $27, $26, $25, $24, $23, $22, $21, $20
     .byte $1F, $1E, $1D, $1C, $1B, $1A, $19, $18, $17, $16, $15, $14, $13, $12, $11, $10
     .byte $0F, $0E, $0D, $0C, $0B, $0A, $09, $08, $07, $06, $05, $04, $03, $02, $01, $00
-LDCAE:
-    .byte $07, $F0, $00, $00, $00, $A2, $00, $AC, $00, $C1, $00, $CC, $00, $D8, $00, $E5
-    .byte $00, $F3, $01, $01, $01, $11, $01, $21, $01, $32, $01, $44, $01, $58, $01, $6C
-    .byte $01, $82, $01, $99, $01, $B1, $01, $CB, $01, $E6, $02, $03, $02, $22, $02, $42
-    .byte $02, $65, $02, $89, $02, $B0, $02, $D9, $03, $04, $03, $32, $03, $63, $03, $96
-    .byte $03, $CD, $04, $07, $04, $44, $04, $85, $04, $CA, $05, $13, $05, $60, $05, $B2
-    .byte $06, $08, $06, $64, $06, $C6, $07, $2D, $07, $9A, $08, $0E, $08, $88, $09, $0A
+
+
+;This table is used specifically for the audio channel of the Famicom Disk System.
+;The formula for figuring out the frequency is as follows: 1790000*hhhhllllllll/16/262144
+MusicNotesTblFDS:
+    .byte $07,$F0                       ;867.1Hz (A5)   Index #$00 (Not used)
+    .byte $00,$00                       ;No sound       Index #$02
+    .byte $00,$A2                       ;69.1Hz (C#2)   Index #$04
+    .byte $00,$AC                       ;73.4Hz (D2)    Index #$06
+    .byte $00,$C1                       ;82.4Hz (E2)    Index #$08
+    .byte $00,$CC                       ;87.0Hz (F2)    Index #$0A
+    .byte $00,$D8                       ;92.2Hz (F#2)   Index #$0C
+    .byte $00,$E5                       ;97.7Hz (G2)    Index #$0E
+    .byte $00,$F3                       ;103.7Hz (Ab2)  Index #$10
+    .byte $01,$01                       ;109.7Hz (A2)   Index #$12
+    .byte $01,$11                       ;116.5Hz (A#2)  Index #$14
+    .byte $01,$21                       ;123.3Hz (B2)   Index #$16
+    .byte $01,$32                       ;130.6Hz (C3)   Index #$18
+    .byte $01,$44                       ;138.3Hz (C#3)  Index #$1A
+    .byte $01,$58                       ;146.8Hz (D3)   Index #$1C
+    .byte $01,$6C                       ;155.3Hz (D#3)  Index #$1E
+    .byte $01,$82                       ;164.7Hz (E3)   Index #$20
+    .byte $01,$99                       ;174.5Hz (F3)   Index #$22
+    .byte $01,$B1                       ;184.8Hz (F#3)  Index #$24
+    .byte $01,$CB                       ;195.9Hz (G3)   Index #$26
+    .byte $01,$E6                       ;207.4Hz (Ab3)  Index #$28
+    .byte $02,$03                       ;219.8Hz (A3)   Index #$2A
+    .byte $02,$22                       ;233.0Hz (A#3)  Index #$2C
+    .byte $02,$42                       ;246.6Hz (B3)   Index #$2E
+    .byte $02,$65                       ;261.6Hz (C4)   Index #$30
+    .byte $02,$89                       ;276.9Hz (C#4)  Index #$32
+    .byte $02,$B0                       ;293.6Hz (D4)   Index #$34
+    .byte $02,$D9                       ;311.1Hz (D#4)  Index #$36
+    .byte $03,$04                       ;329.4Hz (E4)   Index #$38
+    .byte $03,$32                       ;349.1Hz (F4)   Index #$3A
+    .byte $03,$63                       ;370.0Hz (F#4)  Index #$3C
+    .byte $03,$96                       ;391.7Hz (G4)   Index #$3E
+    .byte $03,$CD                       ;415.2Hz (Ab4)  Index #$40
+    .byte $04,$07                       ;439.9Hz (A4)   Index #$42
+    .byte $04,$44                       ;466.0Hz (A#4)  Index #$44
+    .byte $04,$85                       ;493.7Hz (B4)   Index #$46
+    .byte $04,$CA                       ;523.2Hz (C5)   Index #$48
+    .byte $05,$13                       ;554.3Hz (C#5)  Index #$4A
+    .byte $05,$60                       ;587.2Hz (D5)   Index #$4C
+    .byte $05,$B2                       ;622.2Hz (D#5)  Index #$4E
+    .byte $06,$08                       ;658.8Hz (E5)   Index #$50
+    .byte $06,$64                       ;698.1Hz (F5)   Index #$52
+    .byte $06,$C6                       ;739.9Hz (F#5)  Index #$54
+    .byte $07,$2D                       ;783.9Hz (G5)   Index #$56
+    .byte $07,$9A                       ;830.4Hz (Ab5)  Index #$58
+    .byte $08,$0E                       ;879.9Hz (A5)   Index #$5A
+    .byte $08,$88                       ;931.9Hz (A#5)  Index #$5C
+    .byte $09,$0A                       ;987.4Hz (B5)   Index #$5E
+
+
 
 LDD0E:
     sta $EA
@@ -1544,41 +1860,345 @@ LDE88:
     .byte $81, $2C, $22, $1C, $2C, $22, $1C, $85, $2C, $04, $81, $2E, $24, $1E, $2E, $24
     .byte $1E, $85, $2E, $04, $81, $32, $28, $22
 
-LDEA0:
-    .word LDF72
+DataD785_SongIntro:
+    .word SongIntroFDS
     .word LDB2C
-    .word LDBAE
+    .word FDSWaveform_DBAE
     .byte $17, $40, $80, $80, $00, $02, $00, $83, $46
 
 LDEAF:
     jsr LD934
-    ldx #<LDEA0.b
-    ldy #>LDEA0.b
+    ldx #<DataD785_SongIntro.b
+    ldy #>DataD785_SongIntro.b
     jmp LD90A
 
-LDEB9:
-    .byte $B7, $02, $C2, $B4, $64, $74, $6A, $02, $64, $78, $74, $02, $FF, $C2, $B2, $72
-    .byte $5A, $6E, $56, $6C, $54, $68, $50, $6E, $56, $6C, $54, $68, $50, $64, $4C, $FF
-    .byte $C4, $72, $5A, $6E, $5A, $6C, $5A, $68, $5A, $6E, $56, $6C, $56, $68, $56, $64
-    .byte $56, $FF, $B2, $5A, $B1, $42, $B2, $56, $B1, $42, $B2, $54, $B1, $42, $B2, $50
-    .byte $B1, $42, $B2, $5A, $B1, $42, $B2, $56, $B1, $42, $B2, $52, $B1, $42, $B2, $50
-    .byte $B1, $42, $B2, $5A, $B1, $44, $B2, $56, $B1, $44, $B2, $52, $B1, $44, $B2, $56
-    .byte $B1, $44, $C4, $5A, $50, $46, $FF, $C3, $58, $50, $46, $FF, $58, $50, $B0, $46
-    .byte $02, $E0, $B4, $02, $FF, $00, $D0, $B6, $2A, $B1, $2A, $B1, $02, $FF, $B4, $4C
-    .byte $60, $5E, $5C, $54, $60, $5C, $56, $C2, $34, $48, $46, $44, $3C, $48, $44, $3E
-    .byte $FF, $C2, $B2, $34, $B1, $42, $B5, $4C, $FF, $C2, $B2, $2C, $B1, $3A, $B5, $48
-    .byte $FF, $C2, $B2, $1E, $B1, $2C, $B5, $36, $FF, $C4, $B2, $20, $B1, $2E, $B5, $38
-    .byte $FF, $E0, $B6, $2A, $B1, $2A, $B1, $02, $FF
-LDF72:
-    .byte $D0, $B6, $06, $B2, $02, $FF, $C8
-    .byte $B4, $02, $FF, $B2, $24, $26, $2A, $2E, $34, $38, $3C, $3E, $B6, $42, $B1, $3E
-    .byte $3C, $B6, $3E, $B1, $3C, $38, $B6, $34, $B2, $42, $B4, $4C, $B3, $44, $42, $3E
-    .byte $3C, $B6, $38, $B2, $3C, $B6, $42, $B2, $4C, $B6, $38, $B2, $3C, $B4, $34, $B3
-    .byte $2A, $2E, $34, $38, $B6, $34, $B2, $2C, $B4, $26, $B5, $38, $3C, $42, $4C, $34
-    .byte $3A, $48, $42, $36, $3E, $4C, $44, $42, $38, $2E, $38, $40, $38, $2E, $38, $E0
-    .byte $B6, $06, $B2, $02, $FF, $D0, $B4, $04, $FF, $CC, $B2, $04, $04, $B5, $07, $B0
-    .byte $04, $04, $B6, $04, $B1, $04, $04, $FF, $CA, $B1, $04, $04, $04, $07, $04, $04
-    .byte $FF, $E0, $B4, $04, $FF, $17, $18, $19, $19, $1A
+
+
+SongIntroSQ1:
+    .byte $B7
+    SongRest
+SongIntroSQ2:
+    SongRepeatSetup $2
+        SongNoteLength $4 ;7/8 seconds
+        SongNote "D6"
+        SongNote "A#6"
+        SongNote "F6"
+        SongRest
+        SongNote "D6"
+        SongNote "C7"
+        SongNote "A#6"
+        SongRest
+    SongRepeat
+    SongRepeatSetup $2
+        SongNoteLength $2 ;7/32 seconds
+        SongNote "A6"
+        SongNote "A5"
+        SongNote "G6"
+        SongNote "G5"
+        SongNote "F#6"
+        SongNote "F#5"
+        SongNote "E6"
+        SongNote "E5"
+        SongNote "G6"
+        SongNote "G5"
+        SongNote "F#6"
+        SongNote "F#5"
+        SongNote "E6"
+        SongNote "E5"
+        SongNote "D6"
+        SongNote "D5"
+    SongRepeat
+    SongRepeatSetup $4
+        SongNote "A6"
+        SongNote "A5"
+        SongNote "G6"
+        SongNote "A5"
+        SongNote "F#6"
+        SongNote "A5"
+        SongNote "E6"
+        SongNote "A5"
+        SongNote "G6"
+        SongNote "G5"
+        SongNote "F#6"
+        SongNote "G5"
+        SongNote "E6"
+        SongNote "G5"
+        SongNote "D6"
+        SongNote "G5"
+    SongRepeat
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "A5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "G5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F#5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "E5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "A5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "G5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "E5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "A5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A#4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "G5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A#4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A#4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "G5"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "A#4"
+    SongRepeatSetup $4
+        SongNote "A5"
+        SongNote "E5"
+        SongNote "B4"
+    SongRepeat
+    SongRepeatSetup $3
+        SongNote "Ab5"
+        SongNote "E5"
+        SongNote "B4"
+    SongRepeat
+    SongNote "Ab5"
+    SongNote "E5"
+    SongNoteLength $0 ;1/4 seconds
+    SongNote "B4"
+    SongRest
+    SongRepeatSetup $20
+        SongNoteLength $4 ;7/8 seconds
+        SongRest
+    SongRepeat
+    SongEnd
+
+SongIntroTri:
+    SongRepeatSetup $10
+        SongNoteLength $6 ;21/32 seconds
+        SongNote "A3"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "A3"
+        SongNoteLength $1 ;7/64 seconds
+        SongRest
+    SongRepeat
+    SongNoteLength $4 ;7/8 seconds
+    SongNote "D5"
+    SongNote "C6"
+    SongNote "B5"
+    SongNote "A#5"
+    SongNote "F#5"
+    SongNote "C6"
+    SongNote "A#5"
+    SongNote "G5"
+    SongRepeatSetup $2
+        SongNote "D4"
+        SongNote "C5"
+        SongNote "B4"
+        SongNote "A#4"
+        SongNote "F#4"
+        SongNote "C5"
+        SongNote "A#4"
+        SongNote "G4"
+    SongRepeat
+    SongRepeatSetup $2
+        SongNoteLength $2 ;7/32 seconds
+        SongNote "D4"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "A4"
+        SongNoteLength $5 ;1 13/16 seconds
+        SongNote "D5"
+    SongRepeat
+    SongRepeatSetup $2
+        SongNoteLength $2 ;7/32 seconds
+        SongNote "A#3"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "F4"
+        SongNoteLength $5 ;1 13/16 seconds
+        SongNote "C5"
+    SongRepeat
+    SongRepeatSetup $2
+        SongNoteLength $2 ;7/32 seconds
+        SongNote "D#3"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "A#3"
+        SongNoteLength $5 ;1 13/16 seconds
+        SongNote "D#4"
+    SongRepeat
+    SongRepeatSetup $4
+        SongNoteLength $2 ;7/32 seconds
+        SongNote "E3"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "B3"
+        SongNoteLength $5 ;1 13/16 seconds
+        SongNote "E4"
+    SongRepeat
+    SongRepeatSetup $20
+        SongNoteLength $6 ;21/32 seconds
+        SongNote "A3"
+        SongNoteLength $1 ;7/64 seconds
+        SongNote "A3"
+        SongNoteLength $1 ;7/64 seconds
+        SongRest
+    SongRepeat
+
+SongIntroFDS:
+    SongRepeatSetup $10
+        SongNoteLength $6 ;21/32 seconds
+        SongNote "D2"
+        SongNoteLength $2 ;7/32 seconds
+        SongRest
+    SongRepeat
+    SongRepeatSetup $8
+        SongNoteLength $4 ;7/8 seconds
+        SongRest
+    SongRepeat
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F#3"
+    SongNote "G3"
+    SongNote "A3"
+    SongNote "B3"
+    SongNote "D4"
+    SongNote "E4"
+    SongNote "F#4"
+    SongNote "G4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "A4"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "G4"
+    SongNote "F#4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "G4"
+    SongNoteLength $1 ;7/64 seconds
+    SongNote "F#4"
+    SongNote "E4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "D4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "A4"
+    SongNoteLength $4 ;7/8 seconds
+    SongNote "D5"
+    SongNoteLength $3 ;7/16 seconds
+    SongNote "A#4"
+    SongNote "A4"
+    SongNote "G4"
+    SongNote "F#4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "E4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F#4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "A4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "D5"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "E4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "F#4"
+    SongNoteLength $4 ;7/8 seconds
+    SongNote "D4"
+    SongNoteLength $3 ;7/16 seconds
+    SongNote "A3"
+    SongNote "B3"
+    SongNote "D4"
+    SongNote "E4"
+    SongNoteLength $6 ;21/32 seconds
+    SongNote "D4"
+    SongNoteLength $2 ;7/32 seconds
+    SongNote "A#3"
+    SongNoteLength $4 ;7/8 seconds
+    SongNote "G3"
+    SongNoteLength $5 ;1 13/16 seconds
+    SongNote "E4"
+    SongNote "F#4"
+    SongNote "A4"
+    SongNote "D5"
+    SongNote "D4"
+    SongNote "F4"
+    SongNote "C5"
+    SongNote "A4"
+    SongNote "D#4"
+    SongNote "G4"
+    SongNote "D5"
+    SongNote "A#4"
+    SongNote "A4"
+    SongNote "E4"
+    SongNote "B3"
+    SongNote "E4"
+    SongNote "Ab4"
+    SongNote "E4"
+    SongNote "B3"
+    SongNote "E4"
+    SongRepeatSetup $20
+        SongNoteLength $6 ;21/32 seconds
+        SongNote "D2"
+        SongNoteLength $2 ;7/32 seconds
+        SongRest
+    SongRepeat
+
+SongIntroNoise:
+    SongRepeatSetup $10
+        SongNoteLength $4 ;7/8 Seconds
+        .byte $04
+    SongRepeat
+    SongRepeatSetup $C
+        SongNoteLength $2 ;7/32 Seconds
+        .byte $04
+        .byte $04
+        SongNoteLength $5 ;1 13/16 Seconds
+        .byte $07
+        SongNoteLength $0 ;1/4 Seconds
+        .byte $04
+        .byte $04
+        SongNoteLength $6 ;21/32 Seconds
+        .byte $04
+        SongNoteLength $1 ;7/64 Seconds
+        .byte $04
+        .byte $04
+    SongRepeat
+    SongRepeatSetup $A
+        SongNoteLength $1 ;7/64 Seconds
+        .byte $04
+        .byte $04
+        .byte $04
+        .byte $07
+        .byte $04
+        .byte $04
+    SongRepeat
+    SongRepeatSetup $20
+        SongNoteLength $4 ;7/8 Seconds
+        .byte $04
+    SongRepeat
+
+
+LDFEE:
+    .byte $17
+    .byte $18
+    .byte $19
+    .byte $19
+    .byte $1A
 
 LDFF3: ;($DFF3)
     jmp LD18C

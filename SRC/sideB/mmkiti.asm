@@ -1,6 +1,6 @@
 MMKITI_DataDD0E_DEA0:
     .word LDB2C
-    .word LDC2E
+    .word FDSWaveform_DC2E
     .byte $00
     .byte $88
     .byte $00
@@ -218,11 +218,79 @@ SongEscapeNoise:
     SongRepeat
 
 
-    .byte $E0, $BA, $2A, $1A, $02, $3A, $40
-    .byte $02, $1C, $2E, $38, $2C, $3C, $38, $02, $40, $44, $46, $02, $1E, $02, $2C, $38
-    .byte $46, $26, $02, $3A, $20, $02, $28, $2E, $02, $18, $44, $02, $46, $48, $4A, $4C
-    .byte $02, $18, $1E, $FF, $B8, $02, $C8, $B0, $0A, $0C, $FF, $C8, $0E, $0C, $FF, $C8
-    .byte $10, $0E, $FF, $C8, $0E, $0C, $FF, $00, $A2, $BF, $A0, $DF, $4C, $85, $D7, $CE
+SongMthrBrnRoomTri:
+    SongRepeatSetup $20
+        SongNoteLength $A ;3/64 seconds
+        SongNote "A3"
+        SongNote "C#3"
+        SongRest
+        SongNote "F4"
+        SongNote "G#4"
+        SongRest
+        SongNote "D3"
+        SongNote "B3"
+        SongNote "E4"
+        SongNote "A#3"
+        SongNote "F#4"
+        SongNote "E4"
+        SongRest
+        SongNote "G#4"
+        SongNote "A#4"
+        SongNote "B4"
+        SongRest
+        SongNote "D#3"
+        SongRest
+        SongNote "A#3"
+        SongNote "E4"
+        SongNote "B4"
+        SongNote "G3"
+        SongRest
+        SongNote "F4"
+        SongNote "E3"
+        SongRest
+        SongNote "G#3"
+        SongNote "B3"
+        SongRest
+        SongNote "C3"
+        SongNote "A#4"
+        SongRest
+        SongNote "B4"
+        SongNote "C5"
+        SongNote "C#5"
+        SongNote "D5"
+        SongRest
+        SongNote "C3"
+        SongNote "D#3"
+    SongRepeat
+
+
+SongMthrBrnRoomSQ1:
+    SongNoteLength $8 ;1/4 seconds
+    SongRest
+    ;SQ1 music data runs down into the SQ2 music data.
+
+SongMthrBrnRoomSQ2:
+    SongRepeatSetup $8
+        SongNoteLength $0 ;3/32 seconds
+        SongNote "F2"
+        SongNote "F#2"
+    SongRepeat
+    SongRepeatSetup $8
+        SongNote "G2"
+        SongNote "F#2"
+    SongRepeat
+    SongRepeatSetup $8
+        SongNote "G#2"
+        SongNote "G2"
+    SongRepeat
+    SongRepeatSetup $8
+        SongNote "G2"
+        SongNote "F#2"
+    SongRepeat
+    SongEnd ;End mother brain room music.
+
+
+    .byte $A2, $BF, $A0, $DF, $4C, $85, $D7, $CE
     .byte $DF, $2C, $DB, $EE, $DB, $00, $01, $A0, $A0, $00, $B5, $03, $94, $94, $B7, $44
     .byte $00, $A2, $D7, $A0, $DF, $D0, $E5, $E6, $DF, $4D, $DB, $AE, $DB, $00, $02, $98
     .byte $41, $00, $11, $00, $94, $A0, $B0, $14, $2E, $B5, $38, $00, $FF, $FF, $FF, $FF

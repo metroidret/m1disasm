@@ -1,10 +1,8 @@
-SongEnd_CC00:
+DataD785_SongEnd:
     .word SongEndFDS ; written to $EE
 ; written to $0610-$061C
-    .byte $32
-    .byte $DB
-    .byte $74
-    .byte $DC
+    .word $DB32
+    .word $DC74
     .byte $17
     .byte $20
     .byte $80

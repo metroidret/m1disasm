@@ -46,7 +46,7 @@
 
 
 
-; file $00 - kyodaku-
+; file $00 - kyodaku- ($2800-$28DF)
 ; Copyright screen necessary for any FDS game to boot properly
 FDSFileMacroPart1 $00
     .ascstr "KYODAKU-"
@@ -62,7 +62,7 @@ FDSFileMacroPart3
 
 
 
-; file $01 - demo.chr
+; file $01 - demo.chr ($0000-$1D9F)
 ; Tile data for title screen
 FDSFileMacroPart1 $00
     .ascstr "DEMO.CHR"
@@ -72,7 +72,7 @@ FDSFileMacroPart3
 
 
 
-; file $02 - met.hex
+; file $02 - met.hex ($D000-$DFF5)
 ; Music engine
 FDSFileMacroPart1 $00
     .ascstr "MET.HEX", $00
@@ -82,7 +82,7 @@ FDSFileMacroPart3
 
 
 
-; file $03 - demo.pgm
+; file $03 - demo.pgm ($6800-$90FF)
 ; Title screen code - part 1
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PGM"
@@ -92,7 +92,7 @@ FDSFileMacroPart3
 
 
 
-; file $04 - demo.pg2
+; file $04 - demo.pg2 ($C5A0-$CF5F)
 ; Title screen code - part 2
 FDSFileMacroPart1 $00
     .ascstr "DEMO.PG2"
@@ -102,7 +102,7 @@ FDSFileMacroPart3
 
 
 
-; file $05 - demo.vec
+; file $05 - demo.vec ($DFFA-$DFFF)
 FDSFileMacroPart1 $00
     .ascstr "DEMO.VEC"
 FDSFileMacroPart2 $DFFA, $00
@@ -113,7 +113,7 @@ FDSFileMacroPart3
 
 
 
-; file $06 - bmenst
+; file $06 - bmenst ($C000-$C0BF)
 FDSFileMacroPart1 $20
     .ascstr "BMENST", $00, $00
 FDSFileMacroPart2 $C000, $00
@@ -122,18 +122,18 @@ FDSFileMacroPart3
 
 
 
-; file $07 - main.vec
+; file $07 - main.vec ($DFFA-$DFFF)
 FDSFileMacroPart1 $20
     .ascstr "MAIN.VEC"
 FDSFileMacroPart2 $DFFA, $00
-    .word $9396
+    .word MAIN_NMI
     .word BMENST_RESET
     .word BMENST_RESET
 FDSFileMacroPart3
 
 
 
-; file $08 - main.pgm
+; file $08 - main.pgm ($6800-$B40F)
 FDSFileMacroPart1 $20
     .ascstr "MAIN.PGM"
 FDSFileMacroPart2 $6800, $00
@@ -142,7 +142,7 @@ FDSFileMacroPart3
 
 
 
-; file $09 - endobj
+; file $09 - endobj ($0000-$05FF)
 FDSFileMacroPart1 $EE
     .ascstr "ENDOBJ", $00, $00
 FDSFileMacroPart2 $0000, $01
@@ -151,7 +151,7 @@ FDSFileMacroPart3
 
 
 
-; file $0A - endbg
+; file $0A - endbg ($1000-$13FF)
 FDSFileMacroPart1 $EE
     .ascstr "ENDBG", $00, $00, $00
 FDSFileMacroPart2 $1000, $01
@@ -160,7 +160,7 @@ FDSFileMacroPart3
 
 
 
-; file $0B - mmeee
+; file $0B - mmeee ($CC00-$CFCF)
 ; Ending Song
 FDSFileMacroPart1 $EE
     .ascstr "MMEEE", $00, $00, $00
@@ -170,7 +170,7 @@ FDSFileMacroPart3
 
 
 
-; file $0C - endpgm
+; file $0C - endpgm ($6000-$6D7F)
 FDSFileMacroPart1 $EE
     .ascstr "ENDPGM", $00, $00
 FDSFileMacroPart2 $6000, $00
@@ -179,7 +179,7 @@ FDSFileMacroPart3
 
 
 
-; file $0D - endvec
+; file $0D - endvec ($DFFA-$DFFF)
 FDSFileMacroPart1 $EE
     .ascstr "ENDVEC", $00, $00
 FDSFileMacroPart2 $DFFA, $00
@@ -190,7 +190,7 @@ FDSFileMacroPart3
 
 
 
-; file $0E - savedata
+; file $0E - savedata ($C5A0-$C614)
 FDSFileMacroPart1 $0F
     .ascstr "SAVEDATA"
 FDSFileMacroPart2 $C5A0, $00
@@ -239,7 +239,7 @@ FDSFileMacroPart3
 .redef FDSFile_Bank = FDSFile_Bank + 1
 
 
-; file $00 - hmbg1a
+; file $00 - hmbg1a ($1000-$114F)
 FDSFileMacroPart1 $81
     .ascstr "HMBG1A", $00, $00
 FDSFileMacroPart2 $1000, $01
@@ -248,7 +248,7 @@ FDSFileMacroPart3
 
 
 
-; file $01 - hmbg1b
+; file $01 - hmbg1b ($1200-$164F)
 FDSFileMacroPart1 $90
     .ascstr "HMBG1B", $00, $00
 FDSFileMacroPart2 $1200, $01
@@ -257,7 +257,7 @@ FDSFileMacroPart3
 
 
 
-; file $02 - hmbg1c
+; file $02 - hmbg1c ($1800-$1FFF)
 FDSFileMacroPart1 $91
     .ascstr "HMBG1C", $00, $00
 FDSFileMacroPart2 $1800, $01
@@ -266,7 +266,7 @@ FDSFileMacroPart3
 
 
 
-; file $03 - hmob1b
+; file $03 - hmob1b ($0C00-$0FFF)
 FDSFileMacroPart1 $81
     .ascstr "HMOB1B", $00, $00
 FDSFileMacroPart2 $0C00, $01
@@ -275,7 +275,7 @@ FDSFileMacroPart3
 
 
 
-; file $04 - hmbg4a
+; file $04 - hmbg4a ($1000-$125F)
 FDSFileMacroPart1 $84
     .ascstr "HMBG4A", $00, $00
 FDSFileMacroPart2 $1000, $01
@@ -284,7 +284,7 @@ FDSFileMacroPart3
 
 
 
-; file $05 - hmbg4b
+; file $05 - hmbg4b ($1700-$176F)
 FDSFileMacroPart1 $84
     .ascstr "HMBG4B", $00, $00
 FDSFileMacroPart2 $1700, $01
@@ -293,7 +293,7 @@ FDSFileMacroPart3
 
 
 
-; file $06 - hmob4a
+; file $06 - hmob4a ($0C00-$0FFF)
 FDSFileMacroPart1 $84
     .ascstr "HMOB4A", $00, $00
 FDSFileMacroPart2 $0C00, $01
@@ -302,7 +302,7 @@ FDSFileMacroPart3
 
 
 
-; file $07 - hmbg6c
+; file $07 - hmbg6c ($1000-$12DF)
 FDSFileMacroPart1 $92
     .ascstr "HMBG6C", $00, $00
 FDSFileMacroPart2 $1000, $01
@@ -311,7 +311,7 @@ FDSFileMacroPart3
 
 
 
-; file $08 - hmbg5b
+; file $08 - hmbg5b ($1200-$17FF)
 FDSFileMacroPart1 $85
     .ascstr "HMBG5B", $00, $00
 FDSFileMacroPart2 $1200, $01
@@ -320,7 +320,7 @@ FDSFileMacroPart3
 
 
 
-; file $09 - hmbg5c
+; file $09 - hmbg5c ($1900-$198F)
 FDSFileMacroPart1 $85
     .ascstr "HMBG5C", $00, $00
 FDSFileMacroPart2 $1900, $01
@@ -329,7 +329,7 @@ FDSFileMacroPart3
 
 
 
-; file $0A - hmbg5d
+; file $0A - hmbg5d ($1D00-$1FFF)
 FDSFileMacroPart1 $85
     .ascstr "HMBG5D", $00, $00
 FDSFileMacroPart2 $1D00, $01
@@ -338,7 +338,7 @@ FDSFileMacroPart3
 
 
 
-; file $0B - hmob5a
+; file $0B - hmob5a ($0C00-$0FFF)
 FDSFileMacroPart1 $85
     .ascstr "HMOB5A", $00, $00
 FDSFileMacroPart2 $0C00, $01
@@ -347,7 +347,7 @@ FDSFileMacroPart3
 
 
 
-; file $0C - hmbg6a
+; file $0C - hmbg6a ($1700-$17BF)
 FDSFileMacroPart1 $86
     .ascstr "HMBG6A", $00, $00
 FDSFileMacroPart2 $1700, $01
@@ -356,7 +356,7 @@ FDSFileMacroPart3
 
 
 
-; file $0D - hmbg6b
+; file $0D - hmbg6b ($1E00-$1FFF)
 FDSFileMacroPart1 $86
     .ascstr "HMBG6B", $00, $00
 FDSFileMacroPart2 $1E00, $01
@@ -365,7 +365,7 @@ FDSFileMacroPart3
 
 
 
-; file $0E - hmob6a
+; file $0E - hmob6a ($0C00-$0FFF)
 FDSFileMacroPart1 $86
     .ascstr "HMOB6A", $00, $00
 FDSFileMacroPart2 $0C00, $01
@@ -374,7 +374,7 @@ FDSFileMacroPart3
 
 
 
-; file $0F - hmbg7a
+; file $0F - hmbg7a ($1700-$17BF)
 FDSFileMacroPart1 $87
     .ascstr "HMBG7A", $00, $00
 FDSFileMacroPart2 $1700, $01
@@ -383,7 +383,7 @@ FDSFileMacroPart3
 
 
 
-; file $10 - hmob7a
+; file $10 - hmob7a ($0C00-$0FFF)
 FDSFileMacroPart1 $87
     .ascstr "HMOB7A", $00, $00
 FDSFileMacroPart2 $0C00, $01
@@ -392,7 +392,7 @@ FDSFileMacroPart3
 
 
 
-; file $11 - mmrock
+; file $11 - mmrock ($DEA0-$DFEF)
 ; Brinstar Song
 FDSFileMacroPart1 $10
     .ascstr "MMROCK", $00, $00
@@ -402,7 +402,7 @@ FDSFileMacroPart3
 
 
 
-; file $12 - mmfire
+; file $12 - mmfire ($DEA0-$DFEF)
 ; Norfair Song
 FDSFileMacroPart1 $11
     .ascstr "MMFIRE", $00, $00
@@ -412,8 +412,8 @@ FDSFileMacroPart3
 
 
 
-; file $13 - mmkiti
-; Escape Song
+; file $13 - mmkiti ($DEA0-$DFEF)
+; Escape and Mother Brain Song
 FDSFileMacroPart1 $13
     .ascstr "MMKITI", $00, $00
 FDSFileMacroPart2 $DEA0, $00
@@ -422,7 +422,7 @@ FDSFileMacroPart3
 
 
 
-; file $14 - mmkbos
+; file $14 - mmkbos ($DEA0-$DFEF)
 ; Kraid and Ridley Songs
 FDSFileMacroPart1 $1F
     .ascstr "MMKBOS", $00, $00
@@ -432,7 +432,8 @@ FDSFileMacroPart3
 
 
 
-; file $15 - stg1pgm
+; file $15 - stg1pgm ($B560-$CFDF)
+; Brinstar Area Data
 FDSFileMacroPart1 $10
     .ascstr "STG1PGM", $00
 FDSFileMacroPart2 $B560, $00
@@ -441,7 +442,8 @@ FDSFileMacroPart3
 
 
 
-; file $16 - stg4pgm
+; file $16 - stg4pgm ($B560-$CFDF)
+; Norfair Area Data
 FDSFileMacroPart1 $11
     .ascstr "STG4PGM", $00
 FDSFileMacroPart2 $B560, $00
@@ -450,7 +452,8 @@ FDSFileMacroPart3
 
 
 
-; file $17 - stg5pgm
+; file $17 - stg5pgm ($B560-$CF7F)
+; Tourian Area Data
 FDSFileMacroPart1 $13
     .ascstr "STG5PGM", $00
 FDSFileMacroPart2 $B560, $00
@@ -459,7 +462,8 @@ FDSFileMacroPart3
 
 
 
-; file $18 - stg6pgm
+; file $18 - stg6pgm ($B560-$CCDF)
+; Kraid Area Data
 FDSFileMacroPart1 $12
     .ascstr "STG6PGM", $00
 FDSFileMacroPart2 $B560, $00
@@ -468,7 +472,8 @@ FDSFileMacroPart3
 
 
 
-; file $19 - stg7pgm
+; file $19 - stg7pgm ($B560-$CBDF)
+; Ridley Area Data
 FDSFileMacroPart1 $14
     .ascstr "STG7PGM", $00
 FDSFileMacroPart2 $B560, $00
@@ -477,7 +482,7 @@ FDSFileMacroPart3
 
 
 
-; file $1A - mensave2
+; file $1A - mensave2 ($C3F0-$C59F)
 FDSFileMacroPart1 $EF
     .ascstr "MENSAVE2"
 FDSFileMacroPart2 $C3F0, $00
@@ -486,7 +491,7 @@ FDSFileMacroPart3
 
 
 
-; file $1B - mensave
+; file $1B - mensave ($C000-$C3EF)
 FDSFileMacroPart1 $EF
     .ascstr "MENSAVE", $00
 FDSFileMacroPart2 $C000, $00

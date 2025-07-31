@@ -5681,6 +5681,9 @@ L9388:
 L9390:
     jsr L9372
     jmp L937C
+
+
+MAIN_NMI:
     cli
     php
     pha

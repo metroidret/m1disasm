@@ -156,24 +156,32 @@ EXPANSION_READ         = $4033
 
     EXPANSION_READ_VOLT    = %10000000
 
-;----------------------------------------------------------------------------------------------------
+; FDS write-only
+; ($4040-$407F)
+FDSAUDIO_WAVETABLE     = $4040
 
-;Writing to any of these addresses or any address in between will write configuration bits to the MMC chip.
-MMC1Reg0               = $8000
-MMC1Reg1               = $A000
-MMC1Reg2               = $C000
-MMC1Reg3               = $E000
+FDSAUDIO_VOL_WRITE     = $4080
+FDSAUDIO_UNUSED        = $4081
+FDSAUDIO_LO            = $4082
+FDSAUDIO_HI            = $4083
 
-    MMC1_0_MIRROR_1LOWER   = %00000
-    MMC1_0_MIRROR_1UPPER   = %00001
-    MMC1_0_MIRROR_VERTI    = %00010
-    MMC1_0_MIRROR_HORIZ    = %00011
-    MMC1_0_PRGFIXED_8000   = %00000
-    MMC1_0_PRGFIXED_C000   = %00100
-    MMC1_0_PRGBANK_32K     = %00000
-    MMC1_0_PRGBANK_16K     = %01000
-    MMC1_0_CHRBANK_8K      = %00000
-    MMC1_0_CHRBANK_4K      = %10000
+FDSAUDIO_MODENV_WRITE  = $4084
+FDSAUDIO_MODCNTR_WRITE = $4085
+FDSAUDIO_MODLO         = $4086
+FDSAUDIO_MODHI         = $4087
+FDSAUDIO_MODWRITE      = $4088
+FDSAUDIO_MASTERVOL     = $4089
+FDSAUDIO_ENVSPEED      = $408A
+
+; FDS read-only
+FDSAUDIO_VOL_READ      = $4090
+FDSAUDIO_WAVEACC       = $4091
+FDSAUDIO_MODENV_READ   = $4092
+FDSAUDIO_MODACC        = $4093
+FDSAUDIO_MODCNTRGAIN   = $4094
+FDSAUDIO_MODCNTRINCR   = $4095
+FDSAUDIO_WAVEOUTPUT    = $4096
+FDSAUDIO_MODCNTR_READ  = $4097
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -200,3 +208,4 @@ FDSBIOS_SkipFiles = $E4DA
 
 SCRN_VX                = 256
 SCRN_VY                = 240
+
