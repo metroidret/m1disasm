@@ -2915,20 +2915,24 @@ CheckHealthStatus: ;($CDFA)
     ldx SamusKnockbackDir
     inx
     beq Lx009
-    ; a is #$01=left or #$02=right
+    ; x is #$01=left or #$02=right
+    ; X speed = floor(i-frames / 16) pixels
     jsr Adiv16       ; / 16
-    ; a is zero here
-    ; (then why are we even comparing its value? am i missing something?)
+    ; check if X speed >= 3, branch if so
     cmp #$03
     bcs Lx007
+        ; X speed < 3
+        ; reset X subspeed if no X accel
         ldy SamusAccelX
         bne Lx009
         jsr LCF4E
     Lx007:
+    ; if left, negate X speed
     dex
     bne Lx008
         jsr TwosComplement              ;($C3D4)
     Lx008:
+    ; X speed = A
     sta ObjSpeedX
 Lx009:
     ; check if samus should become invisible for her i-frames blinking
