@@ -373,9 +373,9 @@ UnusedIntroRoutine2:
     bne RTS_822D
     lda #$00
     sta ObjAction
-    lda #ObjAnim_0B - ObjectAnimIndexTbl.b
+    lda #ObjAnim_SamusJumpTransition - ObjectAnimIndexTbl.b
     sta ObjAnimResetIndex
-    lda #ObjAnim_0C - ObjectAnimIndexTbl.b
+    lda #ObjAnim_SamusJump - ObjectAnimIndexTbl.b
     sta ObjAnimIndex
     lda #_id_ObjFrame07.b
     sta ObjAnimFrame
