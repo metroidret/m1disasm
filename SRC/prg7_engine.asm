@@ -602,14 +602,14 @@ ReadOnePad:
     lda Joy1Status,x
     cmp $00
     ;If none, branch.
-    bne LC263
+    bne @endIf_B
         ;Decrement RetrigDelay if same buttons pressed.
         dec RetrigDelay1,x
         bne RTS_C265
         ;Once RetrigDelay=#$00, store buttons to retrigger.
         sta Joy1Retrig,x
         ldy #$08
-    LC263:
+    @endIf_B:
     ;Reset retrigger delay to #$20(32 frames) or #$08(8 frames) if already retriggering.
     sty RetrigDelay1,x
 RTS_C265:
