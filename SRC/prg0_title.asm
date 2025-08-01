@@ -2057,26 +2057,34 @@ TurnOnDisplay:
     jmp ScreenOn                    ;($C447)Turn screen on.
 
 ChooseStartContinue:
-    lda Joy1Change                  ;
-    and #$30                        ;Checks both select and start buttons.
-    cmp #$10                        ;Check if START has been pressed.
-    bne L90EB                       ;Branch if START not pressed.
-    ldy StartContinue               ;
-    bne L90E7                       ;if CONTINUE selected, branch.
-    jmp InitializeStats             ;($932B)Zero out all stats.
-L90E7:
-    ldy #_id_LoadPasswordScreen.b   ;Next routine is LoadPasswordScreen.
-    sty TitleRoutine                ;
-L90EB:
-    cmp #$20                        ;check if SELECT has been pressed.
-    bne L90FF                       ;Branch if SELECT not pressed.
-    lda StartContinue               ;
-    eor #$01                        ;Chooses between START and CONTINUE-->
-    sta StartContinue               ;on game select screen.
-    lda TriSFXFlag                  ;
-    ora #sfxTri_Beep                ;Set SFX flag for select being pressed.-->
-    sta TriSFXFlag                  ;Uses triangle channel.
-L90FF:
+    ;Checks both select and start buttons.
+    lda Joy1Change
+    and #BUTTON_START | BUTTON_SELECT.b
+    ;Branch if START not pressed.
+    cmp #BUTTON_START
+    bne @endIf_A
+        ;if CONTINUE selected, branch.
+        ldy StartContinue
+        bne @endIf_B
+            ;Zero out all stats.
+            jmp InitializeStats
+        @endIf_B:
+        ;Next routine is LoadPasswordScreen.
+        ldy #_id_LoadPasswordScreen.b
+        sty TitleRoutine
+    @endIf_A:
+    ;Branch if SELECT not pressed.
+    cmp #BUTTON_SELECT
+    bne @endIf_C
+        ;Toggles between START and CONTINUE on game select screen.
+        lda StartContinue
+        eor #$01
+        sta StartContinue
+        ;Set SFX flag for select being pressed. Uses triangle channel.
+        lda TriSFXFlag
+        ora #sfxTri_Beep
+        sta TriSFXFlag
+    @endIf_C:
     ldy StartContinue
     ;Load sprite info for square selection sprite.
     lda StartContTbl,y
@@ -2119,12 +2127,12 @@ EnterPassword:
     
     ;Check to see if START has been pressed.
     lda Joy1Change
-    and #$10
+    and #BUTTON_START
     ;If not, branch.
-    beq L9153
-        ;($8C5E)Check if password is correct.
+    beq @endIf_A
+        ;Check if password is correct.
         jmp CheckPassword
-    L9153:
+    @endIf_A:
     
     ;Prepare to write the password screen data to PPU.
     ldx #$01
@@ -2142,40 +2150,41 @@ EnterPassword:
     jsr WritePPUByte
     
     lda Timer3
-    beq L9178
+    beq @else_B
         ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
         lda #<L8759.b
         sta $02
         lda #>L8759.b
         sta $03
-        jmp L9180
-    L9178:
+        jmp @endIf_B
+    @else_B:
         ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
         lda #<L8768.b
         sta $02
         lda #>L8768.b
         sta $03
-    L9180:
+    @endIf_B:
     ; loop to write all the bytes from those strings to ppu string buffer
     ldy #$00
-    L9182:
+    @loop:
         lda ($02),y
         jsr WritePPUByte
         iny
         cpy #$0F
-        bne L9182
+        bne @loop
     
     ;If button A pressed, branch.
     lda Joy1Change
-    bmi L9193
-        ;($91FB)Check if backspace pressed.
+    bmi @endIf_C
+        ;Check if backspace pressed.
         jmp CheckBackspace
-    L9193:
+    @endIf_C:
     
     ;Initiate BombLaunch SFX if a character has been written to the screen.
     lda TriSFXFlag
     ora #sfxTri_BombLaunch
     sta TriSFXFlag
+    
     ;Check to see if password cursor is on character 19 thru 24.  If not, branch.
     lda PasswordCursor
     cmp #$12
@@ -2248,19 +2257,22 @@ LoadRowAndColumn: ;($91BF)
     L91F8:
     sta PasswordCursor
 
-CheckBackspace:
-    lda Joy1Change                  ;
-    and #$40                        ;If button B (backspace) has not-->
-    beq L920E                       ;been pressed, branch.
-        lda PasswordCursor              ;
-        sec                             ;Subtract 1 from PasswordCursor.  If-->
-        sbc #$01                        ;PasswordCursor is negative, load-->
-        bcs L920B                       ;PasswordCursor with #$17 (last character).
-            lda #$17                        ;
+CheckBackspace: ;($91FB)
+    ;If button B (backspace) has not been pressed, branch.
+    lda Joy1Change
+    and #BUTTON_B
+    beq L920E
+        ;Subtract 1 from PasswordCursor.
+        lda PasswordCursor
+        sec
+        sbc #$01
+        ;If PasswordCursor is negative, load PasswordCursor with #$17 (last character).
+        bcs L920B
+            lda #$17
         L920B:
-        sta PasswordCursor              ;
+        sta PasswordCursor
     L920E:
-    ldy PasswordStat00              ;Appears to have no function.
+    ldy PasswordStat00 ;Appears to have no function.
     ;If FrameCount bit 3 not set, branch.
     ;This flashes the cursor on and off.
     lda FrameCount
@@ -2447,7 +2459,7 @@ RestartXPosTbl:
     .byte $78                       ;All other areas.
     .byte $5C                       ;Not used.
 
-InitializeStats:
+InitializeStats: ;($932B)
     ;Set all of Samus' stats to 0 when starting new game.
     lda #$00
     sta SamusStat00
@@ -2464,7 +2476,7 @@ InitializeStats:
     sta AtEnding
     sta JustInBailey
     ;Prepare to switch to Brinstar memory page.
-    lda #$02
+    lda #$01+1
     sta SwitchPending
     rts
 
@@ -4584,8 +4596,7 @@ WorldMap:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16, $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-;Loads contents of world map into -->
-;RAM at addresses $7000 thru $73FF.
+;Loads contents of world map into RAM at addresses $7000 thru $73FF.
 CopyMap:
     lda #<WorldMap.b
     sta $00

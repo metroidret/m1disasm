@@ -72,37 +72,52 @@ Startup:
     dex                             ;X = $FF
     txs                             ;S points to end of stack page
 
-;Clear RAM at $000-$7FF.
-    ldy #$07                        ;High byte of start address.
-    sty $01                         ;
-    ldy #$00                        ;Low byte of start address.
-    sty $00                         ;$0000 = #$0700
-    tya                             ;A = 0
-    LC048:
-        sta ($00),y                     ;clear address
-        iny                             ;
-        bne LC048                       ;Repeat for entire page.
-        dec $01                         ;Decrement high byte of address.
-        bmi LC057                       ;If $01 < 0, all pages are cleared.
-        ldx $01                         ;
-        cpx #$01                        ;Keep looping until ram is cleared.
-        bne LC048                       ;
+;Clear RAM at $0000-$07FF.
+    ;$0000 = #$0700
+    ;High byte of start address.
+    ldy #$07
+    sty $01
+    ;Low byte of start address.
+    ldy #$00
+    sty $00
+    tya ;A = 0
+    @loop_A:
+        @loop_B:
+            ;clear address
+            sta ($00),y
+            ;Repeat for entire page.
+            iny
+            bne @loop_B
+        ;Decrement high byte of address.
+        dec $01
+        ;If $01 < 0, all pages are cleared.
+        bmi @exitLoop_A
+        ;Keep looping until ram is cleared.
+        ldx $01
+        cpx #$01
+        bne @loop_A
+    @exitLoop_A:
 
-;Clear cartridge RAM at $6000-$7FFF.
-LC057:
-    ldy #$7F                        ;High byte of start address.
-    sty $01                         ;
-    ldy #$00                        ;Low byte of start address.
-    sty $00                         ;$0000 points to $7F00
-    tya                             ;A = 0
-    LC060:
-        sta ($00),y                     ;
-        iny                             ;Clears 256 bytes of memory before decrementing to next-->
-        bne LC060                       ;256 bytes.
-        dec $01                         ;
-        ldx $01                         ;Is address < $6000?-->
-        cpx #$60                        ;If not, do another page.
-        bcs LC060                       ;
+    ;Clear cartridge RAM at $6000-$7FFF.
+    ;$0000 points to $7F00
+    ;High byte of start address.
+    ldy #$7F
+    sty $01
+    ;Low byte of start address.
+    ldy #$00
+    sty $00
+    tya ;A = 0
+    @loop_C:
+        @loop_D:
+            ;Clears 256 bytes of memory before decrementing to next 256 bytes.
+            sta ($00),y
+            iny
+            bne @loop_D
+        dec $01
+        ldx $01
+        ;Is address < $6000? If not, do another page.
+        cpx #$60
+        bcs @loop_C
 
 
     ;Vertical mirroring.
@@ -113,18 +128,23 @@ LC057:
     lda #MMC1CTRL_MIRROR_VERTI | MMC1CTRL_PRGFIXED_C000 | MMC1CTRL_PRGBANK_16K | MMC1CTRL_CHRBANK_8K.b
     sta MMC1CTRL_ZP
 
-    lda #$00                        ;Clear bits 3 and 4 of MMC1 register 3.
-    sta SwitchUpperBits             ;
+    ;Clear bits 3 and 4 of MMC1 register 3.
+    lda #$00
+    sta SwitchUpperBits
 
-    ldy #$00                        ;
-    sty ScrollX                     ;ScrollX = 0
-    sty ScrollY                     ;ScrollY = 0
-    sty PPUSCROLL                   ;Clear hardware scroll x
-    sty PPUSCROLL                   ;Clear hardware scroll y
-    iny                             ;Y = #$01
-    sty GameMode                    ;Title screen mode
-    jsr ClearNameTables             ;($C158)
-    jsr EraseAllSprites             ;($C1A3)
+    ; clear scroll and hardware scroll
+    ldy #$00
+    sty ScrollX
+    sty ScrollY
+    sty PPUSCROLL ;Clear hardware scroll x
+    sty PPUSCROLL ;Clear hardware scroll y
+    
+    ;Title screen mode
+    iny ;Y = #$01
+    sty GameMode
+    
+    jsr ClearNameTables
+    jsr EraseAllSprites
 
     ;NMI = enabled
     ;Sprite size = 8x8
@@ -167,7 +187,7 @@ LC057:
     lda #$FF
     sta RandomNumber2
 
-    iny                             ;Y = 1
+    iny ;Y = 1
     sty SwitchPending               ;Prepare to switch page 0 into lower PRGROM.
     jsr CheckSwitch                 ;($C4DE)
     bne WaitNMIEnd                  ;Branch always
@@ -343,7 +363,7 @@ IncrementRoutine:
 
 ;-------------------------------------[ Clear name tables ]------------------------------------------
 
-ClearNameTables:
+ClearNameTables: ;($C158)
     jsr ClearNameTable0             ;($C16D)Always clear name table 0 first.
     lda GameMode                    ;
     beq LC165                       ;Branch if mode = Play.
@@ -409,7 +429,7 @@ HiPPUTable:
 
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
-EraseAllSprites:
+EraseAllSprites: ;($C1A3)
     ; load SpriteRAM address into $00-01
     ldy #>SpriteRAM.b
     sty $01
@@ -515,57 +535,85 @@ PreparePPUProcess_:
 ;The following routine reads the status of both joypads
 
 ReadJoyPads:
-    ldx #$00                        ;Load x with #$00. Used to read status of joypad 1.
-    stx $01                         ;
-    jsr ReadOnePad                  ;
-    inx                             ;Load x with #$01. Used to read status of joypad 2.
-    inc $01                         ;
+    ;Load x with #$00. Used to read status of joypad 1.
+    ldx #$00
+    stx $01
+    jsr ReadOnePad
+    ;Load x with #$01. Used to read status of joypad 2.
+    inx
+    inc $01
+    ; fallthrough
 
 ReadOnePad:
-    ldy #$01                        ;These lines strobe the -->
-    sty JOY1                        ;joystick to enable the -->
-    dey                             ;program to read the -->
-    sty JOY1                        ;buttons pressed.
+    ;These lines strobe the joystick to enable the program to read the buttons pressed.
+    ldy #$01
+    sty JOY1
+    dey
+    sty JOY1
+    ;Do 8 buttons.
+    ldy #$08
+    @loop:
+        ;Store A.
+        pha
+        ;Read button status. Joypad 1 or 2.
+        lda JOY1,x
+        ;Store button press at location $00.
+        sta $00
+        ;Also accept button press from joypad that is plugged into the console's expansion port
+        lsr
+        ora $00
+        ;Move button press to carry bit.
+        lsr
+        ;Restore A.
+        pla
+        ;Add button press status to A.
+        rol
+        ;Loop 8 times to get status of all 8 buttons.
+        dey
+        bne @loop
+    ; a now contains the new joypad status
 
-    ldy #$08                        ;Do 8 buttons.
-    LC22A:
-        pha                             ;Store A.
-        lda JOY1,x                      ;Read button status. Joypad 1 or 2.
-        sta $00                         ;Store button press at location $00.
-        lsr                             ;Move button push to carry bit.
-        ora $00                         ;If joystick not connected, -->
-        lsr                             ;fills Joy1Status with all 1s.
-        pla                             ;Restore A.
-        rol                             ;Add button press status to A.
-        dey                             ;Loop 8 times to get -->
-        bne LC22A                       ;status of all 8 buttons.
-
-    ldx $01                         ;Joypad #(0 or 1).
-    ldy Joy1Status,x                ;Get joypad status of previous refresh.
-    sty $00                         ;Store at $00.
-    sta Joy1Status,x                ;Store current joypad status.
-    eor $00                         ;
-    beq LC24D                       ;Branch if no buttons changed.
-        lda $00                         ;
-        and #~BUTTON_B.b                  ;Remove the previous status of the B button.
-        sta $00                         ;
-        eor Joy1Status,x                ;
-    LC24D:
-    and Joy1Status,x                ;Save any button changes from the current frame-->
-    sta Joy1Change,x                ;and the last frame to the joy change addresses.
-    sta Joy1Retrig,x                ;Store any changed buttons in JoyRetrig address.
-    ldy #$20                        ;
-    lda Joy1Status,x                ;Checks to see if same buttons are being-->
-    cmp $00                         ;pressed this frame as last frame.-->
-    bne LC263                       ;If none, branch.
-    dec RetrigDelay1,x              ;Decrement RetrigDelay if same buttons pressed.
-    bne RTS_C265                       ;
-    sta Joy1Retrig,x                ;Once RetrigDelay=#$00, store buttons to retrigger.
-    ldy #$08                        ;
-LC263:
-    sty RetrigDelay1,x              ;Reset retrigger delay to #$20(32 frames)-->
+    ;Get joypad status of previous refresh.
+    ldx $01 ;Joypad #(0 or 1).
+    ldy Joy1Status,x
+    ;Store at $00.
+    sty $00
+    
+    ;Store current joypad status.
+    sta Joy1Status,x
+    
+    ;Branch if no buttons changed.
+    eor $00
+    beq @endIf_A
+        ;Remove the previous status of the B button.
+        lda $00
+        and #~BUTTON_B.b
+        sta $00
+        eor Joy1Status,x
+    @endIf_A:
+    ;Save any button changes from the current frame and the last frame to the joy change addresses.
+    and Joy1Status,x
+    sta Joy1Change,x
+    ;Store any changed buttons in JoyRetrig address.
+    sta Joy1Retrig,x
+    
+    ldy #$20
+    ;Checks to see if same buttons are being pressed this frame as last frame.
+    lda Joy1Status,x
+    cmp $00
+    ;If none, branch.
+    bne LC263
+        ;Decrement RetrigDelay if same buttons pressed.
+        dec RetrigDelay1,x
+        bne RTS_C265
+        ;Once RetrigDelay=#$00, store buttons to retrigger.
+        sta Joy1Retrig,x
+        ldy #$08
+    LC263:
+    ;Reset retrigger delay to #$20(32 frames) or #$08(8 frames) if already retriggering.
+    sty RetrigDelay1,x
 RTS_C265:
-    rts                             ;or #$08(8 frames) if already retriggering.
+    rts
 
 ;-------------------------------------------[ Update timer ]-----------------------------------------
 
@@ -1713,7 +1761,7 @@ MoreInit:
     jsr ScreenOff                   ;($C439)Turn off Background and visibility.
     jsr ClearNameTables             ;($C158)Clear screen data.
     jsr EraseAllSprites             ;($C1A3)Erase all sprites from sprite RAM.
-    jsr DestroyEnemies              ;($C8BB)
+    jsr DestroyEnemies
 
     stx ScrollBlockOnNameTable3     ;Clear data about doors on the name tables.
     stx ScrollBlockOnNameTable0     ;
@@ -1787,7 +1835,7 @@ CopyAreaPointers:
 ; DestroyEnemies
 ; ==============
 
-DestroyEnemies: ; LC8BB
+DestroyEnemies: ;($C8BB)
     lda #$00
     tax
     @loop:
