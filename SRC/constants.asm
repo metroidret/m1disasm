@@ -26,8 +26,23 @@
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
+
+Joy1Change             = $12     ;These addresses store any button changes-->
+Joy2Change             = $13     ;that happened since last frame(pads 1 and 2).
+Joy1Status             = $14     ;These two addresses store all buttons-->
+Joy2Status             = $15     ;currently being pressed on the two controllers.
+Joy1Retrig             = $16     ;These two addresses store any buttons that need-->
+Joy2Retrig             = $17     ;to retrigger after being held down by player.
+RetrigDelay1           = $18     ;These two addresses are counters that control-->
+RetrigDelay2           = $19     ;The retriggering of held down buttons.
+
 NMIStatus              = $1A     ;0=NMI in progress. anything else, NMI not in progress.
 PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
+
+TimerDelay             = $23     ;Count down from 9 to 0. Decremented every frame.
+Timer1                 = $24     ;Decremented every frame after set.
+Timer2                 = $25     ;Decremented every frame after set.
+Timer3                 = $26     ;Decremented every 10 frames after set.
 
 RandomNumber1          = $28        ;Random numbers used-->
 RandomNumber2          = $29        ;throughout the game.

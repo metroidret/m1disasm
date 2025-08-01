@@ -76,7 +76,7 @@ L684F:
 
 
 L6874:
-    jsr L6AE4
+    jsr UpdateTimer
     jsr L695F
     inc $27
     lda #$00
@@ -381,8 +381,8 @@ L6A5B:
     tya
     asl a
     tay
-    ldx $77EC,y
-    lda $77ED,y
+    ldx L77EC,y
+    lda L77EC+1,y
     tay
     lda #$00
     sta $1C
@@ -400,50 +400,79 @@ L6A71:
 L6A78:
     ldx #$00
     stx $01
-    jsr L6A83
+    jsr ReadOnePad
     ldx $2B
     inc $01
-L6A83:
+
+ReadOnePad:
+    ;These lines strobe the joystick to enable the program to read the buttons pressed.
     ldy #$01
     sty JOY1
     dey
     sty JOY1
+    ;Do 8 buttons.
     ldy #$08
-L6A8E:
-    pha
-    lda JOY1,x
-    sta $00
-    lsr a
-    ora $00
-    lsr a
-    pla
-    rol a
-    dey
-    bne L6A8E
-    ldx $01
-    ldy $14,x
+    @loop:
+        ;Store A.
+        pha
+        ;Read button status. Joypad 1 or 2.
+        lda JOY1,x
+        ;Store button press at location $00.
+        sta $00
+        ;Also accept button press from joypad that is plugged into the console's expansion port
+        lsr
+        ora $00
+        ;Move button press to carry bit.
+        lsr
+        ;Restore A.
+        pla
+        ;Add button press status to A.
+        rol
+        ;Loop 8 times to get status of all 8 buttons.
+        dey
+        bne @loop
+    ; a now contains the new joypad status
+    
+    ;Get joypad status of previous refresh.
+    ldx $01 ;Joypad #(0 or 1).
+    ldy Joy1Status,x
+    ;Store at $00.
     sty $00
-    sta $14,x
+    
+    ;Store current joypad status.
+    sta Joy1Status,x
+    
+    ;Branch if no buttons changed.
     eor $00
-    beq L6AB1
-    lda $00
-    and #$BF
-    sta $00
-    eor $14,x
-L6AB1:
-    and $14,x
-    sta $12,x
-    sta $16,x
+    beq @endIf_A
+        ;Remove the previous status of the B button.
+        lda $00
+        and #~BUTTON_B.b
+        sta $00
+        eor Joy1Status,x
+    @endIf_A:
+    
+    ;Save any button changes from the current frame and the last frame to the joy change addresses.
+    and Joy1Status,x
+    sta Joy1Change,x
+    ;Store any changed buttons in JoyRetrig address.
+    sta Joy1Retrig,x
+    
     ldy #$20
-    lda $14,x
+    ;Checks to see if same buttons are being pressed this frame as last frame.
+    lda Joy1Status,x
     cmp $00
-    bne L6AC7
-    dec $18,x
-    bne RTS_6AC9
-    sta $16,x
-    ldy #$10
-L6AC7:
-    sty $18,x
+    ;If none, branch.
+    bne @endIf_B
+        ;Decrement RetrigDelay if same buttons pressed.
+        dec RetrigDelay1,x
+        bne RTS_6AC9
+        ;Once RetrigDelay=#$00, store buttons to retrigger.
+        sta Joy1Retrig,x
+        ldy #$10
+    @endIf_B:
+    ;Reset retrigger delay to #$20(32 frames) or #$10(16 frames) if already retriggering.
+    sty RetrigDelay1,x
 RTS_6AC9:
     rts
 
@@ -464,22 +493,32 @@ L6ACA:
     
     iny
     sty $5B
-    bne RTS_6AC9
-    
-L6AE4:
+    bne RTS_6AC9 ; branch always
+
+
+UpdateTimer:
+    ; Default to only decrementing Timer2 and Timer1.
     ldx #$01
-    dec $23
-    bpl L6AF0
-    lda #$09
-    sta $23
-    ldx #$02
-    L6AF0:
-        lda $24,x
-        beq L6AF6
-            dec $24,x
-        L6AF6:
+    ; branch if timer delay is not zero
+    dec TimerDelay
+    bpl @endIf_A
+        ;TimerDelay hits #$00 every 10th frame.
+        ;Reset TimerDelay after it hits #$00.
+        lda #$09
+        sta TimerDelay
+        ;Decrement Timer3 every 10 frames.
+        ldx #$02
+    @endIf_A:
+    
+    ; decrement the chosen timers
+    @loop_decTimer:
+        ;Don't decrease if timer is already zero.
+        lda Timer1,x
+        beq @endIf_B
+            dec Timer1,x
+        @endIf_B:
         dex
-        bpl L6AF0
+        bpl @loop_decTimer
     rts
 
 
@@ -965,8 +1004,8 @@ L6999_6D69:
     sta $0684
     jsr ScreenOff
     jsr L69DF
-    ldx #$34
-    ldy #$7B
+    ldx #<L7B34.b
+    ldy #>L7B34.b
     jsr L6A6A
     lda #$01
     sta $1C
@@ -2006,30 +2045,30 @@ ObjFrame49:
 ObjFrame4A:
     .byte $04, $04, $04, $8A, $FF
 
-L77EA:
+L77EB:
     .byte $00
 
-L77EB:
-    .word L77EB_7810
-    .word L77EB_7834
-    .word L77EB_7858
-    .word L77EB_787C
-    .word L77EB_78A0
-    .word L77EB_78C4
-    .word L77EB_78E8
-    .word L77EB_790C
-    .word L77EB_7930
-    .word L77EB_7954
-    .word L77EB_7978
-    .word L77EB_799C
-    .word L77EB_79C0
-    .word L77EB_79E4
-    .word L77EB_7A08
-    .word L77EB_7A2C
-    .word L77EB_7A50
-    .word L77EB_7A74
+L77EC:
+    .word L77EC_7810
+    .word L77EC_7834
+    .word L77EC_7858
+    .word L77EC_787C
+    .word L77EC_78A0
+    .word L77EC_78C4
+    .word L77EC_78E8
+    .word L77EC_790C
+    .word L77EC_7930
+    .word L77EC_7954
+    .word L77EC_7978
+    .word L77EC_799C
+    .word L77EC_79C0
+    .word L77EC_79E4
+    .word L77EC_7A08
+    .word L77EC_7A2C
+    .word L77EC_7A50
+    .word L77EC_7A74
 
-L77EB_7810:
+L77EC_7810:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2039,7 +2078,7 @@ L77EB_7810:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7834:
+L77EC_7834:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2049,7 +2088,7 @@ L77EB_7834:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7858:
+L77EC_7858:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2059,7 +2098,7 @@ L77EB_7858:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_787C:
+L77EC_787C:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2069,7 +2108,7 @@ L77EB_787C:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_78A0:
+L77EC_78A0:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2079,7 +2118,7 @@ L77EB_78A0:
     .byte $31, $20, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_78C4:
+L77EC_78C4:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2089,7 +2128,7 @@ L77EB_78C4:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_78E8:
+L77EC_78E8:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2099,7 +2138,7 @@ L77EB_78E8:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_790C:
+L77EC_790C:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2109,7 +2148,7 @@ L77EB_790C:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7930:
+L77EC_7930:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2119,7 +2158,7 @@ L77EB_7930:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7954:
+L77EC_7954:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2129,7 +2168,7 @@ L77EB_7954:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7978:
+L77EC_7978:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2139,7 +2178,7 @@ L77EB_7978:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_799C:
+L77EC_799C:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2149,7 +2188,7 @@ L77EB_799C:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_79C0:
+L77EC_79C0:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $12, $30, $21, $0F
@@ -2159,7 +2198,7 @@ L77EB_79C0:
     .byte $12, $30, $21, $0F
     .byte $27, $24, $2C, $0F
     .byte $15, $21, $38, $00
-L77EB_79E4:
+L77EC_79E4:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2169,7 +2208,7 @@ L77EB_79E4:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7A08:
+L77EC_7A08:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2179,7 +2218,7 @@ L77EB_7A08:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7A2C:
+L77EC_7A2C:
     .byte $3F, $00, $20, $0F
     .byte $28, $18, $08, $0F
     .byte $29, $1B, $1A, $0F
@@ -2189,7 +2228,7 @@ L77EB_7A2C:
     .byte $37, $3A, $1B, $0F
     .byte $17, $31, $37, $0F
     .byte $32, $22, $12, $00
-L77EB_7A50:
+L77EC_7A50:
     .byte $3F, $00, $20, $30
     .byte $28, $18, $08, $30
     .byte $29, $1B, $1A, $30
@@ -2199,7 +2238,7 @@ L77EB_7A50:
     .byte $37, $3A, $1B, $30
     .byte $17, $31, $37, $30
     .byte $32, $22, $12, $00
-L77EB_7A74:
+L77EC_7A74:
     .byte $3F, $00, $04, $0F
     .byte $30, $30, $21, $00
 

@@ -563,12 +563,9 @@ LD4AE:
 DataDD0E_D4B6:
     .word LDB4D
     .word FDSWaveform_DB6E
-    .byte $82, $50, $00
+    .byte $82, $50, $00, $20, $04, $A0, $A0, $98, $07
 
-LD4BD:
-    jsr $A004
-    ldy #$98
-    .byte $07
+LD4C3:
     jsr LD1F2
     lda #$50
     ldx #<DataDD0E_D4B6.b
@@ -1691,7 +1688,7 @@ LDFEE:
     .byte $19
     .byte $1A
 
-LDFF3: ;($DFF3)
+GotoLD18C: ;($DFF3)
     jmp LD18C
 
 
