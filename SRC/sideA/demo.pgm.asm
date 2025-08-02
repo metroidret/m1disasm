@@ -1272,13 +1272,13 @@ L6999_6F26:
     lda $4C
     cmp #$0B
     bne L6F42
-    lda #$00
-    sta $4C
-    lda #$30
-    sta $26
-    inc $1F
-    bne RTS_6F45
-L6F42:
+        lda #$00
+        sta $4C
+        lda #$30
+        sta $26
+        inc $1F
+        bne RTS_6F45
+    L6F42:
     jsr L8673
 RTS_6F45:
     rts
@@ -1294,13 +1294,13 @@ L6999_6F46:
     lda $4C
     cmp #$05
     bne L6F62
-    lda #$06
-    sta $4C
-    lda #$00
-    sta $53
-    inc $1F
-    bne RTS_6F65
-L6F62:
+        lda #$06
+        sta $4C
+        lda #$00
+        sta $53
+        inc $1F
+        bne RTS_6F65
+    L6F62:
     jsr L8673
 RTS_6F65:
     rts
@@ -2801,14 +2801,14 @@ L8327:
     ldx #$70
 L833B:
     lda $048A,x
-    bne L834D
+    bne RTS_834D
     jsr L8387
     bcs L834A
     lda #$01
     sta $048A,x
 L834A:
     jmp L8253
-L834D:
+RTS_834D:
     rts
 L834E:
     lda $4F
@@ -3040,10 +3040,10 @@ L85D1:
 L85DB:
     lda $27
     and #$0F
-    bne L85E6
+    bne RTS_85E6
     lda $07A0
     beq L85E7
-L85E6:
+RTS_85E6:
     rts
 L85E7:
     lda #$19
@@ -3637,7 +3637,7 @@ L896A:
     sty $38
 L896C:
     ldy $38
-    lda $898D,y
+    lda L898D,y
     sta $0200
     lda #$E8
     sta $0201
@@ -3650,11 +3650,12 @@ L896C:
     jsr L8C95
     jmp L8DB1
 
-
+L898D:
     rti
     rts
     .byte $80
     ldy #$B8
+
 L8992:
     lda $38
     asl a
