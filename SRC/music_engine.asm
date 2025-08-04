@@ -1030,7 +1030,7 @@ SamusToBallSFXStart:
     ldy #<SamusToBallSFXData.b        ;Lower byte of sound data start address(base=$B200).
     jsr SelectSFXRoutine            ;($B452)Setup registers for SFX.
     lda #$05                        ;
-    sta PercentDifference           ;Stores percent difference. In this case 5 = 1/5 = 20%.
+    sta TriPeriodDivisor           ;Stores fraction difference. In this case 5 = 1/5 = 20%.
     lda SamusToBallSFXData+2        ;#$DD.
     sta TriPeriodLow                ;Save new triangle period low data.
     lda SamusToBallSFXData+3        ;#$3B.
@@ -1041,12 +1041,12 @@ SamusToBallSFXStart:
 SamusToBallSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB857                       ;If more frames to process, branch.
-    jmp EndTriSFX                  ;($B896)End SFX.
-LB857:
+        jmp EndTriSFX                  ;($B896)End SFX.
+    LB857:
     jsr DivideTriPeriods            ;($B9A0)reduces triangle period low by 20% each frame.
-    lda TriLowPercentage            ;
+    lda TriPeriodDividedLow            ;
     sta TriChangeLow                ;Store new values to change triangle periods.
-    lda TriHighPercentage           ;
+    lda TriPeriodDividedHigh           ;
     sta TriChangeHigh               ;
     jsr DecreaseTriPeriods          ;($B98C)Decrease periods.
 
@@ -1118,7 +1118,7 @@ SamusDieSFXStart:
     ldy #<SamusDieSFXData.b           ;Lower byte of sound data start address(base=$B200).
     jsr SelectSFXRoutine            ;($B452)Setup registers for SFX.
     lda #$15                        ;Decrease triangle SFX periods by 4.8% every frame.
-    sta PercentDifference           ;
+    sta TriPeriodDivisor           ;
     lda SamusDieSFXData+2           ;#$40.
     sta TriPeriodLow                ;
     lda #$00                        ;Initial values of triangle periods.
@@ -1141,9 +1141,9 @@ SamusDieSFXContinue:
         jmp EndTriSFX                   ;($B896)End SFX.
     LB90C:
     jsr DivideTriPeriods            ;($B9A0)reduces triangle period low.
-    lda TriLowPercentage            ;
+    lda TriPeriodDividedLow            ;
     sta TriChangeLow                ;Update triangle periods.
-    lda TriHighPercentage           ;
+    lda TriPeriodDividedHigh           ;
     sta TriChangeHigh               ;
     jsr IncreaseTriPeriods          ;($B978)Increase periods.
     jmp WriteTriPeriods             ;($B869)Save new periods.
@@ -1191,54 +1191,67 @@ StatueRaiseSFXContinue:
 
 IncreaseTriPeriods:
     clc
-    lda TriPeriodLow           ;
-    adc TriChangeLow           ;Calculate new TriPeriodLow.
-    sta TriPeriodLow           ;
-    lda TriPeriodHigh          ;
-    adc TriChangeHigh          ;Calculate new TriPeriodHigh.
-    sta TriPeriodHigh          ;
+    ;Calculate new TriPeriodLow.
+    lda TriPeriodLow
+    adc TriChangeLow
+    sta TriPeriodLow
+    ;Calculate new TriPeriodHigh.
+    lda TriPeriodHigh
+    adc TriChangeHigh
+    sta TriPeriodHigh
     rts
 
 DecreaseTriPeriods:
     sec
-    lda TriPeriodLow           ;
-    sbc TriChangeLow           ;Calculate new TriPeriodLow.
-    sta TriPeriodLow           ;
-    lda TriPeriodHigh          ;
-    sbc TriChangeHigh          ;Calculate new TriPeriodHigh.
-    sta TriPeriodHigh          ;
+    ;Calculate new TriPeriodLow.
+    lda TriPeriodLow
+    sbc TriChangeLow
+    sta TriPeriodLow
+    ;Calculate new TriPeriodHigh.
+    lda TriPeriodHigh
+    sbc TriChangeHigh
+    sta TriPeriodHigh
     rts
 
+;The following routine takes the triangle period values (TriPeriodLow, TriPeriodHigh) -->
+;and divides them by TriPeriodDivisor.
+;The routine then stores the result in TriPeriodDividedLow and TriPeriodDividedHigh.
+;This function is basically a software emulation of a sweep function.
 DivideTriPeriods:
-    lda TriPeriodLow           ;
-    pha                             ;Store TriPeriodLow and TriPeriodHigh.
-    lda TriPeriodHigh          ;
-    pha                             ;
-    lda #$00                        ;
-    sta DivideData                  ;
-    ldx #$10                        ;
-    rol TriPeriodLow           ;
-    rol TriPeriodHigh          ;
-    LB9B5:
-        rol DivideData                  ;The following routine takes the triangle period-->
-        lda DivideData                  ;high and triangle period low values and reduces-->
-        cmp PercentDifference           ;them by a certain percent.  The percent is-->
-        bcc LB9C6                       ;determined by the value stored in-->
-            sbc PercentDifference           ;PercentDifference.  If PercentDifference=#$05,-->
-            sta DivideData                  ;then the values will be reduced by 20%(1/5).-->
-        LB9C6:
-        rol TriPeriodLow           ;If PercentDifference=#$0A,Then the value will-->
-        rol TriPeriodHigh          ;be reduced by 10%(1/10), etc. This function is-->
-        dex                             ;basically a software emulation of a sweep function.
-        bne LB9B5                       ;
-    lda TriPeriodLow           ;
-    sta TriLowPercentage       ;
-    lda TriPeriodHigh          ;
-    sta TriHighPercentage      ;
-    pla                             ;
-    sta TriPeriodHigh          ;Restore TriPerodLow and TriPeriodHigh.
-    pla                             ;
-    sta TriPeriodLow           ;
+    ;Store TriPeriodLow and TriPeriodHigh.
+    lda TriPeriodLow
+    pha
+    lda TriPeriodHigh
+    pha
+    
+    ;Perform division.
+    lda #$00
+    sta DivideData
+    ldx #$10
+    rol TriPeriodLow
+    rol TriPeriodHigh
+    @loop:
+        rol DivideData
+        lda DivideData
+        cmp TriPeriodDivisor
+        bcc @endIf_A
+            sbc TriPeriodDivisor
+            sta DivideData
+        @endIf_A:
+        rol TriPeriodLow
+        rol TriPeriodHigh
+        dex
+        bne @loop
+    lda TriPeriodLow
+    sta TriPeriodDividedLow
+    lda TriPeriodHigh
+    sta TriPeriodDividedHigh
+    
+    ;Restore TriPeriodLow and TriPeriodHigh.
+    pla
+    sta TriPeriodHigh
+    pla
+    sta TriPeriodLow
     rts
 
 ;--------------------------------------[ End SFX routines ]-------------------------------------
