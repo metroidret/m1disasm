@@ -1201,7 +1201,7 @@ L9F39:  .byte $00, $40, $08, $48, $80, $C0, $88, $C8
 L9F41:  .byte $08, $02, $09, $03, $0A, $04, $0B, $05
 
 MotherBrain_9F49:
-    jsr L9F69
+    jsr MotherBrain_SpawnDoor
     bcs RTS_9F64
     lda #$00
     sta MotherBrainStatus
@@ -1217,7 +1217,8 @@ RTS_9F64:
 
 L9F65:  .byte $80, $B0, $A0, $90
 
-L9F69:
+MotherBrain_SpawnDoor:
+    ; get obj slot
     lda SamusMapPosX
     clc
     adc SamusMapPosY
@@ -1226,25 +1227,31 @@ L9F69:
     and #$03
     tay
     ldx L9F65,y
+    ; door closes immediately
     lda #$01
-    sta SamusJumpDsplcmnt,x
+    sta DoorHitPoints,x
+    ; blue door
     lda #$01
-    sta SamusOnElevator,x
+    sta DoorType,x
+    ; door action = open
     lda #$03
     sta ObjAction,x
+    ; set door coords
     lda MotherBrainHi
     sta ObjHi,x
     lda #$10
     sta ObjX,x
     lda #$68
     sta ObjY,x
-    lda #$55
+    ; init door animation (garbage, 1/2 chance it plays only for 1 frame)
+    lda #ObjAnim_55 - ObjectAnimIndexTbl.b
     sta ObjAnimResetIndex,x
     sta ObjAnimIndex,x
     lda #$00
     sta ObjAnimDelay,x
     lda #$F7
     sta ObjAnimFrame,x
+    ; create door tiles
     lda #$10
     sta TileBlastAnimFrame
     lda #$40
@@ -1276,7 +1283,7 @@ RTS_9FD9:
 
 ;-------------------------------------------------------------------------------
 MotherBrain_9FDA:
-    jsr L9F69
+    jsr MotherBrain_SpawnDoor
     bcs RTS_9FEC
     lda MotherBrainHi
     sta EndTimerEnemyHi

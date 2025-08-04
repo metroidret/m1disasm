@@ -118,7 +118,9 @@ ObjAnim_SamusFadeOutArea_Reset: ;$4E
 
 ;Elevator fade out of old area. (plays for only one frame on NES)
 ObjAnim_ElevatorFadeOutArea: ;$50
-    .byte _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23
+    .byte _id_ObjFrame23, $F7, $F7, _id_ObjFrame23, $F7
+ObjAnim_55: ;$55 (referenced in MotherBrain_SpawnDoor)
+    .byte $F7, $F7, _id_ObjFrame23, $F7, $F7, $F7, $F7, _id_ObjFrame23
 ObjAnim_ElevatorFadeOutArea_Reset: ;$5D
     .byte $F7, $FF
 
