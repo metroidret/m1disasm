@@ -1968,17 +1968,17 @@ GameEngine:
 UpdateAge:
     ;Exit if at title/password screen.
     lda GameMode
-    bne RTS_C9A5
+    bne @RTS
     
     ;Exit if game engine is notrunning.
     lda MainRoutine
     cmp #_id_GameEngine.b
-    bne RTS_C9A5
+    bne @RTS
     
     ;Only update age when FrameCount is zero-->
     ;(which is approx. every 4.266666666667 seconds).
     ldx FrameCount
-    bne RTS_C9A5
+    bne @RTS
     
     ;Minor Age = Minor Age + 1.
     inc SamusAge,x
@@ -1986,19 +1986,19 @@ UpdateAge:
     lda SamusAge
     cmp #$D0
     ;If not, we're done.-->
-    bcc RTS_C9A5
+    bcc @RTS
     ;Else reset minor age.
     lda #$00
     sta SamusAge
     ;Loop to update middle age and possibly major age.
-    LC99B:
+    @loop:
         cpx #$03
-        bcs RTS_C9A5
+        bcs @RTS
         inx
         inc SamusAge,x
         ;Branch if middle age overflowed, need to increment major age too. Else exit.
-        beq LC99B
-RTS_C9A5:
+        beq @loop
+@RTS:
     rts
 
 ;-------------------------------------------[ Game over ]--------------------------------------------
@@ -2346,8 +2346,9 @@ ClearScreenData:
 ; ===== THE REAL GUTS OF THE GAME ENGINE! =====
 
 UpdateWorld:
-    ldx #$00                        ;Set start of sprite RAM to $0200.
-    stx SpritePagePos               ;
+    ;Set start of sprite RAM to $0200.
+    ldx #$00
+    stx SpritePagePos
 
     jsr UpdateAllEnemies            ;($F345)Display of enemies.
     jsr UpdateProjectiles           ;($D4BF)Display of bullets/missiles/bombs.

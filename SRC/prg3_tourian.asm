@@ -893,19 +893,19 @@ GetVRAMPtrHi:
 ; Rinka Handler
 SpawnRinkaSpawnerRoutine:
     ldx #$03
-    jsr L9D75
-        bmi RTS_9D87
+    jsr @endIf_A
+        bmi @RTS
         ldx #$00
-    L9D75:
+    @endIf_A:
     lda RinkaSpawners.0.status,x
-    bpl RTS_9D87
+    bpl @RTS
     lda ($00),y
     jsr Adiv16_
     sta RinkaSpawners.0.status,x
     jsr GetNameTableAtScrollDir_
     sta RinkaSpawners.0.hi,x
     lda #$FF
-RTS_9D87:
+@RTS:
     rts
 
 GetNameTableAtScrollDir_:

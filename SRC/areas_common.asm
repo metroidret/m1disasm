@@ -505,40 +505,43 @@ EnemyGetDeltaY_JumpToCaseFA: ; L827C
 
 ;---------------------------------------
 EnemyGetDeltaY_CommonCase:
-; Take the value from memory
-; Branch ahead if velocityString[EnMovementInstrIndex] - EnDelay != 0
+    ; Take the value from memory
+    ; Branch ahead if velocityString[EnMovementInstrIndex] - EnDelay != 0
     sec
     sbc EnDelay,x
-    bne L8290
+    bne @endIf_A
+        ; delay has elapsed
+        ; reset delay to zero
+        sta EnDelay,x
+        ; EnMovementInstrIndex += 2
+        iny
+        iny
+        tya
+        sta EnMovementInstrIndex,x
+        ; Handle another byte
+        bne EnemyGetDeltaY_ReadByte ; branch always
 
-    sta EnDelay,x
-; EnMovementInstrIndex += 2
-    iny
-    iny
-    tya
-    sta EnMovementInstrIndex,x
-    bne EnemyGetDeltaY_ReadByte ; Handle another byte
-
-; Increment EnDelay
-L8290:
+    @endIf_A:
+    ; Increment EnDelay
     inc EnDelay,x
 
-; Read the sign/magnitude of the speed from the next byte
+    ; Read the sign/magnitude of the speed from the next byte
     iny
     lda (EnemyMovementPtr),y
 
 EnemyGetDeltaY_8296: ;referenced in bank 7
-; Save the sign bit to the carry flag
+    ; Save the sign bit to the carry flag
     asl
     php
-; Get the magnitude
+    ; Get the magnitude
     jsr Adiv32                      ;($C2BE)Divide by 32.
-; Negate the magnitude if necessary
+    ; Negate the magnitude if necessary
     plp
-    bcc L82A2
-    eor #$FF
-    adc #$00 ; Since carry is set in this branch, this increments A
-; Store this frame's delta y in temp
+    bcc @endIf_A
+        eor #$FF
+        adc #$00 ; Since carry is set in this branch, this increments A
+    @endIf_A:
+    ; Store this frame's delta y in temp
 L82A2:
     sta $00
     rts
