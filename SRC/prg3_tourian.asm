@@ -1243,7 +1243,8 @@ MotherBrain_SpawnDoor:
     sta ObjX,x
     lda #$68
     sta ObjY,x
-    ; init door animation (garbage, 1/2 chance it plays only for 1 frame)
+    ; init door animation (because of the 1/2 chance that it plays only for 1 frame,
+    ; the first frame has to be $F7)
     lda #ObjAnim_55 - ObjectAnimIndexTbl.b
     sta ObjAnimResetIndex,x
     sta ObjAnimIndex,x
