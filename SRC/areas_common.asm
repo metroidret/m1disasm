@@ -657,9 +657,9 @@ EnemyGetDeltaY_CaseFA:
 EnemyGetDeltaX:
     ; jump if enemy uses acceleration to move itself
     jsr LoadTableAt977B
-    bpl L8320
+    bpl @endIf_A
         jmp EnemyGetDeltaX_UsingAcceleration
-    L8320:
+    @endIf_A:
     
     ; enemy uses movement strings to move itself
     ; If bit 5 of EnData05 is clear, don't move horizontally
@@ -668,23 +668,23 @@ EnemyGetDeltaX:
     eor #$20
     beq L833C
 
-; Read the same velocity byte as in EnemyGetDeltaY
+    ; Read the same velocity byte as in EnemyGetDeltaY
     ldy EnMovementInstrIndex,x
     iny
     lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
 EnemyGetDeltaX_832F:
     tax
-; Save the sign bit to the processor flags
+    ; Save the sign bit to the processor flags
     and #$08
     php
     txa
-; Get the lower three bits
+    ; Get the lower three bits
     and #$07
     plp
-; Negate, according to the sign bit
-    beq L833C
-    jsr TwosComplement
-
+    ; Negate, according to the sign bit
+    beq @endIf_A
+        jsr TwosComplement
+    @endIf_A:
 L833C:
     sta $00
     rts
