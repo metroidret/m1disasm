@@ -153,18 +153,18 @@ ChooseEnemyAIRoutine:
         .word SwooperAIRoutine01 ; 01 - swooper targetting samus
         .word SidehopperFloorAIRoutine ; 02 - dessgeegas
         .word SidehopperCeilingAIRoutine ; 03 - ceiling dessgeegas
-        .word InvalidEnemy ; 04 - disappears
-        .word InvalidEnemy ; 05 - same as 4
+        .word RemoveEnemy_ ; 04 - disappears
+        .word RemoveEnemy_ ; 05 - same as 4
         .word CrawlerAIRoutine ; 06 - crawler
         .word PipeBugAIRoutine ; 07 - zebbo
-        .word InvalidEnemy ; 08 - same as 4
+        .word RemoveEnemy_ ; 08 - same as 4
         .word RidleyAIRoutine ; 09 - ridley
         .word RidleyProjectileAIRoutine ; 0A - ridley fireball
-        .word InvalidEnemy ; 0B - same as 4
+        .word RemoveEnemy_ ; 0B - same as 4
         .word MultiviolaAIRoutine ; 0C - bouncy orbs
-        .word InvalidEnemy ; 0D - same as 4
+        .word RemoveEnemy_ ; 0D - same as 4
         .word PolypAIRoutine ; 0E - polyp (unused)
-        .word InvalidEnemy ; 0F - same as 4
+        .word RemoveEnemy_ ; 0F - same as 4
 
 EnemyDeathAnimIndex:
     .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
@@ -476,7 +476,7 @@ EnemyFireballMovement3:
     .byte $FF
 
 ;-------------------------------------------------------------------------------
-InvalidEnemy:
+RemoveEnemy_:
     lda #$00
     sta EnsExtra.0.status,x
     rts

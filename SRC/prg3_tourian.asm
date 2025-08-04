@@ -147,19 +147,19 @@ ChooseEnemyAIRoutine:
         .word MetroidAIRoutine ; 00 - red metroid
         .word MetroidAIRoutine ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
-        .word InvalidEnemy ; 03 - disappears
+        .word RemoveEnemy_ ; 03 - disappears
         .word RinkaAIRoutine ; 04 - rinka
-        .word InvalidEnemy ; 05 - same as 3
-        .word InvalidEnemy ; 06 - same as 3
-        .word InvalidEnemy ; 07 - same as 3
-        .word InvalidEnemy ; 08 - same as 3
-        .word InvalidEnemy ; 09 - same as 3
-        .word InvalidEnemy ; 0A - same as 3
-        .word InvalidEnemy ; 0B - same as 3
-        .word InvalidEnemy ; 0C - same as 3
-        .word InvalidEnemy ; 0D - same as 3
-        .word InvalidEnemy ; 0E - same as 3
-        .word InvalidEnemy ; 0F - same as 3
+        .word RemoveEnemy_ ; 05 - same as 3
+        .word RemoveEnemy_ ; 06 - same as 3
+        .word RemoveEnemy_ ; 07 - same as 3
+        .word RemoveEnemy_ ; 08 - same as 3
+        .word RemoveEnemy_ ; 09 - same as 3
+        .word RemoveEnemy_ ; 0A - same as 3
+        .word RemoveEnemy_ ; 0B - same as 3
+        .word RemoveEnemy_ ; 0C - same as 3
+        .word RemoveEnemy_ ; 0D - same as 3
+        .word RemoveEnemy_ ; 0E - same as 3
+        .word RemoveEnemy_ ; 0F - same as 3
 
 
 EnemyDeathAnimIndex:
@@ -418,7 +418,7 @@ EnemyFireballMovement2:
 EnemyFireballMovement3:
     .byte $FF
 
-InvalidEnemy:
+RemoveEnemy_:
     lda #$00
     sta EnsExtra.0.status,x
     rts
