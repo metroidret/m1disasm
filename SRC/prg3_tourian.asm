@@ -628,7 +628,7 @@ Cannon_ShootFireball:
     ; apply offset to cannon position
     jsr CommonJump_ApplySpeedToPosition
     ; use as fireball position
-    jsr LoadPositionFromTemp
+    jsr LoadEnemyPositionFromTemp_
     ldx CannonIndex
     rts
 

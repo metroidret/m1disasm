@@ -165,7 +165,7 @@ L9AB0:
             lda #$00
             sta EnsExtra.0.status,x
         L9AF1:
-        jsr LoadPositionFromTemp
+        jsr LoadEnemyPositionFromTemp_
     L9AF4:
     ; change animation frame every 8 frames
     lda #$08

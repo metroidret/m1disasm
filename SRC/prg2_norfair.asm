@@ -539,7 +539,7 @@ L9963:
 
 ;-------------------------------------------------------------------------------
 
-StorePositionToTemp:
+StoreEnemyPositionToTemp_:
     lda EnY,x
     sta Temp08_PositionY
     lda EnX,x
@@ -548,7 +548,7 @@ StorePositionToTemp:
     sta Temp0B_PositionHi
     rts
 
-LoadPositionFromTemp:
+LoadEnemyPositionFromTemp_:
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
