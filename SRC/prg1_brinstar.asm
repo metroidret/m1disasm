@@ -154,8 +154,8 @@ ChooseEnemyAIRoutine:
 
 ; Animation related table ?
 EnemyDeathAnimIndex:
-    .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl
-    .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl
+    .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl ; unused enemy
+    .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl ; unused enemy
     .byte EnAnim_2D - EnAnimTbl, EnAnim_2B - EnAnimTbl
     .byte EnAnim_RipperExplodeFacingRight - EnAnimTbl, EnAnim_RipperExplodeFacingLeft - EnAnimTbl
     .byte EnAnim_SkreeExplode - EnAnimTbl, EnAnim_SkreeExplode - EnAnimTbl
@@ -176,8 +176,8 @@ EnemyHealthTbl:
 
 ; ResetAnimIndex table for resting enemy
 EnemyRestingAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; unused enemy
+    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; unused enemy
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
     .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl
     .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl
@@ -195,8 +195,8 @@ EnemyRestingAnimIndex:
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; unused enemy
+    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; unused enemy
     .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl
     .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl
     .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl
@@ -214,8 +214,8 @@ EnemyActiveAnimIndex:
 
 ;another animation related table
 L967B:
-    .byte $00
-    .byte $00
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
     .byte $00
     .byte $00 | $80
     .byte $00
@@ -250,8 +250,8 @@ EnemyData0DTbl:
 ; bit 4-6: zero
 ; bit 0-3: number of blocks distance threshold in the axis indicated by EnData05 bit 7
 EnemyDistanceToSamusThreshold:
-    .byte $00
-    .byte $00
+    .byte $00 ; unused enemy
+    .byte $00 ; unused enemy
     .byte $6 | (0 << 7)
     .byte $00
     .byte $3 | (1 << 7)
@@ -272,8 +272,8 @@ EnemyInitDelayTbl:
 
 ; Index to a table starting at EnemyMovementChoices
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice01 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice02 - EnemyMovementChoices
     .byte EnemyMovementChoice03 - EnemyMovementChoices
     .byte EnemyMovementChoice04 - EnemyMovementChoices
