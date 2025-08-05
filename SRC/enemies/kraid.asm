@@ -19,7 +19,7 @@ KraidBranch_Explode:
     sta EnsExtra.3.status
     sta EnsExtra.4.status
     sta EnsExtra.5.status
-    beq KraidBranch_Exit
+    beq KraidBranch_Exit ; branch always
 
 KraidBranch_Normal:
     jsr KraidUpdateAllProjectiles

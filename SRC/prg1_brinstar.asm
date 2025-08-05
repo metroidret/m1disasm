@@ -272,14 +272,14 @@ EnemyInitDelayTbl:
 
 ; Index to a table starting at EnemyMovementChoices
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
     .byte EnemyMovementChoice02 - EnemyMovementChoices
     .byte EnemyMovementChoice03 - EnemyMovementChoices
     .byte EnemyMovementChoice04 - EnemyMovementChoices
     .byte EnemyMovementChoice07 - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice05 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice06 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice05 - EnemyMovementChoices
+    .byte EnemyMovementChoice06 - EnemyMovementChoices
     .byte EnemyMovementChoice09 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice0A - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice0B - EnemyMovementChoices ; unused enemy
@@ -389,9 +389,9 @@ TileBlastFramePtrTable:
 ;  EnData08 = EnemyMovementChoices[(EnemyMovementChoices[EnemyMovementChoiceOffset[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
 ; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
 EnemyMovementChoices:
-EnemyMovementChoice00: ; enemy can't use movement strings
+EnemyMovementChoice00:
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice01: ; enemy can't use movement strings
+EnemyMovementChoice01:
     EnemyMovementChoiceEntry $03, $04
 EnemyMovementChoice02:
     EnemyMovementChoiceEntry $05
@@ -399,9 +399,9 @@ EnemyMovementChoice03:
     EnemyMovementChoiceEntry $06
 EnemyMovementChoice04:
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice05: ; enemy can't use movement strings
+EnemyMovementChoice05:
     EnemyMovementChoiceEntry $08
-EnemyMovementChoice06: ; enemy can't use movement strings
+EnemyMovementChoice06:
     EnemyMovementChoiceEntry $09
 EnemyMovementChoice07: ; enemy moves manually
     EnemyMovementChoiceEntry $00

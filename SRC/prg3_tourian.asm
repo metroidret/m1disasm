@@ -265,8 +265,8 @@ EnemyInitDelayTbl:
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
     .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy doesn't move
     .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice02 - EnemyMovementChoices ; enemy moves manually
@@ -363,7 +363,7 @@ TileBlastFramePtrTable:
 EnemyMovementChoices:
 EnemyMovementChoice00:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice01: ; enemy can't use movement strings
+EnemyMovementChoice01:
     EnemyMovementChoiceEntry $01
 EnemyMovementChoice02: ; enemy moves manually
     ; nothing
