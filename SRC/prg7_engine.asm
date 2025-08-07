@@ -9004,7 +9004,7 @@ LEE41:
 CheckForItem:
     ; if Samus has no unique items, Load item and exit.
     ldy NumberOfUniqueItems
-    beq @samusDoesNotHaveThisItem                         
+    beq @samusDoesNotHaveThisItem
     @loop:
         ;Look for upper byte of unique item. branch if it doesn't match
         lda Temp06_ItemID+1.b
@@ -9853,7 +9853,7 @@ CollisionDetectionEnemy_ReactToCollisionWithSamus:
     
     jsr LF2E8
     ;branch if screw attack is active.
-    jsr IsScrewAttackActive         
+    jsr IsScrewAttackActive
     ldy #$00
     bcc Lx289
     
