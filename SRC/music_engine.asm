@@ -107,7 +107,7 @@ NoiseSFXInitPointers:
     .byte $00
 
 NoiseSFXContPointers:
-    .word NoiseSFXContRoutineTbl, RTS_B4EE              ;Noise continue SFX     (2nd).
+    .word NoiseSFXContRoutineTbl, CheckSFXFlag@RTS              ;Noise continue SFX     (2nd).
     .byte $00
 
 SQ1SFXInitPointers:
@@ -115,7 +115,7 @@ SQ1SFXInitPointers:
     .byte $01
 
 SQ1SFXContPointers:
-    .word SQ1SFXContRoutineTbl, RTS_B4EE              ;SQ2 continue SFX       (6th).
+    .word SQ1SFXContRoutineTbl, CheckSFXFlag@RTS              ;SQ2 continue SFX       (6th).
     .byte $01
 
 TriSFXInitPointers:
@@ -123,7 +123,7 @@ TriSFXInitPointers:
     .byte $03
 
 TriSFXContPointers:
-    .word TriSFXContRoutineTbl, RTS_B4EE              ;Triangle continue SFX  (8th).
+    .word TriSFXContRoutineTbl, CheckSFXFlag@RTS              ;Triangle continue SFX  (8th).
     .byte $03
 
 MultiSFXInitPointers:
@@ -146,25 +146,25 @@ MusicInitPointers:
 
 ;Noise Init SFX handling routine addresses:
 NoiseSFXInitRoutineTbl:
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
     .word ScrewAttackSFXStart                     ;Screw attack init SFX.
     .word MissileLaunchSFXStart                     ;Missile launch init SFX.
     .word BombExplodeSFXStart                     ;Bomb explode init SFX.
     .word SamusWalkSFXStart                     ;Samus walk init SFX.
     .word SpitFlameSFXStart                     ;Spit flame init SFX.
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
 
 ;Noise Continue SFX handling routine addresses:
 NoiseSFXContRoutineTbl:
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
     .word ScrewAttackSFXContinue                     ;Screw attack continue SFX.
     .word MissileLaunchSFXContinue                     ;Missile launch continue SFX.
     .word NoiseSFXContinue                     ;Bomb explode continue SFX.
     .word NoiseSFXContinue                     ;Samus walk continue SFX.
     .word SpitFlameSFXContinue                     ;Spit flame continue SFX.
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
 
 ;SQ1 Init SFX handling routine addresses:
 SQ1SFXInitRoutineTbl:
@@ -511,11 +511,11 @@ IncrementSFXFrame:
     lda ThisNoiseFrame,x
     ;Check to see if current frame is last frame to play.
     cmp NoiseSFXLength,x
-    bne RTS_B4BC
+    bne @RTS
         ;If current frame is last frame, reset current frame to 0.
         lda #$00
         sta ThisNoiseFrame,x
-    RTS_B4BC:
+    @RTS:
     rts
 
 
@@ -528,7 +528,7 @@ CheckSFXFlag:
     sty SoundE4+1.b
     ;Y=0 for counting loop ahead.
     ldy #$00
-    LB4C8:
+    @loop_A:
         ;Loads either SFXInitPointers or SFXContPointers into $E0-$E3
         lda (SoundE4),y
         sta SoundE0,y
@@ -536,7 +536,7 @@ CheckSFXFlag:
         tya
         ;Loop repeats four times to load the values.
         cmp #$04
-        bne LB4C8
+        bne @loop_A
     lda (SoundE4),y
     sta ChannelType                 ;#$00=SQ1,#$01=SQ2,#$02=Triangle,#$03=Noise
     ;Set y to 0 for counting loop ahead.
@@ -544,33 +544,33 @@ CheckSFXFlag:
     ;Push current SFX flags on stack.
     lda CurrentSFXFlags
     pha
-    LB4DE:
+    @loop_B:
         ;This portion of the routine loops a maximum of eight times looking for
         ;any SFX flags that have been set in the current SFX cycle.
         asl CurrentSFXFlags
-        ;If a flag is found, Branch to SFXFlagFound for further processing
-        bcs SFXFlagFound
+        ;If a flag is found, Branch to @SFXFlagFound for further processing
+        bcs @SFXFlagFound
         ;no flags are set, continue to next SFX cycle.
         iny
         iny
         tya
         cmp #$10
-        bne LB4DE
+        bne @loop_B
 
 ;Restore original data in CurrentSFXFlags.
-RestoreSFXFlags:
+@RestoreSFXFlags:
     pla
     sta CurrentSFXFlags
-RTS_B4EE:
+@RTS:
     rts
 
-SFXFlagFound:
+@SFXFlagFound:
     lda (SoundE0),y                 ;This routine stores the starting address of the-->
     sta SoundE2                     ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
     lda (SoundE0),y                 ;$E2 and $E3.
     sta SoundE2+1.b                   ;
-    jmp RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
+    jmp @RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
 
 ;-----------------------------------[ SFX Handling Routines ]---------------------------------------
 
@@ -1648,7 +1648,7 @@ MultiSFXInitRoutineTbl:
     .word GotoMusic01Init                     ;Power up music.
     .word GotoMusic05Init                     ;End game music.
     .word GotoMusic01Init                     ;Intro music.
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
     .word SamusHitSFXStart                     ;Samus hit init SFX.
     .word BossHitSFXStart                     ;Boss hit init SFX.
     .word IncorrectPasswordSFXStart                     ;Incorrect password init SFX.
@@ -1656,11 +1656,11 @@ MultiSFXInitRoutineTbl:
 ;Multi channel continue SFX handling routine addresses:
 
 MultiSFXContRoutineTbl:
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
-    .word RTS_B4EE                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
+    .word CheckSFXFlag@RTS                     ;No sound.
     .word SamusHitSFXContinue                     ;Samus hit continue SFX.
     .word BossHitSFXContinue                     ;Boss hit continue SFX.
     .word IncorrectPasswordSFXContinue                     ;Incorrect password continue SFX.
