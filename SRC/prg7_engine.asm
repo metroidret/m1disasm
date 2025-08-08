@@ -480,14 +480,14 @@ RemoveIntroSprites:
 ;The routine below clears RAM associated with rooms and enemies.
 
 ClearRAM_33_DF:
-    ldx #RoomPtr
+    ldx #RoomPtr.b
     lda #$00
     @loop:
         ;Clear RAM addresses $33 through $DF.
         sta $00,x
         inx
         ;Loop until all desired addresses are cleared.
-        cpx #SoundE0
+        cpx #SoundE0.b
         bcc @loop
     rts
 
@@ -611,7 +611,7 @@ ReadOnePad:
         ldy #$08
     @endIf_B:
     ;Reset retrigger delay to #$20(32 frames) or #$08(8 frames) if already retriggering.
-    sty RetrigDelay1,x
+    sty RetrigDelay1.b,x
 RTS_C265:
     rts
 
