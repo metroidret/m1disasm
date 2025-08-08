@@ -262,60 +262,82 @@ GotoLoadSQ1SFXInitFlags:
     jsr LoadSQ1SFXInitFlags         ;($B329)Check for SQ1 init flags.
     rts
 
-LoadSQ1ChannelSFX:                      ;Used to determine which sound registers to change-->
-    lda #$00                        ;($4000 - $4003) - SQ1.
-    beq LoadSFXData                       ;Branch always.
+LoadSQ1ChannelSFX: ;($B368)
+    ;Used to determine which sound registers to change ($4000 - $4003) - SQ1.
+    lda #<SQ1_VOL.b
+    beq LoadSFXData ;Branch always.
 
-LoadTriChannelSFX:                 ;Used to determine which sound registers to change-->
-    lda #$08                        ;($4008 - $400B) - Triangle.
-    bne LoadSFXData                       ;Branch always.
+LoadTriChannelSFX:
+    ;Used to determine which sound registers to change ($4008 - $400B) - Triangle.
+    lda #<TRI_LINEAR.b
+    bne LoadSFXData ;Branch always.
 
-LoadNoiseChannelSFX:                    ;Used to determine which sound registers to change-->
-    lda #$0C                        ;($400C - $400F) - Noise.
-    bne LoadSFXData                       ;Branch always.
+LoadNoiseChannelSFX:
+    ;Used to determine which sound registers to change ($400C - $400F) - Noise.
+    lda #<NOISE_VOL.b
+    bne LoadSFXData ;Branch always.
 
-LoadSQ2ChannelSFX:                      ;Used to determine which sound registers to change-->
-    lda #$04                        ;($4004 - $4007) - SQ2.
+LoadSQ2ChannelSFX:
+    ;Used to determine which sound registers to change ($4004 - $4007) - SQ2.
+    lda #<SQ2_VOL.b
     ; fallthrough
 
 LoadSFXData:
-    sta SoundE0                     ;Lower address byte of desired APU control register.
-    lda #$40                        ;
-    sta SoundE0+1.b                   ;Upper address byte of desired APU control register.
-    sty SoundE2                     ;Lower address byte of data to load into sound channel.
-    lda #>SFXData.b                   ;
-    sta SoundE2+1.b                   ;Upper address byte of data to load into sound channel.
-    ldy #$00                        ;Starting index for loading four byte sound data.
-
-LoadSFXRegisters:
-    lda (SoundE2),y                 ;Load A with SFX data byte.
-    sta (SoundE0),y                 ;Store A in SFX register.
-    iny                             ;
-    tya                             ;The four registers associated with each sound-->
-    cmp #$04                        ;channel are loaded one after the other (the loop-->
-    bne LoadSFXRegisters            ;repeats four times).
+    ;Lower address byte of desired APU control register.
+    sta SoundE0
+    ;Upper address byte of desired APU control register.
+    lda #$40
+    sta SoundE0+1.b
+    
+    ;Lower address byte of data to load into sound channel.
+    sty SoundE2
+    ;Upper address byte of data to load into sound channel.
+    lda #>SFXData.b
+    sta SoundE2+1.b
+    
+    ;Starting index for loading four byte sound data.
+    ldy #$00
+    @loop_LoadSFXRegisters:
+        ;Load A with SFX data byte. Store A in SFX register.
+        lda (SoundE2),y
+        sta (SoundE0),y
+        iny
+        tya
+        ;The four registers associated with each sound channel are loaded one after the other.
+        ; (the loop repeats four times)
+        cmp #$04
+        bne @loop_LoadSFXRegisters
     rts
 
 PauseSFX:
-    inc SFXPaused                   ;SFXPaused=#$01
-    jsr ClearSounds                 ;($B43E)Clear sound registers of data.
-    sta PauseSFXStatus              ;PauseSFXStatus=#$00
+    ;SFXPaused=#$01
+    inc SFXPaused
+    ;Clear sound registers of data.
+    jsr ClearSounds
+    ;PauseSFXStatus=#$00
+    sta PauseSFXStatus
     rts
 
-LB399:
-    lda SFXPaused                   ;Has SFXPaused been set? if not, branch
-    beq PauseSFX                    ;
-    lda PauseSFXStatus              ;For the first #$12 frames after the game has been-->
-    cmp #$12                        ;paused, play GamePaused SFX.  If paused for #$12-->
-    beq RTS_B3B3                       ;frames or more, branch to exit.
-    and #$03                        ;
-    cmp #$03                        ;Every fourth frame, repeat GamePaused SFX
-    bne LB3B0                       ;
-        ldy #<GamePausedSFXData.b         ;Lower address byte of GamePaused SFX data(Base=$B200)
-        jsr LoadSQ1ChannelSFX           ;($B368) Load GamePaused SFX data.
-    LB3B0:
+SoundEngine_GameIsPaused:
+    ;Has SFXPaused been set? if not, branch
+    lda SFXPaused
+    beq PauseSFX
+    ;For the first #$12 frames after the game has been paused, play GamePaused SFX.
+    ;If paused for #$12 frames or more, branch to exit.
+    lda PauseSFXStatus
+    cmp #$12
+    beq @RTS
+    ;Every fourth frame, repeat GamePaused SFX
+    and #$03
+    cmp #$03
+    bne @endIf_A
+        ;Lower address byte of GamePaused SFX data(Base=$B200)
+        ldy #<GamePausedSFXData.b
+        ;Load GamePaused SFX data.
+        jsr LoadSQ1ChannelSFX
+    @endIf_A:
     inc PauseSFXStatus
-RTS_B3B3:
+@RTS:
     rts
 
 ;------------------------------------[ Sound Engine Entry Point ]------------------------------------
@@ -339,11 +361,11 @@ SoundEngine:
     ;is bit zero is set in NoiseSFXFlag(Silence music)?  If yes, branch.
     lda NoiseSFXFlag
     lsr
-    bcs LB3EB
+    bcs SilenceMusic
     ;Is game paused?  If yes, branch.
     lda MainRoutine
-    cmp #$05
-    beq LB399
+    cmp #_id_PauseMode.b
+    beq SoundEngine_GameIsPaused
     ;Clear SFXPaused when game is running.
     lda #$00
     sta SFXPaused
@@ -364,7 +386,7 @@ ClearSFXFlags:
     sta MusicInitFlag
     rts
 
-LB3EB:
+SilenceMusic:
     jsr InitializeSoundAddresses    ;($B404)Prepare to start playing music.
     beq ClearSFXFlags               ;Branch always.
 

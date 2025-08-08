@@ -2433,7 +2433,7 @@ InitializeGame:
         inc SamusStat0B+1
     L930D:
     
-    lda #$01                        ;
+    lda #_id_MoreInit.b
     sta MainRoutine                 ;Initialize starting area.
     jsr ScreenNmiOff                ;($C45D)Turn off screen.
     jsr LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
@@ -3566,10 +3566,10 @@ RTS_9C44:
 LoadCredits:
     ;If credits are not being displayed, exit.
     ldy CreditPageNumber
-    beq @RET
+    beq @RTS
     ;If CreditPageNumber is higher than #$06, exit.
     cpy #$07
-    bcs @RET
+    bcs @RTS
     ;If ScrollY is less than #$80 (128), branch.
     ldx #$00
     lda ScrollY
@@ -3581,7 +3581,7 @@ LoadCredits:
     @endIf_A:
     ;If (ScrollY & #$7F) is greater or equal to #$04, branch to exit.
     cmp #$04
-    bcs @RET
+    bcs @RTS
     ;Store #$00, #$01, #$02 or #$03 in address $01.
     sta $01
     ;Y now contains CreditPageNumber - 1.
@@ -3592,7 +3592,7 @@ LoadCredits:
         ;Y now contains CreditPageNumber - 2.
         dey
         ;If on Credit page less than two, branch to exit.
-        bmi @RET
+        bmi @RTS
         ;Start with ((CreditPageNumber - 2) * 8 + 4 + $01) * 2.
         ;Equivalent to CreditPageNumber * 16 - 22
         ;This formula is used when ScrollY = 0, 1, 2 and 3.
@@ -3620,7 +3620,7 @@ LoadCredits:
     lda CreditsPointerTbl+1,y       ;Upper byte of pointer to PPU string.
     tay
     jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-@RET:
+@RTS:
     rts
 
 LoadWaveSprites:
