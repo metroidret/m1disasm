@@ -970,8 +970,8 @@ MotherBrainStatusHandler:
         .word MotherBrain_9F02_05     ;#$05=Mother brain gone
         .word MotherBrain_9F49     ;#$06=Time bomb set,
         .word MotherBrain_9FC0     ;#$07=Time bomb exploded
-        .word MotherBrain_9F02_08     ;#$08=Initialize mother brain
-        .word MotherBrain_9FDA     ;#$09=Unused. Was intended to initialize mother brain already dead?
+        .word MotherBrain_9F02_08     ;#$08=Initialize mother brain already dead (part 1)
+        .word MotherBrain_9FDA     ;#$09=Initialize mother brain already dead (part 2)
         .word Exit__    ;#$0A=Mother brain already dead.
 RTS_9DF1:
     rts
