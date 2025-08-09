@@ -692,7 +692,9 @@ EnData0A               = $040A   ; unknown -- For crawlers, orientation
                                    ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
 EnHealth               = $040B   ;Current health of enemy.
 EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
-EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
+EnData0D               = $040D   ;Resting: force speed towards samus delay
+                                   ;Frozen: frozen timer (* 8)
+                                   ;Pickup: die delay (* 4)
 EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
 
