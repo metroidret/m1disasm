@@ -970,8 +970,8 @@ MotherBrainStatusHandler:
         .word MotherBrain_9F02_05     ;#$05=Mother brain gone
         .word MotherBrain_9F49     ;#$06=Time bomb set,
         .word MotherBrain_9FC0     ;#$07=Time bomb exploded
-        .word MotherBrain_9F02_08     ;#$08=Initialize mother brain
-        .word MotherBrain_9FDA     ;#$09
+        .word MotherBrain_9F02_08     ;#$08=Initialize mother brain already dead (part 1)
+        .word MotherBrain_9FDA     ;#$09=Initialize mother brain already dead (part 2)
         .word Exit__    ;#$0A=Mother brain already dead.
 RTS_9DF1:
     rts
@@ -1168,6 +1168,7 @@ MotherBrain_9F02_08:
     bmi L9F33
         cmp #$08
         beq L9F36
+        ; draw the TIME BOMB SET GET OUT FAST! message
         tay
         lda L9F41,y
         sta TileBlastAnimFrame
@@ -1201,18 +1202,23 @@ L9F39:  .byte $00, $40, $08, $48, $80, $C0, $88, $C8
 L9F41:  .byte $08, $02, $09, $03, $0A, $04, $0B, $05
 
 MotherBrain_9F49:
+    ; try to spawn door until it succeeds
     jsr MotherBrain_SpawnDoor
-    bcs RTS_9F64
+    bcs @RTS
+    ; mother brain status = not in room
     lda #$00
     sta MotherBrainStatus
+    ; timer = 9999 frames = 166.65 seconds
     lda #$99
     sta EndTimer
     sta EndTimer+1
+    ; enable end timer enemy
     lda #$01
     sta EndTimerEnemyIsEnabled
+    ; place end timer enemy
     lda MotherBrainHi
     sta EndTimerEnemyHi
-RTS_9F64:
+@RTS:
     rts
 
 L9F65:  .byte $80, $B0, $A0, $90
@@ -1268,31 +1274,41 @@ MotherBrain_SpawnDoor:
 
 ;-------------------------------------------------------------------------------
 MotherBrain_9FC0:
+    ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
     sta NoiseSFXFlag
+    ; branch if time bomb is still exploding
     lda Timer3
-    bne RTS_9FD9
-    lda #$08
+    bne @RTS
+    ; Time bomb finishes exploding
+    ; Bug? Doesn't set ObjAnimDelay to 0
+    lda #sa_Dead2
     sta ObjAction
+    ; mother brain status = already dead (RTS)
     lda #$0A
     sta MotherBrainStatus
+    ; reload palette #$00
     lda #_id_Palette00+1.b
     sta PalDataPending
-RTS_9FD9:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
 MotherBrain_9FDA:
+    ; try to spawn door until it succeeds
     jsr MotherBrain_SpawnDoor
-    bcs RTS_9FEC
+    bcs @RTS
+    ; place end timer enemy
     lda MotherBrainHi
     sta EndTimerEnemyHi
+    ; enable end timer enemy
     ldy #$01
     sty EndTimerEnemyIsEnabled
+    ; mother brain status = not in room (RTS)
     dey
     sty MotherBrainStatus
-RTS_9FEC:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------

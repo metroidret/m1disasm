@@ -111,7 +111,7 @@ sa_PntUp               = 4
 sa_Door                = 5
 sa_PntJump             = 6
 sa_Dead                = 7
-sa_Dead2               = 8
+sa_Dead2               = 8       ;Also after time bomb exploded.
 sa_Elevator            = 9
 sa_Begin               = 255
 
