@@ -128,7 +128,7 @@ SongIntroTri:
         SongRest
     SongRepeat
     SongNoteLength $4 ;7/8 seconds
-        SongNote "D5"
+    SongNote "D5"
     SongNote "C6"
     SongNote "B5"
     SongNote "A#5"
@@ -179,11 +179,11 @@ SongIntroTri:
         SongNote "E4"
     SongRepeat
     SongRepeatSetup $20
-        SongNoteLength $6 ;21/32 seconds  +
+        SongNoteLength $6 ;21/32 seconds
         SongNote "A3"
-        SongNoteLength $1 ;7/64 seconds   | Repeat 32 times.
+        SongNoteLength $1 ;7/64 seconds
         SongNote "A3"
-        SongNoteLength $1 ;7/64 seconds   |
+        SongNoteLength $1 ;7/64 seconds
         SongRest
     SongRepeat
 

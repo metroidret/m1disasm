@@ -153,18 +153,18 @@ ChooseEnemyAIRoutine:
         .word SwooperAIRoutine01 ; 01 - swooper targetting samus
         .word SidehopperFloorAIRoutine ; 02 - dessgeegas
         .word SidehopperCeilingAIRoutine ; 03 - ceiling dessgeegas
-        .word InvalidEnemy ; 04 - disappears
-        .word InvalidEnemy ; 05 - same as 4
+        .word RemoveEnemy_ ; 04 - disappears
+        .word RemoveEnemy_ ; 05 - same as 4
         .word CrawlerAIRoutine ; 06 - crawler
         .word PipeBugAIRoutine ; 07 - zebbo
-        .word InvalidEnemy ; 08 - same as 4
+        .word RemoveEnemy_ ; 08 - same as 4
         .word RidleyAIRoutine ; 09 - ridley
         .word RidleyProjectileAIRoutine ; 0A - ridley fireball
-        .word InvalidEnemy ; 0B - same as 4
+        .word RemoveEnemy_ ; 0B - same as 4
         .word MultiviolaAIRoutine ; 0C - bouncy orbs
-        .word InvalidEnemy ; 0D - same as 4
+        .word RemoveEnemy_ ; 0D - same as 4
         .word PolypAIRoutine ; 0E - polyp (unused)
-        .word InvalidEnemy ; 0F - same as 4
+        .word RemoveEnemy_ ; 0F - same as 4
 
 EnemyDeathAnimIndex:
     .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl
@@ -269,19 +269,19 @@ EnemyInitDelayTbl:
     .byte $10, $01, $03, $03, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice09 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice0A - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice09 - EnemyMovementChoices
+    .byte EnemyMovementChoice0A - EnemyMovementChoices
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
     .byte EnemyMovementChoice03 - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice03 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice03 - EnemyMovementChoices
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice04 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice05 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice04 - EnemyMovementChoices
+    .byte EnemyMovementChoice05 - EnemyMovementChoices
     .byte EnemyMovementChoice06 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice07 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice07 - EnemyMovementChoices
     .byte EnemyMovementChoice08 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice09 - EnemyMovementChoices ; unused enemy
     .byte $00 ; unused enemy
@@ -366,27 +366,27 @@ TileBlastFramePtrTable:
     .word TileBlastFrame10
 
 EnemyMovementChoices:
-EnemyMovementChoice00: ; enemy can't use movement strings
+EnemyMovementChoice00:
     EnemyMovementChoiceEntry $04, $05
-EnemyMovementChoice01: ; enemy can't use movement strings
+EnemyMovementChoice01:
     EnemyMovementChoiceEntry $06, $07
 EnemyMovementChoice02: ; not assigned to any enemy
     EnemyMovementChoiceEntry $02
 EnemyMovementChoice03: ; enemy moves manually
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice04: ; enemy can't use movement strings
+EnemyMovementChoice04:
     EnemyMovementChoiceEntry $0D
-EnemyMovementChoice05: ; enemy can't use movement strings
+EnemyMovementChoice05:
     EnemyMovementChoiceEntry $0E, $0F
-EnemyMovementChoice06: ; enemy can't use movement strings
+EnemyMovementChoice06:
     EnemyMovementChoiceEntry $00, $01, $02, $03
 EnemyMovementChoice07: ; unused enemy
     EnemyMovementChoiceEntry $10
-EnemyMovementChoice08: ; enemy can't use movement strings
+EnemyMovementChoice08:
     EnemyMovementChoiceEntry $11
-EnemyMovementChoice09: ; enemy can't use movement strings
+EnemyMovementChoice09:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice0A: ; enemy can't use movement strings
+EnemyMovementChoice0A:
     EnemyMovementChoiceEntry $01
 
 EnemyMovement00_R:
@@ -476,7 +476,7 @@ EnemyFireballMovement3:
     .byte $FF
 
 ;-------------------------------------------------------------------------------
-InvalidEnemy:
+RemoveEnemy_:
     lda #$00
     sta EnsExtra.0.status,x
     rts
@@ -519,7 +519,7 @@ CommonEnemyJump_00_01_02:
 
 .include "enemies/ridley.asm"
 
-StorePositionToTemp:
+StoreEnemyPositionToTemp_:
     lda EnY,x
     sta Temp08_PositionY
     lda EnX,x
@@ -528,7 +528,7 @@ StorePositionToTemp:
     sta Temp0B_PositionHi
     rts
 
-LoadPositionFromTemp:
+LoadEnemyPositionFromTemp_:
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x

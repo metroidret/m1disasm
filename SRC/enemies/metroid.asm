@@ -239,7 +239,7 @@ L98A9:
     ; add offset to Samus position
     jsr CommonJump_ApplySpeedToPosition
     ; set as metroid position
-    jsr LoadPositionFromTemp
+    jsr LoadEnemyPositionFromTemp_
     jmp L9967
 
 L9964:
@@ -333,7 +333,7 @@ StoreSamusPositionToTemp:
     sta Temp0B_PositionHi
     rts
 
-LoadPositionFromTemp:
+LoadEnemyPositionFromTemp_:
     ; save function result as enemy position
     lda Temp09_PositionX
     sta EnX,x

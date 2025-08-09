@@ -147,19 +147,19 @@ ChooseEnemyAIRoutine:
         .word MetroidAIRoutine ; 00 - red metroid
         .word MetroidAIRoutine ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
-        .word InvalidEnemy ; 03 - disappears
+        .word RemoveEnemy_ ; 03 - disappears
         .word RinkaAIRoutine ; 04 - rinka
-        .word InvalidEnemy ; 05 - same as 3
-        .word InvalidEnemy ; 06 - same as 3
-        .word InvalidEnemy ; 07 - same as 3
-        .word InvalidEnemy ; 08 - same as 3
-        .word InvalidEnemy ; 09 - same as 3
-        .word InvalidEnemy ; 0A - same as 3
-        .word InvalidEnemy ; 0B - same as 3
-        .word InvalidEnemy ; 0C - same as 3
-        .word InvalidEnemy ; 0D - same as 3
-        .word InvalidEnemy ; 0E - same as 3
-        .word InvalidEnemy ; 0F - same as 3
+        .word RemoveEnemy_ ; 05 - same as 3
+        .word RemoveEnemy_ ; 06 - same as 3
+        .word RemoveEnemy_ ; 07 - same as 3
+        .word RemoveEnemy_ ; 08 - same as 3
+        .word RemoveEnemy_ ; 09 - same as 3
+        .word RemoveEnemy_ ; 0A - same as 3
+        .word RemoveEnemy_ ; 0B - same as 3
+        .word RemoveEnemy_ ; 0C - same as 3
+        .word RemoveEnemy_ ; 0D - same as 3
+        .word RemoveEnemy_ ; 0E - same as 3
+        .word RemoveEnemy_ ; 0F - same as 3
 
 
 EnemyDeathAnimIndex:
@@ -265,8 +265,8 @@ EnemyInitDelayTbl:
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy can't use movement strings
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy can't use movement strings
+    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice01 - EnemyMovementChoices
     .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy doesn't move
     .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice02 - EnemyMovementChoices ; enemy moves manually
@@ -363,7 +363,7 @@ TileBlastFramePtrTable:
 EnemyMovementChoices:
 EnemyMovementChoice00:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice01: ; enemy can't use movement strings
+EnemyMovementChoice01:
     EnemyMovementChoiceEntry $01
 EnemyMovementChoice02: ; enemy moves manually
     ; nothing
@@ -418,7 +418,7 @@ EnemyFireballMovement2:
 EnemyFireballMovement3:
     .byte $FF
 
-InvalidEnemy:
+RemoveEnemy_:
     lda #$00
     sta EnsExtra.0.status,x
     rts
@@ -628,7 +628,7 @@ Cannon_ShootFireball:
     ; apply offset to cannon position
     jsr CommonJump_ApplySpeedToPosition
     ; use as fireball position
-    jsr LoadPositionFromTemp
+    jsr LoadEnemyPositionFromTemp_
     ldx CannonIndex
     rts
 
@@ -893,19 +893,19 @@ GetVRAMPtrHi:
 ; Rinka Handler
 SpawnRinkaSpawnerRoutine:
     ldx #$03
-    jsr L9D75
-        bmi RTS_9D87
+    jsr @endIf_A
+        bmi @RTS
         ldx #$00
-    L9D75:
+    @endIf_A:
     lda RinkaSpawners.0.status,x
-    bpl RTS_9D87
+    bpl @RTS
     lda ($00),y
     jsr Adiv16_
     sta RinkaSpawners.0.status,x
     jsr GetNameTableAtScrollDir_
     sta RinkaSpawners.0.hi,x
     lda #$FF
-RTS_9D87:
+@RTS:
     rts
 
 GetNameTableAtScrollDir_:

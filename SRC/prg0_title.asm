@@ -829,16 +829,16 @@ WriteIntroSprite:
     lda IntroSprYCoord,x
     sec ;Subtract #$01 from first byte to get proper y coordinate.
     sbc #$01
-    sta SpriteRAM+($04<<2),x
+    sta SpriteRAM.4.y,x
     
     lda IntroSprPattTbl,x
-    sta SpriteRAM+($04<<2)+1,x
+    sta SpriteRAM.4.tileID,x
     
     lda IntroSprCntrl,x
-    sta SpriteRAM+($04<<2)+2,x
+    sta SpriteRAM.4.attrib,x
     
     lda IntroSprXCoord,x
-    sta SpriteRAM+($04<<2)+3,x
+    sta SpriteRAM.4.x,x
     
     rts
 
@@ -1494,7 +1494,7 @@ SamusHasItem:
     sty NumberOfUniqueItems         ;Keeps a running total of unique items.
     rts
 
-CheckPassword:
+CheckPassword: ;($8C5E)
     jsr ConsolidatePassword         ;($8F60)Convert password characters to password bytes.
     jsr ValidatePassword            ;($8DDE)Verify password is correct.
     ;Branch if incorrect password.
@@ -2057,35 +2057,44 @@ TurnOnDisplay:
     jmp ScreenOn                    ;($C447)Turn screen on.
 
 ChooseStartContinue:
-    lda Joy1Change                  ;
-    and #$30                        ;Checks both select and start buttons.
-    cmp #$10                        ;Check if START has been pressed.
-    bne L90EB                       ;Branch if START not pressed.
-    ldy StartContinue               ;
-    bne L90E7                       ;if CONTINUE selected, branch.
-    jmp InitializeStats             ;($932B)Zero out all stats.
-L90E7:
-    ldy #_id_LoadPasswordScreen.b   ;Next routine is LoadPasswordScreen.
-    sty TitleRoutine                ;
-L90EB:
-    cmp #$20                        ;check if SELECT has been pressed.
-    bne L90FF                       ;Branch if SELECT not pressed.
-    lda StartContinue               ;
-    eor #$01                        ;Chooses between START and CONTINUE-->
-    sta StartContinue               ;on game select screen.
-    lda TriSFXFlag                  ;
-    ora #sfxTri_Beep                ;Set SFX flag for select being pressed.-->
-    sta TriSFXFlag                  ;Uses triangle channel.
-L90FF:
-    ldy StartContinue               ;
-    lda StartContTbl,y              ;Get y pos of selection sprite.
-    sta SpriteRAM                   ;
-    lda #$6E                        ;Load sprite info for square selection sprite.
-    sta SpriteRAM+1                 ;
-    lda #$03                        ;
-    sta SpriteRAM+2                 ;
-    lda #$50                        ;Set data for selection sprite.
-    sta SpriteRAM+3                 ;
+    ;Checks both select and start buttons.
+    lda Joy1Change
+    and #BUTTON_START | BUTTON_SELECT.b
+    ;Branch if START not pressed.
+    cmp #BUTTON_START
+    bne @endIf_A
+        ;if CONTINUE selected, branch.
+        ldy StartContinue
+        bne @endIf_B
+            ;Zero out all stats.
+            jmp InitializeStats
+        @endIf_B:
+        ;Next routine is LoadPasswordScreen.
+        ldy #_id_LoadPasswordScreen.b
+        sty TitleRoutine
+    @endIf_A:
+    ;Branch if SELECT not pressed.
+    cmp #BUTTON_SELECT
+    bne @endIf_C
+        ;Toggles between START and CONTINUE on game select screen.
+        lda StartContinue
+        eor #$01
+        sta StartContinue
+        ;Set SFX flag for select being pressed. Uses triangle channel.
+        lda TriSFXFlag
+        ora #sfxTri_Beep
+        sta TriSFXFlag
+    @endIf_C:
+    ldy StartContinue
+    ;Load sprite info for square selection sprite.
+    lda StartContTbl,y
+    sta SpriteRAM.0.y
+    lda #$6E
+    sta SpriteRAM.0.tileID
+    lda #$03
+    sta SpriteRAM.0.attrib
+    lda #$50
+    sta SpriteRAM.0.x
     rts
 
 StartContTbl:
@@ -2118,12 +2127,12 @@ EnterPassword:
     
     ;Check to see if START has been pressed.
     lda Joy1Change
-    and #$10
+    and #BUTTON_START
     ;If not, branch.
-    beq L9153
-        ;($8C5E)Check if password is correct.
+    beq @endIf_A
+        ;Check if password is correct.
         jmp CheckPassword
-    L9153:
+    @endIf_A:
     
     ;Prepare to write the password screen data to PPU.
     ldx #$01
@@ -2141,40 +2150,41 @@ EnterPassword:
     jsr WritePPUByte
     
     lda Timer3
-    beq L9178
+    beq @else_B
         ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
         lda #<L8759.b
         sta $02
         lda #>L8759.b
         sta $03
-        jmp L9180
-    L9178:
+        jmp @endIf_B
+    @else_B:
         ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
         lda #<L8768.b
         sta $02
         lda #>L8768.b
         sta $03
-    L9180:
+    @endIf_B:
     ; loop to write all the bytes from those strings to ppu string buffer
     ldy #$00
-    L9182:
+    @loop:
         lda ($02),y
         jsr WritePPUByte
         iny
         cpy #$0F
-        bne L9182
+        bne @loop
     
     ;If button A pressed, branch.
     lda Joy1Change
-    bmi L9193
-        ;($91FB)Check if backspace pressed.
+    bmi @endIf_C
+        ;Check if backspace pressed.
         jmp CheckBackspace
-    L9193:
+    @endIf_C:
     
     ;Initiate BombLaunch SFX if a character has been written to the screen.
     lda TriSFXFlag
     ora #sfxTri_BombLaunch
     sta TriSFXFlag
+    
     ;Check to see if password cursor is on character 19 thru 24.  If not, branch.
     lda PasswordCursor
     cmp #$12
@@ -2247,41 +2257,55 @@ LoadRowAndColumn: ;($91BF)
     L91F8:
     sta PasswordCursor
 
-CheckBackspace:
-    lda Joy1Change                  ;
-    and #$40                        ;If button B (backspace) has not-->
-    beq L920E                       ;been pressed, branch.
-        lda PasswordCursor              ;
-        sec                             ;Subtract 1 from PasswordCursor.  If-->
-        sbc #$01                        ;PasswordCursor is negative, load-->
-        bcs L920B                       ;PasswordCursor with #$17 (last character).
-            lda #$17                        ;
+CheckBackspace: ;($91FB)
+    ;If button B (backspace) has not been pressed, branch.
+    lda Joy1Change
+    and #BUTTON_B
+    beq L920E
+        ;Subtract 1 from PasswordCursor.
+        lda PasswordCursor
+        sec
+        sbc #$01
+        ;If PasswordCursor is negative, load PasswordCursor with #$17 (last character).
+        bcs L920B
+            lda #$17
         L920B:
-        sta PasswordCursor              ;
+        sta PasswordCursor
     L920E:
-    ldy PasswordStat00              ;Appears to have no function.
-    lda FrameCount                  ;
-    and #$08                        ;If FrameCount bit 3 not set, branch.
-    beq L923F                       ;
-        lda #$3F                        ;
-        ldx PasswordCursor              ;Load A with #$3F if PasswordCursor is on-->
-        cpx #$0C                        ;character 0 thru 11, else load it with #$4F.
-        bcc L9222                       ;
-            lda #$4F                        ;
+    ldy PasswordStat00 ;Appears to have no function.
+    ;If FrameCount bit 3 not set, branch.
+    ;This flashes the cursor on and off.
+    lda FrameCount
+    and #$08
+    beq L923F
+        ;Set cursor y position to #$3F if PasswordCursor is on character 0 thru 11,
+        ;else set it to #$4F.
+        lda #$3F
+        ldx PasswordCursor
+        cpx #$0C
+        bcc L9222
+            lda #$4F
         L9222:
-        sta SpriteRAM+($01<<2)            ;Set Y-coord of password cursor sprite.
-        lda #$6E                        ;
-        sta SpriteRAM+($01<<2)+1          ;Set pattern for password cursor sprite.
-        lda #$20                        ;
-        sta SpriteRAM+($01<<2)+2          ;Set attributes for password cursor sprite.
-        lda PasswordCursor              ;If the password cursor is at the 12th-->
-        cmp #$0C                        ;character or less, branch.
-        bcc L9238                       ;
-            sbc #$0C                        ;Calculate how many characters the password cursor-->
+        sta SpriteRAM.1.y
+        ;Set pattern for password cursor sprite.
+        lda #$6E
+        sta SpriteRAM.1.tileID
+        ;Set attributes for password cursor sprite.
+        lda #OAMDATA_PRIORITY
+        sta SpriteRAM.1.attrib
+        ; load cursor position
+        lda PasswordCursor
+        cmp #$0C
+        ;If the password cursor is at the 12th character or less, branch.
+        bcc L9238
+            ;Cursor is on the second row of password.
+            ;Calculate how many characters the password cursor is from the left.
+            sbc #$0C
         L9238:
-        tax                             ;is from the left if on the second row of password.
-        lda CursorPosXTbl,x              ;Load X position of PasswordCursor.
-        sta SpriteRAM+($01<<2)+3          ;
+        tax
+        ;Set X position of PasswordCursor based on this.
+        lda CursorPosXTbl,x
+        sta SpriteRAM.1.x
     L923F:
     ldx InputRow                    ;Load X and Y with row and column-->
     ldy InputColumn                 ;of current character selected.
@@ -2338,17 +2362,22 @@ CheckBackspace:
         L9294:
         stx InputRow                    ;row in InputRow.
     L9297:
-    lda FrameCount                  ;
-    and #$08                        ;If FrameCount bit 3 not set, branch.
-    beq RTS_92B3                    ;
-        lda CharSelectYTbl,x            ;Set Y-coord of character selection sprite.
-        sta SpriteRAM+($02<<2)            ;
-        lda #$6E                        ;Set pattern for character selection sprite.
-        sta SpriteRAM+($02<<2)+1          ;
-        lda #$20                        ;Set attributes for character selection sprite.
-        sta SpriteRAM+($02<<2)+2          ;
-        lda CharSelectXTbl,y            ;Set x-Coord of character selection sprite.
-        sta SpriteRAM+($02<<2)+3          ;
+    ;If FrameCount bit 3 not set, branch.
+    lda FrameCount
+    and #$08
+    beq RTS_92B3
+        ;Set Y-coord of character selection sprite.
+        lda CharSelectYTbl,x
+        sta SpriteRAM.2.y
+        ;Set pattern for character selection sprite.
+        lda #$6E
+        sta SpriteRAM.2.tileID
+        ;Set attributes for character selection sprite.
+        lda #$20
+        sta SpriteRAM.2.attrib
+        ;Set x-Coord of character selection sprite.
+        lda CharSelectXTbl,y
+        sta SpriteRAM.2.x
     RTS_92B3:
     rts
 
@@ -2374,11 +2403,12 @@ InitializeGame:
     jsr ClearRAM_33_DF              ;($C1D4)Clear RAM.
     jsr ClearSamusStats             ;($C578)Reset Samus stats for a new game.
     jsr LoadPasswordData            ;($8D12)Load data from password.
-    ldy #$00                        ;
-    sty SpritePagePos               ;
-    sty PageIndex                   ;Clear object data.
-    sty ObjectCntrl                 ;
-    sty ObjHi                       ;
+    ;Clear object data.
+    ldy #$00
+    sty SpritePagePos
+    sty PageIndex
+    sty ObjectCntrl
+    sty ObjHi
     jsr SilenceMusic                ;($CB8E)Turn off music.
     lda #_id_ObjFrame5A.b           ;
     sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
@@ -2403,7 +2433,7 @@ InitializeGame:
         inc SamusStat0B+1
     L930D:
     
-    lda #$01                        ;
+    lda #_id_MoreInit.b
     sta MainRoutine                 ;Initialize starting area.
     jsr ScreenNmiOff                ;($C45D)Turn off screen.
     jsr LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
@@ -2429,7 +2459,7 @@ RestartXPosTbl:
     .byte $78                       ;All other areas.
     .byte $5C                       ;Not used.
 
-InitializeStats:
+InitializeStats: ;($932B)
     ;Set all of Samus' stats to 0 when starting new game.
     lda #$00
     sta SamusStat00
@@ -2446,7 +2476,7 @@ InitializeStats:
     sta AtEnding
     sta JustInBailey
     ;Prepare to switch to Brinstar memory page.
-    lda #$02
+    lda #$01+1
     sta SwitchPending
     rts
 
@@ -2481,12 +2511,14 @@ L937F:
     PPUStringEnd
 
 WaitForSTART:
-    lda Joy1Change                  ;Waits for START to be ressed proceed-->
-    and #$10                        ;past the GAME OVER screen.
-    beq RTS_939D                       ;If start not pressed, branch.
-        jmp CheckPassword               ;($8C5E)Check if password is correct.
-
-    RTS_939D:
+    ;Waits for START to be ressed proceed past the GAME OVER screen.
+    lda Joy1Change
+    and #BUTTON_START
+    ;If start not pressed, branch.
+    beq @RTS
+        ;Check if password is correct.
+        jmp CheckPassword
+    @RTS:
     rts
 
 GameOver:
@@ -3019,7 +3051,7 @@ DecSpriteYCoord:
     @loop:
         ;Decrement y coord of 40 sprites.
         dec IntroStarSprite,x
-        dec SpriteRAM+($18<<2),x
+        dec SpriteRAM.24,x
         ;Move to next sprite.
         dex
         dex
@@ -3039,7 +3071,7 @@ LoadStarSprites:
     ldy #$9F
     @loop:
         lda IntroStarSprite,y
-        sta SpriteRAM+($18<<2),y
+        sta SpriteRAM.24,y
         dey
         cpy #$FF
         bne @loop
@@ -3534,10 +3566,10 @@ RTS_9C44:
 LoadCredits:
     ;If credits are not being displayed, exit.
     ldy CreditPageNumber
-    beq @RET
+    beq @RTS
     ;If CreditPageNumber is higher than #$06, exit.
     cpy #$07
-    bcs @RET
+    bcs @RTS
     ;If ScrollY is less than #$80 (128), branch.
     ldx #$00
     lda ScrollY
@@ -3549,7 +3581,7 @@ LoadCredits:
     @endIf_A:
     ;If (ScrollY & #$7F) is greater or equal to #$04, branch to exit.
     cmp #$04
-    bcs @RET
+    bcs @RTS
     ;Store #$00, #$01, #$02 or #$03 in address $01.
     sta $01
     ;Y now contains CreditPageNumber - 1.
@@ -3560,7 +3592,7 @@ LoadCredits:
         ;Y now contains CreditPageNumber - 2.
         dey
         ;If on Credit page less than two, branch to exit.
-        bmi @RET
+        bmi @RTS
         ;Start with ((CreditPageNumber - 2) * 8 + 4 + $01) * 2.
         ;Equivalent to CreditPageNumber * 16 - 22
         ;This formula is used when ScrollY = 0, 1, 2 and 3.
@@ -3588,7 +3620,7 @@ LoadCredits:
     lda CreditsPointerTbl+1,y       ;Upper byte of pointer to PPU string.
     tay
     jmp PreparePPUProcess_          ;($C20E)Prepare to write to PPU.
-@RET:
+@RTS:
     rts
 
 LoadWaveSprites:
@@ -3641,24 +3673,26 @@ LoadEndSamusSprites:
         inx                             ;Increment X and Y.
         cpy SpriteByteCounter           ;
         bne L9CAA                       ;Repeat until sprite load is complete.
-    lda RoomPtr                     ;
+    lda RoomPtr
     cmp #$02                        ;If not running the EndSamusFlash routine, branch.
-    bcc RTS_9CF9                       ;
-    lda ColorCntIndex               ;
+    bcc RTS_9CF9
+    lda ColorCntIndex
     cmp #$08                        ;If EndSamusFlash routine is more than half-->
     bcc RTS_9CF9                       ;way done, Check ending type for the Samus helmet-->
     lda EndingType                  ;off ending.  If not helmet off ending, branch.
-    cmp #$03                        ;
-    bne RTS_9CF9                       ;
-    ldy #$00                        ;
-    ldx #$00                        ;
+    cmp #$03
+    bne RTS_9CF9
+    ldy #$00
+    ldx #$00
     L9CED:
-        lda SamusHeadSpriteTable,y      ;The following code loads the sprite graphics-->
-        sta SpriteRAM,x               ;when the helmet off ending is playing.  The-->
-        iny                             ;sprites below keep Samus head from flashing-->
-        inx                             ;while the rest of her body does.
-        cpy #$18                        ;
-        bne L9CED                       ;
+        ;The following code loads the sprite graphics when the helmet off ending is playing.
+        ;The sprites below keep Samus head from flashing while the rest of her body does.
+        lda SamusHeadSpriteTable,y
+        sta SpriteRAM,x
+        iny
+        inx
+        cpy #$18
+        bne L9CED
 RTS_9CF9:
     rts
 
@@ -3849,7 +3883,7 @@ LoadEndStarSprites:
     ldy #$00
     L9EAC:
         lda EndStarDataTable,y
-        sta SpriteRAM+($1C<<2),y               ;Load the table below into sprite RAM-->
+        sta SpriteRAM.28,y               ;Load the table below into sprite RAM-->
         iny                             ;starting at address $0270.
         cpy #$9C
         bne L9EAC
@@ -4562,8 +4596,7 @@ WorldMap:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16, $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-;Loads contents of world map into -->
-;RAM at addresses $7000 thru $73FF.
+;Loads contents of world map into RAM at addresses $7000 thru $73FF.
 CopyMap:
     lda #<WorldMap.b
     sta $00
