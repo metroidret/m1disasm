@@ -17,9 +17,9 @@
 
 .struct SkreeProjectile
     dieDelay db        ;Delay until projectile dies.
-    y       db
-    x       db
-    hi      db
+    y        db
+    x        db
+    hi       db
 .endst
 
 .struct Mellow
@@ -356,7 +356,7 @@ ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
 
     EndMsgWrite            db        ;0=don't write end message, 1=write end message.
     IsCredits              db        ;0=credits not rolling, 1=credits rolling.
-    SpriteByteCounter      db       ;Used to indicate when Samus sprite load complete.
+    SpriteByteCounter      db        ;Used to indicate when Samus sprite load complete.
     SpritePointerIndex     db        ;Index to proper Samus sprite graphics at end game.
     SpriteAttribByte       db        ;#$00.  Attribute byte of some sprites.
     ColorCntIndex          db        ;Index for finding count number for ClrChangeCounter.
