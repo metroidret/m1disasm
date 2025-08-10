@@ -50,7 +50,15 @@
     data1C           db ; Unused
     jumpDsplcmnt     db ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
     type             db ;Enemy type used as index into enemy data tables.
-    data1F           db ; Unknown
+    data1F           db ;For EnemyFlipAfterDisplacement:
+                          ;#$00:         displacement = abs(jumpDsplcmnt)
+                          ;#$40:         displacement = jumpDsplcmnt
+                          ;#$80 or #$C0: displacement = -jumpDsplcmnt
+                        ;For EnemyIfMoveFailed:
+                          ;#$00:         bounce
+                          ;#$40:         land on floor/right wall
+                          ;#$80 or #$C0: land on ceiling/left wall
+                        
 .endst
 
 .struct Cannon

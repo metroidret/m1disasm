@@ -11537,18 +11537,20 @@ EnemyFlipAfterDisplacement:
     jsr GetEnemyTypeTimes2PlusFacingDirection
     
     lda EnsExtra.0.jumpDsplcmnt,x
-    ; branch if EnData1F is zero
+    ; branch if EnData1F is not zero
     inc EnsExtra.0.data1F,x
     dec EnsExtra.0.data1F,x
     bne Lx382
-        ; EnData1F is not zero
+        ; EnData1F is zero
         ; set negative flag for EnJumpDsplcmnt
         pha
         pla
     Lx382:
-    ; branch if EnData1F is zero or if EnJumpDsplcmnt is positive
+    ; branch if EnData1F is zero and if EnJumpDsplcmnt is positive,
+    ; or if EnData1F == #$40
     bpl Lx383
-        ; EnData1F is not zero and EnJumpDsplcmnt is negative
+        ; EnData1F is zero and EnJumpDsplcmnt is negative
+        ; or EnData1F == #$80 or #$C0
         ; negate EnJumpDsplcmnt to get the absolute distance
         jsr TwosComplement              ;($C3D4)
     Lx383:
