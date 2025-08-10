@@ -269,21 +269,21 @@ EnemyInitDelayTbl:
     .byte $10, $01, $03, $03, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice09 - EnemyMovementChoices
-    .byte EnemyMovementChoice0A - EnemyMovementChoices
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice_HoltzIdle - EnemyMovementChoices
+    .byte EnemyMovementChoice_HoltzAttacking - EnemyMovementChoices
+    .byte EnemyMovementChoice_DessgeegaFloor - EnemyMovementChoices
+    .byte EnemyMovementChoice_DessgeegaCeiling - EnemyMovementChoices
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice03 - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice03 - EnemyMovementChoices
+    .byte EnemyMovementChoice_Zebbo - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice_Zebbo - EnemyMovementChoices
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice04 - EnemyMovementChoices
-    .byte EnemyMovementChoice05 - EnemyMovementChoices
+    .byte EnemyMovementChoice_Ridley - EnemyMovementChoices
+    .byte EnemyMovementChoice_RidleyFireball - EnemyMovementChoices
     .byte EnemyMovementChoice06 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice07 - EnemyMovementChoices
+    .byte EnemyMovementChoice_Multiviola - EnemyMovementChoices
     .byte EnemyMovementChoice08 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice09 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_HoltzIdle - EnemyMovementChoices ; unused enemy
     .byte $00 ; unused enemy
 
 EnemyMovementPtrs:
@@ -366,27 +366,27 @@ TileBlastFramePtrTable:
     .word TileBlastFrame10
 
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice_DessgeegaFloor:
     EnemyMovementChoiceEntry $04, $05
-EnemyMovementChoice01:
+EnemyMovementChoice_DessgeegaCeiling:
     EnemyMovementChoiceEntry $06, $07
 EnemyMovementChoice02: ; not assigned to any enemy
     EnemyMovementChoiceEntry $02
-EnemyMovementChoice03: ; enemy moves manually
+EnemyMovementChoice_Zebbo: ; enemy moves manually
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice04:
+EnemyMovementChoice_Ridley:
     EnemyMovementChoiceEntry $0D
-EnemyMovementChoice05:
+EnemyMovementChoice_RidleyFireball:
     EnemyMovementChoiceEntry $0E, $0F
-EnemyMovementChoice06:
+EnemyMovementChoice06: ; unused enemy
     EnemyMovementChoiceEntry $00, $01, $02, $03
-EnemyMovementChoice07: ; unused enemy
+EnemyMovementChoice_Multiviola:
     EnemyMovementChoiceEntry $10
-EnemyMovementChoice08:
+EnemyMovementChoice08: ; unused enemy
     EnemyMovementChoiceEntry $11
-EnemyMovementChoice09:
+EnemyMovementChoice_HoltzIdle:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice0A:
+EnemyMovementChoice_HoltzAttacking:
     EnemyMovementChoiceEntry $01
 
 EnemyMovement00_R:

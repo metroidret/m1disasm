@@ -272,18 +272,18 @@ EnemyInitDelayTbl:
 
 ; Index to a table starting at EnemyMovementChoices
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice02 - EnemyMovementChoices
-    .byte EnemyMovementChoice03 - EnemyMovementChoices
-    .byte EnemyMovementChoice04 - EnemyMovementChoices
-    .byte EnemyMovementChoice07 - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice05 - EnemyMovementChoices
-    .byte EnemyMovementChoice06 - EnemyMovementChoices
-    .byte EnemyMovementChoice09 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice0A - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice0B - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice07 - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_SidehopperFloor - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_SidehopperCeiling - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_Waver - EnemyMovementChoices
+    .byte EnemyMovementChoice_Ripper - EnemyMovementChoices
+    .byte EnemyMovementChoice_Skree - EnemyMovementChoices
+    .byte EnemyMovementChoice_Zoomer - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice_Rio - EnemyMovementChoices
+    .byte EnemyMovementChoice_Zeb - EnemyMovementChoices
+    .byte EnemyMovementChoice_Kraid - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_KraidLint - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_KraidNail - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_Zoomer - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice08 - EnemyMovementChoices ; unused enemy
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
@@ -389,29 +389,29 @@ TileBlastFramePtrTable:
 ;  EnData08 = EnemyMovementChoices[(EnemyMovementChoices[EnemyMovementChoiceOffset[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
 ; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice_SidehopperFloor:
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice01:
+EnemyMovementChoice_SidehopperCeiling:
     EnemyMovementChoiceEntry $03, $04
-EnemyMovementChoice02:
+EnemyMovementChoice_Waver:
     EnemyMovementChoiceEntry $05
-EnemyMovementChoice03:
+EnemyMovementChoice_Ripper:
     EnemyMovementChoiceEntry $06
-EnemyMovementChoice04:
+EnemyMovementChoice_Skree:
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice05:
+EnemyMovementChoice_Rio:
     EnemyMovementChoiceEntry $08
-EnemyMovementChoice06:
+EnemyMovementChoice_Zeb:
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice07: ; enemy moves manually
+EnemyMovementChoice_Zoomer: ; enemy moves manually
     EnemyMovementChoiceEntry $00
 EnemyMovementChoice08: ; unused
     EnemyMovementChoiceEntry $0B
-EnemyMovementChoice09: ; unused
+EnemyMovementChoice_Kraid: ; unused
     EnemyMovementChoiceEntry $0C, $0D
-EnemyMovementChoice0A: ; unused
+EnemyMovementChoice_KraidLint: ; unused
     EnemyMovementChoiceEntry $0E
-EnemyMovementChoice0B: ; unused
+EnemyMovementChoice_KraidNail: ; unused
     EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ;-------------------------------------------------------------------------------
