@@ -653,7 +653,12 @@ EnY                    = $0400   ;Enemy y position in room.(not actual screen po
 EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
 EnSpeedY               = $0402   ; unknown - y speed?
 EnSpeedX               = $0403   ; unknown - x speed?
-EnIsHit                = $0404   ; unknown - hurt flag?
+EnIsHit                = $0404   ;bit2: touching Samus
+                                   ;bit1 set: touch Samus from the top
+                                   ;bit0 set: touch Samus from the left
+                                   ;bit5: hit by weapon (projectile or screw attack) (except fireballs)
+                                   ;bit4 set: hit by weapon from the top
+                                   ;bit3 set: hit by weapon from the left
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
