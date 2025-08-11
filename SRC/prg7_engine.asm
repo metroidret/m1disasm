@@ -9562,7 +9562,7 @@ Lx275:
         jsr GetRadiusSumsOfObjXSlotAndEnYSlot
         jsr GetEnemyYSlotPosition
         jsr CheckCollisionOfXSlotAndYSlot
-        jsr CollisionDetectionFireball_F2ED
+        jsr CollisionDetectionFireball_ReactToCollisionWithSamus
     Lx277:
         jsr Yplus16
         cmp #$C0
@@ -9851,14 +9851,14 @@ CollisionDetectionEnemy_ReactToCollisionWithSamus:
     ; exit if collision didn't happen
     bcs Exit17
     
-    jsr LF2E8
+    jsr SetEnemyTouchingSamusFlags
     ;branch if screw attack is active.
     jsr IsScrewAttackActive
     ldy #$00
     bcc Lx289
     
     ; screw attack is not active
-    ; exit if enemy is frozen
+    ; exit if enemy is frozen, pickup or hurt
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
     bcs Exit17
@@ -9924,20 +9924,20 @@ Lx292:
 Lx293:
     rts
 
-CollisionDetectionFireball_F2ED_F2DF:
+CollisionDetectionFireball_ReactToCollisionWithSamus_F2DF:
     lda Temp10_DistHi
     ora EnIsHit,y
     sta EnIsHit,y
     rts
 
-LF2E8:
+SetEnemyTouchingSamusFlags:
     jsr LF340
-    bne Lx292
-CollisionDetectionFireball_F2ED:
+    bne Lx292 ; branch always
+CollisionDetectionFireball_ReactToCollisionWithSamus:
     ; exit if collision didn't happen
     bcs RTS_X294
     
-    jsr CollisionDetectionFireball_F2ED_F2DF
+    jsr CollisionDetectionFireball_ReactToCollisionWithSamus_F2DF
     tya
     pha
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
@@ -11537,18 +11537,20 @@ EnemyFlipAfterDisplacement:
     jsr GetEnemyTypeTimes2PlusFacingDirection
     
     lda EnsExtra.0.jumpDsplcmnt,x
-    ; branch if EnData1F is zero
+    ; branch if EnData1F is not zero
     inc EnsExtra.0.data1F,x
     dec EnsExtra.0.data1F,x
     bne Lx382
-        ; EnData1F is not zero
+        ; EnData1F is zero
         ; set negative flag for EnJumpDsplcmnt
         pha
         pla
     Lx382:
-    ; branch if EnData1F is zero or if EnJumpDsplcmnt is positive
+    ; branch if EnData1F is zero and if EnJumpDsplcmnt is positive,
+    ; or if EnData1F == #$40
     bpl Lx383
-        ; EnData1F is not zero and EnJumpDsplcmnt is negative
+        ; EnData1F is zero and EnJumpDsplcmnt is negative
+        ; or EnData1F == #$80 or #$C0
         ; negate EnJumpDsplcmnt to get the absolute distance
         jsr TwosComplement              ;($C3D4)
     Lx383:

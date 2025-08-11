@@ -258,21 +258,21 @@ EnemyInitDelayTbl:
     .byte $10, $01, $01, $01, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice07 - EnemyMovementChoices
-    .byte EnemyMovementChoice08 - EnemyMovementChoices
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
+    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices
+    .byte EnemyMovementChoice_GerutaAttacking - EnemyMovementChoices
+    .byte EnemyMovementChoice_RipperII - EnemyMovementChoices
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice01 - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices
     .byte $00 ; unused enemy
     .byte EnemyMovementChoice02 - EnemyMovementChoices ; unused enemy
     .byte EnemyMovementChoice03 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice04 - EnemyMovementChoices
-    .byte EnemyMovementChoice05 - EnemyMovementChoices
-    .byte EnemyMovementChoice06 - EnemyMovementChoices
-    .byte EnemyMovementChoice07 - EnemyMovementChoices ; enemy doesn't move
+    .byte EnemyMovementChoice_Squeept - EnemyMovementChoices
+    .byte EnemyMovementChoice_Multiviola - EnemyMovementChoices
+    .byte EnemyMovementChoice_Dragon - EnemyMovementChoices
+    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices ; enemy doesn't move
     .byte $00 ; unused enemy
 
 EnemyMovementPtrs:
@@ -354,23 +354,23 @@ TileBlastFramePtrTable:
     .word TileBlastFrame10
 
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice_RipperII:
     EnemyMovementChoiceEntry $02
-EnemyMovementChoice01: ; enemy moves manually
+EnemyMovementChoice_Gamet: ; enemy moves manually
     EnemyMovementChoiceEntry $09
 EnemyMovementChoice02: ; unused enemy
     EnemyMovementChoiceEntry $0D
 EnemyMovementChoice03: ; unused enemy
     EnemyMovementChoiceEntry $0E, $0F
-EnemyMovementChoice04:
+EnemyMovementChoice_Squeept: ; enemy moves manually
     EnemyMovementChoiceEntry $00, $01, $02, $03
-EnemyMovementChoice05:
+EnemyMovementChoice_Multiviola:
     EnemyMovementChoiceEntry $10
-EnemyMovementChoice06:
+EnemyMovementChoice_Dragon:
     EnemyMovementChoiceEntry $11
-EnemyMovementChoice07: ; enemy doesn't move
+EnemyMovementChoice_GerutaIdle: ; enemy doesn't move
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice08:
+EnemyMovementChoice_GerutaAttacking:
     EnemyMovementChoiceEntry $01
 
 

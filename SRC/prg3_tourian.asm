@@ -265,11 +265,11 @@ EnemyInitDelayTbl:
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; enemy doesn't move
-    .byte EnemyMovementChoice00 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice02 - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices
+    .byte EnemyMovementChoice_MetroidGreen - EnemyMovementChoices
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; enemy doesn't move
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; unused enemy
+    .byte EnemyMovementChoice_Rinka - EnemyMovementChoices ; enemy moves manually
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
@@ -361,11 +361,11 @@ TileBlastFramePtrTable:
     .word TileBlastFrame10
 
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice_MetroidRed:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice01:
+EnemyMovementChoice_MetroidGreen:
     EnemyMovementChoiceEntry $01
-EnemyMovementChoice02: ; enemy moves manually
+EnemyMovementChoice_Rinka: ; enemy moves manually
     ; nothing
 
 EnemyMovement00_R:

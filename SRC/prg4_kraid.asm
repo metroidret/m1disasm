@@ -261,17 +261,17 @@ EnemyInitDelayTbl:
     .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $00, $00, $00
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice00 - EnemyMovementChoices
-    .byte EnemyMovementChoice01 - EnemyMovementChoices
+    .byte EnemyMovementChoice_SidehopperFloor - EnemyMovementChoices
+    .byte EnemyMovementChoice_SidehopperCeiling - EnemyMovementChoices
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice02 - EnemyMovementChoices
-    .byte EnemyMovementChoice03 - EnemyMovementChoices
-    .byte EnemyMovementChoice05 - EnemyMovementChoices ; enemy moves manually
+    .byte EnemyMovementChoice_Ripper - EnemyMovementChoices
+    .byte EnemyMovementChoice_Skree - EnemyMovementChoices
+    .byte EnemyMovementChoice_Zeela - EnemyMovementChoices ; enemy moves manually
     .byte $00 ; unused enemy
-    .byte EnemyMovementChoice04 - EnemyMovementChoices
-    .byte EnemyMovementChoice06 - EnemyMovementChoices
-    .byte EnemyMovementChoice07 - EnemyMovementChoices
-    .byte EnemyMovementChoice08 - EnemyMovementChoices
+    .byte EnemyMovementChoice_Geega - EnemyMovementChoices
+    .byte EnemyMovementChoice_Kraid - EnemyMovementChoices
+    .byte EnemyMovementChoice_KraidLint - EnemyMovementChoices
+    .byte EnemyMovementChoice_KraidNail - EnemyMovementChoices
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
     .byte $00 ; unused enemy
@@ -357,23 +357,23 @@ TileBlastFramePtrTable:
     .word TileBlastFrame10
 
 EnemyMovementChoices:
-EnemyMovementChoice00:
+EnemyMovementChoice_SidehopperFloor:
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice01:
+EnemyMovementChoice_SidehopperCeiling:
     EnemyMovementChoiceEntry $03, $04
-EnemyMovementChoice02:
+EnemyMovementChoice_Ripper:
     EnemyMovementChoiceEntry $06
-EnemyMovementChoice03:
+EnemyMovementChoice_Skree:
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice04:
+EnemyMovementChoice_Geega:
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice05: ; enemy moves manually
+EnemyMovementChoice_Zeela: ; enemy moves manually
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice06:
+EnemyMovementChoice_Kraid:
     EnemyMovementChoiceEntry $0C, $0D
-EnemyMovementChoice07:
+EnemyMovementChoice_KraidLint:
     EnemyMovementChoiceEntry $0E
-EnemyMovementChoice08:
+EnemyMovementChoice_KraidNail:
     EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ; unused (???)
