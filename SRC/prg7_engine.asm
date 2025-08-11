@@ -1875,10 +1875,10 @@ SamusInit:
     ldx #$00
     stx SamusBlink
     dex                             ;X = $FF
-    stx PipeBugHoleStatus+$00
-    stx PipeBugHoleStatus+$08
-    stx PipeBugHoleStatus+10 ; (BUG! those last two should be +$10 and +$18)
-    stx PipeBugHoleStatus+$10
+    stx PipeBugHoles.0.status
+    stx PipeBugHoles.1.status
+    stx PipeBugHoles.1.y ; (BUG! those last two should be PipeBugHoles.2.status and PipeBugHoles.3.status)
+    stx PipeBugHoles.2.status
     stx EndTimer                    ;Set end timer bytes to #$FF as-->
     stx EndTimer+1.w                  ;escape timer not currently active.
     stx RinkaSpawners.0.status
@@ -4035,10 +4035,10 @@ LD48C:
         bne Lx066
 LD4A8:
     tya
-    cmp PipeBugHoleHi,x
+    cmp PipeBugHoles.0.hi,x
     bne RTS_X067
         lda #$FF
-        sta PipeBugHoleStatus,x
+        sta PipeBugHoles.0.status,x
     RTS_X067:
     rts
 
@@ -5272,19 +5272,19 @@ UpdateItems:
     sta PageIndex                   ;
     ldx #$00                        ;Check first item slot.
     jsr CheckOneItem                ;($DB42)Check current item slot.
-    ldx #$08                        ;Check second item slot.
+    ldx #_sizeof_PowerUps.0         ;Check second item slot.
 
 CheckOneItem:
     stx ItemIndex                   ;First or second item slot index(#$00 or #$08).
-    ldy PowerUpType,x               ;
+    ldy PowerUps.0.type,x           ;
     iny                             ;Is no item present in item slot(#$FF)?-->
     beq RTS_DB36                           ;If so, branch to exit.
 
-    lda PowerUpYCoord,x             ;
+    lda PowerUps.0.y,x              ;
     sta PowerUpDrawY                ;
-    lda PowerUpXCoord,x             ;Store y, x and name table coordinates of power up item.
+    lda PowerUps.0.x,x              ;Store y, x and name table coordinates of power up item.
     sta PowerUpDrawX                ;
-    lda PowerUpNameTable,x          ;
+    lda PowerUps.0.hi,x             ;
     sta PowerUpDrawHi               ;
     jsr GetObjCartRAMPtr                ;($D79F)Find object position in room RAM.
     ldx ItemIndex                   ;Index to proper power up item.
@@ -5292,7 +5292,7 @@ CheckOneItem:
     lda (Temp04_CartRAMPtr),y                     ;Load pointer into room RAM.
     cmp #$A0                        ;Is object being placed on top of a solid tile?-->
     bcc RTS_DB36                       ;If so, branch to exit.
-    lda PowerUpType,x               ;
+    lda PowerUps.0.type,x           ;
     and #$0F                        ;Load power up type byte and keep only bits 0 thru 3.
     ora #_id_ObjFrame50.b           ;Set bits 4 and 6.
     sta PowerUpDrawAnimFrame        ;Save index to find object animation.
@@ -5303,7 +5303,7 @@ CheckOneItem:
     sta ObjectCntrl                 ;Change color of item every other frame.
     lda SpritePagePos               ;Load current index into sprite RAM.
     pha                             ;Temp save sprite RAM position.
-    lda PowerUpAnimIndex,x          ;Load entry into ObjFramePtrTable for item animation.
+    lda PowerUps.0.data07,x         ;this read is redundant
     jsr ObjDrawFrame                   ;($DE4A)Display special item.
 
     pla                             ;Restore sprite page position byte.
@@ -5311,7 +5311,7 @@ CheckOneItem:
     beq Exit9                       ;If not, branch to exit.
     tax                             ;Store sprite page position in x.
     ldy ItemIndex                   ;Load index to proper power up data slot.
-    lda PowerUpType,y               ;Reload power up type data.
+    lda PowerUps.0.type,y           ;Reload power up type data.
     ldy #$01                        ;Set power up color for ice beam orb.
     cmp #pu_ICEBEAM                        ;Is power up item the ice beam?-->
     beq LDB9F                       ;If so, branch.
@@ -5338,13 +5338,13 @@ CheckOneItem:
     ldx ItemIndex                   ;X=index to power up item slot.
     iny                             ;Is item obtained a beam weapon?-->
     beq LDBC6                       ;If so, branch.
-        lda PowerUpNameTable,x          ;
+        lda PowerUps.0.hi,x             ;
         sta Temp08_ItemHi               ;Temp storage of nametable and power-up type in $08-->
-        lda PowerUpType,x               ;and $09 respectively.
+        lda PowerUps.0.type,x           ;and $09 respectively.
         sta Temp09_ItemType             ;
         jsr GetItemXYPos                ;($DC1C)Get proper X and Y coords of item, save in history.
     LDBC6:
-    lda PowerUpType,x               ;Get power-up type byte again.
+    lda PowerUps.0.type,x           ;Get power-up type byte again.
     tay                             ;
     cpy #pu_ENERGYTANK                        ;Is power-up item a missile or energy tank?-->
     bcs MissileEnergyTank           ;If so, branch.
@@ -5360,7 +5360,7 @@ CheckOneItem:
 LDBE3:
     lda #$FF                        ;
     sta PowerUpDelayFlag            ;Initiate delay while power up music plays.
-    sta PowerUpType,x               ;Clear out item data from RAM.
+    sta PowerUps.0.type,x           ;Clear out item data from RAM.
     ldy ItemRoomMusicStatus         ;Is Samus not in an item room?-->
     beq LDBF1                       ;If not, branch.
         ldy #$01                        ;Restart item room music after special item music is done.
@@ -8614,16 +8614,16 @@ Lx237:
 
 LoadPipeBugHole:
     ; find first open pipe bug hole slot
-    ldx #$20
+    ldx #_sizeof_PipeBugHoles
     @loop:
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_PipeBugHoles.0
         ; exit if no slots are open
         bmi @exit
         tax
         ; slot is occupied if status is not #$FF
-        ldy PipeBugHoleStatus,x
+        ldy PipeBugHoles.0.status,x
         iny
         bne @loop
     ; slot found, spawn pipe bug hole
@@ -8631,24 +8631,24 @@ LoadPipeBugHole:
     ldy #$00
     lda ($00),y
     and #$F0
-    sta PipeBugHoleEnemySlot,x
+    sta PipeBugHoles.0.enemySlot,x
     ; set status (enemy type to be spawned)
     iny
     lda ($00),y
-    sta PipeBugHoleStatus,x
+    sta PipeBugHoles.0.status,x
     ; set position
     iny
     lda ($00),y
     tay
     and #$F0
     ora #$08
-    sta PipeBugHoleY,x
+    sta PipeBugHoles.0.y,x
     tya
     jsr Amul16       ; * 16
     ora #$00
-    sta PipeBugHoleX,x
+    sta PipeBugHoles.0.x,x
     jsr GetNameTableAtScrollDir     ;($EB85)
-    sta PipeBugHoleHi,x
+    sta PipeBugHoles.0.hi,x
 @exit:
     lda #$03
     bne Lx237
@@ -8689,7 +8689,7 @@ UpdateRoomSpriteInfo:
         jsr Xminus16
         bpl @loop_enemies
     ; same thing with mellows
-    ldx #$18
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
     @loop_mellows:
         tya
         eor Mellows.0.hi,x
@@ -8700,7 +8700,7 @@ UpdateRoomSpriteInfo:
         @dontDeleteMellow:
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_Mellows.0
         tax
         bpl @loop_mellows
     ; doors
@@ -8741,16 +8741,16 @@ UpdateRoomSpriteInfo:
         sta ElevatorStatus
     Lx246:
     ; unused RAM $0700-$0723
-    ldx #$1E
+    ldx #_sizeof_Mem0700 - _sizeof_Mem0700.0.b
     Lx247:
-        lda Mem0704,x
+        lda Mem0700.0.data04,x
         bne Lx248
             lda #$FF
-            sta Mem0700,x
+            sta Mem0700.0.data00,x
         Lx248:
         txa
         sec
-        sbc #$06
+        sbc #_sizeof_Mem0700.0
         tax
         bpl Lx247
     ; statues
@@ -8760,17 +8760,17 @@ UpdateRoomSpriteInfo:
         sta StatueStatus
     Lx249:
     ; pipe bug holes
-    ldx #$18
+    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
     Lx250:
         tya
-        cmp PipeBugHoleHi,x
+        cmp PipeBugHoles.0.hi,x
         bne Lx251
             lda #$FF
-            sta PipeBugHoleStatus,x
+            sta PipeBugHoles.0.status,x
         Lx251:
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_PipeBugHoles.0
         tax
         bpl Lx250
     ; power-ups
@@ -8840,12 +8840,12 @@ Projectile_RemoveIfOffScreen:
 PowerUp_RemoveIfOffScreen:
     ; exit if power-up is in the current nametable
     tya
-    cmp PowerUpNameTable,x
+    cmp PowerUps.0.hi,x
     bne Exit11
     
     ; remove power-up
     lda #$FF
-    sta PowerUpType,x
+    sta PowerUps.0.type,x
 Exit11:
     rts
 
@@ -8934,12 +8934,12 @@ SpawnPowerUp:
     ;Is first power-up item slot available? if yes, use the slot to load item.
     ldx #$00
     lda #$FF
-    cmp PowerUpType+$00
+    cmp PowerUps.0.type
     beq @endIf_A
         ;Prepare to check second power-up item slot.
         ;Is second power-up item slot available? If not, the power-up fails to spawn, branch to exit.
-        ldx #$08
-        cmp PowerUpType+$08
+        ldx #_sizeof_PowerUps.0
+        cmp PowerUps.1.type
         bne @exit
         ; second slot is available. use the slot to load item.
     @endIf_A:
@@ -8956,7 +8956,7 @@ SpawnPowerUp:
     ldy #$02
     ;Store power-up type in available item slot.
     lda Temp09_ItemType
-    sta PowerUpType,x
+    sta PowerUps.0.type,x
     ; load x and y screen position of item.
     lda ($00),y
     ;Save position data for later processing.
@@ -8965,18 +8965,18 @@ SpawnPowerUp:
     and #$F0
     ora #$08
     ;Store center Y coord
-    sta PowerUpYCoord,x
+    sta PowerUps.0.y,x
     ;Reload position data.
     tya
     ;Move lower 4 bits to upper 4 bits. + 8 to find X coordinate center.
     jsr Amul16
     ora #$08
     ;Store center X coord
-    sta PowerUpXCoord,x
+    sta PowerUps.0.x,x
     ;($EB85)Get name table to place item on.
     ;Store name table Item is located on.
     jsr GetNameTableAtScrollDir
-    sta PowerUpNameTable,x
+    sta PowerUps.0.hi,x
 @exit:
     ;Get next data byte(Always #$00).
     lda #$03
@@ -9032,7 +9032,7 @@ CheckForItem:
 
 SpawnMellows:
     ; try to spawn a mellow in all available mellow slots
-    ldx #(4-1)*$08
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
     ; store random number in MellowRandomNumber
     lda RandomNumber1
     adc FrameCount
@@ -9043,7 +9043,7 @@ SpawnMellows:
         ; move to next slot
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_Mellows.0
         tax
         bpl @loop
     ;
@@ -9118,11 +9118,11 @@ SpawnZebetite:
     bcc @endIf_A
         ; Kill Zebetite
         lda #$81
-        sta ZebetiteStatus,x
+        sta Zebetites.0.status,x
         lda #$01
-        sta ZebetiteIsHit,x
+        sta Zebetites.0.isHit,x
         lda #$07
-        sta ZebetiteQtyHits,x
+        sta Zebetites.0.qtyHits,x
     @endIf_A:
     jmp SpawnMotherBrain_exit
 
@@ -9421,7 +9421,7 @@ CollisionDetection:
     sta SamusHurt010F
 
 ; mellow <--> bullet/missile/bomb detection
-    ldx #$18
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
     Lx261:
         ; branch if no Mellow in slot
         lda Mellows.0.status,x
@@ -9464,7 +9464,7 @@ CollisionDetection:
         ; each Mellow occupies 8 bytes
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_Mellows.0
         tax
         bpl Lx261
 
@@ -11440,23 +11440,23 @@ Table16:
 
 ;-------------------------------------------------------------------------------
 UpdateAllPipeBugHoles:
-    ldy #$18
+    ldy #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
     @loop:
         jsr UpdatePipeBugHole
         lda PageIndex
         sec
-        sbc #$08
+        sbc #_sizeof_PipeBugHoles.0
         tay
         bne @loop
 
 UpdatePipeBugHole:
     sty PageIndex
     ; exit if hole doesn't exist
-    ldx PipeBugHoleStatus,y
+    ldx PipeBugHoles.0.status,y
     inx
     beq RTS_X375
     ; exit if enemy slot is occupied by a visible enemy
-    ldx PipeBugHoleEnemySlot,y
+    ldx PipeBugHoles.0.enemySlot,y
     lda EnsExtra.0.status,x
     beq @endIf_A
         lda EnData05,x
@@ -11475,15 +11475,15 @@ UpdatePipeBugHole:
     dec EnDelay,x
     bne Exit13
     ; set pipe bug type
-    lda PipeBugHoleStatus,y
+    lda PipeBugHoles.0.status,y
     jsr GetEnemyType
     ; set pipe bug position
     ldy PageIndex
-    lda PipeBugHoleY,y
+    lda PipeBugHoles.0.y,y
     sta EnY,x
-    lda PipeBugHoleX,y
+    lda PipeBugHoles.0.x,y
     sta EnX,x
-    lda PipeBugHoleHi,y
+    lda PipeBugHoles.0.hi,y
     sta EnsExtra.0.hi,x
     ; set pipe bug radius
     lda #$18
@@ -11597,7 +11597,7 @@ LFBCA:
 UpdateAllSkreeProjectiles:
     lda #$40
     sta PageIndex
-    ldx #(4-1)*4
+    ldx #_sizeof_SkreeProjectiles - _sizeof_SkreeProjectiles.0.b
     @loop:
         jsr UpdateSkreeProjectile
         dex
@@ -11717,7 +11717,7 @@ UpdateAllMellows:
     jsr UpdateEnemyAnim
     lda RandomNumber1
     sta MellowRandomNumber
-    lda #(4-1)*$08
+    lda #_sizeof_Mellows - _sizeof_Mellows.0.b
     @loop:
         pha
         tax
@@ -11729,7 +11729,7 @@ UpdateAllMellows:
         sta Mellows.0.isHit,x
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_Mellows.0
         bpl @loop
 @RTS:
     rts
@@ -12012,20 +12012,20 @@ UpdateTourianItems: ; $FDE3
     @endIf_A:
     
     ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
-    ldx #$20
+    ldx #_sizeof_Zebetites - _sizeof_Zebetites.0.b
     @loop:
         ; ($FE05) Update one zebetite
         jsr CheckZebetite
         ; Subtract 8 from x
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_Zebetites.0
         tax
         bne @loop
 
 CheckZebetite: ; $FE05
     ; Exit if zebetite state != 2
-    lda ZebetiteStatus,x
+    lda Zebetites.0.status,x
     sec
     sbc #$02
     bne RTS_X410
@@ -12033,7 +12033,7 @@ CheckZebetite: ; $FE05
     ; a is #$00, low byte of ui_ZEBETITE1
     sta Temp06_ItemID
     ; Set zebetite state to 3
-    inc ZebetiteStatus,x
+    inc Zebetites.0.status,x
     txa
     lsr                     ; A =  zebetite index * 4 (10, C, 8, 4, or 0)
     adc #>ui_ZEBETITE1.b      ;      + $3C

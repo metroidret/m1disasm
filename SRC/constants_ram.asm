@@ -33,6 +33,45 @@
     unused           db
 .endst
 
+.struct Struct0700 ; unused
+    data00           db
+    data01           db
+    data02           db
+    data03           db
+    data04           db
+    data05           db
+.endst
+
+.struct PipeBugHole
+    status           db   ;bit0-3: spawned enemy type (often $7, pipe bug)
+                                   ;bit7: strong variant
+                                   ;#$FF=no hole
+    enemySlot        db   ; enemy slot to spawn pipe bug in
+    y                db   ; y position of hole
+    x                db   ; x position of hole
+    hi               db   ; nametable position of hole
+    unused           ds 3
+.endst
+
+.struct PowerUp
+    type             db   ;Holds the byte describing what power-up is on name table.
+    y                db   ;Y coordinate of the power-up.
+    x                db   ;X coordiante of the power-up
+    hi               db   ;#$00 if on name table 0, #$01 if on name table 3.
+    unused           ds 3
+    data07           db   ;stored to A before ObjDrawFrame immediately overwrites it
+.endst
+
+.struct Zebetite
+    status           db
+    vramPtr          dw   ;Pointer to top-left tile of Zebetite in the nametable.
+    ; vramPtr+1      = $075A
+    qtyHits          db   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
+    healingDelay     db   ;Heals 1 hit when counts down from #$40 to #$00.
+    isHit            db   ;#$01 if zebetite got hit by a missile this frame, else #$00
+    unused           dw
+.endst
+
 .struct EnExtra
     status           db ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
                           ;#$04=Enemy frozen.
@@ -851,46 +890,33 @@ CurrentMusic           = $068D   ;Stores the flag of the current music being pla
 
 ;----------------------------------------------------------------------------------------------------
 
-; 5 slots of 6 bytes each ($0700-$0723)
-Mem0700                = $0700
-Mem0704                = $0704
+.enum $0700 export
 
+; 6 slots of 6 bytes each ($0700-$0723)
+Mem0700                instanceof Struct0700 6 startfrom 0
+
+SpareMem0784           ds 4
 
 ; 4 slots of 8 bytes each ($0728-$0747)
-PipeBugHoleStatus      = $0728   ;bit0-3: spawned enemy type (often $7, pipe bug)
-                                   ;bit7: strong variant
-                                   ;#$FF=no hole
-PipeBugHoleEnemySlot   = $0729   ; enemy slot to spawn pipe bug in
-PipeBugHoleY           = $072A   ; y position of hole
-PipeBugHoleX           = $072B   ; x position of hole
-PipeBugHoleHi          = $072C   ; nametable position of hole
+PipeBugHoles           instanceof PipeBugHole 4 startfrom 0
 
 ; 2 slots of 8 bytes each ($0748-$0757)
-PowerUpType            = $0748   ;Holds the byte describing what power-up is on name table.
-PowerUpYCoord          = $0749   ;Y coordinate of the power-up.
-PowerUpXCoord          = $074A   ;X coordiante of the power-up
-PowerUpNameTable       = $074B   ;#$00 if on name table 0, #$01 if on name table 3.
-PowerUpAnimIndex       = $074F   ;Entry into FramePtrTable for item animation.
+PowerUps               instanceof PowerUp 2 startfrom 0
 
 ; 5 Zebetite slots of 8 bytes each ($0758-$077F)
-ZebetiteStatus         = $0758
-ZebetiteVRAMPtr        = $0759   ;Pointer to top-left tile of Zebetite in the nametable.
-; ZebetiteVRAMPtr+1      = $075A
-ZebetiteQtyHits        = $075B   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
-ZebetiteHealingDelay   = $075C   ;Heals 1 hit when counts down from #$40 to #$00.
-ZebetiteIsHit          = $075D   ;#$01 if zebetite got hit by a missile this frame, else #$00
-; $075E is unused
-; $075F is unused
+Zebetites              instanceof Zebetite 5 startfrom 0
 
-TileSize               = $0780   ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
-TileInfo0              = $0781   ;
-TileInfo1              = $0782   ;
-TileInfo2              = $0783   ;Tile patterns to replace blasted tiles.
-TileInfo3              = $0784   ;
-TileInfo4              = $0785   ;
-TileInfo5              = $0786   ;
+TileSize               db        ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
+TileInfo0              db        ;
+TileInfo1              db        ;
+TileInfo2              db        ;Tile patterns to replace blasted tiles.
+TileInfo3              db        ;
+TileInfo4              db        ;
+TileInfo5              db        ;
 
-PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F bytes max.
+SpareMem0787           ds $19
+
+PPUStrIndex            db        ;# of bytes of data in PPUDataString. #$4F bytes max.
 
 ;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. 
 ;The first two bytes in the string are the address of the starting point in the PPU to write -->
@@ -904,7 +930,9 @@ PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F byte
 ;Any following bytes are the actual data bytes to be written to the PPU.
 ;#$00 separates the data chunks.
 
-PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written to PPU.
+PPUDataString          db        ;Thru $07F0. String of data bytes to be written to PPU.
+
+.ende
 
 ;----------------------------------------------------------------------------------------------------
 
