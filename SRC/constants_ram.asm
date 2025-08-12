@@ -764,7 +764,7 @@ PauseSFXStatus         db        ;Plays PauseMusic SFX if less than #$12
 MusicSQ2PeriodLow      db        ;Loaded into SQ2_LO when playing music
 MusicSQ2PeriodHigh     db        ;Loaded into SQ2_HI when playing music
 
-SpareMem0606           db
+Mem0606                db        ;Don't remove it, it's needed
 
 WriteMultiChannelData  db        ;1=data needs to be written, 0=no data to write
 
