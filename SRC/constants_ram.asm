@@ -892,7 +892,7 @@ SQ2VolumeIndex         db        ;Stores index to SQ2 volume data in a volume da
 SQ1VolumeData          db        ;stores duty cycle and this frame volume data of SQ1
 SQ2VolumeData          db        ;Stores duty cycle and this frame volume data of SQ2
 
-SpareMem066E           dw
+SpareMem066E           dw        ;$066E is unknowingly written to by "sta SQ1VolumeData,x", but never read
 
 NoiseSFXData           db        ;Stores additional info for Noise SFX
 SQ1SFXData             db        ;Stores additional info for SQ1 SFX
