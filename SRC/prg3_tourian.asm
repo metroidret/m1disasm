@@ -466,12 +466,12 @@ AreaRoutine_Tourian:
 
 ;-------------------------------------------------------------------------------
 UpdateAllCannons:
-    ldx #$78
+    ldx #_sizeof_Cannons - _sizeof_Cannons.0.b
     @loop:
         jsr @updateIfPossible
         lda CannonIndex
         sec
-        sbc #$08
+        sbc #_sizeof_Cannons.0
         tax
         bne @loop
 
@@ -706,7 +706,7 @@ UpdateRoomSpriteInfo_Tourian:
         ; go to next cannon
         tya
         clc
-        adc #$08
+        adc #_sizeof_Cannons.0
         tay
         bpl @loop_A
     
@@ -714,22 +714,22 @@ UpdateRoomSpriteInfo_Tourian:
     ldx #$00
     @loop_B:
         ; branch if zebetite doesn't exist
-        lda ZebetiteStatus,x
+        lda Zebetites.0.status,x
         beq @endIf_B
         ; branch if zebetite is in the current nametable
         jsr GetVRAMPtrHi
-        eor ZebetiteVRAMPtr+1,x
+        eor Zebetites.0.vramPtr+1,x
         bne @endIf_B
             ; zebetite is in the opposite nametable
             ; clear status
-            sta ZebetiteStatus,x
+            sta Zebetites.0.status,x
         @endIf_B:
         ; move to next zebetite
         txa
         clc
-        adc #$08
+        adc #_sizeof_Zebetites.0
         tax
-        cmp #$28
+        cmp #_sizeof_Zebetites
         bne @loop_B
     
     ; for all rinka spawners
@@ -801,7 +801,7 @@ SpawnCannonRoutine:
         beq @spawnCannon
         txa
         clc
-        adc #$08
+        adc #_sizeof_Cannons.0
         tax
         bpl @loop
     ; cannon failed to spawn, because all 16 slots are occupied
@@ -869,17 +869,17 @@ SpawnZebetiteRoutine:
     and #$10
     eor #$10
     ora #$84
-    sta ZebetiteVRAMPtr,x
+    sta Zebetites.0.vramPtr,x
     jsr GetVRAMPtrHi
-    sta ZebetiteVRAMPtr+1,x
+    sta Zebetites.0.vramPtr+1,x
     
     lda #$01
-    sta ZebetiteStatus,x
+    sta Zebetites.0.status,x
     
     lda #$00
-    sta ZebetiteQtyHits,x
-    sta ZebetiteHealingDelay,x
-    sta ZebetiteIsHit,x
+    sta Zebetites.0.qtyHits,x
+    sta Zebetites.0.healingDelay,x
+    sta Zebetites.0.isHit,x
     rts
 
 GetVRAMPtrHi:
@@ -1171,18 +1171,18 @@ MotherBrain_9F02_08:
         ; draw the TIME BOMB SET GET OUT FAST! message
         tay
         lda L9F41,y
-        sta TileBlastAnimFrame
+        sta TileBlasts.0.animFrame
         lda L9F39,y
         clc
         adc #$42
-        sta TileBlastWRAMPtr
+        sta TileBlasts.0.wramPtr
         php
         lda MotherBrainHi
         asl
         asl
         plp
         adc #$61
-        sta TileBlastWRAMPtr+1
+        sta TileBlasts.0.wramPtr+1
         lda #$00
         sta PageIndex
         lda PPUStrIndex
@@ -1260,14 +1260,14 @@ MotherBrain_SpawnDoor:
     sta ObjAnimFrame,x
     ; create door tiles
     lda #$10
-    sta TileBlastAnimFrame
+    sta TileBlasts.0.animFrame
     lda #$40
-    sta TileBlastWRAMPtr
+    sta TileBlasts.0.wramPtr
     lda MotherBrainHi
     asl
     asl
     ora #$61
-    sta TileBlastWRAMPtr+1
+    sta TileBlasts.0.wramPtr+1
     lda #$00
     sta PageIndex
     jmp CommonJump_DrawTileBlast
@@ -1336,9 +1336,9 @@ MotherBrain_9E22_HandleBeingHit:
         ldx #$00
         @loop:
             lda #$00
-            sta TileBlastRoutine,x
+            sta TileBlasts.0.routine,x
             jsr Xplus16
-            cmp #$D0
+            cmp #_sizeof_TileBlasts
             bne @loop
         ; set mother brain status to dying
         iny
@@ -1455,7 +1455,7 @@ MotherBrain_Disintegrate:
 @disintegrate:
     ; add ($6144 + MotherBrainHi*$0400) to byte
     adc #$44
-    sta TileBlastWRAMPtr
+    sta TileBlasts.0.wramPtr
     php
     lda MotherBrainHi
     asl
@@ -1463,10 +1463,10 @@ MotherBrain_Disintegrate:
     ora #$61
     plp
     adc #$00
-    sta TileBlastWRAMPtr+1
+    sta TileBlasts.0.wramPtr+1
     ; clear 2x2 tile region at that location
     lda #$00
-    sta TileBlastAnimFrame
+    sta TileBlasts.0.animFrame
     sta PageIndex
     jmp CommonJump_DrawTileBlast
 
@@ -1532,11 +1532,11 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
         ; find open TileBlast slot
         ldx #$00
         @loop_Slot:
-            lda TileBlastRoutine,x
+            lda TileBlasts.0.routine,x
             beq @slotFound
             ; slot occupied, try next slot
             jsr Xplus16
-            cmp #$D0
+            cmp #_sizeof_TileBlasts
             bne @loop_Slot
         ; no slots found, exit
         beq @exit ; branch always
@@ -1544,12 +1544,12 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
         @slotFound:
         ; set pointer
         lda #$8C
-        sta TileBlastWRAMPtr,x
+        sta TileBlasts.0.wramPtr,x
         lda Temp04_CartRAMPtr+1.b
-        sta TileBlastWRAMPtr+1,x
+        sta TileBlasts.0.wramPtr+1,x
         ; set to clear 2x3 tile region
         lda #$01
-        sta TileBlastAnimFrame,x
+        sta TileBlasts.0.animFrame,x
         ; push current samus projectile slot
         lda PageIndex
         pha
@@ -1585,31 +1585,31 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
         ; loop through zebetites to find the one she shot
         @loop_Zebetite:
             ; if zebetite is active
-            lda ZebetiteStatus,y
+            lda Zebetites.0.status,y
             beq @notTheRightZebetite
             ; and if missile is touching that zebetite
             lda Temp04_CartRAMPtr
             and #$9E
-            cmp ZebetiteVRAMPtr,y
+            cmp Zebetites.0.vramPtr,y
             bne @notTheRightZebetite
             lda Temp04_CartRAMPtr+1.b
-            cmp ZebetiteVRAMPtr+1,y
+            cmp Zebetites.0.vramPtr+1,y
             beq @theRightZebetite
             @notTheRightZebetite:
                 ; missile is not touching that zebetite
                 ; check again for next zebetite
                 tya
                 clc
-                adc #$08
+                adc #_sizeof_Zebetites.0
                 tay
-                cmp #$28
+                cmp #_sizeof_Zebetites
                 bne @loop_Zebetite
                 ; no more zebetites to loop through, exit
                 beq @exit
             @theRightZebetite:
                 ; set zebetite flag to indicate it got hit
                 lda #$01
-                sta ZebetiteIsHit,y
+                sta Zebetites.0.isHit,y
 @exit:
     pla
     pla
@@ -1874,19 +1874,19 @@ UpdateAllZebetites:
         bne @loop
 UpdateZebetite:
     ; return if status is not #$x1
-    lda ZebetiteStatus,x
+    lda Zebetites.0.status,x
     and #$0F
     cmp #$01
     bne RTS_A28A
     
     ; check if zebetite just got hit
-    lda ZebetiteIsHit,x
+    lda Zebetites.0.isHit,x
     beq LA2F2
     
     ; zebetite was just hit
     ; increase hits count
-    inc ZebetiteQtyHits,x
-    lda ZebetiteQtyHits,x
+    inc Zebetites.0.qtyHits,x
+    lda Zebetites.0.qtyHits,x
     ; check if hits count is even or odd
     lsr
     bcs LA2F2
@@ -1895,16 +1895,16 @@ UpdateZebetite:
     tay
     sbc #$03
     bne LA2BA
-    inc ZebetiteStatus,x
+    inc Zebetites.0.status,x
 LA2BA:
     ; set anim frame
     lda ZebetiteAnimFrameTable,y
-    sta TileBlastAnimFrame+$10
+    sta TileBlasts.1.animFrame
     ; set vram pointer
-    lda ZebetiteVRAMPtr,x
-    sta TileBlastWRAMPtr+$10
-    lda ZebetiteVRAMPtr+1,x
-    sta TileBlastWRAMPtr+1+$10
+    lda Zebetites.0.vramPtr,x
+    sta TileBlasts.1.wramPtr
+    lda Zebetites.0.vramPtr+1,x
+    sta TileBlasts.1.wramPtr+1
     ; if a ppu string is in the buffer, dont update gfx
     lda PPUStrIndex
     bne LA2DA
@@ -1915,44 +1915,44 @@ LA2BA:
         jsr CommonJump_DrawTileBlast
         pla
         tax
-        ; (when is the carry flag set/unset here?)
+        ; branch if gfx update is successful
         bcc LA2EB
     LA2DA:
-    lda ZebetiteStatus,x
+    lda Zebetites.0.status,x
     and #$80
     ora #$01
-    sta ZebetiteStatus,x
-    sta ZebetiteIsHit,x
-    dec ZebetiteQtyHits,x
+    sta Zebetites.0.status,x
+    sta Zebetites.0.isHit,x
+    dec Zebetites.0.qtyHits,x
     rts
 
 LA2EB:
     ; reset healing delay to max
     lda #$40
-    sta ZebetiteHealingDelay,x
+    sta Zebetites.0.healingDelay,x
     bne LA30A ; branch always
 
 LA2F2:
     ; dont heal if at full health
-    ldy ZebetiteQtyHits,x
+    ldy Zebetites.0.qtyHits,x
     beq LA30A
     ; dont heal if healing delay is not zero
-    dec ZebetiteHealingDelay,x
+    dec Zebetites.0.healingDelay,x
     bne LA30A
     
     ; reset delay and heal one hit
     lda #$40
-    sta ZebetiteHealingDelay,x
+    sta Zebetites.0.healingDelay,x
     dey
     tya
-    sta ZebetiteQtyHits,x
+    sta Zebetites.0.qtyHits,x
     ; if hits count is odd, update zebetite appearance
     lsr
     tay
     bcc LA2BA
 LA30A:
     lda #$00
-    sta ZebetiteIsHit,x
+    sta Zebetites.0.isHit,x
     rts
 
 ZebetiteAnimFrameTable:

@@ -480,8 +480,8 @@ SelectSFXRoutine_Common:
     lda #$00
     sta ThisNoiseFrame,x
     sta NoiseSFXData,x
-    sta MultiSFXData,x
-    sta ScrewAttackSFXData,x
+    sta NoiseSFXData1,x
+    sta NoiseSFXData2,x
     sta WriteMultiChannelData
     rts
 
@@ -606,12 +606,12 @@ RTS_B538:
     rts
 
 ScrewAttackSFXContinue:
-    lda ScrewAttackSFXData          ;Prevents period index from being incremented until-->
+    lda NoiseSFXData2               ;Prevents period index from being incremented until-->
     cmp #$02                        ;after the tenth frame of the SFX.
     beq LB549                       ;Branch if not ready to increment.
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne RTS_B538                    ;
-    inc ScrewAttackSFXData          ;Increment every fifth frame.
+    inc NoiseSFXData2               ;Increment every fifth frame.
     rts
 
 LB549:
@@ -620,8 +620,8 @@ LB549:
     dec NoiseSFXData                ;
     dec NoiseSFXData                ;Decrement NoiseSFXData by three every fifth frame.
     dec NoiseSFXData                ;
-    inc MultiSFXData                ;Increment MultiSFXData.  When it is equal to #$0F-->
-    lda MultiSFXData                ;end screw attack SFX.  MultiSFXData does not-->
+    inc NoiseSFXData1               ;Increment NoiseSFXData1.  When it is equal to #$0F-->
+    lda NoiseSFXData1               ;end screw attack SFX.  NoiseSFXData1 does not-->
     cmp #$0F                        ;appear to be linked to multi SFX channels in-->
     bne RTS_B538                    ;this routine.
     jmp EndNoiseSFX                 ;($B58F)End SFX.
@@ -952,8 +952,8 @@ WaveBeamSFXStart:
 WaveBeamSFXContinue:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB797                       ;If more frames to process, branch.
-        ldy SQ1SQ2SFXData               ;
-        inc SQ1SQ2SFXData               ;Load wave beam SFXDisable/enable envelope length-->
+        ldy SQ1SFXData1                 ;
+        inc SQ1SFXData1                 ;Load wave beam SFXDisable/enable envelope length-->
         lda WaveBeamSFXDisLngthTbl,y    ;data from WaveBeamSFXDisableLengthTbl.
         sta SQ1_VOL                     ;
         bne RTS_MusicBranch10               ;If at end of WaveBeamSFXDisableLengthTbl, end SFX.
