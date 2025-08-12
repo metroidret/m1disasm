@@ -466,12 +466,12 @@ AreaRoutine_Tourian:
 
 ;-------------------------------------------------------------------------------
 UpdateAllCannons:
-    ldx #$78
+    ldx #_sizeof_Cannons - _sizeof_Cannons.0.b
     @loop:
         jsr @updateIfPossible
         lda CannonIndex
         sec
-        sbc #$08
+        sbc #_sizeof_Cannons.0
         tax
         bne @loop
 
@@ -706,7 +706,7 @@ UpdateRoomSpriteInfo_Tourian:
         ; go to next cannon
         tya
         clc
-        adc #$08
+        adc #_sizeof_Cannons.0
         tay
         bpl @loop_A
     
@@ -801,7 +801,7 @@ SpawnCannonRoutine:
         beq @spawnCannon
         txa
         clc
-        adc #$08
+        adc #_sizeof_Cannons.0
         tax
         bpl @loop
     ; cannon failed to spawn, because all 16 slots are occupied
