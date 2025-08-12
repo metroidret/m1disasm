@@ -928,7 +928,7 @@ CurrentMusic           db        ;Stores the flag of the current music being pla
 ; 6 slots of 6 bytes each ($0700-$0723)
 Mem0700                instanceof Struct0700 6 startfrom 0
 
-SpareMem0784           ds 4
+SpareMem0724           ds 4
 
 ; 4 slots of 8 bytes each ($0728-$0747)
 PipeBugHoles           instanceof PipeBugHole 4 startfrom 0
