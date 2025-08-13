@@ -5157,8 +5157,8 @@ UpdateStatueBGTiles:
     ; set 2x3 tile region of solid blank tiles
     lda #$09
     sta TileBlasts.12.animFrame
-    ; set page index to #$C0 (what is this parameter used for?)
-    lda #$C0
+    ; set tile blast index to #$C0
+    lda #_sizeof_TileBlasts.0*$C.b
     sta PageIndex
     ; update bg tiles
     jsr DrawTileBlast
