@@ -1418,7 +1418,7 @@ L8C1D:
     sta Temp09_ItemType
     lda DoorHi,x
     sta Temp08_ItemHi
-    ldy SamusMapPosX
+    ldy MapPosX
     txa
     jsr Amul16
     bcc L8C4C

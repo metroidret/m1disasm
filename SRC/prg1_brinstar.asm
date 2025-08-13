@@ -107,9 +107,9 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $2B, $2C, $28, $0B, $1C, $0A, $1A
 
-AreaSamusMapPosX:
+AreaMapPosX:
     .byte $03   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaMapPosY:
     .byte $0E   ;Samus start y coord on world map.
 AreaSamusY:
     .byte $B0   ;Samus start vertical screen position.

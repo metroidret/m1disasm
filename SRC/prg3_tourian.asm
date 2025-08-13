@@ -116,9 +116,9 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:
+AreaMapPosX:
     .byte $03   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaMapPosY:
     .byte $04   ;Samus start y coord on world map.
 AreaSamusY:
     .byte $6E   ;Samus start vertical screen position.
@@ -1225,9 +1225,9 @@ L9F65:  .byte $80, $B0, $A0, $90
 
 MotherBrain_SpawnDoor:
     ; get obj slot
-    lda SamusMapPosX
+    lda MapPosX
     clc
-    adc SamusMapPosY
+    adc MapPosY
     sec
     rol
     and #$03
