@@ -1861,8 +1861,8 @@ RTS_A28A:
 
 ;-------------------------------------------------------------------------------
 UpdateAllZebetites:
-    ; set tile blast index
-    lda #(1-0)*_sizeof_TileBlasts.0.b
+    ; set tile blast index to 1
+    lda #1*_sizeof_TileBlasts.0.b
     sta PageIndex
     ; run UpdateZebetite for all zebetite slots
     ldx #$20
