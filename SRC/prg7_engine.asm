@@ -3893,7 +3893,7 @@ SamusDoor:
         sta DoorEntryStatus
         bne Lx055
     Lx049:
-    jsr LD48C
+    jsr Door_DeleteOffscreenEnemies
     jsr Doors_RemoveIfOffScreen
     jsr GotoClearAllMetroidLatches ; if it is defined in the current bank
     lda ItemRoomMusicStatus
@@ -4014,40 +4014,42 @@ Lx063:
 RTS_X064:
     rts
 
-LD48C:
-    ldx #$60
+Door_DeleteOffscreenEnemies:
+    ldx #$60 ; BUG: should be #$50
     sec
-    Lx065:
-        jsr LD4B4
+    @loop_enemies:
+        jsr @deleteEnemy
         txa
-        sbc #$20
+        sbc #$20 ; BUG: should be #$10
         tax
-        bpl Lx065
+        bpl @loop_enemies
     jsr GetNameTableAtScrollDir     ;($EB85)
     tay
-    ldx #$18
-    Lx066:
-        jsr LD4A8
+    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
+    @loop_pipeBugHoles:
+        jsr @deletePipeBugHole
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_PipeBugHoles.0
         tax
-        bne Lx066
-LD4A8:
+        bne @loop_pipeBugHoles
+@deletePipeBugHole:
+    ; delete if offscreen
     tya
     cmp PipeBugHoles.0.hi,x
-    bne RTS_X067
+    bne @@RTS
         lda #$FF
         sta PipeBugHoles.0.status,x
-    RTS_X067:
+    @@RTS:
     rts
 
-LD4B4:
+@deleteEnemy:
+    ; delete if offscreen
     lda EnData05,x
     and #$02
-    bne RTS_D4BE
+    bne @@RTS
         sta EnsExtra.0.status,x
-    RTS_D4BE:
+    @@RTS:
     rts
 
 ; UpdateProjectiles
