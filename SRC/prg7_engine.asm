@@ -525,7 +525,7 @@ LC1FF:
     lda #$00                        ;Clear A.
     sta PalDataPending              ;Reset palette data pending byte.
 
-PreparePPUProcess_:
+PreparePPUProcess:
     stx $00                         ;Lower byte of pointer to PPU string.
     sty $01                         ;Upper byte of pointer to PPU string.
     jmp ProcessPPUString            ;($C30C)Write data string to PPU.
