@@ -3893,6 +3893,7 @@ SamusDoor:
         sta DoorEntryStatus
         bne Lx055
     Lx049:
+    ; Why not use DeleteOffscreenRoomSprites?
     jsr Door_DeleteOffscreenEnemies
     jsr Doors_RemoveIfOffScreen
     jsr GotoClearAllMetroidLatches ; if it is defined in the current bank
@@ -8191,7 +8192,7 @@ SetupRoom:
     beq LEA5D                           ;Branch if empty place holder byte found in room data.
     cmp #$F0                        ;
     bcs AttribTableWrite                          ;Branch if time to write PPU attribute table data.
-    jsr UpdateRoomSpriteInfo        ;($EC9B)Update which sprite belongs on which name table.
+    jsr DeleteOffscreenRoomSprites  ;($EC9B)Delete offscreen room sprites.
 
     jsr ScanForItems                ;($ED98)Set up any special items.
     lda RoomNumber                  ;Room number to load.
@@ -8664,7 +8665,7 @@ OnNameTable0:
     rts
 
 ; Despawn offscreen room sprites to make room for new room sprites.
-UpdateRoomSpriteInfo:
+DeleteOffscreenRoomSprites:
     ; This seems useless because it's already cleared when starting door transition
     ; X = 0 if ScrollDir = down, 1 if left, 2 if right, 3 if up
     ldx ScrollDir
@@ -8781,7 +8782,7 @@ UpdateRoomSpriteInfo:
     ldx #$08
     jsr PowerUp_RemoveIfOffScreen
     ; tourian stuff
-    jmp GotoUpdateRoomSpriteInfo_Tourian
+    jmp GotoDeleteOffscreenRoomSprites_Tourian
 
 UpdateDoorData:
     ; 3 if ScrollDir = down, 2 if left, 1 if right, 0 if up
