@@ -125,6 +125,29 @@
     instrID          db
 .endst
 
+.struct IntroSpr
+    y                db   ;Loaded into byte 0 of sprite RAM(Y position).
+    tileID           db   ;Loaded into byte 1 of sprite RAM(Pattern table index).
+    attrib           db   ;Loaded into byte 2 of sprite RAM(Control byte).
+    x                db   ;Loaded into byte 3 of sprite RAM(X position).
+    index            db   ;Index to next sparkle sprite data byte.
+    nextDelay        db   ;Decrements each frame. When 0, load new sparkle sprite data.
+    sparkleYChange   .db  ;Sparkle sprite y coordinate change.
+    crossMissileXChange db ;Cross missile sprite x total movement distance.
+    sparkleXChange   .db  ;Sparkle sprite x coordinate change.
+    crossMissileYChange db ;Cross missile sprite y total movement distance.
+    changeDelay      db   ;decrements each frame from #$20. At 0, change sparkle sprite.
+    byteType         db   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
+                                    ;bits for x coord change. if #$00, next data byte contains-->
+                                    ;4 bits for x coord change and 4 bits for y coord change.
+    complete         db   ;#$01=sprite has completed its task, #$00 if not complete.
+    spareB           db   ;Not used.
+    xRun             db   ;x displacement of sprite movement(run).
+    yRise            db   ;y displacement of sprite movement(rise).
+    xDir             db   ;MSB set=decrease sprite x pos, else increase sprite x pos.
+    yDir             db   ;MSB set=decrease sprite y pos, else increase sprite y pos.
+.endst
+
 ;-------------------------------------------[ Defines ]----------------------------------------------
 ;--------------------------------------------[ Zeropage ]--------------------------------------------
 
@@ -1089,30 +1112,11 @@ SpareRAM6C74           ds $18C
 ; 40 slots of 4 bytes each ($6E00-$6E9F)
 IntroStarSprite        instanceof OAMSprite $28 startfrom 0        ;RAM used for storing intro star sprite data.
 
-.ende
-
 ; 8 slots of 16 bytes each ($6EA0-$6F1F)
 ;Intro sprite 0 and sparkle sprite.
-IntroSprYCoord         = $6EA0   ;Loaded into byte 0 of sprite RAM(Y position).
-IntroSprPattTbl        = $6EA1   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-IntroSprCntrl          = $6EA2   ;Loaded into byte 2 of sprite RAM(Control byte).
-IntroSprXCoord         = $6EA3   ;Loaded into byte 3 of sprite RAM(X position).
-IntroSprIndex          = $6EA4   ;Index to next sparkle sprite data byte.
-IntroSprNextDelay      = $6EA5   ;Decrements each frame. When 0, load new sparkle sprite data.
-SparkleSprYChange      = $6EA6   ;Sparkle sprite y coordinate change.
-IntroSprXChange        = $6EA6   ;Intro sprite x total movement distance.
-SparkleSprXChange      = $6EA7   ;Sparkle sprite x coordinate change.
-IntroSprYChange        = $6EA7   ;Intro sprite y total movement distance.
-IntroSprChangeDelay    = $6EA8   ;decrements each frame from #$20. At 0, change sparkle sprite.
-IntroSprByteType       = $6EA9   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
-                                   ;bits for x coord change. if #$00, next data byte contains-->
-                                   ;4 bits for x coord change and 4 bits for y coord change.
-IntroSprComplete       = $6EAA   ;#$01=sprite has completed its task, #$00 if not complete.
-IntroSprSpareB         = $6EAB   ;Not used.
-IntroSprXRun           = $6EAC   ;x displacement of sprite movement(run).
-IntroSprYRise          = $6EAD   ;y displacement of sprite movement(rise).
-IntroSprXDir           = $6EAE   ;MSB set=decrease sprite x pos, else increase sprite x pos.
-IntroSprYDir           = $6EAF   ;MSB set=decrease sprite y pos, else increase sprite y pos.
+IntroSprs              instanceof IntroSpr 8 startfrom 0
+
+.ende
 
 ;----------------------------------------------------------------------------------------------------
 
