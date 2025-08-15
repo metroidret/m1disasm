@@ -20,7 +20,7 @@ ObjAnim_SamusFront: ;$04
     .byte _id_ObjFrame07, $FF
 
 ;Samus jump out of ball animation.
-ObjAnim_Unroll: ;$06
+ObjAnim_SamusUnroll: ;$06
     .byte _id_ObjFrame17
 ;Samus Stand animation.
 ObjAnim_SamusStand: ;$07

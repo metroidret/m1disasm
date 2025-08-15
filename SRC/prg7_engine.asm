@@ -525,7 +525,7 @@ LC1FF:
     lda #$00                        ;Clear A.
     sta PalDataPending              ;Reset palette data pending byte.
 
-PreparePPUProcess_:
+PreparePPUProcess:
     stx $00                         ;Lower byte of pointer to PPU string.
     sty $01                         ;Upper byte of pointer to PPU string.
     jmp ProcessPPUString            ;($C30C)Write data string to PPU.
@@ -3893,7 +3893,8 @@ SamusDoor:
         sta DoorEntryStatus
         bne Lx055
     Lx049:
-    jsr LD48C
+    ; Why not use DeleteOffscreenRoomSprites?
+    jsr Door_DeleteOffscreenEnemies
     jsr Doors_RemoveIfOffScreen
     jsr GotoClearAllMetroidLatches ; if it is defined in the current bank
     lda ItemRoomMusicStatus
@@ -4014,40 +4015,42 @@ Lx063:
 RTS_X064:
     rts
 
-LD48C:
-    ldx #$60
+Door_DeleteOffscreenEnemies:
+    ldx #$60 ; BUG: should be #$50
     sec
-    Lx065:
-        jsr LD4B4
+    @loop_enemies:
+        jsr @deleteEnemy
         txa
-        sbc #$20
+        sbc #$20 ; BUG: should be #$10
         tax
-        bpl Lx065
+        bpl @loop_enemies
     jsr GetNameTableAtScrollDir     ;($EB85)
     tay
-    ldx #$18
-    Lx066:
-        jsr LD4A8
+    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
+    @loop_pipeBugHoles:
+        jsr @deletePipeBugHole
         txa
         sec
-        sbc #$08
+        sbc #_sizeof_PipeBugHoles.0
         tax
-        bne Lx066
-LD4A8:
+        bne @loop_pipeBugHoles
+@deletePipeBugHole:
+    ; delete if offscreen
     tya
     cmp PipeBugHoles.0.hi,x
-    bne RTS_X067
+    bne @@RTS
         lda #$FF
         sta PipeBugHoles.0.status,x
-    RTS_X067:
+    @@RTS:
     rts
 
-LD4B4:
+@deleteEnemy:
+    ; delete if offscreen
     lda EnData05,x
     and #$02
-    bne RTS_D4BE
+    bne @@RTS
         sta EnsExtra.0.status,x
-    RTS_D4BE:
+    @@RTS:
     rts
 
 ; UpdateProjectiles
@@ -8189,7 +8192,7 @@ SetupRoom:
     beq LEA5D                           ;Branch if empty place holder byte found in room data.
     cmp #$F0                        ;
     bcs AttribTableWrite                          ;Branch if time to write PPU attribute table data.
-    jsr UpdateRoomSpriteInfo        ;($EC9B)Update which sprite belongs on which name table.
+    jsr DeleteOffscreenRoomSprites  ;($EC9B)Delete offscreen room sprites.
 
     jsr ScanForItems                ;($ED98)Set up any special items.
     lda RoomNumber                  ;Room number to load.
@@ -8662,7 +8665,7 @@ OnNameTable0:
     rts
 
 ; Despawn offscreen room sprites to make room for new room sprites.
-UpdateRoomSpriteInfo:
+DeleteOffscreenRoomSprites:
     ; This seems useless because it's already cleared when starting door transition
     ; X = 0 if ScrollDir = down, 1 if left, 2 if right, 3 if up
     ldx ScrollDir
@@ -8776,10 +8779,10 @@ UpdateRoomSpriteInfo:
     ; power-ups
     ldx #$00
     jsr PowerUp_RemoveIfOffScreen
-    ldx #$08
+    ldx #_sizeof_PowerUps.0
     jsr PowerUp_RemoveIfOffScreen
     ; tourian stuff
-    jmp GotoUpdateRoomSpriteInfo_Tourian
+    jmp GotoDeleteOffscreenRoomSprites_Tourian
 
 UpdateDoorData:
     ; 3 if ScrollDir = down, 2 if left, 1 if right, 0 if up
