@@ -1967,7 +1967,7 @@ ClearAllMetroidLatches:
         jsr ClearMetroidLatch
         dey
         bpl LA317
-    sta $92
+    sta MetroidOnSamus
     rts
 
 ClearCurrentMetroidLatchAndMetroidOnSamus:
