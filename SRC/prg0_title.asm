@@ -545,7 +545,7 @@ UnusedIntroRoutine3:
 RTS_82A2:
     rts
 
-PrepIntroRestart
+PrepIntroRestart:
     ;Check if delay timer has expired.  If not, branch to exit.
     lda Timer3
     bne @RTS
