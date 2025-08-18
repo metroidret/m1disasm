@@ -156,124 +156,184 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy_ ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl
-    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl
-    .byte EnAnim_RipperIIExplode - EnAnimTbl, EnAnim_RipperIIExplode - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl
-    .byte EnAnim_GametExplodeFacingRight - EnAnimTbl, EnAnim_GametExplodeFacingLeft - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl ; unused enemy
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl
-    .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl
-    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl
-    .byte $00, $00 ; undefined for polyp, because it is invisible at all times
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIExplode - EnAnimTbl, EnAnim_RipperIIExplode - EnAnimTbl ; 02 - ripper II
+    .byte $00, $00 ; 03 - disappears
+    .byte $00, $00 ; 04 - same as 3
+    .byte $00, $00 ; 05 - same as 3
+    .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_GametExplodeFacingRight - EnAnimTbl, EnAnim_GametExplodeFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte $00, $00 ; 08 - same as 3
+    .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl ; 0B - lava jumper
+    .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orb
+    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - seahorse
+    .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
+    .byte $00, $00 ; 0F - same as 3
 
 EnemyHealthTbl:
-    .byte $08, $08, $FF, $01, $01, $01, $02, $01, $01, $20, $FF, $FF, $08, $06, $FF, $00
+    .byte $08 ; 00 - swooper has not seen samus
+    .byte $08 ; 01 - swooper targetting samus
+    .byte $FF ; 02 - ripper II
+    .byte $01 ; 03 - disappears
+    .byte $01 ; 04 - same as 3
+    .byte $01 ; 05 - same as 3
+    .byte $02 ; 06 - crawler
+    .byte $01 ; 07 - gamet
+    .byte $01 ; 08 - same as 3
+    .byte $20 ; 09 - same as 3
+    .byte $FF ; 0A - same as 3
+    .byte $FF ; 0B - lava jumper
+    .byte $08 ; 0C - bouncy orb
+    .byte $06 ; 0D - seahorse
+    .byte $FF ; 0E - rock launcher thing
+    .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl
-    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl
-    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl
-    .byte EnAnim_GametRestingFacingRight - EnAnimTbl, EnAnim_GametRestingFacingLeft - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; unused enemy
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl
-    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl
-    .byte $00, $00 ; undefined for polyp, because it is invisible at all times
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl ; 02 - ripper II
+    .byte $00, $00 ; 03 - disappears
+    .byte $00, $00 ; 04 - same as 3
+    .byte $00, $00 ; 05 - same as 3
+    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_GametRestingFacingRight - EnAnimTbl, EnAnim_GametRestingFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte $00, $00 ; 08 - same as 3
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
+    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse
+    .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
+    .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl
-    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl
-    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl
-    .byte EnAnim_GametActiveFacingRight - EnAnimTbl, EnAnim_GametActiveFacingLeft - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; unused enemy
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl
-    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl
-    .byte $00, $00 ; undefined for polyp, because it is invisible at all times
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl ; 02 - ripper II
+    .byte $00, $00 ; 03 - disappears
+    .byte $00, $00 ; 04 - same as 3
+    .byte $00, $00 ; 05 - same as 3
+    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_GametActiveFacingRight - EnAnimTbl, EnAnim_GametActiveFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte $00, $00 ; 08 - same as 3
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
+    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse
+    .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
+    .byte $00, $00 ; 0F - same as 3
 
 L967B:
-    .byte $00
-    .byte $00
-    .byte $00 | $80
-    .byte $02 | $80 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00
-    .byte $00
-    .byte $00 | $80 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00
-    .byte $02 | $80
-    .byte $00
-    .byte $00
-    .byte $00 ; unused enemy
+    .byte $00 ; 00 - swooper has not seen samus
+    .byte $00 ; 01 - swooper targetting samus
+    .byte $00 | $80 ; 02 - ripper II
+    .byte $02 | $80 ; 03 - disappears
+    .byte $00 ; 04 - same as 3
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - crawler
+    .byte $00 ; 07 - gamet
+    .byte $00 | $80 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - lava jumper
+    .byte $02 | $80 ; 0C - bouncy orb
+    .byte $00 ; 0D - seahorse
+    .byte $00 ; 0E - rock launcher thing
+    .byte $00 ; 0F - same as 3
 
 L968B:
-    .byte $89, $89, $00, $42, $00, $00, $04, $80, $80, $81, $00, $00, $05, $89, $00, $00
+    .byte %10001001 ; 00 - swooper has not seen samus
+    .byte %10001001 ; 01 - swooper targetting samus
+    .byte %00000000 ; 02 - ripper II
+    .byte %01000010 ; 03 - disappears
+    .byte %00000000 ; 04 - same as 3
+    .byte %00000000 ; 05 - same as 3
+    .byte %00000100 ; 06 - crawler
+    .byte %10000000 ; 07 - gamet
+    .byte %10000000 ; 08 - same as 3
+    .byte %10000001 ; 09 - same as 3
+    .byte %00000000 ; 0A - same as 3
+    .byte %00000000 ; 0B - lava jumper
+    .byte %00000101 ; 0C - bouncy orb
+    .byte %10001001 ; 0D - seahorse
+    .byte %00000000 ; 0E - rock launcher thing
+    .byte %00000000 ; 0F - same as 3
 
 EnemyData0DTbl:
-    .byte $01, $01, $01, $01, $01, $01, $01, $01, $28, $10, $00, $00, $00, $01, $00, $00
+    .byte $01 ; 00 - swooper has not seen samus
+    .byte $01 ; 01 - swooper targetting samus
+    .byte $01 ; 02 - ripper II
+    .byte $01 ; 03 - disappears
+    .byte $01 ; 04 - same as 3
+    .byte $01 ; 05 - same as 3
+    .byte $01 ; 06 - crawler
+    .byte $01 ; 07 - gamet
+    .byte $28 ; 08 - same as 3
+    .byte $10 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - lava jumper
+    .byte $00 ; 0C - bouncy orb
+    .byte $01 ; 0D - seahorse
+    .byte $00 ; 0E - rock launcher thing
+    .byte $00 ; 0F - same as 3
 
 EnemyDistanceToSamusThreshold:
-    .byte $5 | (0 << 7)
-    .byte $5 | (0 << 7)
-    .byte $00
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00
-    .byte $00
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00
-    .byte $00
-    .byte $C | (1 << 7)
-    .byte $00
-    .byte $00 ; unused enemy
+    .byte $5 | (0 << 7) ; 00 - swooper has not seen samus
+    .byte $5 | (0 << 7) ; 01 - swooper targetting samus
+    .byte $00 ; 02 - ripper II
+    .byte $00 ; 03 - disappears
+    .byte $00 ; 04 - same as 3
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - crawler
+    .byte $00 ; 07 - gamet
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - lava jumper
+    .byte $00 ; 0C - bouncy orb
+    .byte $C | (1 << 7) ; 0D - seahorse
+    .byte $00 ; 0E - rock launcher thing
+    .byte $00 ; 0F - same as 3
 
 EnemyInitDelayTbl:
-    .byte $10, $01, $01, $01, $10, $10, $01, $08, $09, $10, $01, $10, $01, $20, $00, $00
+    .byte $10 ; 00 - swooper has not seen samus
+    .byte $01 ; 01 - swooper targetting samus
+    .byte $01 ; 02 - ripper II
+    .byte $01 ; 03 - disappears
+    .byte $10 ; 04 - same as 3
+    .byte $10 ; 05 - same as 3
+    .byte $01 ; 06 - crawler
+    .byte $08 ; 07 - gamet
+    .byte $09 ; 08 - same as 3
+    .byte $10 ; 09 - same as 3
+    .byte $01 ; 0A - same as 3
+    .byte $10 ; 0B - lava jumper
+    .byte $01 ; 0C - bouncy orb
+    .byte $20 ; 0D - seahorse
+    .byte $00 ; 0E - rock launcher thing
+    .byte $00 ; 0F - same as 3
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices
-    .byte EnemyMovementChoice_GerutaAttacking - EnemyMovementChoices
-    .byte EnemyMovementChoice_RipperII - EnemyMovementChoices
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices ; enemy moves manually
-    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices
-    .byte $00 ; unused enemy
-    .byte EnemyMovementChoice02 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice03 - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice_Squeept - EnemyMovementChoices
-    .byte EnemyMovementChoice_Multiviola - EnemyMovementChoices
-    .byte EnemyMovementChoice_Dragon - EnemyMovementChoices
-    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices ; enemy doesn't move
-    .byte $00 ; unused enemy
+    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices ; 00 - swooper has not seen samus
+    .byte EnemyMovementChoice_GerutaAttacking - EnemyMovementChoices ; 01 - swooper targetting samus
+    .byte EnemyMovementChoice_RipperII - EnemyMovementChoices ; 02 - ripper II
+    .byte $00 ; 03 - disappears
+    .byte $00 ; 04 - same as 3
+    .byte $00 ; 05 - same as 3
+    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices ; 06 - crawler (enemy moves manually)
+    .byte EnemyMovementChoice_Gamet - EnemyMovementChoices ; 07 - gamet
+    .byte $00 ; 08 - same as 3
+    .byte EnemyMovementChoice02 - EnemyMovementChoices ; 09 - same as 3
+    .byte EnemyMovementChoice03 - EnemyMovementChoices ; 0A - same as 3
+    .byte EnemyMovementChoice_Squeept - EnemyMovementChoices ; 0B - lava jumper
+    .byte EnemyMovementChoice_Multiviola - EnemyMovementChoices ; 0C - bouncy orb
+    .byte EnemyMovementChoice_Dragon - EnemyMovementChoices ; 0D - seahorse
+    .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices ; 0E - rock launcher thing (enemy doesn't move)
+    .byte $00 ; 0F - same as 3
 
 EnemyMovementPtrs:
     .word EnemyMovement00_R, EnemyMovement00_L
@@ -294,7 +354,8 @@ EnemyMovementPtrs:
     .word EnemyMovement0F_R, EnemyMovement0F_L
     .word EnemyMovement10_R, EnemyMovement10_L
     .word EnemyMovement11_R, EnemyMovement11_L
-    .byte $00, $00, $00, $00, $00, $00, $00, $00
+    .word $0000, $0000
+    .word $0000, $0000
 
 EnAccelYTable:
     .byte $80, $80, $00, $00, $00, $00, $00, $00, $00, $00, $E0, $16, $15, $7F, $7F, $7F, $00, $00, $00, $00
@@ -306,7 +367,22 @@ EnSpeedXTable:
     .byte $00, $02, $01, $01, $00, $00, $FA, $FC, $06, $00, $01, $01, $01, $00, $01, $01, $03, $00, $00, $00
 
 L977B:
-    .byte $4C, $4C, $01, $00, $00, $00, $00, $40, $00, $64, $44, $44, $40, $00, $00, $00
+    .byte %01001100 ; 00 - swooper has not seen samus
+    .byte %01001100 ; 01 - swooper targetting samus
+    .byte %00000001 ; 02 - ripper II
+    .byte %00000000 ; 03 - disappears
+    .byte %00000000 ; 04 - same as 3
+    .byte %00000000 ; 05 - same as 3
+    .byte %00000000 ; 06 - crawler
+    .byte %01000000 ; 07 - gamet
+    .byte %00000000 ; 08 - same as 3
+    .byte %01100100 ; 09 - same as 3
+    .byte %01000100 ; 0A - same as 3
+    .byte %01000100 ; 0B - lava jumper
+    .byte %01000000 ; 0C - bouncy orb
+    .byte %00000000 ; 0D - seahorse
+    .byte %00000000 ; 0E - rock launcher thing
+    .byte %00000000 ; 0F - same as 3
 
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00

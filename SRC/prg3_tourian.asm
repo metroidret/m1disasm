@@ -163,124 +163,184 @@ ChooseEnemyAIRoutine:
 
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl
-    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_1F - EnAnimTbl, EnAnim_1F - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
+    .byte EnAnim_1F - EnAnimTbl, EnAnim_1F - EnAnimTbl ; 04 - rinka
+    .byte $00, $00 ; 05 - same as 3
+    .byte $00, $00 ; 06 - same as 3
+    .byte $00, $00 ; 07 - same as 3
+    .byte $00, $00 ; 08 - same as 3
+    .byte $00, $00 ; 09 - same as 3
+    .byte $00, $00 ; 0A - same as 3
+    .byte $00, $00 ; 0B - same as 3
+    .byte $00, $00 ; 0C - same as 3
+    .byte $00, $00 ; 0D - same as 3
+    .byte $00, $00 ; 0E - same as 3
+    .byte $00, $00 ; 0F - same as 3
 
 EnemyHealthTbl:
-    .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $FF ; 00 - red metroid
+    .byte $FF ; 01 - green metroid
+    .byte $01 ; 02 - i dunno but it takes 30 damage with varia
+    .byte $FF ; 03 - disappears
+    .byte $01 ; 04 - rinka
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_1B - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
+    .byte EnAnim_1B - EnAnimTbl, EnAnim_1B - EnAnimTbl ; 04 - rinka
+    .byte $00, $00 ; 05 - same as 3
+    .byte $00, $00 ; 06 - same as 3
+    .byte $00, $00 ; 07 - same as 3
+    .byte $00, $00 ; 08 - same as 3
+    .byte $00, $00 ; 09 - same as 3
+    .byte $00, $00 ; 0A - same as 3
+    .byte $00, $00 ; 0B - same as 3
+    .byte $00, $00 ; 0C - same as 3
+    .byte $00, $00 ; 0D - same as 3
+    .byte $00, $00 ; 0E - same as 3
+    .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; unused enemy
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
-    .byte $00, $00 ; unused enemy
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
+    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 04 - rinka
+    .byte $00, $00 ; 05 - same as 3
+    .byte $00, $00 ; 06 - same as 3
+    .byte $00, $00 ; 07 - same as 3
+    .byte $00, $00 ; 08 - same as 3
+    .byte $00, $00 ; 09 - same as 3
+    .byte $00, $00 ; 0A - same as 3
+    .byte $00, $00 ; 0B - same as 3
+    .byte $00, $00 ; 0C - same as 3
+    .byte $00, $00 ; 0D - same as 3
+    .byte $00, $00 ; 0E - same as 3
+    .byte $00, $00 ; 0F - same as 3
 
 L967B:
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00 ; unused enemy
-    .byte $02
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
+    .byte $00 ; 00 - red metroid
+    .byte $00 ; 01 - green metroid
+    .byte $00 ; 02 - i dunno but it takes 30 damage with varia
+    .byte $00 ; 03 - disappears
+    .byte $02 ; 04 - rinka
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 L968B:
-    .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte %11111110 ; 00 - red metroid
+    .byte %11111110 ; 01 - green metroid
+    .byte %00000000 ; 02 - i dunno but it takes 30 damage with varia
+    .byte %00000000 ; 03 - disappears
+    .byte %11000000 ; 04 - rinka
+    .byte %00000000 ; 05 - same as 3
+    .byte %00000000 ; 06 - same as 3
+    .byte %00000000 ; 07 - same as 3
+    .byte %00000000 ; 08 - same as 3
+    .byte %00000000 ; 09 - same as 3
+    .byte %00000000 ; 0A - same as 3
+    .byte %00000000 ; 0B - same as 3
+    .byte %00000000 ; 0C - same as 3
+    .byte %00000000 ; 0D - same as 3
+    .byte %00000000 ; 0E - same as 3
+    .byte %00000000 ; 0F - same as 3
 
 EnemyData0DTbl:
-    .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $01 ; 00 - red metroid
+    .byte $01 ; 01 - green metroid
+    .byte $00 ; 02 - i dunno but it takes 30 damage with varia
+    .byte $00 ; 03 - disappears
+    .byte $01 ; 04 - rinka
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 EnemyDistanceToSamusThreshold:
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00 ; unused enemy
-    .byte $00
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
+    .byte $00 ; 00 - red metroid
+    .byte $00 ; 01 - green metroid
+    .byte $00 ; 02 - i dunno but it takes 30 damage with varia
+    .byte $00 ; 03 - disappears
+    .byte $00 ; 04 - rinka
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 EnemyInitDelayTbl:
-    .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $01 ; 00 - red metroid
+    .byte $01 ; 01 - green metroid
+    .byte $00 ; 02 - i dunno but it takes 30 damage with varia
+    .byte $00 ; 03 - disappears
+    .byte $01 ; 04 - rinka
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices
-    .byte EnemyMovementChoice_MetroidGreen - EnemyMovementChoices
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; enemy doesn't move
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; unused enemy
-    .byte EnemyMovementChoice_Rinka - EnemyMovementChoices ; enemy moves manually
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
-    .byte $00 ; unused enemy
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 00 - red metroid
+    .byte EnemyMovementChoice_MetroidGreen - EnemyMovementChoices ; 01 - green metroid
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 02 - i dunno but it takes 30 damage with varia (enemy doesn't move)
+    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 03 - disappears
+    .byte EnemyMovementChoice_Rinka - EnemyMovementChoices ; 04 - rinka (enemy moves manually)
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
 
 EnemyMovementPtrs:
     .word EnemyMovement00_R, EnemyMovement00_L
@@ -301,7 +361,8 @@ EnemyMovementPtrs:
     .word EnemyMovement0F_R, EnemyMovement0F_L
     .word EnemyMovement10_R, EnemyMovement10_L
     .word EnemyMovement11_R, EnemyMovement11_L
-    .byte $00, $00, $00, $00, $00, $00, $00, $00
+    .word $0000, $0000
+    .word $0000, $0000
     
 EnAccelYTable:
     .byte $18, $30, $00, $C0, $D0, $00, $00, $7F, $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
@@ -313,7 +374,22 @@ EnSpeedXTable:
     .byte $00, $00, $00, $02, $02, $00, $00, $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
 L977B:
-    .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte %01010000 ; 00 - red metroid
+    .byte %01010000 ; 01 - green metroid
+    .byte %00000000 ; 02 - i dunno but it takes 30 damage with varia (enemy doesn't move)
+    .byte %00000000 ; 03 - disappears
+    .byte %00000000 ; 04 - rinka (enemy moves manually)
+    .byte %00000000 ; 05 - same as 3
+    .byte %00000000 ; 06 - same as 3
+    .byte %00000000 ; 07 - same as 3
+    .byte %00000000 ; 08 - same as 3
+    .byte %00000000 ; 09 - same as 3
+    .byte %00000000 ; 0A - same as 3
+    .byte %00000000 ; 0B - same as 3
+    .byte %00000000 ; 0C - same as 3
+    .byte %00000000 ; 0D - same as 3
+    .byte %00000000 ; 0E - same as 3
+    .byte %00000000 ; 0F - same as 3
 
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
