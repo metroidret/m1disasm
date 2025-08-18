@@ -4736,7 +4736,7 @@ ElevatorFade:
     lda ObjAction,x
     cmp #$08
     bne @endIf_A
-        lda #_id_ObjFrame23.b
+        lda #_id_ObjFrame_Elevator.b
         sta ElevatorAnimFrame-$20,x
         lda #ObjAnim_SamusFront - ObjectAnimIndexTbl.b
         jsr SetSamusAnim
@@ -5052,8 +5052,8 @@ StatueXTable:
     .byte $88 ; Kraid's X position
     .byte $68 ; Ridley's X position
 StatueAnimFrameTable:
-    .byte _id_ObjFrame65 ; Kraid anim frame
-    .byte _id_ObjFrame66 ; Ridley anim frame
+    .byte _id_ObjFrame_KraidStatue ; Kraid anim frame
+    .byte _id_ObjFrame_RidleyStatue ; Ridley anim frame
 
 UpdateStatue_Raise:
     ; exit if statue is raised
@@ -5297,7 +5297,7 @@ CheckOneItem:
     bcc RTS_DB36                       ;If so, branch to exit.
     lda PowerUps.0.type,x           ;
     and #$0F                        ;Load power up type byte and keep only bits 0 thru 3.
-    ora #_id_ObjFrame50.b           ;Set bits 4 and 6.
+    ora #_id_ObjFrame_BombItem.b           ;Set bits 4 and 6.
     sta PowerUpDrawAnimFrame        ;Save index to find object animation.
     lda FrameCount                  ;
     lsr                             ;Color affected every other frame.
@@ -5918,7 +5918,7 @@ ObjDrawFrame:
     GotoClearObjectCntrl:
         jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
     LDE56:
-        cmp #_id_ObjFrame07.b           ;Is the animation of Samus facing forward?-->
+        cmp #_id_ObjFrame_SamusFront.b           ;Is the animation of Samus facing forward?-->
     bne LDE60                           ;If not, branch.
 
     lda ObjectCntrl                 ;Ensure object mirroring bit is clear so Samus'-->
@@ -8574,7 +8574,7 @@ SpawnElevatorRoutine:
     sta ObjX+$20       ; elevator X coord
     jsr GetNameTableAtScrollDir     ;($EB85)
     sta ObjHi+$20       ; high Y coord
-    lda #_id_ObjFrame23.b
+    lda #_id_ObjFrame_Elevator.b
     sta ObjAnimFrame+$20       ; elevator frame
     inc ElevatorStatus              ;1
 @exit:
@@ -11660,7 +11660,7 @@ UpdateSkreeProjectile:
     sta PowerUpDrawHi
     
     ;Save index to find object animation.
-    lda #_id_ObjFrame5A.b
+    lda #_id_ObjFrame_SkreeProjectile.b
     sta PowerUpDrawAnimFrame
     txa
     pha

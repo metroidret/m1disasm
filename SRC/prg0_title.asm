@@ -377,7 +377,7 @@ UnusedIntroRoutine2:
     sta ObjAnimResetIndex
     lda #ObjAnim_SamusJump - ObjectAnimIndexTbl.b
     sta ObjAnimIndex
-    lda #_id_ObjFrame07.b
+    lda #_id_ObjFrame_SamusFront.b
     sta ObjAnimFrame
     lda #$08
     sta Timer3
@@ -2410,7 +2410,7 @@ InitializeGame:
     sty ObjectCntrl
     sty ObjHi
     jsr SilenceMusic                ;($CB8E)Turn off music.
-    lda #_id_ObjFrame5A.b           ;
+    lda #_id_ObjFrame_SkreeProjectile.b           ;
     sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
     ldx #$01                        ;x is the index into the position tables below.
     lda InArea                      ;Load starting area.
