@@ -162,7 +162,7 @@ ObjAnim_MissileUp: ;$8F
 
 ;Missile explode animation.
 ObjAnim_MissileExplode: ;$91
-    .byte _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode1, _id_ObjFrame_MissileExplode1, _id_ObjFrame69, $F7, $FF
+    .byte _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode0, _id_ObjFrame_MissileExplode1, _id_ObjFrame_MissileExplode1, _id_ObjFrame_MissileExplode2, $F7, $FF
 
 ;----------------------------[ Sprite drawing pointer tables ]--------------------------------------
 
@@ -274,7 +274,7 @@ ObjFramePtrTable:
     PtrTableEntry ObjFramePtrTable, ObjFrame_RidleyStatue
     PtrTableEntry ObjFramePtrTable, ObjFrame_MissileExplode0
     PtrTableEntry ObjFramePtrTable, ObjFrame_MissileExplode1
-    PtrTableEntry ObjFramePtrTable, ObjFrame69
+    PtrTableEntry ObjFramePtrTable, ObjFrame_MissileExplode2
 
 ;The following table provides pointers to data used for the placement of the sprites that make up
 ;Samus and other non-enemy objects.
@@ -1510,7 +1510,7 @@ ObjFrame_MissileExplode1:
     .byte $FF
 
 ;Missile explode.
-ObjFrame69:
+ObjFrame_MissileExplode2:
     .byte ($0 << 4) + _id_ObjPlaceC, $04, $10
     .byte $FD, $0
     .byte $57
