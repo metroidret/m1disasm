@@ -110,9 +110,9 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $10, $05, $27, $04, $0F, $FF, $FF
 
-AreaSamusMapPosX:
+AreaMapPosX:
     .byte $16   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaMapPosY:
     .byte $0D   ;Samus start y coord on world map.
 AreaSamusY:
     .byte $6E   ;Samus start vertical screen position.
@@ -263,7 +263,7 @@ L968B:
     .byte %00000000 ; 0E - rock launcher thing
     .byte %00000000 ; 0F - same as 3
 
-EnemyData0DTbl:
+EnemyForceSpeedTowardsSamusDelayTbl:
     .byte $01 ; 00 - swooper has not seen samus
     .byte $01 ; 01 - swooper targetting samus
     .byte $01 ; 02 - ripper II

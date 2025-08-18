@@ -32,8 +32,8 @@ CommonJump_InitEnAnimIndex: ;$800F
     jmp InitEnAnimIndex
 CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
-CommonJump_InitEnemyData0DAndHealth: ;$8015 (unused?)
-    jmp InitEnemyData0DAndHealth
+CommonJump_InitEnemyForceSpeedTowardsSamusDelayAndHealth: ;$8015 (unused?)
+    jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
 CommonJump_InitEnResetAnimIndex: ;$8018 (unused?)
     jmp InitEnResetAnimIndex
 CommonJump_EnemyFlipAfterDisplacement: ;$801B
@@ -491,16 +491,21 @@ RTS_822A:
 ;-------------------------------------------------------------------------------
 ; Loads a pointer from this table to $81 and $82
 LoadEnemyMovementPtr:
+    ; use horizontal facing direction if bit 7 of EnData05 is not set
     lda EnData05,x
     bpl L8232
+        ; use vertical facing direction if bit 7 of EnData05 is set
         lsr
         lsr
     L8232:
+    ; put facing direction bit into carry
     lsr
+    ; y = ((EnMovementIndex) * 2 + (facing direction)) * 2
     lda EnMovementIndex,x
     rol
     asl
     tay
+    ; load pointer from table
     lda EnemyMovementPtrs,y
     sta EnemyMovementPtr
     lda EnemyMovementPtrs+1,y
@@ -517,13 +522,17 @@ EnemyGetDeltaY:
     L824C:
 
     ; enemy uses movement strings to move itself
+    ; exit if enemy is triggering a resting period
     lda EnData05,x
     and #$20
     eor #$20
     beq L82A2
 
-    jsr LoadEnemyMovementPtr ; Puts a pointer at $81
+    ; enemy is not triggering a resting period
+    ; load movement string pointer into EnemyMovementPtr
+    jsr LoadEnemyMovementPtr
 L8258:
+    ; read instruction at current index into string
     ldy EnMovementInstrIndex,x
 EnemyGetDeltaY_ReadByte:
     lda (EnemyMovementPtr),y
@@ -531,40 +540,40 @@ EnemyGetDeltaY_ReadByte:
 ;CommonCase
 ; Branch if the value is <$F0
     cmp #$F0
-    bcc EnemyGetDeltaY_CommonCase
+    bcc EnemyGetDeltaY_SignMagSpeed
 
 ;CaseFA
     cmp #$FA
-    beq EnemyGetDeltaY_JumpToCaseFA
+    beq GotoEnemyGetDeltaY_StopMovementSeahorse
 
 ;CaseFB
     cmp #$FB
-    beq EnemyGetDeltaY_CaseFB
+    beq EnemyGetDeltaY_StopMovement
 
 ;CaseFC
     cmp #$FC
-    beq EnemyGetDeltaY_CaseFC
+    beq EnemyGetDeltaY_RepeatPreviousUntilFailure
 
 ;CaseFD
     cmp #$FD
-    beq EnemyGetDeltaY_CaseFD
+    beq EnemyGetDeltaY_ClearEnJumpDsplcmnt
 
 ;CaseFE
     cmp #$FE
     beq EnemyGetDeltaY_CaseFE
 
 ;Default case (see this as CaseFF)
-; Reset enemy counter
+; Restart movement string from the beginning
     lda #$00
     sta EnMovementInstrIndex,x
-    beq L8258
+    beq L8258 ; branch always
 
 ;---------------------------------------
-EnemyGetDeltaY_JumpToCaseFA: ; L827C
-    jmp EnemyGetDeltaY_CaseFA
+GotoEnemyGetDeltaY_StopMovementSeahorse: ; L827C
+    jmp EnemyGetDeltaY_StopMovementSeahorse
 
 ;---------------------------------------
-EnemyGetDeltaY_CommonCase:
+EnemyGetDeltaY_SignMagSpeed:
     ; Take the value from memory
     ; Branch ahead if velocityString[EnMovementInstrIndex] - EnDelay != 0
     sec
@@ -608,7 +617,7 @@ L82A2:
 
 ;---------------------------------------
 ; Clear EnsExtra.0.jumpDsplcmnt, move on to next byte in the stream
-EnemyGetDeltaY_CaseFD:
+EnemyGetDeltaY_ClearEnJumpDsplcmnt:
     inc EnMovementInstrIndex,x
     iny
     lda #$00
@@ -618,7 +627,7 @@ EnemyGetDeltaY_CaseFD:
 ;---------------------------------------
 ; Don't move, and don't advance the movement counter
 ; HALT, perhaps?
-EnemyGetDeltaY_CaseFB:
+EnemyGetDeltaY_StopMovement:
 ; Double RTS !?
     pla
     pla
@@ -627,7 +636,7 @@ EnemyGetDeltaY_CaseFB:
 
 ;---------------------------------------
 ; Repeat Previous Movement Until Vertical Movement Fails
-EnemyGetDeltaY_CaseFC:
+EnemyGetDeltaY_RepeatPreviousUntilFailure:
     ; If bit 7 of EnsExtra.0.data1F is set, then check if you can move up and then jump ahead
     lda EnsExtra.0.data1F,x
     bpl L82BE
@@ -692,7 +701,7 @@ L82FB:
     ldy EnsExtra.0.type,x
     lda L968B,y
     and #$20
-    beq EnemyGetDeltaY_CaseFA
+    beq EnemyGetDeltaY_StopMovementSeahorse
         ; toggle facing direction bits
         lda EnData05,x
         eor #$05
@@ -708,7 +717,7 @@ L82FB:
 ;EnemyTriggerRestingPeriod_AndClearEnAccelY
 ; Move horizontally indefinitely (???)
 ; Used only at the end of seahorse's movement string
-EnemyGetDeltaY_CaseFA:
+EnemyGetDeltaY_StopMovementSeahorse:
     jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
     jmp L82A2 ; Set delta-y to zero and exit
 
@@ -1409,7 +1418,7 @@ L8C1D:
     sta Temp09_ItemType
     lda DoorHi,x
     sta Temp08_ItemHi
-    ldy SamusMapPosX
+    ldy MapPosX
     txa
     jsr Amul16
     bcc L8C4C

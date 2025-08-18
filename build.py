@@ -43,7 +43,7 @@ for bt, bto in build_targets.items():
     print('-- Building target ' + bt + ' --')
     print('Assembling .asm files')
     for bank in banks:
-        run_or_exit("wla-6502 -h -D BUILDTARGET=\"" + bt + "\" -o out/" + bank + ".o -I SRC SRC/" + bank + ".asm", "Assembler Error.")
+        run_or_exit("wla-6502 -h -w -D BUILDTARGET=\"" + bt + "\" -o out/" + bank + ".o -I SRC SRC/" + bank + ".asm", "Assembler Error.")
     print('Success\n')
 
     print('Linking .o files')

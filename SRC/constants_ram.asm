@@ -17,9 +17,9 @@
 
 .struct SkreeProjectile
     dieDelay db        ;Delay until projectile dies.
-    y       db
-    x       db
-    hi      db
+    y        db
+    x        db
+    hi       db
 .endst
 
 .struct Mellow
@@ -326,8 +326,8 @@ ItemIndex              db        ;#$00 or #$08. Added to PowerUpType addresses t
 
 SamusDir               db        ;0 = Right, 1 = Left.
 SamusDoorDir           db        ;Direction Samus passed through door.
-SamusMapPosY           db        ;Current y position on world map of the screen to load into VRAM.
-SamusMapPosX           db        ;Current x position on world map of the screen to load into VRAM.
+MapPosY                db        ;Current y position on world map of the screen to load into VRAM.
+MapPosX                db        ;Current x position on world map of the screen to load into VRAM.
 SamusScrX              db        ;Samus x position on screen.
 SamusScrY              db        ;Samus y position on screen.
 WalkSoundDelay         db   
@@ -384,7 +384,7 @@ ScrollBlockOnNameTable0 db         ;doors loaded on the name tables. The informa
 HealthChange           dw        ;Amount to add/subtract from Health.
 ; HealthChange+1         = $6F
 
-SamusBlink             db        ;Samus's invincibility frames delay counter.
+SamusInvincibleDelay   db        ;Samus's invincibility frames delay counter.
 UpdatingProjectile     db        ;#$01=Projectile update in process. #$00=not in process.
 SamusKnockbackDir      db        ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
                                     ; i think there may something more to this variable, but im not sure what
@@ -440,7 +440,7 @@ ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
 
     EndMsgWrite            db        ;0=don't write end message, 1=write end message.
     IsCredits              db        ;0=credits not rolling, 1=credits rolling.
-    SpriteByteCounter      db       ;Used to indicate when Samus sprite load complete.
+    SpriteByteCounter      db        ;Used to indicate when Samus sprite load complete.
     SpritePointerIndex     db        ;Index to proper Samus sprite graphics at end game.
     SpriteAttribByte       db        ;#$00.  Attribute byte of some sprites.
     ColorCntIndex          db        ;Index for finding count number for ClrChangeCounter.
@@ -754,7 +754,9 @@ EnData0A               = $040A   ; unknown -- For crawlers, orientation
                                    ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
 EnHealth               = $040B   ;Current health of enemy.
 EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
-EnData0D               = $040D   ; unknown - Ice Timer? stun timer?
+EnData0D               = $040D   ;Resting: force speed towards samus delay
+                                   ;Frozen: frozen timer (* 8)
+                                   ;Pickup: die delay (* 4)
 EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
 

@@ -122,9 +122,9 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:
+AreaMapPosX:
     .byte $19   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaMapPosY:
     .byte $18   ;Samus start y coord on world map.
 AreaSamusY:
     .byte $6E   ;Samus start vertical screen position.
@@ -244,7 +244,7 @@ L967B:
 L968B:
     .byte $89, $89, $89, $89, $00, $00, $04, $80, $80, $81, $00, $00, $05, $89, $00, $00
 
-EnemyData0DTbl:
+EnemyForceSpeedTowardsSamusDelayTbl:
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $28, $10, $00, $00, $00, $01, $00, $00
 
 EnemyDistanceToSamusThreshold:

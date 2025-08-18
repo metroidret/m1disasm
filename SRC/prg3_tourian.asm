@@ -116,9 +116,9 @@ AreaEnemyDamage:
 AreaItemRoomNumbers:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:
+AreaMapPosX:
     .byte $03   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaMapPosY:
     .byte $04   ;Samus start y coord on world map.
 AreaSamusY:
     .byte $6E   ;Samus start vertical screen position.
@@ -270,7 +270,7 @@ L968B:
     .byte %00000000 ; 0E - same as 3
     .byte %00000000 ; 0F - same as 3
 
-EnemyData0DTbl:
+EnemyForceSpeedTowardsSamusDelayTbl:
     .byte $01 ; 00 - red metroid
     .byte $01 ; 01 - green metroid
     .byte $00 ; 02 - i dunno but it takes 30 damage with varia
@@ -1301,9 +1301,9 @@ L9F65:  .byte $80, $B0, $A0, $90
 
 MotherBrain_SpawnDoor:
     ; get obj slot
-    lda SamusMapPosX
+    lda MapPosX
     clc
-    adc SamusMapPosY
+    adc MapPosY
     sec
     rol
     and #$03
