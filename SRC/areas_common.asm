@@ -188,7 +188,7 @@ L80C7:
     bpl L80D8
     ; data1F >= #$80
     ; trigger resting period and clear Y accel and speed
-    jsr SetBit5OfEnData05_AndClearEnAccelY
+    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
     beq L80E2 ; branch always
 
 L80D8:
@@ -255,7 +255,7 @@ L810A:
 L8120:
     ; data1F == #$40
     ; trigger resting period
-    jsr SetBit5OfEnData05_AndClearEnAccelY
+    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
 L8123:
     ; enemy uses movement strings
     ; branch if bit 1 of L977B is clear
@@ -307,7 +307,7 @@ L8148:
 L8159:
     ; data1F == #$40
     ; trigger resting period
-    jsr SetBit5OfEnData05_AndClearEnAccelX
+    jsr EnemyTriggerRestingPeriod_AndClearEnAccelX
     beq L8169 ; branch always
 L815E:
     ; enemy uses movement strings
@@ -352,7 +352,7 @@ L8182:
     bpl L818E
         ; data1F >= #$80
         ; trigger resting period and clear X speed
-        jsr SetBit5OfEnData05_AndClearEnAccelX
+        jsr EnemyTriggerRestingPeriod_AndClearEnAccelX
         beq L8198 ; branch always
     L818E:
     ; data1F == #$40
@@ -387,21 +387,21 @@ RTS_81B0:
     rts
 
 ;-------------------------------------------------------------------------------
-SetBit5OfEnData05_AndClearEnAccelY:
-    jsr SetBit5OfEnData05
+EnemyTriggerRestingPeriod_AndClearEnAccelY:
+    jsr EnemyTriggerRestingPeriod
     sta EnsExtra.0.accelY,x
     rts
 
 ;-------------------------------------------------------------------------------
-SetBit5OfEnData05:
+EnemyTriggerRestingPeriod:
     lda #$20
     jsr OrEnData05
     lda #$00
     rts
 
 ;-------------------------------------------------------------------------------
-SetBit5OfEnData05_AndClearEnAccelX:
-    jsr SetBit5OfEnData05
+EnemyTriggerRestingPeriod_AndClearEnAccelX:
+    jsr EnemyTriggerRestingPeriod
     sta EnsExtra.0.accelX,x
     rts
 
@@ -714,11 +714,11 @@ L82FB:
         sta EnData05,x
         ; fallthrough
 ;---------------------------------------
-;SetBit5OfEnData05_AndClearEnAccelY
+;EnemyTriggerRestingPeriod_AndClearEnAccelY
 ; Move horizontally indefinitely (???)
 ; Used only at the end of seahorse's movement string
 EnemyGetDeltaY_StopMovementSeahorse:
-    jsr SetBit5OfEnData05_AndClearEnAccelY
+    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
     jmp L82A2 ; Set delta-y to zero and exit
 
 ;-------------------------------------------------------------------------------
