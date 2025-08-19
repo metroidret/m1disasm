@@ -5668,7 +5668,7 @@ LDD30:
     tay
     lda ItemDropTbl,y
     sta EnsExtra.0.animFrame,x
-    cmp #_id_EnFrame80.b
+    cmp #_id_EnFrame_MissilePickup.b
     bne Lx138
         ; check if spawning a missile pickup is allowed
         ; fail if the quantity of missile pickups spawned in this room has reached the max
@@ -5692,7 +5692,7 @@ LDD30:
         
         inc EnergyPickupQtyCur
         ; exit if it is not big energy (small energy pickup)
-        cmp #_id_EnFrame89.b
+        cmp #_id_EnFrame_BigEnergyPickup.b
         bne RTS_X137
         
         ; fail if enemy can't drop big energy
@@ -5880,14 +5880,14 @@ DrawEnemy_NotBlank:
 ;This is the EnFrame of the drop.
 
 ItemDropTbl:
-    .byte _id_EnFrame80                       ;Missile.
-    .byte _id_EnFrame81                       ;Energy.
-    .byte _id_EnFrame89                       ;No item / big energy.
-    .byte _id_EnFrame80                       ;Missile.
-    .byte _id_EnFrame81                       ;Energy.
-    .byte _id_EnFrame89                       ;No item / big energy.
-    .byte _id_EnFrame81                       ;Energy.
-    .byte _id_EnFrame89                       ;No item / big energy.
+    .byte _id_EnFrame_MissilePickup                       ;Missile.
+    .byte _id_EnFrame_SmallEnergyPickup                       ;Energy.
+    .byte _id_EnFrame_BigEnergyPickup                       ;No item / big energy.
+    .byte _id_EnFrame_MissilePickup                       ;Missile.
+    .byte _id_EnFrame_SmallEnergyPickup                       ;Energy.
+    .byte _id_EnFrame_BigEnergyPickup                       ;No item / big energy.
+    .byte _id_EnFrame_SmallEnergyPickup                       ;Energy.
+    .byte _id_EnFrame_BigEnergyPickup                       ;No item / big energy.
 
 ;------------------------------------[ Object drawing routines ]-------------------------------------
 
@@ -10220,7 +10220,7 @@ UpdateEnemy_Pickup: ;($F483)
     
     ; if anim frame is #$80, it is a missile pickup
     ldy EnsExtra.0.animFrame,x
-    cpy #_id_EnFrame80.b
+    cpy #_id_EnFrame_MissilePickup.b
     beq @pickupMissile
     
     ; health pickup
@@ -10239,7 +10239,7 @@ UpdateEnemy_Pickup: ;($F483)
         dex
         pla
         ; branch if not small health pickup
-        cmp #_id_EnFrame81.b
+        cmp #_id_EnFrame_SmallEnergyPickup.b
         bne @endIf_B
             ; small health pickup
             ;Increase Health by 5.

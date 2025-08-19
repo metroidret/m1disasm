@@ -130,13 +130,13 @@ AreaPalToggle:
 AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_21 - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTbl
 
     .byte $00, $00
 AreaFireballFallingAnimIndex:
     .byte $00, $00
 AreaFireballSplatterAnimIndex:
-    .byte $00, EnAnim_10 - EnAnimTbl
+    .byte $00, EnAnim_CannonBulletExplode - EnAnimTbl
 AreaMellowAnimIndex:
     .byte $00
 
@@ -163,11 +163,11 @@ ChooseEnemyAIRoutine:
 
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_08 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_MetroidExplode - EnAnimTbl, EnAnim_MetroidExplode - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_MetroidExplode - EnAnimTbl, EnAnim_MetroidExplode - EnAnimTbl ; 01 - green metroid
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
     .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_1F - EnAnimTbl, EnAnim_1F - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_RinkaExplode - EnAnimTbl, EnAnim_RinkaExplode - EnAnimTbl ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -199,11 +199,11 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 01 - green metroid
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
     .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_1B - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_RinkaSpawning - EnAnimTbl, EnAnim_RinkaSpawning - EnAnimTbl ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -217,11 +217,11 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 01 - green metroid
+    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 00 - red metroid
+    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 01 - green metroid
     .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
     .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_Rinka - EnAnimTbl, EnAnim_Rinka - EnAnimTbl ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -580,7 +580,7 @@ UpdateCannon:
         lda FrameCount
         and #$02
         bne RTS_9B4B
-        lda #_id_EnFrame19.b
+        lda #_id_EnFrame_CannonTimeBombSet.b
         jmp DrawCannon_Escape
 
 UpdateCannon_RunInstructions:
@@ -709,9 +709,9 @@ Cannon_ShootFireball:
     rts
 
 CannonFireballAnimTable:
-    .byte EnAnim_0C - EnAnimTbl ; cannon instr #$FE : diagonal right
-    .byte EnAnim_0A - EnAnimTbl ; cannon instr #$FD : diagonal left
-    .byte EnAnim_0E - EnAnimTbl ; cannon instr #$FC : straight down
+    .byte EnAnim_CannonBulletDownRight - EnAnimTbl ; cannon instr #$FE : diagonal right
+    .byte EnAnim_CannonBulletDownLeft - EnAnimTbl ; cannon instr #$FD : diagonal left
+    .byte EnAnim_CannonBulletDown - EnAnimTbl ; cannon instr #$FC : straight down
 
 DrawCannon_Normal:
     ldy Cannons.0.angle,x
@@ -1014,14 +1014,14 @@ CannonInstrList4: .byte $06, $05, $FC, $04, $05, $FF
 ; cannon instr list 5 means the cannon won't do anything
 
 CannonAnimFrameTable:
-    .byte _id_EnFrame06
-    .byte _id_EnFrame07
-    .byte _id_EnFrame08
-    .byte _id_EnFrame09
-    .byte _id_EnFrame0A
-    .byte _id_EnFrame0B
-    .byte _id_EnFrame0C
-    .byte _id_EnFrame0D
+    .byte _id_EnFrame_CannonUp
+    .byte _id_EnFrame_CannonUpLeft
+    .byte _id_EnFrame_CannonLeft
+    .byte _id_EnFrame_CannonDownLeft
+    .byte _id_EnFrame_CannonDown
+    .byte _id_EnFrame_CannonDownRight
+    .byte _id_EnFrame_CannonRight
+    .byte _id_EnFrame_CannonUpRight
 
 CannonFireballXOffsetTable:
     .byte $09 ; cannon instr #$FE : diagonal right
@@ -1500,13 +1500,13 @@ MotherBrain_DrawSprites:
 ; animation frame id table
 MotherBrainAnimFrameTable:
 ; pulsations on the brain
-    .byte _id_EnFrame13
-    .byte _id_EnFrame14
-    .byte _id_EnFrame15
-    .byte _id_EnFrame16
+    .byte _id_EnFrame_MotherBrainPulsations0
+    .byte _id_EnFrame_MotherBrainPulsations1
+    .byte _id_EnFrame_MotherBrainPulsations2
+    .byte _id_EnFrame_MotherBrainPulsations3
 
 ; mother brain's eyes
-    .byte _id_EnFrame17
+    .byte _id_EnFrame_MotherBrainEyes
 
 MotherBrain_Disintegrate:
     ; exit if mother brain disintegration step is zero

@@ -5,7 +5,7 @@ EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
 EnAnim_FireballKilled:
-    .byte _id_EnFrame02, $FF
+    .byte _id_EnFrame_FireballKilled, $FF
 
 EnAnim_05:
     .byte _id_EnFrame03, _id_EnFrame04, $FF
@@ -93,7 +93,7 @@ EnAnim_56:
     .byte _id_EnFrame60, $FF
 
 EnAnim_58:
-    .byte _id_EnFrame61, $F7, _id_EnFrame62, $F7, $FF
+    .byte _id_EnFrame_Explosion0, $F7, _id_EnFrame_Explosion1, $F7, $FF
 
 EnAnim_5D:
     .byte _id_EnFrame66, _id_EnFrame67, $FF
@@ -118,7 +118,7 @@ EnAnim_69:
 EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame00
     PtrTableEntry EnFramePtrTable1, EnFrame01
-    PtrTableEntry EnFramePtrTable1, EnFrame02
+    PtrTableEntry EnFramePtrTable1, EnFrame_FireballKilled
     PtrTableEntry EnFramePtrTable1, EnFrame03
     PtrTableEntry EnFramePtrTable1, EnFrame04
     PtrTableEntry EnFramePtrTable1, EnFrame05
@@ -213,8 +213,8 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame5E
     PtrTableEntry EnFramePtrTable1, EnFrame5F
     PtrTableEntry EnFramePtrTable1, EnFrame60
-    PtrTableEntry EnFramePtrTable1, EnFrame61
-    PtrTableEntry EnFramePtrTable1, EnFrame62
+    PtrTableEntry EnFramePtrTable1, EnFrame_Explosion0
+    PtrTableEntry EnFramePtrTable1, EnFrame_Explosion1
     PtrTableEntry EnFramePtrTable1, EnFrame63
     PtrTableEntry EnFramePtrTable1, EnFrame64
     PtrTableEntry EnFramePtrTable1, EnFrame65
@@ -245,8 +245,8 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame7E
     PtrTableEntry EnFramePtrTable1, EnFrame7F
 EnFramePtrTable2:
-    PtrTableEntry EnFramePtrTable1, EnFrame80
-    PtrTableEntry EnFramePtrTable1, EnFrame81
+    PtrTableEntry EnFramePtrTable1, EnFrame_MissilePickup
+    PtrTableEntry EnFramePtrTable1, EnFrame_SmallEnergyPickup
     PtrTableEntry EnFramePtrTable1, EnFrame82
     PtrTableEntry EnFramePtrTable1, EnFrame83
     PtrTableEntry EnFramePtrTable1, EnFrame84
@@ -254,7 +254,7 @@ EnFramePtrTable2:
     PtrTableEntry EnFramePtrTable1, EnFrame86
     PtrTableEntry EnFramePtrTable1, EnFrame87
     PtrTableEntry EnFramePtrTable1, EnFrame88
-    PtrTableEntry EnFramePtrTable1, EnFrame89
+    PtrTableEntry EnFramePtrTable1, EnFrame_BigEnergyPickup
 
 EnPlacePtrTable:
     PtrTableEntry EnPlacePtrTable, EnPlace0
@@ -336,7 +336,7 @@ EnFrame01:
     .byte $24
     .byte $FF
 
-EnFrame02:
+EnFrame_FireballKilled:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
     .byte $FF
@@ -969,7 +969,7 @@ EnFrame60:
     .byte $DD
     .byte $FF
 
-EnFrame61:
+EnFrame_Explosion0:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $75
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
@@ -980,7 +980,7 @@ EnFrame61:
     .byte $75
     .byte $FF
 
-EnFrame62:
+EnFrame_Explosion1:
     .byte ($0 << 4) + _id_EnPlaceA, $00, $00
     .byte $FE
     .byte $FE
@@ -1074,13 +1074,13 @@ EnFrame7C:
 EnFrame7D:
 EnFrame7E:
 EnFrame7F:
-EnFrame80:
+EnFrame_MissilePickup:
     .byte ($0 << 4) + _id_EnPlaceC, $08, $04
     .byte $14
     .byte $24
     .byte $FF
 
-EnFrame81:
+EnFrame_SmallEnergyPickup:
     .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF
@@ -1092,7 +1092,7 @@ EnFrame85:
 EnFrame86:
 EnFrame87:
 EnFrame88:
-EnFrame89:
+EnFrame_BigEnergyPickup:
     .byte ($0 << 4) + _id_EnPlace0, $04, $04
     .byte $8A
     .byte $FF
