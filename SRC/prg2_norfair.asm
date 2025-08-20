@@ -165,8 +165,8 @@ EnemyDeathAnimIndex:
     .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl ; 06 - crawler
     .byte EnAnim_GametExplodeFacingRight - EnAnimTbl, EnAnim_GametExplodeFacingLeft - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyExplode - EnAnimTbl, EnAnim_RidleyExplode - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orb
     .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - seahorse
@@ -201,8 +201,8 @@ EnemyRestingAnimIndex:
     .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
     .byte EnAnim_GametRestingFacingRight - EnAnimTbl, EnAnim_GametRestingFacingLeft - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
     .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse
@@ -219,8 +219,8 @@ EnemyActiveAnimIndex:
     .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
     .byte EnAnim_GametActiveFacingRight - EnAnimTbl, EnAnim_GametActiveFacingLeft - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
     .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse

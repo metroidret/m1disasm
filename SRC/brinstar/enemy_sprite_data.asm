@@ -7,144 +7,144 @@ EnAnim_00:
 EnAnim_FireballKilled:
     .byte _id_EnFrame_FireballKilled, $FF
 
-EnAnim_05:
-    .byte _id_EnFrame19, _id_EnFrame1A, $FF
+EnAnim_SidehopperFloorIdle:
+    .byte _id_EnFrame_SidehopperFloorIdle0, _id_EnFrame_SidehopperFloorIdle1, $FF
 
-EnAnim_08:
-    .byte _id_EnFrame1A
-EnAnim_09:
-    .byte _id_EnFrame1B, $FF
+EnAnim_SidehopperFloorStartHopping:
+    .byte _id_EnFrame_SidehopperFloorIdle1
+EnAnim_SidehopperFloorHopping:
+    .byte _id_EnFrame_SidehopperFloorHopping, $FF
 
-EnAnim_0B:
-    .byte _id_EnFrame1C, _id_EnFrame1D, $FF
+EnAnim_SidehopperCeilingIdle:
+    .byte _id_EnFrame_SidehopperCeilingIdle0, _id_EnFrame_SidehopperCeilingIdle1, $FF
 
-EnAnim_0E:
-    .byte _id_EnFrame1D
-EnAnim_0F:
-    .byte _id_EnFrame1E, $FF
+EnAnim_SidehopperCeilingStartHopping:
+    .byte _id_EnFrame_SidehopperCeilingIdle1
+EnAnim_SidehopperCeilingHopping:
+    .byte _id_EnFrame_SidehopperCeilingHopping, $FF
 
 EnAnim_11:
-    .byte _id_EnFrame22, _id_EnFrame23
-EnAnim_13:
-    .byte _id_EnFrame24, $FF
+    .byte _id_EnFrame_RipperFacingLeft, _id_EnFrame_Waver1FacingLeft
+EnAnim_Waver0FacingLeft:
+    .byte _id_EnFrame_Waver0FacingLeft, $FF
 
 EnAnim_15:
-    .byte _id_EnFrame1F, _id_EnFrame20
-EnAnim_17:
-    .byte _id_EnFrame21, $FF
+    .byte _id_EnFrame_RipperFacingRight, _id_EnFrame_Waver1FacingRight
+EnAnim_Waver0FacingRight:
+    .byte _id_EnFrame_Waver0FacingRight, $FF
 
 EnAnim_RipperFacingLeft:
-    .byte _id_EnFrame22, $FF
+    .byte _id_EnFrame_RipperFacingLeft, $FF
 
 EnAnim_RipperFacingRight:
-    .byte _id_EnFrame1F, $FF
+    .byte _id_EnFrame_RipperFacingRight, $FF
 
-EnAnim_1D:
-    .byte _id_EnFrame23,
-EnAnim_1E:
-    .byte _id_EnFrame04, $FF
+EnAnim_Waver1FacingLeft:
+    .byte _id_EnFrame_Waver1FacingLeft,
+EnAnim_Waver2FacingLeft:
+    .byte _id_EnFrame_Waver2FacingLeft, $FF
 
-EnAnim_20:
-    .byte _id_EnFrame20
-EnAnim_21:
-    .byte _id_EnFrame03, $FF
+EnAnim_Waver1FacingRight:
+    .byte _id_EnFrame_Waver1FacingRight
+EnAnim_Waver2FacingRight:
+    .byte _id_EnFrame_Waver2FacingRight, $FF
 
 EnAnim_Skree:
-    .byte _id_EnFrame27, _id_EnFrame28, _id_EnFrame29, $FF
+    .byte _id_EnFrame_Skree0, _id_EnFrame_Skree1, _id_EnFrame_Skree2, $FF
 
-EnAnim_27:
-    .byte _id_EnFrame37, $FF
+EnAnim_SidehopperFloorExplode:
+    .byte _id_EnFrame_SidehopperFloorExplode, $FF
 
-EnAnim_29:
-    .byte _id_EnFrame38, $FF
+EnAnim_SidehopperCeilingExplode:
+    .byte _id_EnFrame_SidehopperCeilingExplode, $FF
 
-EnAnim_2B:
-    .byte _id_EnFrame39, $FF
+EnAnim_WaverExplodeFacingLeft:
+    .byte _id_EnFrame_WaverExplodeFacingLeft, $FF
 
-EnAnim_2D:
-    .byte _id_EnFrame3A, $FF
+EnAnim_WaverExplodeFacingRight:
+    .byte _id_EnFrame_WaverExplodeFacingRight, $FF
 
 EnAnim_RipperExplodeFacingLeft:
-    .byte _id_EnFrame3B, $FF
+    .byte _id_EnFrame_RipperExplodeFacingLeft, $FF
 
 EnAnim_RipperExplodeFacingRight:
-    .byte _id_EnFrame3C, $FF
+    .byte _id_EnFrame_RipperExplodeFacingRight, $FF
 
 EnAnim_SkreeExplode:
-    .byte _id_EnFrame3D, $FF
+    .byte _id_EnFrame_SkreeExplode, $FF
 
 EnAnim_ZoomerOnFloor:
-    .byte _id_EnFrame58, _id_EnFrame59, $FF
+    .byte _id_EnFrame_ZoomerOnFloor0, _id_EnFrame_ZoomerOnFloor1, $FF
 
 EnAnim_ZoomerOnRightWall:
-    .byte _id_EnFrame5A, _id_EnFrame5B, $FF
+    .byte _id_EnFrame_ZoomerOnRightWall0, _id_EnFrame_ZoomerOnRightWall1, $FF
 
 EnAnim_ZoomerOnCeiling:
-    .byte _id_EnFrame5C, _id_EnFrame5D, $FF
+    .byte _id_EnFrame_ZoomerOnCeiling0, _id_EnFrame_ZoomerOnCeiling1, $FF
 
 EnAnim_ZoomerOnLeftWall:
-    .byte _id_EnFrame5E, _id_EnFrame5F, $FF
+    .byte _id_EnFrame_ZoomerOnLeftWall0, _id_EnFrame_ZoomerOnLeftWall1, $FF
 
 EnAnim_ZoomerExplode:
-    .byte _id_EnFrame60, $FF
+    .byte _id_EnFrame_ZoomerExplode, $FF
 
 EnAnim_Explosion:
     .byte _id_EnFrame_Explosion0, $F7, _id_EnFrame_Explosion1, $F7, $FF
 
 EnAnim_Rio:
-    .byte _id_EnFrame63, _id_EnFrame64, $FF
+    .byte _id_EnFrame_Rio0, _id_EnFrame_Rio1, $FF
 
 EnAnim_RioExplode:
-    .byte _id_EnFrame65, $FF
+    .byte _id_EnFrame_RioExplode, $FF
 
 EnAnim_ZebFacingLeft:
-    .byte _id_EnFrame66, _id_EnFrame67, $FF
+    .byte _id_EnFrame_ZebFacingLeft0, _id_EnFrame_ZebFacingLeft1, $FF
 
 EnAnim_ZebFacingRight:
-    .byte _id_EnFrame69, _id_EnFrame6A, $FF
+    .byte _id_EnFrame_ZebFacingRight0, _id_EnFrame_ZebFacingRight1, $FF
 
 EnAnim_ZebExplodeFacingLeft:
-    .byte _id_EnFrame68, $FF
+    .byte _id_EnFrame_ZebExplodeFacingLeft, $FF
 
 EnAnim_ZebExplodeFacingRight:
-    .byte _id_EnFrame6B, $FF
+    .byte _id_EnFrame_ZebExplodeFacingRight, $FF
 
-EnAnim_57:
-    .byte _id_EnFrame66, $FF
+EnAnim_ZebRestingFacingLeft:
+    .byte _id_EnFrame_ZebFacingLeft0, $FF
 
-EnAnim_59:
-    .byte _id_EnFrame69, $FF
+EnAnim_ZebRestingFacingRight:
+    .byte _id_EnFrame_ZebFacingRight0, $FF
 
-EnAnim_5B:
-    .byte _id_EnFrame6C, $FF
+EnAnim_KraidLintFacingRight:
+    .byte _id_EnFrame_KraidLintFacingRight, $FF
 
-EnAnim_5D:
-    .byte _id_EnFrame6D, $FF
+EnAnim_KraidLintFacingLeft:
+    .byte _id_EnFrame_KraidLintFacingLeft, $FF
 
-EnAnim_5F:
-    .byte _id_EnFrame6F, _id_EnFrame70, _id_EnFrame71
-EnAnim_62:
-    .byte _id_EnFrame6E, $FF
+EnAnim_KraidNailMovingFacingRight:
+    .byte _id_EnFrame_KraidNailFacingRight1, _id_EnFrame_KraidNailFacingRight2, _id_EnFrame_KraidNailFacingRight3
+EnAnim_KraidNailIdleFacingRight:
+    .byte _id_EnFrame_KraidNailFacingRight0, $FF
 
-EnAnim_64:
-    .byte _id_EnFrame73, _id_EnFrame74, _id_EnFrame75
-EnAnim_67:
-    .byte _id_EnFrame72, $FF
+EnAnim_KraidNailMovingFacingLeft:
+    .byte _id_EnFrame_KraidNailFacingLeft1, _id_EnFrame_KraidNailFacingLeft2, _id_EnFrame_KraidNailFacingLeft3
+EnAnim_KraidNailIdleFacingLeft:
+    .byte _id_EnFrame_KraidNailFacingLeft0, $FF
 
 EnAnim_Mellow:
-    .byte _id_EnFrame8F, _id_EnFrame90, $FF
+    .byte _id_EnFrame_Mellow0, _id_EnFrame_Mellow1, $FF
 
-EnAnim_6C:
-    .byte _id_EnFrame91, _id_EnFrame92, $FF
+EnAnim_KraidFacingRight:
+    .byte _id_EnFrame_KraidFacingRight0, _id_EnFrame_KraidFacingRight1, $FF
 
-EnAnim_6F:
-    .byte _id_EnFrame93, _id_EnFrame94, $FF
+EnAnim_KraidFacingLeft:
+    .byte _id_EnFrame_KraidFacingLeft0, _id_EnFrame_KraidFacingLeft1, $FF
 
-EnAnim_72:
-    .byte _id_EnFrame95, $FF
+EnAnim_KraidExplodeFacingRight:
+    .byte _id_EnFrame_KraidExplodeFacingRight, $FF
 
-EnAnim_74:
-    .byte _id_EnFrame96, $FF
+EnAnim_KraidExplodeFacingLeft:
+    .byte _id_EnFrame_KraidExplodeFacingLeft, $FF
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
@@ -152,8 +152,8 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame00
     PtrTableEntry EnFramePtrTable1, EnFrame01
     PtrTableEntry EnFramePtrTable1, EnFrame_FireballKilled
-    PtrTableEntry EnFramePtrTable1, EnFrame03
-    PtrTableEntry EnFramePtrTable1, EnFrame04
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver2FacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver2FacingLeft
     PtrTableEntry EnFramePtrTable1, EnFrame05
     PtrTableEntry EnFramePtrTable1, EnFrame06
     PtrTableEntry EnFramePtrTable1, EnFrame07
@@ -174,23 +174,23 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame16
     PtrTableEntry EnFramePtrTable1, EnFrame17
     PtrTableEntry EnFramePtrTable1, EnFrame18
-    PtrTableEntry EnFramePtrTable1, EnFrame19
-    PtrTableEntry EnFramePtrTable1, EnFrame1A
-    PtrTableEntry EnFramePtrTable1, EnFrame1B
-    PtrTableEntry EnFramePtrTable1, EnFrame1C
-    PtrTableEntry EnFramePtrTable1, EnFrame1D
-    PtrTableEntry EnFramePtrTable1, EnFrame1E
-    PtrTableEntry EnFramePtrTable1, EnFrame1F
-    PtrTableEntry EnFramePtrTable1, EnFrame20
-    PtrTableEntry EnFramePtrTable1, EnFrame21
-    PtrTableEntry EnFramePtrTable1, EnFrame22
-    PtrTableEntry EnFramePtrTable1, EnFrame23
-    PtrTableEntry EnFramePtrTable1, EnFrame24
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperFloorIdle0
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperFloorIdle1
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperFloorHopping
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperCeilingIdle0
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperCeilingIdle1
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperCeilingHopping
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver1FacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver0FacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperFacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver1FacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_Waver0FacingLeft
     PtrTableEntry EnFramePtrTable1, EnFrame25
     PtrTableEntry EnFramePtrTable1, EnFrame26
-    PtrTableEntry EnFramePtrTable1, EnFrame27
-    PtrTableEntry EnFramePtrTable1, EnFrame28
-    PtrTableEntry EnFramePtrTable1, EnFrame29
+    PtrTableEntry EnFramePtrTable1, EnFrame_Skree0
+    PtrTableEntry EnFramePtrTable1, EnFrame_Skree1
+    PtrTableEntry EnFramePtrTable1, EnFrame_Skree2
     PtrTableEntry EnFramePtrTable1, EnFrame2A
     PtrTableEntry EnFramePtrTable1, EnFrame2B
     PtrTableEntry EnFramePtrTable1, EnFrame2C
@@ -204,13 +204,13 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame34
     PtrTableEntry EnFramePtrTable1, EnFrame35
     PtrTableEntry EnFramePtrTable1, EnFrame36
-    PtrTableEntry EnFramePtrTable1, EnFrame37
-    PtrTableEntry EnFramePtrTable1, EnFrame38
-    PtrTableEntry EnFramePtrTable1, EnFrame39
-    PtrTableEntry EnFramePtrTable1, EnFrame3A
-    PtrTableEntry EnFramePtrTable1, EnFrame3B
-    PtrTableEntry EnFramePtrTable1, EnFrame3C
-    PtrTableEntry EnFramePtrTable1, EnFrame3D
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperFloorExplode
+    PtrTableEntry EnFramePtrTable1, EnFrame_SidehopperCeilingExplode
+    PtrTableEntry EnFramePtrTable1, EnFrame_WaverExplodeFacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_WaverExplodeFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperExplodeFacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperExplodeFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_SkreeExplode
     PtrTableEntry EnFramePtrTable1, EnFrame3E
     PtrTableEntry EnFramePtrTable1, EnFrame3F
     PtrTableEntry EnFramePtrTable1, EnFrame40
@@ -237,36 +237,36 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame55
     PtrTableEntry EnFramePtrTable1, EnFrame56
     PtrTableEntry EnFramePtrTable1, EnFrame57
-    PtrTableEntry EnFramePtrTable1, EnFrame58
-    PtrTableEntry EnFramePtrTable1, EnFrame59
-    PtrTableEntry EnFramePtrTable1, EnFrame5A
-    PtrTableEntry EnFramePtrTable1, EnFrame5B
-    PtrTableEntry EnFramePtrTable1, EnFrame5C
-    PtrTableEntry EnFramePtrTable1, EnFrame5D
-    PtrTableEntry EnFramePtrTable1, EnFrame5E
-    PtrTableEntry EnFramePtrTable1, EnFrame5F
-    PtrTableEntry EnFramePtrTable1, EnFrame60
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnFloor0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnFloor1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnRightWall0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnRightWall1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnCeiling0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnCeiling1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnLeftWall0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerOnLeftWall1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZoomerExplode
     PtrTableEntry EnFramePtrTable1, EnFrame_Explosion0
     PtrTableEntry EnFramePtrTable1, EnFrame_Explosion1
-    PtrTableEntry EnFramePtrTable1, EnFrame63
-    PtrTableEntry EnFramePtrTable1, EnFrame64
-    PtrTableEntry EnFramePtrTable1, EnFrame65
-    PtrTableEntry EnFramePtrTable1, EnFrame66
-    PtrTableEntry EnFramePtrTable1, EnFrame67
-    PtrTableEntry EnFramePtrTable1, EnFrame68
-    PtrTableEntry EnFramePtrTable1, EnFrame69
-    PtrTableEntry EnFramePtrTable1, EnFrame6A
-    PtrTableEntry EnFramePtrTable1, EnFrame6B
-    PtrTableEntry EnFramePtrTable1, EnFrame6C
-    PtrTableEntry EnFramePtrTable1, EnFrame6D
-    PtrTableEntry EnFramePtrTable1, EnFrame6E
-    PtrTableEntry EnFramePtrTable1, EnFrame6F
-    PtrTableEntry EnFramePtrTable1, EnFrame70
-    PtrTableEntry EnFramePtrTable1, EnFrame71
-    PtrTableEntry EnFramePtrTable1, EnFrame72
-    PtrTableEntry EnFramePtrTable1, EnFrame73
-    PtrTableEntry EnFramePtrTable1, EnFrame74
-    PtrTableEntry EnFramePtrTable1, EnFrame75
+    PtrTableEntry EnFramePtrTable1, EnFrame_Rio0
+    PtrTableEntry EnFramePtrTable1, EnFrame_Rio1
+    PtrTableEntry EnFramePtrTable1, EnFrame_RioExplode
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebFacingLeft0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebFacingLeft1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebExplodeFacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebFacingRight0
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebFacingRight1
+    PtrTableEntry EnFramePtrTable1, EnFrame_ZebExplodeFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidLintFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidLintFacingLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingRight0
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingRight1
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingRight2
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingRight3
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingLeft0
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingLeft1
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingLeft2
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidNailFacingLeft3
     PtrTableEntry EnFramePtrTable1, EnFrame76
     PtrTableEntry EnFramePtrTable1, EnFrame77
     PtrTableEntry EnFramePtrTable1, EnFrame78
@@ -293,14 +293,14 @@ EnFramePtrTable2:
     PtrTableEntry EnFramePtrTable1, EnFrame8C
     PtrTableEntry EnFramePtrTable1, EnFrame8D
     PtrTableEntry EnFramePtrTable1, EnFrame8E
-    PtrTableEntry EnFramePtrTable1, EnFrame8F
-    PtrTableEntry EnFramePtrTable1, EnFrame90
-    PtrTableEntry EnFramePtrTable1, EnFrame91
-    PtrTableEntry EnFramePtrTable1, EnFrame92
-    PtrTableEntry EnFramePtrTable1, EnFrame93
-    PtrTableEntry EnFramePtrTable1, EnFrame94
-    PtrTableEntry EnFramePtrTable1, EnFrame95
-    PtrTableEntry EnFramePtrTable1, EnFrame96
+    PtrTableEntry EnFramePtrTable1, EnFrame_Mellow0
+    PtrTableEntry EnFramePtrTable1, EnFrame_Mellow1
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidFacingRight0
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidFacingRight1
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidFacingLeft0
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidFacingLeft1
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidExplodeFacingRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_KraidExplodeFacingLeft
 
 EnPlacePtrTable:
     PtrTableEntry EnPlacePtrTable, EnPlace0
@@ -382,14 +382,14 @@ EnFrame_FireballKilled:
     .byte $04
     .byte $FF
 
-EnFrame03:
+EnFrame_Waver2FacingRight:
     .byte ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
     .byte $D0
     .byte $D1
     .byte $FF
 
-EnFrame04:
+EnFrame_Waver2FacingLeft:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
     .byte $D0
@@ -416,7 +416,7 @@ EnFrame15:
 EnFrame16:
 EnFrame17:
 EnFrame18:
-EnFrame19:
+EnFrame_SidehopperFloorIdle0:
     .byte ($2 << 4) + _id_EnPlace5, $08, $0A
     .byte $A3
     .byte $B3
@@ -429,7 +429,7 @@ EnFrame19:
     .byte $B3
     .byte $FF
 
-EnFrame1A:
+EnFrame_SidehopperFloorIdle1:
     .byte ($2 << 4) + _id_EnPlace5, $08, $0A
     .byte $A5
     .byte $B3
@@ -442,7 +442,7 @@ EnFrame1A:
     .byte $B3
     .byte $FF
 
-EnFrame1B:
+EnFrame_SidehopperFloorHopping:
     .byte ($2 << 4) + _id_EnPlace6, $08, $0A
     .byte $B5
     .byte $B3
@@ -453,7 +453,7 @@ EnFrame1B:
     .byte $B3
     .byte $FF
 
-EnFrame1C:
+EnFrame_SidehopperCeilingIdle0:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $0A
     .byte $A3
     .byte $B3
@@ -466,7 +466,7 @@ EnFrame1C:
     .byte $B3
     .byte $FF
 
-EnFrame1D:
+EnFrame_SidehopperCeilingIdle1:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $0A
     .byte $A5
     .byte $B3
@@ -479,7 +479,7 @@ EnFrame1D:
     .byte $B3
     .byte $FF
 
-EnFrame1E:
+EnFrame_SidehopperCeilingHopping:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace6, $08, $0A
     .byte $B5
     .byte $B3
@@ -491,14 +491,14 @@ EnFrame1E:
     .byte $FF
 
 ;Ripper facing right.
-EnFrame1F:
+EnFrame_RipperFacingRight:
     .byte ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
     .byte $C0
     .byte $C1
     .byte $FF
 
-EnFrame20:
+EnFrame_Waver1FacingRight:
     .byte ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $E0
     .byte $E1
@@ -507,7 +507,7 @@ EnFrame20:
     .byte $E1
     .byte $FF
 
-EnFrame21:
+EnFrame_Waver0FacingRight:
     .byte ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $F0
     .byte $F1
@@ -517,14 +517,14 @@ EnFrame21:
     .byte $FF
 
 ;Ripper facing left.
-EnFrame22:
+EnFrame_RipperFacingLeft:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $FC, $04, $00
     .byte $C0
     .byte $C1
     .byte $FF
 
-EnFrame23:
+EnFrame_Waver1FacingLeft:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $E0
     .byte $E1
@@ -533,7 +533,7 @@ EnFrame23:
     .byte $E1
     .byte $FF
 
-EnFrame24:
+EnFrame_Waver0FacingLeft:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
     .byte $F0
     .byte $F1
@@ -545,7 +545,7 @@ EnFrame24:
 ;Skree.
 EnFrame25:
 EnFrame26:
-EnFrame27:
+EnFrame_Skree0:
     .byte ($2 << 4) + _id_EnPlace8, $0C, $08
     .byte $CE
     .byte $FC, $00, $FC
@@ -557,7 +557,7 @@ EnFrame27:
     .byte $FF
 
 ;Skree.
-EnFrame28:
+EnFrame_Skree1:
     .byte ($2 << 4) + _id_EnPlace8, $0C, $08
     .byte $CE
     .byte $CF
@@ -565,7 +565,7 @@ EnFrame28:
     .byte $FF
 
 ;Skree.
-EnFrame29:
+EnFrame_Skree2:
     .byte ($2 << 4) + _id_EnPlace8, $0C, $08
     .byte $CE
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
@@ -586,7 +586,7 @@ EnFrame33:
 EnFrame34:
 EnFrame35:
 EnFrame36:
-EnFrame37:
+EnFrame_SidehopperFloorExplode:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $FC
     .byte $A3
@@ -598,7 +598,7 @@ EnFrame37:
     .byte $B3
     .byte $FF
 
-EnFrame38:
+EnFrame_SidehopperCeilingExplode:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $00, $FC
     .byte $B3
@@ -610,7 +610,7 @@ EnFrame38:
     .byte $A3
     .byte $FF
 
-EnFrame39:
+EnFrame_WaverExplodeFacingLeft:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $04, $00
     .byte $F1
@@ -619,7 +619,7 @@ EnFrame39:
     .byte $F0
     .byte $FF
 
-EnFrame3A:
+EnFrame_WaverExplodeFacingRight:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $04, $00
     .byte $F0
@@ -629,7 +629,7 @@ EnFrame3A:
     .byte $FF
 
 ;Ripper explode facing left (uses waver gfx).
-EnFrame3B:
+EnFrame_RipperExplodeFacingLeft:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
     .byte $D1
@@ -637,7 +637,7 @@ EnFrame3B:
     .byte $FF
 
 ;Ripper explode facing right (uses waver gfx).
-EnFrame3C:
+EnFrame_RipperExplodeFacingRight:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
     .byte $D0
@@ -645,7 +645,7 @@ EnFrame3C:
     .byte $FF
 
 ;Skree explode.
-EnFrame3D:
+EnFrame_SkreeExplode:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $FC, $08, $00
     .byte $DE
@@ -681,7 +681,7 @@ EnFrame54:
 EnFrame55:
 EnFrame56:
 EnFrame57:
-EnFrame58:
+EnFrame_ZoomerOnFloor0:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
     .byte $CD
@@ -690,7 +690,7 @@ EnFrame58:
     .byte $FF
 
 ;Zoomer on floor.
-EnFrame59:
+EnFrame_ZoomerOnFloor1:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
     .byte $CD
@@ -699,7 +699,7 @@ EnFrame59:
     .byte $FF
 
 ;Zoomer on right wall.
-EnFrame5A:
+EnFrame_ZoomerOnRightWall0:
     .byte ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
@@ -708,7 +708,7 @@ EnFrame5A:
     .byte $FF
 
 ;Zoomer on right wall.
-EnFrame5B:
+EnFrame_ZoomerOnRightWall1:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
@@ -717,7 +717,7 @@ EnFrame5B:
     .byte $FF
 
 ;Zoomer on ceiling.
-EnFrame5C:
+EnFrame_ZoomerOnCeiling0:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
     .byte $CD
@@ -726,7 +726,7 @@ EnFrame5C:
     .byte $FF
 
 ;Zoomer on ceiling.
-EnFrame5D:
+EnFrame_ZoomerOnCeiling1:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CC
     .byte $CD
@@ -735,7 +735,7 @@ EnFrame5D:
     .byte $FF
 
 ;Zoomer on left wall.
-EnFrame5E:
+EnFrame_ZoomerOnLeftWall0:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
@@ -744,7 +744,7 @@ EnFrame5E:
     .byte $FF
 
 ;Zoomer on left wall.
-EnFrame5F:
+EnFrame_ZoomerOnLeftWall1:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
     .byte $CA
     .byte $CB
@@ -753,7 +753,7 @@ EnFrame5F:
     .byte $FF
 
 ;Zoomer explode.
-EnFrame60:
+EnFrame_ZoomerExplode:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $CC
     .byte $CD
@@ -798,7 +798,7 @@ EnFrame_Explosion1:
     .byte $FF
 
 ;Rio.
-EnFrame63:
+EnFrame_Rio0:
     .byte ($2 << 4) + _id_EnPlaceB, $08, $08
     .byte $E2
     .byte $E3
@@ -810,7 +810,7 @@ EnFrame63:
     .byte $FF
 
 ;Rio.
-EnFrame64:
+EnFrame_Rio1:
     .byte ($2 << 4) + _id_EnPlaceB, $08, $08
     .byte $E2
     .byte $E3
@@ -823,7 +823,7 @@ EnFrame64:
     .byte $FF
 
 ;Rio explode (gfx looks wrong).
-EnFrame65:
+EnFrame_RioExplode:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $96
     .byte $96
@@ -832,7 +832,7 @@ EnFrame65:
     .byte $FF
 
 ;Zeb facing left.
-EnFrame66:
+EnFrame_ZebFacingLeft0:
     .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C3
@@ -841,7 +841,7 @@ EnFrame66:
     .byte $FF
 
 ;Zeb facing left.
-EnFrame67:
+EnFrame_ZebFacingLeft1:
     .byte ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C4
@@ -850,7 +850,7 @@ EnFrame67:
     .byte $FF
 
 ;Zeb explode facing left.
-EnFrame68:
+EnFrame_ZebExplodeFacingLeft:
     .byte ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
     .byte $C4
@@ -859,7 +859,7 @@ EnFrame68:
     .byte $FF
 
 ;Zeb facing right.
-EnFrame69:
+EnFrame_ZebFacingRight0:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C3
@@ -868,7 +868,7 @@ EnFrame69:
     .byte $FF
 
 ;Zeb facing right.
-EnFrame6A:
+EnFrame_ZebFacingRight1:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
     .byte $C2
     .byte $C4
@@ -877,7 +877,7 @@ EnFrame6A:
     .byte $FF
 
 ;Zeb explode facing right.
-EnFrame6B:
+EnFrame_ZebExplodeFacingRight:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace1, $08, $08
     .byte $C2
     .byte $C4
@@ -885,61 +885,61 @@ EnFrame6B:
     .byte $D4
     .byte $FF
 
-EnFrame6C:
+EnFrame_KraidLintFacingRight:
     .byte ($2 << 4) + _id_EnPlace0, $02, $04
     .byte $FC, $FF, $00
     .byte $F8
     .byte $FF
 
-EnFrame6D:
+EnFrame_KraidLintFacingLeft:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $02, $04
     .byte $FC, $FF, $00
     .byte $F8
     .byte $FF
 
-EnFrame6E:
+EnFrame_KraidNailFacingRight0:
     .byte ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $FE, $00
     .byte $D9
     .byte $FF
 
-EnFrame6F:
+EnFrame_KraidNailFacingRight1:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $00, $02
     .byte $D8
     .byte $FF
 
-EnFrame70:
+EnFrame_KraidNailFacingRight2:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $02, $00
     .byte $D9
     .byte $FF
 
-EnFrame71:
+EnFrame_KraidNailFacingRight3:
     .byte ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $00, $FE
     .byte $D8
     .byte $FF
 
-EnFrame72:
+EnFrame_KraidNailFacingLeft0:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $FE, $00
     .byte $D9
     .byte $FF
 
-EnFrame73:
+EnFrame_KraidNailFacingLeft1:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $00, $FE
     .byte $D8
     .byte $FF
 
-EnFrame74:
+EnFrame_KraidNailFacingLeft2:
     .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $02, $00
     .byte $D9
     .byte $FF
 
-EnFrame75:
+EnFrame_KraidNailFacingLeft3:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $02, $02
     .byte $FC, $00, $02
     .byte $D8
@@ -989,7 +989,7 @@ EnFrame8B:
 EnFrame8C:
 EnFrame8D:
 EnFrame8E:
-EnFrame8F:
+EnFrame_Mellow0:
     .byte ($3 << 4) + _id_EnPlaceF, $04, $08
     .byte $FD, $3
     .byte $EC
@@ -998,7 +998,7 @@ EnFrame8F:
     .byte $FF
 
 ;Mellow.
-EnFrame90:
+EnFrame_Mellow1:
     .byte ($3 << 4) + _id_EnPlaceF, $04, $08
     .byte $FD, $3
     .byte $ED
@@ -1006,7 +1006,7 @@ EnFrame90:
     .byte $ED
     .byte $FF
 
-EnFrame91:
+EnFrame_KraidFacingRight0:
     .byte ($2 << 4) + _id_EnPlace2, $10, $0C
     .byte $C5
     .byte $C6
@@ -1022,7 +1022,7 @@ EnFrame91:
     .byte $F7
     .byte $FF
 
-EnFrame92:
+EnFrame_KraidFacingRight1:
     .byte ($2 << 4) + _id_EnPlace2, $10, $0C
     .byte $C5
     .byte $C6
@@ -1038,7 +1038,7 @@ EnFrame92:
     .byte $F9
     .byte $FF
 
-EnFrame93:
+EnFrame_KraidFacingLeft0:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $10, $0C
     .byte $C5
     .byte $C6
@@ -1054,7 +1054,7 @@ EnFrame93:
     .byte $F7
     .byte $FF
 
-EnFrame94:
+EnFrame_KraidFacingLeft1:
     .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $10, $0C
     .byte $C5
     .byte $C6
@@ -1070,7 +1070,7 @@ EnFrame94:
     .byte $F9
     .byte $FF
 
-EnFrame95:
+EnFrame_KraidExplodeFacingRight:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $C5
     .byte $C7
@@ -1080,7 +1080,7 @@ EnFrame95:
     .byte $E7
     .byte $FF
 
-EnFrame96:
+EnFrame_KraidExplodeFacingLeft:
     .byte ($2 << 4) + _id_EnPlace1, $00, $00
     .byte $C7
     .byte $C5

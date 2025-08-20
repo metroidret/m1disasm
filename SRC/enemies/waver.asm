@@ -1,8 +1,8 @@
 ; Waver Routine
 WaverAIRoutine:
-    lda #EnAnim_21 - EnAnimTbl.b
+    lda #EnAnim_Waver2FacingRight - EnAnimTbl.b
     sta EnemyFlipAfterDisplacementAnimIndex
-    lda #EnAnim_1E - EnAnimTbl.b
+    lda #EnAnim_Waver2FacingLeft - EnAnimTbl.b
     sta EnemyFlipAfterDisplacementAnimIndex+1.b
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode

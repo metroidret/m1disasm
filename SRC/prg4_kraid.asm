@@ -128,7 +128,7 @@ AreaPalToggle:
 AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_43 - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTbl
 
     .byte $00, $00
 AreaFireballFallingAnimIndex:
@@ -136,7 +136,7 @@ AreaFireballFallingAnimIndex:
 AreaFireballSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_64 - EnAnimTbl
+    .byte EnAnim_Memu - EnAnimTbl
 
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
@@ -159,19 +159,19 @@ ChooseEnemyAIRoutine:
         .word RTS_95CB ; 0F - same as 2
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl ; 00 - sidehopper
-    .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl ; 01 - ceiling sidehopper
-    .byte EnAnim_2D - EnAnimTbl, EnAnim_2B - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_31 - EnAnimTbl, EnAnim_2F - EnAnimTbl ; 03 - ripper
-    .byte EnAnim_33 - EnAnimTbl, EnAnim_33 - EnAnimTbl ; 04 - skree
-    .byte EnAnim_41 - EnAnimTbl, EnAnim_41 - EnAnimTbl ; 05 - crawler
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl ; 06 - same as 2
-    .byte EnAnim_50 - EnAnimTbl, EnAnim_4E - EnAnimTbl ; 07 - geega
-    .byte EnAnim_6D - EnAnimTbl, EnAnim_6F - EnAnimTbl ; 08 - kraid
+    .byte EnAnim_SidehopperFloorExplode - EnAnimTbl, EnAnim_SidehopperFloorExplode - EnAnimTbl ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingExplode - EnAnimTbl, EnAnim_SidehopperCeilingExplode - EnAnimTbl ; 01 - ceiling sidehopper
+    .byte EnAnim_WaverExplodeFacingRight - EnAnimTbl, EnAnim_WaverExplodeFacingLeft - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_RipperExplodeFacingRight - EnAnimTbl, EnAnim_RipperExplodeFacingLeft - EnAnimTbl ; 03 - ripper
+    .byte EnAnim_SkreeExplode - EnAnimTbl, EnAnim_SkreeExplode - EnAnimTbl ; 04 - skree
+    .byte EnAnim_ZeelaExplode - EnAnimTbl, EnAnim_ZeelaExplode - EnAnimTbl ; 05 - crawler
+    .byte EnAnim_GeegaFacingLeft - EnAnimTbl, EnAnim_GeegaFacingLeft - EnAnimTbl ; 06 - same as 2
+    .byte EnAnim_GeegaExplodeFacingRight - EnAnimTbl, EnAnim_GeegaExplodeFacingLeft - EnAnimTbl ; 07 - geega
+    .byte EnAnim_KraidExplodeFacingRight - EnAnimTbl, EnAnim_KraidExplodeFacingLeft - EnAnimTbl ; 08 - kraid
     .byte $00, $00 ; 09 - kraid lint
     .byte $00, $00 ; 0A - kraid nail
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0B - same as 2
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0C - same as 2
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0B - same as 2
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
@@ -195,37 +195,37 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 2
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - sidehopper
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; 01 - ceiling sidehopper
-    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl ; 03 - ripper
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl ; 04 - skree
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - ceiling sidehopper
+    .byte EnAnim_Waver0FacingRight - EnAnimTbl, EnAnim_Waver0FacingLeft - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl ; 03 - ripper
+    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - skree
     .byte EnAnim_ZeelaOnFloor - EnAnimTbl, EnAnim_ZeelaOnFloor - EnAnimTbl ; 05 - crawler
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl ; 06 - same as 2
-    .byte EnAnim_54 - EnAnimTbl, EnAnim_52 - EnAnimTbl ; 07 - geega
-    .byte EnAnim_67 - EnAnimTbl, EnAnim_6A - EnAnimTbl ; 08 - kraid
-    .byte EnAnim_56 - EnAnimTbl, EnAnim_58 - EnAnimTbl ; 09 - kraid lint
-    .byte EnAnim_5D - EnAnimTbl, EnAnim_62 - EnAnimTbl ; 0A - kraid nail
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0B - same as 2
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0C - same as 2
+    .byte EnAnim_GeegaFacingLeft - EnAnimTbl, EnAnim_GeegaFacingLeft - EnAnimTbl ; 06 - same as 2
+    .byte EnAnim_GeegaRestingFacingRight - EnAnimTbl, EnAnim_GeegaRestingFacingLeft - EnAnimTbl ; 07 - geega
+    .byte EnAnim_KraidFacingRight - EnAnimTbl, EnAnim_KraidFacingLeft - EnAnimTbl ; 08 - kraid
+    .byte EnAnim_KraidLintFacingRight - EnAnimTbl, EnAnim_KraidLintFacingLeft - EnAnimTbl ; 09 - kraid lint
+    .byte EnAnim_KraidNailIdleFacingRight - EnAnimTbl, EnAnim_KraidNailIdleFacingLeft - EnAnimTbl ; 0A - kraid nail
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0B - same as 2
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - sidehopper
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; 01 - ceiling sidehopper
-    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_1B - EnAnimTbl, EnAnim_19 - EnAnimTbl ; 03 - ripper
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl ; 04 - skree
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - ceiling sidehopper
+    .byte EnAnim_Waver0FacingRight - EnAnimTbl, EnAnim_Waver0FacingLeft - EnAnimTbl ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl ; 03 - ripper
+    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - skree
     .byte EnAnim_ZeelaOnFloor - EnAnimTbl, EnAnim_ZeelaOnFloor - EnAnimTbl ; 05 - crawler
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_48 - EnAnimTbl ; 06 - same as 2
-    .byte EnAnim_4B - EnAnimTbl, EnAnim_48 - EnAnimTbl ; 07 - geega
-    .byte EnAnim_67 - EnAnimTbl, EnAnim_6A - EnAnimTbl ; 08 - kraid
-    .byte EnAnim_56 - EnAnimTbl, EnAnim_58 - EnAnimTbl ; 09 - kraid lint
-    .byte EnAnim_5A - EnAnimTbl, EnAnim_5F - EnAnimTbl ; 0A - kraid nail
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0B - same as 2
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0C - same as 2
+    .byte EnAnim_GeegaFacingLeft - EnAnimTbl, EnAnim_GeegaFacingLeft - EnAnimTbl ; 06 - same as 2
+    .byte EnAnim_GeegaFacingRight - EnAnimTbl, EnAnim_GeegaFacingLeft - EnAnimTbl ; 07 - geega
+    .byte EnAnim_KraidFacingRight - EnAnimTbl, EnAnim_KraidFacingLeft - EnAnimTbl ; 08 - kraid
+    .byte EnAnim_KraidLintFacingRight - EnAnimTbl, EnAnim_KraidLintFacingLeft - EnAnimTbl ; 09 - kraid lint
+    .byte EnAnim_KraidNailMovingFacingRight - EnAnimTbl, EnAnim_KraidNailMovingFacingLeft - EnAnimTbl ; 0A - kraid nail
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0B - same as 2
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
@@ -389,8 +389,8 @@ L977B:
 
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_5F - EnAnimTbl, EnAnim_62 - EnAnimTbl
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_64 - EnAnimTbl
+    .byte EnAnim_KraidNailMovingFacingLeft - EnAnimTbl, EnAnim_KraidNailIdleFacingLeft - EnAnimTbl
+    .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
