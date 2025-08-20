@@ -154,9 +154,9 @@ ChooseEnemyAIRoutine:
 
 ; Animation related table ?
 EnemyDeathAnimIndex:
-    .byte EnAnim_27 - EnAnimTbl, EnAnim_27 - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_29 - EnAnimTbl, EnAnim_29 - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_2D - EnAnimTbl, EnAnim_2B - EnAnimTbl ; 02 - Waver
+    .byte EnAnim_SidehopperFloorExplode - EnAnimTbl, EnAnim_SidehopperFloorExplode - EnAnimTbl ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingExplode - EnAnimTbl, EnAnim_SidehopperCeilingExplode - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_WaverExplodeFacingRight - EnAnimTbl, EnAnim_WaverExplodeFacingLeft - EnAnimTbl ; 02 - Waver
     .byte EnAnim_RipperExplodeFacingRight - EnAnimTbl, EnAnim_RipperExplodeFacingLeft - EnAnimTbl ; 03 - Ripper
     .byte EnAnim_SkreeExplode - EnAnimTbl, EnAnim_SkreeExplode - EnAnimTbl ; 04 - Skree
     .byte EnAnim_ZoomerExplode - EnAnimTbl, EnAnim_ZoomerExplode - EnAnimTbl ; 05 - Zoomer (crawler)
@@ -191,9 +191,9 @@ EnemyHealthTbl:
 
 ; ResetAnimIndex table for resting enemy
 EnemyRestingAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; 02 - Waver
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0FacingRight - EnAnimTbl, EnAnim_Waver0FacingLeft - EnAnimTbl ; 02 - Waver
     .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl ; 03 - Ripper
     .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - Skree
     .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)
@@ -210,9 +210,9 @@ EnemyRestingAnimIndex:
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_05 - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_0B - EnAnimTbl, EnAnim_0B - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_17 - EnAnimTbl, EnAnim_13 - EnAnimTbl ; 02 - Waver
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0FacingRight - EnAnimTbl, EnAnim_Waver0FacingLeft - EnAnimTbl ; 02 - Waver
     .byte EnAnim_RipperFacingRight - EnAnimTbl, EnAnim_RipperFacingLeft - EnAnimTbl ; 03 - Ripper
     .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - Skree
     .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)

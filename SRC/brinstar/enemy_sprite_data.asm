@@ -7,30 +7,30 @@ EnAnim_00:
 EnAnim_FireballKilled:
     .byte _id_EnFrame_FireballKilled, $FF
 
-EnAnim_05:
+EnAnim_SidehopperFloorIdle:
     .byte _id_EnFrame19, _id_EnFrame1A, $FF
 
-EnAnim_08:
+EnAnim_SidehopperFloorStartHopping:
     .byte _id_EnFrame1A
-EnAnim_09:
+EnAnim_SidehopperFloorHopping:
     .byte _id_EnFrame1B, $FF
 
-EnAnim_0B:
+EnAnim_SidehopperCeilingIdle:
     .byte _id_EnFrame1C, _id_EnFrame1D, $FF
 
-EnAnim_0E:
+EnAnim_SidehopperCeilingStartHopping:
     .byte _id_EnFrame1D
-EnAnim_0F:
+EnAnim_SidehopperCeilingHopping:
     .byte _id_EnFrame1E, $FF
 
 EnAnim_11:
     .byte _id_EnFrame22, _id_EnFrame23
-EnAnim_13:
+EnAnim_Waver0FacingLeft:
     .byte _id_EnFrame24, $FF
 
 EnAnim_15:
     .byte _id_EnFrame1F, _id_EnFrame20
-EnAnim_17:
+EnAnim_Waver0FacingRight:
     .byte _id_EnFrame21, $FF
 
 EnAnim_RipperFacingLeft:
@@ -39,29 +39,29 @@ EnAnim_RipperFacingLeft:
 EnAnim_RipperFacingRight:
     .byte _id_EnFrame1F, $FF
 
-EnAnim_1D:
+EnAnim_Waver1FacingLeft:
     .byte _id_EnFrame23,
-EnAnim_1E:
+EnAnim_Waver2FacingLeft:
     .byte _id_EnFrame04, $FF
 
-EnAnim_20:
+EnAnim_Waver1FacingRight:
     .byte _id_EnFrame20
-EnAnim_21:
+EnAnim_Waver2FacingRight:
     .byte _id_EnFrame03, $FF
 
 EnAnim_Skree:
     .byte _id_EnFrame27, _id_EnFrame28, _id_EnFrame29, $FF
 
-EnAnim_27:
+EnAnim_SidehopperFloorExplode:
     .byte _id_EnFrame37, $FF
 
-EnAnim_29:
+EnAnim_SidehopperCeilingExplode:
     .byte _id_EnFrame38, $FF
 
-EnAnim_2B:
+EnAnim_WaverExplodeFacingLeft:
     .byte _id_EnFrame39, $FF
 
-EnAnim_2D:
+EnAnim_WaverExplodeFacingRight:
     .byte _id_EnFrame3A, $FF
 
 EnAnim_RipperExplodeFacingLeft:
