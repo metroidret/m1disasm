@@ -11568,11 +11568,11 @@ EnemyFlipAfterDisplacement:
         tya
         and #$01
         tay
-        ; exit if enemy animation has started
+        ; exit if current enemy animation is the same as the new animation
         lda EnemyFlipAfterDisplacementAnimIndex,y
         cmp EnsExtra.0.resetAnimIndex,x
         beq Exit13
-        ; enemy anim is starting, init anim index
+        ; current enemy anim is different, init anim index
         sta EnsExtra.0.animIndex,x
         dec EnsExtra.0.animIndex,x
 InitEnResetAnimIndex: ; referenced in areas_common.asm
