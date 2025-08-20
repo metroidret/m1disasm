@@ -162,7 +162,7 @@ EnemyDeathAnimIndex:
     .byte EnAnim_ZoomerExplode - EnAnimTbl, EnAnim_ZoomerExplode - EnAnimTbl ; 05 - Zoomer (crawler)
     .byte EnAnim_RioExplode - EnAnimTbl, EnAnim_RioExplode - EnAnimTbl ; 06 - Rio (swoopers)
     .byte EnAnim_ZebExplodeFacingRight - EnAnimTbl, EnAnim_ZebExplodeFacingLeft - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_72 - EnAnimTbl, EnAnim_74 - EnAnimTbl ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidExplodeFacingRight - EnAnimTbl, EnAnim_KraidExplodeFacingLeft - EnAnimTbl ; 08 - Kraid (crashes due to bug)
     .byte $00, $00 ; 09 - Kraid's lint (crashes)
     .byte $00, $00 ; 0A - Kraid's nail (crashes)
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
@@ -198,10 +198,10 @@ EnemyRestingAnimIndex:
     .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - Skree
     .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)
     .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl ; 06 - Rio (swoopers)
-    .byte EnAnim_59 - EnAnimTbl, EnAnim_57 - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_62 - EnAnimTbl, EnAnim_67 - EnAnimTbl ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_ZebRestingFacingRight - EnAnimTbl, EnAnim_ZebRestingFacingLeft - EnAnimTbl ; 07 - Zeb
+    .byte EnAnim_KraidFacingRight - EnAnimTbl, EnAnim_KraidFacingLeft - EnAnimTbl ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLintFacingRight - EnAnimTbl, EnAnim_KraidLintFacingLeft - EnAnimTbl ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailIdleFacingRight - EnAnimTbl, EnAnim_KraidNailIdleFacingLeft - EnAnimTbl ; 0A - Kraid's nail (crashes)
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0C - Null
     .byte $00, $00 ; 0D - Null
@@ -218,9 +218,9 @@ EnemyActiveAnimIndex:
     .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)
     .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl ; 06 - Rio (swoopers)
     .byte EnAnim_ZebFacingRight - EnAnimTbl, EnAnim_ZebFacingLeft - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_6C - EnAnimTbl, EnAnim_6F - EnAnimTbl ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_5B - EnAnimTbl, EnAnim_5D - EnAnimTbl ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_5F - EnAnimTbl, EnAnim_64 - EnAnimTbl ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_KraidFacingRight - EnAnimTbl, EnAnim_KraidFacingLeft - EnAnimTbl ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLintFacingRight - EnAnimTbl, EnAnim_KraidLintFacingLeft - EnAnimTbl ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailMovingFacingRight - EnAnimTbl, EnAnim_KraidNailMovingFacingLeft - EnAnimTbl ; 0A - Kraid's nail (crashes)
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0C - Null
     .byte $00, $00 ; 0D - Null
@@ -415,7 +415,7 @@ L977B:
 ; Enemy animation related table?
 EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_64 - EnAnimTbl, EnAnim_67 - EnAnimTbl
+    .byte EnAnim_KraidNailMovingFacingLeft - EnAnimTbl, EnAnim_KraidNailIdleFacingLeft - EnAnimTbl
     .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
