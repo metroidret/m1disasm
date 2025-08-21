@@ -99,14 +99,14 @@ CrawlerReorientSprite:
         .byte EnAnim_ZeelaOnLeftWall - EnAnimTbl
 .elif BANK == 5
     CrawlerAnimIndexTable:
-        .byte EnAnim_4A - EnAnimTbl
-        .byte EnAnim_4A - EnAnimTbl
-        .byte EnAnim_53 - EnAnimTbl
-        .byte EnAnim_4D - EnAnimTbl
-        .byte EnAnim_50 - EnAnimTbl
-        .byte EnAnim_50 - EnAnimTbl
-        .byte EnAnim_4D - EnAnimTbl
-        .byte EnAnim_53 - EnAnimTbl
+        .byte EnAnim_ViolaOnFloor - EnAnimTbl
+        .byte EnAnim_ViolaOnFloor - EnAnimTbl
+        .byte EnAnim_ViolaOnLeftWall - EnAnimTbl
+        .byte EnAnim_ViolaOnRightWall - EnAnimTbl
+        .byte EnAnim_ViolaOnCeiling - EnAnimTbl
+        .byte EnAnim_ViolaOnCeiling - EnAnimTbl
+        .byte EnAnim_ViolaOnRightWall - EnAnimTbl
+        .byte EnAnim_ViolaOnLeftWall - EnAnimTbl
 .endif
 
 CrawlerInsideCornerCheck:
