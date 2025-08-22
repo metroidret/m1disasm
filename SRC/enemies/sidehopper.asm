@@ -4,7 +4,7 @@ SidehopperFloorAIRoutine:
     .if BANK == 1 || BANK == 4
         lda #EnAnim_SidehopperFloorHopping - EnAnimTbl.b
     .elif BANK == 5
-        lda #EnAnim_42 - EnAnimTbl.b
+        lda #EnAnim_DessgeegaFloorHopping - EnAnimTbl.b
     .endif
 Sidehopper_Common:
     sta EnemyFlipAfterDisplacementAnimIndex
@@ -26,7 +26,7 @@ SidehopperCeilingAIRoutine:
     .if BANK == 1 || BANK == 4
         lda #EnAnim_SidehopperCeilingHopping - EnAnimTbl.b
     .elif BANK == 5
-        lda #EnAnim_48 - EnAnimTbl.b
+        lda #EnAnim_DessgeegaCeilingHopping - EnAnimTbl.b
     .endif
     jmp Sidehopper_Common
 

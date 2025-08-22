@@ -34,7 +34,7 @@ UpdateSwooperAnim:
     .if BANK == 2
         lda #EnAnim_GerutaSwooping - EnAnimTbl.b
     .elif BANK == 5
-        lda #EnAnim_20 - EnAnimTbl.b
+        lda #EnAnim_HoltzSwooping - EnAnimTbl.b
     .endif
     ; branch if y speed is positive (swooper is swooping downwards)
     ldy EnSpeedY,x
@@ -44,7 +44,7 @@ UpdateSwooperAnim:
         .if BANK == 2
             lda #EnAnim_GerutaIdle - EnAnimTbl.b
         .elif BANK == 5
-            lda #EnAnim_1D - EnAnimTbl.b
+            lda #EnAnim_HoltzIdle - EnAnimTbl.b
         .endif
     L9904:
     sta EnsExtra.0.resetAnimIndex,x

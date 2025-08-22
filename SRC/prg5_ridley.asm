@@ -136,15 +136,15 @@ AreaPalToggle:
 AreaFireballKilledAnimIndex:
     .byte EnAnim_FireballKilled - EnAnimTbl
 AreaExplosionAnimIndex:
-    .byte EnAnim_58 - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTbl
 
-    .byte EnAnim_44 - EnAnimTbl, EnAnim_4A - EnAnimTbl
+    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl
 AreaFireballFallingAnimIndex:
-    .byte EnAnim_48 - EnAnimTbl, EnAnim_4A - EnAnimTbl
+    .byte EnAnim_DessgeegaCeilingHopping - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl
 AreaFireballSplatterAnimIndex:
-    .byte EnAnim_4A - EnAnimTbl, EnAnim_36 - EnAnimTbl
+    .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_36 - EnAnimTbl
 AreaMellowAnimIndex:
-    .byte EnAnim_25 - EnAnimTbl
+    .byte EnAnim_Mella - EnAnimTbl
 
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
@@ -167,19 +167,19 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy_ ; 0F - same as 4
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_23 - EnAnimTbl, EnAnim_23 - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_3A - EnAnimTbl, EnAnim_3A - EnAnimTbl ; 02 - dessgeegas
-    .byte EnAnim_3C - EnAnimTbl, EnAnim_3C - EnAnimTbl ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzExplode - EnAnimTbl, EnAnim_HoltzExplode - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzExplode - EnAnimTbl, EnAnim_HoltzExplode - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaExplodeFloor - EnAnimTbl, EnAnim_DessgeegaExplodeFloor - EnAnimTbl ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaExplodeCeiling - EnAnimTbl, EnAnim_DessgeegaExplodeCeiling - EnAnimTbl ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_56 - EnAnimTbl, EnAnim_56 - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_65 - EnAnimTbl, EnAnim_63 - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_ViolaExplode - EnAnimTbl, EnAnim_ViolaExplode - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_ZebboExplodeFacingRight - EnAnimTbl, EnAnim_ZebboExplodeFacingLeft - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_11 - EnAnimTbl, EnAnim_11 - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - ridley fireball
-    .byte EnAnim_28 - EnAnimTbl, EnAnim_28 - EnAnimTbl ; 0B - same as 4
-    .byte EnAnim_32 - EnAnimTbl, EnAnim_32 - EnAnimTbl ; 0C - bouncy orbs
+    .byte EnAnim_RidleyExplode - EnAnimTbl, EnAnim_RidleyExplode - EnAnimTbl ; 09 - ridley
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0B - same as 4
+    .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
@@ -203,37 +203,37 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 4
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_3E - EnAnimTbl, EnAnim_3E - EnAnimTbl ; 02 - dessgeegas
-    .byte EnAnim_44 - EnAnimTbl, EnAnim_44 - EnAnimTbl ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaIdleFloor - EnAnimTbl, EnAnim_DessgeegaIdleFloor - EnAnimTbl ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTbl, EnAnim_DessgeegaIdleCeiling - EnAnimTbl ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_4A - EnAnimTbl, EnAnim_4A - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_69 - EnAnimTbl, EnAnim_67 - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_ZebboRestingFacingRight - EnAnimTbl, EnAnim_ZebboRestingFacingLeft - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - ridley fireball
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 0B - same as 4
-    .byte EnAnim_2D - EnAnimTbl, EnAnim_28 - EnAnimTbl ; 0C - bouncy orbs
+    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - ridley
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 0B - same as 4
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_20 - EnAnimTbl, EnAnim_20 - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_20 - EnAnimTbl, EnAnim_20 - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_3E - EnAnimTbl, EnAnim_3E - EnAnimTbl ; 02 - dessgeegas
-    .byte EnAnim_44 - EnAnimTbl, EnAnim_44 - EnAnimTbl ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzSwooping - EnAnimTbl, EnAnim_HoltzSwooping - EnAnimTbl ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzSwooping - EnAnimTbl, EnAnim_HoltzSwooping - EnAnimTbl ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaIdleFloor - EnAnimTbl, EnAnim_DessgeegaIdleFloor - EnAnimTbl ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTbl, EnAnim_DessgeegaIdleCeiling - EnAnimTbl ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_4A - EnAnimTbl, EnAnim_4A - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_60 - EnAnimTbl, EnAnim_5D - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl ; 06 - crawler
+    .byte EnAnim_ZebboFacingRight - EnAnimTbl, EnAnim_ZebboFacingLeft - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_05 - EnAnimTbl, EnAnim_08 - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_13 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 0A - ridley fireball
-    .byte EnAnim_1D - EnAnimTbl, EnAnim_1D - EnAnimTbl ; 0B - same as 4
-    .byte EnAnim_2D - EnAnimTbl, EnAnim_28 - EnAnimTbl ; 0C - bouncy orbs
+    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - ridley
+    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 0B - same as 4
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
@@ -399,7 +399,7 @@ EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl
-    .byte EnAnim_44 - EnAnimTbl, EnAnim_4A - EnAnimTbl
+    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
