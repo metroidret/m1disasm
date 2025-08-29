@@ -567,11 +567,13 @@ CommonEnemyJump_00_01_02:
 
 
 ; enemy ai routines
-    .byte $A9, $09, $85, $80, $85, $81, $BD, $60, $B4, $C9, $03, $F0, $03, $20, $1B, $6C
-    .byte $A9, $06, $85, $00, $A9, $08, $85, $01, $4C, $99, $B9, $A9, $0F, $4C, $B2, $B9
-    .byte $BD, $60, $B4, $C9, $03, $F0, $03, $20, $1E, $6C, $4C, $C0, $B9, $A9, $21, $85
-    .byte $80, $A9, $1E, $85, $81, $BD, $60, $B4, $C9, $03, $F0, $03, $20, $1B, $6C, $4C
-    .byte $C0, $B9, $A5, $7C, $C9, $01, $F0, $44, $C9, $03, $F0, $45, $BD, $06, $04, $C9
+.include "sideB/enemies/sidehopper.asm"
+
+.include "sideB/enemies/ripper.asm"
+
+.include "sideB/enemies/waver.asm"
+
+    .byte $A5, $7C, $C9, $01, $F0, $44, $C9, $03, $F0, $45, $BD, $06, $04, $C9
     .byte $0F, $90, $34, $C9, $11, $B0, $07, $A9, $3A, $9D, $6D, $B4, $D0, $29, $DE, $6D
     .byte $B4, $D0, $24, $A9, $00, $9D, $60, $B4, $A0, $0C, $A9, $0A, $99, $A0, $00, $BD
     .byte $00, $04, $99, $A1, $00, $BD, $01, $04, $99, $A2, $00, $BD, $67, $B4, $99, $A3
