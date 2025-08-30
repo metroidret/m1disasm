@@ -417,7 +417,7 @@ EnemyFireballPosOffsetY:
 
 EnemyFireballMovementPtrTable:
     .word EnemyFireballMovement0
-    .word EnemyFireballMovement0
+    .word EnemyFireballMovement1
     .word EnemyFireballMovement2
     .word EnemyFireballMovement3
 
