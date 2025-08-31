@@ -115,8 +115,8 @@ MetroidAIRoutine:
         lda #$FF
         sta EnHealth,x
 L9899:
-    lda EnemyMovementPtr
-    cmp #$06
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Hurt
     bne L98A9
     cmp EnsExtra.0.status,x
     beq L98A9

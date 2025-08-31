@@ -5,12 +5,12 @@ RinkaAIRoutine:
     bne L9AB0
 
     ; enemy is active
-    ; branch if EnemyMovementPtr is not #$01
+    ; branch if previous status is not resting
     dey ; set y to #$01
-    cpy EnemyMovementPtr
+    cpy EnemyStatusPreAI
     bne L9AB0
 
-    ; EnemyMovementPtr is #$01
+    ; previous status is resting
     ; that means the rinka's speed vector needs to be initialized
     ; clear rinka acceleration
     ; (this is useless, because rinka isn't using the acceleration movement system)
