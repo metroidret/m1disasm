@@ -597,8 +597,8 @@ L9963:
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    lda EnemyMovementPtr
-    cmp #$02
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Active
     bne L9993
     cmp EnsExtra.0.status,x
     bne L9993
