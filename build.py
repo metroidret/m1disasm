@@ -38,7 +38,7 @@ build_targets = {
         filename="out/M1_NES_PAL.nes",
     ),
     "NES_MZMUS": BuildTarget(
-        md5_hash_expected_hex="d7da4a907be0012abca6625471ef2c9c",
+        md5_hash_expected_hex="b27e46122890364407af3ee7591477ad",
         filename="out/M1_NES_MZMUS.nes",
     ),
 }

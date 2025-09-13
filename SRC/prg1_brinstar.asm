@@ -27,10 +27,17 @@
 
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
+; 8D60 - "THE END" graphics + partial font
 GFX_TheEndFont:
-    .incbin "ending/end_font.chr"       ; 8D60 - "THE END" graphics + partial font
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "ending/end_font.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "ending/end_font_mzmus.chr"
+    .endif
+
+; 9160 - Brinstar Enemies
 GFX_BrinstarSprites:
-    .incbin "brinstar/sprite_tiles.chr" ; 9160 - Brinstar Enemies
+    .incbin "brinstar/sprite_tiles.chr"
 
 ;----------------------------------------------------------------------------------------------------
 

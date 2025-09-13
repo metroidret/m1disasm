@@ -27,11 +27,17 @@
 
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
+; 8D60 - Common Room Elements (loaded everywhere except Tourian)
 GFX_CREBG1:
-    .incbin "common_chr/bg_CRE.chr" ; 8D60 - Common Room Elements (loaded everywhere except Tourian)
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/bg_CRE.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/bg_CRE_mzmus.chr"
+    .endif
 
+; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
 GFX_TourianFont:
-    .incbin "tourian/font_chr.chr" ; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
+    .incbin "tourian/font_chr.chr"
 
 ;Unused tile patterns.
 GFX_Bank5Garbage:

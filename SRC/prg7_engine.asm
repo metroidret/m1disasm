@@ -6443,7 +6443,11 @@ SPRWriteDigit:
 
 AddOneTank:
     ;Y coord-1.
-    lda #$17
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        lda #$17
+    .elif BUILDTARGET == "NES_MZMUS"
+        lda #$15
+    .endif
     sta SpriteRAM.0.y,x
     ;Tile value.
     tya
@@ -6512,11 +6516,19 @@ DivideByRepeatedSubtraction: ;($E1AD)
 DataDisplayTbl:
     .byte $21,$A0,$01,$30           ;Upper health digit.
     .byte $21,$A0,$01,$38           ;Lower health digit.
-    .byte $2B,$FF,$01,$28           ;Upper missile digit.
-    .byte $2B,$FF,$01,$30           ;Middle missile digit.
-    .byte $2B,$FF,$01,$38           ;Lower missile digit.
-    .byte $2B,$5E,$00,$18           ;Left half of missile.
-    .byte $2B,$5F,$00,$20           ;Right half of missile.
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .byte $2B,$FF,$01,$28           ;Upper missile digit.
+        .byte $2B,$FF,$01,$30           ;Middle missile digit.
+        .byte $2B,$FF,$01,$38           ;Lower missile digit.
+        .byte $2B,$5E,$00,$18           ;Left half of missile.
+        .byte $2B,$5F,$00,$20           ;Right half of missile.
+    .elif BUILDTARGET == "NES_MZMUS"
+        .byte $2D,$FF,$01,$28           ;Upper missile digit.
+        .byte $2D,$FF,$01,$30           ;Middle missile digit.
+        .byte $2D,$FF,$01,$38           ;Lower missile digit.
+        .byte $2D,$5E,$00,$18           ;Left half of missile.
+        .byte $2D,$5F,$00,$20           ;Right half of missile.
+    .endif
     .byte $21,$76,$01,$18           ;E
     .byte $21,$7F,$01,$20           ;N
     .byte $21,$3A,$00,$28           ;..

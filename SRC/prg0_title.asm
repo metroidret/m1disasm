@@ -682,8 +682,14 @@ PPUString_DrawIntroBackground:
         $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52, $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
 
     ;Writes PUSH START BUTTON in row $2220 (18th row from top).
-    PPUString $2227, \
-        " PUSH START BUTTON   "
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        PPUString $2227, \
+            " PUSH START BUTTON   "
+    .elif BUILDTARGET == "NES_MZMUS"
+        PPUString $2227, \
+            "    PRESS START      "
+    .endif
+    
 
     ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
     PPUString $2269, \
@@ -2588,8 +2594,13 @@ DisplayPassword:
 
 L937F:
     ;Information below is for above routine to display "PASS WORD" on the screen.
-    PPUString $214B, \
-        "PASS WORD"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        PPUString $214B, \
+            "PASS WORD"
+    .elif BUILDTARGET == "NES_MZMUS"
+        PPUString $214B, \
+            " PASSWORD"
+    .endif
 
     ;Information to be stored in attribute table 0.
     PPUStringRepeat $23D0, $00, $08
@@ -3246,8 +3257,13 @@ PasswordRow4: .stringmap charmap, "qrstuvwxyz?- "
 
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
 L99E3:
-    PPUString $2088, \
-        "PASS WORD PLEASE"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        PPUString $2088, \
+            "PASS WORD PLEASE"
+    .elif BUILDTARGET == "NES_MZMUS"
+        PPUString $20A8, \
+            "PASSWORD PLEASE "
+    .endif
 
     ;Clears attribute table 0 starting at address $23C0.
     PPUStringRepeat $23C0, $00, $10

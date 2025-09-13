@@ -56,14 +56,25 @@ GFX_Garbage8AA0:
     .byte $9D, $0A, $03, $8A, $29, $10, $49, $10, $05, $6B, $85, $6B, $A9, $06, $4C, $47
     .byte $DE, $05, $01, $0A, $01, $BD, $0A, $03, $29, $04, $F0, $D5, $DE, $0F, $03, $D0
 
+; 8BE0 - METROID title screen CHR
 GFX_Title:
-    .incbin "common_chr/title.chr" ; 8BE0 - METROID title screen CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/title.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/title_mzmus.chr"
+    .endif
 
+; 90E0 - Suitless Samus (in-game)
 GFX_SamusSuitless:
-    .incbin "common_chr/samus_suitless.chr" ; 90E0 - Suitless Samus (in-game)
+    .incbin "common_chr/samus_suitless.chr" 
 
+; 9890 - Exclamation point
 GFX_ExclamationPoint:
-    .incbin "common_chr/exclamation_point.chr" ; 9890 - Exclamation point
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/exclamation_point.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/exclamation_point_mzmus.chr"
+    .endif
 
 ; Garbage data (leftovers from Ridley's bank)
 GFX_Garbage98A0:
@@ -151,32 +162,72 @@ GFX_Garbage99C0:
     .byte $08, $00, $F8, $E8, $F8, $10, $F8, $F0, $F8, $08, $F8, $F8, $F8, $00, $00, $F8
     .byte $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0, $F0, $F8, $F8, $F0, $00, $F0
 
+; 9DA0 - Brinstar BG CHR data
 GFX_BrinBG1:
-    .incbin "brinstar/bg_chr_1.chr" ; 9DA0 - Brinstar BG CHR data
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "brinstar/bg_chr_1.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "brinstar/bg_chr_1_mzmus.chr"
+    .endif
 
+; 9EF0 - Common Room Elements (loaded in all areas)
 GFX_CREBG2:
-    .incbin "common_chr/bg_CRE_2.chr" ; 9EF0 - Common Room Elements (loaded in all areas)
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/bg_CRE_2.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/bg_CRE_2_mzmus.chr"
+    .endif
 
+; A6F0 - Norfair BG CHR data
 GFX_NorfBG1:
-    .incbin "norfair/bg_chr_1.chr" ; A6F0 - Norfair BG CHR data
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "norfair/bg_chr_1.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "norfair/bg_chr_1_mzmus.chr"
+    .endif
 
+; A950 - Norfair BG CHR data
 GFX_NorfBG2:
-    .incbin "norfair/bg_chr_2.chr" ; A950 - Norfair BG CHR data
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "norfair/bg_chr_2.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "norfair/bg_chr_2_mzmus.chr"
+    .endif
 
+; A9C0 - Kraid, Ridley, Tourian BG CHR
 GFX_BossBG:
-    .incbin "common_chr/bg_boss_areas.chr" ; A9C0 - Kraid, Ridley, Tourian BG CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/bg_boss_areas.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/bg_boss_areas_mzmus.chr"
+    .endif
 
+; ACA0 - Tourian BG CHR
 GFX_TourBG:
-    .incbin "tourian/bg_chr.chr" ; ACA0 - Tourian BG CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "tourian/bg_chr.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "tourian/bg_chr_mzmus.chr"
+    .endif
 
 GFX_Zebetite:
     .incbin "tourian/zebetite_chr.chr" ; B2A0 - Zebetite BG CHR
 
+; B330 - More Kraid BG CHR
 GFX_KraiBG2:
-    .incbin "kraid/bg_chr_2.chr" ; B330 - More Kraid BG CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "kraid/bg_chr_2.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "kraid/bg_chr_2_mzmus.chr"
+    .endif
 
+; B3F0 - More Ridley BG CHR
 GFX_RidlBG:
-    .incbin "ridley/bg_chr.chr" ; B3F0 - More Ridley BG CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "ridley/bg_chr.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "ridley/bg_chr_mzmus.chr"
+    .endif
 
 ;Not used.
 GFX_GarbageB4B0:
@@ -186,12 +237,16 @@ GFX_GarbageB4B0:
     .byte $06, $A9, $00, $9D, $65, $06, $9D, $70, $06, $9D, $74, $06, $9D, $78, $06, $8D
 .endif
 
-
+; B4C0 - Font (upper and lowercase)
 GFX_Font:
-    .incbin "common_chr/font.chr" ; B4C0 - Font (upper and lowercase)
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "common_chr/font.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "common_chr/font_mzmus.chr"
+    .endif
 
 GFX_GarbageB8C0:
-.incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
+    .incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
 
 ; Garbage data (Half of the music engine)
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"

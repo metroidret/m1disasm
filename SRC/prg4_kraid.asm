@@ -35,8 +35,13 @@ GFX_EndingSprites:
 GFX_KraiUnused:
     .incbin "kraid/unused_tiles.chr"
 
+; 9360 - Misc Kraid BG CHR
 GFX_KraiBG3:
-    .incbin "kraid/bg_chr_3.chr" ; 9360 - Misc Kraid BG CHR
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
+        .incbin "kraid/bg_chr_3.chr"
+    .elif BUILDTARGET == "NES_MZMUS"
+        .incbin "kraid/bg_chr_3_mzmus.chr"
+    .endif
 
 ;----------------------------------------------------------------------------------------------------
 
