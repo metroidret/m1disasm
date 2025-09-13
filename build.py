@@ -36,7 +36,11 @@ build_targets = {
     "NES_PAL": BuildTarget(
         md5_hash_expected_hex="442fcb92fce27cabdb7635bd35593d8a",
         filename="out/M1_NES_PAL.nes",
-    )
+    ),
+    "NES_MZMUS": BuildTarget(
+        md5_hash_expected_hex="d7da4a907be0012abca6625471ef2c9c",
+        filename="out/M1_NES_MZMUS.nes",
+    ),
 }
 
 for bt, bto in build_targets.items():

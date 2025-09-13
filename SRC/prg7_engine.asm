@@ -268,7 +268,7 @@ NMI:
         jsr ReadJoyPads
     LC103:
     ;($B3B4)Update music and SFX.
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         jsr SoundEngine
     .elif BUILDTARGET == "NES_PAL"
         jsr GotoSoundEngine
@@ -1862,7 +1862,7 @@ SamusInit:
     ;SamusIntro will be executed next frame.
     lda #_id_SamusIntro.b
     sta MainRoutine
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         ;440 frames to fade in Samus(7.3 seconds).
         lda #$2C
     .elif BUILDTARGET == "NES_PAL"
@@ -1933,7 +1933,7 @@ GameEngine:
         lda #$00                        ;
         sta MiniBossKillDelayFlag       ;Reset delay indicators.
         sta PowerUpDelayFlag            ;
-        .if BUILDTARGET == "NES_NTSC"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
             ;Set timer for 240 frames(4 seconds).
             lda #$18
         .elif BUILDTARGET == "NES_PAL"
@@ -12315,7 +12315,7 @@ TileBlastAnim7:  .byte $07,$06,$0A,$FE ; respawning tile #$74
 TileBlastAnim8:  .byte $07,$06,$0B,$FE ; respawning tile #$78
 TileBlastAnim9:  .byte $07,$06,$08,$FE ; respawning tile #$90
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $00, $00
 .elif BUILDTARGET == "NES_PAL"
     .byte $01, $02

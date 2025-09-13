@@ -48,7 +48,7 @@ RESET: ;($BFB0)
 
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .if BANK == 7
         .byte $FF, $FF, $FF, $4C, $E4, $B3, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
         .byte $FF, $FF, $FF, $FF, $4D, $45, $54, $52, $4F, $49, $44, $E4, $8D, $00, $00, $38

@@ -180,7 +180,7 @@ GFX_RidlBG:
 
 ;Not used.
 GFX_GarbageB4B0:
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $65, $06, $DD, $60, $06, $D0, $05, $A9, $00, $9D, $65, $06, $60, $8D, $4D, $06
 .elif BUILDTARGET == "NES_PAL"
     .byte $06, $A9, $00, $9D, $65, $06, $9D, $70, $06, $9D, $74, $06, $9D, $78, $06, $8D
@@ -194,7 +194,7 @@ GFX_GarbageB8C0:
 .incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
 
 ; Garbage data (Half of the music engine)
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $40, $60, $20, $04, $B4, $A9, $0E, $A0, $75, $20, $52, $B4, $A9, $15, $8D, $16
     .byte $06, $AD, $77, $B2, $8D, $10, $06, $A9, $00, $8D, $11, $06, $60, $20, $A9, $B4
     .byte $D0, $1A, $A9, $20, $8D, $12, $06, $A9, $00, $8D, $13, $06, $20, $8C, $B9, $EE

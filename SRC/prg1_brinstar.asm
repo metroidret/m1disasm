@@ -965,14 +965,14 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/brinstar.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/brinstar.asm"
 .endif
 
 ; Errant Mother Brain BG tiles (unused)
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
     .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
     .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
@@ -1006,7 +1006,7 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .section "ROM Bank $001 - Music Engine" bank 1 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $001 - Music Engine" bank 1 slot "ROMSwitchSlot" orga $B230 force

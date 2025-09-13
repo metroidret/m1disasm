@@ -1795,7 +1795,7 @@ VolumeEnvelopePtrTable:
     .word VolumeEnvelope1, VolumeEnvelope2, VolumeEnvelope3, VolumeEnvelope4, VolumeEnvelope5
 
 VolumeEnvelope1:
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $01, $02, $02, $03, $03, $04, $05, $06, $07, $08, $FF
 .elif BUILDTARGET == "NES_PAL"
     .byte $01, $02, $03, $04, $04, $05, $06, $06, $07, $08, $FF
@@ -1834,7 +1834,7 @@ VolumeEnvelope5:
 SongHeaders:
 
 SongMthrBrnRoomHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $F5, $00, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $F5, $00, $00
@@ -1842,7 +1842,7 @@ SongMthrBrnRoomHeader:
     
     .if BANK == 3
         .word SongMthrBrnRoomSQ1, SongMthrBrnRoomSQ2, SongMthrBrnRoomTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0000
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1850,7 +1850,7 @@ SongMthrBrnRoomHeader:
 
 
 SongEscapeHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $00, $02, $02
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $00, $02, $02
@@ -1858,7 +1858,7 @@ SongEscapeHeader:
     
     .if BANK == 3
         .word SongEscapeSQ1, SongEscapeSQ2, SongEscapeTri, SongEscapeNoise
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1866,7 +1866,7 @@ SongEscapeHeader:
 
 
 SongNorfairHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $F0, $04, $04
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $F0, $04, $04
@@ -1874,7 +1874,7 @@ SongNorfairHeader:
     
     .if BANK == 2
         .word SongNorfairSQ1, SongNorfairSQ2, SongNorfairTri, SongNorfairNoise
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1882,7 +1882,7 @@ SongNorfairHeader:
 
 
 SongKraidHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@4, $FF, $F0, $00, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@4, $FF, $F0, $00, $00
@@ -1890,7 +1890,7 @@ SongKraidHeader:
     
     .if (BANK == 4) || (BANK == 5)
         .word SongKraidSQ1, SongKraidSQ2, SongKraidTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0000
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1898,7 +1898,7 @@ SongKraidHeader:
 
 
 SongItemRoomHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $03, $00, $00
@@ -1906,7 +1906,7 @@ SongItemRoomHeader:
     
     .if BANK <= 5
         .word SongItemRoomSQ1, SongItemRoomSQ2, SongItemRoomTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1914,7 +1914,7 @@ SongItemRoomHeader:
 
 
 SongRidleyHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $F0, $01, $01
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $F0, $01, $01
@@ -1922,7 +1922,7 @@ SongRidleyHeader:
     
     .if (BANK == 4) || (BANK == 5)
         .word SongRidleySQ1, SongRidleySQ2, SongRidleyTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0000
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1930,7 +1930,7 @@ SongRidleyHeader:
 
 
 SongEndHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@7, $00, $00, $02, $01
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@6, $00, $00, $02, $01
@@ -1938,7 +1938,7 @@ SongEndHeader:
     
     .if BANK == 0
         .word SongEndSQ1, SongEndSQ2, SongEndTri, SongEndNoise
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1946,7 +1946,7 @@ SongEndHeader:
 
 
 SongIntroHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@7, $00, $F0, $02, $05
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@6, $00, $F0, $02, $05
@@ -1954,14 +1954,14 @@ SongIntroHeader:
     
     .if BANK == 0
         .word SongIntroSQ1, SongIntroSQ2, SongIntroTri, SongIntroNoise
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
     .endif
 
 SongFadeInHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $00, $F0, $02, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $00, $F0, $02, $00
@@ -1969,7 +1969,7 @@ SongFadeInHeader:
     
     .if BANK <= 5
         .word SongFadeInSQ1, SongFadeInSQ2, SongFadeInTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -1977,7 +1977,7 @@ SongFadeInHeader:
 
 
 SongPowerUpHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@4, $00, $F0, $01, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@3, $00, $F0, $01, $00
@@ -1985,14 +1985,14 @@ SongPowerUpHeader:
     
     .if BANK <= 5
         .word SongPowerUpSQ1, SongPowerUpSQ2, SongPowerUpTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
     .endif
 
 SongBrinstarHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $00, $02, $03
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $00, $02, $03
@@ -2000,7 +2000,7 @@ SongBrinstarHeader:
     
     .if BANK == 1
         .word SongBrinstarSQ1, SongBrinstarSQ2, SongBrinstarTri, SongBrinstarNoise
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
@@ -2008,7 +2008,7 @@ SongBrinstarHeader:
 
 
 SongTourianHeader:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         SongHeader NoteLengthsTbl@6, $FF, $03, $00, $00
     .elif BUILDTARGET == "NES_PAL"
         SongHeader NoteLengthsTbl@5, $FF, $03, $00, $00
@@ -2016,32 +2016,32 @@ SongTourianHeader:
     
     .if BANK <= 5
         .word SongTourianSQ1, SongTourianSQ2, SongTourianTri, $0000
-    .elif BUILDTARGET == "NES_NTSC"
+    .elif BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         .word $0100, $0300, $0500, $0700
     .elif BUILDTARGET == "NES_PAL"
         .word $0000, $0000, $0000, $0000
     .endif
 
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/item_room.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/item_room.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/power_up.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/power_up.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/fade_in.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/fade_in.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/tourian.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/tourian.asm"
@@ -2125,7 +2125,7 @@ MusicNotesTbl:
 ;numbers below divide more evenly.
 
 NoteLengthsTbl:
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     ;Used by power up music and Kraid area music.
     @4:
         .byte $04                       ;About    1/16 seconds ($B0)
@@ -2285,7 +2285,7 @@ InitializeMusic:
     rts
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $10, $07, $0E, $1C, $38, $70, $2A, $54, $15, $12, $02, $03, $20, $2C, $B4, $AD
     .byte $4D, $06, $8D, $8D, $06, $AD, $5E, $06, $A8, $B9, $2A, $BC, $A8, $A2, $00, $B9
     .byte $61, $BD, $9D, $2B, $06, $C8, $E8, $8A, $C9, $0D, $D0, $F3, $A9, $01, $8D, $40

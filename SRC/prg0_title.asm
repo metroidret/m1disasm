@@ -2918,7 +2918,7 @@ UnusedIntroRoutine8: ;($94DA)
     rts
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -3425,7 +3425,7 @@ L9AE4:
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
     lda #sfxMulti_EndMusic          ;Initiate end game music.
     sta MultiSFXFlag                ;
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         ;Loads Timer3 with a delay of 960 frames (16 seconds).
         lda #$60
     .elif BUILDTARGET == "NES_PAL"
@@ -3456,7 +3456,7 @@ ShowEndSamus:
         rts
 
     L9B26:
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         ;After 160 frames have passed (2.6 seconds), write end message.
         cmp #$50
     .elif BUILDTARGET == "NES_PAL"
@@ -3527,7 +3527,7 @@ SamusWave:
     ;If 160 frame timer from previous routine has not expired, branch(waves for 2.6 seconds).
     lda Timer3
     bne L9BA2
-    .if BUILDTARGET == "NES_NTSC"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
         ;Load Timer3 with 160 frame delay (2.6 seconds).
         lda #$10
     .elif BUILDTARGET == "NES_PAL"
@@ -3585,7 +3585,7 @@ EndFadeOut:
     lda PalDataPending              ;This creates the fade out effect.
     cmp #$0C                        ;
     bne L9BEF                       ;
-        .if BUILDTARGET == "NES_NTSC"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
             ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
             lda #$10
         .elif BUILDTARGET == "NES_PAL"
@@ -4710,7 +4710,7 @@ CopyMap:
     rts
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
     .byte $22, $56, $03, $2B, $74, $37, $0D, $3F, $5F, $7D, $7F, $7F, $5F, $3F, $0F, $68
     .byte $F6, $BC, $5E, $3C, $DE, $7C, $F0, $FC, $DE, $FE, $FE, $FE, $FE, $FC, $F0, $00
@@ -4801,14 +4801,14 @@ CopyMap:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/end.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/end.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $80, $40, $20, $10, $88, $00, $00, $00, $00, $00, $00, $00, $80, $04, $00, $02
     .byte $02, $00, $00, $00, $00, $07, $03, $03, $03, $01, $00, $00, $00, $84, $C4, $42
     .byte $62, $21, $31, $11, $11, $80, $C0, $C0, $E0, $E0, $F0, $F0, $F0, $00, $00, $00
@@ -4847,14 +4847,14 @@ CopyMap:
     .byte $17
 .endif
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .include "songs/ntsc/intro.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/intro.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
     .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
     .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
@@ -4891,7 +4891,7 @@ CopyMap:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
     .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B230 force
