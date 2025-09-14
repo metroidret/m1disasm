@@ -29,11 +29,19 @@
 
 ; 8D60 - Kraid Sprite CHR
 GFX_KraidSprites:
-    .incbin "kraid/sprite_tiles.chr"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+        .incbin "kraid/sprite_tiles.chr"
+    .elif BUILDTARGET == "NES_MZMJP"
+        .ds $400, $00
+    .endif
 
 ; 9160 - Ridley Sprite CHR
 GFX_RidleySprites:
-    .incbin "ridley/sprite_tiles.chr"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+        .incbin "ridley/sprite_tiles.chr"
+    .elif BUILDTARGET == "NES_MZMJP"
+        .ds $400, $00
+    .endif
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -2193,20 +2201,20 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .include "songs/ntsc/escape.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/escape.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .include "songs/ntsc/mthr_brn_room.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/mthr_brn_room.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .byte $2B, $3B, $1B, $5A, $D0, $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0
     .byte $2C, $23, $20, $20, $30, $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30
     .byte $1F, $80, $C0, $C0, $60, $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00
@@ -2222,7 +2230,7 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B230 force

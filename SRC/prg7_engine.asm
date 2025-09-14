@@ -268,7 +268,7 @@ NMI:
         jsr ReadJoyPads
     LC103:
     ;($B3B4)Update music and SFX.
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         jsr SoundEngine
     .elif BUILDTARGET == "NES_PAL"
         jsr GotoSoundEngine
@@ -1862,7 +1862,7 @@ SamusInit:
     ;SamusIntro will be executed next frame.
     lda #_id_SamusIntro.b
     sta MainRoutine
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         ;440 frames to fade in Samus(7.3 seconds).
         lda #$2C
     .elif BUILDTARGET == "NES_PAL"
@@ -1933,7 +1933,7 @@ GameEngine:
         lda #$00                        ;
         sta MiniBossKillDelayFlag       ;Reset delay indicators.
         sta PowerUpDelayFlag            ;
-        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
             ;Set timer for 240 frames(4 seconds).
             lda #$18
         .elif BUILDTARGET == "NES_PAL"
@@ -6445,7 +6445,7 @@ AddOneTank:
     ;Y coord-1.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         lda #$17
-    .elif BUILDTARGET == "NES_MZMUS"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         lda #$15
     .endif
     sta SpriteRAM.0.y,x
@@ -6522,7 +6522,7 @@ DataDisplayTbl:
         .byte $2B,$FF,$01,$38           ;Lower missile digit.
         .byte $2B,$5E,$00,$18           ;Left half of missile.
         .byte $2B,$5F,$00,$20           ;Right half of missile.
-    .elif BUILDTARGET == "NES_MZMUS"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .byte $2D,$FF,$01,$28           ;Upper missile digit.
         .byte $2D,$FF,$01,$30           ;Middle missile digit.
         .byte $2D,$FF,$01,$38           ;Lower missile digit.
@@ -12327,7 +12327,7 @@ TileBlastAnim7:  .byte $07,$06,$0A,$FE ; respawning tile #$74
 TileBlastAnim8:  .byte $07,$06,$0B,$FE ; respawning tile #$78
 TileBlastAnim9:  .byte $07,$06,$08,$FE ; respawning tile #$90
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .byte $00, $00
 .elif BUILDTARGET == "NES_PAL"
     .byte $01, $02
@@ -12344,7 +12344,12 @@ ROMFIXED_RESET:
 
 .section "ROM Bank $007 - Vectors" bank 7 slot "ROMFixedSlot" orga $FFFA force
     .word NMI                       ;($C0D9)NMI vector.
-    .word ROMFIXED_RESET            ;($FFB0)Reset vector.
-    .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+        .word ROMFIXED_RESET            ;($FFB0)Reset vector.
+        .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
+    .elif BUILDTARGET == "NES_MZMJP"
+        .word $FFFF
+        .word $FFFF
+    .endif
 .ends
 

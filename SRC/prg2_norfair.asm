@@ -29,11 +29,19 @@
 
 ;Norfair enemy tile patterns.
 GFX_NorfairSprites:
-    .incbin "norfair/sprite_tiles.chr"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+        .incbin "norfair/sprite_tiles.chr"
+    .elif BUILDTARGET == "NES_MZMJP"
+        .ds $400, $00
+    .endif
 
 ;Tourian enemy tile patterns.
 GFX_TourianSprites:
-    .incbin "tourian/sprite_tiles.chr"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+        .incbin "tourian/sprite_tiles.chr"
+    .elif BUILDTARGET == "NES_MZMJP"
+        .ds $400, $00
+    .endif
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -749,14 +757,14 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .include "songs/ntsc/norfair.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/norfair.asm"
 .endif
 
 ;Unused. (B099)
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .byte $B9, $30, $3A, $3E, $B6, $42, $B9, $42, $3E, $42, $B3, $44, $B2, $3A, $B9, $3A
     .byte $44, $48, $B4, $4C, $B3, $48, $46, $B6, $48, $B9, $4E, $4C, $48, $B3, $4C, $B2
     .byte $44, $B9, $44, $4C, $52, $B4, $54, $54, $C4, $B4, $02, $FF, $C3, $B2, $26, $B9
@@ -813,7 +821,7 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .section "ROM Bank $002 - Music Engine" bank 2 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $002 - Music Engine" bank 2 slot "ROMSwitchSlot" orga $B230 force
