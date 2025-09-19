@@ -685,7 +685,7 @@ PPUString_DrawIntroBackground:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         PPUString $2227, \
             " PUSH START BUTTON   "
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         PPUString $2227, \
             "    PRESS START      "
     .endif
@@ -1348,7 +1348,12 @@ RTS_8ABC:
     rts
 
 ScreenFlashPalTbl:
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
     .byte $11, $01, $11, $01, $11, $11, $01, $11, $01, $FF
+.elif BUILDTARGET == "NES_CNSUS"
+    .byte $11, $11, $11, $01, $01, $01, $01, $01, $01, $FF
+.endif
+
 
 ;----------------------------------[ Intro star palette routines ]-----------------------------------
 
@@ -2142,7 +2147,12 @@ StartContinueScreen1B:
     jsr PreparePPUProcess_          ;($9449)Clears screen and writes "START CONTINUE".
     ldy #$00                        ;
     sty StartContinue               ;Set selection sprite at START.
-    lda #$0D                        ;
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        lda #$0D
+    .elif BUILDTARGET == "NES_CNSUS"
+        NES_CNSUS_IllegalOpcode42
+        .byte $0D
+    .endif
     sta PalDataPending              ;Change palette and title routine.
     lda #_id_ChooseStartContinue.b  ;Next routine is ChooseStartContinue.
     sta TitleRoutine                ;
@@ -2590,14 +2600,19 @@ DisplayPassword:
     lda #$13                        ;
     sta PalDataPending              ;Change palette.
     inc TitleRoutine                ;
-    jmp ScreenOn                    ;($C447)Turn screen on.
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        jmp ScreenOn                    ;($C447)Turn screen on.
+    .elif BUILDTARGET == "NES_CNSUS"
+        NES_CNSUS_IllegalOpcode42
+        .word ScreenOn
+    .endif
 
 L937F:
     ;Information below is for above routine to display "PASS WORD" on the screen.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         PPUString $214B, \
             "PASS WORD"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         PPUString $214B, \
             " PASSWORD"
     .endif
@@ -2613,7 +2628,13 @@ L937F:
 WaitForSTART:
     ;Waits for START to be ressed proceed past the GAME OVER screen.
     lda Joy1Change
-    and #BUTTON_START
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        and #BUTTON_START
+    .elif BUILDTARGET == "NES_CNSUS"
+        ;START has no effect
+        NES_CNSUS_IllegalOpcode42
+        .byte BUTTON_START
+    .endif
     ;If start not pressed, branch.
     beq @RTS
         ;Check if password is correct.
@@ -2929,7 +2950,7 @@ UnusedIntroRoutine8: ;($94DA)
     rts
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -3260,7 +3281,7 @@ L99E3:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         PPUString $2088, \
             "PASS WORD PLEASE"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         PPUString $20A8, \
             "PASSWORD PLEASE "
     .endif
@@ -3441,7 +3462,7 @@ L9AE4:
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
     lda #sfxMulti_EndMusic          ;Initiate end game music.
     sta MultiSFXFlag                ;
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Loads Timer3 with a delay of 960 frames (16 seconds).
         lda #$60
     .elif BUILDTARGET == "NES_PAL"
@@ -3472,7 +3493,7 @@ ShowEndSamus:
         rts
 
     L9B26:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;After 160 frames have passed (2.6 seconds), write end message.
         cmp #$50
     .elif BUILDTARGET == "NES_PAL"
@@ -3543,7 +3564,7 @@ SamusWave:
     ;If 160 frame timer from previous routine has not expired, branch(waves for 2.6 seconds).
     lda Timer3
     bne L9BA2
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Load Timer3 with 160 frame delay (2.6 seconds).
         lda #$10
     .elif BUILDTARGET == "NES_PAL"
@@ -3601,7 +3622,7 @@ EndFadeOut:
     lda PalDataPending              ;This creates the fade out effect.
     cmp #$0C                        ;
     bne L9BEF                       ;
-        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
             ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
             lda #$10
         .elif BUILDTARGET == "NES_PAL"
@@ -4726,49 +4747,13 @@ CopyMap:
     rts
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-    .byte $00, $40, $90, $D0, $08, $5C, $0C, $00, $00, $C0, $70, $F8, $FC, $F4, $FC, $10
-    .byte $22, $56, $03, $2B, $74, $37, $0D, $3F, $5F, $7D, $7F, $7F, $5F, $3F, $0F, $68
-    .byte $F6, $BC, $5E, $3C, $DE, $7C, $F0, $FC, $DE, $FE, $FE, $FE, $FE, $FC, $F0, $00
-    .byte $00, $7F, $80, $80, $FF, $7F, $00, $00, $7F, $80, $7F, $FF, $FF, $7F, $00, $00
-    .byte $00, $FC, $01, $03, $FF, $FE, $00, $00, $FE, $03, $FF, $FF, $FF, $FE, $00, $00
-    .byte $10, $20, $20, $00, $20, $00, $00, $3C, $42, $81, $81, $81, $81, $42, $3C, $7F
-    .byte $7F, $3F, $1F, $80, $0F, $08, $88, $12, $80, $C0, $E0, $E0, $EF, $E8, $E8, $FC
-    .byte $FC, $FC, $F8, $1C, $DC, $58, $5C, $48, $04, $0C, $18, $1C, $DC, $18, $1C, $0F
-    .byte $00, $9F, $3F, $7F, $DB, $00, $00, $E0, $E0, $FF, $FF, $FF, $DB, $00, $00, $DC
-    .byte $18, $EC, $F4, $F8, $6C, $00, $00, $1C, $18, $FC, $FC, $FC, $6C, $00, $00, $FF
-    .byte $FF, $C0, $C0, $CF, $CB, $CC, $CC, $00, $00, $1F, $3F, $3F, $38, $3B, $3B, $FC
-    .byte $FC, $0C, $0C, $CC, $4C, $CC, $CC, $00, $04, $EC, $FC, $FC, $3C, $BC, $BC, $CB
-    .byte $CF, $C0, $C0, $FF, $FF, $00, $00, $3B, $30, $3F, $1F, $7F, $FF, $00, $00, $4C
-    .byte $CC, $0C, $0C, $FC, $FC, $00, $00, $3C, $3C, $FC, $EC, $FC, $FC, $00, $00, $FE
-    .byte $82, $82, $82, $82, $FE, $00, $00, $00, $7E, $56, $56, $7E, $FE, $00, $00, $20
-    .byte $00, $00, $18, $20, $00, $00, $18, $1C, $F7, $3C, $18, $1C, $F7, $3C, $18, $E2
-    .byte $80, $10, $20, $00, $00, $80, $00, $E2, $98, $2C, $5E, $7E, $3C, $98, $00, $7E
-    .byte $00, $7E, $00, $7E, $00, $7E, $00, $6E, $00, $6E, $00, $6E, $00, $6E, $00, $10
-    .byte $F4, $08, $04, $C5, $24, $23, $05, $E8, $F8, $0E, $E6, $F7, $37, $2E, $FD, $00
-    .byte $5F, $20, $48, $D7, $88, $18, $80, $3F, $3F, $E0, $C7, $CF, $B8, $98, $7F, $F8
-    .byte $10, $10, $10, $D7, $08, $00, $EF, $F8, $10, $30, $B7, $F7, $30, $DF, $EF, $FF
-    .byte $00, $08, $08, $EF, $08, $10, $EF, $FF, $00, $18, $DB, $FF, $38, $F7, $EF, $FF
-    .byte $7F, $3F, $5F, $4F, $07, $03, $01, $00, $B0, $C0, $E0, $F0, $F8, $FC, $FE, $FE
-    .byte $FE, $FE, $FA, $FA, $FE, $FE, $FE, $00, $1A, $06, $0A, $1A, $3E, $7E, $FE, $01
-    .byte $03, $07, $4F, $5F, $27, $7F, $00, $FF, $FF, $FF, $FF, $FF, $E7, $FF, $00, $7E
-    .byte $BE, $DA, $EA, $F6, $CA, $FC, $00, $FE, $FE, $FA, $FA, $FE, $CE, $FE, $00, $CF
-    .byte $BF, $70, $60, $C4, $C8, $C0, $C0, $47, $BF, $70, $27, $4B, $57, $5F, $DF, $CC
-    .byte $F4, $38, $18, $0C, $0C, $0C, $0C, $CC, $F4, $38, $98, $CC, $EC, $EC, $EC, $C0
-    .byte $C0, $60, $70, $BF, $CF, $00, $00, $DF, $CF, $67, $70, $BF, $4F, $00, $00, $0C
-    .byte $0C, $18, $38, $F4, $CC, $00, $00, $EC, $CC, $98, $38, $F4, $CC, $00, $00, $FF
-    .byte $FF, $C0, $DF, $D0, $D0, $DF, $C0, $00, $00, $3F, $3F, $35, $35, $20, $3F, $FC
-    .byte $FC, $0C, $EC, $2C, $2C, $EC, $0C, $00, $04, $FC, $FC, $5C, $5C, $1C, $FC, $FF
-    .byte $00, $00, $E4, $00, $CF, $00, $00, $7F, $00, $00, $E3, $00, $BF, $00, $00, $FC
-    .byte $00, $00, $F9, $00, $87, $00, $00, $FC, $00, $00, $F7, $00, $67, $00, $00, $FE
-    .byte $02, $02, $02, $FE, $00, $00, $7F, $00, $FE, $0E, $FE, $FE, $00, $00, $00, $7F
-    .byte $40, $40, $40, $7F, $00, $00, $FE, $00, $3F, $30, $3F, $7F, $00, $00, $00, $40
-    .byte $40, $40, $7F, $00, $00, $00, $FF, $3F, $30, $3F, $7F, $00, $00, $FF, $FF, $02
-    .byte $02, $02, $FE, $00, $00, $00, $FF, $FE, $0E, $FE, $FE, $00, $00, $FF, $FF, $FF
-    .byte $FF, $C0, $D0, $C0, $C0, $C0, $C0, $00, $00, $3F, $27, $3F, $3F, $3F, $3F, $FC
-    .byte $FC, $0C, $4C, $0C, $0C, $0C, $0C, $00, $04, $FC, $9C, $FC, $FC, $FC, $FC, $C0
-    .byte $C0, $D0, $C0, $FF, $FF, $00, $00, $3F, $3F, $27, $3F, $3F, $7F, $00, $00, $0C
-    .byte $0C, $4C, $0C, $FC, $FC, $00, $00, $FC, $FC, $9C, $FC, $FC, $FC, $00, $00
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .incbin "norfair/bg_chr_2.chr" skip $11
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        .incbin "common_chr/bg_boss_areas.chr" read $240
+    .elif BUILDTARGET == "NES_CNSUS"
+        .incbin "common_chr/bg_boss_areas_cnsus.chr" read $240
+    .endif
 .elif BUILDTARGET == "NES_PAL"
     .byte $A9, $01, $85, $10, $A5, $05, $29, $01, $85, $05, $A0, $17, $B9, $00, $03, $30
     .byte $4F, $F0, $66, $C9, $03, $90, $62, $A5, $10, $D0, $49, $B9, $00, $03, $C9, $0F
@@ -4817,7 +4802,7 @@ CopyMap:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/end.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/end.asm"
@@ -4825,22 +4810,10 @@ CopyMap:
 
 ;Unused tile patterns.
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-    .byte $80, $40, $20, $10, $88, $00, $00, $00, $00, $00, $00, $00, $80, $04, $00, $02
-    .byte $02, $00, $00, $00, $00, $07, $03, $03, $03, $01, $00, $00, $00, $84, $C4, $42
-    .byte $62, $21, $31, $11, $11, $80, $C0, $C0, $E0, $E0, $F0, $F0, $F0, $00, $00, $00
-    .byte $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $03, $03, $11, $11, $31
-    .byte $21, $63, $62, $C4, $84, $F0, $F0, $F0, $E0, $E0, $E0, $C0, $80, $01, $13, $16
-    .byte $2C, $78, $B3, $EC, $F0, $07, $1F, $1E, $3C, $78, $F0, $E0, $00, $08, $10, $20
-    .byte $40, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $82, $CC, $4E
-    .byte $4C, $40, $4C, $4C, $4C, $82, $CC, $CE, $CC, $C0, $CC, $CC, $CC, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $01, $03, $06, $0C, $18, $00, $00, $00, $00, $00, $01, $03, $07, $0F, $3C, $E0
-    .byte $84, $08, $30, $60, $E0, $00, $02, $1F, $7A, $F4, $C8, $98, $10, $19, $31, $33
-    .byte $63, $63, $67, $E7, $E7, $06, $0E, $0C, $1C, $1C, $18, $18, $18, $C0, $C0, $80
-    .byte $80, $80, $00, $00, $00, $30, $30, $60, $60, $60, $E0, $E0, $E0, $C7, $C7, $C7
-    .byte $C7, $C7, $C7, $C7, $C7, $38, $38, $38, $38, $38, $38, $38, $38, $20, $20, $20
-    .byte $20, $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
+    .incbin "tourian/bg_chr.chr" skip $263 read $FD
+.elif BUILDTARGET == "NES_CNSUS"
+    .incbin "tourian/bg_chr.chr" skip $263 read $D
+    .incbin "tourian/bg_chr_cnsus.chr" skip $270 read $F0
 .elif BUILDTARGET == "NES_PAL"
     .byte $02, $A8, $B9, $D9, $93, $85, $7A, $B9, $DA, $93, $85, $7B, $BD, $4A, $F6, $8D
     .byte $61, $04, $A9, $00, $85, $7D, $8D, $12, $04, $60, $85, $7D, $0A, $A8, $B1, $7A
@@ -4863,7 +4836,7 @@ CopyMap:
     .byte $17
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/intro.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/intro.asm"
@@ -4871,19 +4844,9 @@ CopyMap:
 
 ;Unused tile patterns.
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-    .byte $E0, $E0, $F0, $00, $00, $00, $00, $00, $00, $00, $00, $21, $80, $40, $02, $05
-    .byte $26, $52, $63, $00, $00, $00, $06, $07, $67, $73, $73, $FF, $AF, $2F, $07, $0B
-    .byte $8D, $A7, $B1, $00, $00, $00, $00, $00, $80, $80, $80, $F8, $B8, $F8, $F8, $F0
-    .byte $F0, $F8, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $07, $07, $07
-    .byte $03, $03, $01, $00, $00, $00, $00, $00, $00, $00, $80, $FF, $C7, $83, $03, $C7
-    .byte $CF, $FE, $EC, $00, $30, $78, $F8, $30, $00, $01, $12, $F5, $EA, $FB, $FD, $F9
-    .byte $1E, $0E, $44, $07, $03, $03, $01, $01, $E0, $10, $48, $2B, $3B, $1B, $5A, $D0
-    .byte $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0, $2C, $23, $20, $20, $30
-    .byte $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30, $1F, $80, $C0, $C0, $60
-    .byte $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
-    .byte $00, $00, $00, $80, $80, $C0, $78, $4C, $C7, $80, $80, $C4, $A5, $45, $0B, $1B
-    .byte $03, $03, $00, $3A, $13, $31, $63, $C3, $83, $03, $04, $E6, $E6, $C4, $8E, $1C
-    .byte $3C, $18, $30, $E8, $E8, $C8, $90, $60, $00, $00, $00
+    .incbin "tourian/bg_chr.chr" skip $495 read $CB
+.elif BUILDTARGET == "NES_CNSUS"
+    .incbin "tourian/bg_chr_cnsus.chr" skip $495 read $CB
 .elif BUILDTARGET == "NES_PAL"
     .byte $3B, $C8, $48, $B1, $3B, $85, $3C, $68, $85, $3B, $A0, $00, $4C, $54, $F0, $E6
     .byte $3B, $D0, $02, $E6, $3C, $85, $74, $0A, $AA, $90, $15, $BD, $0B, $99, $85, $75
@@ -4907,7 +4870,7 @@ CopyMap:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $000 - Music Engine" bank 0 slot "ROMSwitchSlot" orga $B230 force

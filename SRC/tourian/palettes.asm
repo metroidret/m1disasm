@@ -67,8 +67,13 @@ Palette08:
     PPUStringEnd
 
 Palette09:
-    PPUString $3F00, \
-        $20, $02, $16, $00, $20, $02, $11, $00, $20, $02, $16, $00, $20, $02, $10, $00, $20
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        PPUString $3F00, \
+            $20, $02, $16, $00, $20, $02, $11, $00, $20, $02, $16, $00, $20, $02, $10, $00, $20
+    .elif BUILDTARGET == "NES_CNSUS"
+        PPUString $3F00, \
+            $00, $02, $16, $00, $00, $02, $11, $00, $00, $02, $16, $00, $00, $02, $10, $00, $00
+    .endif
     PPUStringEnd
 
 ;Time bomb explosion palette.

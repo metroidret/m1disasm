@@ -33,6 +33,8 @@ GFX_KraidSprites:
         .incbin "kraid/sprite_tiles.chr"
     .elif BUILDTARGET == "NES_MZMJP"
         .ds $400, $00
+    .elif BUILDTARGET == "NES_CNSUS"
+        .incbin "kraid/sprite_tiles_cnsus.chr"
     .endif
 
 ; 9160 - Ridley Sprite CHR
@@ -41,6 +43,8 @@ GFX_RidleySprites:
         .incbin "ridley/sprite_tiles.chr"
     .elif BUILDTARGET == "NES_MZMJP"
         .ds $400, $00
+    .elif BUILDTARGET == "NES_CNSUS"
+        .incbin "ridley/sprite_tiles_cnsus.chr"
     .endif
 
 ;----------------------------------------------------------------------------------------------------
@@ -1130,8 +1134,14 @@ UpdateMotherBrainFlashDelay:
     L9E4B:
     ; save bit 1 of delay to y
     lda MotherBrainFlashDelay
-    and #$02
-    lsr
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+        and #$02
+        lsr
+    .elif BUILDTARGET == "NES_CNSUS"
+        NES_CNSUS_IllegalOpcode42
+        nop
+        nop
+    .endif
     tay
     rts
 
@@ -2201,20 +2211,20 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/escape.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/escape.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/mthr_brn_room.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/mthr_brn_room.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $2B, $3B, $1B, $5A, $D0, $D1, $C3, $C3, $3B, $3B, $9B, $DA, $D0, $D0, $C0, $C0
     .byte $2C, $23, $20, $20, $30, $98, $CF, $C7, $00, $00, $00, $00, $00, $00, $00, $30
     .byte $1F, $80, $C0, $C0, $60, $70, $FC, $C0, $00, $00, $00, $00, $00, $00, $00, $00
@@ -2230,7 +2240,7 @@ TileBlastFrame10:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $003 - Music Engine" bank 3 slot "ROMSwitchSlot" orga $B230 force
