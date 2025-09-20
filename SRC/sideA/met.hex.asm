@@ -1,79 +1,121 @@
 
-LD000:
+METHEX_ReadJoyPads: ;($D000)
     ldx #$00
     stx $01
-    jsr LD00B
+    jsr METHEX_ReadOnePad
     ldx $2B
     inc $01
-LD00B:
+
+METHEX_ReadOnePad:
+    ;These lines strobe the joystick to enable the program to read the buttons pressed.
     ldy #$01
-    sty $4016
+    sty JOY1
     dey
-    sty $4016
+    sty JOY1
+    ;Do 8 buttons.
     ldy #$08
-LD016:
-    pha
-    lda $4016,x
-    sta $00
-    lsr a
-    ora $00
-    lsr a
-    pla
-    rol a
-    dey
-    bne LD016
-    ldx $01
-    ldy $14,x
+    @loop:
+        ;Store A.
+        pha
+        ;Read button status. Joypad 1 or 2.
+        lda JOY1,x
+        ;Store button press at location $00.
+        sta $00
+        ;Also accept button press from joypad that is plugged into the console's expansion port
+        lsr
+        ora $00
+        ;Move button press to carry bit.
+        lsr
+        ;Restore A.
+        pla
+        ;Add button press status to A.
+        rol
+        ;Loop 8 times to get status of all 8 buttons.
+        dey
+        bne @loop
+    ; a now contains the new joypad status
+    
+    ;Get joypad status of previous refresh.
+    ldx $01 ;Joypad #(0 or 1).
+    ldy Joy1Status,x
+    ;Store at $00.
     sty $00
-    sta $14,x
+    
+    ;Store current joypad status.
+    sta Joy1Status,x
+    
+    ;Branch if no buttons changed.
     eor $00
-    beq LD039
-    lda $00
-    and #$BF
-    sta $00
-    eor $14,x
-LD039:
-    and $14,x
-    sta $12,x
-    sta $16,x
+    beq @endIf_A
+        ;Remove the previous status of the B button.
+        lda $00
+        and #~BUTTON_B.b
+        sta $00
+        eor Joy1Status,x
+    @endIf_A:
+    
+    ;Save any button changes from the current frame and the last frame to the joy change addresses.
+    and Joy1Status,x
+    sta Joy1Change,x
+    ;Store any changed buttons in JoyRetrig address.
+    sta Joy1Retrig,x
+    
     ldy #$20
-    lda $14,x
+    ;Checks to see if same buttons are being pressed this frame as last frame.
+    lda Joy1Status,x
     cmp $00
-    bne LD04F
-        dec $18,x
+    ;If none, branch.
+    bne @endIf_B
+        ;Decrement RetrigDelay if same buttons pressed.
+        dec RetrigDelay1,x
         bne RTS_D051
-        sta $16,x
+        ;Once RetrigDelay=#$00, store buttons to retrigger.
+        sta Joy1Retrig,x
         ldy #$10
-    LD04F:
-    sty $18,x
+    @endIf_B:
+    ;Reset retrigger delay to #$20(32 frames) or #$10(16 frames) if already retriggering.
+    sty RetrigDelay1,x
 RTS_D051:
     rts
 
-LD052:
-    lda $FE
-    and #$E7
-LD056:
-    sta $FE
-    jsr $95A1
-LD05B:
-    lda $1A
-    beq LD05B
+
+
+METHEX_ScreenOff: ;($D052)
+    lda PPUMASK_ZP
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
+
+METHEX_WriteAndWait: ;($D056)
+    sta PPUMASK_ZP
+    jsr MAIN_ClearNMIStat
+    @loop:
+        lda NMIStatus
+        beq @loop
     rts
-    lda $FF
-    and #$F7
-    ora #$10
-    sta $FF
-    lda $FE
-    ora #$18
-    bne LD056
-    lda $FF
-    sta $2000
-    lda $FE
-    sta $2001
+
+
+
+LD060:
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_OBJ_1000.b
+    ora #PPUCTRL_BG_1000
+    sta PPUCTRL_ZP
+    lda PPUMASK_ZP
+    ora #(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
+    bne METHEX_WriteAndWait ; branch always
+
+
+
+LD06E:
+    lda PPUCTRL_ZP
+    sta PPUCTRL
+    lda PPUMASK_ZP
+    sta PPUMASK
     lda $73
-    sta $FB
-    sta $4025
+    sta FDS_CTRL_ZP
+    sta FDS_CTRL
     rts
+
+
 
 LD080:
     .byte $00, $10, $01, $18, $00, $01, $38, $01, $02, $40, $00, $09, $58, $18, $7F, $0F

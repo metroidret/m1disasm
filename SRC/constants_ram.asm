@@ -15,6 +15,7 @@ RetrigDelay2           = $19     ;The retriggering of held down buttons.
 
 NMIStatus              = $1A     ;0=NMI in progress. anything else, NMI not in progress.
 PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
+PalDataPending         = $1C     ;Pending palette data. Palette # = PalDataPending - 1.
 
 MainRoutine            = $1E
 
@@ -25,10 +26,12 @@ Timer1                 = $24     ;Decremented every frame after set.
 Timer2                 = $25     ;Decremented every frame after set.
 Timer3                 = $26     ;Decremented every 10 frames after set.
 
-RandomNumber1          = $28        ;Random numbers used-->
-RandomNumber2          = $29        ;throughout the game.
+RandomNumber1          = $28     ;Random numbers used-->
+RandomNumber2          = $29     ;throughout the game.
 
-HealthChange           = $68        ;Amount to add/subtract from Health.
+SpritePagePos          = $55     ;Index into sprite RAM used to load object sprite data.
+
+HealthChange           = $68     ;Amount to add/subtract from Health.
 ; HealthChange+1         = $69
 
 MotherBrainStatus      = $98
@@ -50,6 +53,8 @@ Health                 = $0106   ;Lower health digit in upper 4 bits.
 
 EndTimer               = $010A   ;Lower byte of end game escape timer.
 ; EndTimer+1             = $010B   ;Upper byte of end game escape timer.
+
+MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
@@ -178,6 +183,8 @@ PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F byte
 
 PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written to PPU.
 
-;
+;----------------------------------------------------------------------------------------------------
 
 SamusGear              = $B411
+
+

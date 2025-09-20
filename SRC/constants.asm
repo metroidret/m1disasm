@@ -19,6 +19,7 @@
 .STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"
 .STRINGMAPTABLE charmap_title "SRC/title.tbl"
 .STRINGMAPTABLE charmap_savemenu "SRC/savemenu.tbl"
+.STRINGMAPTABLE charmap_gameover "SRC/gameover.tbl"
 .STRINGMAPTABLE charmap_ending "SRC/ending.tbl"
 
 

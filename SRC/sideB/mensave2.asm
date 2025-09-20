@@ -12,11 +12,12 @@ LC3F0:
     jsr $B310
     jmp LC425
 
+; "Aメンヲ セットシテクダサイ" message (switch to disk side A)
 PPUString_C40B:
-    PPUString $21D4, undefined, \
-        $F3
-    PPUString $21E9, undefined, \
-        $A6, $A7, $A8, $A9, $FF, $AA, $AB, $AC, $AD, $AE, $AF, $F2, $F4, $F5
+    PPUString $21D4, charmap_gameover, \
+        "゛"
+    PPUString $21E9, charmap_gameover, \
+        "aメンヲ セットシテクタサイ"
     PPUStringRepeat $23D0, undefined, $00, $20
     PPUStringEnd
 
@@ -212,7 +213,7 @@ LC575:
     lda #$00
     cmp $B419
     bcc LC589
-    lda $C597,y
+    lda LC598-1,y
     cmp $B418
     bcc LC589
 LC584:
@@ -230,5 +231,7 @@ LC58F:
     cpy #$0C
     bne LC58F
     rts
+
+LC598:
     .byte $3C, $0A, $04, $02, $0A, $00, $B0, $07
 

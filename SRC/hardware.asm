@@ -187,6 +187,7 @@ FDSAUDIO_MODCNTR_READ  = $4097
 
 ;FDS BIOS routines
 
+FDSBIOS_DisPFObj = $E161
 FDSBIOS_EnPFObj = $E16B
 
 FDSBIOS_LoadFiles = $E1F8
@@ -203,6 +204,8 @@ FDSBIOS_GetNumFiles = $E484
 FDSBIOS_SetNumFiles = $E492
 FDSBIOS_FileMatchTest = $E4A0
 FDSBIOS_SkipFiles = $E4DA
+
+FDSBIOS_VRAMFill = $EA84
 
 ;----------------------------------------------------------------------------------------------------
 

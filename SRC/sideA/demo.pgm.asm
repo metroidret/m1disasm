@@ -57,7 +57,7 @@ DEMO_RESET: ;($6821)
         bne L683A
 L684F:
     jsr L69DF
-    jsr EraseAllSprites
+    jsr DEMO_EraseAllSprites
     ldy #$00
     sty PPUSCROLL
     sty PPUSCROLL
@@ -76,7 +76,7 @@ L684F:
 
 
 L6874:
-    jsr UpdateTimer
+    jsr DEMO_UpdateTimer
     jsr L695F
     inc $27
     lda #$00
@@ -144,7 +144,7 @@ DEMO_NMI: ;($68BD)
     lda $1A
     bne L694E
     jsr L6A45
-    jsr CheckPPUWrite
+    jsr DEMO_CheckPPUWrite
     jsr WritePPUCtrl
     jsr L6A71
     lda $2002
@@ -159,7 +159,7 @@ DEMO_NMI: ;($68BD)
     sta $2006
     lda $3F
     sta $FD
-    jsr WriteScroll
+    jsr DEMO_WriteScroll
     lda $43
     beq L694E
     L691E:
@@ -187,7 +187,7 @@ L693D:
     beq L693D
     lda $40
     sta $FD
-    jsr WriteScroll
+    jsr DEMO_WriteScroll
     jmp L6951
 
 
@@ -328,7 +328,7 @@ HiPPUTable: ;($6A18)
 
 
 
-EraseAllSprites: ;($6A1C)
+DEMO_EraseAllSprites: ;($6A1C)
     ldy #>SpriteRAM.b
     sty $01
     ldy #<SpriteRAM.b
@@ -389,22 +389,23 @@ L6A5B:
 L6A6A:
     stx $00
     sty $01
-    jmp ProcessPPUString
+    jmp DEMO_ProcessPPUString
 
 
 ;ReadJoyPads
 L6A71:
     lda $59
-    beq L6A78
+    beq DEMO_ReadJoyPads
     jmp L6ACA
-L6A78:
+
+DEMO_ReadJoyPads: ;($6A78)
     ldx #$00
     stx $01
-    jsr ReadOnePad
+    jsr DEMO_ReadOnePad
     ldx $2B
     inc $01
 
-ReadOnePad:
+DEMO_ReadOnePad:
     ;These lines strobe the joystick to enable the program to read the buttons pressed.
     ldy #$01
     sty JOY1
@@ -480,12 +481,12 @@ RTS_6AC9:
 
 L6ACA:
     ldy #$01
-    sty $4016
+    sty JOY1
     dey
-    sty $4016
+    sty JOY1
     ldy #$04
     L6AD5:
-        lda $4016
+        lda JOY1
         dey
         bne L6AD5
     and #$03
@@ -496,7 +497,7 @@ L6ACA:
     bne RTS_6AC9 ; branch always
 
 
-UpdateTimer:
+DEMO_UpdateTimer:
     ; Default to only decrementing Timer2 and Timer1.
     ldx #$01
     ; branch if timer delay is not zero
@@ -553,7 +554,7 @@ DEMO_ChooseRoutine: ;($6AFA)
 
 
 
-WriteScroll: ;($6B1C)
+DEMO_WriteScroll: ;($6B1C)
     ;Reset scroll register flip/flop
     lda PPUSTATUS
     ;X and Y scroll offsets are loaded serially.
@@ -564,7 +565,7 @@ WriteScroll: ;($6B1C)
     rts
 
 
-AddYToPtr00: ;($6B2A)
+DEMO_AddYToPtr00: ;($6B2A)
     tya
     clc
     adc $00
@@ -587,15 +588,19 @@ AddYToPtr02: ;($6B35)
     rts
 
 
-L6B40:
+
+AddYToPtr04: ;($6B40)
     tya
     clc
     adc $04
     sta $04
     bcc RTS_6B3F
-    inc $05
+        inc $05
     rts
-L6B4B:
+
+
+
+TwosComplement:
     eor #$FF
     clc
     adc #$01
@@ -603,11 +608,11 @@ L6B4B:
 
 
 
-Adiv32: ;($6B51)
+DEMO_Adiv32: ;($6B51)
     lsr a
-Adiv16: ;($6B52)
+DEMO_Adiv16: ;($6B52)
     lsr a
-Adiv8: ;($6B53)
+DEMO_Adiv8: ;($6B53)
     lsr a
     lsr a
     lsr a
@@ -615,11 +620,11 @@ Adiv8: ;($6B53)
 
 
 
-Amul32: ;($6B57)
+DEMO_Amul32: ;($6B57)
     asl a
-Amul16: ;($6B58)
+DEMO_Amul16: ;($6B58)
     asl a
-Amul8: ;($6B59)
+DEMO_Amul8: ;($6B59)
     asl a
     asl a
     asl a
@@ -627,7 +632,7 @@ Amul8: ;($6B59)
 
 
 
-CheckPPUWrite: ;($6B5D)
+DEMO_CheckPPUWrite: ;($6B5D)
     ;If zero no PPU data to write, branch to exit.
     lda PPUDataPending
     beq RTS_6B76
@@ -638,7 +643,7 @@ CheckPPUWrite: ;($6B5D)
     lda #>PPUDataString.b
     sta $01
     ;($C30C)write it to PPU.
-    jsr ProcessPPUString
+    jsr DEMO_ProcessPPUString
     ;PPU data string has been written so the data stored for the write is now erased.
     lda #$00
     sta PPUStrIndex
@@ -649,7 +654,7 @@ RTS_6B76:
 
 
 
-PPUWrite: ;($6B77)
+DEMO_PPUWrite: ;($6B77)
     sta $2006
     iny
     lda ($00),y
@@ -673,16 +678,16 @@ L6B93:
     dex
     bne L6B90
     iny
-    jsr AddYToPtr00
+    jsr DEMO_AddYToPtr00
 
 
 
-ProcessPPUString: ;($6B9F)
+DEMO_ProcessPPUString: ;($6B9F)
     ldx $2002
     ldy #$00
     lda ($00),y
-    bne PPUWrite
-    jmp WriteScroll
+    bne DEMO_PPUWrite
+    jmp DEMO_WriteScroll
 
 
 
@@ -708,7 +713,7 @@ EraseTile:
     and #$0F
     sta $05
     lda ($02),y
-    jsr Adiv16
+    jsr DEMO_Adiv16
     sta $04
     ldx PPUStrIndex
     L6BD0:
@@ -725,10 +730,10 @@ EraseTile:
             jsr WritePPUByte
             dec $06
             bne L6BE1
-        stx $07A0
+        stx PPUStrIndex
         sty $06
         ldy #$20
-        jsr AddYToPtr00
+        jsr DEMO_AddYToPtr00
         ldy $06
         dec $04
         bne L6BD0
@@ -794,7 +799,7 @@ WritePaletteStringByte:
     bpl L6C4E
         ldy #$20
     L6C4E:
-    jsr AddYToPtr00
+    jsr DEMO_AddYToPtr00
     ldy $06
     dec $05
     bne WritePaletteStringByte
@@ -878,7 +883,7 @@ DEMO_ExtractNibbles:
 
 
 
-DEMO_WaitNMIPass:
+DEMO_WaitNMIPass: ;($6CC5)
     jsr DEMO_ClearNMIStat
     L6CC8:
         lda NMIStatus
@@ -887,18 +892,18 @@ DEMO_WaitNMIPass:
 
 
 
-DEMO_ClearNMIStat:
+DEMO_ClearNMIStat: ;($6CCD)
     lda #$00
     sta NMIStatus
     rts
 
 
 
-ScreenOff:
+DEMO_ScreenOff: ;($6CD2)
     lda PPUMASK_ZP
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
 
-WriteAndWait:
+DEMO_WriteAndWait: ;($6CD6)
     sta $FE
     
     jsr DEMO_ClearNMIStat
@@ -915,7 +920,7 @@ L6CE0:
     sta $2000
     lda $FE
     ora #$1E
-    bne WriteAndWait ; branch always
+    bne DEMO_WriteAndWait ; branch always
 
 
 
@@ -1002,7 +1007,7 @@ L6999_6D69:
     lda #$10
     sta $F0
     sta $0684
-    jsr ScreenOff
+    jsr DEMO_ScreenOff
     jsr L69DF
     ldx #<L7B34.b
     ldy #>L7B34.b
@@ -1420,7 +1425,7 @@ L6999_6FD1:
 
 
 L6999_701C:
-    jsr ScreenOff
+    jsr DEMO_ScreenOff
     inc $1F
     rts
 
@@ -1462,7 +1467,7 @@ L7051:
     beq L707E
     lda $0107
     tay
-    jsr Adiv16
+    jsr DEMO_Adiv16
     jsr L70A9
     jsr L70B0
     beq L707E
@@ -1472,7 +1477,7 @@ L7051:
     jsr L70B0
     beq L707E
     lda $0106
-    jsr Adiv16
+    jsr DEMO_Adiv16
     jsr L70A9
 L707E:
     ldy $0422
@@ -1592,7 +1597,7 @@ L7118:
     lda #$20
     sta $040D
     lda $040C
-    jsr Amul8
+    jsr DEMO_Amul8
     bcs L712C
     ldy $040A
     cpy #$03
@@ -2305,7 +2310,7 @@ L7AEC:
     lda $02
     bcc L7AF5
     beq L7B33
-    jsr L6B4B
+    jsr TwosComplement
 L7AF5:
     sta $11
     cmp $04
@@ -2339,7 +2344,7 @@ L7B26:
     lda $02
     bcc L7B2F
     beq L7B33
-    jsr L6B4B
+    jsr TwosComplement
 L7B2F:
     sta $0F
     cmp $05
@@ -2662,7 +2667,7 @@ L81F1:
 
 L81F2:
     txa
-    jsr Adiv8
+    jsr DEMO_Adiv8
     tay
     lda $83F3,y
     sta $00
@@ -2693,7 +2698,7 @@ L8228:
     lda #$00
     sta $0489,x
     pla
-    jsr Adiv16
+    jsr DEMO_Adiv16
     jsr L8249
     sta $0486,x
     pla
@@ -2709,7 +2714,7 @@ L8249:
     cmp #$08
     bcc @RTS
     and #$07
-    jsr L6B4B
+    jsr TwosComplement
 @RTS:
     rts
 
@@ -3190,7 +3195,7 @@ L8695:
     bcc RTS_86BD
 L86B0:
     txa
-    jsr L6B4B
+    jsr TwosComplement
     tax
 L86B5:
     txa
@@ -3468,9 +3473,9 @@ L873B:
 
 
 L883B:
-    jsr ScreenOff
+    jsr DEMO_ScreenOff
     jsr L69DF
-    jsr EraseAllSprites
+    jsr DEMO_EraseAllSprites
     jmp LCF1D
 
 
@@ -3710,7 +3715,7 @@ L6999_89CE:
 
 
 L6999_89F2:
-    jsr EraseAllSprites
+    jsr DEMO_EraseAllSprites
     ldx #$30
     ldy #$58
     jsr L8C95
@@ -3988,7 +3993,7 @@ L6999_8BA5:
 
 
 L6999_8BC5:
-    jsr EraseAllSprites
+    jsr DEMO_EraseAllSprites
     ldx #$30
     ldy #$58
     jsr L8C95
@@ -4356,7 +4361,7 @@ L8E37:
 L8E39:
     stx $00
     sty $01
-    jmp ProcessPPUString
+    jmp DEMO_ProcessPPUString
 
 L8E40:
     stx $07A0
@@ -4390,7 +4395,7 @@ L8E6F:
 L8E70:
     tya
     pha
-    jsr Amul16
+    jsr DEMO_Amul16
     tay
     lda $C5EB,y
     sta $0B
@@ -4408,7 +4413,7 @@ L8E85:
 L8E90:
     tya
     pha
-    jsr Amul16
+    jsr DEMO_Amul16
     tay
     lda $C5ED,y
     sta $0B
@@ -4471,11 +4476,11 @@ L8EF0:
     adc #$0A
     sta $06
     lda $01
-    jsr Amul16
+    jsr DEMO_Amul16
     ora $06
     sta $06
     lda $03
-    jsr Amul16
+    jsr DEMO_Amul16
     ora $02
     sta $07
     rts

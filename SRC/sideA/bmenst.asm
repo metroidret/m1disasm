@@ -30,8 +30,8 @@ BMENST_RESET: ;($C000)
         iny
         bne LC019
 LC02E:
-    jsr $941D
-    jsr $6F3B
+    jsr ClearNameTables
+    jsr MAIN_EraseAllSprites
     ldy #$00
     sty PPUSCROLL
     sty PPUSCROLL
@@ -46,36 +46,40 @@ LC02E:
     sta FDS_CTRL
     sta $73
     sta FDS_CTRL_ZP
-    sta $28
-    jmp $9388
+    sta RandomNumber1
+    jmp L9388
 
 
 LC058:
-    jsr $6EE4
-    lda #<DataC06C.b
+    jsr ClearScreenData
+    lda #<PPUString_C06C.b
     sta $00
-    lda #>DataC06C.b
+    lda #>PPUString_C06C.b
     sta $01
-    jsr $94BC
-    jsr $D060
-    jmp $B310
+    jsr MAIN_ProcessPPUString
+    jsr LD060
+    jmp LB310
 
-DataC06C:
-    .byte $21, $D4, $01, $5B, $21, $E9, $0E, $0B, $4F, $5A, $24, $FF, $3B, $2D, $41, $39
-    .byte $40, $35, $3D, $38, $2F, $00
+; "Bメンヲ セットシテクダサイ" message (switch to disk side B)
+PPUString_C06C:
+    PPUString $21D4, charmap_savemenu, \
+        "゛"
+    PPUString $21E9, charmap_savemenu, \
+        "Bメンヲ セットシテクタサイ"
+    PPUStringEnd
 
 
 LC082:
     lda #$01
     sta $70
-    inc $1E
-    lda $14
+    inc MainRoutine
+    lda Joy1Status
     and #$C0
     sta $F0
     jsr LC058
-    jsr $6F3B
+    jsr MAIN_EraseAllSprites
     lda #$10
-    jmp $B261
+    jmp LB261
 
 ; is this data?
 DataC099:

@@ -3,10 +3,13 @@
 .include "macros.asm"
 
 
-.def FDSFile_Side = 0
-.def FDSFile_Number = 0
+
 .def FDSFile_Bank = 0
 
+
+; --------------------------- Disk Side A ---------------------------
+.def FDSFile_Side = 0
+.def FDSFile_Number = 0
 
 
 ; disk info block
@@ -114,6 +117,7 @@ FDSFileMacroPart3
 
 
 ; file $06 - bmenst ($C000-$C0BF)
+; Switching to disk side B
 FDSFileMacroPart1 $20
     .ascstr "BMENST", $00, $00
 FDSFileMacroPart2 $C000, $00
@@ -198,7 +202,7 @@ FDSFileMacroPart2 $C5A0, $00
 FDSFileMacroPart3
 
 
-; switch to side b of the disk
+; --------------------------- Disk Side B ---------------------------
 .redef FDSFile_Side = FDSFile_Side + 1
 .redef FDSFile_Number = 0
 
