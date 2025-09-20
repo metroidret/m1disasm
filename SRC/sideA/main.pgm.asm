@@ -76,10 +76,10 @@ CommonJump_6C3C: ;($6C3C)
     jmp L8107
 CommonJump_6C3F: ;($6C3F)
     jmp L9E4F
-CommonJump_6C42: ;($6C42)
-    jmp L7246
-CommonJump_6C45: ;($6C45)
-    jmp L9568
+CommonJump_SubtractHealth: ;($6C42)
+    jmp SubtractHealth
+CommonJump_Base10Subtract: ;($6C45)
+    jmp MAIN_Base10Subtract
 
 CrawlerMovementRoutinesTable: ;($6C48)
     .word EnemyMoveOnePixelRight-1
@@ -257,7 +257,7 @@ L6D84:
     sta $0109
     lda #$18
     ldx #$03
-    jsr L95BC
+    jsr SetTimer
 L6DA4:
     lda $0300
     cmp #$08
@@ -268,7 +268,7 @@ L6DA4:
     beq L6DBB
     lda #$0C
     ldx #$04
-    jmp L95BC
+    jmp SetTimer
 L6DBB:
     inc $1E
     rts
@@ -295,7 +295,7 @@ L6DCC:
     bpl L6DCC
     lda #$0C
     ldx #$06
-    jmp L95BC
+    jmp SetTimer
     cli
     .byte $BB
     rts
@@ -872,7 +872,7 @@ L71D2:
     sta $0308
     lda #$38
     sta $0314
-    jsr L7238
+    jsr IsSamusDead
     bne L71E4
     jmp L721A
 L71E4:
@@ -921,50 +921,70 @@ L7232:
     lda #$00
     sta $030A
     rts
-L7238:
+
+
+
+IsSamusDead:
+    ;Samus is dead. Zero flag is set.
     lda $0300
     cmp #$07
-    beq L7245
+    beq RTS_7245
     cmp #$08
-    beq L7245
+    beq RTS_7245
+    ;Samus not dead. Clear zero flag.
     cmp #$FF
-L7245:
+RTS_7245:
     rts
-L7246:
-    lda $68
-    ora $69
-    beq L7245
-    jsr L7238
-    beq L7257
-    ldy $010B
+
+
+
+SubtractHealth:
+    ;Check to see if health needs to be changed. If not, branch to exit.
+    lda HealthChange
+    ora HealthChange+1.b
+    beq RTS_7245
+    ;Samus cannot be hurt while she is dead
+    jsr IsSamusDead
+    beq GotoClearHealthChange
+    ;If end escape timer is running, Samus cannot be hurt.
+    ldy EndTimer+1
     iny
-    beq L725A
-L7257:
-    jmp LA210
-L725A:
-    lda $98
+    beq L725A ;Branch if end escape timer no
+    GotoClearHealthChange:
+        jmp ClearHealthChange
+    L725A:
+    ;If mother brain is in the process of dying, receive no damage.
+    lda MotherBrainStatus
     cmp #$03
-    bcs L7257
-    lda $B411
+    bcs GotoClearHealthChange
+    
+    ;Branch if Samus doesn't have Varia.
+    lda SamusGear
     and #$20
     beq L7273
-    lsr $68
-    lsr $69
+    ;Samus has Varia, divide damage by 2.
+    lsr HealthChange
+    lsr HealthChange+1.b
     bcc L7273
+    ;If Health+1 moved a bit into the carry flag while--> 
+    ;dividing, add #$4F to Health for proper division results.
     lda #$4F
-    adc $68
-    sta $68
+    adc HealthChange
+    sta HealthChange
+
 L7273:
-    lda $0106
+    ;Prepare to subtract from Health.
+    lda Health
     sta $03
+    ;Amount to subtract from Health.
     lda $68
     sec
-    jsr L9568
+    jsr MAIN_Base10Subtract
     sta $0106
     lda $0107
     sta $03
     lda $69
-    jsr L9568
+    jsr MAIN_Base10Subtract
     sta $0107
     lda $0106
     and #$F0
@@ -984,12 +1004,12 @@ L72AD:
     sta $03
     lda $68
     clc
-    jsr L9547
+    jsr MAIN_Base10Add
     sta $0106
     lda $0107
     sta $03
     lda $69
-    jsr L9547
+    jsr MAIN_Base10Add
     sta $0107
     lda $B410
     jsr L9479
@@ -1001,7 +1021,7 @@ L72AD:
     lda #$99
     sta $0106
 L72DF:
-    jmp LA210
+    jmp ClearHealthChange
 L72E2:
     lda $030A
     lsr a
@@ -3618,7 +3638,7 @@ L85DF:
     ldy #$FF
     bcs L8611
     sty $6C
-    jsr LA210
+    jsr ClearHealthChange
     lda #$32
     sta $6A
     lda $27
@@ -3637,7 +3657,7 @@ L85F8:
 L8608:
     lda #$07
     sta $68
-    jsr L7246
+    jsr SubtractHealth
 L860F:
     ldy #$00
 L8611:
@@ -5959,13 +5979,16 @@ L9539:
     and #$3F
     sta $05
     jmp L9529
-L9547:
-    jsr L958A
+
+
+
+MAIN_Base10Add: ;($9547)
+    jsr MAIN_ExtractNibbles
     adc $01
     cmp #$0A
     bcc L9552
-    adc #$05
-L9552:
+        adc #$05
+    L9552:
     clc
     adc $02
     sta $02
@@ -5981,28 +6004,34 @@ L9563:
     cmp #$A0
     bcs L955F
     rts
-L9568:
-    jsr L958A
+
+
+
+MAIN_Base10Subtract: ;($9568)
+    jsr MAIN_ExtractNibbles
     sbc $01
     sta $01
     bcs L957B
-    adc #$0A
-    sta $01
-    lda $02
-    adc #$0F
-    sta $02
-L957B:
+        adc #$0A
+        sta $01
+        lda $02
+        adc #$0F
+        sta $02
+    L957B:
     lda $03
     and #$F0
     sec
     sbc $02
     bcs L9587
-    adc #$A0
-    clc
-L9587:
+        adc #$A0
+        clc
+    L9587:
     ora $01
     rts
-L958A:
+
+
+
+MAIN_ExtractNibbles: ;($958A)
     pha
     and #$0F
     sta $01
@@ -6012,33 +6041,49 @@ L958A:
     lda $03
     and #$0F
     rts
-    jsr L95A1
-L959C:
-    lda $1A
-    beq L959C
+
+
+
+MAIN_WaitNMIPass: ;($9599)
+    jsr MAIN_ClearNMIStat
+    @loop:
+        lda NMIStatus
+        beq @loop
     rts
-L95A1:
+
+
+
+MAIN_ClearNMIStat: ;($95A1)
     lda #$00
-    sta $1A
+    sta NMIStatus
     rts
-    lda $26
-    bne L95BB
-    lda $20
+
+
+
+WaitTimer: ;($95A6)
+    lda Timer3
+    bne RTS_95BB
+    lda NextRoutine
     cmp #$04
-    beq L95B9
+    beq SetMainRoutine
     cmp #$06
-    beq L95B9
+    beq SetMainRoutine
     jsr L7CAA
-    lda $20
-L95B9:
-    sta $1E
-L95BB:
+    lda NextRoutine
+SetMainRoutine: ;($95B9)
+    sta MainRoutine
+RTS_95BB:
     rts
-L95BC:
-    sta $26
-    stx $20
+
+
+
+SetTimer: ;($95BC)
+    sta Timer3
+    stx NextRoutine
     lda #$09
-    bne L95B9 ; branch always
+    bne SetMainRoutine ; branch always
+
+
 
 L95C4:
     .byte $03, $04, $05, $FF, $07, $FF, $17, $08, $FF, $22, $FF, $04, $10, $FF, $17, $18
@@ -6514,7 +6559,7 @@ L9E19:
     jsr LA1FE
     lda #$50
     sta $68
-    jmp L7246
+    jmp SubtractHealth
 L9E3F:
     lda $0503,x
     asl a
@@ -6653,7 +6698,7 @@ L9F2A:
     cmp #$03
     beq L9F68
     jsr LA087
-    jsr L7238
+    jsr IsSamusDead
     beq L9F46
     lda $6A
     bne L9F46
@@ -6691,7 +6736,7 @@ L9F71:
     cmp #$02
     bne L9F85
     ldy #$00
-    jsr L7238
+    jsr IsSamusDead
     beq L9F8A
     jsr L7FF5
     jsr LA164
@@ -6732,7 +6777,7 @@ L9FC1:
     ldy #$00
     lda $6A
     bne L9FD2
-    jsr L7238
+    jsr IsSamusDead
     beq L9FD2
     jsr LA02D
     jsr LA16F
@@ -6751,7 +6796,7 @@ L9FE1:
     beq L9FFF
     lda $6A
     bne L9FFF
-    jsr L7238
+    jsr IsSamusDead
     beq L9FFF
     jsr LA0A0
     jsr LA04F
@@ -6762,7 +6807,7 @@ L9FFF:
     cmp #$C0
     bne L9FE1
     ldy #$00
-    jsr L7238
+    jsr IsSamusDead
     beq LA02A
     jsr LA073
     ldx #$F0
@@ -6780,7 +6825,7 @@ LA023:
     cmp #$C0
     bne LA012
 LA02A:
-    jmp L7246
+    jmp SubtractHealth
 LA02D:
     jsr LA0AC
     jsr LA073
@@ -7025,14 +7070,14 @@ LA1D5:
     jsr LA22D
     bne LA1C5
 LA1DA:
-    bcs LA1FD
+    bcs RTS_A1FD
     jsr LA1CC
     tya
     pha
     jsr L7150
     pla
     tay
-    bcc LA1FD
+    bcc RTS_A1FD
     lda #$80
     sta $010F
     jsr LA21F
@@ -7042,10 +7087,13 @@ LA1F3:
     sta $68
     lda $B5C7
     sta $69
-LA1FD:
+RTS_A1FD:
     rts
+
+
+
 LA1FE:
-    bcs LA216
+    bcs RTS_A216
     lda #$E0
     sta $010F
     jsr LA225
@@ -7055,14 +7103,17 @@ LA20A:
     lda #$01
 LA20E:
     sta $6D
-LA210:
+ClearHealthChange:
     lda #$00
     sta $68
     sta $69
-LA216:
+RTS_A216:
     rts
+
+
+
 LA217:
-    bcs LA216
+    bcs RTS_A216
     jsr LA166
     jmp LA1AC
 LA21F:
@@ -8260,7 +8311,7 @@ LAB1F:
     jsr LA1FE
     lda #$50
     sta $68
-    jsr L7246
+    jsr SubtractHealth
 LAB42:
     pla
     tax

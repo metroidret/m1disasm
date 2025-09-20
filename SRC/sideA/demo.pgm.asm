@@ -816,8 +816,8 @@ SeparateControlBits:
 
 
 
-Base10Add:
-    jsr ExtractNibbles
+DEMO_Base10Add:
+    jsr DEMO_ExtractNibbles
     adc $01
     cmp #$0A
     bcc L6C7E
@@ -841,8 +841,8 @@ L6C8F:
 
 
 
-Base10Subtract:
-    jsr ExtractNibbles
+DEMO_Base10Subtract:
+    jsr DEMO_ExtractNibbles
     sbc $01
     sta $01
     bcs L6CA7
@@ -865,7 +865,7 @@ Base10Subtract:
 
 
 
-ExtractNibbles:
+DEMO_ExtractNibbles:
     pha
     and #$0F
     sta $01
@@ -878,8 +878,8 @@ ExtractNibbles:
 
 
 
-WaitNMIPass:
-    jsr ClearNMIStat
+DEMO_WaitNMIPass:
+    jsr DEMO_ClearNMIStat
     L6CC8:
         lda NMIStatus
         beq L6CC8
@@ -887,7 +887,7 @@ WaitNMIPass:
 
 
 
-ClearNMIStat:
+DEMO_ClearNMIStat:
     lda #$00
     sta NMIStatus
     rts
@@ -901,7 +901,7 @@ ScreenOff:
 WriteAndWait:
     sta $FE
     
-    jsr ClearNMIStat
+    jsr DEMO_ClearNMIStat
     L6CDB:
         lda $1A
         beq L6CDB
