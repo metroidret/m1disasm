@@ -151,11 +151,11 @@ L6CA8:
     ldy #$00
     sty $2006
     ldx #$04
-L6CD0:
-    lda ($00),y
-    sta $2007
-    iny
-    bne L6CD0
+    L6CD0:
+        lda ($00),y
+        sta PPUDATA
+        iny
+        bne L6CD0
 L6CD8:
     inc $01
     dex

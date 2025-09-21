@@ -1,17 +1,35 @@
 ; placeholder to be overwritten with real save data from savedata.asm
-SaveData_C5A0:
-    .byte $80, $80, $80
-SaveData_C5A3:
+SaveData:
+@C5A0:
+    .byte $80
+    .byte $80
+    .byte $80
+@C5A3:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-
-SaveData_C5D3:
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+@C5D3:
     .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+@C5D9:
+    .byte $00
+    .byte $00
+    .byte $00
+@C5DC:
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+@C5E2:
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+@C612:
+    .byte $00
+    .byte $00
+    .byte $00
+@end:
+
 
 LC615:
     .incbin "sideA/demo.pg2_font_savemenu.chr"
@@ -25,10 +43,10 @@ LCE3C:
     sty LCE58+1
     jsr LCEDC
 LCE45:
-    jsr $6CD8
+    jsr DEMO_WaitNMIPass_
     jsr LCF1D
-    jsr $7023
-    jsr $DFF3
+    jsr L7023
+    jsr GotoLD18C
     lda #$0E
     jsr FDSBIOS_WriteFile
         .word LCF34
@@ -49,9 +67,9 @@ LCE66:
 LCE6E:
     sta LCF3E
 LCE71:
-    jsr $6CD8
+    jsr DEMO_WaitNMIPass_
     jsr LCF1D
-    jsr $7023
+    jsr L7023
     jsr GotoLD18C
     jsr FDSBIOS_LoadFiles
         .word LCF34
@@ -78,14 +96,14 @@ LCE90:
     and #$0F
     ora #$80
     sta PPUString_CF03+7+1
-    jsr $883B
+    jsr L883B
     lda #$12
-    sta $1C
+    sta PalDataPending
     ldx #<PPUString_CF03.b
     ldy #>PPUString_CF03.b
-    jsr $8E39
+    jsr L8E39
     jsr LCF27
-    jsr $6CD8
+    jsr DEMO_WaitNMIPass_
     jsr FDSBIOS_EnPFObj
     LCEBE:
         lda DRIVESTATUS
@@ -95,7 +113,7 @@ LCEC5:
     lda #$20
     pha
 LCEC8:
-    jsr $6CD8
+    jsr DEMO_WaitNMIPass_
     pla
     beq LCED1
     tay
@@ -109,21 +127,21 @@ LCED1:
     pla
     bne LCEC5
 LCEDC:
-    jsr $883B
+    jsr L883B
     lda #$F4
-    sta $0200
+    sta SpriteRAM
     lda #$12
-    sta $1C
+    sta PalDataPending
     ldx #<PPUString_CF0D.b
     ldy #>PPUString_CF0D.b
-    jsr $8E39
+    jsr L8E39
     lda PPUCTRL_ZP
-    and #$EF
-    ora #$08
+    and #~PPUCTRL_BG_1000.b
+    ora #PPUCTRL_OBJ_1000
     sta PPUCTRL_ZP
     sta PPUCTRL
     jsr LCF27
-    jsr $6CD8
+    jsr DEMO_WaitNMIPass_
     jmp FDSBIOS_EnPFObj
 
 ; "ERR --" message (disk error)
@@ -176,10 +194,10 @@ LCF3E:
 LCF40:
     .byte $0E
     .ascstr $01, $01, $01, $01, $01, $01, $01, $01
-    .word $C5A0
-    .word $0075
+    .word SaveData
+    .word SaveData@end - SaveData
     .byte $00
-    .word $C5A0
+    .word SaveData
     .byte $00
 
 LCF51:

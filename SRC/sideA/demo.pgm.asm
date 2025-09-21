@@ -885,9 +885,9 @@ DEMO_ExtractNibbles:
 
 DEMO_WaitNMIPass: ;($6CC5)
     jsr DEMO_ClearNMIStat
-    L6CC8:
+    @loop:
         lda NMIStatus
-        beq L6CC8
+        beq @loop
     rts
 
 
@@ -904,13 +904,16 @@ DEMO_ScreenOff: ;($6CD2)
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
 
 DEMO_WriteAndWait: ;($6CD6)
-    sta $FE
+    sta PPUMASK_ZP
     
+DEMO_WaitNMIPass_: ;($6CD8)
     jsr DEMO_ClearNMIStat
-    L6CDB:
-        lda $1A
-        beq L6CDB
+    @loop:
+        lda NMIStatus
+        beq @loop
     rts
+
+
 
 L6CE0:
     lda $FF
@@ -3495,9 +3498,9 @@ L6999_8847:
     sta $2F
     tay
     tax
-    lda #$15
+    lda #<LC615.b
     sta $2D
-    lda #$C6
+    lda #>LC615.b
     sta $2E
 L886F:
     lda ($2D),y
@@ -3536,7 +3539,7 @@ L6999_8899:
     lda $2002
     ldy #$00
 L88B0:
-    lda SaveData_C5A0,y
+    lda SaveData@C5A0,y
     and #$01
     beq L8915
     tya
@@ -3550,9 +3553,9 @@ L88B0:
     clc
     adc #$0F
     sta $2006
-    lda $C5DC,x
+    lda SaveData@C5DC,x
     sta $2007
-    lda $C5DD,x
+    lda SaveData@C5DC+1,x
     jsr L892D
     lda $8D43,x
     sta $2006
@@ -3560,11 +3563,11 @@ L88B0:
     clc
     adc #$24
     sta $2006
-    lda $C5D3,x
+    lda SaveData@C5D3,x
     jsr L892D
-    lda $C5D4,x
+    lda SaveData@C5D3+1,x
     jsr L892D
-    lda $C5D9,y
+    lda SaveData@C5D9,y
     beq L8915
     pha
     lda $8D43,x
@@ -3668,28 +3671,28 @@ L8992:
     asl a
     asl a
     tax
-    ldy $C5EE,x
+    ldy SaveData@C5E2+$C,x
     beq L89A6
-    dec $C5EE,x
+    dec SaveData@C5E2+$C,x
     lda #$81
-    sta $C5F0,x
+    sta SaveData@C5E2+$E,x
 L89A6:
     ldy #$00
-L89A8:
-    lda $C5E2,x
-    sta $B410,y
-    inx
-    iny
-    cpy #$10
-    bne L89A8
+    L89A8:
+        lda SaveData@C5E2,x
+        sta $B410,y
+        inx
+        iny
+        cpy #$10
+        bne L89A8
     lda $38
     sta $B41F
     tax
-    lda SaveData_C5A0,x
+    lda SaveData@C5A0,x
     ora $B41E
     sta $B41E
     and #$01
-    sta SaveData_C5A0,x
+    sta SaveData@C5A0,x
     jsr LCE35
     jmp LCE66
 
@@ -3736,12 +3739,12 @@ L8A17:
     lda #$00
     sta $2D
 L8A1B:
-    lda SaveData_C5A3,y
+    lda SaveData@C5A3,y
     cmp #$FF
     beq L8A2A
-    lda SaveData_C5A0,x
+    lda SaveData@C5A0,x
     ora #$01
-    sta SaveData_C5A0,x
+    sta SaveData@C5A0,x
 L8A2A:
     iny
     inc $2D
@@ -3832,10 +3835,10 @@ L8AAD:
     beq L8AC5
     cmp #$5C
     beq L8AC5
-    sta SaveData_C5A3,x
+    sta SaveData@C5A3,x
     lda #$FF
 L8AC5:
-    sta $C5AB,x
+    sta SaveData@C5A3+$8,x
     lda $33
     clc
     adc #$08
@@ -4009,7 +4012,7 @@ L6999_8BC5:
     rts
 L8BE3:
     lda #$80
-    sta SaveData_C5A0,y
+    sta SaveData@C5A0,y
     tya
     pha
     pha
@@ -4034,28 +4037,28 @@ L8BE3:
     asl a
     tay
     ldx #$00
-L8C16:
-    lda #$FF
-    sta SaveData_C5A3,y
-    lda #$00
-    sta $C5E2,y
-    iny
-    inx
-    cpx #$10
-    bne L8C16
+    L8C16:
+        lda #$FF
+        sta SaveData@C5A3,y
+        lda #$00
+        sta SaveData@C5E2,y
+        iny
+        inx
+        cpx #$10
+        bne L8C16
     pla
     tay
     lda #$00
-    sta $C5D9,y
-    sta $C612,y
+    sta SaveData@C5D9,y
+    sta SaveData@C612,y
     tya
     asl a
     tay
     lda #$00
-    sta $C5D3,y
-    sta $C5D4,y
-    sta $C5DC,y
-    sta $C5DD,y
+    sta SaveData@C5D3,y
+    sta SaveData@C5D3+1,y
+    sta SaveData@C5DC,y
+    sta SaveData@C5DC+1,y
 L8C41:
     lda $12
     and #$20
@@ -4087,7 +4090,7 @@ L8C6A:
 LL8C77:
     ldy #$00
 L8C79:
-    lda SaveData_C5A0,y
+    lda SaveData@C5A0,y
     and #$01
     bne L8C85
     iny
@@ -4098,7 +4101,7 @@ L8C85:
 L8C86:
     ldy #$00
 L8C88:
-    lda SaveData_C5A0,y
+    lda SaveData@C5A0,y
     and #$01
     beq L8C94
     iny
@@ -4215,7 +4218,7 @@ L8D49:
 L8D4F:
     ldx #$00
     @loop:
-        lda SaveData_C5A3,y
+        lda SaveData@C5A3,y
         sta $2007
         iny
         inx
@@ -4290,10 +4293,10 @@ L8DC3:
     sty $2E
     ldx #$00
 L8DCB:
-    lda SaveData_C5A0,y
+    lda SaveData@C5A0,y
     and #$01
     beq L8E13
-    lda $C612,y
+    lda SaveData@C612,y
     sta $31
     ldy #$00
     sty $2D
@@ -4397,16 +4400,16 @@ L8E70:
     pha
     jsr DEMO_Amul16
     tay
-    lda $C5EB,y
+    lda SaveData@C5E2+$9,y
     sta $0B
-    lda $C5EA,y
+    lda SaveData@C5E2+$8,y
     sta $0A
     jsr L8EBB
     lda $06
 L8E85:
-    sta $C5DD,x
+    sta SaveData@C5DC+1,x
     lda $07
-    sta $C5DC,x
+    sta SaveData@C5DC,x
     pla
     tay
     rts
@@ -4415,22 +4418,22 @@ L8E90:
     pha
     jsr DEMO_Amul16
     tay
-    lda $C5ED,y
+    lda SaveData@C5E2+$B,y
     sta $0B
-    lda $C5EC,y
+    lda SaveData@C5E2+$A,y
     sta $0A
     jsr L8EBB
     lda $06
-    sta $C5D4,x
+    sta SaveData@C5D3+1,x
     lda $07
-    sta $C5D3,x
-    lda $C5E2,y
+    sta SaveData@C5D3,x
+    lda SaveData@C5E2,y
     pha
     txa
     lsr a
     tay
     pla
-    sta $C5D9,y
+    sta SaveData@C5D9,y
     pla
     tay
     rts

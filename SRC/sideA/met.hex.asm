@@ -86,6 +86,8 @@ METHEX_ScreenOff: ;($D052)
 
 METHEX_WriteAndWait: ;($D056)
     sta PPUMASK_ZP
+
+METHEX_WaitNMIPass_: ;($D058)
     jsr MAIN_ClearNMIStat
     @loop:
         lda NMIStatus
