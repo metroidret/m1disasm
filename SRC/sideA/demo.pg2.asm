@@ -73,16 +73,16 @@ LCE90:
     lsr
     lsr
     ora #$80
-    sta LCF03+7
+    sta PPUString_CF03+7
     pla
     and #$0F
     ora #$80
-    sta LCF03+7+1
+    sta PPUString_CF03+7+1
     jsr $883B
     lda #$12
     sta $1C
-    ldx #<LCF03.b
-    ldy #>LCF03.b
+    ldx #<PPUString_CF03.b
+    ldy #>PPUString_CF03.b
     jsr $8E39
     jsr LCF27
     jsr $6CD8
@@ -114,8 +114,8 @@ LCEDC:
     sta $0200
     lda #$12
     sta $1C
-    ldx #<LCF0D.b
-    ldy #>LCF0D.b
+    ldx #<PPUString_CF0D.b
+    ldy #>PPUString_CF0D.b
     jsr $8E39
     lda PPUCTRL_ZP
     and #$EF
@@ -127,15 +127,15 @@ LCEDC:
     jmp FDSBIOS_EnPFObj
 
 ; "ERR --" message (disk error)
-LCF03:
-    PPUString $21F3, undefined, \
-        $B3, $BA, $BA, $FF, $21, $21
+PPUString_CF03:
+    PPUString $21F3, charmap_gameover, \
+        "ERR ", $21, $21
     PPUStringEnd
 
 ; "おまちください" message (waiting during disk access)
-LCF0D:
-    PPUString $21CC, undefined, \
-        $0B, $0C, $1B, $1C, $2B, $2C, $3F
+PPUString_CF0D:
+    PPUString $21CC, charmap_gameover, \
+        "おまちください"
     PPUString $23DB, undefined, \
         $00, $00
     PPUStringEnd
