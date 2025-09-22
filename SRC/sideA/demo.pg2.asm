@@ -1,5 +1,5 @@
 ; placeholder to be overwritten with real save data from savedata.asm
-SaveData:
+SaveData: ;($C5A0)
 @C5A0:
     .byte $80
     .byte $80

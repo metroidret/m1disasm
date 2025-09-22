@@ -212,43 +212,40 @@ L6951:
 L695F:
     lda $1D
     beq L6966
-    jmp L696D
-
-
-
-L6966:
-    lda $1E
+        jmp MainTitleRoutine
+    L6966:
+    lda MainRoutine
     jsr DEMO_ChooseRoutine
         .word RTS_6D00
 
 
 
-L696D:
+MainTitleRoutine: ;($696D)
     ldy $5B
     beq L6988
-    dey
-    sty $5B
-    sty $59
-    sty $43
-    sty $3F
-    sty $40
-    lda $FF
-    and #$FC
-    sta $FF
-    lda #$1B
-    sta $1F
-    bne L6999
-L6988:
-    jsr L8707
-    jsr L86BE
-    lda $1F
-    cmp #$0A
-    bcs L6999
-    jsr RemoveIntroSprites
-    lda $1F
+        dey
+        sty $5B
+        sty $59
+        sty $43
+        sty $3F
+        sty $40
+        lda PPUCTRL_ZP
+        and #$FC
+        sta PPUCTRL_ZP
+        lda #$1B
+        sta TitleRoutine
+        bne L6999
+    L6988:
+        jsr L8707
+        jsr L86BE
+        lda TitleRoutine
+        cmp #$0A
+        bcs L6999
+        jsr RemoveIntroSprites
+        lda TitleRoutine
 L6999:
     jsr DEMO_ChooseRoutine
-        .word L6999_6D01
+        .word L6999_InitializeAfterReset00
         .word L6999_6D69
         .word L6999_6D8C
         .word L6999_6DDF
@@ -258,17 +255,17 @@ L6999:
         .word L6999_6E16
         .word L6999_6E35
         .word L6999_6E84
-        .word L6999_69DC
-        .word L6999_69DC
+        .word L6999_IncTitleRoutine0A
+        .word L6999_IncTitleRoutine0B
         .word L6999_6EE3
         .word L6999_6F26
         .word L6999_6F46
         .word L6999_6F66
-        .word L6999_69D6
-        .word L6999_6FD1
-        .word L6999_701C
-        .word RTS_7022
-        .word RTS_7022
+        .word L6999_ClearSpareMem
+        .word L6999_PrepIntroRestart
+        .word L6999_TitleScreenOff
+        .word L6999_TitleRoutineReturn13
+        .word L6999_TitleRoutineReturn14
         .word L6999_8899
         .word L6999_893C
         .word L6999_89CE
@@ -276,16 +273,17 @@ L6999:
         .word L6999_8BA5
         .word L6999_8BC5
         .word L6999_8847
-        .word L6999_6D01
+        .word L6999_InitializeAfterReset1C
 
 
 
-L6999_69D6:
+L6999_ClearSpareMem:
     lda #$00
     sta $53
     sta $51
-L6999_69DC:
-    inc $1F
+L6999_IncTitleRoutine0A:
+L6999_IncTitleRoutine0B:
+    inc TitleRoutine
     rts
 
 
@@ -339,7 +337,7 @@ DEMO_EraseAllSprites: ;($6A1C)
         sta ($00),y
         iny
         bne @loop
-    jmp L84D0
+    jmp DecSpriteYCoord
 
     rts ; unused?
 
@@ -356,7 +354,7 @@ RemoveIntroSprites: ;($6A31)
         sta ($00),y
         dey
         bpl @loop
-    jmp L84D0
+    jmp DecSpriteYCoord
 
 
 
@@ -939,7 +937,8 @@ RTS_6D00:
 
 
 
-L6999_6D01:
+L6999_InitializeAfterReset00: ;($6D01)
+L6999_InitializeAfterReset1C:
     ldy #$02
     sty $57
     sty $54
@@ -968,41 +967,37 @@ L6999_6D01:
     sty $4C
     sty $00
     ldx #$60
-L6D37:
-    stx $01
-    txa
-    and #$03
-    asl a
-    tay
-    sty $02
-    lda $6D61,y
-    ldy #$00
-L6D45:
-    sta ($00),y
-    iny
-    beq L6D57
-    cpy #$40
-    bne L6D45
-    ldy $02
-    lda $6D62,y
-    ldy #$40
-    bpl L6D45
-L6D57:
-    inx
-    cpx #$68
-    bne L6D37
-    inc $1F
-    jmp L84EE
+    @loop_A:
+        stx $01
+        txa
+        and #$03
+        asl a
+        tay
+        sty $02
+        lda RamValueTbl,y
+        ldy #$00
+        @loop_B:
+            sta ($00),y
+            iny
+            beq @exitloop_B
+            cpy #$40
+            bne @loop_B
+            ldy $02
+            lda RamValueTbl+1,y
+            ldy #$40
+            bpl @loop_B
+        @exitloop_B:
+        inx
+        cpx #$68
+        bne @loop_A
+    inc TitleRoutine
+    jmp LoadStarSprites
 
-L6D61:
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $C0
-    .byte $C4
+RamValueTbl: ;($6D61)
+    .byte $00, $00
+    .byte $00, $00
+    .byte $00, $00
+    .byte $C0, $C4
 
 
 
@@ -1168,7 +1163,7 @@ L6E5E:
     lda #$01
     sta $4F
     sta $48
-    jsr L84EE
+    jsr LoadStarSprites
     lda #$00
     sta $4E
     inc $1F
@@ -1381,20 +1376,22 @@ L6FB8:
 
 
 
-L6999_6FD1:
-    lda $26
+L6999_PrepIntroRestart: ;($6FD1)
+    lda Timer3
     bne @RTS
+    
     sta $5A
     sta $43
     sta $0408
+    
     ldy #$1F
     @loop:
-        sta $0300,y
+        sta ObjAction,y
         dey
         bpl @loop
-    lda $FF
+    lda PPUCTRL_ZP
     and #$FC
-    sta $FF
+    sta PPUCTRL_ZP
     iny
     sty $3F
     sty $40
@@ -1412,29 +1409,31 @@ L6999_6FD1:
     iny
     sty $54
     sty $57
-    sty $1F
-    lda $63
+    sty TitleRoutine
+    lda IntroMusicRestart
     bne @dec63
-    lda #$10
-    sta $0684
-    lda #$02
-    sta $63
-@RTS:
-    rts
-@dec63:
-    dec $63
-    rts
+        lda #$10
+        sta $0684
+        lda #$02
+        sta $63
+    @RTS:
+        rts
+
+    @dec63:
+        dec IntroMusicRestart
+        rts
 
 
 
-L6999_701C:
+L6999_TitleScreenOff: ;($701C)
     jsr DEMO_ScreenOff
-    inc $1F
+    inc TitleRoutine
     rts
 
 
 
-RTS_7022:
+L6999_TitleRoutineReturn13: ;($7022)
+L6999_TitleRoutineReturn14:
     rts
 
 
@@ -1455,7 +1454,7 @@ L7023:
     ldy #$00
     ldx $040E
 L7043:
-    lda $70B5,y
+    lda L70B5,y
     sta $0200,x
     inx
     beq L7051
@@ -1615,10 +1614,13 @@ L7133:
     stx $0409
 L7138:
     rts
+
+L7139:
     lda $030C
     eor #$01
     sta $030C
     rts
+
 L7142:
     lda $0400
     eor #$03
@@ -2672,9 +2674,9 @@ L81F2:
     txa
     jsr DEMO_Adiv8
     tay
-    lda $83F3,y
+    lda SparkleAddressTbl,y
     sta $00
-    lda $83F4,y
+    lda SparkleAddressTbl+1,y
     sta $01
     ldy $0484,x
     lda ($00),y
@@ -2810,7 +2812,7 @@ L8327:
 L833B:
     lda $048A,x
     bne RTS_834D
-    jsr L8387
+    jsr UpdateCrossMissileCoords
     bcs L834A
     lda #$01
     sta $048A,x
@@ -2828,7 +2830,7 @@ L834E:
     lda #$00
     sta $4F
 L835E:
-    lda L8382,y
+    lda CrossExplodeLengthTbl,y
     sta $00
     ldy #$00
 L8365:
@@ -2851,18 +2853,24 @@ L8369:
     RTS_8381:
     rts
 
-L8382:
-    .byte $05, $19, $41, $19, $05
+CrossExplodeLengthTbl: ;($8382)
+    .byte CrossExplodeDataTbl@end_0 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_1 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_2 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_1 - CrossExplodeDataTbl
+    .byte CrossExplodeDataTbl@end_0 - CrossExplodeDataTbl
 
-L8387:
+
+
+UpdateCrossMissileCoords: ;($8387)
     lda $048C,x
-    jsr L83DA
+    jsr CalcDisplacement
     ldy $048E,x
     bpl L8397
-    eor #$FF
-    clc
-    adc #$01
-L8397:
+        eor #$FF
+        clc
+        adc #$01
+    L8397:
     clc
     adc $0483,x
     sta $0483,x
@@ -2873,76 +2881,182 @@ L8397:
     eor $048E,x
     lsr a
     bcc L83CD
-    lda $048D,x
-    jsr L83DA
-    ldy $048F,x
-    bpl L83BA
-    eor #$FF
-    clc
-    adc #$01
-L83BA:
-    clc
-    adc $0480,x
-    sta $0480,x
-    sec
-    sbc $0487,x
-    php
-    pla
-    eor $048F,x
-    lsr a
-    bcs RTS_83D9
-L83CD:
-    lda $0487,x
-    sta $0480,x
-    lda $0486,x
-    sta $0483,x
-RTS_83D9:
+        lda $048D,x
+        jsr CalcDisplacement
+        ldy $048F,x
+        bpl L83BA
+            eor #$FF
+            clc
+            adc #$01
+        L83BA:
+        clc
+        adc $0480,x
+        sta $0480,x
+        sec
+        sbc $0487,x
+        php
+        pla
+        eor $048F,x
+        lsr a
+        bcs RTS_83D9
+    L83CD:
+        lda $0487,x
+        sta $0480,x
+        lda $0486,x
+        sta $0483,x
+    RTS_83D9:
     rts
-L83DA:
+
+
+
+CalcDisplacement: ;($83DA)
     sta $04
     lda #$08
     sta $00
-L83E0:
-    lsr $04
-    bcc L83EC
-    lda $27
-    and $00
-    bne L83EC
-    inc $04
-L83EC:
-    lsr $00
-    bne L83E0
+    L83E0:
+        lsr $04
+        bcc L83EC
+        lda FrameCount
+        and $00
+        bne L83EC
+        inc $04
+    L83EC:
+        lsr $00
+        bne L83E0
     lda $04
     rts
 
-L83F3:
-    .byte $F7, $83, $2D, $84, $01, $00, $01, $11, $01, $10, $06, $11, $07, $91, $10, $01
-    .byte $03, $10, $01, $19, $01, $10, $01, $19, $01, $10, $01, $19, $09, $11, $04, $01
-    .byte $02, $91, $01, $90, $01, $91, $06, $90, $01, $91, $06, $90, $15, $01, $06, $10
-    .byte $01, $11, $0E, $01, $08, $91, $27, $01, $00, $00, $01, $00, $08, $09, $01, $99
-    .byte $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99
-    .byte $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99, $01, $09, $01, $99
-    .byte $01, $09, $01, $99, $01, $19, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11
-    .byte $01, $10, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11, $01, $10, $01, $11
-    .byte $01, $10, $02, $11, $01, $10, $01, $11, $10, $09, $FF, $EF, $11, $09, $FF, $F3
-    .byte $1F, $09, $FF, $EC, $0F, $09, $FF, $ED, $16, $09, $00, $00, $10, $5A, $E5, $00
-    .byte $79, $14, $52, $E3, $00, $79, $18, $5A, $E7, $40, $71, $1C, $5A, $E7, $00, $81
-    .byte $20, $62, $E3, $80, $79, $14, $52, $E4, $00, $79, $18, $5A, $E6, $00, $71, $1C
-    .byte $5A, $E6, $00, $81, $20, $62, $E4, $00, $79, $24, $4A, $E3, $00, $79, $28, $5A
-    .byte $E7, $40, $69, $2C, $5A, $E7, $00, $89, $30, $6A, $E3, $80, $79
+
+
+SparkleAddressTbl: ;($83F3)
+    .word TopSparkleDataTbl
+    .word BottomSparkleDataTbl
+
+TopSparkleDataTbl: ;($83F7)
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $06,  1,  1
+    SignMagSpeed $07,  1, -1
+    SignMagSpeed $10,  1,  0
+    SignMagSpeed $03,  0,  1
+    SignMagSpeed $01, -1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01, -1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01, -1,  1
+    SignMagSpeed $09,  1,  1
+    SignMagSpeed $04,  1,  0
+    SignMagSpeed $02,  1, -1
+    SignMagSpeed $01,  0, -1
+    SignMagSpeed $01,  1, -1
+    SignMagSpeed $06,  0, -1
+    SignMagSpeed $01,  1, -1
+    SignMagSpeed $06,  0, -1
+    SignMagSpeed $15,  1,  0
+    SignMagSpeed $06,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $0E,  1,  0
+    SignMagSpeed $08,  1, -1
+    SignMagSpeed $27,  1,  0
+    SignMagSpeed $00,  0,  0
+
+BottomSparkleDataTbl: ;($842D)
+    SignMagSpeed $01,  0,  0
+    SignMagSpeed $08, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  0
+    SignMagSpeed $01, -1, -1
+    SignMagSpeed $01, -1,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $02,  1,  1
+    SignMagSpeed $01,  0,  1
+    SignMagSpeed $01,  1,  1
+    SignMagSpeed $10, -1,  0
+    .byte $FF, $EF
+    SignMagSpeed $11, -1,  0
+    .byte $FF, $F3
+    SignMagSpeed $1F, -1,  0
+    .byte $FF, $EC
+    SignMagSpeed $0F, -1,  0
+    .byte $FF, $ED
+    SignMagSpeed $16, -1,  0
+    SignMagSpeed $00,  0,  0
 
 
 
-L84D0:
+CrossExplodeDataTbl: ;($848F)
+    .byte $10
+    .byte $5A, $E5, $00, $79
+    @end_0:
+    .byte $14
+    .byte $52, $E3, $00, $79
+    .byte $18
+    .byte $5A, $E7, $40, $71
+    .byte $1C
+    .byte $5A, $E7, $00, $81
+    .byte $20
+    .byte $62, $E3, $80, $79
+    @end_1:
+    .byte $14
+    .byte $52, $E4, $00, $79
+    .byte $18
+    .byte $5A, $E6, $00, $71
+    .byte $1C
+    .byte $5A, $E6, $00, $81
+    .byte $20
+    .byte $62, $E4, $00, $79
+    .byte $24
+    .byte $4A, $E3, $00, $79
+    .byte $28
+    .byte $5A, $E7, $40, $69
+    .byte $2C
+    .byte $5A, $E7, $00, $89
+    .byte $30
+    .byte $6A, $E3, $80, $79
+    @end_2:
+
+
+
+DecSpriteYCoord: ;($84D0)
     lda $50
     beq @RTS
-    lda $27
+    lda FrameCount
     lsr a
     bcs @RTS
     ldx #$9F
     @loop:
-        dec L8500,x
-        dec $0260,x
+        dec IntroStarsData,x
+        dec SpriteRAM+$60,x
         dex
         dex
         dex
@@ -2950,23 +3064,23 @@ L84D0:
         cpx #$FF
         bne @loop
     lda #$00
-    sta $50
+    sta SpriteLoadPending
 @RTS:
     rts
 
-L84EE:
+LoadStarSprites: ;($84EE)
     ldy #$9F
-    L84F0:
-        lda L8500,y
-        sta $0260,y
+    @loop:
+        lda IntroStarsData,y
+        sta SpriteRAM+$60,y
         dey
         cpy #$FF
-        bne L84F0
+        bne @loop
     lda #$00
-    sta $50
+    sta SpriteLoadPending
     rts
 
-L8500:
+IntroStarsData: ;($8500)
     .byte $73, $CC, $22, $F2
     .byte $48, $CD, $63, $EE
     .byte $2A, $CE, $A2, $DC
@@ -3218,9 +3332,9 @@ L86BE:
     bne L86DA
     pha
     ldy $57
-    lda $873B,y
+    lda L873B,y
     sta $55
-    ldx $873C,y
+    ldx L873B+1,y
     stx $56
     inc $57
     inc $57
@@ -3490,11 +3604,11 @@ L6999_8847:
     jsr L883B
     lda $39
     bne L6999_8899
-    lda $2002
+    lda PPUSTATUS
     lda #$10
-    sta $2006
+    sta PPUADDR
     lda #$00
-    sta $2006
+    sta PPUADDR
     sta $2F
     tay
     tax
@@ -3504,7 +3618,7 @@ L6999_8847:
     sta $2E
 L886F:
     lda ($2D),y
-    sta $2007
+    sta PPUDATA
     inc $2D
     lda $2D
     bne @L887C
@@ -3518,7 +3632,7 @@ L886F:
     bne L886F
 L8887:
     lda ($2D),y
-    sta $2007
+    sta PPUDATA
     inc $2D
     lda $2D
     bne L8894
@@ -3536,7 +3650,7 @@ L6999_8899:
     inc $36
     jsr L8CF2
     dec $36
-    lda $2002
+    lda PPUSTATUS
     ldy #$00
 L88B0:
     lda SaveData@C5A0,y
@@ -3547,22 +3661,22 @@ L88B0:
     tax
     jsr L8E70
     jsr L8E90
-    lda $8D43,x
-    sta $2006
-    lda $8D44,x
+    lda L8D43,x
+    sta PPUADDR
+    lda L8D43+1,x
     clc
     adc #$0F
-    sta $2006
+    sta PPUADDR
     lda SaveData@C5DC,x
-    sta $2007
+    sta PPUDATA
     lda SaveData@C5DC+1,x
     jsr L892D
-    lda $8D43,x
-    sta $2006
-    lda $8D44,x
+    lda L8D43,x
+    sta PPUADDR
+    lda L8D43+1,x
     clc
     adc #$24
-    sta $2006
+    sta PPUADDR
     lda SaveData@C5D3,x
     jsr L892D
     lda SaveData@C5D3+1,x
@@ -3570,19 +3684,19 @@ L88B0:
     lda SaveData@C5D9,y
     beq L8915
     pha
-    lda $8D43,x
-    sta $2006
-    lda $8D44,x
+    lda L8D43,x
+    sta PPUADDR
+    lda L8D43+1,x
     clc
     adc #$08
-    sta $2006
+    sta PPUADDR
     pla
     tax
-L890D:
-    lda #$74
-    sta $2007
-    dex
-    bne L890D
+    L890D:
+        lda #$74
+        sta PPUDATA
+        dex
+        bne L890D
 L8915:
     iny
     cpy #$03
@@ -3590,7 +3704,7 @@ L8915:
     jsr LL8C77
     sty $38
     lda #$0D
-    sta $1C
+    sta PalDataPending
     lda #$16
     sta $1F
 L8927:
@@ -3618,31 +3732,31 @@ L6999_893C:
     and #$30
     cmp #$10
     bne L8956
-    ldy $38
-    cpy #$03
-    bcc L8992
-    beq L8950
-    ldy #$19
-    bne L8952
-L8950:
-    ldy #$17
-L8952:
-    sty $1F
-    bcs L896C
-L8956:
+        ldy $38
+        cpy #$03
+        bcc L8992
+        beq L8950
+            ldy #$19
+            bne L8952
+        L8950:
+            ldy #$17
+        L8952:
+        sty $1F
+        bcs L896C
+    L8956:
     cmp #$20
     bne L896C
-    ldy $38
-    iny
-    cpy #$05
-    bne L8963
-    ldy #$00
-L8963:
-    cpy #$03
-    bcs L896A
-    jsr L8C79
-L896A:
-    sty $38
+        ldy $38
+        iny
+        cpy #$05
+        bne L8963
+            ldy #$00
+        L8963:
+        cpy #$03
+        bcs L896A
+            jsr L8C79
+        L896A:
+        sty $38
 L896C:
     ldy $38
     lda L898D,y

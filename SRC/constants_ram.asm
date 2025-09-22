@@ -18,18 +18,22 @@ PPUDataPending         = $1B     ;1=not PPU data pending, 1=data pending.
 PalDataPending         = $1C     ;Pending palette data. Palette # = PalDataPending - 1.
 
 MainRoutine            = $1E
-
+TitleRoutine           = $1F
 NextRoutine            = $20
 
 TimerDelay             = $23     ;Count down from 9 to 0. Decremented every frame.
 Timer1                 = $24     ;Decremented every frame after set.
 Timer2                 = $25     ;Decremented every frame after set.
 Timer3                 = $26     ;Decremented every 10 frames after set.
-
+FrameCount             = $27
 RandomNumber1          = $28     ;Random numbers used-->
 RandomNumber2          = $29     ;throughout the game.
 
+SpriteLoadPending      = $50
+
 SpritePagePos          = $55     ;Index into sprite RAM used to load object sprite data.
+
+IntroMusicRestart      = $63
 
 HealthChange           = $68     ;Amount to add/subtract from Health.
 ; HealthChange+1         = $69
