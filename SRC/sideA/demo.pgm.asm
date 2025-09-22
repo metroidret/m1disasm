@@ -3893,8 +3893,8 @@ LL8A39:
     jmp L8AE8
 L8A58:
     lda $12
-    bpl L8AD5
-    ldx $07A0
+    bpl CheckBackspace
+    ldx PPUStrIndex
     tya
     asl a
     tay
@@ -3958,46 +3958,46 @@ L8AC5:
     adc #$08
     cmp #$C0
     bne L8AD3
-    lda #$80
-L8AD3:
+        lda #$80
+    L8AD3:
     sta $33
-L8AD5:
+
+CheckBackspace: ;($8AD5)
     lda $12
     and #$40
     beq L8AE8
-    lda $33
-    sec
-    sbc #$08
-    cmp #$78
-    bne @L8AE6
-        lda #$B8
-    @L8AE6:
-    sta $33
-L8AE8:
+        lda $33
+        sec
+        sbc #$08
+        cmp #$78
+        bne @L8AE6
+            lda #$B8
+        @L8AE6:
+        sta $33
+    L8AE8:
     ldy $37
-    lda $8B87,y
-    sta $0200
+    lda SaveDataYTbl,y
+    sta SpriteRAM+$00+0
     lda #$E8
-    sta $0201
+    sta SpriteRAM+$00+1
     lda #$03
-    sta $0202
+    sta SpriteRAM+$00+2
     lda #$40
-    sta $0203
+    sta SpriteRAM+$00+3
     cpy #$03
-    beq L8B80
+    beq RTS_8B80
     lda $27
     and #$08
     beq L8B1E
-    lda $8B87,y
-    sta $0204
-    lda #$EC
-    sta $0205
-    lda #$20
-    sta $0206
-    lda $33
-L8B1B:
-    sta $0207
-L8B1E:
+        lda SaveDataYTbl,y
+        sta SpriteRAM+$04+0
+        lda #$EC
+        sta SpriteRAM+$04+1
+        lda #$20
+        sta SpriteRAM+$04+2
+        lda $33
+        sta SpriteRAM+$04+3
+    L8B1E:
     ldx $34
     ldy $35
     lda $16
@@ -4005,90 +4005,76 @@ L8B1E:
     beq L8B64
     lsr a
     bcc L8B3D
-    iny
-    cpy #$15
-    bne LL8B3B
-        inx
-        cpx #$05
-        bne L8B37
-        .byte $A2
-    L8B36:
-        .byte $00
-    L8B37:
-        stx $34
-        ldy #$00
-    LL8B3B:
-    sty $35
-L8B3D:
+        iny
+        cpy #$15
+        bne LL8B3B
+            inx
+            cpx #$05
+            bne L8B37
+                ldx #$00
+            L8B37:
+            stx $34
+            ldy #$00
+        LL8B3B:
+        sty $35
+    L8B3D:
     lsr a
     bcc L8B4E
-    dey
-    bpl L8B4C
-    dex
-    bpl L8B48
-    ldx #$04
-L8B48:
-    stx $34
-    ldy #$14
-L8B4C:
-    sty $35
-L8B4E:
+        dey
+        bpl L8B4C
+            dex
+            bpl L8B48
+                ldx #$04
+            L8B48:
+            stx $34
+            ldy #$14
+        L8B4C:
+        sty $35
+    L8B4E:
     lsr a
     bcc L8B5A
-    inx
-    cpx #$05
-    bne L8B58
-    ldx #$00
-L8B58:
-    stx $34
-L8B5A:
+        inx
+        cpx #$05
+        bne L8B58
+            ldx #$00
+        L8B58:
+        stx $34
+    L8B5A:
     lsr a
     bcc L8B64
-    dex
-    bpl L8B62
-    ldx #$04
-L8B62:
-    stx $34
-L8B64:
+        dex
+        bpl L8B62
+            ldx #$04
+        L8B62:
+        stx $34
+    L8B64:
     lda $27
     and #$08
-    beq L8B80
-    lda $8B8B,x
-    sta $0208
+    beq RTS_8B80
+    lda CharSelectYTbl,x
+    sta SpriteRAM+$08+0
     lda #$EC
-    sta $0209
+    sta SpriteRAM+$08+1
     lda #$20
-    sta $020A
-    lda $8B90,y
-L8B7D:
-    sta $020B
-L8B80:
+    sta SpriteRAM+$08+2
+    lda CharSelectXTbl,y
+    sta SpriteRAM+$08+3
+RTS_8B80:
     rts
-    jsr $21C0
-    rti
-    and ($C0,x)
-    .byte $37
-    .byte $57
-    .byte $77
-    .byte $8F
-    .byte $A7
-    .byte $AF
-    .byte $B7
-    .byte $BF
-    .byte $C7
-    jsr $3028
-    sec
-    rti
-    .byte $50, $58
-    rts
-    pla
-    bvs L8B1B
-    dey
-    bcc L8B36
-    ldy #$B0
-    clv
-    cpy #$C8
-    bne L8B7D
+
+L8B81: ;($8B81)
+    .byte $20, $C0
+    .byte $21, $40
+    .byte $21, $C0
+
+SaveDataYTbl: ;($8B87)
+    .byte $37, $57, $77, $8F
+
+CharSelectYTbl: ;($8B8B)
+    .byte $A7, $AF, $B7, $BF, $C7
+
+CharSelectXTbl: ;($8B90)
+    .byte $20,$28,$30,$38,$40,   $50,$58,$60,$68,$70,   $80,$88,$90,$98,$A0,   $B0,$B8,$C0,$C8,$D0,$D8
 
 
 
@@ -4133,13 +4119,13 @@ L8BE3:
     asl a
     tay
     ldx $07A0
-    lda $8D49,y
+    lda L8D49,y
     jsr L8E5C
-    lda $8D4A,y
+    lda L8D49+1,y
     jsr L8C6A
-    lda $8D49,y
+    lda L8D49,y
     jsr L8E5C
-    lda $8D4A,y
+    lda L8D49+1,y
     sec
     sbc #$20
     jsr L8C6A
@@ -4186,32 +4172,35 @@ L8C50:
     stx $37
 L8C52:
     ldy $37
-    lda $8B87,y
-    sta $0200
+    lda SaveDataYTbl,y
+    sta SpriteRAM+$00+0
     lda #$E8
-    sta $0201
+    sta SpriteRAM+$00+1
     lda #$03
-    sta $0202
+    sta SpriteRAM+$00+2
     lda #$40
-    sta $0203
+    sta SpriteRAM+$00+3
     rts
+
 L8C6A:
     jsr L8E5C
     lda #$48
     jsr L8E5C
     lda #$FF
     jmp L8E5C
+
 LL8C77:
     ldy #$00
-L8C79:
-    lda SaveData@C5A0,y
-    and #$01
-    bne L8C85
-    iny
-    cpy #$03
-    bne L8C79
-L8C85:
+    L8C79:
+        lda SaveData@C5A0,y
+        and #$01
+        bne RTS_8C85
+        iny
+        cpy #$03
+        bne L8C79
+RTS_8C85:
     rts
+
 L8C86:
     ldy #$00
 L8C88:
