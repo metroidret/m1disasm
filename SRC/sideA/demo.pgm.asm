@@ -2834,10 +2834,10 @@ L835E:
     sta $00
     ldy #$00
 L8365:
-    ldx $848F,y
+    ldx CrossExplodeDataTbl,y
     iny
 L8369:
-    lda $848F,y
+    lda CrossExplodeDataTbl,y
     sta $0200,x
     inx
     iny
@@ -3909,9 +3909,9 @@ L8A58:
     lda $34
     asl a
     tay
-    lda $8FCF,y
+    lda L8FCF,y
     sta $2D
-    lda $8FD0,y
+    lda L8FCF+1,y
     sta $2E
     ldy $35
     lda ($2D),y
@@ -4206,12 +4206,13 @@ L8C86:
 L8C88:
     lda SaveData@C5A0,y
     and #$01
-    beq L8C94
+    beq RTS_8C94
     iny
     cpy #$03
     bne L8C88
-L8C94:
+RTS_8C94:
     rts
+
 L8C95:
     stx $2D
     sty $2E
@@ -4264,7 +4265,7 @@ L8CD7:
 
 
 L8CF2:
-    lda $2002
+    lda PPUSTATUS
     lda #$00
     tay
     sta $2D
@@ -4286,9 +4287,9 @@ L8CF2:
             sta $2F
         @endIf_A:
         lda $2E
-        sta $2006
+        sta PPUADDR
         lda $2F
-        sta $2006
+        sta PPUADDR
         jsr L8D4F
         pla
         tax
@@ -4298,9 +4299,9 @@ L8CF2:
         pha
         lda $2E
         sbc #$00
-        sta $2006
+        sta PPUADDR
         pla
-        sta $2006
+        sta PPUADDR
         jsr L8D4F
         inc $2D
         lda $2D
@@ -4322,7 +4323,7 @@ L8D4F:
     ldx #$00
     @loop:
         lda SaveData@C5A3,y
-        sta $2007
+        sta PPUDATA
         iny
         inx
         cpx #$08
@@ -4332,7 +4333,7 @@ L8D4F:
 
 
 L8D5E:
-    lda $2002
+    lda PPUSTATUS
     ldy #$00
     tya
     sta $2D
@@ -4341,14 +4342,14 @@ L8D5E:
         asl a
         tax
         lda L8DA7,x
-        sta $2006
+        sta PPUADDR
         lda L8DA7+1,x
-        sta $2006
+        sta PPUADDR
         @loop_B:
             ldx #$00
             @loop_C:
-                lda $8FD9,y
-                sta $2007
+                lda L8FCF_8FD9,y
+                sta PPUDATA
                 iny
                 inx
                 cpx #$05
@@ -4358,11 +4359,11 @@ L8D5E:
             cmp #$04
             beq @exitLoop_B
             lda #$FF
-            sta $2007
+            sta PPUDATA
             bne @loop_B
         @exitLoop_B:
-        lda $8FD9,y
-        sta $2007
+        lda L8FCF_8FD9,y
+        sta PPUDATA
         iny
         lda #$00
         sta $2D
@@ -4405,7 +4406,7 @@ L8DCB:
     sty $2D
 L8DDB:
     ldy $2E
-    lda $8E33,y
+    lda L8E33,y
     ldy $30
     beq L8DE7
     clc
@@ -4413,7 +4414,7 @@ L8DDB:
 L8DE7:
     ldy $2D
     clc
-    adc $8E36,y
+    adc L8E36,y
     sta $0220,x
     inx
     lda $31
@@ -4421,7 +4422,7 @@ L8DE7:
     asl a
     adc $2D
     tay
-    lda $8E1C,y
+    lda L8E1C,y
     sta $0220,x
     inx
     lda #$02
@@ -4440,29 +4441,22 @@ L8E13:
     cpy #$03
     bne L8DCB
     rts
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    cpy #$D0
-    .byte $FF
-    .byte $FF
-    cmp ($D1,x)
-    .byte $FF
-    .byte $C3
-    .byte $C2
-    .byte $D2
-    .byte $FF
-    cmp $C4
-    .byte $D4
-    .byte $FF
-    .byte $C7
-    dec $D6
-    bmi L8E85
-    bvs L8E37
-L8E37:
-    .byte $08, $10
+
+; money bag pile tile id table
+L8E1C:
+    .byte $FF, $FF, $FF, $FF ; 0 bags of money
+    .byte $FF, $C0, $D0, $FF ; 1 bag of money
+    .byte $FF, $C1, $D1, $FF ; 2 bags of money
+    .byte $C3, $C2, $D2, $FF ; 3 bags of money
+    .byte $C5, $C4, $D4, $FF ; 4 bags of money
+    .byte $C7, $C6, $D6      ; 5 bags of money
+
+; money bag pile y offset per save slot
+L8E33:
+    .byte $30, $50, $70
+; money bag pile y offset per sprite
+L8E36:
+    .byte $00, $08, $10
 
 L8E39:
     stx $00
@@ -4470,12 +4464,14 @@ L8E39:
     jmp DEMO_ProcessPPUString
 
 L8E40:
-    stx $07A0
+    stx PPUStrIndex
     lda #$00
-    sta $07A1,x
+    sta PPUDataString,x
     lda #$01
     sta $1B
     rts
+
+L8E4D:
     sta $32
     and #$F0
     lsr a
@@ -4486,18 +4482,19 @@ L8E40:
     lda $32
     and #$0F
 L8E5C:
-    sta $07A1,x
+    sta PPUDataString,x
     inx
     txa
     cmp #$55
-    bcc L8E6F
-    ldx $07A0
+    bcc RTS_8E6F
+    ldx PPUStrIndex
 L8E68:
     lda #$00
-    sta $07A1,x
+    sta PPUDataString,x
     beq L8E68
-L8E6F:
+RTS_8E6F:
     rts
+
 L8E70:
     tya
     pha
@@ -4516,6 +4513,7 @@ L8E85:
     pla
     tay
     rts
+
 L8E90:
     tya
     pha
@@ -4565,20 +4563,20 @@ L8EBB:
     adc #$03
     sta $0B
     lda $0A
-L8EE2:
-    sec
-L8EE3:
-    sbc #$64
-    inc $02
-    bcs L8EE3
-    dec $0B
-    bpl L8EE2
+    L8EE2:
+        sec
+        L8EE3:
+            sbc #$64
+            inc $02
+            bcs L8EE3
+        dec $0B
+        bpl L8EE2
     adc #$64
     sec
-L8EF0:
-    sbc #$0A
-    inc $01
-    bcs L8EF0
+    L8EF0:
+        sbc #$0A
+        inc $01
+        bcs L8EF0
     adc #$0A
     sta $06
     lda $01
@@ -4593,10 +4591,10 @@ L8EF0:
 
 
 L8F0D:
-    .byte $3F, $00, $20
-    .byte $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17
-    .byte $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
-    .byte $00
+    PPUString $3F00, undefined, \
+        $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
+        $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
+    PPUStringEnd
     
 L8F31:
     PPUString $2075, charmap_savemenu, \
