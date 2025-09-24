@@ -1990,13 +1990,13 @@ UpdateAge:
     ;Else reset minor age.
     lda #$00
     sta SamusAge
-    ;Loop to update middle age and possibly major age.
+    ;Loop to update the higher bytes of age.
     @loop:
         cpx #$03
         bcs @RTS
         inx
         inc SamusAge,x
-        ;Branch if middle age overflowed, need to increment major age too. Else exit.
+        ;Branch if carry to next byte. Else exit.
         beq @loop
 @RTS:
     rts

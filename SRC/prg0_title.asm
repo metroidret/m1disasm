@@ -1684,7 +1684,7 @@ CalculatePassword:
     lda $00
     sta PasswordByte+$0F
     
-    ;Store SamusAge in $6993, SamusAge+1 in $6994 and SamusAge+2 in $6995.
+    ;Store SamusAge in $6993, SamusAge+1 in $6994, SamusAge+2 in $6995 and SamusAge+3 in $6996.
     ldy #$03
     @loop_SamusAge:
         lda SamusAge,y
@@ -1729,7 +1729,7 @@ LoadPasswordData:
     ;Load Samus' age.
     ldy #$03
     L8D33:
-        ;Loop to load all 3 age bytes.
+        ;Loop to load all 4 age bytes.
         lda PasswordByte+$0B,y
         sta SamusAge,y
         dey
@@ -2561,7 +2561,7 @@ InitializeStats: ;($932B)
     sta SamusAge
     sta SamusAge+1
     sta SamusAge+2
-    sta SamusStat0A
+    sta SamusAge+3
     sta AtEnding
     sta JustInBailey
     ;Prepare to switch to Brinstar memory page.
@@ -2802,7 +2802,7 @@ UnusedIntroRoutine6:
     lda UnusedIntro684A,y
     sta $0A
     ; transform into BCD
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     ; save BCD to UnusedIntro683C
     lda $06
     sta UnusedIntro683C+1,x
@@ -2829,7 +2829,7 @@ UnusedIntroRoutine7:
     lda UnusedIntro684C,y
     sta $0A
     ; transform into BCD
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     ; save BCD to UnusedIntro6833
     lda $06
     sta UnusedIntro6833+1,x
@@ -2855,7 +2855,7 @@ UnusedIntroRoutine7:
 ;Unused intro routine. A 16-bit version of HexToDec.
 ;Convert 16-bit value in $0A-$0B to 4 decimal digits.
 ;Stored as a 16-bit BCD value in $06-$07.
-UnusedIntroRoutine8: ;($94DA)
+Hex16ToDec: ;($94DA)
     lda #$FF
     sta $01
     sta $02

@@ -1043,10 +1043,10 @@ MissileCount           db        ;Stores current number of missiles.
 MaxMissiles            db        ;Maximum amount of missiles Samus can carry
 KraidStatueStatus      db        ;bit 0 set, the statues blink, -->
 RidleyStatueStatus     db        ;bit 7 set, statues are up.
-SamusAge               ds 3      ;Low byte of Samus' age.
-; SamusAge+1             = $687E   ;Mid byte of Samus' age.
-; SamusAge+2             = $687F   ;High byte of Samus' age.
-SamusStat0A            db        ;Unused memory address for storing Samus info.
+SamusAge               ds 4      ;Samus' age.
+; SamusAge+1             = $687E
+; SamusAge+2             = $687F
+; SamusAge+3             = $6880   ; not considered for ending
 SamusStat0B            dw        ;SamusStat0B keeps track of how many times Samus has-->
 ; SamusStat0B+1          = $6882   ;died, but this info is never accessed anywhere in the game.
 
@@ -1082,7 +1082,7 @@ PasswordByte           ds $12
 ; PasswordByte+$0B       = $6993   ;Stores SamusAge.
 ; PasswordByte+$0C       = $6994   ;Stores SamusAge+1.
 ; PasswordByte+$0D       = $6995   ;Stores SamusAge+2.
-; PasswordByte+$0E       = $6996   ;Stores no data.
+; PasswordByte+$0E       = $6996   ;Stores SamusAge+3.
 ; PasswordByte+$0F       = $6997   ;Stores Statue statuses(bits 4 thu 7).
 ; PasswordByte+$10       = $6998   ;Stores value RandomNumber1.
 ; PasswordByte+$11       = $6999   ;Stores sum of $6988 thru $6998(Checksum).
