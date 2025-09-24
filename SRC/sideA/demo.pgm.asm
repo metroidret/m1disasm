@@ -4504,7 +4504,7 @@ L8E70:
     sta $0B
     lda SaveData@samusStat+$8,y
     sta $0A
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     lda $06
 L8E85:
     sta SaveData@day+1,x
@@ -4523,7 +4523,7 @@ L8E90:
     sta $0B
     lda SaveData@samusStat+$A,y
     sta $0A
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     lda $06
     sta SaveData@gameOverCount+1,x
     lda $07
@@ -4541,7 +4541,7 @@ L8E90:
 
 
 
-UnusedIntroRoutine8: ;($8EB8)
+Hex16ToDec: ;($8EB8)
     lda #$FF
     sta $01
     sta $02
