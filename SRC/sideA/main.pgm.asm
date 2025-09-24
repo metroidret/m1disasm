@@ -97,7 +97,7 @@ L6C58:
     ldx #$FF
     stx $6F
     inx
-    stx $B41C
+    stx SamusStat+$C
     stx $50
     stx $52
     txa
@@ -236,14 +236,14 @@ L6D64:
     ldx $27
     bne L6D84
     jsr L6DBE
-    lda $B416
+    lda SamusStat+$6
     cmp #$C2
     bne L6D84
-    lda $B417
+    lda SamusStat+$7
     sbc #$01
     bne L6D84
-    sta $B416
-    sta $B417
+    sta SamusStat+$6
+    sta SamusStat+$7
     ldx #$02
     jsr L6DBE
 L6D84:
@@ -274,9 +274,9 @@ L6DBB:
     inc $1E
     rts
 L6DBE:
-    inc $B416,x
+    inc SamusStat+$6,x
     bne L6DC6
-    inc $B417,x
+    inc SamusStat+$7,x
 L6DC6:
     rts
     jsr L6E00
@@ -376,9 +376,9 @@ L6E64:
 L6E7C:
     tya
     bpl RTS_6E92
-    inc $B41A
+    inc SamusStat+$A
     bne L6E87
-    inc $B41B
+    inc SamusStat+$B
 L6E87:
     lsr $6F
     bcs L6E90
@@ -811,7 +811,7 @@ L7150:
     ldy $0300
     dey
     bne L7172
-    lda $B411
+    lda SamusStat+$1
     and #$08
     beq L7172
     lda $0305
@@ -1027,7 +1027,7 @@ L72AD:
     lda $69
     jsr MAIN_Base10Add
     sta $0107
-    lda $B410
+    lda SamusStat+$0
     jsr MAIN_Amul16
     ora #$0F
     cmp $0107
@@ -1132,7 +1132,7 @@ L7379:
     ldx $0300
     dex
     bne L73A6
-    lda $B411
+    lda SamusStat+$1
     and #$08
     beq L73A6
     lda #$00
@@ -1143,7 +1143,7 @@ L73A6:
     jsr L6F6C
 L73A9:
     ldy #$18
-    lda $B411
+    lda SamusStat+$1
     and #$02
     beq L73B4
     ldy #$12
@@ -1247,7 +1247,7 @@ L7463:
     jsr L75C6
     lda #$20
     jmp L731F
-    lda $B411
+    lda SamusStat+$1
     and #$10
     beq L7491
     lda $0314
@@ -1320,7 +1320,7 @@ L74FD:
     sty $0312
     rts
 L7506:
-    lda $B411
+    lda SamusStat+$1
     lsr a
     bcc L754D
     lda $13
@@ -1567,7 +1567,7 @@ L76BB:
     sta $0300,y
     lda #$FF
     sta $030F,y
-    dec $B412
+    dec SamusStat+$2
     bne L76F0
     dec $010E
     jmp SelectSamusPal
@@ -1593,7 +1593,7 @@ L76F1:
     lda $47
 L76F3:
     sta $0502,y
-    bit $B411
+    bit SamusStat+$1
     bvc L76F0
     lda #$00
     sta $0501,y
@@ -1614,7 +1614,7 @@ L771C:
     lda #$02
     bne L76F3
 L7720:
-    lda $B411
+    lda SamusStat+$1
     bpl L76F0
     lda #$03
     sta $0300,y
@@ -1807,7 +1807,7 @@ L786C:
 L7879:
     ldx $45
     bcc L7890
-    lda $B411
+    lda SamusStat+$1
     and #$04
     bne L7898
     dec $030F,x
@@ -2333,7 +2333,7 @@ L7C44:
     bne L7C5E
     lda #$07
     sta $1E
-    inc $B41C
+    inc SamusStat+$C
     jsr L6E00
     jmp L6E99
 L7C5E:
@@ -2478,12 +2478,12 @@ L7D6B:
     ldy $0360
     cpy #$02
     bne L7D8B
-    lda $B414
+    lda SamusStat+$4
     bpl L7D7C
     ldy #$02
     jsr L7E26
 L7D7C:
-    lda $B415
+    lda SamusStat+$5
     bpl L7D86
     ldy #$03
     jsr L7E26
@@ -2602,8 +2602,8 @@ L7E50:
     bmi L7E8C
     lda $50
     bne L7E8C
-    lda $B414
-    and $B415
+    lda SamusStat+$4
+    and SamusStat+$5
     bpl L7E8C
     sta $4E
     ldx #$70
@@ -2631,7 +2631,7 @@ L7E66:
 L7E8C:
     rts
 L7E8D:
-    lda $B412
+    lda SamusStat+$2
     beq L7E8C
     lda $13
     ora $17
@@ -2728,13 +2728,13 @@ L7F3C:
     bcs L7F6D
     cpy #$06
     bcc L7F50
-    lda $B411
+    lda SamusStat+$1
     and #$3F
-    sta $B411
+    sta SamusStat+$1
 L7F50:
     jsr L7EA5
-    ora $B411
-    sta $B411
+    ora SamusStat+$1
+    sta SamusStat+$1
 L7F59:
     lda #$FF
     sta $0109
@@ -2758,12 +2758,12 @@ L7F70:
     jsr L8113
     bne L7F59
 L7F76:
-    lda $B410
+    lda SamusStat+$0
     cmp #$06
     beq L7F80
-    inc $B410
+    inc SamusStat+$0
 L7F80:
-    lda $B410
+    lda SamusStat+$0
     jsr MAIN_Amul16
     ora #$09
     sta $0107
@@ -2944,7 +2944,7 @@ L80AC:
     ldy $8E
     cpy $90
     beq L80D7
-    lda $B413
+    lda SamusStat+$3
     beq L80D7
     inc $90
 L80C6:
@@ -2981,7 +2981,7 @@ L80F1:
     sta $0108
     lsr a
     tay
-    sta $B413,y
+    sta SamusStat+$3,y
     lda #$4B
     jsr L8113
     bne L80D7
@@ -2994,18 +2994,18 @@ L8107:
 L8113:
     pha
     clc
-    adc $B412
+    adc SamusStat+$2
     bcc L811C
     lda #$FF
 L811C:
-    sta $B412
+    sta SamusStat+$2
     pla
     clc
-    adc $B413
+    adc SamusStat+$3
     bcc L8128
     lda #$FF
 L8128:
-    sta $B413
+    sta SamusStat+$3
     rts
 L812C:
     lda $0400,x
@@ -3450,9 +3450,9 @@ L843E:
     ldy $010B
     iny
     bne L848B
-    ldy $B413
+    ldy SamusStat+$3
     beq L8481
-    lda $B412
+    lda SamusStat+$2
     jsr L8503
     lda $02
     jsr L84DE
@@ -3484,7 +3484,7 @@ L848B:
     inc $0206,x
 L84B5:
     ldx $55
-    lda $B410
+    lda SamusStat+$0
     beq L84DD
     sta $03
     lda #$40
@@ -3666,7 +3666,7 @@ L85F8:
     lsr a
     and #$03
     bne L860F
-    lda $B411
+    lda SamusStat+$1
     and #$20
     beq L8608
     bcc L860F
@@ -4938,7 +4938,7 @@ L8E7D:
     and #$06
     lsr a
     tay
-    lda $B413,y
+    lda SamusStat+$3,y
     beq L8E96
     pla
     pla
@@ -5077,13 +5077,13 @@ L8F85:
     jsr L8EDB
     sta $036C
     lda #$40
-    ldx $B415
+    ldx SamusStat+$5
     bpl L8F94
     lda #$30
 L8F94:
     sta $0370
     lda #$60
-    ldx $B414
+    ldx SamusStat+$4
     bpl L8FA0
     lda #$50
 L8FA0:
@@ -5396,7 +5396,7 @@ L91A5:
     cmp $B420,y
     bne L91B3
     lda $06
-    cmp $B41F,y
+    cmp SamusStat+$F,y
     beq L91B8
 L91B3:
     dey
@@ -7369,14 +7369,14 @@ LA3A4:
     lda #$1E
 LA3AD:
     clc
-    adc $B412
+    adc SamusStat+$2
     bcs LA3B8
-    cmp $B413
+    cmp SamusStat+$3
     bcc LA3BB
 LA3B8:
-    lda $B413
+    lda SamusStat+$3
 LA3BB:
-    sta $B412
+    sta SamusStat+$2
     jmp L6F80
 LA3C1:
     lda $27

@@ -189,6 +189,13 @@ PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written
 
 ;----------------------------------------------------------------------------------------------------
 
+SamusStat              = $B410   ;$B410-$B41F
+TankCount              = $B410
 SamusGear              = $B411
+
+SamusAge               = $B416   ;Samus' age.
+; SamusAge+1             = $B417
+; SamusAge+2             = $B418
+; SamusAge+3             = $B419
 
 

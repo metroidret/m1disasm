@@ -1,30 +1,35 @@
 ; placeholder to be overwritten with real save data from savedata.asm
-SaveData: ;($C5A0)
-@C5A0:
+SaveData:
+@enable: ;($C5A0)
+    ; bit 7: slot was once accessed to start a game? %1=no, %0=yes
+    ; bit 0: slot is named? %1=yes, %0=no
     .byte $80
     .byte $80
     .byte $80
-@C5A3:
+@name: ;($C5A3)
+    ; first 8 bytes is save slot name, last 8 bytes is save slot name's dakuten accents
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-@C5D3:
+@gameOverCount: ;($C5D3)
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-@C5D9:
+@energyTank: ;($C5D9)
+    ; only for save menu, real etank count is in samus stat
     .byte $00
     .byte $00
     .byte $00
-@C5DC:
+@day: ;($C5DC)
+    ; day count is SamusAge+2
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-@C5E2:
+@samusStat: ;($C5E2)
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-@C612:
+@moneyBags: ;($C612)
     .byte $00
     .byte $00
     .byte $00

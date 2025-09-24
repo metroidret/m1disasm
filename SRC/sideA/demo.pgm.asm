@@ -3653,7 +3653,7 @@ L6999_8899:
     lda PPUSTATUS
     ldy #$00
 L88B0:
-    lda SaveData@C5A0,y
+    lda SaveData@enable,y
     and #$01
     beq L8915
     tya
@@ -3667,9 +3667,9 @@ L88B0:
     clc
     adc #$0F
     sta PPUADDR
-    lda SaveData@C5DC,x
+    lda SaveData@day,x
     sta PPUDATA
-    lda SaveData@C5DC+1,x
+    lda SaveData@day+1,x
     jsr L892D
     lda L8D43,x
     sta PPUADDR
@@ -3677,11 +3677,11 @@ L88B0:
     clc
     adc #$24
     sta PPUADDR
-    lda SaveData@C5D3,x
+    lda SaveData@gameOverCount,x
     jsr L892D
-    lda SaveData@C5D3+1,x
+    lda SaveData@gameOverCount+1,x
     jsr L892D
-    lda SaveData@C5D9,y
+    lda SaveData@energyTank,y
     beq L8915
     pha
     lda L8D43,x
@@ -3785,28 +3785,28 @@ L8992:
     asl a
     asl a
     tax
-    ldy SaveData@C5E2+$C,x
+    ldy SaveData@samusStat+$C,x
     beq L89A6
-    dec SaveData@C5E2+$C,x
+    dec SaveData@samusStat+$C,x
     lda #$81
-    sta SaveData@C5E2+$E,x
+    sta SaveData@samusStat+$E,x
 L89A6:
     ldy #$00
     L89A8:
-        lda SaveData@C5E2,x
-        sta $B410,y
+        lda SaveData@samusStat,x
+        sta SamusStat+$0,y
         inx
         iny
         cpy #$10
         bne L89A8
     lda $38
-    sta $B41F
+    sta SamusStat+$F
     tax
-    lda SaveData@C5A0,x
-    ora $B41E
-    sta $B41E
+    lda SaveData@enable,x
+    ora SamusStat+$E
+    sta SamusStat+$E
     and #$01
-    sta SaveData@C5A0,x
+    sta SaveData@enable,x
     jsr LCE35
     jmp LCE66
 
@@ -3849,25 +3849,25 @@ L6999_89F2:
     inc $39
     ldx #$00
     ldy #$00
-L8A17:
-    lda #$00
-    sta $2D
-L8A1B:
-    lda SaveData@C5A3,y
-    cmp #$FF
-    beq L8A2A
-    lda SaveData@C5A0,x
-    ora #$01
-    sta SaveData@C5A0,x
-L8A2A:
-    iny
-    inc $2D
-    lda $2D
-    cmp #$10
-    bne L8A1B
-    inx
-    cpx #$03
-    bne L8A17
+    L8A17:
+        lda #$00
+        sta $2D
+        L8A1B:
+            lda SaveData@name,y
+            cmp #$FF
+            beq L8A2A
+                lda SaveData@enable,x
+                ora #$01
+                sta SaveData@enable,x
+            L8A2A:
+            iny
+            inc $2D
+            lda $2D
+            cmp #$10
+            bne L8A1B
+        inx
+        cpx #$03
+        bne L8A17
     rts
 
 
@@ -3949,10 +3949,10 @@ L8AAD:
     beq L8AC5
     cmp #$5C
     beq L8AC5
-    sta SaveData@C5A3,x
+    sta SaveData@name,x
     lda #$FF
 L8AC5:
-    sta SaveData@C5A3+$8,x
+    sta SaveData@name+$8,x
     lda $33
     clc
     adc #$08
@@ -4112,7 +4112,7 @@ L6999_8BC5:
     rts
 L8BE3:
     lda #$80
-    sta SaveData@C5A0,y
+    sta SaveData@enable,y
     tya
     pha
     pha
@@ -4139,9 +4139,9 @@ L8BE3:
     ldx #$00
     L8C16:
         lda #$FF
-        sta SaveData@C5A3,y
+        sta SaveData@name,y
         lda #$00
-        sta SaveData@C5E2,y
+        sta SaveData@samusStat,y
         iny
         inx
         cpx #$10
@@ -4149,16 +4149,16 @@ L8BE3:
     pla
     tay
     lda #$00
-    sta SaveData@C5D9,y
-    sta SaveData@C612,y
+    sta SaveData@energyTank,y
+    sta SaveData@moneyBags,y
     tya
     asl a
     tay
     lda #$00
-    sta SaveData@C5D3,y
-    sta SaveData@C5D3+1,y
-    sta SaveData@C5DC,y
-    sta SaveData@C5DC+1,y
+    sta SaveData@gameOverCount,y
+    sta SaveData@gameOverCount+1,y
+    sta SaveData@day,y
+    sta SaveData@day+1,y
 L8C41:
     lda $12
     and #$20
@@ -4192,7 +4192,7 @@ L8C6A:
 LL8C77:
     ldy #$00
     L8C79:
-        lda SaveData@C5A0,y
+        lda SaveData@enable,y
         and #$01
         bne RTS_8C85
         iny
@@ -4203,13 +4203,13 @@ RTS_8C85:
 
 L8C86:
     ldy #$00
-L8C88:
-    lda SaveData@C5A0,y
-    and #$01
-    beq RTS_8C94
-    iny
-    cpy #$03
-    bne L8C88
+    L8C88:
+        lda SaveData@enable,y
+        and #$01
+        beq RTS_8C94
+        iny
+        cpy #$03
+        bne L8C88
 RTS_8C94:
     rts
 
@@ -4322,7 +4322,7 @@ L8D49:
 L8D4F:
     ldx #$00
     @loop:
-        lda SaveData@C5A3,y
+        lda SaveData@name,y
         sta PPUDATA
         iny
         inx
@@ -4397,10 +4397,10 @@ L8DC3:
     sty $2E
     ldx #$00
 L8DCB:
-    lda SaveData@C5A0,y
+    lda SaveData@enable,y
     and #$01
     beq L8E13
-    lda SaveData@C612,y
+    lda SaveData@moneyBags,y
     sta $31
     ldy #$00
     sty $2D
@@ -4500,16 +4500,16 @@ L8E70:
     pha
     jsr DEMO_Amul16
     tay
-    lda SaveData@C5E2+$9,y
+    lda SaveData@samusStat+$9,y
     sta $0B
-    lda SaveData@C5E2+$8,y
+    lda SaveData@samusStat+$8,y
     sta $0A
-    jsr L8EBB
+    jsr UnusedIntroRoutine8
     lda $06
 L8E85:
-    sta SaveData@C5DC+1,x
+    sta SaveData@day+1,x
     lda $07
-    sta SaveData@C5DC,x
+    sta SaveData@day,x
     pla
     tay
     rts
@@ -4519,29 +4519,29 @@ L8E90:
     pha
     jsr DEMO_Amul16
     tay
-    lda SaveData@C5E2+$B,y
+    lda SaveData@samusStat+$B,y
     sta $0B
-    lda SaveData@C5E2+$A,y
+    lda SaveData@samusStat+$A,y
     sta $0A
-    jsr L8EBB
+    jsr UnusedIntroRoutine8
     lda $06
-    sta SaveData@C5D3+1,x
+    sta SaveData@gameOverCount+1,x
     lda $07
-    sta SaveData@C5D3,x
-    lda SaveData@C5E2,y
+    sta SaveData@gameOverCount,x
+    lda SaveData@samusStat,y
     pha
     txa
     lsr a
     tay
     pla
-    sta SaveData@C5D9,y
+    sta SaveData@energyTank,y
     pla
     tay
     rts
 
 
 
-L8EBB:
+UnusedIntroRoutine8: ;($8EB8)
     lda #$FF
     sta $01
     sta $02
