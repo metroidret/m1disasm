@@ -3646,7 +3646,7 @@ L6999_8899:
     sta $39
     ldx #<L8F31.b
     ldy #>L8F31.b
-    jsr L8E39
+    jsr DEMO_PreparePPUProcess
     inc $36
     jsr L8CF2
     dec $36
@@ -3659,8 +3659,8 @@ L88B0:
     tya
     asl a
     tax
-    jsr L8E70
-    jsr L8E90
+    jsr UpdateSaveDataDay
+    jsr UpdateSaveDataGameOverCountAndEnergyTank
     lda L8D43,x
     sta PPUADDR
     lda L8D43+1,x
@@ -3785,26 +3785,26 @@ L8992:
     asl a
     asl a
     tax
-    ldy SaveData@samusStat+$C,x
+    ldy SaveData@samusStat@0.byteC,x
     beq L89A6
-    dec SaveData@samusStat+$C,x
+    dec SaveData@samusStat@0.byteC,x
     lda #$81
-    sta SaveData@samusStat+$E,x
+    sta SaveData@samusStat@0.byteE,x
 L89A6:
     ldy #$00
     L89A8:
         lda SaveData@samusStat,x
-        sta SamusStat+$0,y
+        sta CurSamusStat,y
         inx
         iny
         cpy #$10
         bne L89A8
     lda $38
-    sta SamusStat+$F
+    sta CurSamusStat+$F
     tax
     lda SaveData@enable,x
-    ora SamusStat+$E
-    sta SamusStat+$E
+    ora CurSamusStat+$E
+    sta CurSamusStat+$E
     and #$01
     sta SaveData@enable,x
     jsr LCE35
@@ -3814,9 +3814,9 @@ L89A6:
 
 L6999_89CE:
     jsr L883B
-    ldx #$42
-    ldy #$90
-    jsr L8E39
+    ldx #<L9042.b
+    ldy #>L9042.b
+    jsr DEMO_PreparePPUProcess
     jsr L8D5E
     jsr L8CF2
     lda #$00
@@ -3899,13 +3899,13 @@ L8A58:
     asl a
     tay
     lda $8B81,y
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda $33
     lsr a
     lsr a
     lsr a
     adc $8B82,y
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda $34
     asl a
     tay
@@ -3922,16 +3922,16 @@ L8A58:
     cmp #$5C
     beq L8A98
     lda #$82
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda #$FF
     bne L8A9A
 L8A98:
     lda #$01
 L8A9A:
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     pla
-    jsr L8E5C
-    jsr L8E40
+    jsr UnusedIntroRoutine5@subroutine
+    jsr UnusedIntroRoutine4
     lda $37
     sta $2D
     lda $33
@@ -4080,13 +4080,13 @@ CharSelectXTbl: ;($8B90)
 
 L6999_8BA5:
     jsr L883B
-    ldx #$42
-    ldy #$90
-    jsr L8E39
+    ldx #<L9042.b
+    ldy #>L9042.b
+    jsr DEMO_PreparePPUProcess
     jsr L8D5E
-    ldx #$8E
-    ldy #$90
-    jsr L8E39
+    ldx #<L908E.b
+    ldy #>L908E.b
+    jsr DEMO_PreparePPUProcess
     jsr L8CF2
     lda #$00
     sta $37
@@ -4120,16 +4120,16 @@ L8BE3:
     tay
     ldx $07A0
     lda L8D49,y
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda L8D49+1,y
     jsr L8C6A
     lda L8D49,y
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda L8D49+1,y
     sec
     sbc #$20
     jsr L8C6A
-    jsr L8E40
+    jsr UnusedIntroRoutine4
     pla
     asl a
     asl a
@@ -4183,11 +4183,11 @@ L8C52:
     rts
 
 L8C6A:
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda #$48
-    jsr L8E5C
+    jsr UnusedIntroRoutine5@subroutine
     lda #$FF
-    jmp L8E5C
+    jmp UnusedIntroRoutine5@subroutine
 
 LL8C77:
     ldy #$00
@@ -4381,17 +4381,17 @@ L8DA7:
     .byte $23, $24
 
 L8DB1:
-    lda $1F
+    lda TitleRoutine
     cmp #$16
     bne L8DBD
-    ldy #$40
-    sty $30
-    bne L8DC3
-L8DBD:
-    ldy #$70
-    lda #$00
-    sta $30
-L8DC3:
+        ldy #$40
+        sty $30
+        bne L8DC3
+    L8DBD:
+        ldy #$70
+        lda #$00
+        sta $30
+    L8DC3:
     sty $2F
     ldy #$00
     sty $2E
@@ -4458,12 +4458,12 @@ L8E33:
 L8E36:
     .byte $00, $08, $10
 
-L8E39:
+DEMO_PreparePPUProcess: ;($8E39)
     stx $00
     sty $01
     jmp DEMO_ProcessPPUString
 
-L8E40:
+UnusedIntroRoutine4: ;($8E40)
     stx PPUStrIndex
     lda #$00
     sta PPUDataString,x
@@ -4471,42 +4471,54 @@ L8E40:
     sta $1B
     rts
 
-L8E4D:
+UnusedIntroRoutine5: ;($8E4D)
     sta $32
     and #$F0
     lsr a
     lsr a
     lsr a
     lsr a
-    jsr L8E5C
+    jsr @subroutine
+    ; run subroutine for low nybble
     lda $32
     and #$0F
-L8E5C:
+    ; fallthrough
+
+@subroutine: ;($8E5C)
+    ; store nybble to current location in PPUDataString buffer
     sta PPUDataString,x
+    ; move to next byte in buffer
     inx
+    ; exit if we haven't moved outside the bounds of the buffer
     txa
     cmp #$55
-    bcc RTS_8E6F
+    bcc @RTS
+    
+    ; oh no. we are out of bounds
+    ; cancel writing the current ppu string to the buffer
     ldx PPUStrIndex
-L8E68:
-    lda #$00
-    sta PPUDataString,x
-    beq L8E68
-RTS_8E6F:
+    @loop_infinite:
+        ; cancel repeatedly forever
+        ; pretty sure this is a bug
+        lda #$00 
+        sta PPUDataString,x
+        beq @loop_infinite
+@RTS:
     rts
 
-L8E70:
+
+
+UpdateSaveDataDay:
     tya
     pha
     jsr DEMO_Amul16
     tay
-    lda SaveData@samusStat+$9,y
+    lda SaveData@samusStat@0.SamusAge+3,y
     sta $0B
-    lda SaveData@samusStat+$8,y
+    lda SaveData@samusStat@0.SamusAge+2,y
     sta $0A
     jsr Hex16ToDec
     lda $06
-L8E85:
     sta SaveData@day+1,x
     lda $07
     sta SaveData@day,x
@@ -4514,14 +4526,16 @@ L8E85:
     tay
     rts
 
-L8E90:
+
+
+UpdateSaveDataGameOverCountAndEnergyTank: ;($8E90)
     tya
     pha
     jsr DEMO_Amul16
     tay
-    lda SaveData@samusStat+$B,y
+    lda SaveData@samusStat@0.GameOverCount+1,y
     sta $0B
-    lda SaveData@samusStat+$A,y
+    lda SaveData@samusStat@0.GameOverCount,y
     sta $0A
     jsr Hex16ToDec
     lda $06
@@ -4541,48 +4555,64 @@ L8E90:
 
 
 
+;Convert 16-bit value in $0A-$0B to 4 decimal digits.
+;Stored as a 16-bit BCD value in $06-$07.
 Hex16ToDec: ;($8EB8)
     lda #$FF
     sta $01
     sta $02
     sta $03
     sec
-    @loop:
+    @loop_A:
+        ; subtract 1000 from $0A-$0B
         lda $0A
         sbc #$E8
         sta $0A
         lda $0B
         sbc #$03
         sta $0B
+        ; increment the thousands digit
         inc $03
-        bcs @loop
+        bcs @loop_A
+    ; undo the last subtraction
     lda $0A
     adc #$E8
     sta $0A
     lda $0B
     adc #$03
     sta $0B
+    ; hundreds
     lda $0A
-    L8EE2:
+    @loop_B:
         sec
-        L8EE3:
+        @loop_C:
             sbc #$64
             inc $02
-            bcs L8EE3
+            bcs @loop_C
         dec $0B
-        bpl L8EE2
+        bpl @loop_B
+    ; undo the last subtraction
     adc #$64
+    ; tens
     sec
-    L8EF0:
+    @loop_D:
         sbc #$0A
         inc $01
-        bcs L8EF0
+        bcs @loop_D
+    ; undo the last subtraction
     adc #$0A
+    
+    ; all digits have now been isolated:
+    ; thousands in $03, hundreds in $02, tens in $01, ones in a
+    
+    ; store ones in $06
     sta $06
+    ; add tens multiplied by 16 to $06
     lda $01
     jsr DEMO_Amul16
     ora $06
     sta $06
+    ; store thousands multiplied by 16 + hundreds in $07
     lda $03
     jsr DEMO_Amul16
     ora $02

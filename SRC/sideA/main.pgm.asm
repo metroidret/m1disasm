@@ -97,7 +97,7 @@ L6C58:
     ldx #$FF
     stx $6F
     inx
-    stx SamusStat+$C
+    stx CurSamusStat.byteC
     stx $50
     stx $52
     txa
@@ -236,17 +236,17 @@ L6D64:
     ldx $27
     bne L6D84
     jsr L6DBE
-    lda SamusStat+$6
+    lda CurSamusStat.SamusAge
     cmp #$C2
     bne L6D84
-    lda SamusStat+$7
-    sbc #$01
-    bne L6D84
-    sta SamusStat+$6
-    sta SamusStat+$7
-    ldx #$02
-    jsr L6DBE
-L6D84:
+        lda CurSamusStat.SamusAge+1
+        sbc #$01
+        bne L6D84
+            sta CurSamusStat.SamusAge
+            sta CurSamusStat.SamusAge+1
+            ldx #$02
+            jsr L6DBE
+    L6D84:
     jsr L855C
     jsr L855C
     jsr UpdateWorld
@@ -273,12 +273,15 @@ L6DA4:
 L6DBB:
     inc $1E
     rts
+
 L6DBE:
-    inc SamusStat+$6,x
-    bne L6DC6
-    inc SamusStat+$7,x
-L6DC6:
+    inc CurSamusStat.SamusAge,x
+    bne RTS_6DC6
+        inc CurSamusStat.SamusAge+1,x
+    RTS_6DC6:
     rts
+
+L6DC7:
     jsr L6E00
     ldy #$0F
 L6DCC:
@@ -376,9 +379,9 @@ L6E64:
 L6E7C:
     tya
     bpl RTS_6E92
-    inc SamusStat+$A
+    inc CurSamusStat.GameOverCount
     bne L6E87
-    inc SamusStat+$B
+    inc CurSamusStat.GameOverCount+1
 L6E87:
     lsr $6F
     bcs L6E90
@@ -481,7 +484,7 @@ MAIN_EraseAllSprites: ;($6F3B)
 
 
 SelectSamusPal: ;($6F3F)
-    lda SamusGear
+    lda CurSamusStat.SamusGear
     asl a
     asl a
     asl a
@@ -811,7 +814,7 @@ L7150:
     ldy $0300
     dey
     bne L7172
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$08
     beq L7172
     lda $0305
@@ -975,7 +978,7 @@ SubtractHealth:
     bcs GotoClearHealthChange
     
     ;Branch if Samus doesn't have Varia.
-    lda SamusGear
+    lda CurSamusStat.SamusGear
     and #$20
     beq L7273
     ;Samus has Varia, divide damage by 2.
@@ -1027,7 +1030,7 @@ L72AD:
     lda $69
     jsr MAIN_Base10Add
     sta $0107
-    lda SamusStat+$0
+    lda CurSamusStat.TankCount
     jsr MAIN_Amul16
     ora #$0F
     cmp $0107
@@ -1132,7 +1135,7 @@ L7379:
     ldx $0300
     dex
     bne L73A6
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$08
     beq L73A6
     lda #$00
@@ -1143,7 +1146,7 @@ L73A6:
     jsr L6F6C
 L73A9:
     ldy #$18
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$02
     beq L73B4
     ldy #$12
@@ -1247,7 +1250,7 @@ L7463:
     jsr L75C6
     lda #$20
     jmp L731F
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$10
     beq L7491
     lda $0314
@@ -1320,7 +1323,7 @@ L74FD:
     sty $0312
     rts
 L7506:
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     lsr a
     bcc L754D
     lda $13
@@ -1567,7 +1570,7 @@ L76BB:
     sta $0300,y
     lda #$FF
     sta $030F,y
-    dec SamusStat+$2
+    dec CurSamusStat.byte2
     bne L76F0
     dec $010E
     jmp SelectSamusPal
@@ -1593,7 +1596,7 @@ L76F1:
     lda $47
 L76F3:
     sta $0502,y
-    bit SamusStat+$1
+    bit CurSamusStat.SamusGear
     bvc L76F0
     lda #$00
     sta $0501,y
@@ -1614,7 +1617,7 @@ L771C:
     lda #$02
     bne L76F3
 L7720:
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     bpl L76F0
     lda #$03
     sta $0300,y
@@ -1807,7 +1810,7 @@ L786C:
 L7879:
     ldx $45
     bcc L7890
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$04
     bne L7898
     dec $030F,x
@@ -2333,7 +2336,7 @@ L7C44:
     bne L7C5E
     lda #$07
     sta $1E
-    inc SamusStat+$C
+    inc CurSamusStat.byteC
     jsr L6E00
     jmp L6E99
 L7C5E:
@@ -2478,12 +2481,12 @@ L7D6B:
     ldy $0360
     cpy #$02
     bne L7D8B
-    lda SamusStat+$4
+    lda CurSamusStat.byte4
     bpl L7D7C
     ldy #$02
     jsr L7E26
 L7D7C:
-    lda SamusStat+$5
+    lda CurSamusStat.byte5
     bpl L7D86
     ldy #$03
     jsr L7E26
@@ -2602,8 +2605,8 @@ L7E50:
     bmi L7E8C
     lda $50
     bne L7E8C
-    lda SamusStat+$4
-    and SamusStat+$5
+    lda CurSamusStat.byte4
+    and CurSamusStat.byte5
     bpl L7E8C
     sta $4E
     ldx #$70
@@ -2631,7 +2634,7 @@ L7E66:
 L7E8C:
     rts
 L7E8D:
-    lda SamusStat+$2
+    lda CurSamusStat.byte2
     beq L7E8C
     lda $13
     ora $17
@@ -2728,13 +2731,13 @@ L7F3C:
     bcs L7F6D
     cpy #$06
     bcc L7F50
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$3F
-    sta SamusStat+$1
+    sta CurSamusStat.SamusGear
 L7F50:
     jsr L7EA5
-    ora SamusStat+$1
-    sta SamusStat+$1
+    ora CurSamusStat.SamusGear
+    sta CurSamusStat.SamusGear
 L7F59:
     lda #$FF
     sta $0109
@@ -2758,12 +2761,12 @@ L7F70:
     jsr L8113
     bne L7F59
 L7F76:
-    lda SamusStat+$0
+    lda CurSamusStat.TankCount
     cmp #$06
     beq L7F80
-    inc SamusStat+$0
+    inc CurSamusStat.TankCount
 L7F80:
-    lda SamusStat+$0
+    lda CurSamusStat.TankCount
     jsr MAIN_Amul16
     ora #$09
     sta $0107
@@ -2944,7 +2947,7 @@ L80AC:
     ldy $8E
     cpy $90
     beq L80D7
-    lda SamusStat+$3
+    lda CurSamusStat.byte3
     beq L80D7
     inc $90
 L80C6:
@@ -2981,7 +2984,7 @@ L80F1:
     sta $0108
     lsr a
     tay
-    sta SamusStat+$3,y
+    sta CurSamusStat.byte3,y
     lda #$4B
     jsr L8113
     bne L80D7
@@ -2994,18 +2997,18 @@ L8107:
 L8113:
     pha
     clc
-    adc SamusStat+$2
+    adc CurSamusStat.byte2
     bcc L811C
     lda #$FF
 L811C:
-    sta SamusStat+$2
+    sta CurSamusStat.byte2
     pla
     clc
-    adc SamusStat+$3
+    adc CurSamusStat.byte3
     bcc L8128
     lda #$FF
 L8128:
-    sta SamusStat+$3
+    sta CurSamusStat.byte3
     rts
 L812C:
     lda $0400,x
@@ -3450,9 +3453,9 @@ L843E:
     ldy $010B
     iny
     bne L848B
-    ldy SamusStat+$3
+    ldy CurSamusStat.byte3
     beq L8481
-    lda SamusStat+$2
+    lda CurSamusStat.byte2
     jsr L8503
     lda $02
     jsr L84DE
@@ -3484,7 +3487,7 @@ L848B:
     inc $0206,x
 L84B5:
     ldx $55
-    lda SamusStat+$0
+    lda CurSamusStat.TankCount
     beq L84DD
     sta $03
     lda #$40
@@ -3666,7 +3669,7 @@ L85F8:
     lsr a
     and #$03
     bne L860F
-    lda SamusStat+$1
+    lda CurSamusStat.SamusGear
     and #$20
     beq L8608
     bcc L860F
@@ -4938,7 +4941,7 @@ L8E7D:
     and #$06
     lsr a
     tay
-    lda SamusStat+$3,y
+    lda CurSamusStat.byte3,y
     beq L8E96
     pla
     pla
@@ -5077,13 +5080,13 @@ L8F85:
     jsr L8EDB
     sta $036C
     lda #$40
-    ldx SamusStat+$5
+    ldx CurSamusStat.byte5
     bpl L8F94
     lda #$30
 L8F94:
     sta $0370
     lda #$60
-    ldx SamusStat+$4
+    ldx CurSamusStat.byte4
     bpl L8FA0
     lda #$50
 L8FA0:
@@ -5396,7 +5399,7 @@ L91A5:
     cmp $B420,y
     bne L91B3
     lda $06
-    cmp SamusStat+$F,y
+    cmp CurSamusStat.byteF,y
     beq L91B8
 L91B3:
     dey
@@ -5797,7 +5800,7 @@ L9407:
     tay
     lda #$00
     sta $1C
-PreparePPUProcess:
+MAIN_PreparePPUProcess:
     stx $00
     sty $01
     jmp MAIN_ProcessPPUString
@@ -5910,7 +5913,7 @@ MAIN_CheckPPUWrite: ;($947E)
     beq RTS_9493
     ldx #<PPUDataString.b
     ldy #>PPUDataString.b
-    jsr PreparePPUProcess
+    jsr MAIN_PreparePPUProcess
     lda #$00
     sta PPUStrIndex
     sta PPUDataString
@@ -7369,14 +7372,14 @@ LA3A4:
     lda #$1E
 LA3AD:
     clc
-    adc SamusStat+$2
+    adc CurSamusStat.byte2
     bcs LA3B8
-    cmp SamusStat+$3
+    cmp CurSamusStat.byte3
     bcc LA3BB
 LA3B8:
-    lda SamusStat+$3
+    lda CurSamusStat.byte3
 LA3BB:
-    sta SamusStat+$2
+    sta CurSamusStat.byte2
     jmp L6F80
 LA3C1:
     lda $27
@@ -9499,7 +9502,7 @@ LB2ED:
     jsr ClearScreenData
     ldx #$4F
     ldy #$B3
-    jsr PreparePPUProcess
+    jsr MAIN_PreparePPUProcess
     jsr LB346
     jsr $D068
 LB307:
@@ -9542,7 +9545,7 @@ LB32D:
     jsr ClearScreenData
     ldx #$59
     ldy #$B3
-    jsr PreparePPUProcess
+    jsr MAIN_PreparePPUProcess
     jsr $D058
     jsr LB346
     jmp $D068

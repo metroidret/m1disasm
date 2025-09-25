@@ -1,3 +1,21 @@
+
+;-------------------------------------------[ Structs ]----------------------------------------------
+
+.struct SamusStat
+    TankCount          db
+    SamusGear          db
+    byte2              db
+    byte3              db
+    byte4              db
+    byte5              db
+    SamusAge           ds 4      ;In-game time
+    GameOverCount      dw
+    byteC              db
+    byteD              db
+    byteE              db
+    byteF              db
+.endst
+
 ;-------------------------------------------[ Defines ]----------------------------------------------
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
@@ -189,13 +207,12 @@ PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written
 
 ;----------------------------------------------------------------------------------------------------
 
-SamusStat              = $B410   ;$B410-$B41F
-TankCount              = $B410
-SamusGear              = $B411
 
-SamusAge               = $B416   ;Samus' age.
-; SamusAge+1             = $B417
-; SamusAge+2             = $B418
-; SamusAge+3             = $B419
+.enum $B410 export
+
+;$B410-$B41F
+CurSamusStat           instanceof SamusStat
+
+.ende
 
 
