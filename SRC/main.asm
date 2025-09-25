@@ -138,6 +138,7 @@ FDSFileMacroPart3
 
 
 ; file $08 - main.pgm ($6800-$B40F)
+; Game engine code
 FDSFileMacroPart1 $20
     .ascstr "MAIN.PGM"
 FDSFileMacroPart2 $6800, $00
@@ -175,6 +176,7 @@ FDSFileMacroPart3
 
 
 ; file $0C - endpgm ($6000-$6D7F)
+; Ending code
 FDSFileMacroPart1 $EE
     .ascstr "ENDPGM", $00, $00
 FDSFileMacroPart2 $6000, $00
@@ -195,6 +197,7 @@ FDSFileMacroPart3
 
 
 ; file $0E - savedata ($C5A0-$C614)
+; Save data file
 FDSFileMacroPart1 $0F
     .ascstr "SAVEDATA"
 FDSFileMacroPart2 $C5A0, $00

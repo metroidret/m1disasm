@@ -3644,8 +3644,8 @@ L8894:
 L6999_8899:
     lda #$00
     sta $39
-    ldx #<L8F31.b
-    ldy #>L8F31.b
+    ldx #<PPUString_8F31.b
+    ldy #>PPUString_8F31.b
     jsr DEMO_PreparePPUProcess
     inc $36
     jsr L8CF2
@@ -3814,8 +3814,8 @@ L89A6:
 
 L6999_89CE:
     jsr L883B
-    ldx #<L9042.b
-    ldy #>L9042.b
+    ldx #<PPUString_9042.b
+    ldy #>PPUString_9042.b
     jsr DEMO_PreparePPUProcess
     jsr L8D5E
     jsr L8CF2
@@ -4080,12 +4080,12 @@ CharSelectXTbl: ;($8B90)
 
 L6999_8BA5:
     jsr L883B
-    ldx #<L9042.b
-    ldy #>L9042.b
+    ldx #<PPUString_9042.b
+    ldy #>PPUString_9042.b
     jsr DEMO_PreparePPUProcess
     jsr L8D5E
-    ldx #<L908E.b
-    ldy #>L908E.b
+    ldx #<PPUString_908E.b
+    ldy #>PPUString_908E.b
     jsr DEMO_PreparePPUProcess
     jsr L8CF2
     lda #$00
@@ -4508,7 +4508,7 @@ UnusedIntroRoutine5: ;($8E4D)
 
 
 
-UpdateSaveDataDay:
+UpdateSaveDataDay: ;($8E70)
     tya
     pha
     jsr DEMO_Amul16
@@ -4620,13 +4620,13 @@ Hex16ToDec: ;($8EB8)
     rts
 
 
-L8F0D:
+PPUString_8F0D:
     PPUString $3F00, undefined, \
         $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
         $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
     PPUStringEnd
     
-L8F31:
+PPUString_8F31:
     PPUString $2075, charmap_savemenu, \
         "゛"
     PPUString $2085, charmap_savemenu, \
@@ -4706,7 +4706,7 @@ L8FCF_902D:
     .stringmap charmap_savemenu, "56789"
     .stringmap charmap_savemenu, "YZ.?/!"
 
-L9042:
+PPUString_9042:
     PPUStringRepeat $23C0, undefined, $00, $20
     PPUStringRepeat $23E0, undefined, $00, $20
     
@@ -4731,7 +4731,7 @@ L9042:
     
     PPUStringEnd
 
-L908E:
+PPUString_908E:
     PPUString $2087, charmap_savemenu, \
         "K I L L    M O D E"
     PPUString $224B, charmap_savemenu, \

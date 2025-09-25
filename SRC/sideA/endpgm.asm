@@ -2,11 +2,11 @@
 ENDPGM_RESET:
     cld
     ldx #$00
-    stx $2000
-    stx $2001
-L6009:
-    lda $2002
-    bpl L6009
+    stx PPUCTRL
+    stx PPUMASK
+    L6009:
+        lda PPUSTATUS
+        bpl L6009
     dex
     txs
     ldx $2F
@@ -15,40 +15,40 @@ L6009:
     lda #$00
     sta $00
     tay
-L601B:
-    sta ($00),y
-    dey
-    bne L601B
-    dec $01
-    bpl L601B
+    L601B:
+            sta ($00),y
+            dey
+            bne L601B
+        dec $01
+        bpl L601B
     txa
     bne L6029
-    ldx #$5F
-L6029:
+        ldx #$5F
+    L6029:
     stx $0618
     lda #$4F
-    sta $4025
+    sta FDS_CTRL
     sta $FA
     jsr L65DC
     jsr L6630
     ldy #$00
-    lda $C3F2
+    lda LC3F2
     sta $00
-    lda $C3F3
+    lda LC3F2+1
     sta $01
     lda #$60
     sta ($00),y
     ldy #$00
-    sty $2005
-    sty $2005
+    sty PPUSCROLL
+    sty PPUSCROLL
     sty $3C
     iny
     sty $3A
     lda #$90
-    sta $2000
-    sta $FF
+    sta PPUCTRL
+    sta PPUCTRL_ZP
     lda #$06
-    sta $FE
+    sta PPUMASK_ZP
     lda #$C0
     sta $0100
     lda #$80
@@ -65,61 +65,74 @@ L6075:
 L6080:
     lda #$01
     sta $32
-L6084:
-    jsr L6777
-    jsr L6777
-    lda $30
-    beq L6084
+    L6084:
+        jsr L6777
+        jsr L6777
+        lda $30
+        beq L6084
     inc $2F
     dec $32
     lda #$00
     sta $30
     rts
-L6097:
+
+
+
+ENDPGM_WaitNMIPass: ;($6097)
     lda #$00
-    sta $1A
-L609B:
-    lda $1A
-    beq L609B
+    sta NMIStatus
+    @loop:
+        lda NMIStatus
+        beq @loop
 RTS_609F:
     rts
 
-L60A0:
+
+
+L615D_60A0:
     lda $40
     and #$10
     beq RTS_609F
-    jmp ($C3F0)
+    jmp (LC3F0)
+
+
+
 L60A9:
-    jsr L6097
-    lda $FE
+    jsr ENDPGM_WaitNMIPass
+    lda PPUMASK_ZP
     and #$E1
 L60B0:
-    sta $2001
-    sta $FE
+    sta PPUMASK
+    sta PPUMASK_ZP
     rts
+
 L60B6:
-    jsr L6097
+    jsr ENDPGM_WaitNMIPass
     jsr L676A
-    lda $FE
+    lda PPUMASK_ZP
     ora #$1E
-    bne L60B0
+    bne L60B0 ; branch always
+
+
+
 L60C2:
-    lda $2002
-    and #$80
-    bne L60C2
-    lda $FF
+    @loop:
+        lda PPUSTATUS
+        and #$80
+        bne @loop
+    lda PPUCTRL_ZP
     ora #$80
     bne L60D3
-    lda $FF
-    and #$7F
-L60D3:
-    sta $2000
-    sta $FF
+        lda PPUCTRL_ZP
+        and #$7F
+    L60D3:
+    sta PPUCTRL
+    sta PPUCTRL_ZP
     rts
 
 
 
-ENDPGM_NMI:
+ENDPGM_NMI: ;($60D9)
     cli
     pha
     txa
@@ -127,9 +140,9 @@ ENDPGM_NMI:
     tya
     pha
     lda #$00
-    sta $2003
+    sta OAMADDR
     lda #$02
-    sta $4014
+    sta OAMDMA
     lda $32
     beq L612D
     jsr L62CD
@@ -158,25 +171,25 @@ L6118:
     jsr L663B
     jsr L66CB
     jsr L676A
-    lda $FE
-    sta $2001
+    lda PPUMASK_ZP
+    sta PPUMASK
     jsr L6672
     ldy #$01
     sty $30
 L612D:
-    lda $FE
-    sta $2001
-    lda $FF
-    sta $2000
-    jsr $DFF3
+    lda PPUMASK_ZP
+    sta PPUMASK
+    lda PPUCTRL_ZP
+    sta PPUCTRL
+    jsr GotoLD18C
     lda #$01
-    sta $1A
+    sta NMIStatus
     pla
     tay
     pla
     tax
     pla
-ENDPGM_IRQ:
+ENDPGM_IRQ: ;($6143)
     rti
 
 
@@ -197,16 +210,19 @@ L6144:
 L615D:
     lda $3C
     jsr ENDPGM_ChooseRoutine
-        .word L6172
-        .word L61AC
-        .word L61C4
-        .word L6222
-        .word L625C
-        .word L628B
-        .word L60A0
+        .word L615D_6172
+        .word L615D_61AC
+        .word L615D_61C4
+        .word L615D_6222
+        .word L615D_625C
+        .word L615D_628B
+        .word L615D_60A0
         .word RTS_609F
-    
-L6172:
+
+
+
+
+L615D_6172:
     jsr L60A9
     jsr L65E7
     jsr L6630
@@ -236,27 +252,27 @@ L6172:
 
 
 
-L61AC:
+L615D_61AC:
     jsr L6322
     lda $2D
     bne L61B6
-    inc $3C
-    rts
-L61B6:
+        inc $3C
+        rts
+    L61B6:
     cmp #$50
     bne L61BD
-    inc $AE
-    rts
-L61BD:
+        inc $AE
+        rts
+    L61BD:
     cmp #$01
-    bne L61C3
-    inc $AF
-L61C3:
+    bne RTS_61C3
+        inc $AF
+    RTS_61C3:
     rts
 
 
 
-L61C4:
+L615D_61C4:
     lda $2F
     and #$3F
     bne L61F8
@@ -264,25 +280,25 @@ L61C4:
     lda $A9
     cmp #$08
     bne L61E1
-    lda $B41D
-    cmp #$03
-    bne L61DA
-    rts
-L61DA:
-    asl a
-    sta $AA
-    lda #$36
-    sta $A6
-L61E1:
+        lda CurSamusStat+$D
+        cmp #$03
+        bne L61DA
+            rts
+        L61DA:
+        asl a
+        sta $AA
+        lda #$36
+        sta $A6
+    L61E1:
     cmp #$10
     bne L61F8
     sta $2D
     ldy #$00
-    lda $B41D
+    lda CurSamusStat+$D
     cmp #$04
     bcc L61F1
-    iny
-L61F1:
+        iny
+    L61F1:
     sty $A7
     inc $3C
     jmp L6630
@@ -306,21 +322,21 @@ L6212:
 
 
 
-L6222:
+L615D_6222:
     lda $2D
     bne L6231
-    lda #$10
-    sta $2D
-    lda #$08
-    sta $34
-    inc $3C
-    rts
-L6231:
-    lda $B41D
+        lda #$10
+        sta $2D
+        lda #$08
+        sta $34
+        inc $3C
+        rts
+    L6231:
+    lda CurSamusStat+$D
     cmp #$04
     bcs L623B
-    jmp L6322
-L623B:
+        jmp L6322
+    L623B:
     sbc #$04
     asl a
     asl a
@@ -328,30 +344,30 @@ L623B:
     lda $2F
     and #$08
     bne L624D
-    ldy #$10
-    sty $AC
-    bne L6255
-L624D:
-    inc $AB
-    inc $AB
-    ldy #$10
-    sty $AC
-L6255:
+        ldy #$10
+        sty $AC
+        bne L6255
+    L624D:
+        inc $AB
+        inc $AB
+        ldy #$10
+        sty $AC
+    L6255:
     lda #$2D
     sta $A6
     jmp L6307
 
 
 
-L625C:
+L615D_625C:
     lda $2D
     bne L627E
     lda $AD
     bne L626A
-    lda #$08
-    sta $34
-    inc $AD
-L626A:
+        lda #$08
+        sta $34
+        inc $AD
+    L626A:
     lda $2F
     and #$07
     bne L627E
@@ -363,32 +379,32 @@ L626A:
     sta $2D
     inc $3C
 L627E:
-    lda $B41D
+    lda CurSamusStat+$D
     cmp #$04
     bcs L6288
-    jmp L6322
-L6288:
-    jmp L6307
+        jmp L6322
+    L6288:
+        jmp L6307
 
 
 
-L628B:
+L615D_628B:
     lda $2D
     beq L629F
-    cmp #$02
-    bne L62CC
-    jsr L60A9
-    jsr L65E7
-    jsr L6630
-    jmp L60B6
-L629F:
+        cmp #$02
+        bne RTS_62CC
+        jsr L60A9
+        jsr L65E7
+        jsr L6630
+        jmp L60B6
+    L629F:
     lda $B0
     bne L62A5
-    inc $B0
-L62A5:
+        inc $B0
+    L62A5:
     cmp #$06
     bne L62B2
-    lda $FC
+    lda ScrollY
     cmp #$88
     bcc L62B2
     inc $3C
@@ -396,39 +412,42 @@ L62A5:
 L62B2:
     lda $2F
     and #$03
-    bne L62CC
-    inc $FC
-    lda $FC
+    bne RTS_62CC
+    inc ScrollY
+    lda ScrollY
     cmp #$F0
-    bne L62CC
+    bne RTS_62CC
     inc $B0
     lda #$00
-    sta $FC
-    lda $FF
+    sta ScrollY
+    lda PPUCTRL_ZP
     eor #$02
-    sta $FF
-L62CC:
+    sta PPUCTRL_ZP
+RTS_62CC:
     rts
+
+
+
 L62CD:
     ldy $B0
-    beq L6306
+    beq RTS_6306
     cpy #$07
-    bcs L6306
+    bcs RTS_6306
     ldx #$00
-    lda $FC
+    lda ScrollY
     bpl L62DF
     inx
     sec
     sbc #$80
 L62DF:
     cmp #$04
-    bcs L6306
+    bcs RTS_6306
     sta $01
     dey
     txa
     bne L62F4
     dey
-    bmi L6306
+    bmi RTS_6306
     tya
     asl a
     asl a
@@ -448,7 +467,7 @@ L62F8:
     lda CreditsPointerTbl+1,y
     tay
     jmp L671E
-L6306:
+RTS_6306:
     rts
 
 
@@ -505,13 +524,13 @@ L634D:
     bne L6332
     lda $3C
     cmp #$02
-    bcc L6381
+    bcc RTS_6381
     lda $A9
     cmp #$08
-    bcc L6381
-    lda $B41D
+    bcc RTS_6381
+    lda CurSamusStat+$D
     cmp #$03
-    bne L6381
+    bne RTS_6381
     ldy #$00
     ldx #$00
     L6375:
@@ -521,7 +540,7 @@ L634D:
         inx
         cpy #$18
         bne L6375
-L6381:
+RTS_6381:
     rts
 
 L6382:
@@ -686,12 +705,12 @@ L63E2_64FC:
 
 L6532:
     ldy #$00
-    L6534:
+    @loop:
         lda L6540,y
         sta $0270,y
         iny
         cpy #$9C
-        bne L6534
+        bne @loop
     rts
 
 ; copied to oam ($0270-$030C, slightly out of bounds)
@@ -752,49 +771,55 @@ L65ED:
     stx $02
     sty $03
     sta $01
-    lda $2002
-    lda $FF
+    lda PPUSTATUS
+    lda PPUCTRL_ZP
     and #$FB
-    sta $2000
-    sta $FF
+    sta PPUCTRL
+    sta PPUCTRL_ZP
     lda $01
-    sta $2006
+    sta PPUADDR
     lda #$00
-    sta $2006
+    sta PPUADDR
     ldx #$04
     ldy #$00
     lda $02
-L660F:
-    sta $2007
-    dey
-    bne L660F
-    dex
-    bne L660F
+    L660F:
+            sta PPUDATA
+            dey
+            bne L660F
+        dex
+        bne L660F
     lda $01
     clc
     adc #$03
-    sta $2006
+    sta PPUADDR
     lda #$C0
-    sta $2006
+    sta PPUADDR
     ldy #$40
     lda $03
-L6629:
-    sta $2007
-    dey
-    bne L6629
+    L6629:
+        sta PPUDATA
+        dey
+        bne L6629
     rts
+
+
+
 L6630:
     ldy #$00
     lda #$F4
-L6634:
-    sta $0200,y
-    dey
-    bne L6634
-L663A:
+    L6634:
+        sta $0200,y
+        dey
+        bne L6634
+RTS_663A:
     rts
+
+
+
 L663B:
     lda $34
-    beq L663A
+    beq RTS_663A
     asl a
     tay
     lda EndGamePalPntrTbl-1,y
@@ -802,11 +827,11 @@ L663B:
     tay
     jsr L671E
     lda #$3F
-    sta $2006
+    sta PPUADDR
     lda #$00
-    sta $2006
-    sta $2006
-    sta $2006
+    sta PPUADDR
+    sta PPUADDR
+    sta PPUADDR
     rts
 
 EndGamePalPntrTbl: ;($665C)
@@ -824,38 +849,49 @@ EndGamePalPntrTbl: ;($665C)
 
 L6672:
     ldx #$01
-    stx $4016
+    stx JOY1
     dex
     txa
-    sta $4016
+    sta JOY1
     jsr L6680
-    inx
-L6680:
+        inx
+    L6680:
+    ;Do 8 buttons.
     ldy #$08
-L6682:
-    pha
-    lda $4016,x
-    sta $00
-    lsr a
-    ora $00
-    lsr a
-    pla
-    rol a
-    dey
-    bne L6682
+    @loop:
+        ;Store A.
+        pha
+        ;Read button status. Joypad 1 or 2.
+        lda JOY1,x
+        ;Store button press at location $00.
+        sta $00
+        ;Also accept button press from joypad that is plugged into the console's expansion port
+        lsr
+        ora $00
+        ;Move button press to carry bit.
+        lsr
+        ;Restore A.
+        pla
+        ;Add button press status to A.
+        rol
+        ;Loop 8 times to get status of all 8 buttons.
+        dey
+        bne @loop
+    ; a now contains the new joypad status
+    
     ldy $40,x
     sty $00
     cmp $48,x
     bne L66A6
-    inc $4A,x
-    ldy $4A,x
-    cpy #$03
-    bcc L66AC
-    sta $4C,x
-    jmp L66A8
-L66A6:
-    sta $48,x
-L66A8:
+        inc $4A,x
+        ldy $4A,x
+        cpy #$03
+        bcc L66AC
+        sta $4C,x
+        jmp L66A8
+    L66A6:
+        sta $48,x
+    L66A8:
     lda #$00
     sta $4A,x
 L66AC:
@@ -865,34 +901,37 @@ L66AC:
     and $40,x
     sta $42,x
     sta $44,x
+    
     ldy #$40
     lda $40,x
     cmp $00
     bne L66C8
-    dec $46,x
-    bne L66CA
-    sta $44,x
-    ldy #$08
-L66C8:
+        dec $46,x
+        bne RTS_66CA
+        sta $44,x
+        ldy #$08
+    L66C8:
     sty $46,x
-L66CA:
+RTS_66CA:
     rts
+
 L66CB:
     lda $31
     beq L66E0
-    ldx #$61
-    ldy #$06
-    jsr L671E
-    lda #$00
-    sta $0660
-    sta $0661
-    sta $31
-L66E0:
-    lda $FF
+        ldx #$61
+        ldy #$06
+        jsr L671E
+        lda #$00
+        sta $0660
+        sta $0661
+        sta $31
+    L66E0:
+    lda PPUCTRL_ZP
     and #$FB
-    sta $FF
-    sta $2000
+    sta PPUCTRL_ZP
+    sta PPUCTRL
     rts
+
 L66EA:
     ldx #$03
     dec $28
@@ -900,13 +939,13 @@ L66EA:
     lda #$0A
     sta $28
     ldx #$05
-L66F6:
-    lda $29,x
-    beq L66FC
-    dec $29,x
-L66FC:
-    dex
-    bpl L66F6
+    L66F6:
+        lda $29,x
+        beq L66FC
+            dec $29,x
+        L66FC:
+        dex
+        bpl L66F6
     rts
 
 
@@ -941,38 +980,38 @@ L671E:
 
 
 L6725:
-    sta $2006
+    sta PPUADDR
     iny
     lda ($00),y
-    sta $2006
+    sta PPUADDR
     iny
     lda ($00),y
     asl a
     pha
-    lda $FF
+    lda PPUCTRL_ZP
     ora #$04
     bcs L673B
-    and #$FB
-L673B:
-    sta $2000
-    sta $FF
+        and #$FB
+    L673B:
+    sta PPUCTRL
+    sta PPUCTRL_ZP
     pla
     asl a
     bcc L6747
-    ora #$02
-    iny
-L6747:
+        ora #$02
+        iny
+    L6747:
     lsr a
     lsr a
     tax
-L674A:
-    bcs L674D
-    iny
-L674D:
-    lda ($00),y
-    sta $2007
-    dex
-    bne L674A
+    L674A:
+        bcs L674D
+            iny
+        L674D:
+        lda ($00),y
+        sta PPUDATA
+        dex
+        bne L674A
     sec
     tya
     adc $00
@@ -981,18 +1020,21 @@ L674D:
     adc $01
     sta $01
 L6761:
-    ldx $2002
+    ldx PPUSTATUS
     ldy #$00
     lda ($00),y
     bne L6725
 L676A:
     pha
     lda #$00
-    sta $2005
-    lda $FC
-    sta $2005
+    sta PPUSCROLL
+    lda ScrollY
+    sta PPUSCROLL
     pla
     rts
+
+
+
 L6777:
     lda $0618
     clc
@@ -1007,29 +1049,37 @@ L6777:
     eor $0618
     clc
     bpl L6798
-    sec
-L6798:
+        sec
+    L6798:
     ror $061A
     ror $061B
     lda $0618
     rts
+
+
+
+L67A2:
     stx $0660
     lda #$00
     sta $0661,x
     lda #$01
     sta $31
     rts
+
+
+
+L67AF:
     sta $0661,x
     inx
     txa
     cmp #$55
-    bcc L67C2
-    ldx $0660
-L67BB:
-    lda #$00
-    sta $0661,x
-    beq L67BB
-L67C2:
+    bcc @RTS
+        ldx $0660
+        @loop:
+            lda #$00
+            sta $0661,x
+            beq @loop
+    @RTS:
     rts
 
 

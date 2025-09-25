@@ -205,7 +205,10 @@ FDSBIOS_SetNumFiles = $E492
 FDSBIOS_FileMatchTest = $E4A0
 FDSBIOS_SkipFiles = $E4DA
 
+FDSBIOS_Random = $E9B1
+
 FDSBIOS_VRAMFill = $EA84
+FDSBIOS_MemFill = $EAD2
 
 ;----------------------------------------------------------------------------------------------------
 

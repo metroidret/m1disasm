@@ -1,15 +1,17 @@
 
 LC3F0:
-    adc ($C4,x)
-    and $20B3
-    cpx $6E
+    .word LC461
+LC3F2:
+    .word $B32D
+LC3F4:
+    jsr ClearScreenData
     lda #<PPUString_C40B.b
     sta $00
     lda #>PPUString_C40B.b
     sta $01
-    jsr $94BC
-    jsr $D060
-    jsr $B310
+    jsr MAIN_ProcessPPUString
+    jsr LD060
+    jsr LB310
     jmp LC425
 
 ; "Aメンヲ セットシテクダサイ" message (switch to disk side A)
@@ -23,9 +25,9 @@ PPUString_C40B:
 
 LC425:
     jsr LB32D
-    ldx #$E6
-    ldy #$B3
-    jsr $B2B6
+    ldx #<LB3E6.b
+    ldy #>LB3E6.b
+    jsr LB2B6
     jsr LC568
     ldy $B41F
     lda $B41D
@@ -52,6 +54,7 @@ LC443:
     ldy #$B3
     lda $B41C
     bne LC465
+LC461:
     ldx #$E8
     ldy #$B3
 LC465:

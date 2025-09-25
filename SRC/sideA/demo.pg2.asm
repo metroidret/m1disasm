@@ -61,26 +61,26 @@ LC615:
     .incbin "sideA/demo.pg2_font_savemenu.chr"
 
 LCE35:
-    ldx #<LCF40.b
-    ldy #>LCF40.b
+    ldx #<SaveDataFileHeader.b
+    ldy #>SaveDataFileHeader.b
     jmp LCE3C
-LCE3C:
+    LCE3C:
     stx LCE58
     sty LCE58+1
     jsr LCEDC
-LCE45:
-    jsr DEMO_WaitNMIPass_
-    jsr LCF1D
-    jsr L7023
-    jsr GotoLD18C
-    lda #$0E
-    jsr FDSBIOS_WriteFile
-        .word LCF34
+    LCE45:
+        jsr DEMO_WaitNMIPass_
+        jsr LCF1D
+        jsr L7023
+        jsr GotoLD18C
+        lda #$0E
+        jsr FDSBIOS_WriteFile
+            .word DEMO_DiskID
 LCE58:
-        .word LCF40
-    beq LCE62
-    jsr LCE90
-    jmp LCE45
+            .word SaveDataFileHeader
+        beq LCE62
+        jsr LCE90
+        jmp LCE45
 LCE62:
     jsr LCF27
     rts
@@ -91,18 +91,18 @@ LCE66:
     jmp ($DFFC) ; reset vector
 
 LCE6E:
-    sta LCF3E
-LCE71:
-    jsr DEMO_WaitNMIPass_
-    jsr LCF1D
-    jsr L7023
-    jsr GotoLD18C
-    jsr FDSBIOS_LoadFiles
-        .word LCF34
-        .word LCF3E
-    beq LCE8C
-    jsr LCE90
-    jmp LCE71
+    sta LoadList
+    LCE71:
+        jsr DEMO_WaitNMIPass_
+        jsr LCF1D
+        jsr L7023
+        jsr GotoLD18C
+        jsr FDSBIOS_LoadFiles
+            .word DEMO_DiskID
+            .word LoadList
+        beq LCE8C
+        jsr LCE90
+        jmp LCE71
 LCE8C:
     jsr LCF27
     rts
@@ -135,23 +135,23 @@ LCE90:
         lda DRIVESTATUS
         and #$01
         beq LCEBE
-LCEC5:
-    lda #$20
-    pha
-LCEC8:
-    jsr DEMO_WaitNMIPass_
-    pla
-    beq LCED1
-    tay
-    dey
-    tya
-LCED1:
-    pha
-    lda DRIVESTATUS
-    and #$01
-    bne LCEC8
-    pla
-    bne LCEC5
+    LCEC5:
+        lda #$20
+        pha
+        LCEC8:
+            jsr DEMO_WaitNMIPass_
+            pla
+            beq LCED1
+                tay
+                dey
+                tya
+            LCED1:
+            pha
+            lda DRIVESTATUS
+            and #$01
+            bne LCEC8
+        pla
+        bne LCEC5
 LCEDC:
     jsr L883B
     lda #$F4
@@ -204,20 +204,21 @@ LCF27:
     ora #PPUCTRL_VBLKNMI_ON
     bne LCF21 ; branch always
 
-LCF34:
+DEMO_DiskID: ;($CF34)
     .byte $01
-    .ascstr "MET "
+    .ascstr "MET"
+    .ascstr " "
     .byte $02
     .byte $00
     .byte $00
     .byte $00
     .byte $00
 
-LCF3E:
+LoadList: ;($CF3E)
     .byte $00
     .byte $FF
 
-LCF40:
+SaveDataFileHeader: ;($CF40)
     .byte $0E
     .ascstr $01, $01, $01, $01, $01, $01, $01, $01
     .word SaveData
