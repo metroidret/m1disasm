@@ -1546,7 +1546,7 @@ InitGFX6:
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
-InitGFX7: ; Load Password Font
+InitPasswordFontGFX:
     ldy #_id_GFX_Font_Complete.b
     jsr LoadGFX
     
