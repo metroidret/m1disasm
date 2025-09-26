@@ -115,6 +115,7 @@ LD06E:
     lda $73
     sta FDS_CTRL_ZP
     sta FDS_CTRL
+RTS_D07F:
     rts
 
 

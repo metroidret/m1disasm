@@ -166,29 +166,38 @@ L6CD8:
     stx $2A
     inc $1E
     jmp LD060
+
+
+
 L6CE9:
     ldx #$0D
-L6CEB:
-    lda $B592,x
-    sta $35,x
-    dex
-    bpl L6CEB
+    L6CEB:
+        lda $B592,x
+        sta $35,x
+        dex
+        bpl L6CEB
     rts
+
+
+
 L6CF4:
     lda #$00
     tax
-L6CF7:
-    cpx #$4D
-    bcs L6CFD
-    sta $92,x
-L6CFD:
-    sta $B460,x
-    pha
-    pla
-    inx
-    bne L6CF7
+    L6CF7:
+        cpx #$4D
+        bcs L6CFD
+            sta $92,x
+        L6CFD:
+        sta $B460,x
+        pha
+        pla
+        inx
+        bne L6CF7
     stx $8D
     jmp $B5A3
+
+
+
 L6D0A:
     lda #$08
     sta $1E
@@ -212,9 +221,9 @@ L6D0A:
     lda $6E
     and #$0F
     beq L6D41
-    lsr $43
-    ldy #$2F
-L6D41:
+        lsr $43
+        ldy #$2F
+    L6D41:
     sty $73
     sty $8E
     sty $8F
@@ -281,88 +290,92 @@ L6DBE:
     RTS_6DC6:
     rts
 
+
+
 L6DC7:
     jsr L6E00
     ldy #$0F
-L6DCC:
-    lda $6DF0,y
-    sta $0201,x
-    dey
-    lda $6DF0,y
-    sta $0203,x
-    lda #$01
-    sta $0202,x
-    lda #$73
-    sta $0200,x
-    jsr L84FE
-    dey
-    bpl L6DCC
+    L6DCC:
+        lda L6DF0,y
+        sta $0201,x
+        dey
+        lda L6DF0,y
+        sta $0203,x
+        lda #$01
+        sta $0202,x
+        lda #$73
+        sta $0200,x
+        jsr L84FE
+        dey
+        bpl L6DCC
     lda #$0C
     ldx #$06
     jmp SetTimer
-    cli
-    .byte $BB
-    rts
-    lda ($68),y
-    ldy $B370,x
-    dey
-    lda $90,x
-    .byte $B2
-    tya
-    .byte $B3
-    ldy #$BA
+L6DF0:
+    .byte $58, $BB, $60, $B1, $68, $BC, $70, $B3, $88, $B5, $90, $B2, $98, $B3, $A0, $BA
+
+
+
 L6E00:
     jsr ClearScreenData
     lda $FF
     and #$FC
     sta $FF
     ldx #$01
-    stx $1C
+    stx PalDataPending
     dex
     stx $FD
     stx $FC
     jmp LD060
+
+
+
+L6E15:
     lda $15
     and #$88
     eor #$88
-    bne L6E2D
+    bne RTS_6E2D
     lda $98
     cmp #$03
-    bcs L6E2D
+    bcs RTS_6E2D
     ldy $010B
     iny
-    bne L6E2D
+    bne RTS_6E2D
     sta $2B
-    inc $1E
-L6E2D:
+    inc MainRoutine
+RTS_6E2D:
     rts
+
+
+
+L6E2E:
     ldy $6F
     bpl L6E64
-    inc $6F
-    iny
-    sty $55
-    sty $45
-    sty $65
-    sty $030C
-    jsr L6E00
-    jsr L6F4E
-    lda #$5A
-    sta $0303
-    ldx #$02
-L6E4B:
-    lda L6E93,x
-    sta $030D
-    lda $6E96,x
-    sta $030E
-    inc $0303
-    txa
-    pha
-    jsr L81C6
-    pla
-    tax
-    dex
-    bpl L6E4B
-L6E64:
+        inc $6F
+        iny
+        sty $55
+        sty $45
+        sty $65
+        sty $030C
+        jsr L6E00
+        jsr L6F4E
+        lda #$5A
+        sta $0303
+        ldx #$02
+        L6E4B:
+            lda L6E93,x
+            sta $030D
+            lda L6E96,x
+            sta $030E
+            inc $0303
+            txa
+            pha
+            jsr L81C6
+            pla
+            tax
+            dex
+            bpl L6E4B
+    L6E64:
     lda $12
     ora $16
     asl a
@@ -370,19 +383,19 @@ L6E64:
     asl a
     tay
     bcc L6E7C
-    lda $6F
-    eor #$01
-    sta $6F
-    lda $0200
-    eor #$28
-    sta $0200
-L6E7C:
+        lda $6F
+        eor #$01
+        sta $6F
+        lda $0200
+        eor #$28
+        sta $0200
+    L6E7C:
     tya
     bpl RTS_6E92
     inc CurSamusStat.GameOverCount
     bne L6E87
-    inc CurSamusStat.GameOverCount+1
-L6E87:
+        inc CurSamusStat.GameOverCount+1
+    L6E87:
     lsr $6F
     bcs L6E90
     lda #$01
@@ -392,16 +405,23 @@ L6E90:
     inc $1E
 RTS_6E92:
     rts
+
 L6E93:
-    .byte $64
-    sty $785C
-    sei
-    .byte $5C
+    .byte $64, $8C, $5C
+L6E96:
+    .byte $78, $78, $5C
+
+
+
 L6E99:
     lda #$18
-    sta $1C
+    sta PalDataPending
     jsr LB261
-    jmp $C3F4
+    jmp LC3F4
+
+
+
+L6EA3:
     jsr MAIN_EraseAllSprites
     ldy $0300
     lda $26
@@ -591,29 +611,23 @@ L6FC1:
     inx
     stx $4F
     jsr L6FCE
-    dec $4F
-    rts
-L6FCE:
+        dec $4F
+        rts
+    L6FCE:
     lda $0300
     bmi L6FEA
     jsr MAIN_ChooseRoutine
-    nop
-    .byte $6F
-    ror $70,x
-    clv
-    .byte $73
-    .byte $97
-    .byte $74
-    lsr $2D75
-    .byte $77
-    clv
-    .byte $73
-    .byte $9F
-    .byte $77
-    .byte $7F
-    .byte $D0
-    .byte $A4
-    .byte $77
+        .word L6FEA
+        .word L7076
+        .word L73B8
+        .word L7497
+        .word L754E
+        .word L772D
+        .word L73B8
+        .word L779F
+        .word RTS_D07F
+        .word L77A4
+
 L6FEA:
     lda $15
     and #$CF
@@ -651,29 +665,27 @@ L7022:
     jsr L7121
     lda $0300
     cmp #$05
-    bcs L704B
+    bcs RTS_704B
     jsr MAIN_ChooseRoutine
-    .byte $7F
-    bne L7080
-    .byte $70
-    .byte $77
-    .byte $73
-    .byte $6B
-    .byte $74
-    .byte $2B
-    .byte $73
-    ora ($01,x)
-    .byte $03
-    .byte $04
+        .word RTS_D07F
+        .word L704C
+        .word L7377
+        .word L746B
+        .word L732B
+    
+    .byte $01, $01, $03, $04
+    
 L703F:
     lda #$50
     sta $030F
     lda #$32
-L7046:
     jsr L731F
     sta $5F
-L704B:
+RTS_704B:
     rts
+
+
+
 L704C:
     lda #$09
     sta $4D
@@ -694,9 +706,15 @@ L706B:
     lda $7074,x
     sta $0315
     rts
-    .byte $00
-    .byte $37
-    bmi L7046
+
+L7072:
+    .byte $00, $37
+L7074:
+    .byte $30, $D0
+
+
+
+L7076:
     ldx $47
     lda $0314
     beq L70D7
@@ -789,47 +807,56 @@ L7121:
     jsr L800B
     jsr L7150
     bcs L7132
-    lda FrameCount
-    lsr a
-    and #$03
-    ora #$A0
-    sta $65
-L7132:
+        lda FrameCount
+        lsr a
+        and #$03
+        ora #$A0
+        sta $65
+    L7132:
     jsr L71AE
     jsr L85D4
     lda $8D
     beq L7140
-    lda #$A1
-    sta $65
-L7140:
+        lda #$A1
+        sta $65
+    L7140:
     jsr L7146
     jmp L81C6
+
+
+
 L7146:
     lda $47
     jsr MAIN_Amul16
     ora $65
     sta $65
     rts
+
+
+
 L7150:
     sec
     ldy $0300
     dey
-    bne L7172
+    bne RTS_7172
     lda CurSamusStat.SamusGear
     and #$08
-    beq L7172
+    beq RTS_7172
     lda $0305
     cmp #$0E
     beq L716F
     cmp #$0C
     sec
-    bne L7172
+    bne RTS_7172
     bit $0308
-    bpl L7172
+    bpl RTS_7172
 L716F:
     cmp $0306
-L7172:
+RTS_7172:
     rts
+
+
+
 L7173:
     lda $15
     and #$08
@@ -839,7 +866,7 @@ L7173:
     tax
     lda $7072,x
     cmp $0305
-    beq L7172
+    beq RTS_7172
     jsr L731F
     pla
     pla
@@ -1010,8 +1037,8 @@ L7273:
     and #$F0
     ora $0107
     beq L729A
-    bcs L72DF
-L729A:
+        bcs L72DF
+    L729A:
     lda #$00
     sta $0106
     sta $0107
@@ -1019,6 +1046,9 @@ L729A:
     sta $0300
     jsr L6FA2
     jmp L703F
+
+
+
 L72AD:
     lda $0106
     sta $03
@@ -1042,20 +1072,23 @@ L72AD:
     sta $0106
 L72DF:
     jmp ClearHealthChange
+
+
+
 L72E2:
     lda $030A
     lsr a
     and #$02
-    beq L7308
+    beq RTS_7308
     bcs L72F3
     lda $0315
-    bmi L7308
+    bmi RTS_7308
     bpl L72FA
 L72F3:
     lda $0315
     bmi L72FA
-    bne L7308
-L72FA:
+        bne RTS_7308
+    L72FA:
     jsr L8001
     sta $0315
 L7300:
@@ -1063,8 +1096,11 @@ L7300:
 L7302:
     sty $0309
     sty $0313
-L7308:
+RTS_7308:
     rts
+
+
+
 L7309:
     lda $0315
     bne L7311
@@ -1083,6 +1119,9 @@ L7322:
     lda #$00
     sta $0304
     rts
+
+
+
 L732B:
     lda #$04
     sta $0300
@@ -1092,6 +1131,9 @@ L7335:
     jsr L736B
     sty $0304
     rts
+
+
+
 L733C:
     lda $15
     and #$03
@@ -1100,25 +1142,29 @@ L733C:
     tax
     jsr L706B
     lda $0314
-    bmi L7371
+    bmi RTS_7371
     lda $0305
     cmp #$0E
-    beq L7371
+    beq RTS_7371
     stx $47
     lda $744D,x
     jmp L731F
 L735D:
     lda $0314
-    bmi L7371
-    beq L7371
+    bmi RTS_7371
+    beq RTS_7371
     lda $0305
     cmp #$0C
-    bne L7371
+    bne RTS_7371
 L736B:
     jsr L7300
     sty $0315
-L7371:
+RTS_7371:
     rts
+
+
+
+L7372:
     ldy #$35
     jmp L7379
 L7377:
@@ -1154,6 +1200,10 @@ L73A9:
 L73B4:
     sty $0314
     rts
+
+
+
+L73B8:
     lda $030F
     bit $0308
     bpl L73CB
@@ -1251,6 +1301,10 @@ L7463:
     jsr L75C6
     lda #$20
     jmp L731F
+
+
+
+L746B:
     lda CurSamusStat.SamusGear
     and #$10
     beq L7491
@@ -1270,6 +1324,10 @@ L7491:
     lda #$00
     sta $0300
     rts
+
+
+
+L7497:
     lda $13
     and #$08
     bne L74A1
@@ -1326,14 +1384,14 @@ L74FD:
 L7506:
     lda CurSamusStat.SamusGear
     lsr a
-    bcc L754D
+    bcc RTS_754D
     lda $13
     ora $17
     asl a
-    bpl L754D
+    bpl RTS_754D
     lda $0308
     ora $0307
-    bne L754D
+    bne RTS_754D
     ldx #$D0
     lda $0300,x
     beq L7530
@@ -1342,7 +1400,7 @@ L7506:
     beq L7530
     ldx #$F0
     lda $0300,x
-    bne L754D
+    bne RTS_754D
 L7530:
     lda $030C
     sta $030C,x
@@ -1355,8 +1413,12 @@ L7530:
     lda #$08
     sta $0300,x
     jsr L6F68
-L754D:
+RTS_754D:
     rts
+
+
+
+L754E:
     lda $15
     and #$08
     bne L7559
@@ -1390,25 +1452,16 @@ L7582:
     jsr L7121
     lda $0300
     jsr MAIN_ChooseRoutine
-    ora #$73
-    jmp L7F70
-
-L7592:
-    .byte $D0
-    .byte $6B
-    .byte $74
-    .byte $7F
-    .byte $D0
-    .byte $7F
-    .byte $D0
-    .byte $72
-    .byte $73
-    .byte $7F
-    .byte $D0
-    .byte $7F
-    .byte $D0
-    .byte $7F
-    .byte $D0
+        .word L7309
+        .word L704C
+        .word RTS_D07F
+        .word L746B
+        .word RTS_D07F
+        .word RTS_D07F
+        .word L7372
+        .word RTS_D07F
+        .word RTS_D07F
+        .word RTS_D07F
 L75A1:
     .byte $01, $01, $03
 L75A4:
@@ -1624,6 +1677,10 @@ L7720:
     sta $0300,y
 L772A:
     jmp L6F86
+
+
+
+L772D:
     lda $50
     cmp #$05
     bcc L7796
@@ -1682,8 +1739,16 @@ L7796:
     jsr L71AE
     jsr L7146
     jmp L81C6
+
+
+
+L779F:
     lda #$01
     jmp L7121
+
+
+
+L77A4:
     lda $0320
     cmp #$03
     beq L77AF
@@ -1792,16 +1857,21 @@ L784C:
     stx $45
     lda $0300,x
     jsr MAIN_ChooseRoutine
-    .byte $7F, $D0, $6C
-    sei
-    lda $4278
-    adc $7949,y
-    .byte $DB
-    adc $79ED,y
-    asl $DB7A
-    adc $79ED,y
-    asl $6C7A
-    sei
+        .word RTS_D07F
+        .word L786C
+        .word L78AD
+        .word L7942
+        .word L7949
+        .word L79DB
+        .word L79ED
+        .word L7A0E
+        .word L79DB
+        .word L79ED
+        .word L7A0E
+        .word L786C
+
+
+
 L786C:
     lda #$01
     sta $6B
@@ -1830,6 +1900,8 @@ L789D:
     dec $6B
     rts
 
+
+
 L78A0:
     inc $0500,x
 L78A3:
@@ -1837,6 +1909,10 @@ L78A3:
     lda #$00
     sta $0501,x
     beq L78C7
+
+
+
+L78AD:
     lda #$01
     sta $6B
     jsr L7979
@@ -1919,10 +1995,15 @@ WaveBulletTrajectoryVertical:
     .byte $FF
 
 
+
 L7942:
     lda #$81
     sta $65
     jmp L786C
+
+
+
+L7949:
     lda #$01
     sta $6B
     lda $0303,x
@@ -2006,6 +2087,10 @@ L79D8:
     cmp #$80
 L79DA:
     rts
+
+
+
+L79DB:
     lda #$7F
     jsr L7692
     lda #$18
@@ -2014,6 +2099,10 @@ L79DA:
 L79E8:
     lda #$03
     jmp L81C3
+
+
+
+L79ED:
     lda FrameCount
     lsr a
     bcc L7A0B
@@ -2030,6 +2119,10 @@ L7A02:
     jsr L6F5A
 L7A0B:
     jmp L79E8
+
+
+
+L7A0E:
     inc $030F,x
     jsr L7A24
     ldx $45
@@ -2199,27 +2292,25 @@ L7B30:
     stx $45
     lda $0300,x
     jsr MAIN_ChooseRoutine
-    .byte $7F
-    bne L7B8B
-    .byte $7B
-    .byte $8B
-    .byte $7B
-    tsx
-    .byte $7B
-    sbc $207B
-    .byte $7C
-    eor #$7C
-    jsr $BA7C
-    .byte $7B
-    cpy $AD7C
-    .byte $07
-    .byte $03
+        .word RTS_D07F
+        .word L7B4E
+        .word L7B8B
+        .word L7BBA
+        .word L7BED
+        .word L7C20
+        .word L7C49
+        .word L7C20
+        .word L7BBA
+        .word L7CCC
+
+L7B4E:
+    lda $0307
     beq L7B83
     lda #$04
     bit $032F
     bpl L7B5B
-    asl a
-L7B5B:
+        asl a
+    L7B5B:
     and $15
     beq L7B83
     jsr L74FD
@@ -2241,6 +2332,9 @@ L7B83:
     lsr a
     bcc L7B1B
     jmp L81C6
+
+
+
 L7B8B:
     lda $FD
     bne L7BA1
@@ -2264,6 +2358,10 @@ L7BA1:
 L7BB4:
     jsr L8A3D
     jmp L7B83
+
+
+
+L7BBA:
     lda $030F,x
     bpl L7BD1
     ldy $030D,x
@@ -2289,6 +2387,10 @@ L7BE3:
     inc $0300,x
 L7BEA:
     jmp L7B83
+
+
+
+L7BED:
     lda $FC
     bne L7C0F
     lda #$4E
@@ -2311,12 +2413,16 @@ L7C0F:
 L7C1A:
     jsr L8884
     jmp L7B83
+
+
+
+L7C20:
     lda $24
     cmp #$3F
     pha
     bcc L7C2A
-    jsr SelectSamusPal
-L7C2A:
+        jsr SelectSamusPal
+    L7C2A:
     pla
     bne L7C44
     inc $0300,x
@@ -2331,6 +2437,10 @@ L7C2A:
 L7C44:
     lda #$01
     jmp L81C3
+
+
+
+L7C49:
     lda $030F,x
     tay
     cmp #$8F
@@ -2398,6 +2508,10 @@ L7CC5:
     ora $0685
     sta $0685
     rts
+
+
+
+L7CCC:
     lda $FC
     bne L7CF1
     lda #$00
@@ -2410,12 +2524,15 @@ L7CC5:
     eor #$80
     sta $030F,x
     bmi L7CEE
-    jsr L85BD
-    sta $73
-L7CEE:
+        jsr L85BD
+        sta $73
+    L7CEE:
     jmp L7B83
 L7CF1:
     jmp L7C0F
+
+
+
 L7CF4:
     lda #$00
     sta $0307
@@ -3409,11 +3526,11 @@ L840B:
     ldx $45
     ldy $B460,x
     cpy #$05
-    beq L8432
+    beq RTS_8432
     ldy $B464,x
     beq L841E
     dec $B464,x
-    bne L8432
+    bne RTS_8432
 L841E:
     sta $B464,x
     ldy $B466,x
@@ -3425,7 +3542,7 @@ L8424:
     iny
     tya
     sta $B466,x
-L8432:
+RTS_8432:
     rts
 L8433:
     ldy $B465,x
@@ -3571,11 +3688,14 @@ L8550:
 L8558:
     txa
     ldx $0E
-L855B:
+RTS_855B:
     rts
+
+
+
 L855C:
     ldx $50
-    beq L855B
+    beq RTS_855B
     dex
     bne L8569
     jsr L8A3D
@@ -3586,7 +3706,7 @@ L8569:
     jsr L8A12
 L856F:
     ldx $FD
-    bne L85B3
+    bne RTS_85B3
     ldx #$05
     bne L8597
 L8577:
@@ -3596,11 +3716,11 @@ L8577:
     jmp L8586
 L8580:
     dex
-    bne L85B3
+    bne RTS_85B3
     jsr L885C
 L8586:
     ldx $FC
-    bne L85B3
+    bne RTS_85B3
     stx $66
     stx $67
     inx
@@ -3625,13 +3745,19 @@ L85AC:
 L85AF:
     sta $73
     stx $50
-L85B3:
+RTS_85B3:
     rts
+
+
+
 L85B4:
     lda $030C
     eor #$01
     sta $030C
     rts
+
+
+
 L85BD:
     lda $43
     eor #$03
@@ -3639,20 +3765,26 @@ L85BD:
     lda $73
     eor #$08
     rts
+
+
+
 L85C8:
     lda #$01
     cmp $43
-    bcs L85D3
+    bcs RTS_85D3
     lda #$D8
     cmp $030D
-L85D3:
+RTS_85D3:
     rts
+
+
+
 L85D4:
     lda $0300
     cmp #$09
     beq L85DF
     cmp #$07
-    bcs L85D3
+    bcs RTS_85D3
 L85DF:
     jsr L85C8
     ldy #$FF
@@ -3754,7 +3886,7 @@ L8685:
     ldy $5E
     beq L869E
     lsr a
-    beq L86CF
+    beq RTS_86CF
 L869E:
     sta $5F
 L86A0:
@@ -3763,15 +3895,15 @@ L86A0:
     dec $5F
     bne L86A0
     lda $52
-    beq L86CF
+    beq RTS_86CF
     lda #$01
     bne L86CD
 L86B2:
-    beq L86CF
+    beq RTS_86CF
     ldy $5E
     beq L86BB
     lsr a
-    beq L86CF
+    beq RTS_86CF
 L86BB:
     sta $5F
 L86BD:
@@ -3780,21 +3912,24 @@ L86BD:
     dec $5F
     bne L86BD
     lda $52
-    beq L86CF
+    beq RTS_86CF
     lda #$00
 L86CD:
     sta $48
-L86CF:
+RTS_86CF:
     rts
+
+
+
 L86D0:
-    bcs L86CF
+    bcs RTS_86CF
     lda #$01
     sta $5F
     lda $0314
-    bne L86CF
+    bne RTS_86CF
     lda $0300
     cmp #$03
-    beq L86CF
+    beq RTS_86CF
     jmp L7309
 L86E5:
     lda $0314
@@ -3826,15 +3961,15 @@ L8710:
     adc #$00
     sta $0308
     bpl L8734
-    lda #$00
-    cmp $0312
-    sbc $0308
-    cmp #$06
-    ldx #$FA
-    bne L8736
-L8734:
-    cmp #$05
-L8736:
+        lda #$00
+        cmp $0312
+        sbc $0308
+        cmp #$06
+        ldx #$FA
+        bne L8736
+    L8734:
+        cmp #$05
+    L8736:
     bcc L873E
     jsr L74FD
     stx $0308
@@ -3847,6 +3982,9 @@ L873E:
     adc $0308
     sta $00
     rts
+
+
+
 L8750:
     lda $0316
     jsr MAIN_Amul16
@@ -3864,30 +4002,30 @@ L8750:
     lda #$00
     bit $0315
     bpl L8778
-    lda #$FF
-L8778:
+        lda #$FF
+    L8778:
     adc $0309
     sta $0309
     tay
     bpl L8791
-    lda #$00
-    sec
-    sbc $0313
-    tax
-    lda #$00
-    sbc $0309
-    tay
-    jsr L87B4
-L8791:
+        lda #$00
+        sec
+        sbc $0313
+        tax
+        lda #$00
+        sbc $0309
+        tay
+        jsr L87B4
+    L8791:
     cpx $02
     tya
     sbc $03
     bcc L87A2
-    lda $00
-    sta $0313
-    lda $01
-    sta $0309
-L87A2:
+        lda $00
+        sta $0313
+        lda $01
+        sta $0309
+    L87A2:
     lda $0311
     clc
     adc $0313
@@ -3896,6 +4034,9 @@ L87A2:
     adc $0309
     sta $00
     rts
+
+
+
 L87B4:
     lda #$00
     sec
@@ -3905,6 +4046,9 @@ L87B4:
     sbc $01
     sta $01
     rts
+
+
+
 L87C2:
     lda $030D
     sec
@@ -4893,14 +5037,14 @@ L8E29:
     beq L8E49
     and #$0F
     jsr MAIN_ChooseRoutine
-        .word $D07F
-        .word $8E5B
-        .word $8EE2
-        .word $D07F
-        .word $8F5A
-        .word $D07F
-        .word $8F85
-        .word $8FAD
+        .word RTS_D07F
+        .word L8E5B
+        .word L8EE2
+        .word RTS_D07F
+        .word L8F5A
+        .word RTS_D07F
+        .word L8F85
+        .word L8FAD
 
 L8E49:
     ldx #$F0
@@ -4912,6 +5056,10 @@ L8E49:
     jmp L88E7
 L8E58:
     jmp L8A77
+
+
+
+L8E5B:
     jsr L8E61
     jmp L8E29
 L8E61:
@@ -4989,6 +5137,10 @@ L8EDB:
     eor $43
     and #$01
     rts
+
+
+
+L8EE2:
     jsr L8EE8
 L8EE5:
     jmp L8E29
@@ -5006,7 +5158,7 @@ L8EE8:
     and #$03
 L8EF9:
     tay
-    ldx $8F56,y
+    ldx L8F56,y
     pla
     and #$03
     sta $0307,x
@@ -5054,10 +5206,15 @@ L8F2B:
     rts
 
 L8F52:
-    .byte $F0, $10, $02, $01, $80, $B0, $A0, $90, $20, $5F, $8F, $D0, $86
+    .byte $F0, $10, $02, $01
+L8F56:
+    .byte $80, $B0, $A0, $90
 
 
 
+L8F5A:
+    jsr L8F5F
+    bne L8EE5
 L8F5F:
     lda $0320
     bne L8F82
@@ -5077,6 +5234,9 @@ L8F64:
 L8F82:
     lda #$02
     rts
+
+
+
 L8F85:
     jsr L8EDB
     sta $036C
@@ -5097,6 +5257,10 @@ L8FA0:
     sta $0360
 L8FAA:
     jmp L8E29
+
+
+
+L8FAD:
     ldx #$20
 L8FAF:
     txa
@@ -5328,7 +5492,7 @@ L912C:
     lda ($00),y
     and #$0F
     jsr MAIN_ChooseRoutine
-        .word $D07F
+        .word RTS_D07F
         .word L914E
         .word L9154
         .word L91B9
@@ -5769,11 +5933,14 @@ L93BA:
     pla
     plp
     rti
+
+
+
 L93C8:
     lda $12
     and #$10
     beq L93E9
-    lda $1E
+    lda MainRoutine
     cmp #$03
     beq L93DC
     cmp #$05
@@ -5783,23 +5950,25 @@ L93C8:
 L93DC:
     lda #$05
 L93DE:
-    sta $1E
+    sta MainRoutine
     lda $2B
     eor #$01
     sta $2B
     jsr L6F52
 L93E9:
-    lda $1E
+    lda MainRoutine
     jsr MAIN_ChooseRoutine
-    .byte $82
-    cpy #$58
-    jmp (L6D0A)
-    .byte $64
-    adc $6DC7
-    ora $6E,x
-    rol $996E
-    ror $6EA3
-    ldx $95
+        .word LC082
+        .word L6C58
+        .word L6D0A
+        .word L6D64
+        .word L6DC7
+        .word L6E15
+        .word L6E2E
+        .word L6E99
+        .word L6EA3
+        .word WaitTimer
+
 L9402:
     ldy $1C
     bne L9407
@@ -6247,11 +6416,13 @@ L95C4:
     .byte $FF, $0C, $04, $10, $FD, $00, $57, $18, $FD, $40, $18, $57, $FD, $C0, $18, $18
     .byte $FF
 
+
+
 L9B65:
     lda $50
-    bne L9BBE
+    bne RTS_9BBE
     ldy $52
-    beq L9BBE
+    beq RTS_9BBE
     sta $90
     sta $91
     lda RandomNumber1
@@ -6295,7 +6466,7 @@ L9BA5:
     sta $52
     lda #$05
     sta $0300
-L9BBE:
+RTS_9BBE:
     rts
 L9BBF:
     jsr L9BA5
@@ -6320,13 +6491,13 @@ L9BD9:
     stx $45
     lda $0300,x
     jsr MAIN_ChooseRoutine
-        .word $D07F
-        .word $9BEF
-        .word $9C27
-        .word $9C53
-        .word $9CD6
-        .word $9D18
-        .word $9D42
+        .word RTS_D07F
+        .word L9BEF
+        .word L9C27
+        .word L9C53
+        .word L9CD6
+        .word L9D18
+        .word L9D42
 
 
 
@@ -6336,7 +6507,7 @@ L9BEF:
     jsr L7692
     jsr L9D4D
     ldy $0307,x
-    lda $9C23,y
+    lda L9C23,y
     sta $030F,x
 L9C03:
     lda $0307,x
@@ -6355,11 +6526,13 @@ L9C0C:
     sta $65
     lda #$06
     jmp L81C3
-    ora $01
-    asl a
-    ora ($BD,x)
-    asl a
-    .byte $03
+L9C23:
+    .byte $05, $01, $0A, $01
+
+
+
+L9C27:
+    lda $030A,x
     and #$04
     beq L9C03
     dec $030F,x
@@ -6379,6 +6552,10 @@ L9C40:
     sec
     sbc #$03
     jmp L9CD0
+
+
+
+L9C53:
     lda $50
     beq L9C6F
     lda $030C
@@ -6444,6 +6621,10 @@ L9CC8:
 L9CD0:
     jsr L7695
     jmp L6F9A
+
+
+
+L9CD6:
     lda $50
     cmp #$05
     bcs L9D15
@@ -6477,6 +6658,10 @@ L9D12:
     jsr L6FB7
 L9D15:
     jmp L9CC3
+
+
+
+L9D18:
     lda $50
     cmp #$05
     bne L9D3F
@@ -6497,9 +6682,16 @@ L9D15:
     sta $0300,x
 L9D3F:
     jmp L9C03
+
+
+
+L9D42:
     lda $50
     bne L9D3F
     jmp L9CB3
+
+
+
 L9D49:
     lda #$FF
     bne L9D4F
@@ -6560,8 +6752,14 @@ L9D9A:
     lda $0500,x
     beq L9D8B
     jsr MAIN_ChooseRoutine
-    .byte $7F, $D0, $B0, $9D, $C7, $9D, $CC, $9D, $C7, $9D, $F6, $9D
-    
+        .word RTS_D07F
+        .word L9DB0
+        .word L9DC7
+        .word L9DCC
+        .word L9DC7
+        .word L9DF6
+
+
 L9DB0:
     inc $0500,x
     lda #$00
@@ -6572,26 +6770,34 @@ L9DB0:
     sta $00
     lda $0509,x
     sta $01
+L9DC7:
     lda #$02
     jmp L9EC7
+
+
+
+
+L9DCC:
     lda FrameCount
     and #$03
-    bne L9DEB
+    bne RTS_9DEB
     dec $0507,x
-    bne L9DEB
+    bne RTS_9DEB
     inc $0500,x
     ldy $050A,x
-    lda $9DEC,y
+    lda L9DEC,y
 L9DE0:
     sta $0506,x
     sta $0505,x
     lda #$00
     sta $0504,x
-L9DEB:
+RTS_9DEB:
     rts
 
 L9DEC:
     .byte $18, $1C, $20, $00, $04, $08, $0C, $10, $24, $14
+
+
 
 L9DF6:
     lda #$00
@@ -6624,11 +6830,14 @@ L9E19:
     adc $0302
     sta $05
     jsr LA0E7
-    bcs L9E4E
+    bcs RTS_9E4E
     jsr LA1FE
     lda #$50
     sta $68
     jmp SubtractHealth
+
+
+
 L9E3F:
     lda $0503,x
     asl a
@@ -6637,12 +6846,15 @@ L9E3F:
     sta $02
     lda $B7A8,y
     sta $03
-L9E4E:
+RTS_9E4E:
     rts
+
+
+
 L9E4F:
     lda $07A0
     cmp #$1F
-    bcs L9E4E
+    bcs RTS_9E4E
     ldx $45
     lda $0508,x
     sta $00
@@ -6692,6 +6904,9 @@ L9EA4:
     jsr L94E3
     clc
     rts
+
+
+
 L9EAF:
     lda $00
     tay
@@ -6707,16 +6922,19 @@ L9EAF:
     jsr MAIN_Amul8
     sta $03
     rts
+
+
+
 L9EC7:
     ldx $45
     ldy $0504,x
     beq L9ED3
     dec $0504,x
-    bne L9EF2
+    bne RTS_9EF2
 L9ED3:
     sta $0504,x
     ldy $0506,x
-    lda $9EF9,y
+    lda L9EF9,y
     cmp #$FE
     beq L9EF3
     sta $0503,x
@@ -6724,37 +6942,30 @@ L9ED3:
     tya
     sta $0506,x
     jsr L9E4F
-    bcc L9EF2
+    bcc RTS_9EF2
     ldx $45
     dec $0506,x
-L9EF2:
+RTS_9EF2:
     rts
 L9EF3:
     inc $0500,x
     pla
     pla
     rts
-    asl $07
-    .byte $00
-    inc $0607,x
-    ora ($FE,x)
-    .byte $07
-    asl $02
-    inc $0607,x
-    .byte $03
-    inc $0607,x
-    .byte $04
-    inc $0607,x
-    ora $FE
-    .byte $07
-    asl $09
-    inc $0607,x
-    asl a
-    inc $0607,x
-    .byte $0B
-    inc $0607,x
-    php
-    .byte $FE
+
+
+
+L9EF9:
+    .byte $06, $07, $00, $FE
+    .byte $07, $06, $01, $FE
+    .byte $07, $06, $02, $FE
+    .byte $07, $06, $03, $FE
+    .byte $07, $06, $04, $FE
+    .byte $07, $06, $05, $FE
+    .byte $07, $06, $09, $FE
+    .byte $07, $06, $0A, $FE
+    .byte $07, $06, $0B, $FE
+    .byte $07, $06, $08, $FE
 
 L9F21:
     lda #$FF
@@ -6884,9 +7095,9 @@ LA012:
     lda $0300,x
     cmp #$07
     beq LA01D
-    cmp #$0A
-    bne LA023
-LA01D:
+        cmp #$0A
+        bne LA023
+    LA01D:
     jsr L7FF8
     jsr LA1FE
 LA023:
@@ -6895,14 +7106,23 @@ LA023:
     bne LA012
 LA02A:
     jmp SubtractHealth
+
+
+
 LA02D:
     jsr LA0AC
     jsr LA073
     jmp LA0E7
+
+
+
 LA036:
     jsr LA073
     jsr LA0BF
     jmp LA0E7
+
+
+
 LA03F:
     lda $0400,x
     sta $07
@@ -6910,6 +7130,9 @@ LA03F:
     sta $09
     lda $B467,x
     jmp LA06C
+
+
+
 LA04F:
     lda $0400,y
     sta $06
@@ -6917,28 +7140,39 @@ LA04F:
     sta $08
     lda $B467,y
     jmp LA080
+
+
+
 LA05F:
     lda $030D,x
     sta $07
     lda $030E,x
     sta $09
     lda $030C,x
+
 LA06C:
     eor $FF
     and #$01
     sta $0B
     rts
+
+
+
 LA073:
     lda $030D,y
     sta $06
     lda $030E,y
     sta $08
     lda $030C,y
+
 LA080:
     eor $FF
     and #$01
     sta $0A
     rts
+
+
+
 LA087:
     lda $B1,x
     sta $07
@@ -6946,57 +7180,88 @@ LA087:
     sta $09
     lda $B3,x
     jmp LA06C
+
+
+
 LA094:
     lda $0301,x
     jsr LA0CD
     lda $0302,x
     jmp LA0C6
+
+
+
 LA0A0:
     lda $0301,x
     jsr LA0D4
     lda $0302,x
     jmp LA0B8
+
+
+
 LA0AC:
     lda $B461,x
     jsr LA0CD
     lda $B462,x
     jmp LA0C6
+
+
+
 LA0B8:
     clc
     adc $B462,y
     sta $05
     rts
+
+
+
 LA0BF:
     lda #$04
     jsr LA0CD
     lda #$08
+
 LA0C6:
     clc
     adc $0302,y
     sta $05
     rts
+
+
+
 LA0CD:
     clc
     adc $0301,y
     sta $04
     rts
+
+
+
 LA0D4:
     clc
     adc $B461,y
     sta $04
     rts
+
+
+
 LA0DB:
     tya
     clc
     adc #$10
     tay
     rts
+
+
+
 LA0E1:
     txa
     sec
     sbc #$10
     tax
     rts
+
+
+
 LA0E7:
     lda #$02
     sta $10
@@ -7027,11 +7292,11 @@ LA111:
 LA118:
     sec
     lda $01
-    bne LA14E
+    bne RTS_A14E
     lda $00
     sta $11
     cmp $04
-    bcs LA14E
+    bcs RTS_A14E
     asl $10
     lda $09
     sec
@@ -7050,44 +7315,56 @@ LA13E:
 LA143:
     sec
     lda $01
-    bne LA14E
-    lda $00
-    sta $0F
-    cmp $05
-LA14E:
+    bne RTS_A14E
+        lda $00
+        sta $0F
+        cmp $05
+    RTS_A14E:
     rts
+
+
+
 LA14F:
     lda $0B
     sbc $0A
 LA153:
     sta $01
-    bpl LA15C
-    jsr L87B4
-    inc $10
-LA15C:
+    bpl RTS_A15C
+        jsr L87B4
+        inc $10
+    RTS_A15C:
     rts
+
+
+
 LA15D:
     ora $030A,x
     sta $030A,x
     rts
+
+
+
 LA164:
-    bcs LA16E
+    bcs RTS_A16E
 LA166:
     lda $10
 LA168:
     ora $030A,y
     sta $030A,y
-LA16E:
+RTS_A16E:
     rts
+
+
+
 LA16F:
-    bcs LA16E
+    bcs RTS_A16E
     jsr LA1D5
     jsr L7150
     ldy #$00
     bcc LA19A
     lda $B460,x
     cmp #$04
-    bcs LA16E
+    bcs RTS_A16E
     lda $B46E,x
 LA185:
     sta $010F
@@ -7095,7 +7372,7 @@ LA185:
     bmi LA192
     lda $B683,y
     and #$10
-    bne LA16E
+    bne RTS_A16E
 LA192:
     ldy #$00
     jsr LA225
@@ -7219,9 +7496,18 @@ LA24C:
     cmp #$07
     bcs LA269
     jsr MAIN_ChooseRoutine
-    .byte $7F, $D0, $AB, $A2, $D3, $A2, $FA, $A2, $2B, $A3, $70, $A3, $DB, $A3
+        .word RTS_D07F
+        .word LA2AB
+        .word LA2D3
+        .word LA2FA
+        .word LA32B
+        .word LA370
+        .word LA3DB
 LA269:
     jmp LA905
+
+
+
 LA26C:
     lda $0405,x
     and #$02
@@ -7259,6 +7545,10 @@ LA29E:
     ror a
     sta $0405,x
     rts
+
+
+
+LA2AB:
     lda $0405,x
     asl a
     bmi LA2D0
@@ -7275,6 +7565,10 @@ LA29E:
     jsr LA6A7
 LA2D0:
     jmp LA2F7
+
+
+
+LA2D3:
     lda $0405,x
     asl a
     bmi LA2F7
@@ -7292,6 +7586,7 @@ LA2EE:
     jsr LA40B
 LA2F7:
     jsr LA423
+LA2FA:
     jmp $B5DD
 LA2FD:
     jsr L840B
@@ -7318,15 +7613,19 @@ LA31A:
 LA325:
     jsr L840B
     jmp LA303
+
+
+
+LA32B:
     jsr LA423
     lda $B460,x
     cmp #$03
     beq LA2FD
     bit $65
     bmi LA33D
-    lda #$A1
-    sta $65
-LA33D:
+        lda #$A1
+        sta $65
+    LA33D:
     lda FrameCount
     and #$07
     bne LA35E
@@ -7350,6 +7649,10 @@ LA35E:
     asl $65
 LA36D:
     jmp LA303
+
+
+
+LA370:
     lda $0404,x
     and #$24
     beq LA3C1
@@ -7409,6 +7712,10 @@ LA3CF:
     ora #$A0
     sta $65
     jmp LA303
+
+
+
+LA3DB:
     dec $040F,x
     bne LA3FD
     lda $040C,x
@@ -8007,18 +8314,26 @@ LA836:
     jsr LA905
 LA842:
     lda $B460,x
-    beq LA856
+    beq RTS_A856
     jsr MAIN_ChooseRoutine
-    .byte $7F, $D0, $57, $A8, $7E, $A8, $7F, $D0, $58, $A9, $7E, $A9
-LA856:
+    .word RTS_D07F
+    .word LA857
+    .word LA87E
+    .word RTS_D07F
+    .word LA958
+    .word LA97E
+RTS_A856:
     rts
+
+
+
 LA857:
     jsr LA948
     jsr LA90B
     ldx $45
     bcs LA869
     lda $B460,x
-    beq LA856
+    beq RTS_A856
     jsr LA94D
 LA869:
     lda #$01
@@ -8032,6 +8347,7 @@ LA874:
     lda #$00
     sta $0409,x
     beq LA891
+LA87E:
     jsr LA948
     lda $040A,x
     and #$FE
@@ -8083,7 +8399,7 @@ LA8DF:
     ldx $45
     bcs LA902
     lda $B460,x
-    beq LA957
+    beq RTS_A957
     ldy #$00
     lda $040A,x
     lsr a
@@ -8097,10 +8413,16 @@ LA8F4:
     sta $0409,x
 LA902:
     jmp LA869
+
+
+
 LA905:
     lda #$00
     sta $B460,x
     rts
+
+
+
 LA90B:
     lda $6E
     cmp #$11
@@ -8113,7 +8435,7 @@ LA917:
     ldy #$00
     lda ($04),y
     cmp #$A0
-    bcc LA947
+    bcc RTS_A947
     ldx $45
 LA924:
     lda $0403,x
@@ -8132,18 +8454,25 @@ LA936:
     lda $0B
     and #$01
     sta $B467,x
-LA947:
+RTS_A947:
     rts
+
+
+
 LA948:
     lda $0404,x
-    beq LA957
+    beq RTS_A957
 LA94D:
     lda #$00
     sta $0404,x
     lda #$05
     sta $B460,x
-LA957:
+RTS_A957:
     rts
+
+
+
+LA958:
     lda $B463,x
     cmp #$F7
     beq LA964
@@ -8162,6 +8491,10 @@ LA96A:
     lda $B467,x
     sta $0B
     jmp L8CBF
+
+
+
+LA97E:
     jsr LA905
     lda $B5D4
     jsr LA57A
@@ -8180,8 +8513,11 @@ LA996:
     tax
     cmp #$E0
     bne LA98C
-LA9A0:
+RTS_A9A0:
     rts
+
+
+
 LA9A1:
     dec $0406,x
     bne LA9B5
@@ -8199,9 +8535,9 @@ LA9B5:
     lda $0407,x
     asl a
     tay
-    lda $A9D7,y
+    lda LA9D7,y
     sta $04
-    lda $A9D8,y
+    lda LA9D7+1,y
     sta $05
     jsr LA92E
 LA9CE:
@@ -8209,7 +8545,15 @@ LA9CE:
     sta $65
     lda #$03
     jmp LA86B
-    .byte $00, $00, $0C, $1C, $10, $F0, $F0, $08
+
+LA9D7:
+    .byte $00, $00
+    .byte $0C, $1C
+    .byte $10, $F0
+    .byte $F0, $08
+
+
+
 LA9DF:
     ldy #$18
     LA9E1:
@@ -8224,7 +8568,7 @@ LA9EC:
     sty $45
     ldx $0728,y
     inx
-    beq LA9A0
+    beq RTS_A9A0
     ldx $0729,y
     lda $B460,x
     beq LAA03
@@ -8403,7 +8747,7 @@ LAB4A:
 
 LAB52:
     lda $B550
-    beq LAB81
+    beq RTS_AB81
     ldx #$F0
     stx $45
     lda $B555
@@ -8427,30 +8771,45 @@ LAB6E:
     sec
     sbc #$08
     bpl LAB6E
-LAB81:
+RTS_AB81:
     rts
 LAB82:
     jmp LA905
+
+
+
 LAB85:
     lda $B0,x
     jsr MAIN_ChooseRoutine
-    .byte $7F
-    bne LAB1F
-    .byte $AB
-    .byte $9E
-    .byte $AB
-    .byte $A7
-    .byte $AB
+        .word RTS_D07F
+        .word LAB92
+        .word LAB9E
+        .word LABA7
+
+
+
+LAB92:
     jsr LAC71
     jsr LABF5
     jsr LAC12
     jmp L8107
+
+
+
+LAB9E:
     jsr LAC71
     jsr LABAE
     jmp L8107
+
+
+
+LABA7:
     lda #$00
     sta $B0,x
     jmp L6F70
+
+
+
 LABAE:
     jsr LAC4C
     lda $B4,x
@@ -9391,45 +9750,51 @@ LB21B:
     sta $0405,x
     rts
 LB222:
-    ldx #$FD
-    ldy #$B3
+    ldx #<LB3FD.b
+    ldy #>LB3FD.b
     lda #$1B
     jmp LB235
+
+
+
+LB22B:
     pha
     lda #$20
     sta MAIN_DiskID@LB3C2
     lda #$00
     beq LB23D
 LB235:
-    pha
-    lda #$20
-    sta MAIN_DiskID@LB3C2
-    lda #$01
-LB23D:
-    sta $B3C4
+        pha
+        lda #$20
+        sta MAIN_DiskID@LB3C2
+        lda #$01
+    LB23D:
+    sta MAIN_DiskID@LB3C4
     pla
-    sta $B24E
-    stx $B254
-    sty $B255
+    sta LB24D+1
+    stx LB254
+    sty LB254+1
 LB24A:
     jsr LB2C3
+LB24D:
     lda #$1F
-    jsr $E239
-    ldx $ECB3,y
-    .byte $B3
+    jsr FDSBIOS_WriteFile
+        .word $B3BE
+LB254:
+        .word $B3EC
     beq LB25E
-    jsr LB2CC
-    jmp LB24A
-LB25E:
-    jmp LB378
+        jsr LB2CC
+        jmp LB24A
+    LB25E:
+        jmp LB378
 
 
 
 LB261:
     pha
     jsr LB32D
-    ldx #<$B3E4
-    ldy #>$B3E4
+    ldx #<LB3E4.b
+    ldy #>LB3E4.b
     jsr LB28A
     pla
     jsr $C46B
@@ -9455,13 +9820,14 @@ LB28A:
     lda #$01
     
 LB291:
-    sta $B3C4
-    stx $B2A2
-    sty $B2A3
+    sta MAIN_DiskID@LB3C4
+    stx LB2A2
+    sty LB2A2+1
 LB29A:
     jsr LB2C3
     jsr FDSBIOS_LoadFiles
         .word MAIN_DiskID
+LB2A2:
         .word $0000
     beq LB2BF
     jsr LB2CC
@@ -9643,6 +10009,7 @@ MAIN_DiskID: ;($B3BE)
 @LB3C2:
     .ascstr " "
     .byte $02
+@LB3C4:
     .byte $00
     .byte $00
     .byte $00
@@ -9677,6 +10044,7 @@ LB3E4:
 LB3E6:
     .db $0E, $FF, $FF, $FF, $EE, $FF
 
+LB3EC:
     .db $0E
     .db $01, $01, $01, $01, $01, $01, $01, $01
     .dw $C5A0
@@ -9684,7 +10052,8 @@ LB3E6:
     .db $00 
     .dw $C5A0
     .db $00 
-    
+
+LB3FD:
     .db $EF
     .db $02, $02, $02, $02, $02, $02, $02, $02
     .dw $C000
@@ -9693,6 +10062,7 @@ LB3E6:
     .dw $C000
     .db $00
 
+LB40E:
     .db $A2, $A3
 
 

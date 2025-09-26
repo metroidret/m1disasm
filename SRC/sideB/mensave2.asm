@@ -2,7 +2,10 @@
 LC3F0:
     .word LC461
 LC3F2:
-    .word $B32D
+    .word LB32D
+
+
+
 LC3F4:
     jsr ClearScreenData
     lda #<PPUString_C40B.b
@@ -49,7 +52,7 @@ LC443:
     ldx #$EC
     ldy #$B3
     lda #$0E
-    jsr $B22B
+    jsr LB22B
     ldx #$EA
     ldy #$B3
     lda $B41C
