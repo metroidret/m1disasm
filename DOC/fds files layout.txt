@@ -1,0 +1,150 @@
+An FDS game is made of multiple files that are loaded from the disk into FDS RAM.
+Which files are currently loaded depends on what's happening in the game.
+
+The files are ordered from lowest to highest address, but if two files overlap,
+the lowest one in the list is the one that has higher priority (highest file number in the LoadFiles call).
+
+
+
+On boot / Title screen / Save menu
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+        side A file $00 - kyodaku- ($2800-$28DF) (not overwritten only on boot)
+    prgram
+        side A file $03 - demo.pgm ($6800-$90FF)
+        side A file $04 - demo.pg2 ($C5A0-$CF5F)
+        side A file $0E - savedata ($C5A0-$C614)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side A file $05 - demo.vec ($DFFA-$DFFF)
+
+
+Starting a save file (side A)
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side A file $06 - bmenst   ($C000-$C0BF)
+        side A file $04 - demo.pg2 ($C5A0-$CF5F)
+        side A file $0E - savedata ($C5A0-$C614)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Starting a save file (side B) / Load new area on elevator
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F) (only $0000-$0BFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $1B - mensave  ($C000-$C3EF)
+        side B file $1A - mensave2 ($C3F0-$C59F)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Playing in Brinstar
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+        side B file $03 - hmob1b   ($0C00-$0FFF)
+        side B file $00 - hmbg1a   ($1000-$114F)
+        side B file $01 - hmbg1b   ($1200-$164F)
+        side B file $02 - hmbg1c   ($1800-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $15 - stg1pgm  ($B560-$CFDF)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side B file $11 - mmrock   ($DEA0-$DFEF)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Playing in Norfair
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+        side B file $06 - hmob4a   ($0C00-$0FFF)
+        side B file $01 - hmbg1b   ($1200-$164F)
+        side B file $04 - hmbg4a   ($1000-$125F)
+        side B file $05 - hmbg4b   ($1700-$176F)
+        side B file $02 - hmbg1c   ($1800-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $16 - stg4pgm  ($B560-$CFDF)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side B file $14 - mmkbos   ($DEA0-$DFEF)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Playing in Kraid
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+        side B file $0E - hmob6a   ($0C00-$0FFF)
+        side B file $01 - hmbg1b   ($1200-$164F)
+        side B file $07 - hmbg6c   ($1000-$12DF)
+        side B file $0C - hmbg6a   ($1700-$17BF)
+        side B file $02 - hmbg1c   ($1800-$1FFF)
+        side B file $0D - hmbg6b   ($1E00-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $18 - stg6pgm  ($B560-$CCDF)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side B file $12 - mmfire   ($DEA0-$DFEF)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Playing in Tourian
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F)
+        side B file $02 - hmbg1c   ($1800-$1FFF)
+        side B file $0B - hmob5a   ($0C00-$0FFF)
+        side B file $07 - hmbg6c   ($1000-$12DF)
+        side B file $08 - hmbg5b   ($1200-$17FF)
+        side B file $09 - hmbg5c   ($1900-$198F)
+        side B file $0A - hmbg5d   ($1D00-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $17 - stg5pgm  ($B560-$CF7F)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side B file $13 - mmkiti   ($DEA0-$DFEF)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Playing in Ridley
+    vram
+        side B file $10 - hmob7a   ($0C00-$0FFF)
+        side B file $01 - hmbg1b   ($1200-$164F)
+        side B file $07 - hmbg6c   ($1000-$12DF)
+        side B file $0F - hmbg7a   ($1700-$17BF)
+        side B file $02 - hmbg1c   ($1800-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $19 - stg7pgm  ($B560-$CBDF)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side B file $14 - mmkbos   ($DEA0-$DFEF)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Switching to side A (side B)
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F) (only $0000-$0BFF)
+        side B file $02 - hmbg1c   ($1800-$1FFF) (only $1800-$18FF and $1E00-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side B file $1B - mensave  ($C000-$C3EF)
+        side B file $1A - mensave2 ($C3F0-$C59F)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side A file $07 - main.vec ($DFFA-$DFFF)
+
+
+Ending
+    vram
+        side A file $01 - demo.chr ($0000-$1D9F) (only $0000-$0BFF)
+        side A file $09 - endobj   ($0000-$05FF)
+        side A file $0A - endbg    ($1000-$13FF)
+        side B file $02 - hmbg1c   ($1800-$1FFF) (only $1800-$18FF and $1E00-$1FFF)
+    prgram
+        side A file $08 - main.pgm ($6800-$B40F)
+        side A file $0C - endpgm   ($6000-$6D7F)
+        side B file $1B - mensave  ($C000-$C3EF)
+        side B file $1A - mensave2 ($C3F0-$C59F)
+        side A file $0E - savedata ($C5A0-$C614)
+        side A file $0B - mmeee    ($CC00-$CFCF)
+        side A file $02 - met.hex  ($D000-$DFF5)
+        side A file $0D - endvec   ($DFFA-$DFFF)
