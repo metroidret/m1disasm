@@ -1,5 +1,30 @@
 ;-------------------------------------[ Hardware defines ]-------------------------------------------
 
+;FDS interrupt control
+FDS_ACTONNMI           = $0100
+
+    FDS_ACTONNMI_VINTWAIT  = %00000000
+    FDS_ACTONNMI_VEC_DFF6  = %01000000
+    FDS_ACTONNMI_VEC_DFF8  = %10000000
+    FDS_ACTONNMI_VEC_DFFA  = %11000000
+
+FDS_ACTONIRQ           = $0101
+
+    FDS_ACTONIRQ_DISKSKIP  = %00000000
+    FDS_ACTONIRQ_DISKTRANS = %01000000
+    FDS_ACTONIRQ_ACKDELAY  = %10000000
+    FDS_ACTONIRQ_VEC_DFFE  = %11000000
+
+FDS_RESETFLAG          = $0102
+
+    FDS_RESETFLAG_RESETOK  = $35
+
+FDS_RESETTYPE          = $0103
+
+    FDS_RESETTYPE_HARD     = $AC
+    FDS_RESETTYPE_SOFT     = $53
+
+
 ;PPU hardware control registers.
 PPUCTRL                = $2000
 PPUMASK                = $2001
