@@ -236,8 +236,8 @@ MainTitleRoutine: ;($696D)
         sta TitleRoutine
         bne L6999
     L6988:
-        jsr L8707
-        jsr L86BE
+        jsr UnusedAttractMode_8707
+        jsr UnusedAttractMode_SetJoypad
         lda TitleRoutine
         cmp #$0A
         bcs L6999
@@ -394,7 +394,7 @@ L6A6A:
 L6A71:
     lda $59
     beq DEMO_ReadJoyPads
-    jmp L6ACA
+    jmp CheckIfStartIsPressed
 
 DEMO_ReadJoyPads: ;($6A78)
     ldx #$00
@@ -477,22 +477,23 @@ RTS_6AC9:
 
 
 
-L6ACA:
+CheckIfStartIsPressed: ;($6ACA)
     ldy #$01
     sty JOY1
     dey
     sty JOY1
-    ldy #$04
-    L6AD5:
+    ldy #BUTTONBIT_START
+    @loop:
         lda JOY1
         dey
-        bne L6AD5
+        bne @loop
     and #$03
     beq RTS_6AC9
     
     iny
     sty $5B
     bne RTS_6AC9 ; branch always
+
 
 
 DEMO_UpdateTimer:
@@ -939,7 +940,7 @@ RTS_6D00:
 
 L6999_InitializeAfterReset00: ;($6D01)
 L6999_InitializeAfterReset1C:
-    ldy #$02
+    ldy #UnusedAttractMode_InputList@L873D - UnusedAttractMode_InputList.b
     sty $57
     sty $54
     dey
@@ -3270,36 +3271,50 @@ RTS_86BD:
 
 
 
-L86BE:
+; routine to force a sequence of joypad inputs into ram
+; only used on the title screen, where those ram addresses are ignored anyway
+UnusedAttractMode_SetJoypad: ;($86BE)
     lda $59
     beq RTS_8706
     lda $55
+    ; branch if delay didnt run out
     dec $56
     bne L86DA
+        ; delay ran out
+        ; update $55 and set up new delay
         pha
         ldy $57
-        lda L873B,y
+        lda UnusedAttractMode_InputList,y
         sta $55
-        ldx L873B+1,y
+        ldx UnusedAttractMode_InputList+1,y
         stx $56
         inc $57
         inc $57
         pla
     L86DA:
     ldx #$01
+    ; move old $15 to $00
     ldy $15
     sty $00
+    ; save $55 as new $15
     sta $15
+    ; get rising edge of $15 (except bit 6)
+    ; branch if new $15 is the same as old $15
     eor $00
     beq L86EE
+        ; new $15 is different than old $15
+        ; rising edge logic
         lda $00
-        and #$BF
+        and #~BUTTON_B.b
         sta $00
         eor $15
     L86EE:
     and $15
+    ; save rising edge
     sta $13
     sta $17
+    
+    ; auto-fire stuff
     ldy #$20
     lda $15
     cmp $00
@@ -3315,27 +3330,27 @@ RTS_8706:
 
 
 
-L8707:
+UnusedAttractMode_8707:
     lda $58
     beq RTS_873A
     ldx $57
     lda $15
-    cmp L873B,x
+    cmp UnusedAttractMode_InputList,x
     beq L8722
-    ldy L873B+1,x
-    bne L872A
-    dex
-    dex
-    dec $57
-    dec $57
-    jmp L872A
-L8722:
-    inc L873B+1,x
+        ldy UnusedAttractMode_InputList+1,x
+        bne L872A
+        dex
+        dex
+        dec $57
+        dec $57
+        jmp L872A
+    L8722:
+    inc UnusedAttractMode_InputList+1,x
     bne RTS_873A
-    dec L873B+3,x
+    dec UnusedAttractMode_InputList+3,x
 L872A:
-    sta L873B+2,x
-    inc L873B+3,x
+    sta UnusedAttractMode_InputList+2,x
+    inc UnusedAttractMode_InputList+3,x
     inc $57
     inc $57
     bne RTS_873A
@@ -3345,17 +3360,90 @@ RTS_873A:
     rts
 
 
-L873B:
-    .byte $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $90, $08, $0B, $00, $00
-    .byte $00, $00, $00, $B1, $01, $36, $81, $1D, $01, $2B, $81, $1E, $01, $2A, $81, $1B
-    .byte $01, $28, $81, $1B, $01, $3A, $41, $06, $01, $05, $41, $06, $01, $05, $41, $05
-    .byte $01, $06, $41, $06, $01, $07, $41, $03, $01, $06, $41, $06, $01, $06, $41, $04
-    .byte $01, $06, $41, $05, $01, $06, $41, $05, $01, $06, $41, $06, $01, $1E, $81, $17
-    .byte $01, $25, $81, $1D, $01, $25, $81, $20, $01, $22, $81, $25, $01, $1E, $81, $20
-    .byte $01, $21, $81, $20, $01, $20, $81, $1E, $01, $22, $81, $29, $01, $32, $41, $08
-    .byte $01, $05, $41, $06, $01, $05, $41, $07, $01, $04, $41, $06, $01, $05, $41, $06
-    .byte $01, $2E, $41, $07, $01, $06, $41, $05, $01, $06, $41, $06, $01, $05, $41, $07
-    .byte $01, $27, $81, $21, $01, $23, $81, $19, $01, $00, $01, $00, $01, $20, $00, $00
+
+UnusedAttractMode_InputList: ;($873B)
+    .byte $FF, $FF
+@L873D:
+    ;       controller input        time
+    .byte $00,                     $100 & $FF
+    .byte $00,                     $100 & $FF
+    .byte $00,                     $100 & $FF
+    .byte $00,                     $100 & $FF
+    .byte $00,                      $90
+    .byte BUTTON_UP,                $0B
+    .byte $00,                     $100 & $FF
+    .byte $00,                     $100 & $FF
+    .byte $00,                      $B1
+    .byte BUTTON_RIGHT,             $36
+    .byte BUTTON_RIGHT | BUTTON_A,  $1D
+    .byte BUTTON_RIGHT,             $2B ; title screen restarts in the middle of this instruction, so the rest are fully unused
+    .byte BUTTON_RIGHT | BUTTON_A,  $1E
+    .byte BUTTON_RIGHT,             $2A
+    .byte BUTTON_RIGHT | BUTTON_A,  $1B
+    .byte BUTTON_RIGHT,             $28
+    .byte BUTTON_RIGHT | BUTTON_A,  $1B
+    .byte BUTTON_RIGHT,             $3A
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $05
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $07
+    .byte BUTTON_RIGHT | BUTTON_B,  $03
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $04
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $05
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $05
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $1E
+    .byte BUTTON_RIGHT | BUTTON_A,  $17
+    .byte BUTTON_RIGHT,             $25
+    .byte BUTTON_RIGHT | BUTTON_A,  $1D
+    .byte BUTTON_RIGHT,             $25
+    .byte BUTTON_RIGHT | BUTTON_A,  $20
+    .byte BUTTON_RIGHT,             $22
+    .byte BUTTON_RIGHT | BUTTON_A,  $25
+    .byte BUTTON_RIGHT,             $1E
+    .byte BUTTON_RIGHT | BUTTON_A,  $20
+    .byte BUTTON_RIGHT,             $21
+    .byte BUTTON_RIGHT | BUTTON_A,  $20
+    .byte BUTTON_RIGHT,             $20
+    .byte BUTTON_RIGHT | BUTTON_A,  $1E
+    .byte BUTTON_RIGHT,             $22
+    .byte BUTTON_RIGHT | BUTTON_A,  $29
+    .byte BUTTON_RIGHT,             $32
+    .byte BUTTON_RIGHT | BUTTON_B,  $08
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $07
+    .byte BUTTON_RIGHT,             $04
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $2E
+    .byte BUTTON_RIGHT | BUTTON_B,  $07
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $05
+    .byte BUTTON_RIGHT,             $06
+    .byte BUTTON_RIGHT | BUTTON_B,  $06
+    .byte BUTTON_RIGHT,             $05
+    .byte BUTTON_RIGHT | BUTTON_B,  $07
+    .byte BUTTON_RIGHT,             $27
+    .byte BUTTON_RIGHT | BUTTON_A,  $21
+    .byte BUTTON_RIGHT,             $23
+    .byte BUTTON_RIGHT | BUTTON_A,  $19
+    .byte BUTTON_RIGHT,            $100 & $FF
+    .byte BUTTON_RIGHT,            $100 & $FF
+    .byte BUTTON_RIGHT,             $20
+    .byte $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
