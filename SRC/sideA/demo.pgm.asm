@@ -1116,20 +1116,20 @@ RTS_6E15:
 L6999_6E16:
     lda $27
     and #$07
-    bne L6E34
+    bne RTS_6E34
     lda $4C
     cmp #$04
     bne L6E31
-    jsr L826F
-    lda #$08
-    sta $26
-    sta $44
-    lda #$00
-    sta $47
-    inc $1F
-L6E31:
+        jsr L826F
+        lda #$08
+        sta $26
+        sta $44
+        lda #$00
+        sta $47
+        inc $1F
+    L6E31:
     jsr L8673
-L6E34:
+RTS_6E34:
     rts
 
 
@@ -1140,7 +1140,7 @@ L6999_6E35:
     jsr L85BB
 L6E3C:
     lda $26
-    bne L6E83
+    bne RTS_6E83
     lda $048A
     and $049A
     and $04AA
@@ -1172,7 +1172,7 @@ L6E7D:
     jsr L82D6
 L6E80:
     jsr L834E
-L6E83:
+RTS_6E83:
     rts
 
 
@@ -1442,6 +1442,8 @@ L7023:
     lda #$01
     sta $0680
     rts
+
+L7029:
     lsr $0416
     lda ($00),y
     and #$C0
@@ -1451,17 +1453,19 @@ L7023:
     ora #$80
     sta $0416
     rts
+
+L703E:
     ldy #$00
     ldx $040E
-L7043:
-    lda L70B5,y
-    sta $0200,x
-    inx
-    beq L7051
-    iny
-    cpy #$1C
-    bne L7043
-L7051:
+    L7043:
+        lda L70B5,y
+        sta $0200,x
+        inx
+        beq L7051
+        iny
+        cpy #$1C
+        bne L7043
+    L7051:
     txa
     pha
     ldx $040E
@@ -1525,27 +1529,17 @@ L70B0:
 
 
 L70B5:
-    .byte $10, $8A
-    .byte $00
-    clc
-    .byte $10, $FF
-    .byte $00
-    jsr $FF10
-    .byte $00
-    plp
-    .byte $10, $FF
-    .byte $00
-    bmi L70DE
-    .byte $FF
-    .byte $00
-    clc
-    clc
-    stx $2800
-    clc
-    .byte $FF
-    .byte $00
-    .byte $30, $86
-    asl $1084
+    .byte $10, $8A, $00, $18
+    .byte $10, $FF, $00, $20
+    .byte $10, $FF, $00, $28
+    .byte $10, $FF, $00, $30
+    .byte $18, $FF, $00, $18
+    .byte $18, $8E, $00, $28
+    .byte $18, $FF, $00, $30
+
+L70D1:
+    stx $0E
+    sty $10
     ldx #$00
     ldy #$08
 L70D9:
@@ -1575,7 +1569,7 @@ L70E6:
     bne L70FC
 @L70F4:
     ldx $3F
-    bne L7138
+    bne RTS_7138
     ldx #$05
     bne L7118
 L70FC:
@@ -1584,10 +1578,10 @@ L70FC:
     jmp L7105
 L7102:
     dex
-    bne L7138
+    bne RTS_7138
 L7105:
     ldx $FC
-    bne L7138
+    bne RTS_7138
     stx $0417
     stx $0418
     inx
@@ -1612,7 +1606,7 @@ L7130:
 L7133:
     sta $FB
     stx $0409
-L7138:
+RTS_7138:
     rts
 
 L7139:
@@ -2284,6 +2278,8 @@ L7AAA:
     adc $0302,y
     sta $05
     rts
+
+L7ABD:
     lda #$02
     sta $01
     lda $07
@@ -2314,12 +2310,12 @@ L7AEB:
 L7AEC:
     lda $02
     bcc L7AF5
-    beq L7B33
+    beq RTS_7B33
     jsr TwosComplement
 L7AF5:
     sta $11
     cmp $04
-    bcs L7B33
+    bcs RTS_7B33
     asl $01
     lda $09
     sec
@@ -2348,12 +2344,12 @@ L7B25:
 L7B26:
     lda $02
     bcc L7B2F
-    beq L7B33
+    beq RTS_7B33
     jsr TwosComplement
 L7B2F:
     sta $0F
     cmp $05
-L7B33:
+RTS_7B33:
     rts
 
 
@@ -2624,26 +2620,23 @@ L8183:
     rts
 
 L819C:
-    eor #$E1
-    ora ($3D,x)
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    jsr $0000
+    .byte $49, $E1, $01, $3D, $00, $00, $00, $00, $20, $00, $00
+
+
+
 L81A7:
     ldx #$00
     jsr L81AE
     ldx #$10
 L81AE:
     jsr L81B1
-L81B1:
+    L81B1:
     lda $0485,x
     bne @endIf_A
         jsr L81F2
     @endIf_A:
     lda $048A,x
-    bne L81F1
+    bne RTS_81F1
     dec $0485,x
     lda $0486,x
     clc
@@ -2655,17 +2648,17 @@ L81B1:
     sta $0483,x
     dec $0488,x
     bne L81EE
-    lda $0481,x
-    eor #$03
-    sta $0481,x
-    lda #$20
-    sta $0488,x
-    asl a
-    eor $0482,x
-    sta $0482,x
-L81EE:
+        lda $0481,x
+        eor #$03
+        sta $0481,x
+        lda #$20
+        sta $0488,x
+        asl a
+        eor $0482,x
+        sta $0482,x
+    L81EE:
     jmp L8253
-L81F1:
+RTS_81F1:
     rts
 
 
@@ -2820,6 +2813,9 @@ L834A:
     jmp L8253
 RTS_834D:
     rts
+
+
+
 L834E:
     lda $4F
     beq RTS_8381
@@ -3176,9 +3172,9 @@ L85E7:
     and #$07
     asl a
     tay
-    lda $8613,y
+    lda L8613,y
     sta $02
-    lda $8614,y
+    lda L8613+1,y
     sta $03
     inc $4B
     jsr PrepPPUPaletteString
@@ -3189,85 +3185,36 @@ L85E7:
     iny
     jsr AddYToPtr02
     jmp PrepPPUPaletteString
-    .byte $23
-    stx $2D
-    stx $37
-    stx $41
-    stx $4B
-    stx $55
-    stx $5F
-    stx $69
-    stx $03
-    .byte $0F
-    .byte $02
-    .byte $13
-    .byte $00
-    .byte $03
-    .byte $00
-    .byte $34
-    .byte $0F
-    .byte $00
-    .byte $03
-    asl $01
-    .byte $23
-    .byte $00
-    .byte $03
-    .byte $0F
-    .byte $34
-    ora #$00
-    .byte $03
-    asl $0F,x
-    .byte $23
-    .byte $00
-    .byte $03
-    .byte $0F
-    bit $1A
-    .byte $00
-    .byte $03
-    .byte $17
-    .byte $0F
-    .byte $13
-    .byte $00
-    .byte $03
-    .byte $00
-    .byte $04
-    plp
-    .byte $00
-    .byte $03
-    .byte $17
-    ora ($14,x)
-    .byte $00
-    .byte $03
-    bpl L8662
-    plp
-    .byte $00
-    .byte $03
-    asl $02,x
-    .byte $0F
-    .byte $00
-    .byte $03
-    bmi L866C
-    .byte $1A
-    .byte $00
-    .byte $03
-    asl $12
-L8662:
-    .byte $0F
-    .byte $00
-    .byte $03
-    bmi L866B
-    ora #$00
-    .byte $03
-    .byte $0F
-L866B:
-    .byte $12
-L866C:
-    .byte $14
-    .byte $00
-    .byte $03
-    bpl L8695
-    .byte $0F
-    .byte $00
+
+L8613:
+    .word L8613_8623
+    .word L8613_862D
+    .word L8613_8637
+    .word L8613_8641
+    .word L8613_864B
+    .word L8613_8655
+    .word L8613_865F
+    .word L8613_8669
+
+L8613_8623:
+    .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
+L8613_862D:
+    .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
+L8613_8637:
+    .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
+L8613_8641:
+    .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
+L8613_864B:
+    .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
+L8613_8655:
+    .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
+L8613_865F:
+    .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
+L8613_8669:
+    .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
+
+
+
 L8673:
     ldy $4C
     lda L8673_8681,y
@@ -3277,14 +3224,13 @@ L8673:
     inc $4C
 RTS_8680:
     rts
+
 L8673_8681:
-    ora $0F0E
-    bpl L8687
-    .byte $FF
-L8687:
-    ora ($10,x)
-    .byte $0F
-    asl $FF0D
+    .byte $0D, $0E, $0F, $10, $01, $FF
+    .byte $01, $10, $0F, $0E, $0D, $FF
+
+
+
 L868D:
     lda $5C
     beq RTS_86BD
@@ -3330,27 +3276,27 @@ L86BE:
     lda $55
     dec $56
     bne L86DA
-    pha
-    ldy $57
-    lda L873B,y
-    sta $55
-    ldx L873B+1,y
-    stx $56
-    inc $57
-    inc $57
-    pla
-L86DA:
+        pha
+        ldy $57
+        lda L873B,y
+        sta $55
+        ldx L873B+1,y
+        stx $56
+        inc $57
+        inc $57
+        pla
+    L86DA:
     ldx #$01
     ldy $15
     sty $00
     sta $15
     eor $00
     beq L86EE
-    lda $00
-    and #$BF
-    sta $00
-    eor $15
-L86EE:
+        lda $00
+        and #$BF
+        sta $00
+        eor $15
+    L86EE:
     and $15
     sta $13
     sta $17
@@ -3358,11 +3304,11 @@ L86EE:
     lda $15
     cmp $00
     bne L8704
-    dec $18,x
-    bne RTS_8706
-    sta $17
-    ldy #$10
-L8704:
+        dec $18,x
+        bne RTS_8706
+        sta $17
+        ldy #$10
+    L8704:
     sty $18,x
 RTS_8706:
     rts
@@ -3400,192 +3346,22 @@ RTS_873A:
 
 
 L873B:
-    .byte $FF
-    .byte $FF
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    bcc @L8750
-    .byte $0B
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    lda ($01),y
-@L8750:
-    rol $81,x
-    ora $2B01,x
-    sta ($1E,x)
-    ora ($2A,x)
-    sta ($1B,x)
-    ora ($28,x)
-    sta ($1B,x)
-    ora ($3A,x)
-    eor ($06,x)
-    ora ($05,x)
-    eor ($06,x)
-    ora ($05,x)
-    eor ($05,x)
-    ora ($06,x)
-    eor ($06,x)
-    ora ($07,x)
-    eor ($03,x)
-    ora ($06,x)
-    eor ($06,x)
-    ora ($06,x)
-    eor ($04,x)
-    ora ($06,x)
-    eor ($05,x)
-    ora ($06,x)
-    eor ($05,x)
-    ora ($06,x)
-    eor ($06,x)
-    ora ($1E,x)
-    sta ($17,x)
-    ora ($25,x)
-    sta ($1D,x)
-    ora ($25,x)
-    sta ($20,x)
-    ora ($22,x)
-    sta ($25,x)
-    ora ($1E,x)
-    sta ($20,x)
-    ora ($21,x)
-    sta ($20,x)
-    ora ($20,x)
-    sta ($1E,x)
-    ora ($22,x)
-    sta ($29,x)
-    ora ($32,x)
-    eor ($08,x)
-    ora ($05,x)
-    eor ($06,x)
-    ora ($05,x)
-    eor ($07,x)
-    ora ($04,x)
-    eor ($06,x)
-    ora ($05,x)
-    eor ($06,x)
-    ora ($2E,x)
-    eor ($07,x)
-    ora ($06,x)
-    eor ($05,x)
-    ora ($06,x)
-    eor ($06,x)
-    ora ($05,x)
-    eor ($07,x)
-    ora ($27,x)
-    sta ($21,x)
-    ora ($23,x)
-    sta ($19,x)
-    ora ($00,x)
-    ora ($00,x)
-    ora ($20,x)
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
-    .byte $00
+    .byte $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $90, $08, $0B, $00, $00
+    .byte $00, $00, $00, $B1, $01, $36, $81, $1D, $01, $2B, $81, $1E, $01, $2A, $81, $1B
+    .byte $01, $28, $81, $1B, $01, $3A, $41, $06, $01, $05, $41, $06, $01, $05, $41, $05
+    .byte $01, $06, $41, $06, $01, $07, $41, $03, $01, $06, $41, $06, $01, $06, $41, $04
+    .byte $01, $06, $41, $05, $01, $06, $41, $05, $01, $06, $41, $06, $01, $1E, $81, $17
+    .byte $01, $25, $81, $1D, $01, $25, $81, $20, $01, $22, $81, $25, $01, $1E, $81, $20
+    .byte $01, $21, $81, $20, $01, $20, $81, $1E, $01, $22, $81, $29, $01, $32, $41, $08
+    .byte $01, $05, $41, $06, $01, $05, $41, $07, $01, $04, $41, $06, $01, $05, $41, $06
+    .byte $01, $2E, $41, $07, $01, $06, $41, $05, $01, $06, $41, $06, $01, $05, $41, $07
+    .byte $01, $27, $81, $21, $01, $23, $81, $19, $01, $00, $01, $00, $01, $20, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 
 
@@ -3599,8 +3375,8 @@ L883B:
 
 L6999_8847:
     lda #$FF
-    sta $0102
-    sta $0103
+    sta FDS_RESETFLAG
+    sta FDS_RESETTYPE
     jsr L883B
     lda $39
     bne L6999_8899
@@ -3622,8 +3398,8 @@ L886F:
     inc $2D
     lda $2D
     bne @L887C
-    inc $2E
-@L887C:
+        inc $2E
+    @L887C:
     inx
     bne L886F
     inc $2F
@@ -3890,21 +3666,21 @@ LL8A39:
     @endIf_A:
     cpy #$03
     bne L8A58
-    jmp L8AE8
-L8A58:
+        jmp L8AE8
+    L8A58:
     lda $12
     bpl CheckBackspace
     ldx PPUStrIndex
     tya
     asl a
     tay
-    lda $8B81,y
+    lda L8B81,y
     jsr UnusedIntroRoutine5@subroutine
     lda $33
     lsr a
     lsr a
     lsr a
-    adc $8B82,y
+    adc L8B81+1,y
     jsr UnusedIntroRoutine5@subroutine
     lda $34
     asl a
@@ -3921,13 +3697,13 @@ L8A58:
     beq L8A98
     cmp #$5C
     beq L8A98
-    lda #$82
-    jsr UnusedIntroRoutine5@subroutine
-    lda #$FF
-    bne L8A9A
-L8A98:
-    lda #$01
-L8A9A:
+        lda #$82
+        jsr UnusedIntroRoutine5@subroutine
+        lda #$FF
+        bne L8A9A
+    L8A98:
+        lda #$01
+    L8A9A:
     jsr UnusedIntroRoutine5@subroutine
     pla
     jsr UnusedIntroRoutine5@subroutine
@@ -4107,10 +3883,10 @@ L6999_8BC5:
     ldy $37
     cpy #$03
     bne L8BE3
-    ldy #$17
-    sty $1F
-    rts
-L8BE3:
+        ldy #$17
+        sty $1F
+        rts
+    L8BE3:
     lda #$80
     sta SaveData@enable,y
     tya
@@ -4618,6 +4394,7 @@ Hex16ToDec: ;($8EB8)
     ora $02
     sta $07
     rts
+
 
 
 PPUString_8F0D:
