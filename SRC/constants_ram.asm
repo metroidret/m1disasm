@@ -47,9 +47,18 @@ FrameCount             = $27
 RandomNumber1          = $28     ;Random numbers used-->
 RandomNumber2          = $29     ;throughout the game.
 
+Joy2Port               = $2B     ;Controller port from which to read Joypad 2 (0=Joypad 1 port, 1=Joypad 2 port)
+
 SpriteLoadPending      = $50
 
 SpritePagePos          = $55     ;Index into sprite RAM used to load object sprite data.
+
+UnusedAttractModeJoyStatus = $55     ;Joypad status of current instruction played.
+UnusedAttractModeDelay = $56     ;Delay until next instruction to play.
+UnusedAttractModeInstrID = $57     ; index into UnusedAttractMode_InputList
+UnusedAttractModeIsRecording = $58     ;Are we recording a movie file for attract mode? (0=no, non-0=yes)
+UnusedAttractModeIsPlaying = $59     ;Are we playing back a movie file for attract mode? (0=no, non-0=yes)
+
 
 IntroMusicRestart      = $63
 

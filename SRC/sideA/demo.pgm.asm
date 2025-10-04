@@ -236,8 +236,8 @@ MainTitleRoutine: ;($696D)
         sta TitleRoutine
         bne L6999
     L6988:
-        jsr UnusedAttractMode_8707
-        jsr UnusedAttractMode_SetJoypad
+        jsr UnusedAttractMode_RecordMovie
+        jsr UnusedAttractMode_PlayMovie
         lda TitleRoutine
         cmp #$0A
         bcs L6999
@@ -400,8 +400,9 @@ DEMO_ReadJoyPads: ;($6A78)
     ldx #$00
     stx $01
     jsr DEMO_ReadOnePad
-    ldx $2B
+    ldx Joy2Port
     inc $01
+    ; fallthrough
 
 DEMO_ReadOnePad:
     ;These lines strobe the joystick to enable the program to read the buttons pressed.
@@ -3277,90 +3278,115 @@ RTS_86BD:
 
 ; routine to force a sequence of joypad inputs into ram
 ; only used on the title screen, where those ram addresses are ignored anyway
-UnusedAttractMode_SetJoypad: ;($86BE)
-    lda $59
-    beq RTS_8706
-    lda $55
+UnusedAttractMode_PlayMovie: ;($86BE)
+    ; exit if not playing back the inputs
+    lda UnusedAttractModeIsPlaying
+    beq @RTS
+    
+    lda UnusedAttractModeJoyStatus
     ; branch if delay didnt run out
-    dec $56
-    bne L86DA
+    dec UnusedAttractModeDelay
+    bne @endIf_A
         ; delay ran out
-        ; update $55 and set up new delay
         pha
-        ldy $57
+        ldy UnusedAttractModeInstrID
+        ; update attract mode joypad
         lda UnusedAttractMode_InputList,y
-        sta $55
+        sta UnusedAttractModeJoyStatus
+        ; set up new delay
         ldx UnusedAttractMode_InputList+1,y
-        stx $56
-        inc $57
-        inc $57
+        stx UnusedAttractModeDelay
+        ; increment instruction index to next instruction
+        inc UnusedAttractModeInstrID
+        inc UnusedAttractModeInstrID
         pla
-    L86DA:
+    @endIf_A:
+    
+    ;Get joypad status of previous refresh.
     ldx #$01
-    ; move old $15 to $00
-    ldy $15
+    ldy Joy2Status
+    ;Store at $00.
     sty $00
-    ; save $55 as new $15
-    sta $15
-    ; get rising edge of $15 (except bit 6)
-    ; branch if new $15 is the same as old $15
+    
+    ;Store current joypad status.
+    sta Joy2Status
+    
+    ;Branch if no buttons changed.
     eor $00
-    beq L86EE
-        ; new $15 is different than old $15
-        ; rising edge logic
+    beq @endIf_B
+        ;Remove the previous status of the B button.
         lda $00
         and #~BUTTON_B.b
         sta $00
-        eor $15
-    L86EE:
-    and $15
-    ; save rising edge
-    sta $13
-    sta $17
+        eor Joy2Status
+    @endIf_B:
     
-    ; auto-fire stuff
+    ;Save any button changes from the current frame and the last frame to the joy change addresses.
+    and Joy2Status
+    sta Joy2Change
+    ;Store any changed buttons in JoyRetrig address.
+    sta Joy2Retrig
+    
     ldy #$20
-    lda $15
+    ;Checks to see if same buttons are being pressed this frame as last frame.
+    lda Joy2Status
     cmp $00
-    bne L8704
-        dec $18,x
-        bne RTS_8706
-        sta $17
+    ;If none, branch.
+    bne @endIf_C
+        ;Decrement RetrigDelay if same buttons pressed.
+        dec RetrigDelay1,x
+        bne @RTS
+        ;Once RetrigDelay=#$00, store buttons to retrigger.
+        sta Joy2Retrig
         ldy #$10
-    L8704:
-    sty $18,x
-RTS_8706:
+    @endIf_C:
+    ;Reset retrigger delay to #$20(32 frames) or #$10(16 frames) if already retriggering.
+    sty RetrigDelay1,x
+@RTS:
     rts
 
 
 
-UnusedAttractMode_8707:
-    lda $58
-    beq RTS_873A
-    ldx $57
-    lda $15
+UnusedAttractMode_RecordMovie: ;($8707)
+    ; exit if not recording the inputs
+    lda UnusedAttractModeIsRecording
+    beq @RTS
+    
+    ; branch if current joypad input is equal to current instruction's input
+    ldx UnusedAttractModeInstrID
+    lda Joy2Status
     cmp UnusedAttractMode_InputList,x
-    beq L8722
+    beq @else_A
+        ; they are different
+        ; if time is not zero, create new instruction after the current one
         ldy UnusedAttractMode_InputList+1,x
-        bne L872A
+        bne @endIf_A
+        ; time is zero, new instruction overwrites current instruction
         dex
         dex
-        dec $57
-        dec $57
-        jmp L872A
-    L8722:
-    inc UnusedAttractMode_InputList+1,x
-    bne RTS_873A
-    dec UnusedAttractMode_InputList+3,x
-L872A:
+        dec UnusedAttractModeInstrID
+        dec UnusedAttractModeInstrID
+        jmp @endIf_A
+    @else_A:
+        ; they are the same
+        ; increase time for current instruction
+        inc UnusedAttractMode_InputList+1,x
+        ; exit if time is < $100
+        bne @RTS
+        ; time is $100, we must create a new instruction with time of zero to prolong the input
+        dec UnusedAttractMode_InputList+3,x
+    @endIf_A:
     sta UnusedAttractMode_InputList+2,x
     inc UnusedAttractMode_InputList+3,x
-    inc $57
-    inc $57
-    bne RTS_873A
-    lda #$00
-    sta $58
-RTS_873A:
+    inc UnusedAttractModeInstrID
+    inc UnusedAttractModeInstrID
+    ; branch if we're not at the end of the input list
+    bne @RTS
+        ; we're at the end of the list, we can't record any extra instructions
+        ; stop recording
+        lda #$00
+        sta UnusedAttractModeIsRecording
+@RTS:
     rts
 
 

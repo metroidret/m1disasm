@@ -3,8 +3,9 @@ METHEX_ReadJoyPads: ;($D000)
     ldx #$00
     stx $01
     jsr METHEX_ReadOnePad
-    ldx $2B
+    ldx Joy2Port
     inc $01
+    ; fallthrough
 
 METHEX_ReadOnePad:
     ;These lines strobe the joystick to enable the program to read the buttons pressed.
@@ -68,14 +69,14 @@ METHEX_ReadOnePad:
     bne @endIf_B
         ;Decrement RetrigDelay if same buttons pressed.
         dec RetrigDelay1,x
-        bne RTS_D051
+        bne @RTS
         ;Once RetrigDelay=#$00, store buttons to retrigger.
         sta Joy1Retrig,x
         ldy #$10
     @endIf_B:
     ;Reset retrigger delay to #$20(32 frames) or #$10(16 frames) if already retriggering.
     sty RetrigDelay1,x
-RTS_D051:
+@RTS:
     rts
 
 
