@@ -138,32 +138,32 @@ DEMO_NMI: ;($68BD)
         sta $0203
     L68E5:
     lda #$00
-    sta $2003
+    sta OAMADDR
     lda #$02
-    sta $4014
+    sta OAMDMA
     lda $1A
     bne L694E
     jsr L6A45
     jsr DEMO_CheckPPUWrite
     jsr WritePPUCtrl
     jsr L6A71
-    lda $2002
+    lda PPUSTATUS
     lda $FF
     and #$01
     asl a
     asl a
     clc
     adc #$20
-    sta $2006
+    sta PPUADDR
     lda #$00
-    sta $2006
+    sta PPUADDR
     lda $3F
     sta $FD
     jsr DEMO_WriteScroll
     lda $43
     beq L694E
     L691E:
-        lda $2002
+        lda PPUSTATUS
         and #$40
         bne L691E
     lda $1F
@@ -180,11 +180,11 @@ L692E:
     lda $5C
     bne L693A
 L693A:
-    jsr $DFF3
-L693D:
-    lda $2002
-    and #$40
-    beq L693D
+    jsr GotoLD18C
+    L693D:
+        lda PPUSTATUS
+        and #$40
+        beq L693D
     lda $40
     sta $FD
     jsr DEMO_WriteScroll
@@ -194,9 +194,9 @@ L693D:
 
 
 L694E:
-    jsr $DFF3
+    jsr GotoLD18C
 L6951:
-    lda $4017
+    lda JOY2
     ldy #$01
     sty $1A
     pla
@@ -365,12 +365,12 @@ L6A45:
     bne L6A5B
     lda $1F
     cmp #$15
-    bcs L6A5A
+    bcs RTS_6A5A
     jmp L85DB
 L6A56:
     lda #$00
     sta $52
-L6A5A:
+RTS_6A5A:
     rts
 
 ;LC1FF
@@ -654,10 +654,10 @@ RTS_6B76:
 
 
 DEMO_PPUWrite: ;($6B77)
-    sta $2006
+    sta PPUADDR
     iny
     lda ($00),y
-    sta $2006
+    sta PPUADDR
     iny
     lda ($00),y
     asl a
@@ -667,22 +667,22 @@ DEMO_PPUWrite: ;($6B77)
     and #$3F
     tax
     bcc L6B90
-    iny
-L6B90:
-    bcs L6B93
-    iny
-L6B93:
-    lda ($00),y
-    sta $2007
-    dex
-    bne L6B90
+        iny
+    L6B90:
+        bcs L6B93
+            iny
+        L6B93:
+        lda ($00),y
+        sta $2007
+        dex
+        bne L6B90
     iny
     jsr DEMO_AddYToPtr00
 
 
 
 DEMO_ProcessPPUString: ;($6B9F)
-    ldx $2002
+    ldx PPUSTATUS
     ldy #$00
     lda ($00),y
     bne DEMO_PPUWrite
@@ -915,13 +915,13 @@ DEMO_WaitNMIPass_: ;($6CD8)
 
 
 L6CE0:
-    lda $FF
-    and #$F7
-    ora #$10
-    sta $FF
-    sta $2000
-    lda $FE
-    ora #$1E
+    lda PPUCTRL_ZP
+    and #~PPUCTRL_OBJ_1000.B
+    ora #PPUCTRL_BG_1000
+    sta PPUCTRL_ZP
+    sta PPUCTRL
+    lda PPUMASK_ZP
+    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG.b
     bne DEMO_WriteAndWait ; branch always
 
 
@@ -1020,27 +1020,28 @@ L6999_6D69:
     jmp L6CE0
 
 
+
 L6999_6D8C:
     lda $62
     cmp #$0D
     bcs L6DB2
-    asl a
-    tay
-    lda L7DAF,y
-    sta $02
-    lda L7DAF+1,y
-    sta $03
-    ldy #$00
-    lda ($02),y
-    sta $01
-    iny
-    lda ($02),y
-    sta $00
-    iny
-    jsr AddYToPtr02
-    inc $62
-    jmp PrepPPUPaletteString
-L6DB2:
+        asl a
+        tay
+        lda L7DAF,y
+        sta $02
+        lda L7DAF+1,y
+        sta $03
+        ldy #$00
+        lda ($02),y
+        sta $01
+        iny
+        lda ($02),y
+        sta $00
+        iny
+        jsr AddYToPtr02
+        inc $62
+        jmp PrepPPUPaletteString
+    L6DB2:
     lda #$08
     sta $26
     lsr a
@@ -1138,8 +1139,8 @@ RTS_6E34:
 L6999_6E35:
     lda $48
     beq L6E3C
-    jsr L85BB
-L6E3C:
+        jsr L85BB
+    L6E3C:
     lda $26
     bne RTS_6E83
     lda $048A
@@ -1150,12 +1151,12 @@ L6E3C:
     lda #$01
     cmp $47
     beq L6E5E
-    inc $47
-    sta $4F
-    sta $48
-    lda #$00
-    sta $4E
-L6E5E:
+        inc $47
+        sta $4F
+        sta $48
+        lda #$00
+        sta $4E
+    L6E5E:
     and $04CA
     and $04DA
     and $04EA
@@ -1181,9 +1182,9 @@ RTS_6E83:
 L6999_6E84:
     lda $48
     beq L6E8E
-    jsr L834E
-    jmp L85BB
-L6E8E:
+        jsr L834E
+        jmp L85BB
+    L6E8E:
     inc $1F
     lda #$60
     sta $030D
@@ -1192,6 +1193,8 @@ L6E8E:
     lda $0305
     sta $0306
     rts
+
+L6EA1:
     lda #$01
     sta $43
     lda #$04
@@ -1204,6 +1207,8 @@ L6E8E:
     sta $0400
     inc $1F
     rts
+
+L6EBB:
     lda $0300
     cmp #$04
     bne RTS_6EE2
@@ -1503,10 +1508,10 @@ L7095:
     clc
     adc #$18
     bcs L70A4
-    tax
-    lda $041E
-    jsr L70A9
-L70A4:
+        tax
+        lda $041E
+        jsr L70A9
+    L70A4:
     pla
     sta $040E
     rts
@@ -1543,13 +1548,12 @@ L70D1:
     sty $10
     ldx #$00
     ldy #$08
-L70D9:
-    lsr a
-    bcs L70E0
-    inx
-    dey
-L70DE:
-    bne L70D9
+    L70D9:
+        lsr a
+        bcs L70E0
+        inx
+        dey
+        bne L70D9
 L70E0:
     txa
     ldy $10
@@ -1565,9 +1569,9 @@ L70E6:
     dex
     bne @L70F1
     jmp @L70F4
-@L70F1:
-    dex
-    bne L70FC
+    @L70F1:
+        dex
+        bne L70FC
 @L70F4:
     ldx $3F
     bne RTS_7138
@@ -1577,9 +1581,9 @@ L70FC:
     dex
     bne L7102
     jmp L7105
-L7102:
-    dex
-    bne RTS_7138
+    L7102:
+        dex
+        bne RTS_7138
 L7105:
     ldx $FC
     bne RTS_7138
@@ -1832,6 +1836,7 @@ ObjPlace7:
 
 
 
+L7363:
     .byte $FC, $F8, $F4, $F0, $EE, $EC, $EA, $E8, $E7, $E6, $E6, $E5, $E5, $E4, $E4, $E3
     .byte $E5, $E7, $E9, $EB, $EF, $F3, $F7, $FB, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $FE, $FC, $FA, $F8, $F6, $F4, $F2, $F0, $EE, $ED, $EB, $EA, $E9, $E8, $E7, $E6
@@ -2305,8 +2310,8 @@ L7AE3:
     lda #$00
     sbc #$00
     bpl L7AEB
-    inc $01
-L7AEB:
+        inc $01
+    L7AEB:
     lsr a
 L7AEC:
     lda $02
@@ -2339,8 +2344,8 @@ L7AF5:
 L7B1F:
     sbc #$00
     bpl L7B25
-    inc $01
-L7B25:
+        inc $01
+    L7B25:
     lsr a
 L7B26:
     lda $02
@@ -3237,15 +3242,14 @@ L868D:
     beq RTS_86BD
     ldx #$01
     lda $13
-L8695:
     asl a
     bcs @L869E
-    asl a
-    bcc RTS_86BD
-    inx
-    inx
-    inx
-@L869E:
+        asl a
+        bcc RTS_86BD
+        inx
+        inx
+        inx
+    @L869E:
     ldy #$03
     lda $15
     lsr a
