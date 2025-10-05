@@ -108,7 +108,7 @@ L6C69:
 L6C6F:
     cpx #$FF
     bcs L6C76
-    sta $0300,x
+    sta ObjAction,x
 L6C76:
     inx
     bne L6C69
@@ -205,7 +205,7 @@ L6D0A:
     sta $26
     jsr L6FB1
     ldy #$14
-    sty $0300
+    sty ObjAction
     ldx #$00
     stx $6A
     dex
@@ -213,8 +213,8 @@ L6D0A:
     stx $0730
     stx $0732
     stx $0738
-    stx $010A
-    stx $010B
+    stx EndTimer
+    stx EndTimer+1
     stx $86
     stx $89
     ldy #$27
@@ -228,16 +228,16 @@ L6D0A:
     sty $8E
     sty $8F
     lda $B5D1
-    sta $030D
+    sta ObjY
     lda #$80
-    sta $030E
+    sta ObjX
     lda $FF
     and #$01
-    sta $030C
+    sta ObjHi
     lda #$00
-    sta $0106
+    sta Health
     lda #$03
-    sta $0107
+    sta Health+1
 RTS_6D63:
     rts
 
@@ -269,7 +269,7 @@ L6D64:
     ldx #$03
     jsr SetTimer
 L6DA4:
-    lda $0300
+    lda ObjAction
     cmp #$08
     bne RTS_6D63
     jsr L6F4E
@@ -338,7 +338,7 @@ L6E15:
     lda $98
     cmp #$03
     bcs RTS_6E2D
-    ldy $010B
+    ldy EndTimer+1
     iny
     bne RTS_6E2D
     sta $2B
@@ -356,18 +356,18 @@ L6E2E:
         sty $55
         sty $45
         sty $65
-        sty $030C
+        sty ObjHi
         jsr L6E00
         jsr L6F4E
         lda #$5A
-        sta $0303
+        sta ObjAnimFrame
         ldx #$02
         L6E4B:
             lda L6E93,x
-            sta $030D
+            sta ObjY
             lda L6E96,x
-            sta $030E
-            inc $0303
+            sta ObjX
+            inc ObjAnimFrame
             txa
             pha
             jsr L81C6
@@ -423,12 +423,12 @@ L6E99:
 
 L6EA3:
     jsr MAIN_EraseAllSprites
-    ldy $0300
+    ldy ObjAction
     lda $26
     bne L6EBE
     sta $74
     lda #$FF
-    sta $0300
+    sta ObjAction
     jsr L7CAA
     jsr SelectSamusPal
     lda #$03
@@ -438,14 +438,14 @@ L6EBE:
     bcs RTS_6E92
     cmp $6ECB,y
     bne L6ECC
-    inc $0300
+    inc ObjAction
     sty $1C
 L6ECC:
     lda FrameCount
     lsr a
     bcc RTS_6E92
     lda #$04
-    jsr L731F
+    jsr SetSamusAnim
     lda #$00
     sta $55
     sta $45
@@ -523,9 +523,11 @@ L6F4E:
 L6F52:
     lda #$02
     bne L6F60
-L6F56:
+
+SFX_SamusWalk: ;($6F56)
     lda #$08
     bne L6F60
+
 L6F5A:
     lda #$10
     bne L6F60
@@ -614,14 +616,14 @@ L6FC1:
         dec $4F
         rts
     L6FCE:
-    lda $0300
+    lda ObjAction
     bmi L6FEA
     jsr MAIN_ChooseRoutine
         .word L6FEA
         .word L7076
         .word L73B8
         .word L7497
-        .word L754E
+        .word SamusPntUp
         .word L772D
         .word L73B8
         .word L779F
@@ -632,7 +634,7 @@ L6FEA:
     lda $15
     and #$CF
     beq L6FF5
-    jsr L7311
+    jsr SetSamusStand@NoFootstep
     lda $15
 L6FF5:
     and #$07
@@ -648,7 +650,7 @@ L6FFF:
 L7008:
     tax
     lda $703B,x
-    sta $0300
+    sta ObjAction
 L700F:
     lda $13
     ora $17
@@ -659,11 +661,11 @@ L7019:
     bit $13
     bpl L7022
     lda #$02
-    sta $0300
+    sta ObjAction
 L7022:
     lda #$04
     jsr L7121
-    lda $0300
+    lda ObjAction
     cmp #$05
     bcs RTS_704B
     jsr MAIN_ChooseRoutine
@@ -671,15 +673,15 @@ L7022:
         .word L704C
         .word L7377
         .word L746B
-        .word L732B
+        .word SetSamusPntUp
     
     .byte $01, $01, $03, $04
     
 L703F:
     lda #$50
-    sta $030F
+    sta SamusJumpDsplcmnt
     lda #$32
-    jsr L731F
+    jsr SetSamusAnim
     sta $5F
 RTS_704B:
     rts
@@ -690,21 +692,21 @@ L704C:
     lda #$09
     sta $4D
     ldx #$00
-    lda $0305
+    lda ObjAnimResetIndex
     cmp #$07
     beq L7063
     inx
     cmp #$27
     beq L7063
     lda #$04
-    jsr L7322
+    jsr SetSamusNextAnim
 L7063:
-    lda $7072,x
-    sta $0305
+    lda L7072,x
+    sta ObjAnimResetIndex
     ldx $47
 L706B:
-    lda $7074,x
-    sta $0315
+    lda L7074,x
+    sta SamusAccelX
     rts
 
 L7072:
@@ -716,43 +718,43 @@ L7074:
 
 L7076:
     ldx $47
-    lda $0314
+    lda SamusAccelY
     beq L70D7
-    ldy $030F
+    ldy SamusJumpDsplcmnt
 L7080:
-    bit $0308
+    bit ObjSpeedY
     bmi L7090
     cpy #$18
     bcs L70B6
     lda #$0C
-    sta $0305
+    sta ObjAnimResetIndex
     bcc L70B6
 L7090:
     cpy #$18
     bcc L70B6
-    lda $0305
+    lda ObjAnimResetIndex
     cmp #$20
     beq L70A0
-    lda #$0E
-    sta $0305
-L70A0:
+        lda #$0E
+        sta ObjAnimResetIndex
+    L70A0:
     cpy #$20
     bcc L70B6
     lda $15
     and #$08
     beq L70AF
     lda #$35
-    sta $0305
+    sta ObjAnimResetIndex
 L70AF:
     bit $15
     bmi L70B6
     jsr L74FD
 L70B6:
     lda #$00
-    cmp $0305
+    cmp ObjAnimResetIndex
     bne L70C2
     lda #$0C
-    sta $0305
+    sta ObjAnimResetIndex
 L70C2:
     lda $5E
     beq L70CA
@@ -765,7 +767,7 @@ L70CA:
     lda #$02
     bne L7121
 L70D7:
-    lda $0307
+    lda SamusOnElevator
     bne L70DF
     jsr L706B
 L70DF:
@@ -774,7 +776,7 @@ L70DF:
     bne L70ED
     lda #$09
     sta $4D
-    jsr L6F56
+    jsr SFX_SamusWalk
 L70ED:
     jsr L72E2
     lda $13
@@ -782,7 +784,7 @@ L70ED:
 L70F4:
     jsr L7377
     lda #$12
-    sta $0316
+    sta SamusHorzSpeedMax
     jmp L711F
 L70FF:
     ora $17
@@ -793,7 +795,7 @@ L7107:
     lda $15
     and #$03
     bne L7113
-    jsr L7309
+    jsr SetSamusStand
     jmp L711F
 L7113:
     jsr L854C
@@ -836,22 +838,22 @@ L7146:
 
 L7150:
     sec
-    ldy $0300
+    ldy ObjAction
     dey
     bne RTS_7172
     lda CurSamusStat.SamusGear
     and #$08
     beq RTS_7172
-    lda $0305
+    lda ObjAnimResetIndex
     cmp #$0E
     beq L716F
     cmp #$0C
     sec
     bne RTS_7172
-    bit $0308
+    bit ObjSpeedY
     bpl RTS_7172
 L716F:
-    cmp $0306
+    cmp ObjAnimIndex
 RTS_7172:
     rts
 
@@ -865,9 +867,9 @@ L7173:
     lsr a
     tax
     lda $7072,x
-    cmp $0305
+    cmp ObjAnimResetIndex
     beq RTS_7172
-    jsr L731F
+    jsr SetSamusAnim
     pla
     pla
     jmp L711F
@@ -877,16 +879,16 @@ L718B:
     and #$08
     bne L719A
     lda #$22
-    sta $0306
+    sta ObjAnimIndex
     rts
 L719A:
-    lda $0306
+    lda ObjAnimIndex
     sec
-    sbc $0305
+    sbc ObjAnimResetIndex
     and #$03
     tax
     lda L71AA,x
-    jmp L7322
+    jmp SetSamusNextAnim
 
 L71AA:
     .byte $3F
@@ -895,7 +897,7 @@ L71AA:
     .byte $3F
 
 L71AE:
-    lda $030A
+    lda SamusIsHit
     and #$20
     beq L71E4
     lda #$32
@@ -908,7 +910,7 @@ L71AE:
     bpl L71C8
     jsr L6F9E
 L71C8:
-    lda $030A
+    lda SamusIsHit
     and #$08
     lsr a
     lsr a
@@ -916,9 +918,9 @@ L71C8:
     sta $6C
 L71D2:
     lda #$FD
-    sta $0308
+    sta ObjSpeedY
     lda #$38
-    sta $0314
+    sta SamusAccelY
     jsr IsSamusDead
     bne L71E4
     jmp L721A
@@ -932,15 +934,15 @@ L71E4:
     jsr MAIN_Adiv16
     cmp #$03
     bcs L71FE
-    ldy $0315
+    ldy SamusAccelX
     bne L7207
     jsr L7302
 L71FE:
     dex
     bne L7204
-    jsr L8001
+    jsr MAIN_TwosComplement
 L7204:
-    sta $0309
+    sta ObjSpeedX
 L7207:
     lda $71
     bpl L721A
@@ -948,15 +950,15 @@ L7207:
     and #$01
     bne L721A
     tay
-    sty $0304
+    sty ObjAnimDelay
     ldy #$F7
-    sty $0303
+    sty ObjAnimFrame
 L721A:
-    ldy $0107
+    ldy Health+1
     dey
     bmi L7229
     bne L7232
-    lda $0106
+    lda Health
     cmp #$70
     bcs L7232
 L7229:
@@ -966,14 +968,14 @@ L7229:
     jsr L6F6C
 L7232:
     lda #$00
-    sta $030A
+    sta SamusIsHit
     rts
 
 
 
 IsSamusDead:
     ;Samus is dead. Zero flag is set.
-    lda $0300
+    lda ObjAction
     cmp #$07
     beq RTS_7245
     cmp #$08
@@ -1027,109 +1029,120 @@ L7273:
     lda $68
     sec
     jsr MAIN_Base10Subtract
-    sta $0106
-    lda $0107
+    sta Health
+    lda Health+1
     sta $03
     lda $69
     jsr MAIN_Base10Subtract
-    sta $0107
-    lda $0106
+    sta Health+1
+    lda Health
     and #$F0
-    ora $0107
+    ora Health+1
     beq L729A
         bcs L72DF
     L729A:
     lda #$00
-    sta $0106
-    sta $0107
+    sta Health
+    sta Health+1
     lda #$07
-    sta $0300
+    sta ObjAction
     jsr L6FA2
     jmp L703F
 
 
 
 L72AD:
-    lda $0106
+    lda Health
     sta $03
     lda $68
     clc
     jsr MAIN_Base10Add
-    sta $0106
-    lda $0107
+    sta Health
+    lda Health+1
     sta $03
     lda $69
     jsr MAIN_Base10Add
-    sta $0107
+    sta Health+1
     lda CurSamusStat.TankCount
     jsr MAIN_Amul16
     ora #$0F
-    cmp $0107
+    cmp Health+1
     bcs L72DF
     and #$F9
-    sta $0107
+    sta Health+1
     lda #$99
-    sta $0106
+    sta Health
 L72DF:
     jmp ClearHealthChange
 
 
 
 L72E2:
-    lda $030A
+    lda SamusIsHit
     lsr a
     and #$02
     beq RTS_7308
     bcs L72F3
-    lda $0315
+    lda SamusAccelX
     bmi RTS_7308
     bpl L72FA
 L72F3:
-    lda $0315
+    lda SamusAccelX
     bmi L72FA
         bne RTS_7308
     L72FA:
-    jsr L8001
-    sta $0315
+    jsr MAIN_TwosComplement
+    sta SamusAccelX
 L7300:
     ldy #$00
 L7302:
-    sty $0309
-    sty $0313
+    sty ObjSpeedX
+    sty SamusSpeedSubPixelX
 RTS_7308:
     rts
 
 
 
-L7309:
-    lda $0315
-    bne L7311
-    jsr L6F56
-L7311:
-    jsr L7335
-    sty $0300
-    lda $15
-    and #$08
-    bne L732B
+SetSamusStand: ;($7309)
+    ;Is Samus moving horizontally? If so, don't play the walk sfx
+    lda SamusAccelX
+    bne @NoFootstep
+        jsr SFX_SamusWalk
+    @NoFootstep: ;($7311)
+    ;Clear horizontal movement and animation delay data.
+    jsr NoHorzMoveNoDelay
+    ;Samus is standing.
+    sty ObjAction
+    ;Is The up button being pressed? If so, branch.
+    lda Joy2Status
+    and #BUTTON_UP
+    bne SetSamusPntUp
+    ;Set Samus animation for standing.
     lda #$07
-L731F:
-    sta $0305
-L7322:
-    sta $0306
+
+SetSamusAnim: ;($731F)
+    ;Set new animation reset index.
+    sta ObjAnimResetIndex
+
+SetSamusNextAnim: ;($7322)
+    ;Set new animation data index.
+    sta ObjAnimIndex
+    ;New animation to take effect immediately.
     lda #$00
-    sta $0304
+    sta ObjAnimDelay
     rts
 
 
 
-L732B:
+SetSamusPntUp: ;($732B)
     lda #$04
-    sta $0300
+    sta ObjAction
     lda #$27
-    jsr L731F
-L7335:
+    jsr SetSamusAnim
+
+NoHorzMoveNoDelay: ;($7335)
     jsr L736B
-    sty $0304
+    sty ObjAnimDelay
     rts
 
 
@@ -1141,24 +1154,24 @@ L733C:
     jsr L854C
     tax
     jsr L706B
-    lda $0314
+    lda SamusAccelY
     bmi RTS_7371
-    lda $0305
+    lda ObjAnimResetIndex
     cmp #$0E
     beq RTS_7371
     stx $47
     lda $744D,x
-    jmp L731F
+    jmp SetSamusAnim
 L735D:
-    lda $0314
+    lda SamusAccelY
     bmi RTS_7371
     beq RTS_7371
-    lda $0305
+    lda ObjAnimResetIndex
     cmp #$0C
     bne RTS_7371
 L736B:
     jsr L7300
-    sty $0315
+    sty SamusAccelX
 RTS_7371:
     rts
 
@@ -1170,16 +1183,16 @@ L7372:
 L7377:
     ldy #$0C
 L7379:
-    sty $0305
+    sty ObjAnimResetIndex
     dey
-    sty $0306
+    sty ObjAnimIndex
     lda #$04
-    sta $0304
+    sta ObjAnimDelay
     lda #$00
-    sta $030F
+    sta SamusJumpDsplcmnt
     lda #$FC
-    sta $0308
-    ldx $0300
+    sta ObjSpeedY
+    ldx ObjAction
     dex
     bne L73A6
     lda CurSamusStat.SamusGear
@@ -1198,14 +1211,14 @@ L73A9:
     beq L73B4
     ldy #$12
 L73B4:
-    sty $0314
+    sty SamusAccelY
     rts
 
 
 
 L73B8:
-    lda $030F
-    bit $0308
+    lda SamusJumpDsplcmnt
+    bit ObjSpeedY
     bpl L73CB
     cmp #$20
     bcc L73CB
@@ -1219,9 +1232,9 @@ L73CB:
     and #$08
     beq L73E1
     lda #$35
-    sta $0305
+    sta ObjAnimResetIndex
     lda #$06
-    sta $0300
+    sta ObjAction
 L73E1:
     jsr L7452
     lda $5E
@@ -1231,15 +1244,15 @@ L73E1:
     jsr L7377
     jmp L711F
 L73F2:
-    lda $0314
+    lda SamusAccelY
     bne L7406
-    lda $0300
+    lda ObjAction
     cmp #$06
     bne L7403
-    jsr L732B
+    jsr SetSamusPntUp
     bne L7406
 L7403:
-    jsr L7309
+    jsr SetSamusStand
 L7406:
     lda #$03
     jmp L7121
@@ -1257,27 +1270,27 @@ L740B:
 L741A:
     cpy $47
     beq L7448
-    lda $0300
+    lda ObjAction
     cmp #$06
     bne L7433
-    lda $0305
+    lda ObjAnimResetIndex
     cmp $744F,y
     bne L743E
     lda $7450,y
     jmp L743E
 L7433:
-    lda $0305
+    lda ObjAnimResetIndex
     cmp $744C,y
     bne L743E
     lda $744D,y
 L743E:
-    jsr L731F
+    jsr SetSamusAnim
     lda #$08
-    sta $0304
+    sta ObjAnimDelay
     sty $47
 L7448:
-    stx $0309
-L744B:
+    stx ObjSpeedX
+RTS_744B:
     rts
 
 L744C:
@@ -1292,15 +1305,15 @@ L7452:
     lda $13
     ora $17
     asl a
-    bpl L744B
-    lda $0305
+    bpl RTS_744B
+    lda ObjAnimResetIndex
     cmp #$35
     bne L7463
     jmp L761C
 L7463:
     jsr L75C6
     lda #$20
-    jmp L731F
+    jmp SetSamusAnim
 
 
 
@@ -1308,21 +1321,21 @@ L746B:
     lda CurSamusStat.SamusGear
     and #$10
     beq L7491
-    lda $0314
+    lda SamusAccelY
     bne L7491
     ldx $47
     lda #$16
-    sta $0305
+    sta ObjAnimResetIndex
     lda #$13
-    sta $0306
+    sta ObjAnimIndex
     lda $7074,x
-    sta $0315
+    sta SamusAccelX
     lda #$01
     sta $0686
     jmp L6F8A
 L7491:
     lda #$00
-    sta $0300
+    sta ObjAction
     rts
 
 
@@ -1337,10 +1350,10 @@ L74A1:
     lda $15
     and #$04
     bne L74D4
-    lda $0301
+    lda ObjRadY
     clc
     adc #$08
-    sta $0301
+    sta ObjRadY
     jsr L8B0D
     bcc L74D4
     ldx #$00
@@ -1350,8 +1363,8 @@ L74A1:
     sta $04
     jsr LAC7C
     jsr L79B5
-    jsr L7309
-    dec $0306
+    jsr SetSamusStand
+    dec ObjAnimIndex
     jsr L74FD
     lda #$04
     jmp L74FA
@@ -1362,7 +1375,7 @@ L74D4:
     bcs L74E4
     sta $47
     lda #$16
-    jsr L731F
+    jsr SetSamusAnim
 L74E4:
     ldx $47
     jsr L706B
@@ -1378,8 +1391,8 @@ L74FA:
     jmp L7121
 L74FD:
     ldy #$00
-    sty $0308
-    sty $0312
+    sty ObjSpeedY
+    sty SamusSpeedSubPixelY
     rts
 L7506:
     lda CurSamusStat.SamusGear
@@ -1389,70 +1402,70 @@ L7506:
     ora $17
     asl a
     bpl RTS_754D
-    lda $0308
-    ora $0307
+    lda ObjSpeedY
+    ora SamusOnElevator
     bne RTS_754D
     ldx #$D0
-    lda $0300,x
+    lda ObjAction,x
     beq L7530
     ldx #$E0
-    lda $0300,x
+    lda ObjAction,x
     beq L7530
     ldx #$F0
-    lda $0300,x
+    lda ObjAction,x
     bne RTS_754D
 L7530:
-    lda $030C
-    sta $030C,x
-    lda $030E
-    sta $030E,x
-    lda $030D
+    lda ObjHi
+    sta ObjHi,x
+    lda ObjX
+    sta ObjX,x
+    lda ObjY
     clc
     adc #$04
-    sta $030D,x
+    sta ObjY,x
     lda #$08
-    sta $0300,x
+    sta ObjAction,x
     jsr L6F68
 RTS_754D:
     rts
 
 
 
-L754E:
-    lda $15
-    and #$08
+SamusPntUp: ;($754E)
+    lda Joy2Status
+    and #BUTTON_UP
     bne L7559
-    lda #$00
-    sta $0300
-L7559:
-    lda $15
-    and #$07
+        lda #$00
+        sta ObjAction
+    L7559:
+    lda Joy2Status
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b
     beq L756F
-    jsr L854C
-    cmp #$02
-    bcs L7568
-    sta $47
-L7568:
-    tax
-    lda L75A1,x
-    sta $0300
-L756F:
-    lda $13
-    ora $17
+        jsr L854C
+        cmp #BUTTONBIT_DOWN
+        bcs L7568
+            sta $47
+        L7568:
+        tax
+        lda Table07,x
+        sta ObjAction
+    L756F:
+    lda Joy2Change
+    ora Joy2Retrig
     asl a
     bpl L7579
-    jsr L75A4
-L7579:
-    bit $13
+        jsr L75A4
+    L7579:
+    bit Joy2Change
     bpl L7582
-    lda #$06
-    sta $0300
-L7582:
+        lda #$06
+        sta ObjAction
+    L7582:
     lda #$04
     jsr L7121
-    lda $0300
+    lda ObjAction
     jsr MAIN_ChooseRoutine
-        .word L7309
+        .word SetSamusStand
         .word L704C
         .word RTS_D07F
         .word L746B
@@ -1462,8 +1475,13 @@ L7582:
         .word RTS_D07F
         .word RTS_D07F
         .word RTS_D07F
-L75A1:
-    .byte $01, $01, $03
+
+Table07: ;($75A1)
+    .byte $01
+    .byte $01
+    .byte $03
+
+
 L75A4:
     lda $15
     and #$08
@@ -1472,18 +1490,18 @@ L75A4:
 L75AD:
     ldy #$D0
 L75AF:
-    lda $0300,y
+    lda ObjAction,y
     beq L75BB
     jsr LA0DB
     bne L75AF
     iny
     rts
 L75BB:
-    sta $030A,y
+    sta SamusIsHit,y
     lda $010E
-    beq L75C5
+    beq RTS_75C5
     cpy #$D0
-L75C5:
+RTS_75C5:
     rts
 L75C6:
     lda $8D
@@ -1494,16 +1512,16 @@ L75C6:
     jsr L76F1
     jsr L7720
     lda #$0C
-    sta $030F,y
+    sta SamusJumpDsplcmnt,y
     ldx $47
     lda $761A,x
-    sta $0309,y
+    sta ObjSpeedX,y
     lda #$00
-    sta $0308,y
+    sta ObjSpeedY,y
     lda #$01
-    sta $030B,y
+    sta ObjOnScreen,y
     jsr L76AD
-    lda $0300,y
+    lda ObjAction,y
     asl a
     ora $47
     and #$03
@@ -1513,7 +1531,7 @@ L75C6:
     lda #$FA
     sta $04
     jsr L769E
-    ldx $0300,y
+    ldx ObjAction,y
     dex
     bne L7610
     jsr L6F74
@@ -1521,7 +1539,7 @@ L7610:
     ldy #$09
 L7612:
     tya
-    jmp L7322
+    jmp SetSamusNextAnim
     .byte $0C
 L7617:
     .byte $F4
@@ -1538,35 +1556,35 @@ L761C:
     jsr L771C
     jsr L7720
     lda #$0C
-    sta $030F,y
+    sta SamusJumpDsplcmnt,y
     lda #$FC
-    sta $0308,y
+    sta ObjSpeedY,y
     lda #$00
-    sta $0309,y
+    sta ObjSpeedX,y
     lda #$01
-    sta $030B,y
+    sta ObjOnScreen,y
     jsr L76D8
     ldx $47
-    lda $767F,x
+    lda L767F,x
     sta $05
-    lda $0300,y
+    lda ObjAction,y
     and #$01
     tax
-    lda $7681,x
+    lda L7681,x
     sta $04
     jsr L769E
-    lda $0300,y
+    lda ObjAction,y
     cmp #$01
     bne L7664
     jsr L6F74
 L7664:
     ldx $47
-    ldy $767B,x
-    lda $0314
+    ldy L767B,x
+    lda SamusAccelY
     beq L7671
-    ldy $767D,x
+    ldy L767D,x
 L7671:
-    lda $0300
+    lda ObjAction
     cmp #$01
     beq RTS_769D
     jmp L7612
@@ -1574,27 +1592,30 @@ L7671:
 L767B:
     .byte $26
     .byte $26
+L767D:
     .byte $34
     .byte $34
+L767F:
     .byte $01
     .byte $FF
+L7681:
     .byte $EC
     .byte $F0
 
 L7683:
     tya
     tax
-    inc $0300,x
+    inc ObjAction,x
     lda #$02
-    sta $0301,y
-    sta $0302,y
+    sta ObjRadY,y
+    sta ObjRadX,y
     lda #$1B
 L7692:
-    sta $0305,x
+    sta ObjAnimResetIndex,x
 L7695:
-    sta $0306,x
+    sta ObjAnimIndex,x
     lda #$00
-    sta $0304,x
+    sta ObjAnimDelay,x
 RTS_769D:
     rts
 
@@ -1611,9 +1632,9 @@ L769E:
     jmp L79B5
 L76AD:
     lda $010E
-    beq L76F0
+    beq RTS_76F0
     cpy #$D0
-    bne L76F0
+    bne RTS_76F0
     ldx $47
     lda $76D6,x
     
@@ -1621,11 +1642,11 @@ L76BB:
     jsr L76E5
     jsr L6F5E
     lda #$0B
-    sta $0300,y
+    sta ObjAction,y
     lda #$FF
-    sta $030F,y
+    sta SamusJumpDsplcmnt,y
     dec CurSamusStat.byte2
-    bne L76F0
+    bne RTS_76F0
     dec $010E
     jmp SelectSamusPal
 
@@ -1634,27 +1655,27 @@ L76D6:
 
 L76D8:
     lda $010E
-    beq L76F0
+    beq RTS_76F0
     cpy #$D0
-    bne L76F0
+    bne RTS_76F0
     lda #$8F
     bne L76BB
 L76E5:
-    sta $0306,y
-    sta $0305,y
+    sta ObjAnimIndex,y
+    sta ObjAnimResetIndex,y
     lda #$00
-    sta $0304,y
-L76F0:
+    sta ObjAnimDelay,y
+RTS_76F0:
     rts
 L76F1:
     lda $47
 L76F3:
     sta $0502,y
     bit CurSamusStat.SamusGear
-    bvc L76F0
+    bvc RTS_76F0
     lda #$00
     sta $0501,y
-    sta $0304,y
+    sta ObjAnimDelay,y
     tya
     jsr MAIN_Adiv32
     lda #$00
@@ -1663,7 +1684,7 @@ L76F3:
 L770D:
     sta $0500,y
     lda #$02
-    sta $0300,y
+    sta ObjAction,y
     lda #$7D
     jsr L76E5
     beq L772A
@@ -1672,9 +1693,9 @@ L771C:
     bne L76F3
 L7720:
     lda CurSamusStat.SamusGear
-    bpl L76F0
+    bpl RTS_76F0
     lda #$03
-    sta $0300,y
+    sta ObjAction,y
 L772A:
     jmp L6F86
 
@@ -1717,7 +1738,7 @@ L775D:
 L776C:
     lda $52
     and #$0F
-    sta $0300
+    sta ObjAction
     lda #$00
     sta $52
     sta $50
@@ -1725,14 +1746,14 @@ L776C:
 L777C:
     lda $48
     beq L778E
-    ldy $030E
+    ldy ObjX
     bne L7788
     jsr L85B4
 L7788:
-    dec $030E
+    dec ObjX
     jmp L7796
 L778E:
-    inc $030E
+    inc ObjX
     bne L7796
     jsr L85B4
 L7796:
@@ -1749,49 +1770,49 @@ L779F:
 
 
 L77A4:
-    lda $0320
+    lda ElevatorStatus
     cmp #$03
     beq L77AF
     cmp #$08
     bne L77F2
 L77AF:
-    lda $032F
+    lda ElevatorType
     bmi L77D4
-    lda $030D
+    lda ObjY
     sec
     sbc $FC
     cmp #$84
     bcc L77C1
     jsr L8884
 L77C1:
-    ldy $030D
+    ldy ObjY
     cpy #$EF
     bne L77CD
     jsr L85B4
     ldy #$FF
 L77CD:
     iny
-    sty $030D
+    sty ObjY
     jmp L77FF
 L77D4:
-    lda $030D
+    lda ObjY
     sec
     sbc $FC
     cmp #$64
     bcs L77E1
     jsr L885C
 L77E1:
-    ldy $030D
+    ldy ObjY
     bne @L77EB
     jsr L85B4
     ldy #$F0
 @L77EB:
     dey
-    sty $030D
+    sty ObjY
     jmp L77FF
 L77F2:
     ldy #$00
-    sty $0308
+    sty ObjSpeedY
     cmp #$05
     beq L7804
     cmp #$07
@@ -1799,12 +1820,12 @@ L77F2:
 L77FF:
     lda FrameCount
     lsr a
-    bcc L780C
+    bcc RTS_780C
 L7804:
     jsr L7146
     lda #$01
     jmp L81C3
-L780C:
+RTS_780C:
     rts
 
 L780D:
@@ -1840,9 +1861,9 @@ RTS_7834:
 L7835:
     lda $0405,x
     and #$02
-    bne L783F
+    bne RTS_783F
     sta $B460,x
-L783F:
+RTS_783F:
     rts
 
 
@@ -1855,7 +1876,7 @@ L7840:
     ldx #$F0
 L784C:
     stx $45
-    lda $0300,x
+    lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
         .word L786C
@@ -1884,13 +1905,13 @@ L7879:
     lda CurSamusStat.SamusGear
     and #$04
     bne L7898
-    dec $030F,x
+    dec SamusJumpDsplcmnt,x
     bne L7898
     lda #$00
-    sta $0300,x
+    sta ObjAction,x
     beq L7898
 L7890:
-    lda $0300,x
+    lda ObjAction,x
     beq L789D
     jsr L7965
 L7898:
@@ -1939,18 +1960,18 @@ L78D6:
     lda ($0A),y
     jsr LAF46
     ldx $45
-    sta $0308,x
+    sta ObjSpeedY,x
     lda ($0A),y
     jsr LAFDF
     ldx $45
-    sta $0309,x
+    sta ObjSpeedX,x
     tay
     lda $0502,x
     lsr a
     bcc L7901
     tya
-    jsr L8001
-    sta $0309,x
+    jsr MAIN_TwosComplement
+    sta ObjSpeedX,x
 L7901:
     jsr L7986
     bcs L7909
@@ -2006,21 +2027,22 @@ L7942:
 L7949:
     lda #$01
     sta $6B
-    lda $0303,x
+    lda ObjAnimFrame,x
     sec
     sbc #$F7
     bne L7958
-    sta $0300,x
-L7958:
+        sta ObjAction,x
+    L7958:
     jmp L7898
+
 L795B:
-    lda $030A,x
-    beq L7978
+    lda SamusIsHit,x
+    beq RTS_7978
     lda #$00
-    sta $030A,x
+    sta SamusIsHit,x
 L7965:
     lda #$1D
-    ldy $0300,x
+    ldy ObjAction,x
     cpy #$0B
     bne L7970
     lda #$91
@@ -2028,18 +2050,20 @@ L7970:
     jsr L7692
     lda #$04
 L7975:
-    sta $0300,x
-L7978:
+    sta ObjAction,x
+RTS_7978:
     rts
+
 L7979:
-    lda $030B,x
+    lda ObjOnScreen,x
     lsr a
-    bcs L7978
+    bcs RTS_7978
 L797F:
     lda #$00
     beq L7975
 L7983:
     jmp L8B89
+
 L7986:
     jsr L7B1C
     ldy #$00
@@ -2050,42 +2074,42 @@ L7986:
     cmp #$4E
     beq L7983
     jsr L79CE
-    bcc L79CD
+    bcc RTS_79CD
     clc
     jmp L8D13
 L79A1:
     ldx $45
-    lda $0309,x
+    lda ObjSpeedX,x
     sta $05
-    lda $0308,x
+    lda ObjSpeedY,x
     sta $04
     jsr L8C13
     jsr LAC7C
     bcc L797F
 L79B5:
     lda $08
-    sta $030D,x
+    sta ObjY,x
     lda $09
-    sta $030E,x
+    sta ObjX,x
     lda $0B
     and #$01
     bpl L79CA
 L79C5:
-    lda $030C,x
+    lda ObjHi,x
     eor #$01
 L79CA:
-    sta $030C,x
-L79CD:
+    sta ObjHi,x
+RTS_79CD:
     rts
 L79CE:
     ldy $6E
     cpy #$10
     beq L79D8
     cmp #$70
-    bcs L79DA
+    bcs RTS_79DA
 L79D8:
     cmp #$80
-L79DA:
+RTS_79DA:
     rts
 
 
@@ -2094,8 +2118,8 @@ L79DB:
     lda #$7F
     jsr L7692
     lda #$18
-    sta $030F,x
-    inc $0300,x
+    sta SamusJumpDsplcmnt,x
+    inc ObjAction,x
 L79E8:
     lda #$03
     jmp L81C3
@@ -2106,16 +2130,16 @@ L79ED:
     lda FrameCount
     lsr a
     bcc L7A0B
-    dec $030F,x
+    dec SamusJumpDsplcmnt,x
     bne L7A0B
     lda #$37
-    ldy $0300,x
+    ldy ObjAction,x
     cpy #$09
     bne L7A02
     lda #$82
 L7A02:
     jsr L7692
-    inc $0300,x
+    inc ObjAction,x
     jsr L6F5A
 L7A0B:
     jmp L79E8
@@ -2123,14 +2147,14 @@ L7A0B:
 
 
 L7A0E:
-    inc $030F,x
+    inc SamusJumpDsplcmnt,x
     jsr L7A24
     ldx $45
-    lda $0303,x
+    lda ObjAnimFrame,x
     sec
     sbc #$F7
     bne L7A21
-    sta $0300,x
+    sta ObjAction,x
 L7A21:
     jmp L79E8
 L7A24:
@@ -2140,7 +2164,7 @@ L7A24:
     lda $05
     sta $0B
     ldx $45
-    ldy $030F,x
+    ldy SamusJumpDsplcmnt,x
     dey
     beq L7A61
     dey
@@ -2151,7 +2175,7 @@ L7A24:
     bne L7A48
     lda $04
     and #$20
-    beq L7A64
+    beq RTS_7A64
 L7A48:
     lda $05
     and #$03
@@ -2162,12 +2186,12 @@ L7A48:
     bcc L7A61
     lda $43
     and #$02
-    bne L7A64
+    bne RTS_7A64
     lda #$80
     jsr L7B08
 L7A61:
     jsr L7AE7
-L7A64:
+RTS_7A64:
     rts
 L7A65:
     dey
@@ -2178,7 +2202,7 @@ L7A65:
     bne L7A76
     lda $04
     and #$20
-    bne L7A64
+    bne RTS_7A64
 L7A76:
     lda $05
     and #$03
@@ -2189,7 +2213,7 @@ L7A76:
     bcc L7A8F
     lda $43
     and #$02
-    bne L7A64
+    bne RTS_7A64
     lda #$80
     jsr L7AFC
 L7A8F:
@@ -2203,7 +2227,7 @@ L7A92:
     bne L7AA2
     lda $04
     lsr a
-    bcc L7AFB
+    bcc RTS_7AFB
 L7AA2:
     lda $04
     and #$1F
@@ -2211,7 +2235,7 @@ L7AA2:
     bcc L7ABB
     lda $43
     and #$02
-    beq L7AFB
+    beq RTS_7AFB
     lda #$1E
     jsr L7AFC
     lda $05
@@ -2221,14 +2245,14 @@ L7ABB:
     jmp L7AE7
 L7ABE:
     dey
-    bne L7AFB
+    bne RTS_7AFB
     lda #$02
     jsr L7AFC
     txa
     bne L7ACE
     lda $04
     lsr a
-    bcs L7AFB
+    bcs RTS_7AFB
 L7ACE:
     lda $04
     and #$1F
@@ -2236,7 +2260,7 @@ L7ACE:
     bcs L7AE7
     lda $43
     and #$02
-    beq L7AFB
+    beq RTS_7AFB
     lda #$1E
     jsr L7B08
     lda $05
@@ -2255,7 +2279,7 @@ L7AE7:
 L7AF9:
     pla
     tax
-L7AFB:
+RTS_7AFB:
     rts
 L7AFC:
     clc
@@ -2276,21 +2300,21 @@ L7B15:
     and #$07
     ora #$60
     sta $05
-L7B1B:
+RTS_7B1B:
     rts
 L7B1C:
     ldx $45
-    lda $030D,x
+    lda ObjY,x
     sta $02
-    lda $030E,x
+    lda ObjX,x
     sta $03
-    lda $030C,x
+    lda ObjHi,x
     sta $0B
     jmp L8CBF
 L7B30:
     ldx #$20
     stx $45
-    lda $0300,x
+    lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
         .word L7B4E
@@ -2304,33 +2328,33 @@ L7B30:
         .word L7CCC
 
 L7B4E:
-    lda $0307
+    lda SamusOnElevator
     beq L7B83
     lda #$04
-    bit $032F
+    bit ElevatorType
     bpl L7B5B
         asl a
     L7B5B:
     and $15
     beq L7B83
     jsr L74FD
-    sty $0304
-    sty $0314
+    sty ObjAnimDelay
+    sty SamusAccelY
     tya
-    sta $0308,x
-    inc $0300,x
+    sta ObjSpeedY,x
+    inc ObjAction,x
     lda #$09
-    sta $0300
+    sta ObjAction
     lda #$04
-    jsr L731F
+    jsr SetSamusAnim
     lda #$80
-    sta $030E
+    sta ObjX
     lda #$70
-    sta $030D
+    sta ObjY
 L7B83:
     lda FrameCount
     lsr a
-    bcc L7B1B
+    bcc RTS_7B1B
     jmp L81C6
 
 
@@ -2344,12 +2368,12 @@ L7B8B:
     lda $43
     and #$01
     sta $43
-    inc $0300,x
+    inc ObjAction,x
     jmp L7B83
 L7BA1:
     lda #$80
-    sta $030E
-    lda $030E,x
+    sta ObjX
+    lda ObjX,x
     sec
     sbc $FD
     bmi L7BB4
@@ -2362,29 +2386,29 @@ L7BB4:
 
 
 L7BBA:
-    lda $030F,x
+    lda SamusJumpDsplcmnt,x
     bpl L7BD1
-    ldy $030D,x
+    ldy ObjY,x
     bne L7BC9
     jsr L79C5
     ldy #$F0
 L7BC9:
     dey
     tya
-    sta $030D,x
+    sta ObjY,x
     jmp L7BE3
 L7BD1:
-    inc $030D,x
-    lda $030D,x
+    inc ObjY,x
+    lda ObjY,x
     cmp #$F0
     bne L7BE3
     jsr L79C5
     lda #$00
-    sta $030D,x
+    sta ObjY,x
 L7BE3:
     cmp #$83
     bne L7BEA
-    inc $0300,x
+    inc ObjAction,x
 L7BEA:
     jmp L7B83
 
@@ -2394,19 +2418,19 @@ L7BED:
     lda $FC
     bne L7C0F
     lda #$4E
-    sta $0305
+    sta ObjAnimResetIndex
     lda #$41
-    sta $0306
+    sta ObjAnimIndex
     lda #$5D
-    sta $0305,x
+    sta ObjAnimResetIndex,x
     lda #$50
-    sta $0306,x
-    inc $0300,x
+    sta ObjAnimIndex,x
+    inc ObjAction,x
     lda #$40
     sta $24
     jmp L7B83
 L7C0F:
-    lda $030F,x
+    lda SamusJumpDsplcmnt,x
     bpl L7C1A
     jsr L885C
     jmp L7B83
@@ -2425,14 +2449,14 @@ L7C20:
     L7C2A:
     pla
     bne L7C44
-    inc $0300,x
-    lda $0300,x
+    inc ObjAction,x
+    lda ObjAction,x
     cmp #$08
     bne L7C44
     lda #$23
-    sta $0303,x
+    sta ObjAnimFrame,x
     lda #$04
-    jsr L731F
+    jsr SetSamusAnim
     jmp L7B83
 L7C44:
     lda #$01
@@ -2441,7 +2465,7 @@ L7C44:
 
 
 L7C49:
-    lda $030F,x
+    lda SamusJumpDsplcmnt,x
     tay
     cmp #$8F
     bne L7C5E
@@ -2478,22 +2502,22 @@ L7C7C:
     ldx #$20
     stx $45
     lda #$6B
-    sta $0305
+    sta ObjAnimResetIndex
     lda #$5F
-    sta $0306
+    sta ObjAnimIndex
     lda #$7A
-    sta $0305,x
+    sta ObjAnimResetIndex,x
     lda #$6E
-    sta $0306,x
-    inc $0300,x
+    sta ObjAnimIndex,x
+    inc ObjAction,x
     lda #$40
     sta $24
     rts
 L7CAA:
-    lda $0320
+    lda ElevatorStatus
     cmp #$06
     bne L7CB6
-    lda $032F
+    lda ElevatorType
     bmi L7CBF
 L7CB6:
     lda $B5C5
@@ -2515,14 +2539,14 @@ L7CCC:
     lda $FC
     bne L7CF1
     lda #$00
-    sta $0300
-    jsr L7309
+    sta ObjAction
+    jsr SetSamusStand
     ldx $45
     lda #$01
-    sta $0300,x
-    lda $030F,x
+    sta ObjAction,x
+    lda SamusJumpDsplcmnt,x
     eor #$80
-    sta $030F,x
+    sta SamusJumpDsplcmnt,x
     bmi L7CEE
         jsr L85BD
         sta $73
@@ -2535,7 +2559,7 @@ L7CF1:
 
 L7CF4:
     lda #$00
-    sta $0307
+    sta SamusOnElevator
     sta $78
     tay
     ldx #$50
@@ -2556,16 +2580,16 @@ L7D1C:
     jsr LA0E1
     bpl L7D01
 L7D21:
-    lda $0320
-    beq L7D37
+    lda ElevatorStatus
+    beq RTS_7D37
     ldy #$00
     ldx #$20
     jsr L7FF8
-    bcs L7D37
+    bcs RTS_7D37
     jsr L7D38
-    bne L7D37
-    inc $0307
-L7D37:
+    bne RTS_7D37
+    inc SamusOnElevator
+RTS_7D37:
     rts
 L7D38:
     lda $10
@@ -2574,29 +2598,29 @@ L7D38:
     ldy $11
     iny
     cpy $04
-    beq L7D51
+    beq RTS_7D51
 L7D45:
-    lda $030A
+    lda SamusIsHit
     and #$38
     ora $10
     ora #$40
-    sta $030A
-L7D51:
+    sta SamusIsHit
+RTS_7D51:
     rts
 L7D52:
     lda #$60
     sta $45
-    ldy $0360
-    beq L7D51
+    ldy StatueStatus
+    beq RTS_7D51
     dey
     bne L7D6B
     jsr L7E26
     ldy #$01
     jsr L7E26
     bcs L7D6B
-    inc $0360
+    inc StatueStatus
 L7D6B:
-    ldy $0360
+    ldy StatueStatus
     cpy #$02
     bne L7D8B
     lda CurSamusStat.byte4
@@ -2610,7 +2634,7 @@ L7D7C:
     jsr L7E26
 L7D86:
     bcs L7D8B
-    inc $0360
+    inc StatueStatus
 L7D8B:
     ldx #$60
     jsr L7D98
@@ -2624,36 +2648,36 @@ L7D98:
     and #$01
     tay
     lda $7DB9,y
-    sta $0363
+    sta StatueAnimFrame
     lda $B3B4,x
     beq L7DB4
     bmi L7DB4
     lda FrameCount
     lsr a
-    bcc L7DF9
+    bcc RTS_7DF9
 L7DB4:
     jmp L81C6
     dey
     pla
     adc $66
 L7DBB:
-    lda $0304,x
-    bmi L7DF9
+    lda ObjAnimDelay,x
+    bmi RTS_7DF9
     lda #$01
-    sta $0304,x
-    lda $030F,x
+    sta ObjAnimDelay,x
+    lda SamusJumpDsplcmnt,x
     and #$0F
-    beq L7DF9
-    inc $0304,x
-    dec $030F,x
-    lda $030F,x
+    beq RTS_7DF9
+    inc ObjAnimDelay,x
+    dec SamusJumpDsplcmnt,x
+    lda SamusJumpDsplcmnt,x
     and #$0F
-    bne L7DF9
-    lda $0304,x
+    bne RTS_7DF9
+    lda ObjAnimDelay,x
     ora #$80
-    sta $0304,x
+    sta ObjAnimDelay,x
     sta $B3B4,x
-    inc $0304,x
+    inc ObjAnimDelay,x
     txa
     pha
     and #$01
@@ -2667,33 +2691,33 @@ L7DBB:
     jsr L7E26
     pla
     tax
-L7DF9:
+RTS_7DF9:
     rts
 L7DFA:
-    lda $030F,x
-    sta $036D
+    lda SamusJumpDsplcmnt,x
+    sta StatueY
     txa
     and #$01
     tay
     lda $7DB7,y
-    sta $036E
+    sta StatueX
     lda $B3B4,x
     beq L7E20
     bmi L7E20
-    lda $0304,x
+    lda ObjAnimDelay,x
     cmp #$01
     bne L7E20
-    lda $0306,x
+    lda ObjAnimIndex,x
     beq L7E20
-    dec $030F,x
+    dec SamusJumpDsplcmnt,x
 L7E20:
     lda #$00
-    sta $0306,x
+    sta ObjAnimIndex,x
     rts
 L7E26:
     lda StatueTileBlastWRAMPtrLoTable,y
     sta $05C8
-    lda $036C
+    lda StatueHi
     asl a
     asl a
     ora StatueTileBlastWRAMPtrHiTable,y
@@ -2720,12 +2744,12 @@ StatueTileBlastWRAMPtrHiTable:
 
 L7E50:
     lda $4E
-    bmi L7E8C
+    bmi RTS_7E8C
     lda $50
-    bne L7E8C
+    bne RTS_7E8C
     lda CurSamusStat.byte4
     and CurSamusStat.byte5
-    bpl L7E8C
+    bpl RTS_7E8C
     sta $4E
     ldx #$70
     ldy #$08
@@ -2737,7 +2761,7 @@ L7E66:
     sta $0507,x
     lda #$04
     sta $050A,x
-    lda $036C
+    lda StatueHi
     asl a
     asl a
     ora #$62
@@ -2749,15 +2773,15 @@ L7E66:
     jsr LA0E1
     dey
     bne L7E66
-L7E8C:
+RTS_7E8C:
     rts
 L7E8D:
     lda CurSamusStat.byte2
-    beq L7E8C
+    beq RTS_7E8C
     lda $13
     ora $17
     and #$20
-    beq L7E8C
+    beq RTS_7E8C
     lda $010E
     eor #$01
     sta $010E
@@ -2769,7 +2793,7 @@ L7EA8:
     rol a
     dey
     bpl L7EA8
-L7EAC:
+RTS_7EAC:
     rts
 L7EAD:
     lda #$40
@@ -2781,23 +2805,23 @@ L7EB8:
     stx $46
     ldy $0748,x
     iny
-    beq L7EAC
+    beq RTS_7EAC
     lda $0749,x
-    sta $034D
+    sta PowerUpDrawY
     lda $074A,x
-    sta $034E
+    sta PowerUpDrawX
     lda $074B,x
-    sta $034C
+    sta PowerUpDrawHi
     jsr L7B1C
     ldx $46
     ldy #$00
     lda ($04),y
     cmp #$A0
-    bcc L7EAC
+    bcc RTS_7EAC
     lda $0748,x
     and #$0F
     ora #$50
-    sta $0343
+    sta PowerUpDrawAnimFrame
     lda FrameCount
     lsr a
     and #$03
@@ -2887,9 +2911,9 @@ L7F80:
     lda CurSamusStat.TankCount
     jsr MAIN_Amul16
     ora #$09
-    sta $0107
+    sta Health+1
     lda #$99
-    sta $0106
+    sta Health
     bne L7F59
 L7F92:
     lda $4A
@@ -2956,35 +2980,42 @@ L7FF8:
     jsr LA05F
     jsr LA094
     jmp LA0E7
-L8001:
+
+
+
+MAIN_TwosComplement: ;($8001)
     eor #$FF
     clc
     adc #$01
     rts
+
+
+
     .byte $00
     .byte $80
     cpy #$40
 L800B:
     ldx $45
-    ldy $0304,x
+    ldy ObjAnimDelay,x
     beq L8017
-    dec $0304,x
-    bne L802C
+    dec ObjAnimDelay,x
+    bne RTS_802C
 L8017:
-    sta $0304,x
-    ldy $0306,x
+    sta ObjAnimDelay,x
+    ldy ObjAnimIndex,x
 L801D:
     lda $95C4,y
     cmp #$FF
     beq L802D
-    sta $0303,x
+    sta ObjAnimFrame,x
     iny
     tya
-    sta $0306,x
-L802C:
+    sta ObjAnimIndex,x
+RTS_802C:
     rts
+
 L802D:
-    ldy $0305,x
+    ldy ObjAnimResetIndex,x
     jmp L801D
     pha
     lda #$00
@@ -3068,7 +3099,7 @@ L80AC:
     lda CurSamusStat.byte3
     beq L80D7
     inc $90
-L80C6:
+RTS_80C6:
     rts
 L80C7:
     ldy $8F
@@ -3076,9 +3107,9 @@ L80C7:
     beq L80D7
     inc $91
     cmp #$89
-    bne L80C6
+    bne RTS_80C6
     lsr $00
-    bcs L80C6
+    bcs RTS_80C6
 L80D7:
     ldx $45
     lda $6E
@@ -3214,7 +3245,7 @@ L81C3:
     jsr L800B
 L81C6:
     ldx $45
-    lda $0303,x
+    lda ObjAnimFrame,x
     cmp #$F7
     bne L81D2
 L81CF:
@@ -3226,13 +3257,13 @@ L81D2:
     and #$EF
     sta $65
 L81DC:
-    lda $030D,x
+    lda ObjY,x
     sta $0A
-    lda $030E,x
+    lda ObjX,x
     sta $0B
-    lda $030C,x
+    lda ObjHi,x
     sta $06
-    lda $0303,x
+    lda ObjAnimFrame,x
     asl a
     tax
     lda $965D,x
@@ -3263,7 +3294,7 @@ L81DC:
     bne L8233
     ldx $45
     lda #$08
-    sta $0300,x
+    sta ObjAction,x
     pla
     pla
     jmp L82A4
@@ -3271,18 +3302,18 @@ L8233:
     ldx $45
     iny
     lda ($00),y
-    sta $0301,x
+    sta ObjRadY,x
     jsr L81B9
     iny
     lda ($00),y
-    sta $0302,x
+    sta ObjRadX,x
     sta $09
     iny
     sty $11
     jsr L8356
     txa
     ldx $45
-    sta $030B,x
+    sta ObjOnScreen,x
     tax
     beq L825A
 L8255:
@@ -3473,16 +3504,16 @@ L8356:
     clc
     adc $10
     cmp #$F0
-    bcc L8392
+    bcc RTS_8392
     clc
 L8389:
     bcc L8391
     lda $09
     cmp $10
-    bcc L8392
+    bcc RTS_8392
 L8391:
     dex
-L8392:
+RTS_8392:
     rts
 L8393:
     lda $06
@@ -3493,16 +3524,16 @@ L8393:
     lda $09
     clc
     adc $0E
-    bcc L83AE
+    bcc RTS_83AE
     clc
 L83A5:
     bcc L83AD
     lda $09
     cmp $0E
-    bcc L83AE
+    bcc RTS_83AE
 L83AD:
     dex
-L83AE:
+RTS_83AE:
     rts
 L83AF:
     lsr $65
@@ -3562,13 +3593,13 @@ L843E:
     stx $55
     pla
     tax
-    lda $0107
+    lda Health+1
     and #$0F
     jsr L84DE
-    lda $0106
+    lda Health
     jsr MAIN_Adiv16
     jsr L84DE
-    ldy $010B
+    ldy EndTimer+1
     iny
     bne L848B
     ldy CurSamusStat.byte3
@@ -3588,13 +3619,13 @@ L8481:
     sta $0211,x
     bne L84B5
 L848B:
-    lda $010B
+    lda EndTimer+1
     jsr MAIN_Adiv16
     jsr L84DE
-    lda $010B
+    lda EndTimer+1
     and #$0F
     jsr L84DE
-    lda $010A
+    lda EndTimer
     jsr MAIN_Adiv16
     jsr L84DE
     lda #$BD
@@ -3606,12 +3637,12 @@ L848B:
 L84B5:
     ldx $55
     lda CurSamusStat.TankCount
-    beq L84DD
+    beq RTS_84DD
     sta $03
     lda #$40
     sta $00
     ldy #$6F
-    lda $0107
+    lda Health+1
     jsr MAIN_Adiv16
     sta $01
     bne L84CF
@@ -3625,7 +3656,7 @@ L84D7:
     dec $03
     bne L84CF
     stx $55
-L84DD:
+RTS_84DD:
     rts
 L84DE:
     ora #$80
@@ -3724,7 +3755,7 @@ L8586:
     stx $66
     stx $67
     inx
-    lda $030E
+    lda ObjX
     bmi L85AC
     inx
     bne L85AC
@@ -3751,9 +3782,9 @@ RTS_85B3:
 
 
 L85B4:
-    lda $030C
+    lda ObjHi
     eor #$01
-    sta $030C
+    sta ObjHi
     rts
 
 
@@ -3773,14 +3804,14 @@ L85C8:
     cmp $43
     bcs RTS_85D3
     lda #$D8
-    cmp $030D
+    cmp ObjY
 RTS_85D3:
     rts
 
 
 
 L85D4:
-    lda $0300
+    lda ObjAction
     cmp #$09
     beq L85DF
     cmp #$07
@@ -3816,13 +3847,13 @@ L8611:
     iny
     sty $5E
     jsr L86E5
-    lda $030D
+    lda ObjY
     sec
     sbc $FC
     sta $4C
     lda $00
     bpl L8642
-    jsr L8001
+    jsr MAIN_TwosComplement
     ldy $5E
     beq L862D
     lsr a
@@ -3833,8 +3864,8 @@ L862F:
     jsr L87C2
     bcs L863E
     sec
-    ror $0308
-    ror $0312
+    ror ObjSpeedY
+    ror SamusSpeedSubPixelY
     jmp L8685
 L863E:
     dec $5F
@@ -3851,38 +3882,38 @@ L864C:
 L864E:
     jsr L880E
     bcs L8681
-    lda $0300
+    lda ObjAction
     cmp #$03
     bne L8676
-    lsr $0308
+    lsr ObjSpeedY
     beq L8679
-    ror $0312
+    ror SamusSpeedSubPixelY
     lda #$00
     sec
-    sbc $0312
-    sta $0312
+    sbc SamusSpeedSubPixelY
+    sta SamusSpeedSubPixelY
     lda #$00
-    sbc $0308
-    sta $0308
+    sbc ObjSpeedY
+    sta ObjSpeedY
     jmp L8685
 L8676:
-    jsr L6F56
+    jsr SFX_SamusWalk
 L8679:
     jsr L74FD
-    sty $0314
+    sty SamusAccelY
     beq L8685
 L8681:
     dec $5F
     bne L864E
 L8685:
     jsr L8750
-    lda $030E
+    lda ObjX
     sec
     sbc $FD
     sta $4B
     lda $00
     bpl L86B2
-    jsr L8001
+    jsr MAIN_TwosComplement
     ldy $5E
     beq L869E
     lsr a
@@ -3925,45 +3956,45 @@ L86D0:
     bcs RTS_86CF
     lda #$01
     sta $5F
-    lda $0314
+    lda SamusAccelY
     bne RTS_86CF
-    lda $0300
+    lda ObjAction
     cmp #$03
     beq RTS_86CF
-    jmp L7309
+    jmp SetSamusStand
 L86E5:
-    lda $0314
+    lda SamusAccelY
     bne L8710
     lda #$18
-    sta $0316
-    lda $030D
+    sta SamusHorzSpeedMax
+    lda ObjY
     clc
-    adc $0301
+    adc ObjRadY
     and #$07
     bne L86FF
     jsr L8B18
     bcc L8710
 L86FF:
     jsr L7CF4
-    lda $0307
+    lda SamusOnElevator
     bne L8710
     lda $78
     bne L8710
     lda #$1A
-    sta $0314
+    sta SamusAccelY
 L8710:
     ldx #$05
-    lda $0312
+    lda SamusSpeedSubPixelY
     clc
-    adc $0314
-    sta $0312
-    lda $0308
+    adc SamusAccelY
+    sta SamusSpeedSubPixelY
+    lda ObjSpeedY
     adc #$00
-    sta $0308
+    sta ObjSpeedY
     bpl L8734
         lda #$00
-        cmp $0312
-        sbc $0308
+        cmp SamusSpeedSubPixelY
+        sbc ObjSpeedY
         cmp #$06
         ldx #$FA
         bne L8736
@@ -3972,48 +4003,48 @@ L8710:
     L8736:
     bcc L873E
     jsr L74FD
-    stx $0308
+    stx ObjSpeedY
 L873E:
-    lda $0310
+    lda SamusSubPixelY
     clc
-    adc $0312
-    sta $0310
+    adc SamusSpeedSubPixelY
+    sta SamusSubPixelY
     lda #$00
-    adc $0308
+    adc ObjSpeedY
     sta $00
     rts
 
 
 
 L8750:
-    lda $0316
+    lda SamusHorzSpeedMax
     jsr MAIN_Amul16
     sta $00
     sta $02
-    lda $0316
+    lda SamusHorzSpeedMax
     jsr MAIN_Adiv16
     sta $01
     sta $03
-    lda $0313
+    lda SamusSpeedSubPixelX
     clc
-    adc $0315
-    sta $0313
+    adc SamusAccelX
+    sta SamusSpeedSubPixelX
     tax
     lda #$00
-    bit $0315
+    bit SamusAccelX
     bpl L8778
         lda #$FF
     L8778:
-    adc $0309
-    sta $0309
+    adc ObjSpeedX
+    sta ObjSpeedX
     tay
     bpl L8791
         lda #$00
         sec
-        sbc $0313
+        sbc SamusSpeedSubPixelX
         tax
         lda #$00
-        sbc $0309
+        sbc ObjSpeedX
         tay
         jsr L87B4
     L8791:
@@ -4022,16 +4053,16 @@ L8750:
     sbc $03
     bcc L87A2
         lda $00
-        sta $0313
+        sta SamusSpeedSubPixelX
         lda $01
-        sta $0309
+        sta ObjSpeedX
     L87A2:
-    lda $0311
+    lda SamusSubPixelX
     clc
-    adc $0313
-    sta $0311
+    adc SamusSpeedSubPixelX
+    sta SamusSubPixelX
     lda #$00
-    adc $0309
+    adc ObjSpeedX
     sta $00
     rts
 
@@ -4050,23 +4081,23 @@ L87B4:
 
 
 L87C2:
-    lda $030D
+    lda ObjY
     sec
-    sbc $0301
+    sbc ObjRadY
     and #$07
     bne L87D2
     jsr L8B0D
-    bcc L880D
+    bcc RTS_880D
 L87D2:
-    lda $0300
+    lda ObjAction
     cmp #$09
     beq L87E6
     jsr L7CF4
-    lda $030A
+    lda SamusIsHit
     and #$42
     cmp #$42
     clc
-    beq L880D
+    beq RTS_880D
 L87E6:
     lda $4C
     cmp #$66
@@ -4076,7 +4107,7 @@ L87E6:
 L87F1:
     dec $4C
 L87F3:
-    lda $030D
+    lda ObjY
     bne L8806
     lda $43
     and #$02
@@ -4084,31 +4115,31 @@ L87F3:
     jsr L85B4
 L8801:
     lda #$F0
-    sta $030D
+    sta ObjY
 L8806:
-    dec $030D
-    inc $030F
+    dec ObjY
+    inc SamusJumpDsplcmnt
     sec
-L880D:
+RTS_880D:
     rts
 L880E:
-    lda $030D
+    lda ObjY
     clc
-    adc $0301
+    adc ObjRadY
     and #$07
     bne L881E
     jsr L8B18
-    bcc L885B
+    bcc RTS_885B
 L881E:
-    lda $0300
+    lda ObjAction
     cmp #$09
     beq L8832
     jsr L7CF4
-    lda $0307
+    lda SamusOnElevator
     clc
-    bne L885B
+    bne RTS_885B
     lda $78
-    bne L885B
+    bne RTS_885B
 L8832:
     lda $4C
     cmp #$84
@@ -4118,7 +4149,7 @@ L8832:
 L883D:
     inc $4C
 L883F:
-    lda $030D
+    lda ObjY
     cmp #$EF
     bne L8854
     lda $43
@@ -4127,12 +4158,12 @@ L883F:
     jsr L85B4
 L884F:
     lda #$FF
-    sta $030D
+    sta ObjY
 L8854:
-    inc $030D
-    dec $030F
+    inc ObjY
+    dec SamusJumpDsplcmnt
     sec
-L885B:
+RTS_885B:
     rts
 L885C:
     lda $43
@@ -4191,13 +4222,13 @@ L88B1:
     dec $49
 L88B3:
     sec
-L88B4:
+RTS_88B4:
     rts
 L88B5:
     jsr L8D80
     ldx $54
     inx
-    bne L88B4
+    bne RTS_88B4
     lda $43
     and #$02
     bne L88C6
@@ -4220,11 +4251,11 @@ L88DC:
     lda $FC
     and #$07
     cmp $88C9,x
-    bne L88B4
+    bne RTS_88B4
 L88E7:
     ldx $43
     cpx $44
-    bne L88B4
+    bne RTS_88B4
     lda $FC
     and #$F8
     sta $00
@@ -4308,16 +4339,16 @@ L8981:
     stx $07A0
     jsr L9531
 L8991:
-    lda $030E
+    lda ObjX
     sec
-    sbc $0302
+    sbc ObjRadX
     and #$07
     bne L89A1
     jsr L8BD5
     bcc L89CE
 L89A1:
     jsr L7CF4
-    lda $030A
+    lda SamusIsHit
     and #$41
     cmp #$41
     clc
@@ -4330,14 +4361,14 @@ L89A1:
 L89B9:
     dec $4B
 L89BB:
-    lda $030E
+    lda ObjX
     bne L89C9
     lda $43
     and #$02
     beq L89C9
     jsr L85B4
 L89C9:
-    dec $030E
+    dec ObjX
     sec
     rts
 L89CE:
@@ -4345,16 +4376,16 @@ L89CE:
     sta $52
     rts
 L89D3:
-    lda $030E
+    lda ObjX
     clc
-    adc $0302
+    adc ObjRadX
     and #$07
     bne L89E3
     jsr L8BE0
     bcc L8A0D
 L89E3:
     jsr L7CF4
-    lda $030A
+    lda SamusIsHit
     and #$41
     cmp #$40
     clc
@@ -4367,7 +4398,7 @@ L89E3:
 L89FB:
     inc $4B
 L89FD:
-    inc $030E
+    inc ObjX
     bne L8A0B
     lda $43
     and #$02
@@ -4439,7 +4470,7 @@ L8A66:
     dec $4A
 L8A68:
     sec
-L8A69:
+RTS_8A69:
     rts
     .byte $07
     .byte $00
@@ -4448,11 +4479,11 @@ L8A6C:
     lda $FD
     and #$07
     cmp L8A68,x
-    bne L8A69
+    bne RTS_8A69
 L8A77:
     ldx $43
     cpx $44
-    bne L8A69
+    bne RTS_8A69
     lda $FD
     and #$F8
     jsr MAIN_Adiv8
@@ -4542,7 +4573,7 @@ L8AFD:
     rts
 L8B0D:
     ldx $45
-    lda $0301,x
+    lda ObjRadY,x
     clc
     adc #$08
     jmp L8B20
@@ -4550,11 +4581,11 @@ L8B18:
     ldx $45
     lda #$00
     sec
-    sbc $0301,x
+    sbc ObjRadY,x
 L8B20:
     sta $02
     jsr L8C13
-    lda $0302,x
+    lda ObjRadX,x
 L8B28:
     bne L8B2C
     sec
@@ -4589,7 +4620,7 @@ L8B51:
     beq L8B89
     jsr $B5B8
     jsr L79CE
-    bcc L8B88
+    bcc RTS_8B88
     cmp #$A0
     bcs L8B6B
     jmp L8D13
@@ -4612,7 +4643,7 @@ L8B7E:
     jmp L8B51
 L8B87:
     sec
-L8B88:
+RTS_8B88:
     rts
 L8B89:
     ldx $6B
@@ -4631,18 +4662,18 @@ L8B8F:
     jsr MAIN_Amul8
     ora #$80
     tay
-    lda $0300,y
+    lda ObjAction,y
     beq L8BC1
-    lda $0307,y
+    lda SamusOnElevator,y
     lsr a
     bcs L8BBA
     ldx $45
-    lda $0300,x
+    lda ObjAction,x
     eor #$0B
     bne L8BD2
 L8BBA:
     lda #$04
-    sta $030A,y
+    sta SamusIsHit,y
     bne L8BD0
 L8BC1:
     dex
@@ -4652,7 +4683,7 @@ L8BC1:
     jsr MAIN_Adiv8
     and #$01
     tax
-    inc $0366,x
+    inc KraidStatueIsHit,x
 L8BD0:
     clc
     rts
@@ -4660,7 +4691,7 @@ L8BD2:
     jmp L6F78
 L8BD5:
     ldx $45
-    lda $0302,x
+    lda ObjRadX,x
     clc
     adc #$08
     jmp L8BE8
@@ -4668,11 +4699,11 @@ L8BE0:
     ldx $45
     lda #$00
     sec
-    sbc $0302,x
+    sbc ObjRadX,x
 L8BE8:
     sta $03
     jsr L8C13
-    ldy $0301,x
+    ldy ObjRadY,x
 L8BF0:
     bne L8BF4
     sec
@@ -4695,11 +4726,11 @@ L8C02:
     lda $01
     jmp L8B49
 L8C13:
-    lda $030C,x
+    lda ObjHi,x
     sta $0B
-    lda $030D,x
+    lda ObjY,x
     sta $08
-    lda $030E,x
+    lda ObjX,x
     sta $09
     rts
 L8C23:
@@ -4791,12 +4822,12 @@ L8C9B:
     sta $01
     txa
     adc #$00
-    beq L8CB3
+    beq RTS_8CB3
     lda $43
     and #$02
-    beq L8CB3
+    beq RTS_8CB3
     inc $0B
-L8CB3:
+RTS_8CB3:
     rts
 L8CB4:
     lda $08
@@ -4847,12 +4878,12 @@ L8CFA:
     clc
     adc $07
     sta $03
-    bcc L8D0B
+    bcc RTS_8D0B
     lda $43
     and #$02
-    beq L8D0B
+    beq RTS_8D0B
     inc $0B
-L8D0B:
+RTS_8D0B:
     rts
 L8D0C:
     lda $FF
@@ -4861,7 +4892,7 @@ L8D0C:
     rts
 L8D13:
     ldy $6B
-    beq L8D59
+    beq RTS_8D59
 L8D17:
     tay
     jsr $B5B5
@@ -4900,7 +4931,7 @@ L8D54:
     sta $050A,x
 L8D58:
     clc
-L8D59:
+RTS_8D59:
     rts
 L8D5A:
     jsr L8EDB
@@ -4925,12 +4956,12 @@ L8D68:
     .byte $7B
     sta $FFA9
     sta $54
-L8D7F:
+RTS_8D7F:
     rts
 L8D80:
     lda $54
     cmp #$FF
-    beq L8D7F
+    beq RTS_8D7F
     cmp #$FE
     beq L8DB2
     cmp #$F0
@@ -5019,9 +5050,9 @@ L8E15:
     clc
     adc $2D
     sta $2D
-    bcc L8E1E
+    bcc RTS_8E1E
     inc $2E
-L8E1E:
+RTS_8E1E:
     rts
 L8E1F:
     lda $2D
@@ -5127,10 +5158,10 @@ L8EC4:
     jmp LA747
 L8ED0:
     lda $B460,x
-    beq L8EDA
+    beq RTS_8EDA
     lda $0405,x
     and #$02
-L8EDA:
+RTS_8EDA:
     rts
 L8EDB:
     lda $FF
@@ -5161,10 +5192,10 @@ L8EF9:
     ldx L8F56,y
     pla
     and #$03
-    sta $0307,x
+    sta SamusOnElevator,x
     tya
     pha
-    lda $0307,x
+    lda SamusOnElevator,x
     cmp #$01
     beq L8F26
     cmp #$03
@@ -5183,17 +5214,17 @@ L8F1D:
     bcs L8F2B
 L8F26:
     lda #$01
-    sta $0300,x
+    sta ObjAction,x
 L8F2B:
     pla
     and #$01
     tay
     jsr L8EDB
-    sta $030C,x
+    sta ObjHi,x
     lda L8F52,y
-    sta $030E,x
+    sta ObjX,x
     lda #$68
-    sta $030D,x
+    sta ObjY,x
     lda L8F52+2,y
     tay
     jsr L8EDB
@@ -5216,21 +5247,21 @@ L8F5A:
     jsr L8F5F
     bne L8EE5
 L8F5F:
-    lda $0320
+    lda ElevatorStatus
     bne L8F82
 L8F64:
     iny
     lda ($00),y
-    sta $032F
+    sta ElevatorType
     ldy #$83
-    sty $032D
+    sty ElevatorY
     lda #$80
-    sta $032E
+    sta ElevatorX
     jsr L8EDB
-    sta $032C
+    sta ElevatorHi
     lda #$23
-    sta $0323
-    inc $0320
+    sta ElevatorAnimFrame
+    inc ElevatorStatus
 L8F82:
     lda #$02
     rts
@@ -5239,22 +5270,22 @@ L8F82:
 
 L8F85:
     jsr L8EDB
-    sta $036C
+    sta StatueHi
     lda #$40
     ldx CurSamusStat.byte5
     bpl L8F94
     lda #$30
 L8F94:
-    sta $0370
+    sta RidleyStatueY
     lda #$60
     ldx CurSamusStat.byte4
     bpl L8FA0
     lda #$50
 L8FA0:
-    sta $036F
+    sta KraidStatueY
     sty $4E
     lda #$01
-    sta $0360
+    sta StatueStatus
 L8FAA:
     jmp L8E29
 
@@ -5364,9 +5395,9 @@ L9045:
     jsr L90D0
     tya
     sec
-    sbc $032C
+    sbc ElevatorHi
     bne L9069
-    sta $0320
+    sta ElevatorStatus
 L9069:
     ldx #$1E
 L906B:
@@ -5380,10 +5411,10 @@ L9075:
     sbc #$06
     tax
     bpl L906B
-    cpy $036C
+    cpy StatueHi
     bne L9086
     lda #$00
-    sta $0360
+    sta StatueStatus
 L9086:
     ldx #$18
 L9088:
@@ -5419,24 +5450,24 @@ L90B1:
 L90BB:
     ldx #$B0
 L90BD:
-    lda $0300,x
+    lda ObjAction,x
     beq L90CA
-    lda $030B,x
+    lda ObjOnScreen,x
     bne L90CA
-    sta $0300,x
+    sta ObjAction,x
 L90CA:
     jsr LA0E1
     bmi L90BD
     rts
 L90D0:
-    lda $0300,x
+    lda ObjAction,x
     cmp #$05
     bcc RTS_90E1
     tya
-    eor $030C,x
+    eor ObjHi,x
     lsr a
     bcs RTS_90E1
-    sta $0300,x
+    sta ObjAction,x
 RTS_90E1:
     rts
 L90E2:
@@ -5565,14 +5596,14 @@ L91A5:
     bne L91B3
     lda $06
     cmp CurSamusStat.byteF,y
-    beq L91B8
+    beq RTS_91B8
 L91B3:
     dey
     dey
     bne L91A5
 L91B7:
     clc
-L91B8:
+RTS_91B8:
     rts
 
 
@@ -5793,7 +5824,7 @@ L92F0:
 L92F4:
     lda $61
     cmp $62
-    beq L9349
+    beq RTS_9349
     lda $00
     sta $02
     lda $01
@@ -5841,7 +5872,7 @@ L92F4:
 L9345:
     ora ($02),y
     sta ($02),y
-L9349:
+RTS_9349:
     rts
 
 L934A:
@@ -6201,14 +6232,14 @@ L9526:
 L9529:
     inx
     cpx #$4F
-    bcc L9538
+    bcc RTS_9538
     ldx $07A0
 L9531:
     lda #$00
     sta $07A1,x
     pla
     pla
-L9538:
+RTS_9538:
     rts
 L9539:
     sta $04
@@ -6444,13 +6475,13 @@ L9B65:
     lda $FC
     beq L9BBF
     lda $FF
-    eor $030C
+    eor ObjHi
     lsr a
     bcc L9BA5
     bcs L9BA4
 L9B9D:
     ldx #$02
-    lda $030E
+    lda ObjX
     bpl L9BA5
 L9BA4:
     dex
@@ -6462,10 +6493,10 @@ L9BA5:
     sta $53
     lda $52
     jsr MAIN_Amul16
-    ora $0300
+    ora ObjAction
     sta $52
     lda #$05
-    sta $0300
+    sta ObjAction
 RTS_9BBE:
     rts
 L9BBF:
@@ -6489,7 +6520,7 @@ L9BD3:
     rts
 L9BD9:
     stx $45
-    lda $0300,x
+    lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
         .word L9BEF
@@ -6502,15 +6533,15 @@ L9BD9:
 
 
 L9BEF:
-    inc $0300,x
+    inc ObjAction,x
     lda #$30
     jsr L7692
     jsr L9D4D
-    ldy $0307,x
+    ldy SamusOnElevator,x
     lda L9C23,y
-    sta $030F,x
+    sta SamusJumpDsplcmnt,x
 L9C03:
-    lda $0307,x
+    lda SamusOnElevator,x
     cmp #$03
     bne L9C0C
     lda #$01
@@ -6518,7 +6549,7 @@ L9C0C:
     ora #$A0
     sta $65
     lda #$00
-    sta $030A,x
+    sta SamusIsHit,x
     txa
     and #$10
     eor #$10
@@ -6532,23 +6563,23 @@ L9C23:
 
 
 L9C27:
-    lda $030A,x
+    lda SamusIsHit,x
     and #$04
     beq L9C03
-    dec $030F,x
+    dec SamusJumpDsplcmnt,x
     bne L9C03
     lda #$03
-    cmp $0307,x
+    cmp SamusOnElevator,x
     bne L9C40
-    ldy $010B
+    ldy EndTimer+1
     iny
     bne L9C03
 L9C40:
-    sta $0300,x
+    sta ObjAction,x
     lda #$50
-    sta $030F,x
+    sta SamusJumpDsplcmnt,x
     lda #$2C
-    sta $0305,x
+    sta ObjAnimResetIndex,x
     sec
     sbc #$03
     jmp L9CD0
@@ -6558,32 +6589,32 @@ L9C40:
 L9C53:
     lda $50
     beq L9C6F
-    lda $030C
-    eor $030C,x
+    lda ObjHi
+    eor ObjHi,x
     lsr a
     bcs L9C6F
-    lda $030E
-    eor $030E,x
+    lda ObjX
+    eor ObjX,x
     bmi L9C6F
     lda #$04
-    sta $0300,x
+    sta ObjAction,x
     bne L9CC5
 L9C6F:
-    lda $0306,x
-    cmp $0305,x
+    lda ObjAnimIndex,x
+    cmp ObjAnimResetIndex,x
     bcc L9CC5
-    lda $030F,x
+    lda SamusJumpDsplcmnt,x
     cmp #$50
     bne L9CA9
     jsr L9D49
-    lda $0307,x
+    lda SamusOnElevator,x
     cmp #$01
     beq L9CA9
     cmp #$03
     beq L9CA9
     lda #$0A
     sta $09
-    lda $030C,x
+    lda ObjHi,x
     sta $08
     ldy $4A
     txa
@@ -6594,20 +6625,20 @@ L9C9E:
     tya
     jsr L7F94
     lda #$00
-    sta $0300,x
+    sta ObjAction,x
     beq L9CC5
 L9CA9:
     lda FrameCount
     lsr a
     bcs L9CC5
-    dec $030F,x
+    dec SamusJumpDsplcmnt,x
     bne L9CC5
 L9CB3:
     lda #$01
-    sta $030F,x
+    sta SamusJumpDsplcmnt,x
     jsr L9D4D
     lda #$02
-    sta $0300,x
+    sta ObjAction,x
     jsr L9CC8
 L9CC3:
     ldx $45
@@ -6615,7 +6646,7 @@ L9CC5:
     jmp L9C03
 L9CC8:
     lda #$30
-    sta $0305,x
+    sta ObjAnimResetIndex,x
     sec
     sbc #$02
 L9CD0:
@@ -6643,10 +6674,10 @@ L9CD6:
     sta $70
     sta $1C
 L9CF9:
-    inc $0300,x
+    inc ObjAction,x
     lda #$00
     sta $8C
-    lda $0307,x
+    lda SamusOnElevator,x
     cmp #$03
     bne L9D15
     txa
@@ -6669,9 +6700,9 @@ L9D18:
     eor #$10
     tax
     lda #$06
-    sta $0300,x
+    sta ObjAction,x
     lda #$2C
-    sta $0305,x
+    sta ObjAnimResetIndex,x
     sec
     sbc #$03
     jsr L7695
@@ -6679,7 +6710,7 @@ L9D18:
     jsr SelectSamusPal
     ldx $45
     lda #$02
-    sta $0300,x
+    sta ObjAction,x
 L9D3F:
     jmp L9C03
 
@@ -6707,7 +6738,7 @@ L9D4F:
     tay
     lda L9D8C,y
     sta $03
-    lda $030C,x
+    lda ObjHi,x
     sta $0B
     jsr L8CBF
     ldy #$00
@@ -6731,7 +6762,7 @@ L9D6B:
     sta $0056,y
     lda $05
     sta $0057,y
-L9D8B:
+RTS_9D8B:
     rts
 
 L9D8C:
@@ -6750,7 +6781,7 @@ L9D8E:
 L9D9A:
     stx $45
     lda $0500,x
-    beq L9D8B
+    beq RTS_9D8B
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
         .word L9DB0
@@ -6823,11 +6854,11 @@ L9E19:
     jsr LA073
     lda #$04
     clc
-    adc $0301
+    adc ObjRadY
     sta $04
     lda #$04
     clc
-    adc $0302
+    adc ObjRadX
     sta $05
     jsr LA0E7
     bcs RTS_9E4E
@@ -6988,7 +7019,7 @@ L9F2A:
 L9F46:
     ldy #$D0
 L9F48:
-    lda $0300,y
+    lda ObjAction,y
     beq L9F63
     cmp #$04
     bcc L9F5D
@@ -7012,7 +7043,7 @@ L9F68:
     bpl L9F2A
     ldx #$B0
 L9F71:
-    lda $0300,x
+    lda ObjAction,x
     cmp #$02
     bne L9F85
     ldy #$00
@@ -7037,7 +7068,7 @@ L9F93:
     beq L9FC1
     ldy #$D0
 L9FA1:
-    lda $0300,y
+    lda ObjAction,y
     beq L9FBC
     cmp #$04
     bcc L9FB6
@@ -7092,7 +7123,7 @@ L9FFF:
     jsr LA073
     ldx #$F0
 LA012:
-    lda $0300,x
+    lda ObjAction,x
     cmp #$07
     beq LA01D
         cmp #$0A
@@ -7144,11 +7175,11 @@ LA04F:
 
 
 LA05F:
-    lda $030D,x
+    lda ObjY,x
     sta $07
-    lda $030E,x
+    lda ObjX,x
     sta $09
-    lda $030C,x
+    lda ObjHi,x
 
 LA06C:
     eor $FF
@@ -7159,11 +7190,11 @@ LA06C:
 
 
 LA073:
-    lda $030D,y
+    lda ObjY,y
     sta $06
-    lda $030E,y
+    lda ObjX,y
     sta $08
-    lda $030C,y
+    lda ObjHi,y
 
 LA080:
     eor $FF
@@ -7184,17 +7215,17 @@ LA087:
 
 
 LA094:
-    lda $0301,x
+    lda ObjRadY,x
     jsr LA0CD
-    lda $0302,x
+    lda ObjRadX,x
     jmp LA0C6
 
 
 
 LA0A0:
-    lda $0301,x
+    lda ObjRadY,x
     jsr LA0D4
-    lda $0302,x
+    lda ObjRadX,x
     jmp LA0B8
 
 
@@ -7222,7 +7253,7 @@ LA0BF:
 
 LA0C6:
     clc
-    adc $0302,y
+    adc ObjRadX,y
     sta $05
     rts
 
@@ -7230,7 +7261,7 @@ LA0C6:
 
 LA0CD:
     clc
-    adc $0301,y
+    adc ObjRadY,y
     sta $04
     rts
 
@@ -7338,8 +7369,8 @@ LA153:
 
 
 LA15D:
-    ora $030A,x
-    sta $030A,x
+    ora SamusIsHit,x
+    sta SamusIsHit,x
     rts
 
 
@@ -7349,8 +7380,8 @@ LA164:
 LA166:
     lda $10
 LA168:
-    ora $030A,y
-    sta $030A,y
+    ora SamusIsHit,y
+    sta SamusIsHit,y
 RTS_A16E:
     rts
 
@@ -7382,7 +7413,7 @@ LA19A:
     sta $040E,x
     bne LA1C2
 LA1A1:
-    bcs LA1B6
+    bcs RTS_A1B6
     jsr L7150
     ldy #$00
     lda #$C0
@@ -7393,11 +7424,11 @@ LA1AC:
     ora $10
     eor #$03
     sta $B6,x
-LA1B6:
+RTS_A1B6:
     rts
 LA1B7:
-    bcs LA1CB
-    lda $0300,y
+    bcs RTS_A1CB
+    lda ObjAction,y
     sta $040E,x
     jsr LA166
 LA1C2:
@@ -7405,7 +7436,7 @@ LA1C2:
 LA1C5:
     ora $0404,x
     sta $0404,x
-LA1CB:
+RTS_A1CB:
     rts
 LA1CC:
     lda $10
@@ -7747,10 +7778,10 @@ LA40B:
     lda $43
     ldx $45
     cmp #$02
-    bcc LA458
+    bcc RTS_A458
     lda $0400,x
     cmp #$EC
-    bcc LA458
+    bcc RTS_A458
     jmp LA905
 LA41D:
     jsr L6F92
@@ -7760,7 +7791,7 @@ LA423:
     sta $0A
     lda $0404,x
     and #$20
-    beq LA458
+    beq RTS_A458
     lda $040E,x
     cmp #$03
     bne LA466
@@ -7774,11 +7805,11 @@ LA423:
     sta $040D,x
     jsr LAD60
     and #$20
-    beq LA458
+    beq RTS_A458
     lda #$05
     sta $040B,x
     jmp $B5A0
-LA458:
+RTS_A458:
     rts
 LA459:
     jsr LAD60
@@ -7925,7 +7956,7 @@ LA56F:
     jsr LA731
     lda $B633,y
     cmp $B465,x
-    beq LA585
+    beq RTS_A585
 LA57A:
     sta $B465,x
 LA57D:
@@ -7933,24 +7964,24 @@ LA57D:
 LA580:
     lda #$00
     sta $B464,x
-LA585:
+RTS_A585:
     rts
 LA586:
     jsr LA731
     lda $B653,y
     cmp $B465,x
-    beq LA5A5
+    beq RTS_A5A5
     jsr LA57A
     ldy $B46E,x
     lda $B673,y
     and #$7F
-    beq LA5A5
+    beq RTS_A5A5
     tay
 LA59F:
     dec $B466,x
     dey
     bne LA59F
-LA5A5:
+RTS_A5A5:
     rts
 LA5A6:
     lda #$00
@@ -7962,11 +7993,11 @@ LA5A6:
     bne LA5BA
     tya
     and #$02
-    beq LA5A5
+    beq RTS_A5A5
 LA5BA:
     tya
     dec $040D,x
-    bne LA5A5
+    bne RTS_A5A5
     pha
     ldy $B46E,x
     lda $B693,y
@@ -7985,7 +8016,7 @@ LA5BA:
     bcs LA5ED
 LA5E2:
     lda $0401,x
-    cmp $030E
+    cmp ObjX
     bne LA5EC
     inc $7D
 LA5EC:
@@ -8011,7 +8042,7 @@ LA5FC:
     bcs LA61E
 LA611:
     lda $0400,x
-    cmp $030D
+    cmp ObjY
     bne LA61D
     inc $7D
     inc $7D
@@ -8027,12 +8058,12 @@ LA61E:
     lsr a
     ror a
     eor $0402,x
-    bpl LA637
+    bpl RTS_A637
     jmp LAEBF
 LA631:
     ora $0405,x
     sta $0405,x
-LA637:
+RTS_A637:
     rts
 LA638:
     ldy $B46E,x
@@ -8041,7 +8072,7 @@ LA638:
 LA63F:
     lda $B467,x
     tay
-    eor $030C
+    eor ObjHi
     lsr a
     rts
 LA648:
@@ -8051,7 +8082,7 @@ LA648:
     jsr LA631
     ldy $B46E,x
     lda $B6A3,y
-    beq LA6A6
+    beq RTS_A6A6
     tay
     lda $0405,x
     and #$02
@@ -8065,16 +8096,16 @@ LA669:
     lsr a
     sta $02
     sty $06
-    lda $030D
+    lda ObjY
     sta $00
     ldy $0400,x
     lda $0405,x
     bmi LA683
-    ldy $030E
+    ldy ObjX
     sty $00
     ldy $0401,x
 LA683:
-    lda $030C
+    lda ObjHi
     lsr a
     ror $00
     lda $B467,x
@@ -8084,28 +8115,28 @@ LA683:
     sec
     sbc $00
     bpl LA697
-    jsr L8001
+    jsr MAIN_TwosComplement
 LA697:
     lsr a
     lsr a
     lsr a
     cmp $02
-    bcc LA6A6
+    bcc RTS_A6A6
 LA69E:
     lda $06
 LA6A0:
     and $0405,x
     sta $0405,x
-LA6A6:
+RTS_A6A6:
     rts
 LA6A7:
     dec $0409,x
-    bne LA6B6
+    bne RTS_A6B6
     lda $0405,x
     and #$08
     bne LA6B7
     inc $0409,x
-LA6B6:
+RTS_A6B6:
     rts
 LA6B7:
     lda $B46E,x
@@ -8191,22 +8222,22 @@ LA747:
     asl a
 LA759:
     sta $040B,x
-LA75C:
+RTS_A75C:
     rts
 LA75D:
     lda $0405,x
     and #$10
-    beq LA75C
+    beq RTS_A75C
     lda $82
     and $B460,x
-    beq LA75C
+    beq RTS_A75C
     lda $82
     bpl LA774
     ldy $B46D,x
-    bne LA75C
+    bne RTS_A75C
 LA774:
     jsr LA7D5
-    bcs LA7E4
+    bcs RTS_A7E4
     sta $0404,y
     jsr LA819
     lda $0405,x
@@ -8246,7 +8277,7 @@ LA774:
     jsr LA80A
     ldx $45
     bit $82
-    bvc LA7E4
+    bvc RTS_A7E4
     lda $0405,x
     and #$01
     tay
@@ -8257,16 +8288,16 @@ LA7D5:
     clc
 LA7D8:
     lda $B460,y
-    beq LA7E4
+    beq RTS_A7E4
     jsr LA0DB
     cmp #$C0
     bne LA7D8
-LA7E4:
+RTS_A7E4:
     rts
 LA7E5:
     lda $80
     cmp #$02
-    bcc LA809
+    bcc RTS_A809
     ldx $45
     lda $0405,x
     lsr a
@@ -8280,7 +8311,7 @@ LA7E5:
     sta $0409,y
     sta $B464,y
     sta $0408,y
-LA809:
+RTS_A809:
     rts
 LA80A:
     ldx $45
@@ -8383,7 +8414,7 @@ LA8AB:
     php
     bcc LA8CC
     tya
-    jsr L8001
+    jsr MAIN_TwosComplement
     sta $0403,x
 LA8CC:
     plp
@@ -8574,14 +8605,14 @@ LA9EC:
     beq LAA03
     lda $0405,x
     and #$02
-    bne LAA74
+    bne RTS_AA74
 LAA03:
     sta $0404,x
     lda #$FF
     cmp $B46E,x
     bne LAA5D
     dec $0409,x
-    bne LAA74
+    bne RTS_AA74
     lda $0728,y
     jsr L8E7D
     ldy $45
@@ -8600,7 +8631,7 @@ LAA03:
     jsr LA03F
     jsr LA0AC
     jsr LA0E7
-    bcc LAA74
+    bcc RTS_AA74
     lda #$01
     sta $0409,x
     sta $B460,x
@@ -8620,7 +8651,7 @@ LAA68:
     ror $0405,x
     lda $B6B3,y
     sta $0409,x
-LAA74:
+RTS_AA74:
     rts
 LAA75:
     ldx $45
@@ -8633,18 +8664,18 @@ LAA75:
     pla
 LAA87:
     bpl LAA8C
-    jsr L8001
+    jsr MAIN_TwosComplement
 LAA8C:
     cmp #$08
     bcc LAAAC
     cmp #$10
-    bcs LAA74
+    bcs RTS_AA74
     tya
     and #$01
     tay
     lda $0080,y
     cmp $B465,x
-    beq LAA74
+    beq RTS_AA74
     sta $B466,x
     dec $B466,x
 LAAA6:
@@ -8653,14 +8684,14 @@ LAAA6:
 LAAAC:
     lda $B633,y
     cmp $B465,x
-    beq LAA74
+    beq RTS_AA74
     jmp LA57A
 LAAB7:
     ldx $45
     jsr LA731
     lda $B653,y
     cmp $B465,x
-    beq LAA74
+    beq RTS_AA74
     sta $B465,x
     jmp LA57D
 LAACA:
@@ -8676,7 +8707,7 @@ LAAD0:
     bne LAAD0
 LAAD9:
     lda $A0,x
-    beq LAB44
+    beq RTS_AB44
     dec $A0,x
     txa
     lsr a
@@ -8695,18 +8726,18 @@ LAAD9:
     bcc LAB45
     lda $08
     sta $A1,x
-    sta $034D
+    sta PowerUpDrawY
     lda $09
     sta $A2,x
-    sta $034E
+    sta PowerUpDrawX
     lda $0B
     and #$01
     sta $A3,x
-    sta $034C
+    sta PowerUpDrawHi
     lda $A3,x
-    sta $034C
+    sta PowerUpDrawHi
     lda #$5A
-    sta $0343
+    sta PowerUpDrawAnimFrame
     txa
 LAB1F:
     pha
@@ -8728,7 +8759,7 @@ LAB1F:
 LAB42:
     pla
     tax
-LAB44:
+RTS_AB44:
     rts
 LAB45:
     lda #$00
@@ -8816,7 +8847,7 @@ LABAE:
     cmp #$02
     bcs LABC2
     ldy $08
-    cpy $030D
+    cpy ObjY
     bcc LABC2
     ora #$02
     sta $B4,x
@@ -8847,29 +8878,29 @@ LABE5:
 LABEA:
     lda $B5,x
     cmp #$50
-    bcc LABF4
+    bcc RTS_ABF4
     lda #$01
     sta $B0,x
-LABF4:
+RTS_ABF4:
     rts
 LABF5:
     lda #$00
     sta $B5,x
     tay
-    lda $030E
+    lda ObjX
     sec
     sbc $B2,x
     bpl LAC06
     iny
-    jsr L8001
+    jsr MAIN_TwosComplement
 LAC06:
     cmp #$10
-    bcs LAC11
+    bcs RTS_AC11
     tya
     sta $B4,x
     lda #$02
     sta $B0,x
-LAC11:
+RTS_AC11:
     rts
 LAC12:
     txa
@@ -8893,7 +8924,7 @@ LAC12:
     lda #$02
     cpy #$20
     bcc LAC3F
-    jsr L8001
+    jsr MAIN_TwosComplement
     cpy #$80
     bcc LAC41
 LAC3F:
@@ -8927,10 +8958,10 @@ LAC59:
 LAC71:
     lda $B6,x
     and #$04
-    beq LAC7B
+    beq RTS_AC7B
     lda #$03
     sta $B0,x
-LAC7B:
+RTS_AC7B:
     rts
 LAC7C:
     lda $43
@@ -8986,14 +9017,14 @@ LACCC:
     rts
 LACCE:
     clc
-LACCF:
+RTS_ACCF:
     rts
 LACD0:
-    lda $010B
+    lda EndTimer+1
     cmp #$99
     bne LACE6
     clc
-    sbc $010A
+    sbc EndTimer
     bne LACE6
     sta $06
     lda #$38
@@ -9012,7 +9043,7 @@ LACF2:
     lda $0758,x
     sec
     sbc #$02
-    bne LACCF
+    bne RTS_ACCF
     sta $06
     inc $0758,x
     txa
@@ -9024,14 +9055,14 @@ LAD08:
     ldx $45
     lda $0405,x
     asl a
-    bmi LAD5F
+    bmi RTS_AD5F
     lda $B460,x
     cmp #$02
-    bne LAD5F
+    bne RTS_AD5F
     jsr LAEF4
     lda $00
     bpl LAD2D
-    jsr L8001
+    jsr MAIN_TwosComplement
     sta $60
 LAD23:
     jsr EnemyMoveOnePixelUp
@@ -9050,7 +9081,7 @@ LAD3B:
     jsr LAFC8
     lda $00
     bpl LAD51
-    jsr L8001
+    jsr MAIN_TwosComplement
     sta $60
 LAD47:
     jsr EnemyMoveOnePixelLeft
@@ -9058,14 +9089,14 @@ LAD47:
     dec $60
     bne LAD47
 LAD51:
-    beq LAD5F
+    beq RTS_AD5F
     sta $60
 LAD55:
     jsr EnemyMoveOnePixelRight
     jsr LADE4
     dec $60
     bne LAD55
-LAD5F:
+RTS_AD5F:
     rts
 LAD60:
     ldy $B46E,x
@@ -9074,7 +9105,7 @@ LAD60:
     rts
 LAD68:
     ldx $45
-    bcs LADAA
+    bcs RTS_ADAA
     lda $0405,x
     bpl LAD77
 LAD71:
@@ -9107,11 +9138,11 @@ LAD9A:
 LADA6:
     lda #$01
     sta $60
-LADAA:
+RTS_ADAA:
     rts
 LADAB:
     ldx $45
-    bcs LADE3
+    bcs RTS_ADE3
     lda $0405,x
     bpl LADBA
 LADB4:
@@ -9139,11 +9170,11 @@ LADD3:
 LADDF:
     lda #$01
     sta $60
-LADE3:
+RTS_ADE3:
     rts
 LADE4:
     ldx $45
-    bcs LAE1D
+    bcs RTS_AE1D
     jsr LAD60
     bpl LAE0E
     lda $0405,x
@@ -9171,11 +9202,11 @@ LAE0E:
 LAE19:
     lda #$01
     sta $60
-LAE1D:
+RTS_AE1D:
     rts
 LAE1E:
     ldx $45
-    bcs LAE60
+    bcs RTS_AE60
     jsr LAD60
     bpl LAE50
     lda $0405,x
@@ -9208,7 +9239,7 @@ LAE50:
 LAE5C:
     lda #$01
     sta $60
-LAE60:
+RTS_AE60:
     rts
 LAE61:
     jsr LAE68
@@ -9225,16 +9256,16 @@ LAE70:
     rts
 LAE77:
     jsr LAEA6
-    bne LAEA5
+    bne RTS_AEA5
     lda #$01
     jsr LB21B
 LAE81:
     lda $B46B,x
-    jsr L8001
+    jsr MAIN_TwosComplement
     sta $B46B,x
 LAE8A:
     jsr LAEA6
-    bne LAEA5
+    bne RTS_AEA5
     jsr LAD60
     sec
     bpl LAE9D
@@ -9245,7 +9276,7 @@ LAE9D:
     lda #$00
     sbc $0403,x
     sta $0403,x
-LAEA5:
+RTS_AEA5:
     rts
 LAEA6:
     jsr LA638
@@ -9253,16 +9284,16 @@ LAEA6:
     rts
 LAEAC:
     jsr LAEA6
-    bne LAEA5
+    bne RTS_AEA5
     lda #$04
     jsr LB21B
 LAEB6:
     lda $B46A,x
-    jsr L8001
+    jsr MAIN_TwosComplement
     sta $B46A,x
 LAEBF:
     jsr LAEA6
-    bne LAEDA
+    bne RTS_AEDA
     jsr LAD60
     sec
     bpl LAED2
@@ -9273,7 +9304,7 @@ LAED2:
     lda #$00
     sbc $0402,x
     sta $0402,x
-LAEDA:
+RTS_AEDA:
     rts
 LAEDB:
     lda $0405,x
@@ -9430,7 +9461,7 @@ LAFDF:
     and #$07
     plp
     beq LAFEC
-    jsr L8001
+    jsr MAIN_TwosComplement
 LAFEC:
     sta $00
     rts
@@ -9446,11 +9477,11 @@ LAFEF:
     sta $0402,x
     bpl LB026
 LB007:
-    jsr L8001
+    jsr MAIN_TwosComplement
     ldy #$F2
     bne LB026
 LB00E:
-    jsr L8001
+    jsr MAIN_TwosComplement
     sec
     sta $00
     lda $0406,x
@@ -9696,7 +9727,7 @@ LB1BF:
     ldy #$00
     sty $00
     ldx $45
-    bcc LB209
+    bcc RTS_B209
     inc $00
     inc $0401,x
     bne LB1E6
@@ -9710,7 +9741,7 @@ LB1BF:
 LB1DD:
     dec $0401,x
     clc
-    bcc LB209
+    bcc RTS_B209
 LB1E3:
     jsr LB20A
 LB1E6:
@@ -9726,14 +9757,14 @@ LB1E6:
 LB1FA:
     dec $0401,x
     clc
-    bcc LB209
+    bcc RTS_B209
 LB200:
     lda $0405,x
     bpl LB208
     dec $B46D,x
 LB208:
     sec
-LB209:
+RTS_B209:
     rts
 LB20A:
     lda $B467,x
@@ -9983,7 +10014,7 @@ LB385:
     sta $03FD
     lda #$C0
     sta $03FE
-    lda $030C
+    lda ObjHi
     sta $03FC
     lda #$F0
     sta $45

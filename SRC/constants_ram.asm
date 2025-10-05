@@ -138,6 +138,9 @@ ElevatorAnimFrame      = $0323   ;*2 = Index into FramePtrTable for current anim
 ElevatorAnimResetIndex = $0325   ;Restart index-1 when AnimIndex finished with last frame.
 ElevatorAnimIndex      = $0326   ;Current index into ObjectAnimIndexTbl.
 ElevatorUnused0328     = $0328   ;when starting to move, #$00 is written, but this is never read
+ElevatorHi             = $032C   ;0=Object on nametable 0, 1=Object on nametable 3.
+ElevatorY              = $032D   ;Object y position in room(not actual screen position).
+ElevatorX              = $032E   ;Object x position in room(not actual screen position).
 ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
                                    ;low nybble is which elevator it is
                                    ;#$0=Brinstar/Brinstar

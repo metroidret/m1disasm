@@ -600,7 +600,7 @@ AddYToPtr04: ;($6B40)
 
 
 
-TwosComplement:
+DEMO_TwosComplement:
     eor #$FF
     clc
     adc #$01
@@ -2318,7 +2318,7 @@ L7AEC:
     lda $02
     bcc L7AF5
     beq RTS_7B33
-    jsr TwosComplement
+    jsr DEMO_TwosComplement
 L7AF5:
     sta $11
     cmp $04
@@ -2352,7 +2352,7 @@ L7B26:
     lda $02
     bcc L7B2F
     beq RTS_7B33
-    jsr TwosComplement
+    jsr DEMO_TwosComplement
 L7B2F:
     sta $0F
     cmp $05
@@ -2719,7 +2719,7 @@ L8249:
     cmp #$08
     bcc @RTS
     and #$07
-    jsr TwosComplement
+    jsr DEMO_TwosComplement
 @RTS:
     rts
 
@@ -3264,7 +3264,7 @@ L868D:
     bcc RTS_86BD
 L86B0:
     txa
-    jsr TwosComplement
+    jsr DEMO_TwosComplement
     tax
 L86B5:
     txa
