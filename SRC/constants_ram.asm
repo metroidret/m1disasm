@@ -634,9 +634,9 @@ SamusIsHit             = $030A   ;Samus hit by enemy.
                                    ;$20: hit by bomb
                                    ;$30: hit by enemy
                                    ; +$08: hit towards the right
-                                   ;$44: touch frozen enemy
-                                   ; +$01: touch enemy from the right
-                                   ; +$02: touch enemy from the bottom
+                                   ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
+                                   ; +$01: touch solid entity from the right
+                                   ; +$02: touch solid entity from the bottom
 ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
 ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
 ObjY                   = $030D   ;Object y position in room(not actual screen position).
