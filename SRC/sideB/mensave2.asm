@@ -13,7 +13,7 @@ LC3F4:
     lda #>PPUString_C40B.b
     sta $01
     jsr MAIN_ProcessPPUString
-    jsr LD060
+    jsr METHEX_ScreenOn
     jsr LB310
     jmp LC425
 

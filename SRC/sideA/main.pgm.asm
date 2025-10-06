@@ -91,7 +91,9 @@ CrawlerMovementRoutinesTable: ;($6C48)
     .word EnemyMoveOnePixelUp-1
     .word EnemyMoveOnePixelUp-1
 
-L6C58:
+
+
+MoreInit: ;($6C58)
     ldy #$01
     sty $1C
     ldx #$FF
@@ -101,21 +103,21 @@ L6C58:
     stx $50
     stx $52
     txa
-L6C69:
-    cpx #$6A
-    bcs L6C6F
-    sta $75,x
-L6C6F:
-    cpx #$FF
-    bcs L6C76
-    sta ObjAction,x
-L6C76:
-    inx
-    bne L6C69
+    L6C69:
+        cpx #$6A
+        bcs L6C6F
+            sta $75,x
+        L6C6F:
+        cpx #$FF
+        bcs L6C76
+            sta ObjAction,x
+        L6C76:
+        inx
+        bne L6C69
     jsr METHEX_ScreenOff
     jsr ClearNameTables
     jsr MAIN_EraseAllSprites
-    jsr L6CF4
+    jsr DestroyEnemies
     stx $66
     stx $67
     inx
@@ -130,13 +132,13 @@ L6C76:
     sta $70
     lda #$FF
     sta $54
-    jsr L6CE9
+    jsr CopyAreaPointers
     jsr L8A8B
-L6CA8:
-    jsr L8D80
-    ldy $54
-    iny
-    bne L6CA8
+    L6CA8:
+        jsr L8D80
+        ldy $54
+        iny
+        bne L6CA8
     ldy $34
     sty $01
     ldy $33
@@ -152,24 +154,23 @@ L6CA8:
     sty PPUADDR
     ldx #$04
     L6CD0:
-        lda ($00),y
-        sta PPUDATA
-        iny
+            lda ($00),y
+            sta PPUDATA
+            iny
+            bne L6CD0
+        inc $01
+        dex
         bne L6CD0
-L6CD8:
-    inc $01
-    dex
-    bne L6CD0
     stx $8C
     inx
     stx $1C
     stx $2A
     inc $1E
-    jmp LD060
+    jmp METHEX_ScreenOn
 
 
 
-L6CE9:
+CopyAreaPointers: ;($6CE9)
     ldx #$0D
     L6CEB:
         lda $B592,x
@@ -180,7 +181,7 @@ L6CE9:
 
 
 
-L6CF4:
+DestroyEnemies: ;($6CF4)
     lda #$00
     tax
     L6CF7:
@@ -198,7 +199,7 @@ L6CF4:
 
 
 
-L6D0A:
+SamusInit: ;($6D0A)
     lda #$08
     sta $1E
     lda #$2C
@@ -241,7 +242,9 @@ L6D0A:
 RTS_6D63:
     rts
 
-L6D64:
+
+
+GameEngine: ;($6D64)
     ldx FrameCount
     bne L6D84
     jsr L6DBE
@@ -256,19 +259,19 @@ L6D64:
             ldx #$02
             jsr L6DBE
     L6D84:
-    jsr L855C
-    jsr L855C
+    jsr ScrollDoor
+    jsr ScrollDoor
     jsr UpdateWorld
     lda $0108
     ora $0109
     beq L6DA4
-    lda #$00
-    sta $0108
-    sta $0109
-    lda #$18
-    ldx #$03
-    jsr SetTimer
-L6DA4:
+        lda #$00
+        sta $0108
+        sta $0109
+        lda #$18
+        ldx #$03
+        jsr SetTimer
+    L6DA4:
     lda ObjAction
     cmp #$08
     bne RTS_6D63
@@ -276,10 +279,10 @@ L6DA4:
     lda $98
     cmp #$0A
     beq L6DBB
-    lda #$0C
-    ldx #$04
-    jmp SetTimer
-L6DBB:
+        lda #$0C
+        ldx #$04
+        jmp SetTimer
+    L6DBB:
     inc $1E
     rts
 
@@ -292,7 +295,7 @@ L6DBE:
 
 
 
-L6DC7:
+PrepareGameOver: ;($6DC7)
     jsr L6E00
     ldy #$0F
     L6DCC:
@@ -311,8 +314,24 @@ L6DC7:
     lda #$0C
     ldx #$06
     jmp SetTimer
+
 L6DF0:
-    .byte $58, $BB, $60, $B1, $68, $BC, $70, $B3, $88, $B5, $90, $B2, $98, $B3, $A0, $BA
+    .byte $58
+    .stringmap charmap_gameover, "G"
+    .byte $60
+    .stringmap charmap_gameover, "A"
+    .byte $68
+    .stringmap charmap_gameover, "M"
+    .byte $70
+    .stringmap charmap_gameover, "E"
+    .byte $88
+    .stringmap charmap_gameover, "O"
+    .byte $90
+    .stringmap charmap_gameover, "V"
+    .byte $98
+    .stringmap charmap_gameover, "E"
+    .byte $A0
+    .stringmap charmap_gameover, "R"
 
 
 
@@ -326,14 +345,14 @@ L6E00:
     dex
     stx $FD
     stx $FC
-    jmp LD060
+    jmp METHEX_ScreenOn
 
 
 
-L6E15:
-    lda $15
-    and #$88
-    eor #$88
+PauseMode: ;($6E15)
+    lda Joy2Status
+    and #BUTTON_A | BUTTON_UP.b
+    eor #BUTTON_A | BUTTON_UP.b
     bne RTS_6E2D
     lda $98
     cmp #$03
@@ -341,14 +360,14 @@ L6E15:
     ldy EndTimer+1
     iny
     bne RTS_6E2D
-    sta $2B
+    sta GamePaused
     inc MainRoutine
 RTS_6E2D:
     rts
 
 
 
-L6E2E:
+PrepareContinueScreen: ;($6E2E)
     ldy $6F
     bpl L6E64
         inc $6F
@@ -413,7 +432,7 @@ L6E96:
 
 
 
-L6E99:
+PrepareSwitchDiskSide: ;($6E99)
     lda #$18
     sta PalDataPending
     jsr LB261
@@ -421,26 +440,26 @@ L6E99:
 
 
 
-L6EA3:
+SamusIntro: ;($6EA3)
     jsr MAIN_EraseAllSprites
     ldy ObjAction
     lda $26
     bne L6EBE
-    sta $74
-    lda #$FF
-    sta ObjAction
-    jsr L7CAA
-    jsr SelectSamusPal
-    lda #$03
-    sta $1E
-L6EBE:
+        sta $74
+        lda #$FF
+        sta ObjAction
+        jsr L7CAA
+        jsr SelectSamusPal
+        lda #$03
+        sta $1E
+    L6EBE:
     cmp #$1F
     bcs RTS_6E92
     cmp $6ECB,y
     bne L6ECC
-    inc ObjAction
-    sty $1C
-L6ECC:
+        inc ObjAction
+        sty $1C
+    L6ECC:
     lda FrameCount
     lsr a
     bcc RTS_6E92
@@ -491,7 +510,7 @@ UpdateWorld: ;($6EF1)
 L6F30:
     lda #$F4
     @loop:
-        sta $0200,x
+        sta SpriteRAM,x
         jsr L84FE
         bne @loop
     rts
@@ -520,7 +539,8 @@ SelectSamusPal: ;($6F3F)
 L6F4E:
     lda #$01
     bne L6F60
-L6F52:
+
+PauseMusic: ;($6F52)
     lda #$02
     bne L6F60
 
@@ -643,7 +663,7 @@ L6FF5:
     and #$08
     beq L700F
 L6FFF:
-    jsr L854C
+    jsr BitScan
     cmp #$02
     bcs L7008
     sta $47
@@ -761,7 +781,7 @@ L70C2:
     lda $13
     bmi L70F4
 L70CA:
-    jsr L733C
+    jsr SamusRun_CheckHorzMovementMidair
     jsr L7452
     jsr L72E2
     lda #$02
@@ -798,7 +818,7 @@ L7107:
     jsr SetSamusStand
     jmp L711F
 L7113:
-    jsr L854C
+    jsr BitScan
     cmp $47
     beq L711F
     sta $47
@@ -816,7 +836,7 @@ L7121:
         sta $65
     L7132:
     jsr L71AE
-    jsr L85D4
+    jsr LavaAndMoveCheck
     lda $8D
     beq L7140
         lda #$A1
@@ -1147,22 +1167,22 @@ NoHorzMoveNoDelay: ;($7335)
 
 
 
-L733C:
-    lda $15
-    and #$03
+SamusRun_CheckHorzMovementMidair: ;($733C)
+    lda Joy2Status
+    and #BUTTON_RIGHT | BUTTON_LEFT.b
     beq L735D
-    jsr L854C
-    tax
-    jsr L706B
-    lda SamusAccelY
-    bmi RTS_7371
-    lda ObjAnimResetIndex
-    cmp #$0E
-    beq RTS_7371
-    stx $47
-    lda $744D,x
-    jmp SetSamusAnim
-L735D:
+        jsr BitScan
+        tax
+        jsr L706B
+        lda SamusAccelY
+        bmi RTS_7371
+        lda ObjAnimResetIndex
+        cmp #$0E
+        beq RTS_7371
+        stx $47
+        lda $744D,x
+        jmp SetSamusAnim
+    L735D:
     lda SamusAccelY
     bmi RTS_7371
     beq RTS_7371
@@ -1370,7 +1390,7 @@ L74A1:
     jmp L74FA
 L74D4:
     lda $13
-    jsr L854C
+    jsr BitScan
     cmp #$02
     bcs L74E4
     sta $47
@@ -1441,7 +1461,7 @@ SamusPntUp: ;($754E)
     lda Joy2Status
     and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b
     beq L756F
-        jsr L854C
+        jsr BitScan
         cmp #BUTTONBIT_DOWN
         bcs L7568
             sta $47
@@ -1714,7 +1734,7 @@ L772D:
     bne L7796
 L773F:
     jsr L780D
-    jsr L90BB
+    jsr Doors_RemoveIfOffScreen
     jsr $B5A3
     lda $74
     beq L775D
@@ -1748,14 +1768,14 @@ L777C:
     beq L778E
     ldy ObjX
     bne L7788
-    jsr L85B4
+    jsr ToggleSamusHi
 L7788:
     dec ObjX
     jmp L7796
 L778E:
     inc ObjX
     bne L7796
-    jsr L85B4
+    jsr ToggleSamusHi
 L7796:
     jsr L71AE
     jsr L7146
@@ -1783,12 +1803,12 @@ L77AF:
     sbc $FC
     cmp #$84
     bcc L77C1
-    jsr L8884
+    jsr ScrollDown
 L77C1:
     ldy ObjY
     cpy #$EF
     bne L77CD
-    jsr L85B4
+    jsr ToggleSamusHi
     ldy #$FF
 L77CD:
     iny
@@ -1800,11 +1820,11 @@ L77D4:
     sbc $FC
     cmp #$64
     bcs L77E1
-    jsr L885C
+    jsr ScrollUp
 L77E1:
     ldy ObjY
     bne @L77EB
-    jsr L85B4
+    jsr ToggleSamusHi
     ldy #$F0
 @L77EB:
     dey
@@ -1837,7 +1857,7 @@ L780D:
         sbc #$20
         tax
         bpl @loop
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     tay
     ldx #$18
 L781F:
@@ -2432,10 +2452,10 @@ L7BED:
 L7C0F:
     lda SamusJumpDsplcmnt,x
     bpl L7C1A
-    jsr L885C
+    jsr ScrollUp
     jmp L7B83
 L7C1A:
-    jsr L8884
+    jsr ScrollDown
     jmp L7B83
 
 
@@ -2469,21 +2489,21 @@ L7C49:
     tay
     cmp #$8F
     bne L7C5E
-    lda #$07
-    sta $1E
-    inc CurSamusStat.byteC
-    jsr L6E00
-    jmp L6E99
-L7C5E:
+        lda #$07
+        sta $1E
+        inc CurSamusStat.byteC
+        jsr L6E00
+        jmp PrepareSwitchDiskSide
+    L7C5E:
     tya
     bpl L7C69
-    ldy #$00
-    cmp #$84
-    bne L7C68
-    iny
-L7C68:
-    tya
-L7C69:
+        ldy #$00
+        cmp #$84
+        bne L7C68
+            iny
+        L7C68:
+        tya
+    L7C69:
     ora #$10
     jsr LB261
     lda $70
@@ -2496,9 +2516,9 @@ L7C69:
 L7C7C:
     sta $1C
     jsr L7CAA
-    jsr LD060
-    jsr L6CE9
-    jsr L6CF4
+    jsr METHEX_ScreenOn
+    jsr CopyAreaPointers
+    jsr DestroyEnemies
     ldx #$20
     stx $45
     lda #$6B
@@ -2548,7 +2568,7 @@ L7CCC:
     eor #$80
     sta SamusJumpDsplcmnt,x
     bmi L7CEE
-        jsr L85BD
+        jsr ToggleScroll
         sta $73
     L7CEE:
     jmp L7B83
@@ -3702,21 +3722,28 @@ L851B:
     adc $0A
     rts
 
-L8524:
-    .byte $21, $80, $01, $30, $21, $80, $01, $38, $2B, $FF, $01, $28, $2B, $FF, $01, $30
-    .byte $2B, $FF, $01, $38, $2B, $5E, $00, $18, $2B, $5F, $00, $20, $21, $76, $01, $18
-    .byte $21, $7F, $01, $20, $21, $3A, $00, $28
+DataDisplayTbl: ;($8524)
+    .byte $21, $80, $01, $30           ;Upper health digit.
+    .byte $21, $80, $01, $38           ;Lower health digit.
+    .byte $2B, $FF, $01, $28           ;Upper missile digit.
+    .byte $2B, $FF, $01, $30           ;Middle missile digit.
+    .byte $2B, $FF, $01, $38           ;Lower missile digit.
+    .byte $2B, $5E, $00, $18           ;Left half of missile.
+    .byte $2B, $5F, $00, $20           ;Right half of missile.
+    .byte $21, $76, $01, $18           ;E
+    .byte $21, $7F, $01, $20           ;N
+    .byte $21, $3A, $00, $28           ;..
 
-L854C:
+BitScan: ;($854C)
     stx $0E
     ldx #$00
-L8550:
-    lsr a
-    bcs L8558
-    inx
-    cpx #$08
-    bne L8550
-L8558:
+    @loop:
+        lsr a
+        bcs @exitLoop
+        inx
+        cpx #$08
+        bne @loop
+@exitLoop:
     txa
     ldx $0E
 RTS_855B:
@@ -3724,32 +3751,33 @@ RTS_855B:
 
 
 
-L855C:
+ScrollDoor: ;($855C)
     ldx $50
     beq RTS_855B
     dex
     bne L8569
-    jsr L8A3D
-    jmp L856F
-L8569:
-    dex
-    bne L8577
-    jsr L8A12
-L856F:
+        jsr L8A3D
+        jmp L856F
+    L8569:
+        dex
+        bne L8577
+        jsr L8A12
+    L856F:
     ldx $FD
     bne RTS_85B3
     ldx #$05
-    bne L8597
+    bne DoOneDoorScroll
 L8577:
     dex
     bne L8580
-    jsr L8884
-    jmp L8586
-L8580:
+        jsr ScrollDown
+        jmp VerticalRoomCentered
+    L8580:
     dex
     bne RTS_85B3
-    jsr L885C
-L8586:
+    jsr ScrollUp
+
+VerticalRoomCentered: ;($8586)
     ldx $FC
     bne RTS_85B3
     stx $66
@@ -3759,20 +3787,22 @@ L8586:
     bmi L85AC
     inx
     bne L85AC
-L8597:
+
+DoOneDoorScroll: ;($8597)
     lda #$20
     sta $53
     lda $52
     jsr MAIN_Amul8
     bcs L85A8
-    ldy $51
-    cpy #$03
-    bcc L85AC
-L85A8:
+        ldy $51
+        cpy #$03
+        bcc L85AC
+    L85A8:
     lda #$47
     bne L85AF
+
 L85AC:
-    jsr L85BD
+    jsr ToggleScroll
 L85AF:
     sta $73
     stx $50
@@ -3781,7 +3811,7 @@ RTS_85B3:
 
 
 
-L85B4:
+ToggleSamusHi: ;($85B4)
     lda ObjHi
     eor #$01
     sta ObjHi
@@ -3789,7 +3819,7 @@ L85B4:
 
 
 
-L85BD:
+ToggleScroll: ;($85BD)
     lda $43
     eor #$03
     sta $43
@@ -3799,7 +3829,7 @@ L85BD:
 
 
 
-L85C8:
+IsSamusInLava: ;($85C8)
     lda #$01
     cmp $43
     bcs RTS_85D3
@@ -3810,14 +3840,14 @@ RTS_85D3:
 
 
 
-L85D4:
+LavaAndMoveCheck: ;($85D4)
     lda ObjAction
     cmp #$09
     beq L85DF
-    cmp #$07
-    bcs RTS_85D3
-L85DF:
-    jsr L85C8
+        cmp #$07
+        bcs RTS_85D3
+    L85DF:
+    jsr IsSamusInLava
     ldy #$FF
     bcs L8611
     sty $6C
@@ -3846,7 +3876,7 @@ L860F:
 L8611:
     iny
     sty $5E
-    jsr L86E5
+    jsr VertAccelerate
     lda ObjY
     sec
     sbc $FC
@@ -3861,7 +3891,7 @@ L8611:
 L862D:
     sta $5F
 L862F:
-    jsr L87C2
+    jsr MoveSamusUp
     bcs L863E
     sec
     ror ObjSpeedY
@@ -3880,7 +3910,7 @@ L8642:
 L864C:
     sta $5F
 L864E:
-    jsr L880E
+    jsr MoveSamusDown
     bcs L8681
     lda ObjAction
     cmp #$03
@@ -3906,7 +3936,7 @@ L8681:
     dec $5F
     bne L864E
 L8685:
-    jsr L8750
+    jsr HorzAccelerate
     lda ObjX
     sec
     sbc $FD
@@ -3922,7 +3952,7 @@ L869E:
     sta $5F
 L86A0:
     jsr L8991
-    jsr L86D0
+    jsr CheckStopHorzMvmt
     dec $5F
     bne L86A0
     lda $52
@@ -3939,7 +3969,7 @@ L86BB:
     sta $5F
 L86BD:
     jsr L89D3
-    jsr L86D0
+    jsr CheckStopHorzMvmt
     dec $5F
     bne L86BD
     lda $52
@@ -3952,7 +3982,7 @@ RTS_86CF:
 
 
 
-L86D0:
+CheckStopHorzMvmt: ;($86D0)
     bcs RTS_86CF
     lda #$01
     sta $5F
@@ -3962,27 +3992,30 @@ L86D0:
     cmp #$03
     beq RTS_86CF
     jmp SetSamusStand
-L86E5:
+
+
+
+VertAccelerate: ;($86E5)
     lda SamusAccelY
-    bne L8710
+    bne @dontStartFalling
     lda #$18
     sta SamusHorzSpeedMax
     lda ObjY
     clc
     adc ObjRadY
     and #$07
-    bne L86FF
-    jsr L8B18
-    bcc L8710
-L86FF:
+    bne @endIf_A
+        jsr L8B18
+        bcc @dontStartFalling
+    @endIf_A:
     jsr L7CF4
     lda SamusOnElevator
-    bne L8710
+    bne @dontStartFalling
     lda $78
-    bne L8710
+    bne @dontStartFalling
     lda #$1A
     sta SamusAccelY
-L8710:
+@dontStartFalling:
     ldx #$05
     lda SamusSpeedSubPixelY
     clc
@@ -3991,20 +4024,20 @@ L8710:
     lda ObjSpeedY
     adc #$00
     sta ObjSpeedY
-    bpl L8734
+    bpl @else_B
         lda #$00
         cmp SamusSpeedSubPixelY
         sbc ObjSpeedY
         cmp #$06
         ldx #$FA
-        bne L8736
-    L8734:
+        bne @endIf_B
+    @else_B:
         cmp #$05
-    L8736:
-    bcc L873E
-    jsr L74FD
-    stx ObjSpeedY
-L873E:
+    @endIf_B:
+    bcc @endIf_C
+        jsr L74FD
+        stx ObjSpeedY
+    @endIf_C:
     lda SamusSubPixelY
     clc
     adc SamusSpeedSubPixelY
@@ -4016,7 +4049,7 @@ L873E:
 
 
 
-L8750:
+HorzAccelerate: ;($8750)
     lda SamusHorzSpeedMax
     jsr MAIN_Amul16
     sta $00
@@ -4046,7 +4079,7 @@ L8750:
         lda #$00
         sbc ObjSpeedX
         tay
-        jsr L87B4
+        jsr NegateTemp00Temp01
     L8791:
     cpx $02
     tya
@@ -4068,7 +4101,7 @@ L8750:
 
 
 
-L87B4:
+NegateTemp00Temp01: ;($87B4)
     lda #$00
     sec
     sbc $00
@@ -4080,109 +4113,115 @@ L87B4:
 
 
 
-L87C2:
+MoveSamusUp: ;($87C2)
     lda ObjY
     sec
     sbc ObjRadY
     and #$07
     bne L87D2
-    jsr L8B0D
-    bcc RTS_880D
-L87D2:
+        jsr L8B0D
+        bcc RTS_880D
+    L87D2:
     lda ObjAction
     cmp #$09
     beq L87E6
-    jsr L7CF4
-    lda SamusIsHit
-    and #$42
-    cmp #$42
-    clc
-    beq RTS_880D
-L87E6:
+        jsr L7CF4
+        lda SamusIsHit
+        and #$42
+        cmp #$42
+        clc
+        beq RTS_880D
+    L87E6:
     lda $4C
     cmp #$66
     bcs L87F1
-    jsr L885C
-    bcc L87F3
-L87F1:
-    dec $4C
-L87F3:
+        jsr ScrollUp
+        bcc L87F3
+    L87F1:
+        dec $4C
+    L87F3:
     lda ObjY
     bne L8806
-    lda $43
-    and #$02
-    bne L8801
-    jsr L85B4
-L8801:
-    lda #$F0
-    sta ObjY
-L8806:
+        lda $43
+        and #$02
+        bne L8801
+            jsr ToggleSamusHi
+        L8801:
+        lda #$F0
+        sta ObjY
+    L8806:
     dec ObjY
     inc SamusJumpDsplcmnt
     sec
 RTS_880D:
     rts
-L880E:
+
+
+
+MoveSamusDown: ;($880E)
     lda ObjY
     clc
     adc ObjRadY
     and #$07
     bne L881E
-    jsr L8B18
-    bcc RTS_885B
-L881E:
+        jsr L8B18
+        bcc RTS_885B
+    L881E:
     lda ObjAction
     cmp #$09
     beq L8832
-    jsr L7CF4
-    lda SamusOnElevator
-    clc
-    bne RTS_885B
-    lda $78
-    bne RTS_885B
-L8832:
+        jsr L7CF4
+        lda SamusOnElevator
+        clc
+        bne RTS_885B
+        lda $78
+        bne RTS_885B
+    L8832:
     lda $4C
     cmp #$84
     bcc L883D
-    jsr L8884
-    bcc L883F
-L883D:
-    inc $4C
-L883F:
+        jsr ScrollDown
+        bcc L883F
+    L883D:
+        inc $4C
+    L883F:
     lda ObjY
     cmp #$EF
     bne L8854
-    lda $43
-    and #$02
-    bne L884F
-    jsr L85B4
-L884F:
-    lda #$FF
-    sta ObjY
-L8854:
+        lda $43
+        and #$02
+        bne L884F
+            jsr ToggleSamusHi
+        L884F:
+        lda #$FF
+        sta ObjY
+    L8854:
     inc ObjY
     dec SamusJumpDsplcmnt
     sec
 RTS_885B:
     rts
-L885C:
+
+
+
+ScrollUp: ;($885C)
     lda $43
     beq L886C
-    cmp #$01
-    bne L8882
-    dec $43
-    lda $FC
-    beq L886C
-    dec $49
-L886C:
+        cmp #$01
+        bne L8882
+        dec $43
+        lda $FC
+        beq L886C
+        dec $49
+    L886C:
     ldx $FC
     bne L887C
-    dec $49
-    jsr L8A8B
-    bcs L8880
-    jsr L8D0C
-    ldx #$F0
-L887C:
+        dec $49
+        jsr L8A8B
+        bcs L8880
+        jsr L8D0C
+        ldx #$F0
+    L887C:
     dex
     jmp L88AA
 L8880:
@@ -4190,7 +4229,10 @@ L8880:
 L8882:
     sec
     rts
-L8884:
+
+
+
+ScrollDown: ;($8884)
     ldx $43
     dex
     beq L8893
@@ -4215,7 +4257,7 @@ L88A9:
     inx
 L88AA:
     stx $FC
-    jsr L88B5
+    jsr CheckUpdateNameTable
     clc
     rts
 L88B1:
@@ -4224,7 +4266,10 @@ L88B3:
     sec
 RTS_88B4:
     rts
-L88B5:
+
+
+
+CheckUpdateNameTable: ;($88B5)
     jsr L8D80
     ldx $54
     inx
@@ -4235,17 +4280,31 @@ L88B5:
     jmp L88DC
 L88C6:
     jmp L8A6C
+
+Table11: ;($88C9)
     .byte $07
     .byte $00
-    jsr $602C
-    .byte $64
-L88CF:
-    jsr L8EDB
-    and #$01
-    tay
-    lda $88CB,y
-    ldx $88CD,y
+
+;---------------------------------[ Get PPU and RoomRAM addresses ]----------------------------------
+
+PPUAddrs: ;($88CB)
+    .byte $20                       ;High byte of nametable #0(PPU).
+    .byte $2C                       ;High byte of nametable #3(PPU)
+
+WRAMAddrs: ;($88CD)
+    .byte >RoomRAMA         ;High byte of RoomRAMA(cart RAM).
+    .byte >RoomRAMB         ;High byte of RoomRAMB(cart RAM).
+
+GetNameAddrs: ;($88CF)
+    jsr GetNameTableAtScrollDir
+    and #$01                        ;Update name table 0 or 3.
+    tay                             ;
+    lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
+    ldx WRAMAddrs,y                 ;Get high cart RAM addr of nametable(src).
     rts
+
+
+
 L88DC:
     ldx $43
     lda $FC
@@ -4266,7 +4325,7 @@ L88E7:
     rol a
 L88FB:
     sta $01
-    jsr L88CF
+    jsr GetNameAddrs
     ora $01
     sta $03
     txa
@@ -4313,7 +4372,7 @@ L88FB:
 L8957:
     stx $00
     stx $02
-    jsr L88CF
+    jsr GetNameAddrs
     ora #$03
     sta $03
     txa
@@ -4366,7 +4425,7 @@ L89BB:
     lda $43
     and #$02
     beq L89C9
-    jsr L85B4
+    jsr ToggleSamusHi
 L89C9:
     dec ObjX
     sec
@@ -4403,7 +4462,7 @@ L89FD:
     lda $43
     and #$02
     beq L8A0B
-    jsr L85B4
+    jsr ToggleSamusHi
 L8A0B:
     sec
     rts
@@ -4430,7 +4489,7 @@ L8A24:
     jsr L8D0C
 L8A32:
     dec $FD
-    jsr L88B5
+    jsr CheckUpdateNameTable
     clc
     rts
 
@@ -4463,7 +4522,7 @@ L8A5A:
     bne L8A61
     jsr L8D0C
 L8A61:
-    jsr L88B5
+    jsr CheckUpdateNameTable
     clc
     rts
 L8A66:
@@ -4497,7 +4556,7 @@ L8A8B:
     rol a
     adc #$FF
     pha
-    jsr L8FE9
+    jsr OnNameTable0
     pla
     and $0066,y
     sec
@@ -4934,7 +4993,7 @@ L8D58:
 RTS_8D59:
     rts
 L8D5A:
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     asl a
     asl a
     ora #$60
@@ -4966,8 +5025,8 @@ L8D80:
     beq L8DB2
     cmp #$F0
     bcs L8D68
-    jsr L8FF1
-    jsr L90EE
+    jsr DeleteOffscreenRoomSprites
+    jsr ScanForItems
     lda $54
     asl a
     tay
@@ -4982,7 +5041,7 @@ L8D80:
     lda #$01
     jsr L8E15
     jsr L8D5A
-    jsr L934E
+    jsr InitTables
 L8DB2:
     jmp L8DFF
 L8DB5:
@@ -5037,7 +5096,7 @@ L8DFF:
     ldy #$00
     lda ($2D),y
     cmp #$FF
-    beq L8E49
+    beq EndOfRoom
     cmp #$FE
     beq L8E11
     cmp #$FD
@@ -5060,40 +5119,40 @@ L8E1F:
     lda $2E
     sta $01
     lda #$01
-L8E29:
-    jsr L925F
+EnemyLoop: ;($8E29)
+    jsr AddToPtr00
     ldy #$00
     lda ($00),y
     cmp #$FF
-    beq L8E49
+    beq EndOfRoom
     and #$0F
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
-        .word L8E5B
-        .word L8EE2
+        .word LoadEnemy
+        .word LoadDoor
         .word RTS_D07F
-        .word L8F5A
+        .word LoadElevator
         .word RTS_D07F
-        .word L8F85
-        .word L8FAD
+        .word LoadStatues
+        .word LoadPipeBugHole
 
-L8E49:
+EndOfRoom: ;($8E49)
     ldx #$F0
     stx $54
     lda $43
     sta $44
     and #$02
     bne L8E58
-    jmp L88E7
-L8E58:
-    jmp L8A77
+        jmp L88E7
+    L8E58:
+        jmp L8A77
 
 
 
-L8E5B:
-    jsr L8E61
-    jmp L8E29
-L8E61:
+LoadEnemy: ;($8E5B)
+    jsr GetEnemyData
+    jmp EnemyLoop
+GetEnemyData: ;($8E61)
     lda ($00),y
     and #$F0
     tax
@@ -5149,7 +5208,7 @@ L8EA3:
     sta $B460,x
     lda #$00
     sta $0404,x
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta $B467,x
 L8EC4:
     ldy $B46E,x
@@ -5163,19 +5222,22 @@ L8ED0:
     and #$02
 RTS_8EDA:
     rts
-L8EDB:
-    lda $FF
-    eor $43
+
+
+
+GetNameTableAtScrollDir: ;($8ED8)
+    lda PPUCTRL_ZP
+    eor ScrollDir
     and #$01
     rts
 
 
 
-L8EE2:
-    jsr L8EE8
+LoadDoor: ;($8EE2)
+    jsr SpawnDoorRoutine
 L8EE5:
-    jmp L8E29
-L8EE8:
+    jmp EnemyLoop
+SpawnDoorRoutine: ;($8EE8)
     iny
     lda ($00),y
     pha
@@ -5189,7 +5251,7 @@ L8EE8:
     and #$03
 L8EF9:
     tay
-    ldx L8F56,y
+    ldx DoorSlots,y
     pla
     and #$03
     sta SamusOnElevator,x
@@ -5210,7 +5272,7 @@ L8EF9:
 L8F1D:
     tya
     jsr L9197
-    jsr L91A0
+    jsr CheckForItem
     bcs L8F2B
 L8F26:
     lda #$01
@@ -5219,15 +5281,15 @@ L8F2B:
     pla
     and #$01
     tay
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta ObjHi,x
-    lda L8F52,y
+    lda DoorXs,y
     sta ObjX,x
     lda #$68
     sta ObjY,x
-    lda L8F52+2,y
+    lda DoorScrollBlocks,y
     tay
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     eor #$01
     tax
     tya
@@ -5236,20 +5298,26 @@ L8F2B:
     lda #$02
     rts
 
-L8F52:
-    .byte $F0, $10, $02, $01
-L8F56:
-    .byte $80, $B0, $A0, $90
+DoorXs: ;($8F52)
+    .byte $F0        ; X coord of RIGHT door
+    .byte $10        ; X coord of LEFT door
+DoorScrollBlocks: ;($8F54)
+    .byte $02        ; right
+    .byte $01        ; left
+DoorSlots: ;($8F56)
+    .byte $80        ; right on white square
+    .byte $B0        ; left on white square
+    .byte $A0        ; right on black square
+    .byte $90        ; left on black square
 
 
 
-L8F5A:
-    jsr L8F5F
+LoadElevator: ;($8F5A)
+    jsr SpawnElevatorRoutine
     bne L8EE5
-L8F5F:
+SpawnElevatorRoutine: ;($8F5F)
     lda ElevatorStatus
-    bne L8F82
-L8F64:
+    bne @exit
     iny
     lda ($00),y
     sta ElevatorType
@@ -5257,51 +5325,51 @@ L8F64:
     sty ElevatorY
     lda #$80
     sta ElevatorX
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta ElevatorHi
     lda #$23
     sta ElevatorAnimFrame
     inc ElevatorStatus
-L8F82:
+@exit:
     lda #$02
     rts
 
 
 
-L8F85:
-    jsr L8EDB
+LoadStatues: ;($8F85)
+    jsr GetNameTableAtScrollDir
     sta StatueHi
     lda #$40
     ldx CurSamusStat.byte5
     bpl L8F94
-    lda #$30
-L8F94:
+        lda #$30
+    L8F94:
     sta RidleyStatueY
     lda #$60
     ldx CurSamusStat.byte4
     bpl L8FA0
-    lda #$50
-L8FA0:
+        lda #$50
+    L8FA0:
     sta KraidStatueY
     sty $4E
     lda #$01
     sta StatueStatus
 L8FAA:
-    jmp L8E29
+    jmp EnemyLoop
 
 
 
-L8FAD:
+LoadPipeBugHole: ;($8FAD)
     ldx #$20
-L8FAF:
-    txa
-    sec
-    sbc #$08
-    bmi L8FE5
-    tax
-    ldy $0728,x
-    iny
-    bne L8FAF
+    @loop:
+        txa
+        sec
+        sbc #$08
+        bmi @exit
+        tax
+        ldy $0728,x
+        iny
+        bne @loop
     ldy #$00
     lda ($00),y
     and #$F0
@@ -5319,147 +5387,165 @@ L8FAF:
     jsr MAIN_Amul16
     ora #$00
     sta $072B,x
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta $072C,x
-L8FE5:
+@exit:
     lda #$03
-    bne L8FAA
-L8FE9:
+    bne L8FAA ; branch always
+
+
+
+OnNameTable0: ;($8FE9)
     lda $FF
     eor #$01
     and #$01
     tay
     rts
-L8FF1:
+
+
+
+DeleteOffscreenRoomSprites: ;($8FF1)
     ldx $43
     dex
     ldy #$00
-    jsr L90A7
+    jsr UpdateDoorData
     iny
-    jsr L90A7
+    jsr UpdateDoorData
     ldx #$50
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     tay
-L9003:
-    tya
-    eor $B467,x
-    lsr a
-    bcs L9014
-    lda $0405,x
-    and #$02
-    bne L9014
-    sta $B460,x
-L9014:
-    jsr LA0E1
-    bpl L9003
+    L9003:
+        tya
+        eor $B467,x
+        lsr a
+        bcs L9014
+        lda $0405,x
+        and #$02
+        bne L9014
+            sta $B460,x
+        L9014:
+        jsr LA0E1
+        bpl L9003
     ldx #$18
-L901B:
-    tya
-    eor $B3,x
-    lsr a
-    bcs L9025
-    lda #$00
-    sta $B0,x
-L9025:
-    txa
-    sec
-    sbc #$08
-    tax
-    bpl L901B
-    jsr L90BB
-    jsr L90B1
-    jsr L8EDB
+    L901B:
+        tya
+        eor $B3,x
+        lsr a
+        bcs L9025
+            lda #$00
+            sta $B0,x
+        L9025:
+        txa
+        sec
+        sbc #$08
+        tax
+        bpl L901B
+    jsr Doors_RemoveIfOffScreen
+    jsr EraseScrollBlockOnNameTableAtScrollDir
+    jsr GetNameTableAtScrollDir
     asl a
     asl a
     tay
     ldx #$C0
-L903A:
-    tya
-    eor $0509,x
-    and #$04
-    bne L9045
-    sta $0500,x
-L9045:
-    jsr LA0E1
-    cmp #$F0
-    bne L903A
+    L903A:
+        tya
+        eor $0509,x
+        and #$04
+        bne L9045
+            sta $0500,x
+        L9045:
+        jsr LA0E1
+        cmp #$F0
+        bne L903A
     tya
     lsr a
     lsr a
     tay
     ldx #$D0
-    jsr L90D0
+    jsr Projectile_RemoveIfOffScreen
     ldx #$E0
-    jsr L90D0
+    jsr Projectile_RemoveIfOffScreen
     ldx #$F0
-    jsr L90D0
+    jsr Projectile_RemoveIfOffScreen
     tya
     sec
     sbc ElevatorHi
     bne L9069
-    sta ElevatorStatus
-L9069:
+        sta ElevatorStatus
+    L9069:
     ldx #$1E
-L906B:
-    lda $0704,x
-    bne L9075
-    lda #$FF
-    sta $0700,x
-L9075:
-    txa
-    sec
-    sbc #$06
-    tax
-    bpl L906B
+    L906B:
+        lda $0704,x
+        bne L9075
+            lda #$FF
+            sta $0700,x
+        L9075:
+        txa
+        sec
+        sbc #$06
+        tax
+        bpl L906B
     cpy StatueHi
     bne L9086
-    lda #$00
-    sta StatueStatus
-L9086:
+        lda #$00
+        sta StatueStatus
+    L9086:
     ldx #$18
-L9088:
-    tya
-    cmp $072C,x
-    bne L9093
-    lda #$FF
-    sta $0728,x
-L9093:
-    txa
-    sec
-    sbc #$08
-    tax
-    bpl L9088
+    L9088:
+        tya
+        cmp $072C,x
+        bne L9093
+            lda #$FF
+            sta $0728,x
+        L9093:
+        txa
+        sec
+        sbc #$08
+        tax
+        bpl L9088
     ldx #$00
-    jsr L90E2
+    jsr PowerUp_RemoveIfOffScreen
     ldx #$08
-    jsr L90E2
+    jsr PowerUp_RemoveIfOffScreen
     jmp $B5A6
-L90A7:
+
+
+
+UpdateDoorData: ;($90A7)
     txa
     eor #$03
     and $0066,y
 L90AD:
     sta $0066,y
     rts
-L90B1:
-    jsr L8EDB
+
+
+
+EraseScrollBlockOnNameTableAtScrollDir: ;($90B1)
+    jsr GetNameTableAtScrollDir
     eor #$01
     tay
     lda #$00
     beq L90AD
-L90BB:
+
+
+
+Doors_RemoveIfOffScreen: ;($90BB)
     ldx #$B0
-L90BD:
-    lda ObjAction,x
-    beq L90CA
-    lda ObjOnScreen,x
-    bne L90CA
-    sta ObjAction,x
-L90CA:
-    jsr LA0E1
-    bmi L90BD
+    L90BD:
+        lda ObjAction,x
+        beq L90CA
+        lda ObjOnScreen,x
+        bne L90CA
+            sta ObjAction,x
+        L90CA:
+        jsr LA0E1
+        bmi L90BD
     rts
-L90D0:
+
+
+
+Projectile_RemoveIfOffScreen: ;($90D0)
     lda ObjAction,x
     cmp #$05
     bcc RTS_90E1
@@ -5470,7 +5556,10 @@ L90D0:
     sta ObjAction,x
 RTS_90E1:
     rts
-L90E2:
+
+
+
+PowerUp_RemoveIfOffScreen: ;($90E2)
     tya
     cmp $074B,x
     bne RTS_90ED
@@ -5481,11 +5570,11 @@ RTS_90ED:
 
 
 
-L90EE:
+ScanForItems: ;($90EE)
     lda $B590
     sta $00
     lda $B591
-L90F6:
+ScanOneItem: ;($90F6)
     sta $01
     ldy #$00
     lda ($00),y
@@ -5501,11 +5590,11 @@ L90F6:
     beq RTS_90ED
     lda ($00),y
     stx $00
-    jmp L90F6
+    jmp ScanOneItem
 
 L9114:
     lda #$03
-    jsr L925F
+    jsr AddToPtr00
 L9119:
     ldy #$00
     lda ($00),y
@@ -5513,38 +5602,38 @@ L9119:
     beq L912A
     bcs RTS_90ED
     iny
-    jsr L9256
+    jsr AnotherItem
     jmp L9119
 L912A:
     lda #$02
-L912C:
-    jsr L925F
+ChooseSpawningRoutine: ;($912C)
+    jsr AddToPtr00
     ldy #$00
     lda ($00),y
     and #$0F
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
-        .word L914E
-        .word L9154
-        .word L91B9
-        .word L91F7
-        .word L91FC
-        .word L9204
-        .word L9220
-        .word L9244
-        .word L924A
-        .word L9250
+        .word SpawnMapEnemy
+        .word SpawnPowerUp
+        .word SpawnMellows
+        .word SpawnElevator
+        .word SpawnCannon
+        .word SpawnMotherBrain
+        .word SpawnZebetite
+        .word SpawnRinkaSpawner
+        .word SpawnDoor
+        .word SpawnPalette
 
 
 
-L914E:
-    jsr $8E61
-L9151:
-    jmp L912C
+SpawnMapEnemy: ;($914E)
+    jsr GetEnemyData
+@exit: ;($9151)
+    jmp ChooseSpawningRoutine
 
 
 
-L9154:
+SpawnPowerUp: ;($9154)
     iny
     ldx #$00
     lda #$FF
@@ -5555,8 +5644,8 @@ L9154:
     bne L918F
 L9165:
     lda ($00),y
-    jsr L9193
-    jsr L91A0
+    jsr PrepareItemID
+    jsr CheckForItem
     bcs L918F
     ldy #$02
     lda $09
@@ -5571,15 +5660,15 @@ L9165:
     ora #$08
     sta $074A,x
 L9189:
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta $074B,x
 L918F:
     lda #$03
-    bne L9151 ; branch always
+    bne SpawnMapEnemy@exit ; branch always
 
 
 
-L9193:
+PrepareItemID: ;($9193)
     sta $09
     lda $4A
 L9197:
@@ -5587,7 +5676,10 @@ L9197:
     lda $49
     sta $06
     jmp L7FDD
-L91A0:
+
+
+
+CheckForItem: ;($91A0)
     ldy $B420
     beq L91B7
 L91A5:
@@ -5608,29 +5700,29 @@ RTS_91B8:
 
 
 
-L91B9:
+SpawnMellows: ;($91B9)
     ldx #$18
     lda RandomNumber1
     adc FrameCount
     sta $85
-L91C1:
-    jsr L91DC
-    txa
-    sec
-    sbc #$08
-    tax
-    bpl L91C1
+    L91C1:
+        jsr SpawnMellow
+        txa
+        sec
+        sbc #$08
+        tax
+        bpl L91C1
     lda $B5DC
     sta $B555
     sta $B556
     lda #$01
     sta $B550
 L91D9:
-    jmp L912C
+    jmp ChooseSpawningRoutine
 
 
 
-L91DC:
+SpawnMellow: ;($91DC)
     lda $B0,x
     bne RTS_91F6
     txa
@@ -5639,7 +5731,7 @@ L91DC:
     sta $B1,x
     adc RandomNumber2
     sta $B2,x
-    jsr L8EDB
+    jsr GetNameTableAtScrollDir
     sta $B3,x
     lda #$01
     sta $B0,x
@@ -5649,36 +5741,39 @@ RTS_91F6:
 
 
 
-L91F7:
-    jsr L8F5F
+SpawnElevator: ;($91F7)
+    jsr SpawnElevatorRoutine
     bne L91D9
-L91FC:
+
+
+
+SpawnCannon: ;($91FC)
     jsr $B5A9
     lda #$02
 L9201:
-    jmp L912C
+    jmp ChooseSpawningRoutine
 
 
 
-L9204:
+SpawnMotherBrain: ;($9204)
     jsr $B5AC
     lda #$38
     sta $07
     lda #$00
     sta $06
-    jsr L91A0
+    jsr CheckForItem
     bcc L921C
-    lda #$08
-    sta $98
-    lda #$00
-    sta $99
-L921C:
+        lda #$08
+        sta $98
+        lda #$00
+        sta $99
+    L921C:
     lda #$01
     bne L9201
 
 
 
-L9220:
+SpawnZebetite: ;($9220)
     jsr $B5AF
     txa
     lsr a
@@ -5686,7 +5781,7 @@ L9220:
     sta $07
     lda #$00
     sta $06
-    jsr L91A0
+    jsr CheckForItem
     bcc L9241
     lda #$81
     sta $0758,x
@@ -5699,33 +5794,36 @@ L9241:
 
 
 
-L9244:
+SpawnRinkaSpawner: ;($9244)
     jsr $B5B2
     jmp L921C
 
 
 
-L924A:
-    jsr L8EE8
-    jmp L912C
+SpawnDoor: ;($924A)
+    jsr SpawnDoorRoutine
+    jmp ChooseSpawningRoutine
 
 
 
-L9250:
+SpawnPalette: ;($9250)
     lda $43
     sta $8C
     bne L921C
 
 
 
-L9256:
+AnotherItem: ;($9256)
     lda ($00),y
     cmp #$FF
-    bne L925F
+    bne AddToPtr00
     pla
     pla
     rts
-L925F:
+
+
+
+AddToPtr00: ;($925F)
     clc
     adc $00
     sta $00
@@ -5736,7 +5834,7 @@ L925F:
 
 
 
-L9269:
+DrawStructRow: ;($9269)
     and #$0F
     bne L926F
         lda #$10
@@ -5779,7 +5877,7 @@ L9281:
         sta ($00),y
         dex
         bpl L92A1
-    jsr L92F4
+    jsr UpdateAttrib
     ldy #$02
     jsr MAIN_AddYToPtr00
     lda $00
@@ -5814,14 +5912,14 @@ L92CE:
     lda ($2F),y
     cmp #$FF
     beq RTS_92EF
-        jmp L9269
+        jmp DrawStructRow
     RTS_92EF:
         rts
 
 L92F0:
     .byte $21, $20, $01, $00
 
-L92F4:
+UpdateAttrib: ;($92F4)
     lda $61
     cmp $62
     beq RTS_9349
@@ -5858,7 +5956,7 @@ L92F4:
     and #$04
     ora $03
     sta $03
-    lda L934A,x
+    lda AttribMaskTable,x
     ldy #$00
     and ($02),y
     sta ($02),y
@@ -5875,15 +5973,15 @@ L9345:
 RTS_9349:
     rts
 
-L934A:
-    .byte $FC
-    .byte $F3
-    .byte $CF
-    .byte $3F
+AttribMaskTable: ;($934A)
+    .byte %11111100                 ;Upper left macro.
+    .byte %11110011                 ;Upper right macro.
+    .byte %11001111                 ;Lower left macro.
+    .byte %00111111                 ;Lower right macro.
 
 
 
-L934E:
+InitTables: ;($934E)
     lda $34
     tay
     tax
@@ -5896,7 +5994,7 @@ L934E:
     jsr L84FE
     stx $01
     ldx $62
-    lda L936E,x
+    lda ATDataTable,x
     ldy #$C0
     L9368:
         sta ($00),y
@@ -5904,12 +6002,15 @@ L934E:
         bne L9368
     rts
 
-L936E:
-    .byte $00, $55, $AA, $FF
+ATDataTable: ;($936E)
+    .byte %00000000
+    .byte %01010101
+    .byte %10101010
+    .byte %11111111
 
 
 
-L9372:
+MAIN_RandomNumbers: ;($9372)
     ldx #$28
     ldy #$02
     jsr FDSBIOS_Random
@@ -5918,23 +6019,23 @@ L9372:
 
 
 
-L937C:
+MainLoop: ;($937C)
     jsr MAIN_UpdateTimer
     jsr L93C8
     inc FrameCount
     lda #$00
     sta $1A
-L9388:
-    tay
-    lda $1A
-    bne L9390
-    jmp L9388
+WaitNMIEnd: ;($9388)
+        tay
+        lda $1A
+        bne L9390
+        jmp WaitNMIEnd
 L9390:
-    jsr L9372
-    jmp L937C
+    jsr MAIN_RandomNumbers
+    jmp MainLoop
 
 
-MAIN_NMI:
+MAIN_NMI: ;($9396)
     cli
     php
     pha
@@ -5946,17 +6047,17 @@ MAIN_NMI:
     sta OAMADDR
     lda #$02
     sta OAMDMA
-    lda $1A
+    lda NMIStatus
     bne L93BA
-    jsr L9402
-    jsr MAIN_CheckPPUWrite
-    jsr $D06E
-    jsr MAIN_WriteScroll
-    jsr $D000
-L93BA:
+        jsr CheckPalWrite
+        jsr MAIN_CheckPPUWrite
+        jsr METHEX_WritePPUCtrl
+        jsr MAIN_WriteScroll
+        jsr METHEX_ReadJoyPads
+    L93BA:
     jsr GotoLD18C
     ldy #$01
-    sty $1A
+    sty NMIStatus
     pla
     tay
     pla
@@ -5968,43 +6069,46 @@ L93BA:
 
 
 L93C8:
-    lda $12
-    and #$10
+    lda Joy1Change
+    and #BUTTON_START
     beq L93E9
+    
     lda MainRoutine
     cmp #$03
     beq L93DC
-    cmp #$05
-    bne L93E9
-    lda #$03
-    bne L93DE
-L93DC:
-    lda #$05
-L93DE:
+        cmp #$05
+        bne L93E9
+        lda #$03
+        bne L93DE
+    L93DC:
+        lda #$05
+    L93DE:
     sta MainRoutine
-    lda $2B
+    lda GamePaused
     eor #$01
-    sta $2B
-    jsr L6F52
+    sta GamePaused
+    jsr PauseMusic
 L93E9:
     lda MainRoutine
     jsr MAIN_ChooseRoutine
         .word LC082
-        .word L6C58
-        .word L6D0A
-        .word L6D64
-        .word L6DC7
-        .word L6E15
-        .word L6E2E
-        .word L6E99
-        .word L6EA3
+        .word MoreInit
+        .word SamusInit
+        .word GameEngine
+        .word PrepareGameOver
+        .word PauseMode
+        .word PrepareContinueScreen
+        .word PrepareSwitchDiskSide
+        .word SamusIntro
         .word WaitTimer
 
-L9402:
-    ldy $1C
+
+
+CheckPalWrite: ;($9402)
+    ldy PalDataPending
     bne L9407
-    rts
-L9407:
+        rts
+    L9407:
     dey
     tya
     asl a
@@ -6501,7 +6605,7 @@ RTS_9BBE:
     rts
 L9BBF:
     jsr L9BA5
-    jsr L8586
+    jsr VerticalRoomCentered
     txa
 L9BC6:
     ora #$80
@@ -7361,7 +7465,7 @@ LA14F:
 LA153:
     sta $01
     bpl RTS_A15C
-        jsr L87B4
+        jsr NegateTemp00Temp01
         inc $10
     RTS_A15C:
     rts
@@ -9535,7 +9639,7 @@ LB066:
     lda #$00
     sbc $0403,x
     tay
-    jsr L87B4
+    jsr NegateTemp00Temp01
 LB080:
     lda $04
     cmp $02

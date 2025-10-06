@@ -1,5 +1,5 @@
 
-RandomNumbers: ;($6800)
+DEMO_RandomNumbers: ;($6800)
     txa
     pha
     ldx #$0B
@@ -108,7 +108,7 @@ L68A7:
     inc $0180
     jmp L68A7
 L68B7:
-    jsr RandomNumbers
+    jsr DEMO_RandomNumbers
     jmp L6874
 
 
@@ -145,7 +145,7 @@ DEMO_NMI: ;($68BD)
     bne L694E
     jsr L6A45
     jsr DEMO_CheckPPUWrite
-    jsr WritePPUCtrl
+    jsr DEMO_WritePPUCtrl
     jsr L6A71
     lda PPUSTATUS
     lda $FF
@@ -915,7 +915,7 @@ DEMO_WaitNMIPass_: ;($6CD8)
 
 
 
-L6CE0:
+DEMO_ScreenOn: ;($6CE0)
     lda PPUCTRL_ZP
     and #~PPUCTRL_OBJ_1000.B
     ora #PPUCTRL_BG_1000
@@ -927,7 +927,7 @@ L6CE0:
 
 
 
-WritePPUCtrl:
+DEMO_WritePPUCtrl: ;($6CF1)
     lda PPUCTRL_ZP
     sta PPUCTRL
     lda PPUMASK_ZP
@@ -1018,7 +1018,7 @@ L6999_6D69:
     inc $1F
     lda #$00
     sta $62
-    jmp L6CE0
+    jmp DEMO_ScreenOn
 
 
 
@@ -3603,7 +3603,7 @@ L8915:
     sta $1F
 L8927:
     jsr LCF27
-    jmp L6CE0
+    jmp DEMO_ScreenOn
 
 
 

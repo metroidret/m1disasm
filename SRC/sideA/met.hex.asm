@@ -97,7 +97,7 @@ METHEX_WaitNMIPass_: ;($D058)
 
 
 
-LD060:
+METHEX_ScreenOn: ;($D060)
     lda PPUCTRL_ZP
     and #~PPUCTRL_OBJ_1000.b
     ora #PPUCTRL_BG_1000
@@ -108,7 +108,7 @@ LD060:
 
 
 
-LD06E:
+METHEX_WritePPUCtrl: ;($D06E)
     lda PPUCTRL_ZP
     sta PPUCTRL
     lda PPUMASK_ZP

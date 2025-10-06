@@ -47,7 +47,7 @@ LC02E:
     sta $73
     sta FDS_CTRL_ZP
     sta RandomNumber1
-    jmp L9388
+    jmp WaitNMIEnd
 
 
 LC058:
@@ -57,7 +57,7 @@ LC058:
     lda #>PPUString_C06C.b
     sta $01
     jsr MAIN_ProcessPPUString
-    jsr LD060
+    jsr METHEX_ScreenOn
     jmp LB310
 
 ; "Bメンヲ セットシテクダサイ" message (switch to disk side B)

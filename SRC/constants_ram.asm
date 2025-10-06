@@ -48,8 +48,11 @@ RandomNumber1          = $28     ;Random numbers used-->
 RandomNumber2          = $29     ;throughout the game.
 
 Joy2Port               = $2B     ;Controller port from which to read Joypad 2 (0=Joypad 1 port, 1=Joypad 2 port)
+GamePaused             = $2B
 
-SpriteLoadPending      = $50
+ScrollDir              = $43        ;0=Up, 1=Down, 2=Left, 3=Right.
+
+SpriteLoadPending      = $50        ;Set to #$00 after sprite RAM load complete.
 
 SpritePagePos          = $55     ;Index into sprite RAM used to load object sprite data.
 
@@ -219,6 +222,10 @@ PPUDataString          = $07A1   ;Thru $07F0. String of data bytes to be written
 
 ;----------------------------------------------------------------------------------------------------
 
+RoomRAMA               = $6000   ;Thru $63FF. Used to load room before it is put into the PPU.
+RoomRAMB               = $6400   ;Thru $67FF. Used to load room before it is put into the PPU.
+
+;----------------------------------------------------------------------------------------------------
 
 .enum $B410 export
 
