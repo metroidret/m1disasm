@@ -1665,7 +1665,7 @@ L76BB:
     sta ObjAction,y
     lda #$FF
     sta SamusJumpDsplcmnt,y
-    dec CurSamusStat.byte2
+    dec CurSamusStat.MissileCount
     bne RTS_76F0
     dec $010E
     jmp SelectSamusPal
@@ -2796,7 +2796,7 @@ L7E66:
 RTS_7E8C:
     rts
 L7E8D:
-    lda CurSamusStat.byte2
+    lda CurSamusStat.MissileCount
     beq RTS_7E8C
     lda $13
     ora $17
@@ -3116,7 +3116,7 @@ L80AC:
     ldy $8E
     cpy $90
     beq L80D7
-    lda CurSamusStat.byte3
+    lda CurSamusStat.MaxMissiles
     beq L80D7
     inc $90
 RTS_80C6:
@@ -3153,7 +3153,7 @@ L80F1:
     sta $0108
     lsr a
     tay
-    sta CurSamusStat.byte3,y
+    sta CurSamusStat.MaxMissiles,y
     lda #$4B
     jsr L8113
     bne L80D7
@@ -3166,18 +3166,18 @@ L8107:
 L8113:
     pha
     clc
-    adc CurSamusStat.byte2
+    adc CurSamusStat.MissileCount
     bcc L811C
     lda #$FF
 L811C:
-    sta CurSamusStat.byte2
+    sta CurSamusStat.MissileCount
     pla
     clc
-    adc CurSamusStat.byte3
+    adc CurSamusStat.MaxMissiles
     bcc L8128
     lda #$FF
 L8128:
-    sta CurSamusStat.byte3
+    sta CurSamusStat.MaxMissiles
     rts
 L812C:
     lda $0400,x
@@ -3622,9 +3622,9 @@ L843E:
     ldy EndTimer+1
     iny
     bne L848B
-    ldy CurSamusStat.byte3
+    ldy CurSamusStat.MaxMissiles
     beq L8481
-    lda CurSamusStat.byte2
+    lda CurSamusStat.MissileCount
     jsr L8503
     lda $02
     jsr L84DE
@@ -5180,7 +5180,7 @@ L8E7D:
     and #$06
     lsr a
     tay
-    lda CurSamusStat.byte3,y
+    lda CurSamusStat.MaxMissiles,y
     beq L8E96
     pla
     pla
@@ -7824,14 +7824,14 @@ LA3A4:
     lda #$1E
 LA3AD:
     clc
-    adc CurSamusStat.byte2
+    adc CurSamusStat.MissileCount
     bcs LA3B8
-    cmp CurSamusStat.byte3
+    cmp CurSamusStat.MaxMissiles
     bcc LA3BB
 LA3B8:
-    lda CurSamusStat.byte3
+    lda CurSamusStat.MaxMissiles
 LA3BB:
-    sta CurSamusStat.byte2
+    sta CurSamusStat.MissileCount
     jmp L6F80
 LA3C1:
     lda FrameCount

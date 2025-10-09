@@ -182,9 +182,9 @@ SongEscapeTri:
 SongEscapeNoise:
     SongRepeatSetup $30
         SongNoteLength $2 ;3/8 seconds
-        .byte $01
-        .byte $04
-        .byte $01
-        .byte $04
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
 

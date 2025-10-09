@@ -307,12 +307,12 @@ SongBrinstarTri:
 SongBrinstarNoise:
     SongRepeatSetup $28
         SongNoteLength $2 ;3/8 seconds
-        .byte $04
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $9 ;1/8 seconds
-        .byte $04
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
 

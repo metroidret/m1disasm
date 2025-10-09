@@ -147,16 +147,16 @@ SongNorfairTri: ;($DEF7)
 SongNorfairNoise: ;($DF2B)
     SongRepeatSetup $20
         SongNoteLength $2 ;3/8 seconds
-        .byte $01
-        .byte $04
-        .byte $04
-        .byte $01
-        .byte $04
-        .byte $04
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $6 ;1 3/16 seconds
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $2 ;3/8 seconds
-        .byte $01
+        .byte DrumBeat00SFXData - SFXData
     SongRepeat
 

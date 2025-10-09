@@ -870,100 +870,100 @@ SongEndSQ2: ;($CEC5)
 
 SongEndNoise: ;($CF64)
     SongRepeatSetup $A
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
-        .byte $01
-        .byte $01
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
     SongRepeat
     SongRepeatSetup $20
-        SongNoteLength $2
-        .byte $04
-        .byte $07
+        SongNoteLength $2 ;7/32 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat02SFXData - SFXData
     SongRepeat
     SongRepeatSetup $8
-        SongNoteLength $1
-        .byte $04
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        SongNoteLength $1
-        .byte $04
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        SongNoteLength $1
-        .byte $04
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        SongNoteLength $1
-        .byte $07
-        SongNoteLength $0
-        .byte $04
-        .byte $04
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat02SFXData - SFXData
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $10
-        SongNoteLength $2
-        .byte $04
+        SongNoteLength $2 ;7/32 seconds
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $20
-        SongNoteLength $1
-        .byte $04
-        .byte $04
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $20
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        SongNoteLength $1
-        .byte $07
-        SongNoteLength $0
-        .byte $0A
-        .byte $04
-        SongNoteLength $1
-        .byte $07
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat02SFXData - SFXData
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat03SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        SongNoteLength $1 ;7/64 seconds
+        .byte DrumBeat02SFXData - SFXData
     SongRepeat
     SongRepeatSetup $8
-        SongNoteLength $0
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
-        .byte $01
-        .byte $01
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $01
+        SongNoteLength $0 ;1/4 seconds
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat00SFXData - SFXData
     SongRepeat
-    SongNoteLength $4
-    .byte $07
-    SongNoteLength $2
-    .byte $01
-    SongNoteLength $0
-    .byte $07
-    .byte $01
-    .byte $07
-    .byte $07
-    SongNoteLength $2
-    .byte $07
+    SongNoteLength $4 ;7/8 seconds
+    .byte DrumBeat02SFXData - SFXData
+    SongNoteLength $2 ;7/32 seconds
+    .byte DrumBeat00SFXData - SFXData
+    SongNoteLength $0 ;1/4 seconds
+    .byte DrumBeat02SFXData - SFXData
+    .byte DrumBeat00SFXData - SFXData
+    .byte DrumBeat02SFXData - SFXData
+    .byte DrumBeat02SFXData - SFXData
+    SongNoteLength $2 ;7/32 seconds
+    .byte DrumBeat02SFXData - SFXData
 

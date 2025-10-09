@@ -286,34 +286,34 @@ SongIntroFDS:
 SongIntroNoise:
     SongRepeatSetup $10
         SongNoteLength $4 ;7/8 Seconds
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $C
         SongNoteLength $2 ;7/32 Seconds
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $5 ;1 13/16 Seconds
-        .byte $07
+        .byte DrumBeat02SFXData - SFXData
         SongNoteLength $0 ;1/4 Seconds
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $6 ;21/32 Seconds
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
         SongNoteLength $1 ;7/64 Seconds
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $A
         SongNoteLength $1 ;7/64 Seconds
-        .byte $04
-        .byte $04
-        .byte $04
-        .byte $07
-        .byte $04
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat02SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
     SongRepeatSetup $20
         SongNoteLength $4 ;7/8 Seconds
-        .byte $04
+        .byte DrumBeat01SFXData - SFXData
     SongRepeat
 

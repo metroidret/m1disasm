@@ -4,8 +4,8 @@
 .struct SamusStat
     TankCount          db
     SamusGear          db
-    byte2              db
-    byte3              db
+    MissileCount       db
+    MaxMissiles        db
     byte4              db
     byte5              db
     SamusAge           ds 4      ;In-game time

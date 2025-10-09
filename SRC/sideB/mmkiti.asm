@@ -34,9 +34,43 @@ LDEB6:
 .include "songs/mthr_brn_room.asm"
 
 
+LDFB8:
+    ldx #<DataD785_DFBF.b
+    ldy #>DataD785_DFBF.b
+LDFBC:
+    jmp LD785
 
-    .byte $A2, $BF, $A0, $DF, $4C, $85, $D7, $CE
-    .byte $DF, $2C, $DB, $EE, $DB, $00, $01, $A0, $A0, $00, $B5, $03, $94, $94, $B7, $44
-    .byte $00, $A2, $D7, $A0, $DF, $D0, $E5, $E6, $DF, $4D, $DB, $AE, $DB, $00, $02, $98
-    .byte $41, $00, $11, $00, $94, $A0, $B0, $14, $2E, $B5, $38, $00, $FF, $FF, $FF, $FF
+DataD785_DFBF:
+    .word SongEscapeAlarmSFXFDS
+    .word LDB2C
+    .word FDSWaveform_DBEE
+    .byte $00, $01, $A0, $A0, $00, $B5, $03, $94, $94
+
+SongEscapeAlarmSFXFDS: ;($DFCE)
+    SongNoteLength $7
+    SongNote "A#4"
+    SongEnd
+
+LDFD1:
+    ldx #<DataD785_DFD7.b
+    ldy #>DataD785_DFD7.b
+    bne LDFBC ; branch always
+
+DataD785_DFD7:
+    .word SongMotherBrainHitSFXFDS
+    .word LDB4D
+    .word FDSWaveform_DBAE
+    .byte $00, $02, $98, $41, $00, $11, $00, $94, $A0
+
+SongMotherBrainHitSFXFDS: ;($DFE6)
+    SongNoteLength $0
+    SongNote "A#2"
+    SongNote "B3"
+    SongNoteLength $5
+    SongNote "E4"
+    SongEnd
+
+
+
+    .byte $FF, $FF, $FF, $FF
 

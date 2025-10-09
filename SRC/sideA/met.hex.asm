@@ -121,44 +121,137 @@ RTS_D07F:
 
 
 
-LD080:
-    .byte $00, $10, $01, $18, $00, $01, $38, $01, $02, $40, $00, $09, $58, $18, $7F, $0F
+SFXData: ;($D080)
+    .byte $00                       ;Base for drum beat music data.
+
+DrumBeat00SFXData:
+    .byte $10, $01, $18             ;Noise channel music data #$01.
+DrumBeat01SFXData:
+    .byte $00, $01, $38             ;Noise channel music data #$04.
+DrumBeat02SFXData:
+    .byte $01, $02, $40             ;Noise channel music data #$07.
+DrumBeat03SFXData:
+    .byte $00, $09, $58             ;Noise channel music data #$0A.
+
+LD08D:
+    .byte $18, $7F, $0F
     .byte $A0, $0D, $7F, $0F, $08, $1B, $7F, $0B, $18, $89, $7F, $67, $18, $8B, $7F, $FD
     .byte $28, $02, $7F, $A8, $F8, $F6, $83, $58, $78, $96, $8C, $40, $B9, $1D, $9A, $20
-    .byte $8F, $16, $8D, $E0, $42, $9A, $7F, $D8, $28, $9A, $7F, $E0, $28, $E0, $D0, $27
-    .byte $D1, $01, $F0, $D0, $D8, $D2, $01, $00, $D1, $35, $D1, $02, $10, $D1, $D8, $D2
-    .byte $02, $A8, $D8, $D8, $D2, $04, $B8, $D8, $DD, $D8, $00, $B8, $D8, $CF, $D8, $00
-    .byte $68, $D3, $82, $D3, $B7, $D3, $AA, $D3, $BE, $D3, $A4, $D3, $9E, $D3, $C4, $D3
-    .byte $4B, $D3, $6E, $D3, $88, $D3, $88, $D3, $88, $D3, $88, $D3, $88, $D3, $CA, $D3
-    .byte $C3, $D4, $E2, $D3, $A0, $D4, $AD, $DE, $AD, $DE, $11, $D5, $44, $D4, $3C, $D5
-    .byte $D9, $D4, $EE, $D4, $AE, $D4, $C6, $DE, $B6, $DE, $1A, $D5, $52, $D4, $EE, $D4
+    .byte $8F, $16, $8D, $E0, $42, $9A, $7F, $D8, $28, $9A, $7F, $E0, $28
+
+LD0BD:
+    .word LD0E0, LD127
+    .byte $01
+
+LD0C2:
+    .word LD0F0, RTS_D2D8
+    .byte $01
+
+LD0C7:
+    .word LD100, LD135
+    .byte $02
+
+LD0CC:
+    .word LD110, RTS_D2D8
+    .byte $02
+
+LD0D1:
+    .word LD8A8, RTS_D2D8
+    .byte $04
+
+LD0D6:
+    .word LD8B8, LD8DD
+    .byte $00
+
+LD0DB:
+    .word LD8B8, LD8CF
+    .byte $00
+
+
+LD0E0:
+    .word LD368
+    .word LD382
+    .word LD3B7
+    .word LD3AA
+    .word LD3BE
+    .word LD3A4
+    .word LD39E
+    .word LD3C4
+
+LD0F0:
+    .word LD34B
+    .word LD36E
+    .word LD388
+    .word LD388
+    .word LD388
+    .word LD388
+    .word LD388
+    .word LD3CA
+
+LD100:
+    .word LD4C3
+    .word LD3E2
+    .word LD4A0
+    .word MMKBOS_LDEAD ; are these in the right order? maybe this is MMKITI and the one below is MMKBOS
+    .word MMKITI_LDEAD
+    .word LD511
+    .word LD444
+    .word LD53C
+
+LD110:
+    .word LD4D9
+    .word LD4EE
+    .word LD4AE
+    .word LDEC6
+    .word LDEB6
+    .word LD51A
+    .word LD452
+    .word LD4EE
+
+
 
 LD120:
     lda $0681
-    ldx #$BD
-    bne LD13A
+    ldx #<LD0BD.b
+    bne LD13A ; branch always
+
+
+
+LD127:
     lda $0689
-    ldx #$C2
-    bne LD13A
+    ldx #<LD0C2.b
+    bne LD13A ; branch always
+
+
+
 LD12E:
     lda $0682
-    ldx #$C7
-    bne LD13A
+    ldx #<LD0C7.b
+    bne LD13A ; branch always
+
+
+LD135:
     lda $068A
-    ldx #$CC
+    ldx #<LD0CC.b
 LD13A:
     jsr LD2A7
     jmp ($00E2)
+
+
+
 LD140:
     lda $0684
-    ldx #$D1
+    ldx #<LD0D1.b
     jsr LD2A7
     jsr LDD8E
     jsr LDD9F
     jmp ($00E2)
+
+
+
 LD151:
     lda #$00
-    beq LD157
+    beq LD157 ; branch always
 LD155:
     lda #$0C
 LD157:
@@ -169,19 +262,25 @@ LD157:
     lda #$D0
     sta $E3
     ldy #$00
-LD165:
-    lda ($E2),y
-    sta ($E0),y
-    iny
-    tya
-    cmp #$04
-    bne LD165
+    LD165:
+        lda ($E2),y
+        sta ($E0),y
+        iny
+        tya
+        cmp #$04
+        bne LD165
     rts
+
+
+
 LD170:
     inc $0602
     jsr LD229
     sta $0603
     rts
+
+
+
 LD17A:
     lda $0680
     and #$FD
@@ -220,7 +319,7 @@ LD1C3:
 LD1C8:
     lda $0603
     cmp #$12
-    beq LD1DD
+    beq RTS_D1DD
     and #$03
     cmp #$03
     bne LD1DA
@@ -228,7 +327,7 @@ LD1C8:
     jsr LD151
 LD1DA:
     inc $0603
-LD1DD:
+RTS_D1DD:
     rts
 LD1DE:
     lda $062C
@@ -357,6 +456,7 @@ LD2C8:
 LD2D4:
     pla
     sta $064D
+RTS_D2D8:
     rts
 LD2D9:
     lda ($E0),y
@@ -418,10 +518,13 @@ RTS_D33D:
 LD33E:
     lda #$03
     ldy #$95
-    bne LD32D
-    lda $7E8D,x
-    lsr $3E46,x
-    .byte $00
+    bne LD32D ; branch always
+
+LD344:
+    .byte $BD, $8D, $7E, $5E, $46, $3E, $00
+
+
+LD34B:
     jsr LD293
     bne RTS_D367
     ldy $0671
@@ -435,10 +538,15 @@ LD35B:
     inc $0671
 RTS_D367:
     rts
+
+
+
 LD368:
     lda #$05
     ldy #$9D
-    bne LD3BB
+    bne LD3BB ; branch always
+
+LD36E:
     jsr LD293
     bne RTS_D367
     inc $0671
@@ -447,10 +555,13 @@ LD368:
     beq LD38D
     ldy #$99
     jmp LD151
+
 LD382:
     lda #$06
     ldy #$99
-    bne LD3BB
+    bne LD3BB ; branch always
+
+LD388:
     jsr LD293
     bne RTS_D367
 LD38D:
@@ -461,30 +572,43 @@ LD38D:
     jsr LD28C
     inc $0607
     rts
+
+
 LD39E:
     lda #$0C
     ldy #$A9
-    bne LD3BB
+    bne LD3BB ; branch always
+
+LD3A4:
     lda #$08
     ldy #$AD
-    bne LD3BB
+    bne LD3BB ; branch always
+
+LD3AA:
     lda $0689
     and #$CC
     bne RTS_D367
     lda #$06
     ldy #$A5
-    bne LD3BB
+    bne LD3BB ; branch always
+
+LD3B7:
     lda #$0B
     ldy #$A1
 LD3BB:
     jmp LD246
+
 LD3BE:
     lda #$16
     ldy #$B1
     bne LD3BB
+
+LD3C4:
     lda #$04
     ldy #$B5
     bne LD3BB
+
+LD3CA:
     jsr LD293
     bne RTS_D3E1
     inc $0671
@@ -621,6 +745,8 @@ LD4C3:
     sta $0672
     lda #$1E
     jmp LD431
+
+LD4D9:
     jsr LD293
     beq LD4F3
     jsr LD56D
@@ -629,6 +755,8 @@ LD4C3:
     lda $0672
     sta $4086
     rts
+
+LD4EE:
     jsr LD293
     bne RTS_D503
 LD4F3:
@@ -651,10 +779,12 @@ LD511:
     ldx #<DataDD0E_D504.b
     ldy #>DataDD0E_D504.b
     jmp LDD0E
+
+LD51A:
     jsr LD293
     bne LD522
-    jmp LD4F3
-LD522:
+        jmp LD4F3
+    LD522:
     lda $0672
     clc
     adc #$12
@@ -993,11 +1123,11 @@ LD769:
     lda $0688
     and #$FC
     bne LD782
-    lda $D080,y
+    lda SFXData,y
     sta $400C
-    lda $D081,y
+    lda SFXData+1,y
     sta $400E
-    lda $D082,y
+    lda SFXData+2,y
     sta $400F
 LD782:
     jmp LD733
@@ -1142,26 +1272,34 @@ LD898:
 
 LD89C:
     .byte $41, $8F, $34, $27, $1A, $0D, $00, $82, $68, $75, $4E, $5B
+
+LD8A8:
     .word LD903
     .word LD8F1
     .word LD910
     .word LDEAF
-    .byte $D8, $D2, $D8, $D2, $D1, $DF, $B8, $DF
-    .word LD900
-    .word LD8EE
-    .word LD8EE
-    .word LD8EE
-    .word LD8FD
-    .word LD8FA
-    .word LD8EE
-    .word LD8FD
+    .word RTS_D2D8
+    .word RTS_D2D8
+    .word LDFD1
+    .word LDFB8
+
+LD8B8:
+    .word GotoLD919
+    .word GotoLD934
+    .word GotoLD934
+    .word GotoLD934
+    .word GotoLD926
+    .word GotoLD92A
+    .word GotoLD934
+    .word GotoLD926
 
 LD8C8:
     lda $065D
-    ldx #$DB
+    ldx #<LD0DB.b
     bne LD8D4
+LD8CF:
     lda $0685
-    ldx #$D6
+    ldx #<LD0D6.b
 LD8D4:
     jsr LD2A7
     jsr LDD8E
@@ -1179,21 +1317,22 @@ LD8E5:
 RTS_D8ED:
     rts
 
-LD8EE:
+GotoLD934: ;($D8EE)
     jmp LD934
 
 LD8F1:
     jsr LD92E
     ldx #<DataD785_SongPowerUp.b
     ldy #>DataD785_SongPowerUp.b
-    bne LD90A
-LD8FA:
+    bne LD90A ; branch always
+
+GotoLD92A: ;($D8FA)
     jmp LD92A
 
-LD8FD:
+GotoLD926: ;($D8FD)
     jmp LD926
 
-LD900:
+GotoLD919: ;($D900)
     jmp LD919
 
 LD903:
@@ -1208,7 +1347,8 @@ LD910:
     jsr LD92E
     ldx #<DataD785_SongEnd.b
     ldy #>DataD785_SongEnd.b
-    bne LD90A
+    bne LD90A ; branch always
+
 LD919:
     lda #$B3
 LD91B:
