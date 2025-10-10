@@ -1,4 +1,4 @@
-MMKITI_DataDD0E_DEA0:
+DataDD0E_MetroidHit:
     .word LDB2C
     .word FDSWaveform_DC2E
     .byte $00
@@ -11,13 +11,13 @@ MMKITI_DataDD0E_DEA0:
     .byte $40
     .byte $02
 
-MMKITI_LDEAD:
+MetroidHitSFXStart:
     lda #$20
-    ldx #<MMKITI_DataDD0E_DEA0.b
-    ldy #>MMKITI_DataDD0E_DEA0.b
+    ldx #<DataDD0E_MetroidHit.b
+    ldy #>DataDD0E_MetroidHit.b
     jmp LDD0E
 
-LDEB6:
+MetroidHitSFXContinue:
     jsr $D293
     bne LDEBE
         jmp $D4F3
@@ -34,13 +34,13 @@ LDEB6:
 .include "songs/mthr_brn_room.asm"
 
 
-LDFB8:
-    ldx #<DataD785_DFBF.b
-    ldy #>DataD785_DFBF.b
+MusicFDSInitSongEscapeAlarmSFX: ;($DFB8)
+    ldx #<DataD785_SongEscapeAlarmSFX.b
+    ldy #>DataD785_SongEscapeAlarmSFX.b
 LDFBC:
     jmp LD785
 
-DataD785_DFBF:
+DataD785_SongEscapeAlarmSFX:
     .word SongEscapeAlarmSFXFDS
     .word LDB2C
     .word FDSWaveform_DBEE
@@ -51,12 +51,13 @@ SongEscapeAlarmSFXFDS: ;($DFCE)
     SongNote "A#4"
     SongEnd
 
-LDFD1:
-    ldx #<DataD785_DFD7.b
-    ldy #>DataD785_DFD7.b
+
+MusicFDSInitSongMotherBrainHitSFX: ;($DFD1)
+    ldx #<DataD785_SongMotherBrainHitSFX.b
+    ldy #>DataD785_SongMotherBrainHitSFX.b
     bne LDFBC ; branch always
 
-DataD785_DFD7:
+DataD785_SongMotherBrainHitSFX:
     .word SongMotherBrainHitSFXFDS
     .word LDB4D
     .word FDSWaveform_DBAE

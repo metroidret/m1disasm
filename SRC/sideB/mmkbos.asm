@@ -1,4 +1,4 @@
-MMKBOS_DataDD0E_DEA0:
+DataDD0E_BossHit:
     .word LDB4D
     .word FDSWaveform_DBAE
     .byte $82
@@ -11,10 +11,10 @@ MMKBOS_DataDD0E_DEA0:
     .byte $48
     .byte $03
 
-MMKBOS_LDEAD:
+BossHitSFXStart:
     lda #$28
-    ldx #<MMKBOS_DataDD0E_DEA0.b
-    ldy #>MMKBOS_DataDD0E_DEA0.b
+    ldx #<DataDD0E_BossHit.b
+    ldy #>DataDD0E_BossHit.b
     jsr LDD0E
     lda #$16
     sta $067E
@@ -24,7 +24,7 @@ MMKBOS_LDEAD:
     sta $0672
     rts
 
-LDEC6:
+BossHitSFXContinue:
     jsr LD293
     bne LDECE
         jmp LD4F3

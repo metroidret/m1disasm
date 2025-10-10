@@ -139,110 +139,111 @@ LD08D:
     .byte $28, $02, $7F, $A8, $F8, $F6, $83, $58, $78, $96, $8C, $40, $B9, $1D, $9A, $20
     .byte $8F, $16, $8D, $E0, $42, $9A, $7F, $D8, $28, $9A, $7F, $E0, $28
 
-LD0BD:
-    .word LD0E0, LD127
+SQ1SFXInitPointers: ;($D0BD)
+    .word SQ1SFXInitRoutineTbl, LoadSQ1SFXContFlags
     .byte $01
 
-LD0C2:
-    .word LD0F0, RTS_D2D8
+SQ1SFXContPointers: ;($D0C2)
+    .word SQ1SFXContRoutineTbl, RTS_D2D8
     .byte $01
 
-LD0C7:
-    .word LD100, LD135
+FDSSFXInitPointers: ;($D0C7)
+    .word FDSSFXInitRoutineTbl, LoadFDSSFXContFlags
     .byte $02
 
-LD0CC:
-    .word LD110, RTS_D2D8
+FDSSFXContPointers: ;($D0CC)
+    .word FDSSFXContRoutineTbl, RTS_D2D8
     .byte $02
 
-LD0D1:
-    .word LD8A8, RTS_D2D8
+MusicFDSInitPointers: ;($D0D1)
+    .word MusicFDSRoutineTbl, RTS_D2D8
     .byte $04
 
-LD0D6:
-    .word LD8B8, LD8DD
+MusicContPointers: ;($D0D6)
+    .word MusicRoutineTbl, ContinueMusic
     .byte $00
 
-LD0DB:
-    .word LD8B8, LD8CF
+MusicInitPointers: ;($D0DB)
+    .word MusicRoutineTbl, LoadMusicInitFlags
     .byte $00
 
 
-LD0E0:
-    .word LD368
-    .word LD382
-    .word LD3B7
-    .word LD3AA
-    .word LD3BE
-    .word LD3A4
-    .word LD39E
-    .word LD3C4
+SQ1SFXInitRoutineTbl: ;($D0E0)
+    .word MissilePickupSFXStart
+    .word EnergyPickupSFXStart
+    .word MetalSFXStart
+    .word BulletFireSFXStart
+    .word BirdOutOfHoleSFXStart
+    .word EnemyHitSFXStart
+    .word SamusJumpSFXStart
+    .word BombLaunchSFXStart
 
-LD0F0:
-    .word LD34B
-    .word LD36E
-    .word LD388
-    .word LD388
-    .word LD388
-    .word LD388
-    .word LD388
-    .word LD3CA
+SQ1SFXContRoutineTbl: ;($D0F0)
+    .word MissilePickupSFXContinue
+    .word EnergyPickupSFXContinue
+    .word SQ1SFXContinue
+    .word SQ1SFXContinue
+    .word SQ1SFXContinue
+    .word SQ1SFXContinue
+    .word SQ1SFXContinue
+    .word BombLaunchSFXContinue
 
-LD100:
-    .word LD4C3
-    .word LD3E2
-    .word LD4A0
-    .word MMKBOS_LDEAD ; are these in the right order? maybe this is MMKITI and the one below is MMKBOS
-    .word MMKITI_LDEAD
-    .word LD511
-    .word LD444
-    .word LD53C
+FDSSFXInitRoutineTbl: ;($D100)
+    .word SamusDieSFXStart
+    .word SamusHitSFXStart
+    .word DoorOpenCloseSFXStart
+    .word BossHitSFXStart
+    .word MetroidHitSFXStart
+    .word BigEnemyHitSFXStart
+    .word ScrewOrBallSFXStart
+    .word WaveBeamSFXStart
 
-LD110:
-    .word LD4D9
-    .word LD4EE
-    .word LD4AE
-    .word LDEC6
-    .word LDEB6
-    .word LD51A
-    .word LD452
-    .word LD4EE
-
-
-
-LD120:
-    lda $0681
-    ldx #<LD0BD.b
-    bne LD13A ; branch always
+FDSSFXContRoutineTbl: ;($D110)
+    .word SamusDieSFXContinue
+    .word FDSSFXContinue
+    .word DoorOpenCloseSFXContinue
+    .word BossHitSFXContinue
+    .word MetroidHitSFXContinue
+    .word BigEnemyHitSFXContinue
+    .word ScrewOrBallSFXContinue
+    .word FDSSFXContinue
 
 
 
-LD127:
-    lda $0689
-    ldx #<LD0C2.b
-    bne LD13A ; branch always
+LoadSQ1SFXInitFlags: ;($D120)
+    lda SQ1SFXFlag
+    ldx #<SQ1SFXInitPointers.b
+    bne GotoSFXCheckFlags ; branch always
 
 
 
-LD12E:
-    lda $0682
-    ldx #<LD0C7.b
-    bne LD13A ; branch always
+LoadSQ1SFXContFlags: ;($D127)
+    lda SQ1ContSFX
+    ldx #<SQ1SFXContPointers.b
+    bne GotoSFXCheckFlags ; branch always
 
 
-LD135:
-    lda $068A
-    ldx #<LD0CC.b
-LD13A:
-    jsr LD2A7
+
+LoadFDSSFXInitFlags: ;($D12E)
+    lda FDSSFXFlag
+    ldx #<FDSSFXInitPointers.b
+    bne GotoSFXCheckFlags ; branch always
+
+
+
+LoadFDSSFXContFlags: ;($D135)
+    lda FDSContSFX
+    ldx #<FDSSFXContPointers.b
+GotoSFXCheckFlags: ;($D13A)
+    jsr CheckSFXFlag
     jmp ($00E2)
 
 
 
-LD140:
-    lda $0684
-    ldx #<LD0D1.b
-    jsr LD2A7
+LoadMusicFDSInitFlags: ;($D140)
+    lda MusicFDSInitFlag
+    ldx #<MusicFDSInitPointers.b
+    jsr CheckSFXFlag
     jsr LDD8E
     jsr LDD9F
     jmp ($00E2)
@@ -282,9 +283,9 @@ LD170:
 
 
 LD17A:
-    lda $0680
+    lda Sound0680
     and #$FD
-    sta $0680
+    sta Sound0680
     lda $0602
     beq LD170
     lda #$00
@@ -292,7 +293,7 @@ LD17A:
 LD18C:
     lda #$C0
     sta $4017
-    lda $0680
+    lda Sound0680
     lsr a
     bcs LD1C3
     lsr a
@@ -300,18 +301,18 @@ LD18C:
     lda $0602
     bne LD1C8
     jsr LD304
-    jsr LD140
-    jsr LD12E
-    jsr LD120
-    jsr LD8C8
+    jsr LoadMusicFDSInitFlags
+    jsr LoadFDSSFXInitFlags
+    jsr LoadSQ1SFXInitFlags
+    jsr LoadMusicTempFlags
     jsr LD7B8
 LD1B1:
     lda #$00
-    sta $0680
-    sta $0681
-    sta $0682
-    sta $0684
-    sta $0685
+    sta Sound0680
+    sta SQ1SFXFlag
+    sta FDSSFXFlag
+    sta MusicFDSInitFlag
+    sta MusicInitFlag
     rts
 LD1C3:
     jsr LD1F2
@@ -332,11 +333,14 @@ RTS_D1DD:
 LD1DE:
     lda $062C
     beq LD1F2
-    lda $068D
+    lda CurrentMusic
     sta $065D
     rts
+
+
+
 LD1EA:
-    lda $068D
+    lda CurrentMusic
     cmp $064D
     beq LD1F8
 LD1F2:
@@ -345,6 +349,9 @@ LD1F2:
 LD1F8:
     jsr LD1FC
     rts
+
+
+
 LD1FC:
     lda #$00
     sta $062D
@@ -352,18 +359,24 @@ LD1FC:
     sta $065D
     sta $062C
     rts
+
+
+
 LD20B:
     lda #$00
     sta $0653
     sta $0656
     sta $0615
     sta $0607
-    sta $0688
-    sta $0689
-    sta $068A
-    sta $068C
-    sta $068D
+    sta Sound0688
+    sta SQ1ContSFX
+    sta FDSContSFX
+    sta Sound068C
+    sta CurrentMusic
     rts
+
+
+
 LD229:
     jsr LD240
     lda #$10
@@ -374,10 +387,16 @@ LD229:
     sta $4008
     sta $4011
     rts
+
+
+
 LD240:
     lda #$80
     sta $4080
     rts
+
+
+
 LD246:
     ldx $065C
     sta $0660,x
@@ -408,10 +427,10 @@ LD264:
     rts
 LD27D:
     ldx $065C
-    lda $0688,x
+    lda Sound0688,x
     and #$00
     ora $064D
-    sta $0688,x
+    sta Sound0688,x
     rts
 LD28C:
     lda #$00
@@ -427,37 +446,41 @@ LD293:
     sta $0665,x
 RTS_D2A6:
     rts
-LD2A7:
+
+
+
+CheckSFXFlag: ;($D2A7)
     sta $064D
     stx $E4
     ldy #$D0
     sty $E5
     ldy #$00
-LD2B2:
-    lda ($E4),y
-    sta $00E0,y
-    iny
-    tya
-    cmp #$04
-    bne LD2B2
+    LD2B2:
+        lda ($E4),y
+        sta $00E0,y
+        iny
+        tya
+        cmp #$04
+        bne LD2B2
     lda ($E4),y
     sta $065C
     ldy #$00
     lda $064D
     pha
-LD2C8:
-    asl $064D
-    bcs LD2D9
-    iny
-    iny
-    tya
-    cmp #$10
-    bne LD2C8
+    LD2C8:
+        asl $064D
+        bcs LD2D9
+        iny
+        iny
+        tya
+        cmp #$10
+        bne LD2C8
 LD2D4:
     pla
     sta $064D
 RTS_D2D8:
     rts
+
 LD2D9:
     lda ($E0),y
     sta $E2
@@ -465,6 +488,9 @@ LD2D9:
     lda ($E0),y
     sta $E3
     jmp LD2D4
+
+
+
 LD2E5:
     inc $0670
     lda $0670
@@ -484,7 +510,7 @@ LD2FC:
 LD304:
     lda #$00
     sta $065C
-    lda $0680
+    lda Sound0680
     sta $064D
     asl a
     asl a
@@ -494,10 +520,10 @@ LD304:
     bcs LD329
     asl a
     bcs LD33E
-    lda $0688
+    lda Sound0688
     and #$20
     bne LD2FC
-    lda $0688
+    lda Sound0688
     and #$DC
     bne LD330
     rts
@@ -524,7 +550,7 @@ LD344:
     .byte $BD, $8D, $7E, $5E, $46, $3E, $00
 
 
-LD34B:
+MissilePickupSFXContinue: ;($D34B)
     jsr LD293
     bne RTS_D367
     ldy $0671
@@ -541,12 +567,12 @@ RTS_D367:
 
 
 
-LD368:
+MissilePickupSFXStart: ;($D368)
     lda #$05
     ldy #$9D
     bne LD3BB ; branch always
 
-LD36E:
+EnergyPickupSFXContinue: ;($D36E)
     jsr LD293
     bne RTS_D367
     inc $0671
@@ -556,12 +582,12 @@ LD36E:
     ldy #$99
     jmp LD151
 
-LD382:
+EnergyPickupSFXStart: ;($D382)
     lda #$06
     ldy #$99
     bne LD3BB ; branch always
 
-LD388:
+SQ1SFXContinue: ;($D388)
     jsr LD293
     bne RTS_D367
 LD38D:
@@ -574,41 +600,41 @@ LD38D:
     rts
 
 
-LD39E:
+SamusJumpSFXStart: ;($D39E)
     lda #$0C
     ldy #$A9
     bne LD3BB ; branch always
 
-LD3A4:
+EnemyHitSFXStart: ;($D3A4)
     lda #$08
     ldy #$AD
     bne LD3BB ; branch always
 
-LD3AA:
-    lda $0689
+BulletFireSFXStart: ;($D3AA)
+    lda SQ1ContSFX
     and #$CC
     bne RTS_D367
     lda #$06
     ldy #$A5
     bne LD3BB ; branch always
 
-LD3B7:
+MetalSFXStart: ;($D3B7)
     lda #$0B
     ldy #$A1
 LD3BB:
     jmp LD246
 
-LD3BE:
+BirdOutOfHoleSFXStart: ;($D3BE)
     lda #$16
     ldy #$B1
     bne LD3BB
 
-LD3C4:
+BombLaunchSFXStart: ;($D3C4)
     lda #$04
     ldy #$B5
     bne LD3BB
 
-LD3CA:
+BombLaunchSFXContinue: ;($D3CA)
     jsr LD293
     bne RTS_D3E1
     inc $0671
@@ -622,35 +648,35 @@ LD3DC:
 RTS_D3E1:
     rts
 
-LD3E2:
+SamusHitSFXStart: ;($D3E2)
     lda $0615
     bne RTS_D3E1
     lda $28
     and #$03
     ora #$03
-    ldx #<DataDD0E_D3F4.b
-    ldy #>DataDD0E_D3F4.b
+    ldx #<DataDD0E_SamusHit.b
+    ldy #>DataDD0E_SamusHit.b
     jmp LDD0E
 
-DataDD0E_D3F4:
+DataDD0E_SamusHit: ;($D3F4)
     .word LDB2C
     .word FDSWaveform_DBAE
     .byte $00, $A0, $00, $07, $00, $A0, $A0, $A8, $02
 
-DataDD0E_D401:
+DataDD0E_SamusToBall: ;($D401)
     .word LDB2C
     .word FDSWaveform_DB6E
     .byte $A0, $A0, $00, $10, $00, $A0, $0A, $E0, $01
 
-DataDD0E_D40E:
+DataDD0E_ScrewAttack: ;($D40E)
     .word LDB2C
     .word FDSWaveform_DC2E
     .byte $82, $47, $00, $06, $00, $87, $87, $02, $00
 
-LD41B:
+ScrewOrBallSFXStart_ScrewAttack: ;($D41B)
     lda #$26
-    ldx #<DataDD0E_D40E.b
-    ldy #>DataDD0E_D40E.b
+    ldx #<DataDD0E_ScrewAttack.b
+    ldy #>DataDD0E_ScrewAttack.b
     jsr LDD0E
     lda #$09
     sta $0676
@@ -662,25 +688,26 @@ LD431:
     lda #$00
     sta $067F
     rts
-LD43A:
+
+ScrewOrBallSFXStart_SamusToBall: ;($D43A)
     lda #$0E
-    ldx #<DataDD0E_D401.b
-    ldy #>DataDD0E_D401.b
+    ldx #<DataDD0E_SamusToBall.b
+    ldy #>DataDD0E_SamusToBall.b
     jsr LDD0E
     rts
 
-LD444:
+ScrewOrBallSFXStart: ;($D444)
     lda $0615
     bne RTS_D451
-    lda $0686
-    beq LD41B
+    lda ScrewOrBallSFXFlag
+    beq ScrewOrBallSFXStart_ScrewAttack
     lsr a
-    bcs LD43A
+    bcs ScrewOrBallSFXStart_SamusToBall
 RTS_D451:
     rts
 
-LD452:
-    lda $0686
+ScrewOrBallSFXContinue: ;($D452)
+    lda ScrewOrBallSFXFlag
     beq LD472
     lsr a
     bcc RTS_D451
@@ -712,41 +739,41 @@ LD483:
     sta $4086
     jmp LD46B
 
-DataDD0E_D493:
+DataDD0E_DoorOpenClose: ;($D493)
     .word LDB2C
     .word FDSWaveform_DC2E
     .byte $82, $4A, $00, $70, $00, $80, $60, $10, $00
 
-LD4A0:
+DoorOpenCloseSFXStart: ;($D4A0)
     lda #$30
-    ldx #<DataDD0E_D493.b
-    ldy #>DataDD0E_D493.b
+    ldx #<DataDD0E_DoorOpenClose.b
+    ldy #>DataDD0E_DoorOpenClose.b
     jsr LDD0E
     lda #$28
     jmp LD431
 
-LD4AE:
+DoorOpenCloseSFXContinue: ;($D4AE)
     jsr LD293
     bne LD46B
     jmp LD4F3
 
-DataDD0E_D4B6:
+DataDD0E_SamusDie: ;($D4B6)
     .word LDB4D
     .word FDSWaveform_DB6E
     .byte $82, $50, $00, $20, $04, $A0, $A0, $98, $07
 
-LD4C3:
+SamusDieSFXStart: ;($D4C3)
     jsr LD1F2
     lda #$50
-    ldx #<DataDD0E_D4B6.b
-    ldy #>DataDD0E_D4B6.b
+    ldx #<DataDD0E_SamusDie.b
+    ldy #>DataDD0E_SamusDie.b
     jsr LDD0E
     lda #$E0
     sta $0672
     lda #$1E
     jmp LD431
 
-LD4D9:
+SamusDieSFXContinue: ;($D4D9)
     jsr LD293
     beq LD4F3
     jsr LD56D
@@ -756,7 +783,7 @@ LD4D9:
     sta $4086
     rts
 
-LD4EE:
+FDSSFXContinue: ;($D4EE)
     jsr LD293
     bne RTS_D503
 LD4F3:
@@ -769,18 +796,18 @@ LD4F3:
 RTS_D503:
     rts
 
-DataDD0E_D504:
+DataDD0E_BigEnemyHit: ;($D504)
     .word LDB2C
     .word FDSWaveform_DBAE
     .byte $9B, $07, $00, $71, $00, $00, $A0, $F8, $02
 
-LD511:
+BigEnemyHitSFXStart: ;($D511)
     lda #$10
-    ldx #<DataDD0E_D504.b
-    ldy #>DataDD0E_D504.b
+    ldx #<DataDD0E_BigEnemyHit.b
+    ldy #>DataDD0E_BigEnemyHit.b
     jmp LDD0E
 
-LD51A:
+BigEnemyHitSFXContinue: ;($D51A)
     jsr LD293
     bne LD522
         jmp LD4F3
@@ -793,18 +820,18 @@ LD51A:
 RTS_D52E:
     rts
 
-DataDD0E_D52F:
+DataDD0E_WaveBeam: ;($D52F)
     .word LDB2C
     .word FDSWaveform_DBEE
     .byte $00, $A0, $00, $27, $00, $00, $8B, $FF, $07
 
-LD53C:
-    lda $068A
+WaveBeamSFXStart: ;($D53C)
+    lda FDSContSFX
     and #$1C
     bne RTS_D52E
     lda #$0E
-    ldx #<DataDD0E_D52F.b
-    ldy #>DataDD0E_D52F.b
+    ldx #<DataDD0E_WaveBeam.b
+    ldy #>DataDD0E_WaveBeam.b
     jmp LDD0E
 
 
@@ -1120,7 +1147,7 @@ LD763:
     sta $062A
     jmp LD6C2
 LD769:
-    lda $0688
+    lda Sound0688
     and #$FC
     bne LD782
     lda SFXData,y
@@ -1270,112 +1297,126 @@ LD898:
     lda #$80
     bne LD882 ; branch always
 
-LD89C:
-    .byte $41, $8F, $34, $27, $1A, $0D, $00, $82, $68, $75, $4E, $5B
+InitMusicIndexTbl: ;($D89C)
+    .byte SongRidleyHeader      - SongHeaders                       ;Ridley area music.
+    .byte SongTourianHeader     - SongHeaders                       ;Tourian music.
+    .byte SongItemRoomHeader    - SongHeaders                       ;Item room music.
+    .byte SongKraidHeader       - SongHeaders                       ;Kraid area music.
+    .byte SongNorfairHeader     - SongHeaders                       ;Norfair music.
+    .byte SongEscapeHeader      - SongHeaders                       ;Escape music.
+    .byte SongMthrBrnRoomHeader - SongHeaders                       ;Mother brain music.
+    .byte SongBrinstarHeader    - SongHeaders                       ;Brinstar music.
+    .byte SongFadeInHeader      - SongHeaders                       ;Fade in music.
+    .byte SongPowerUpHeader     - SongHeaders                       ;Power up music.
+    .byte SongEndHeader         - SongHeaders                       ;End music.
+    .byte SongIntroHeader       - SongHeaders                       ;Intro music.
 
-LD8A8:
-    .word LD903
-    .word LD8F1
-    .word LD910
-    .word LDEAF
+MusicFDSRoutineTbl: ;($D8A8)
+    .word MusicFDSInitSongFadeIn
+    .word MusicFDSInitSongPowerUp
+    .word MusicFDSInitSongEnd
+    .word MusicFDSInitSongIntro
     .word RTS_D2D8
     .word RTS_D2D8
-    .word LDFD1
-    .word LDFB8
+    .word MusicFDSInitSongMotherBrainHitSFX
+    .word MusicFDSInitSongEscapeAlarmSFX
 
-LD8B8:
-    .word GotoLD919
-    .word GotoLD934
-    .word GotoLD934
-    .word GotoLD934
-    .word GotoLD926
-    .word GotoLD92A
-    .word GotoLD934
-    .word GotoLD926
+MusicRoutineTbl: ;($D8B8)
+    .word GotoMusic04Init
+    .word GotoMusic00Init
+    .word GotoMusic00Init
+    .word GotoMusic00Init
+    .word GotoMusic03Init
+    .word GotoMusic02Init
+    .word GotoMusic00Init
+    .word GotoMusic03Init
 
-LD8C8:
+LoadMusicTempFlags: ;($D8C8)
     lda $065D
-    ldx #<LD0DB.b
-    bne LD8D4
-LD8CF:
-    lda $0685
-    ldx #<LD0D6.b
+    ldx #<MusicInitPointers.b
+    bne LD8D4 ; branch always
+
+LoadMusicInitFlags: ;($D8CF)
+    lda MusicInitFlag
+    ldx #<MusicContPointers.b
 LD8D4:
-    jsr LD2A7
+    jsr CheckSFXFlag
     jsr LDD8E
     jmp ($00E2)
 
-LD8DD:
-    lda $068D
+ContinueMusic: ;($D8DD)
+    lda CurrentMusic
     beq RTS_D8ED
     jmp LD630
 
 LD8E5:
-    lda $068D
+    lda CurrentMusic
     ora #$F0
-    sta $068D
+    sta CurrentMusic
 RTS_D8ED:
     rts
 
-GotoLD934: ;($D8EE)
-    jmp LD934
+GotoMusic00Init: ;($D8EE)
+    jmp Music00Init
 
-LD8F1:
-    jsr LD92E
+MusicFDSInitSongPowerUp: ;($D8F1)
+    jsr Music05Init
     ldx #<DataD785_SongPowerUp.b
     ldy #>DataD785_SongPowerUp.b
     bne LD90A ; branch always
 
-GotoLD92A: ;($D8FA)
-    jmp LD92A
+GotoMusic02Init: ;($D8FA)
+    jmp Music02Init
 
-GotoLD926: ;($D8FD)
-    jmp LD926
+GotoMusic03Init: ;($D8FD)
+    jmp Music03Init
 
-GotoLD919: ;($D900)
-    jmp LD919
+GotoMusic04Init: ;($D900)
+    jmp Music04Init
 
-LD903:
-    jsr LD926
+MusicFDSInitSongFadeIn: ;($D903)
+    jsr Music03Init
     ldx #<DataD785_SongFadeIn.b
     ldy #>DataD785_SongFadeIn.b
 LD90A:
     jsr LD8E5
     jmp LD785
 
-LD910:
-    jsr LD92E
+MusicFDSInitSongEnd: ;($D910)
+    jsr Music05Init
     ldx #<DataD785_SongEnd.b
     ldy #>DataD785_SongEnd.b
     bne LD90A ; branch always
 
-LD919:
+Music04Init: ;($D919)
     lda #$B3
-LD91B:
+
+XYMusicInit: ;($D91B)
     tax
     tay
+
 LD91D:
     jsr LD581
     jsr LDE4B
     jmp LD630
 
-LD926:
+Music03Init: ;($D926)
     lda #$34
-    bne LD91B
+    bne XYMusicInit ; branch always
 
-LD92A:
+Music02Init: ;($D92A)
     lda #$F4
-    bne LD91B
+    bne XYMusicInit ; branch always
 
-LD92E:
+Music05Init: ;($D92E)
     ldx #$F5
     ldy #$F6
-    bne LD91D
+    bne LD91D ; branch always
 
-LD934:
+Music00Init: ;($D934)
     ldx #$92
     ldy #$96
-    bne LD91D
+    bne LD91D ; branch always
 
 
 DataD785_SongPowerUp:
@@ -1605,7 +1646,7 @@ LDD0E:
     sta $EA
     stx $E0
     sty $E1
-    lda $068A
+    lda FDSContSFX
     and #$FC
     bne @RTS
     ldy #$00
@@ -1818,23 +1859,22 @@ NoteLengthsTbl: ;($DE29)
 LDE4B:
     jsr LD1EA
     lda $064D
-    sta $068D
+    sta CurrentMusic
     lda $065E
     tay
-    lda LD89C,y
+    lda InitMusicIndexTbl,y
     tay
     ldx #$00
-LDE5E:
-    lda $D9A9,y
-    sta $062B,x
-    iny
-    inx
-    txa
-    cmp #$0D
-    bne LDE5E
+    @loop:
+        lda SongHeaders,y
+        sta $062B,x
+        iny
+        inx
+        txa
+        cmp #$0D
+        bne @loop
     lda #$01
     sta $0640
-LDE70:
     sta $0641
     sta $0642
     sta $0643
@@ -1855,8 +1895,8 @@ DataD785_SongIntro:
     .word FDSWaveform_DBAE
     .byte $17, $40, $80, $80, $00, $02, $00, $83, $46
 
-LDEAF:
-    jsr LD934
+MusicFDSInitSongIntro: ;($DEAF)
+    jsr Music00Init
     ldx #<DataD785_SongIntro.b
     ldy #>DataD785_SongIntro.b
     jmp LD90A

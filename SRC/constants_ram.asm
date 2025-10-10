@@ -204,6 +204,22 @@ TempY                  = $0415
 
 ;----------------------------------------------------------------------------------------------------
 
+Sound0680              = $0680
+SQ1SFXFlag             = $0681
+FDSSFXFlag             = $0682
+MusicFDSInitFlag       = $0684
+MusicInitFlag          = $0685
+
+ScrewOrBallSFXFlag     = $0686   ;Controls which SFX plays for FDSSFXFlag bit 1. 0=Screw Attack, 1=Morph
+
+Sound0688              = $0688
+SQ1ContSFX             = $0689
+FDSContSFX             = $068A
+Sound068C              = $068C   ; unused
+CurrentMusic           = $068D
+
+;----------------------------------------------------------------------------------------------------
+
 PPUStrIndex            = $07A0   ;# of bytes of data in PPUDataString. #$4F bytes max.
 
 ;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. 
