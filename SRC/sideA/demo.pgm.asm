@@ -56,7 +56,7 @@ DEMO_RESET: ;($6821)
         iny
         bne L683A
 L684F:
-    jsr L69DF
+    jsr DEMO_ClearNameTables
     jsr DEMO_EraseAllSprites
     ldy #$00
     sty PPUSCROLL
@@ -246,7 +246,7 @@ MainTitleRoutine: ;($696D)
 L6999:
     jsr DEMO_ChooseRoutine
         .word L6999_InitializeAfterReset00
-        .word L6999_6D69
+        .word L6999_DrawIntroBackground
         .word L6999_6D8C
         .word L6999_6DDF
         .word L6999_6DF5
@@ -287,11 +287,10 @@ L6999_IncTitleRoutine0B:
     rts
 
 
-;ClearNameTables
-L69DF:
+DEMO_ClearNameTables: ;($69DF)
     jsr L69E6
     lda #$02
-    bne L69E8
+    bne L69E8 ; branch always
 L69E6:
     lda #$01
 L69E8:
@@ -384,7 +383,7 @@ L6A5B:
     tay
     lda #$00
     sta $1C
-L6A6A:
+DEMO_PreparePPUProcess_:
     stx $00
     sty $01
     jmp DEMO_ProcessPPUString
@@ -705,7 +704,7 @@ SetPPUInc:
 
 
 
-EraseTile:
+WriteTileBlast:
     ldy #$01
     sty PPUDataPending
     dey
@@ -1003,19 +1002,19 @@ RamValueTbl: ;($6D61)
 
 
 
-L6999_6D69:
+L6999_DrawIntroBackground: ;($6D69)
     lda #$10
     sta $F0
-    sta $0684
+    sta MusicFDSInitFlag
     jsr DEMO_ScreenOff
-    jsr L69DF
-    ldx #<L7B34.b
-    ldy #>L7B34.b
-    jsr L6A6A
+    jsr DEMO_ClearNameTables
+    ldx #<PPUString_DrawIntroGround.b
+    ldy #>PPUString_DrawIntroGround.b
+    jsr DEMO_PreparePPUProcess_
     lda #$01
-    sta $1C
+    sta PalDataPending
     sta $4D
-    inc $1F
+    inc TitleRoutine
     lda #$00
     sta $62
     jmp DEMO_ScreenOn
@@ -1028,9 +1027,9 @@ L6999_6D8C:
     bcs L6DB2
         asl a
         tay
-        lda L7DAF,y
+        lda PPUStringTable_DrawIntroLogo,y
         sta $02
-        lda L7DAF+1,y
+        lda PPUStringTable_DrawIntroLogo+1,y
         sta $03
         ldy #$00
         lda ($02),y
@@ -1247,9 +1246,9 @@ L6999_6EE3:
         inc $51
         asl a
         tay
-        lda L7F44,y
+        lda TileBlastTable_DrawIntroMessage,y
         sta $02
-        lda L7F44+1,y
+        lda TileBlastTable_DrawIntroMessage+1,y
         sta $03
         ldy #$00
         lda ($02),y
@@ -1259,7 +1258,7 @@ L6999_6EE3:
         sta $00
         iny
         jsr AddYToPtr02
-        jmp EraseTile
+        jmp WriteTileBlast
     @endIf_B:
     inc $1F
     lda #$08
@@ -1332,9 +1331,9 @@ L6999_6F66:
         inc $51
         asl a
         tay
-        lda L7F44,y
+        lda TileBlastTable_DrawIntroMessage,y
         sta $04
-        lda L7F44+1,y
+        lda TileBlastTable_DrawIntroMessage+1,y
         sta $05
         ldy #$00
         lda ($04),y
@@ -1346,7 +1345,7 @@ L6999_6F66:
         sta $02
         lda #$81
         sta $03
-        jmp EraseTile
+        jmp WriteTileBlast
     @endIf_B:
     lda #$23
     sta $01
@@ -2361,7 +2360,7 @@ RTS_7B33:
 
 
 
-L7B34:
+PPUString_DrawIntroGround: ;($7B34)
     PPUStringRepeat $1FF0, undefined, $00, $10
     
     PPUString $23C0, undefined, \
@@ -2406,183 +2405,183 @@ L7B34:
     
     PPUStringEnd
 
-L7DAF:
-    .word L7DAF_7DC9
-    .word L7DAF_7DED
-    .word L7DAF_7E11
-    .word L7DAF_7E35
-    .word L7DAF_7E59
-    .word L7DAF_7E75
-    .word L7DAF_7E91
-    .word L7DAF_7EAD
-    .word L7DAF_7EC9
-    .word L7DAF_7EE5
-    .word L7DAF_7F01
-    .word L7DAF_7F1D
-    .word L7DAF_7F32
+PPUStringTable_DrawIntroLogo: ;($7DAF)
+    .word PPUStringTable_DrawIntroLogo_7DC9
+    .word PPUStringTable_DrawIntroLogo_7DED
+    .word PPUStringTable_DrawIntroLogo_7E11
+    .word PPUStringTable_DrawIntroLogo_7E35
+    .word PPUStringTable_DrawIntroLogo_7E59
+    .word PPUStringTable_DrawIntroLogo_7E75
+    .word PPUStringTable_DrawIntroLogo_7E91
+    .word PPUStringTable_DrawIntroLogo_7EAD
+    .word PPUStringTable_DrawIntroLogo_7EC9
+    .word PPUStringTable_DrawIntroLogo_7EE5
+    .word PPUStringTable_DrawIntroLogo_7F01
+    .word PPUStringTable_DrawIntroLogo_7F1D
+    .word PPUStringTable_DrawIntroLogo_7F32
 
-L7DAF_7DC9:
+PPUStringTable_DrawIntroLogo_7DC9:
     PPUString $23C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     PPUStringEnd
-L7DAF_7DED:
+PPUStringTable_DrawIntroLogo_7DED:
     PPUString $23E0, undefined, \
         $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     PPUStringEnd
-L7DAF_7E11:
+PPUStringTable_DrawIntroLogo_7E11:
     PPUString $27C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     PPUStringEnd
-L7DAF_7E35:
+PPUStringTable_DrawIntroLogo_7E35:
     PPUString $27E0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     PPUStringEnd
-L7DAF_7E59:
+PPUStringTable_DrawIntroLogo_7E59:
     PPUString $2124, undefined, \
         $FF, $FF, $FF, $03, $04, $05, $06, $07, $08, $FF, $0A, $0B, $0C, $FF, $FF, $0F, $70, $71, $72, $73, $74, $FF, $FF, $FF
     PPUStringEnd
-L7DAF_7E75:
+PPUStringTable_DrawIntroLogo_7E75:
     PPUString $2144, undefined, \
         $FF, $FF, $12, $13, $14, $15, $16, $17, $18, $FF, $1A, $1B, $1C, $1D, $1E, $1F, $80, $81, $82, $83, $84, $85, $FF, $FF
     PPUStringEnd
-L7DAF_7E91:
+PPUStringTable_DrawIntroLogo_7E91:
     PPUString $2164, undefined, \
         $FF, $FF, $FF, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $90, $91, $92, $93, $94, $95, $96, $FF
     PPUStringEnd
-L7DAF_7EAD:
+PPUStringTable_DrawIntroLogo_7EAD:
     PPUString $2184, undefined, \
         $FF, $FF, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $78, $79, $7A, $7B, $7C, $7D, $7E, $FF
     PPUStringEnd
-L7DAF_7EC9:
+PPUStringTable_DrawIntroLogo_7EC9:
     PPUString $21A4, undefined, \
         $FF, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F
     PPUStringEnd
-L7DAF_7EE5:
+PPUStringTable_DrawIntroLogo_7EE5:
     PPUString $21C4, undefined, \
         $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
     PPUStringEnd
-L7DAF_7F01:
+PPUStringTable_DrawIntroLogo_7F01:
     PPUString $21E4, undefined, \
         $60, $61, $62, $63, $FF, $65, $66, $67, $FF, $69, $6A, $6B, $6C, $6D, $6E, $6F, $A8, $A9, $AA, $AB, $AC, $AD, $FF, $FF
     PPUStringEnd
-L7DAF_7F1D:
+PPUStringTable_DrawIntroLogo_7F1D:
     PPUString $2228, charmap_title, \
         "PUSH START BUTTON"
     PPUStringEnd
-L7DAF_7F32:
+PPUStringTable_DrawIntroLogo_7F32:
     PPUString $2269, charmap_title, \
         "©1986 NINTENDO"
     PPUStringEnd
 
-L7F44:
-    .word L7F44_7F64
-    .word L7F44_7F7F
-    .word L7F44_7F9A
-    .word L7F44_7FB5
-    .word L7F44_7FD0
-    .word L7F44_7FEB
-    .word L7F44_8006
-    .word L7F44_8021
-    .word L7F44_803C
-    .word L7F44_8057
-    .word L7F44_8072
-    .word L7F44_808D
-    .word L7F44_80A8
-    .word L7F44_80C3
-    .word L7F44_80DE
-    .word L7F44_80F9
+TileBlastTable_DrawIntroMessage: ;($7F44)
+    .word TileBlastTable_DrawIntroMessage_7F64
+    .word TileBlastTable_DrawIntroMessage_7F7F
+    .word TileBlastTable_DrawIntroMessage_7F9A
+    .word TileBlastTable_DrawIntroMessage_7FB5
+    .word TileBlastTable_DrawIntroMessage_7FD0
+    .word TileBlastTable_DrawIntroMessage_7FEB
+    .word TileBlastTable_DrawIntroMessage_8006
+    .word TileBlastTable_DrawIntroMessage_8021
+    .word TileBlastTable_DrawIntroMessage_803C
+    .word TileBlastTable_DrawIntroMessage_8057
+    .word TileBlastTable_DrawIntroMessage_8072
+    .word TileBlastTable_DrawIntroMessage_808D
+    .word TileBlastTable_DrawIntroMessage_80A8
+    .word TileBlastTable_DrawIntroMessage_80C3
+    .word TileBlastTable_DrawIntroMessage_80DE
+    .word TileBlastTable_DrawIntroMessage_80F9
 
-L7F44_7F64:
+TileBlastTable_DrawIntroMessage_7F64:
     .byte $20, $A4, $46
     .stringmap charmap_title, "キンキュウ "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "     ゛"
     .stringmap charmap_title, "ワクセイ セ"
-L7F44_7F7F:
+TileBlastTable_DrawIntroMessage_7F7F:
     .byte $20, $AA, $46
     .stringmap charmap_title, "シレイ   "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, " ゛    "
     .stringmap charmap_title, "-へス ノ "
-L7F44_7F9A:
+TileBlastTable_DrawIntroMessage_7F9A:
     .byte $20, $B0, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "    ゛ "
     .stringmap charmap_title, "メトロイト "
-L7F44_7FB5:
+TileBlastTable_DrawIntroMessage_7FB5:
     .byte $20, $B6, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ヲ タオシ "
-L7F44_7FD0:
+TileBlastTable_DrawIntroMessage_7FD0:
     .byte $21, $24, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "キカイセイメ"
     .stringmap charmap_title, "      "
-L7F44_7FEB:
+TileBlastTable_DrawIntroMessage_7FEB:
     .byte $21, $2A, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "     ゛"
     .stringmap charmap_title, "イタイ マサ"
     .stringmap charmap_title, "      "
-L7F44_8006:
+TileBlastTable_DrawIntroMessage_8006:
     .byte $21, $30, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, " ゛    "
     .stringmap charmap_title, "-フレイン "
     .stringmap charmap_title, "      "
-L7F44_8021:
+TileBlastTable_DrawIntroMessage_8021:
     .byte $21, $36, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ヲ ハカイ "
     .stringmap charmap_title, "      "
-L7F44_803C:
+TileBlastTable_DrawIntroMessage_803C:
     .byte $21, $A4, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "セヨ!   "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-L7F44_8057:
+TileBlastTable_DrawIntroMessage_8057:
     .byte $21, $AA, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "゛ ゛   "
     .stringmap charmap_title, "キンカ レン"
-L7F44_8072:
+TileBlastTable_DrawIntroMessage_8072:
     .byte $21, $B0, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "゜     "
     .stringmap charmap_title, "ホウ ケイサ"
-L7F44_808D:
+TileBlastTable_DrawIntroMessage_808D:
     .byte $21, $B6, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ツ M510"
-L7F44_80A8:
+TileBlastTable_DrawIntroMessage_80A8:
     .byte $22, $24, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-L7F44_80C3:
+TileBlastTable_DrawIntroMessage_80C3:
     .byte $22, $2A, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-L7F44_80DE:
+TileBlastTable_DrawIntroMessage_80DE:
     .byte $22, $30, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-L7F44_80F9:
+TileBlastTable_DrawIntroMessage_80F9:
     .byte $22, $36, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
@@ -3485,9 +3484,9 @@ UnusedAttractMode_InputList: ;($873B)
 
 L883B:
     jsr DEMO_ScreenOff
-    jsr L69DF
+    jsr DEMO_ClearNameTables
     jsr DEMO_EraseAllSprites
-    jmp LCF1D
+    jmp VBOffAndHorzWrite
 
 
 
@@ -3602,7 +3601,7 @@ L8915:
     lda #$16
     sta $1F
 L8927:
-    jsr LCF27
+    jsr NMIOn
     jmp DEMO_ScreenOn
 
 
@@ -4298,37 +4297,37 @@ L8DCB:
     sta $31
     ldy #$00
     sty $2D
-L8DDB:
-    ldy $2E
-    lda L8E33,y
-    ldy $30
-    beq L8DE7
-    clc
-    adc #$08
-L8DE7:
-    ldy $2D
-    clc
-    adc L8E36,y
-    sta $0220,x
-    inx
-    lda $31
-    asl a
-    asl a
-    adc $2D
-    tay
-    lda L8E1C,y
-    sta $0220,x
-    inx
-    lda #$02
-    sta $0220,x
-    inx
-    lda $2F
-    sta $0220,x
-    inx
-    inc $2D
-    ldy $2D
-    cpy #$03
-    bne L8DDB
+    L8DDB:
+        ldy $2E
+        lda L8E33,y
+        ldy $30
+        beq L8DE7
+            clc
+            adc #$08
+        L8DE7:
+        ldy $2D
+        clc
+        adc L8E36,y
+        sta $0220,x
+        inx
+        lda $31
+        asl a
+        asl a
+        adc $2D
+        tay
+        lda L8E1C,y
+        sta $0220,x
+        inx
+        lda #$02
+        sta $0220,x
+        inx
+        lda $2F
+        sta $0220,x
+        inx
+        inc $2D
+        ldy $2D
+        cpy #$03
+        bne L8DDB
 L8E13:
     inc $2E
     ldy $2E

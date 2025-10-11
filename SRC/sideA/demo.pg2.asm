@@ -70,7 +70,7 @@ LCE35:
     jsr LCEDC
     LCE45:
         jsr DEMO_WaitNMIPass_
-        jsr LCF1D
+        jsr VBOffAndHorzWrite
         jsr L7023
         jsr GotoLD18C
         lda #$0E
@@ -82,7 +82,7 @@ LCE58:
         jsr LCE90
         jmp LCE45
 LCE62:
-    jsr LCF27
+    jsr NMIOn
     rts
 
 LCE66:
@@ -94,7 +94,7 @@ LCE6E:
     sta LoadList
     LCE71:
         jsr DEMO_WaitNMIPass_
-        jsr LCF1D
+        jsr VBOffAndHorzWrite
         jsr L7023
         jsr GotoLD18C
         jsr FDSBIOS_LoadFiles
@@ -104,12 +104,12 @@ LCE6E:
         jsr LCE90
         jmp LCE71
 LCE8C:
-    jsr LCF27
+    jsr NMIOn
     rts
 
 LCE90:
     pha
-    jsr LCF27
+    jsr NMIOn
     pla
     pha
     lsr
@@ -128,7 +128,7 @@ LCE90:
     ldx #<PPUString_CF03.b
     ldy #>PPUString_CF03.b
     jsr DEMO_PreparePPUProcess
-    jsr LCF27
+    jsr NMIOn
     jsr DEMO_WaitNMIPass_
     jsr FDSBIOS_EnPFObj
     LCEBE:
@@ -166,7 +166,7 @@ LCEDC:
     ora #PPUCTRL_OBJ_1000
     sta PPUCTRL_ZP
     sta PPUCTRL
-    jsr LCF27
+    jsr NMIOn
     jsr DEMO_WaitNMIPass_
     jmp FDSBIOS_EnPFObj
 
@@ -184,7 +184,9 @@ PPUString_CF0D:
         $00, $00
     PPUStringEnd
 
-LCF1D:
+
+
+VBOffAndHorzWrite: ;($CF1D)
     ; turn v-blank nmi off and set ppu increment to 1
     lda PPUCTRL_ZP
     and #~(PPUCTRL_VBLKNMI_ON | PPUCTRL_INCR_DOWN).b
@@ -193,7 +195,9 @@ LCF21:
     sta PPUCTRL_ZP
     rts
 
-LCF27:
+
+
+NMIOn: ;($CF27)
     ; wait for v-blank
     @loop:
         lda PPUSTATUS
@@ -203,6 +207,8 @@ LCF27:
     lda PPUCTRL_ZP
     ora #PPUCTRL_VBLKNMI_ON
     bne LCF21 ; branch always
+
+
 
 DEMO_DiskID: ;($CF34)
     .byte $01

@@ -115,7 +115,7 @@ MoreInit: ;($6C58)
         inx
         bne L6C69
     jsr METHEX_ScreenOff
-    jsr ClearNameTables
+    jsr MAIN_ClearNameTables
     jsr MAIN_EraseAllSprites
     jsr DestroyEnemies
     stx $66
@@ -6125,7 +6125,7 @@ MAIN_PreparePPUProcess:
 
 
 
-ClearNameTables: ;($941D)
+MAIN_ClearNameTables: ;($941D)
     lda #>$2400
     ldx #$FC
     ldy #$00
