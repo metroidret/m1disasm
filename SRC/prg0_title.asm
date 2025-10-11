@@ -1613,7 +1613,7 @@ CheckPassword: ;($8C5E)
     sta TitleRoutine
     rts
 
-CalculatePassword:
+CalculatePassword: ;($8C7A)
     lda #$00
     ldy #$0F
     ;Clears the 16 first password bytes (and also the 16 first password characters, for some reason)
@@ -1695,7 +1695,7 @@ CalculatePassword:
     lda $00
     sta PasswordByte+$0F
     
-    ;Store SamusAge in $6993, SamusAge+1 in $6994 and SamusAge+2 in $6995.
+    ;Store SamusAge in $6993, SamusAge+1 in $6994, SamusAge+2 in $6995 and SamusAge+3 in $6996.
     ldy #$03
     @loop_SamusAge:
         lda SamusAge,y
@@ -1740,7 +1740,7 @@ LoadPasswordData:
     ;Load Samus' age.
     ldy #$03
     L8D33:
-        ;Loop to load all 3 age bytes.
+        ;Loop to load all 4 age bytes.
         lda PasswordByte+$0B,y
         sta SamusAge,y
         dey
@@ -2211,7 +2211,7 @@ LoadPasswordScreen:
     ldx #<L99E3.b                     ;Loads PPU with info to display-->
     ldy #>L99E3.b                     ;PASS WORD PLEASE.
     jsr PreparePPUProcess_          ;($9449)Load "PASSWORD PLEASE" on screen.
-    jsr InitGFX7                    ;($C6D6)Loads the font for the password.
+    jsr InitPasswordFontGFX                    ;($C6D6)Loads the font for the password.
     jsr DisplayInputCharacters      ;($940B)Write password character to screen.
     lda #$13                        ;
     sta PalDataPending              ;Change palette.
@@ -2515,13 +2515,17 @@ InitializeGame:
     sty ObjectCntrl
     sty ObjHi
     jsr SilenceMusic                ;($CB8E)Turn off music.
-    lda #_id_ObjFrame_SkreeProjectile.b           ;
-    sta ObjAnimFrame                ;Set animframe index. changed by initializing routines.
-    ldx #$01                        ;x is the index into the position tables below.
-    lda InArea                      ;Load starting area.
-    and #$0F                        ;
-    bne L92F9                       ;If in area other than Brinstar, get second item in tables.
-        dex                             ;Starting in Brinstar. Get first item in each table.
+    ;Set animframe index. changed by initializing routines.
+    lda #_id_ObjFrame_SkreeProjectile.b
+    sta ObjAnimFrame
+    ;x is the index into the position tables below.
+    ;If in area other than Brinstar, get second item in tables.
+    ldx #$01
+    lda InArea
+    and #$0F
+    bne L92F9
+        ;Starting in Brinstar. Get first item in each table.
+        dex
     L92F9:
     
     ;Set Samus restart position on screen.
@@ -2577,7 +2581,7 @@ InitializeStats: ;($932B)
     sta SamusAge
     sta SamusAge+1
     sta SamusAge+2
-    sta SamusStat0A
+    sta SamusAge+3
     sta AtEnding
     sta JustInBailey
     ;Prepare to switch to Brinstar memory page.
@@ -2586,20 +2590,27 @@ InitializeStats: ;($932B)
     rts
 
 DisplayPassword:
-    lda Timer3                      ;Wait for "GAME OVER" to be displayed-->
-    bne RTS_9324                    ;for 160 frames (2.6 seconds).
-    jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L937F.b                     ;Low byte of start of PPU data.
-    ldy #>L937F.b                     ;High byte of start of PPU data.
-    jsr PreparePPUProcess_          ;($9449)Clears screen and writes "PASS WORD".
-    jsr InitGFX7                    ;($C6D6)Loads the font for the password.
-    jsr CalculatePassword           ;($8C7A)Calculates the password.
-    jsr NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
-    jsr PasswordToScreen            ;($93C6)Displays password on screen.
-    jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
-    lda #$13                        ;
-    sta PalDataPending              ;Change palette.
-    inc TitleRoutine                ;
+    ;Wait for "GAME OVER" to be displayed for 160 frames (2.6 seconds).
+    lda Timer3
+    bne RTS_9324
+    
+    ;Turn off screen, erase sprites and nametables.
+    jsr ClearAll
+    ;Clears screen and writes "PASS WORD".
+    ldx #<@PPUString.b
+    ldy #>@PPUString.b
+    jsr PreparePPUProcess_
+    jsr InitPasswordFontGFX
+    ; calculate and display password to screen
+    jsr CalculatePassword
+    jsr NMIOn
+    jsr PasswordToScreen
+    jsr WaitNMIPass
+    ;Change palette.
+    lda #$13
+    sta PalDataPending
+    ;Next routine is WaitForSTART.
+    inc TitleRoutine
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         jmp ScreenOn                    ;($C447)Turn screen on.
     .elif BUILDTARGET == "NES_CNSUS"
@@ -2607,7 +2618,7 @@ DisplayPassword:
         .word ScreenOn
     .endif
 
-L937F:
+@PPUString:
     ;Information below is for above routine to display "PASS WORD" on the screen.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         PPUString $214B, \
@@ -2643,19 +2654,24 @@ WaitForSTART:
     rts
 
 GameOver:
-    jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
-    ldx #<L93B9.b                     ;Low byte of start of PPU data.
-    ldy #>L93B9.b                     ;High byte of start of PPU data.
-    jsr PreparePPUProcess_          ;($9449)Clears screen and writes "GAME OVER".
-    jsr InitGFX7                    ;($C6D6)Loads the font for the password.
-    jsr NMIOn                       ;($C487)Turn on the nonmaskable interrupt.
-    lda #$10                        ;Load Timer3 with a delay of 160 frames-->
-    sta Timer3                      ;(2.6 seconds) for displaying "GAME OVER".
-    lda #_id_DisplayPassword.b      ;Loads TitleRoutine with -->
-    sta TitleRoutine                ;DisplayPassword.
-    jmp ScreenOn                    ;($C447)Turn screen on.
+    ;Turn off screen, erase sprites and nametables.
+    jsr ClearAll
+    ;Clears screen and writes "GAME OVER".
+    ldx #<@PPUString.b
+    ldy #>@PPUString.b
+    jsr PreparePPUProcess_
+    ; load font
+    jsr InitPasswordFontGFX
+    jsr NMIOn
+    ;Load Timer3 with a delay of 160 frames (2.6 seconds) for displaying "GAME OVER".
+    lda #$10
+    sta Timer3
+    ;Next routine is DisplayPassword.
+    lda #_id_DisplayPassword.b
+    sta TitleRoutine
+    jmp ScreenOn
 
-L93B9:
+@PPUString:
     ;Information below is for above routine to display "GAME OVER" on the screen.
     PPUString $218C, \
         "GAME OVER"
@@ -2737,12 +2753,13 @@ DisplayInputCharacters:
 
 ;The table below is used by the code above to determine the positions
 ;of the five character rows on the password entry screen.
+;The two entries in each row are the upper and lower address bytes to start writing to the name table, respectively.
 PasswordRowsTbl:
-    .byte $21, $E4                  ;
-    .byte $22, $24                  ;The two entries in each row are the upper and lower address-->
-    .byte $22, $64                  ;bytes to start writing to the name table, respectively.
-    .byte $22, $A4                  ;
-    .byte $22, $E4                  ;
+    .byte $21, $E4
+    .byte $22, $24
+    .byte $22, $64
+    .byte $22, $A4
+    .byte $22, $E4
 
 
 PreparePPUProcess_:
@@ -2820,7 +2837,7 @@ UnusedIntroRoutine5:
     rts
 
 ;Another unused intro routine.
-UnusedIntroRoutine6:
+UpdateSaveDataDay:
     ; push y
     tya
     pha
@@ -2834,7 +2851,7 @@ UnusedIntroRoutine6:
     lda UnusedIntro684A,y
     sta $0A
     ; transform into BCD
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     ; save BCD to UnusedIntro683C
     lda $06
     sta UnusedIntro683C+1,x
@@ -2847,7 +2864,7 @@ UnusedIntroRoutine6:
     rts
 
 ;Another unused intro routine.
-UnusedIntroRoutine7:
+UpdateSaveDataGameOverCountAndEnergyTank:
     ; push y
     tya
     pha
@@ -2861,7 +2878,7 @@ UnusedIntroRoutine7:
     lda UnusedIntro684C,y
     sta $0A
     ; transform into BCD
-    jsr UnusedIntroRoutine8
+    jsr Hex16ToDec
     ; save BCD to UnusedIntro6833
     lda $06
     sta UnusedIntro6833+1,x
@@ -2887,7 +2904,7 @@ UnusedIntroRoutine7:
 ;Unused intro routine. A 16-bit version of HexToDec.
 ;Convert 16-bit value in $0A-$0B to 4 decimal digits.
 ;Stored as a 16-bit BCD value in $06-$07.
-UnusedIntroRoutine8: ;($94DA)
+Hex16ToDec: ;($94DA)
     lda #$FF
     sta $01
     sta $02
@@ -3247,9 +3264,10 @@ IntroStarsData:
     .byte $38, $CF, $23, $85
 
 ;Not used.
-    .byte $3F, $00, $20, $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02
-    .byte $26, $31, $17, $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02
-    .byte $01, $20, $21, $00
+    PPUString $3F00, \
+        $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
+        $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
+    PPUStringEnd
 
 L9984:
     PPUString $218C, \
@@ -3325,11 +3343,11 @@ NMIScreenWrite:
         jsr PreparePPUProcess           ;($C20E)Prepare to write to PPU.
     L9A24:
     ;If not time to erase end message, branch
-    lda HideShowEndMsg              ;
-    beq Exit100                     
+    lda HideShowEndMsg
+    beq Exit100
     ;If end message is finished being erased, branch
-    cmp #$05                        ;
-    bcs Exit100                     
+    cmp #$05
+    bcs Exit100
         ;Erases the end message on name table 0
         asl
         tay
@@ -3489,7 +3507,7 @@ ShowEndSamus:
     jsr LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
     lda Timer3                      ;Once 960 frames (16 seconds) have expired,-->
     bne L9B26                       ;Move to EndSamusFlash routine.
-        inc RoomPtr                     ;
+        inc RoomPtr
         rts
 
     L9B26:
@@ -3506,7 +3524,7 @@ ShowEndSamus:
     L9B2D:
     cmp #$01                        ;After 950 frames have passed-->
     bne L9B33                       ;(15.8 seconds), erase end message.
-        inc HideShowEndMsg              ;
+        inc HideShowEndMsg
     L9B33:
     rts
 
@@ -3579,18 +3597,22 @@ SamusWave:
     rts
 
 L9BA2:
-    lda EndingType                  ;If suitless Samus-->
-    cmp #$04                        ;ending, branch.
-    bcs L9BAC                       ;
-    jmp LoadEndSamusSprites         ;($9C9A)
-L9BAC:
-    sbc #$04                        ;If jumpsuit Samus ending,-->
-    asl                             ;WaveSpritePointer=#$00, if bikini-->
-    asl                             ;Samus ending, WaveSpritePointer=#$04.
-    sta WaveSpritePointer           ;
-    lda FrameCount                  ;
-    and #$08                        ;Every eigth frame count, change wave sprite data.
-    bne L9BBE                       ;
+    ;If suitless Samus ending, branch.
+    lda EndingType
+    cmp #$04
+    bcs L9BAC
+        jmp LoadEndSamusSprites
+    L9BAC:
+    ;If jumpsuit Samus ending, WaveSpritePointer=#$00
+    ;if bikini Samus ending, WaveSpritePointer=#$04.
+    sbc #$04
+    asl
+    asl
+    sta WaveSpritePointer
+    ;Every eight frames, change wave sprite data.
+    lda FrameCount
+    and #$08
+    bne L9BBE
         ldy #$10                        ;Load WaveSpriteCounter with #$10(16 bytes of-->
         sty WaveSpriteCounter           ;sprite data to be loaded).
         bne L9BC6                       ;Branch always.
@@ -3750,22 +3772,26 @@ LoadCredits:
     rts
 
 LoadWaveSprites:
-    ldx WaveSpritePointer           ;
-    lda WavePointerTable,x          ;
-    sta $00                         ;Load pointer to wave sprite data-->
-    lda WavePointerTable+1,x        ;into addresses $00 and $01.
-    sta $01                         ;
-    ldx #$20                        ;Offset for sprite RAM load.
-    ldy #$00                        ;
-    L9C8F:
-        lda ($00),y                     ;
-        sta SpriteRAM,x               ;Load wave sprites into sprite RAM starting at-->
-        inx                             ;location $220 (Sprite08RAM).
-        iny                             ;
-        cpy WaveSpriteCounter           ;Check to see if sprite RAM load complete.-->
-        bne L9C8F                       ;If not, branch and load another byte.
+    ;Load pointer to wave sprite data into addresses $00 and $01.
+    ldx WaveSpritePointer
+    lda WavePointerTable,x
+    sta $00
+    lda WavePointerTable+1,x
+    sta $01
+    ;Offset for sprite RAM load.
+    ldx #<SpriteRAM.8.b
+    ldy #$00
+    @loop:
+        ;Load wave sprites into sprite RAM starting at location $0220 (SpriteRAM.8).
+        lda ($00),y
+        sta SpriteRAM,x
+        inx
+        iny
+        ;Check to see if sprite RAM load complete. If not, branch and load another byte.
+        cpy WaveSpriteCounter
+        bne @loop
 
-LoadEndSamusSprites:
+LoadEndSamusSprites: ;($9C9A)
     ldx #$30                        ;Index for loading Samus sprite data into sprite RAM.
     ldy SpritePointerIndex          ;
     lda EndSamusAddrTbl,y           ;Base is $9D5A.

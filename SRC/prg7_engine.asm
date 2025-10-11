@@ -1546,7 +1546,7 @@ InitGFX6:
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
-InitGFX7: ; Load Password Font
+InitPasswordFontGFX:
     ldy #_id_GFX_Font_Complete.b
     jsr LoadGFX
     
@@ -1990,13 +1990,13 @@ UpdateAge:
     ;Else reset minor age.
     lda #$00
     sta SamusAge
-    ;Loop to update middle age and possibly major age.
+    ;Loop to update the higher bytes of age.
     @loop:
         cpx #$03
         bcs @RTS
         inx
         inc SamusAge,x
-        ;Branch if middle age overflowed, need to increment major age too. Else exit.
+        ;Branch if carry to next byte. Else exit.
         beq @loop
 @RTS:
     rts
@@ -3164,24 +3164,32 @@ LCF2B:
 ;----------------------------------------------------------------------------------------------------
 
 LCF2E:
+    ; exit if samus is not touching a solid entity
     lda SamusIsHit
     lsr
     and #$02
     beq RTS_X014
-    bcs Lx012
+    ; branch if bit 0 of SamusIsHit is set (touch solid entity from the right)
+    bcs @else_A
+        ; touch from the left
+        ; exit if samus accelerates left
         lda SamusAccelX
         bmi RTS_X014
-        bpl Lx013
-    Lx012:
-    lda SamusAccelX
-    bmi Lx013
-    bne RTS_X014
-Lx013:
+        bpl @endIf_A
+    @else_A:
+        ; touch from the right
+        ; exit if samus accelerates right
+        lda SamusAccelX
+        bmi @endIf_A
+        bne RTS_X014
+    @endIf_A:
+    ; samus is accelerating towards the solid entity
+    ; flip acceleration so that she accelerates away from it
     jsr TwosComplement              ;($C3D4)
     sta SamusAccelX
 
 ClearHorzMvmntData:
-    ;Set Samus Horizontal speed and horizontal linear counter to #$00.
+    ;Set Samus Horizontal speed to #$00.
     ldy #$00
 LCF4E:
     sty ObjSpeedX
@@ -4893,7 +4901,7 @@ ElevatorStop:
 Lx116:
     jmp ElevScrollRoom
 
-SamusOnElevatorOrEnemy:
+SamusCollisionWithSolidEntities: ;($D976)
     ;Default to Samus not being on an elevator or on a frozen enemy.
     lda #$00
     sta SamusOnElevator
@@ -6952,14 +6960,13 @@ VertAccelerate:
     and #$07
     bne @endIf_A
         ;Branch if Samus is obstructed downwards
-        jsr ObjectCheckMoveDown               
+        jsr ObjectCheckMoveDown
         bcc @dontStartFalling
     @endIf_A:
-    jsr SamusOnElevatorOrEnemy      ;($D976)Calculate if Samus standing on elevator or enemy.
-    ;branch if Samus is on an elevator
+    jsr SamusCollisionWithSolidEntities
+    ;branch if Samus is standing on a solid entity
     lda SamusOnElevator
     bne @dontStartFalling
-    ;branch if Samus is on a frozen enemy
     lda OnFrozenEnemy
     bne @dontStartFalling
 
@@ -7105,19 +7112,22 @@ MoveSamusUp:
         jsr ObjectCheckMoveUp                 ;($E7A2)Check if Samus obstructed UPWARDS.-->
         bcc RTS_X156                     ;If so, branch to exit(can't move any further).
     Lx150:
-    lda ObjAction                   ;
-    cmp #sa_Elevator                ;Is Samus riding elevator?-->
-    beq Lx151                           ;If so, branch.
-        jsr SamusOnElevatorOrEnemy      ;($D976)Calculate if Samus standing on elevator or enemy.
+    ; branch if Samus is riding elevator
+    lda ObjAction
+    cmp #sa_Elevator
+    beq Lx151
+        jsr SamusCollisionWithSolidEntities
+        ; exit if samus is under a solid entity
         lda SamusIsHit
         and #$42
         cmp #$42
         clc
         beq RTS_X156
     Lx151:
+    ; reached up scroll limit? branch if not
     lda SamusScrY
-    cmp #$66        ; reached up scroll limit?
-    bcs Lx152      ; branch if not
+    cmp #$66
+    bcs Lx152
         jsr ScrollUp
         bcc Lx153
     Lx152:
@@ -7150,19 +7160,22 @@ MoveSamusDown:
         jsr ObjectCheckMoveDown       ; check if Samus obstructed DOWNWARDS
         bcc RTS_X163      ; exit if yes
     Lx157:
+    ; branch if Samus is riding elevator
     lda ObjAction
-    cmp #sa_Elevator        ; is Samus in elevator?
+    cmp #sa_Elevator
     beq Lx158
-        jsr SamusOnElevatorOrEnemy
+        jsr SamusCollisionWithSolidEntities
+        ; exit if samus is standing on a solid entity
         lda SamusOnElevator
         clc
         bne RTS_X163
         lda OnFrozenEnemy
         bne RTS_X163
     Lx158:
+    ; reached down scroll limit? branch if not
     lda SamusScrY
-    cmp #$84        ; reached down scroll limit?
-    bcc Lx159      ; branch if not
+    cmp #$84
+    bcc Lx159
         jsr ScrollDown
         bcc Lx160
     Lx159:
@@ -7416,15 +7429,17 @@ MoveSamusLeft: ;($E626)
         jsr ObjectCheckMoveLeft       ; check if player is obstructed to the LEFT
         bcc Lx181        ; branch if yes! (CF = 0)
     Lx177:
-    jsr SamusOnElevatorOrEnemy
+    jsr SamusCollisionWithSolidEntities
+    ; exit if samus is touching the right side of a solid entity
     lda SamusIsHit
     and #$41
     cmp #$41
     clc
     beq Lx181
+    ; reached left scroll limit? branch if not
     lda SamusScrX
-    cmp #$71        ; reached left scroll limit?
-    bcs Lx178      ; branch if not
+    cmp #$71
+    bcs Lx178
         jsr ScrollLeft
         bcc Lx179
     Lx178:
@@ -7458,15 +7473,17 @@ MoveSamusRight:
         jsr ObjectCheckMoveRight      ; check if Samus is obstructed to the RIGHT
         bcc Lx186       ; branch if yes! (CF = 0)
     Lx182:
-    jsr SamusOnElevatorOrEnemy
+    jsr SamusCollisionWithSolidEntities
+    ; exit if samus is touching the left side of a solid entity
     lda SamusIsHit
     and #$41
     cmp #$40
     clc
     beq Lx186
+    ; reached right scroll limit? branch if not
     lda SamusScrX
-    cmp #$8F        ; reached right scroll limit?
-    bcc Lx183      ; branch if not
+    cmp #$8F
+    bcc Lx183
         jsr ScrollRight
         bcc Lx184
     Lx183:
