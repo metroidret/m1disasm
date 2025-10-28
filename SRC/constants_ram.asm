@@ -1,25 +1,25 @@
 ;-------------------------------------------[ Structs ]----------------------------------------------
 
 .struct OAMSprite
-    y       db
-    tileID  db
-    attrib  db
-    x       db
+    y                db
+    tileID           db
+    attrib           db
+    x                db
 .endst
 
 .struct RinkaSpawner
-    status     db       ;#$00=use even indices to RinkaSpawnPosTbl,-->
-                                  ;#$01=use odd indices to RinkaSpawnPosTbl,-->
-                                  ;#$FF=inactive
-    hi         db
-    posIndex   db
+    status           db   ;#$00=use even indices to RinkaSpawnPosTbl,-->
+                            ;#$01=use odd indices to RinkaSpawnPosTbl,-->
+                            ;#$FF=inactive
+    hi               db
+    posIndex         db
 .endst
 
 .struct SkreeProjectile
-    dieDelay db        ;Delay until projectile dies.
-    y        db
-    x        db
-    hi       db
+    dieDelay         db   ;Delay until projectile dies.
+    y                db
+    x                db
+    hi               db
 .endst
 
 .struct Mellow
@@ -42,7 +42,6 @@
     animIndex        db
     delay            db
     wramPtr          dw
-    ; wramPtr+1     = $0509
     type             db
     spare0B          ds 5
 .endst
@@ -79,7 +78,6 @@
 .struct Zebetite
     status           db
     vramPtr          dw   ;Pointer to top-left tile of Zebetite in the nametable.
-    ; vramPtr+1      = $075A
     qtyHits          db   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
     healingDelay     db   ;Heals 1 hit when counts down from #$40 to #$00.
     isHit            db   ;#$01 if zebetite got hit by a missile this frame, else #$00
@@ -87,31 +85,30 @@
 .endst
 
 .struct EnExtra
-    status           db ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
-                          ;#$04=Enemy frozen.
-    radY             db ;Distance in pixels from middle of enemy to top or botom.
-    radX             db ;Distance in pixels from middle of enemy to left or right.
-    animFrame        db ;Index into enemy animation frame data.
-    animDelay        db ;Number of frames to delay between animation frames.
-    resetAnimIndex   db ;Index to beginning of animation sequence.
-    animIndex        db ;Index to current animation.
-    hi               db ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
-    subPixelY        db ; Unknown
-    subPixelX        db ; Unknown
-    accelY           db ; Unknown
-    accelX           db ; Unknown
-    data1C           db ; Unused
-    jumpDsplcmnt     db ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
-    type             db ;Enemy type used as index into enemy data tables.
-    data1F           db ;For EnemyFlipAfterDisplacement:
-                          ;#$00:         displacement = abs(jumpDsplcmnt)
-                          ;#$40:         displacement = jumpDsplcmnt
-                          ;#$80 or #$C0: displacement = -jumpDsplcmnt
-                        ;For EnemyIfMoveFailed:
-                          ;#$00:         bounce
-                          ;#$40:         land on floor/right wall
-                          ;#$80 or #$C0: land on ceiling/left wall
-                        
+    status           db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
+                            ;#$04=Enemy frozen.
+    radY             db   ;Distance in pixels from middle of enemy to top or botom.
+    radX             db   ;Distance in pixels from middle of enemy to left or right.
+    animFrame        db   ;Index into enemy animation frame data.
+    animDelay        db   ;Number of frames to delay between animation frames.
+    resetAnimIndex   db   ;Index to beginning of animation sequence.
+    animIndex        db   ;Index to current animation.
+    hi               db   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
+    subPixelY        db   ; Unknown
+    subPixelX        db   ; Unknown
+    accelY           db   ; Unknown
+    accelX           db   ; Unknown
+    data1C           db   ; Unused
+    jumpDsplcmnt     db   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
+    type             db   ;Enemy type used as index into enemy data tables.
+    data1F           db   ;For EnemyFlipAfterDisplacement:
+                            ;#$00:         displacement = abs(jumpDsplcmnt)
+                            ;#$40:         displacement = jumpDsplcmnt
+                            ;#$80 or #$C0: displacement = -jumpDsplcmnt
+                          ;For EnemyIfMoveFailed:
+                            ;#$00:         bounce
+                            ;#$40:         land on floor/right wall
+                            ;#$80 or #$C0: land on ceiling/left wall
 .endst
 
 .struct Cannon
@@ -230,268 +227,268 @@ CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ;The bits of the change and status addresses represent the following joypad buttons:
 ;bit 7=A, bit 6=B, bit 5=SELECT, bit 4=START, bit 3=Up, bit 2=Down, bit 1=Left, bit 0=Right.
 
-Joy1Change             db        ;These addresses store any button changes-->
-Joy2Change             db        ;that happened since last frame(pads 1 and 2).
-Joy1Status             db        ;These two addresses store all buttons-->
-Joy2Status             db        ;currently being pressed on the two controllers.
-Joy1Retrig             db        ;These two addresses store any buttons that need-->
-Joy2Retrig             db        ;to retrigger after being held down by player.
-RetrigDelay1           db        ;These two addresses are counters that control-->
-RetrigDelay2           db        ;The retriggering of held down buttons.
+Joy1Change             db   ;$12     ;These addresses store any button changes-->
+Joy2Change             db   ;$13     ;that happened since last frame(pads 1 and 2).
+Joy1Status             db   ;$14     ;These two addresses store all buttons-->
+Joy2Status             db   ;$15     ;currently being pressed on the two controllers.
+Joy1Retrig             db   ;$16     ;These two addresses store any buttons that need-->
+Joy2Retrig             db   ;$17     ;to retrigger after being held down by player.
+RetrigDelay1           db   ;$18     ;These two addresses are counters that control-->
+RetrigDelay2           db   ;$19     ;The retriggering of held down buttons.
 
-NMIStatus              db        ;0=NMI in progress. anything else, NMI not in progress.
-PPUDataPending         db        ;1=not PPU data pending, 1=data pending.
-PalDataPending         db        ;Pending palette data. Palette # = PalDataPending - 1.
-GameMode               db        ;0 = Game is playing, 1 = At title/password screen
-MainRoutine            db        ;5 = Game paused, 3 = Game engine running
-TitleRoutine           db        ;Stores title routine number currently running.
-NextRoutine            db        ;Stores next routine to jump to after WaitTimer expires.
+NMIStatus              db   ;$1A     ;0=NMI in progress. anything else, NMI not in progress.
+PPUDataPending         db   ;$1B     ;1=not PPU data pending, 1=data pending.
+PalDataPending         db   ;$1C     ;Pending palette data. Palette # = PalDataPending - 1.
+GameMode               db   ;$1D     ;0 = Game is playing, 1 = At title/password screen
+MainRoutine            db   ;$1E     ;5 = Game paused, 3 = Game engine running
+TitleRoutine           db   ;$1F     ;Stores title routine number currently running.
+NextRoutine            db   ;$20     ;Stores next routine to jump to after WaitTimer expires.
 
-SpareMem21             dw
+SpareMem21             dw   ;$21
 
-CurrentBank            db        ;0 thru 7. current memory page in lower memory block.
-SwitchPending          db        ;Switch memory page. Page # = SwitchPending - 1.
-MMC1CTRL_ZP            db        ;Stores bits to be loaded into MMC1 Register 0.
+CurrentBank            db   ;$23     ;0 thru 7. current memory page in lower memory block.
+SwitchPending          db   ;$24     ;Switch memory page. Page # = SwitchPending - 1.
+MMC1CTRL_ZP            db   ;$25     ;Stores bits to be loaded into MMC1 Register 0.
 
-SpareMem26             dw
+SpareMem26             dw   ;$26
 
-SwitchUpperBits        db        ;Used to store bits 3 and 4 for MMC1 register 3.  Bits-->
-                                   ;3 and 4 should always be 0 under normal conditions.
+SwitchUpperBits        db   ;$28     ;Used to store bits 3 and 4 for MMC1 register 3.  Bits-->
+                                       ;3 and 4 should always be 0 under normal conditions.
 
-TimerDelay             db        ;Count down from 9 to 0. Decremented every frame.
-Timer1                 db        ;Decremented every frame after set.
-Timer2                 db        ;Decremented every frame after set.
-Timer3                 db        ;Decremented every 10 frames after set.
+TimerDelay             db   ;$29     ;Count down from 9 to 0. Decremented every frame.
+Timer1                 db   ;$2A     ;Decremented every frame after set.
+Timer2                 db   ;$2B     ;Decremented every frame after set.
+Timer3                 db   ;$2C     ;Decremented every 10 frames after set.
 
-FrameCount             db        ;Increments every frame(overflows every 256 frames).
+FrameCount             db   ;$2D     ;Increments every frame(overflows every 256 frames).
 
-RandomNumber1          db        ;Random numbers used-->
-RandomNumber2          db        ;throughout the game.
+RandomNumber1          db   ;$2E     ;Random numbers used-->
+RandomNumber2          db   ;$2F     ;throughout the game.
 
-SpareMem30             db        ;Written to, but never accessed.
-GamePaused             db        ;#$00=Game running, #$01=Game paused.
+SpareMem30             db   ;$30     ;Written to, but never accessed.
+GamePaused             db   ;$31     ;#$00=Game running, #$01=Game paused.
 
-SpareMem32             db
+SpareMem32             db   ;$32
 
-RoomPtr                dw        ;Low byte of room pointer address.
-; RoomPtr+1              = $34     ;High byte of room pointer address.
+RoomPtr                dw   ;$33     ;Low byte of room pointer address.
+; RoomPtr+1                    $34     ;High byte of room pointer address.
 
-StructPtr              dw        ;Low bute of structure pointer address.
-; StructPtr+1            = $36     ;High byte of structure pointer address.
+StructPtr              dw   ;$35     ;Low bute of structure pointer address.
+; StructPtr+1                  $36     ;High byte of structure pointer address.
 
-CartRAMWorkPtr         dw        ;Low byte of pointer to current position in room RAM.
-; CartRAMWorkPtr+1       = $38     ;High byte of pointer to current position in room RAM.
-                                   ;The CartRAMWorkPtr points to the current memory address-->
-                                   ;in the room RAM that is being loaded.
+CartRAMWorkPtr         dw   ;$37     ;Low byte of pointer to current position in room RAM.
+; CartRAMWorkPtr+1             $38     ;High byte of pointer to current position in room RAM.
+                                       ;The CartRAMWorkPtr points to the current memory address-->
+                                       ;in the room RAM that is being loaded.
 
-CartRAMPtr             dw        ;Low byte of pointer to room RAM (#$00).
-; CartRAMPtr+1           = $3A     ;High byte of pointer to room RAM (#$60 or #$64).
-                                   ;Room RAM is a screen buffer where the objects that make-->
-                                   ;up a room are loaded.  There are two room RAM memory-->
-                                   ;areas and they are the exact same size as the two name-->
-                                   ;tables and attribute tables in the PPU. Once the room-->
-                                   ;RAM conatins a completed room in it, the entire contents-->
-                                   ;of the room RAM is loaded into the PPU.
+CartRAMPtr             dw   ;$39     ;Low byte of pointer to room RAM (#$00).
+; CartRAMPtr+1                 $3A     ;High byte of pointer to room RAM (#$60 or #$64).
+                                       ;Room RAM is a screen buffer where the objects that make-->
+                                       ;up a room are loaded.  There are two room RAM memory-->
+                                       ;areas and they are the exact same size as the two name-->
+                                       ;tables and attribute tables in the PPU. Once the room-->
+                                       ;RAM conatins a completed room in it, the entire contents-->
+                                       ;of the room RAM is loaded into the PPU.
 
-RoomPtrTable           dw        ;Low byte of start of room pointer table.
-; RoomPtrTable+1         = $3C     ;High byte of start of room pointer table.
+RoomPtrTable           dw   ;$3B     ;Low byte of start of room pointer table.
+; RoomPtrTable+1               $3C     ;High byte of start of room pointer table.
 
-StructPtrTable         dw        ;Low byte of start of structure pointer table.
-; StructPtrTable+1       = $3E     ;High byte of structure pointer table.
+StructPtrTable         dw   ;$3D     ;Low byte of start of structure pointer table.
+; StructPtrTable+1             $3E     ;High byte of structure pointer table.
 
-MacroPtr               dw        ;Low byte of pointer into macro definitions.
-; MacroPtr+1             = $40     ;High byte of pointer into macro definitions.
+MacroPtr               dw   ;$3F     ;Low byte of pointer into macro definitions.
+; MacroPtr+1                   $40     ;High byte of pointer into macro definitions.
 
-EnmyFrameTbl1Ptr       dw        ;Low byte of pointer into address table to find enemy animations.
-; EnmyFrameTbl1Ptr+1     = $42     ;High byte of pointer into address table to find enemy animations.
+EnmyFrameTbl1Ptr       dw   ;$41     ;Low byte of pointer into address table to find enemy animations.
+; EnmyFrameTbl1Ptr+1           $42     ;High byte of pointer into address table to find enemy animations.
 
-EnmyFrameTbl2Ptr       dw        ;Same as above except in a second table because there are-->
-; EnmyFrameTbl2Ptr+1     = $44     ;too many entries to fit into one table.
+EnmyFrameTbl2Ptr       dw   ;$43     ;Same as above except in a second table because there are-->
+; EnmyFrameTbl2Ptr+1           $44     ;too many entries to fit into one table.
 
-EnmyPlaceTblPtr        dw        ;Low byte of pointer into enemy frame placement table.
-; EnmyPlaceTblPtr+1      = $46     ;High byte of pointer into enemy frame placement table.
+EnmyPlaceTblPtr        dw   ;$45     ;Low byte of pointer into enemy frame placement table.
+; EnmyPlaceTblPtr+1            $46     ;High byte of pointer into enemy frame placement table.
 
-EnemyAnimPtr           dw        ;Low byte of start of EnemyAnimIndexTbl.
-; EnemyAnimPtr+1         = $48     ;High byte of start of EnemyAnimIndexTbl.
+EnemyAnimPtr           dw   ;$47     ;Low byte of start of EnemyAnimIndexTbl.
+; EnemyAnimPtr+1               $48     ;High byte of start of EnemyAnimIndexTbl.
 
-ScrollDir              db        ;0=Up, 1=Down, 2=Left, 3=Right.
+ScrollDir              db   ;$49     ;0=Up, 1=Down, 2=Left, 3=Right.
 
-TempScrollDir          db        ;Stores ScrollDir when room is initially loaded.
+TempScrollDir          db   ;$4A     ;Stores ScrollDir when room is initially loaded.
 
-PageIndex              db        ;Index to object data.
-                                   ;#$D0, #$E0, #$F0 = projectile indices(including bombs).
+PageIndex              db   ;$4B     ;Index to object data.
+                                       ;#$D0, #$E0, #$F0 = projectile indices(including bombs).
 
-ItemIndex              db        ;#$00 or #$08. Added to PowerUpType addresses to determine if-->
-                                   ;the first or second item slot is being checked.
+ItemIndex              db   ;$4C     ;#$00 or #$08. Added to PowerUpType addresses to determine if-->
+                                       ;the first or second item slot is being checked.
 
-SamusDir               db        ;0 = Right, 1 = Left.
-SamusDoorDir           db        ;Direction Samus passed through door.
-MapPosY                db        ;Current y position on world map of the screen to load into VRAM.
-MapPosX                db        ;Current x position on world map of the screen to load into VRAM.
-SamusScrX              db        ;Samus x position on screen.
-SamusScrY              db        ;Samus y position on screen.
-WalkSoundDelay         db   
-StatuesBridgeIsSpawned db        ;0=Bridge is not spawned, 1=Bridge is spawned and will build itself.
-IsSamus                db        ;1=Samus object being accessed, 0=not Samus.
-DoorEntryStatus        db        ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
-                                   ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
-                                   ;is 3 or 4, a door was entered while in a vertical shaft and-->
-                                   ;the door was not centered on the screen and up or down-->
-                                   ;scrolling needs to occur before scrolling to the next room.
-DoorScrollStatus       db        ;#$01=Entered right hand door from horizontal area.-->
-                                   ;#$02=Entered left hand door from horizontal area.-->
-                                   ;#$03=Entered door from vertical shaft and room needs to-->
-                                   ;be centered before horizontal scrolling. #$04=Entered-->
-                                   ;door from vertical shaft and room was already centered.
-SamusDoorData          db        ;The upper 4 bits store either 1 or 2. If 1 is stored(bit 4-->
-                                   ;set), the scrolling after Samus exits the door is toggled.-->
-                                   ;If 2 is stored(bit 5 set), the scrolling is set to-->
-                                   ;horizontal scrolling after Samus exits the door. This-->
-                                   ;happens mostly in item rooms. The lower 4 bits store Samus'-->
-                                   ;action status as she enters the door. This is used to set-->
-                                   ;Samus' action after she exits and keeps her looking the same.
-DoorDelay              db        ;Number of frames to delay when Samus entering/exiting doors.
-RoomNumber             db        ;Room number currently being loaded. #$FF=no room requested.
-SpritePagePos          db        ;Index into sprite RAM used to load object sprite data.
+SamusDir               db   ;$4D     ;0 = Right, 1 = Left.
+SamusDoorDir           db   ;$4E     ;Direction Samus passed through door.
+MapPosY                db   ;$4F     ;Current y position on world map of the screen to load into VRAM.
+MapPosX                db   ;$50     ;Current x position on world map of the screen to load into VRAM.
+SamusScrX              db   ;$51     ;Samus x position on screen.
+SamusScrY              db   ;$52     ;Samus y position on screen.
+WalkSoundDelay         db   ;$53
+StatuesBridgeIsSpawned db   ;$54     ;0=Bridge is not spawned, 1=Bridge is spawned and will build itself.
+IsSamus                db   ;$55     ;1=Samus object being accessed, 0=not Samus.
+DoorEntryStatus        db   ;$56     ;0=Not in door, 1=In right door, 2=In left door, 3=Scroll up-->
+                                       ;4=Scroll down, 5=Exit door, MSB set=Door entered. If value-->
+                                       ;is 3 or 4, a door was entered while in a vertical shaft and-->
+                                       ;the door was not centered on the screen and up or down-->
+                                       ;scrolling needs to occur before scrolling to the next room.
+DoorScrollStatus       db   ;$57     ;#$01=Entered right hand door from horizontal area.-->
+                                       ;#$02=Entered left hand door from horizontal area.-->
+                                       ;#$03=Entered door from vertical shaft and room needs to-->
+                                       ;be centered before horizontal scrolling. #$04=Entered-->
+                                       ;door from vertical shaft and room was already centered.
+SamusDoorData          db   ;$58     ;The upper 4 bits store either 1 or 2. If 1 is stored(bit 4-->
+                                       ;set), the scrolling after Samus exits the door is toggled.-->
+                                       ;If 2 is stored(bit 5 set), the scrolling is set to-->
+                                       ;horizontal scrolling after Samus exits the door. This-->
+                                       ;happens mostly in item rooms. The lower 4 bits store Samus'-->
+                                       ;action status as she enters the door. This is used to set-->
+                                       ;Samus' action after she exits and keeps her looking the same.
+DoorDelay              db   ;$59     ;Number of frames to delay when Samus entering/exiting doors.
+RoomNumber             db   ;$5A     ;Room number currently being loaded. #$FF=no room requested.
+SpritePagePos          db   ;$5B     ;Index into sprite RAM used to load object sprite data.
 
 ; 4 slots of 2 bytes each ($5C-$63)
-DoorCartRAMPtr         dsw 4
-; DoorCartRAMPtr+1       = $5D
+DoorCartRAMPtr         dsw 4;$5C
+; DoorCartRAMPtr+1             $5D
 
-SamusInLava            db        ;#$01=Samus in lava, #$00=She is not.
-ObjectCounter          db        ;Counts such things as object explosion time.
-EnemyMovePixelQty      db        ;Quantity of times to call the current EnemyMoveOnePixel routine
-ObjectPal              db        ;Attrib. table info for room object(#$00 thru #$03).
-RoomPal                db
-TempX                  db
-TempY                  db
-ObjectCntrl            db        ;Controls object properties such as mirroring and color-->
-                                   ;bits. Bit 4 controls object horizontal mirroring.
-                                   ;If bit 7 set, these attributes apply:
-                                   ;bit 5 is priority
-                                   ;bit 0 and bit 1 is for the color palette
+SamusInLava            db   ;$64     ;#$01=Samus in lava, #$00=She is not.
+ObjectCounter          db   ;$65     ;Counts such things as object explosion time.
+EnemyMovePixelQty      db   ;$66     ;Quantity of times to call the current EnemyMoveOnePixel routine
+ObjectPal              db   ;$67     ;Attrib. table info for room object(#$00 thru #$03).
+RoomPal                db   ;$68
+TempX                  db   ;$69
+TempY                  db   ;$6A
+ObjectCntrl            db   ;$6B     ;Controls object properties such as mirroring and color-->
+                                       ;bits. Bit 4 controls object horizontal mirroring.
+                                       ;If bit 7 set, these attributes apply:
+                                       ;bit 5 is priority
+                                       ;bit 0 and bit 1 is for the color palette
 
-ScrollBlockOnNameTable3 db         ;The following two addresses are used to keep track of the-->
-ScrollBlockOnNameTable0 db         ;doors loaded on the name tables. The information is used-->
-                                   ;in the GetRoomNum routine to prevent the loading of a-->
-                                   ;room behind a door when scrolling horizontally. This has-->
-                                   ;the effect of stopping scrolling until Samus walks through-->
-                                   ;the door. #$01=Left door on name table. #$02=right door-->
-                                   ;on name table. #$03 two doors on the same name table.-->
-                                   ;#$00 is possible in $6D if 2 doors are on name table 0-->
-                                   ;while vertically scrolling.
+ScrollBlockOnNameTable3 db  ;$6C     ;The following two addresses are used to keep track of the-->
+ScrollBlockOnNameTable0 db  ;$6D       ;doors loaded on the name tables. The information is used-->
+                                       ;in the GetRoomNum routine to prevent the loading of a-->
+                                       ;room behind a door when scrolling horizontally. This has-->
+                                       ;the effect of stopping scrolling until Samus walks through-->
+                                       ;the door. #$01=Left door on name table. #$02=right door-->
+                                       ;on name table. #$03 two doors on the same name table.-->
+                                       ;#$00 is possible in $6D if 2 doors are on name table 0-->
+                                       ;while vertically scrolling.
 
-HealthChange           dw        ;Amount to add/subtract from Health.
-; HealthChange+1         = $6F
+HealthChange           dw   ;$6E     ;Amount to add/subtract from Health.
+; HealthChange+1               $6F
 
-SamusInvincibleDelay   db        ;Samus's invincibility frames delay counter.
-UpdatingProjectile     db        ;#$01=Projectile update in process. #$00=not in process.
-SamusKnockbackDir      db        ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
-                                    ; i think there may something more to this variable, but im not sure what
-SamusKnockbackIsBomb   db        ;bit 7: 0=samus was hurt, 1=samus was bombed
-                                   ;bit 0: 0=diagonal knockback, 1=vertical knockback
-InArea                 db        ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12=Kraid hideout,-->
-                                   ;#$13=Tourian, #$14=Ridley hideout.
+SamusInvincibleDelay   db   ;$70     ;Samus's invincibility frames delay counter.
+UpdatingProjectile     db   ;$71     ;#$01=Projectile update in process. #$00=not in process.
+SamusKnockbackDir      db   ;$72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
+                                       ; i think there may something more to this variable, but im not sure what
+SamusKnockbackIsBomb   db   ;$73     ;bit 7: 0=samus was hurt, 1=samus was bombed
+                                       ;bit 0: 0=diagonal knockback, 1=vertical knockback
+InArea                 db   ;$74     ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12=Kraid hideout,-->
+                                       ;#$13=Tourian, #$14=Ridley hideout.
 
-SpareMem75             db        ;Initialized to #$FF in AreaInit. Not used.
-PalToggle              db   
-SamusKnockbackIsBomb77 db        ;set to SamusKnockbackIsBomb
+SpareMem75             db   ;$75     ;Initialized to #$FF in AreaInit. Not used.
+PalToggle              db   ;$76
+SamusKnockbackIsBomb77 db   ;$77     ;set to SamusKnockbackIsBomb
 
-SpareMem78             db
+SpareMem78             db   ;$78
 
-ItemRoomMusicStatus    db        ;#$00=Item room music not playing.
-                                   ;#$01=Play item room music.
-                                   ;#$80=Stop item room music once door scroll complete.
-                                   ;#$81=Item room music already playing. Don't restart.
+ItemRoomMusicStatus    db   ;$7C     ;#$00=Item room music not playing.
+                                       ;#$01=Play item room music.
+                                       ;#$80=Stop item room music once door scroll complete.
+                                       ;#$81=Item room music already playing. Don't restart.
 
 ; $7A-$DE cleared in MoreInit (should clear $DF, off-by-one bug?)
 .union
-    SpareMem7A             db        ;cleared in MoreInit, never used in gameplay
+    SpareMem7A             db   ;$7A     ;cleared in MoreInit, never used in gameplay
 
-    SpareMem7B             dw
+    SpareMem7B             dw   ;$7B
 
-    OnFrozenEnemy          db        ;#$01=Samus standing on frozen enemy, #$00=she is not.
+    OnFrozenEnemy          db   ;$7D     ;#$01=Samus standing on frozen enemy, #$00=she is not.
 
-    KraidLintCounter       db        ;Used to determine when to fire Kraid's lint. Accidentally used by Ridley too.
-    KraidNailCounter       db        ;Used to determine when to fire Kraid's nail.
-    RidleyProjectileCounter db        ;Used to determine when to fire Ridley's projectile.
+    KraidLintCounter       db   ;$7E     ;Used to determine when to fire Kraid's lint. Accidentally used by Ridley too.
+    KraidNailCounter       db   ;$7F     ;Used to determine when to fire Kraid's nail.
+    RidleyProjectileCounter db  ;$80     ;Used to determine when to fire Ridley's projectile.
 
-    EnemyMovementPtr       .dw
-    ; EnemyMovementPtr+1     = $82
-    EnemyStatusPreAI       db        ;set to enemy status before enemy ai routine is run
-    Enemy82                db
+    EnemyMovementPtr       .dw  ;$81
+    ; EnemyMovementPtr+1           $82
+    EnemyStatusPreAI       db   ;$81     ;set to enemy status before enemy ai routine is run
+    Enemy82                db   ;$82
 
-    SpawnFireball_83       dw        ;right facing anim index for enemy that shoots the fireball
-    ; SpawnFireball_83+1     = $84     ;left facing anim index for enemy that shoots the fireball
-    SpawnFireball_AnimTableIndex .db       ;index into EnemyFireballRisingAnimIndexTable
-    EnemyFlipAfterDisplacementAnimIndex          dw     ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
-    ; EnemyFlipAfterDisplacementAnimIndex+1 = $86     ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
-    SpawnFireball_87       db        ;fireball status?
-    SpawnFireball_EnData0A db
+    SpawnFireball_83       dw   ;$83     ;right facing anim index for enemy that shoots the fireball
+    ; SpawnFireball_83+1           $84     ;left facing anim index for enemy that shoots the fireball
+    SpawnFireball_AnimTableIndex .db ;$85 ;index into EnemyFireballRisingAnimIndexTable
+    EnemyFlipAfterDisplacementAnimIndex dw ;$85 ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
+    ; EnemyFlipAfterDisplacementAnimIndex+1   $86 ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
+    SpawnFireball_87       db   ;$87     ;fireball status?
+    SpawnFireball_EnData0A db   ;$88
 
-    SpareMem89             db
+    SpareMem89             db   ;$89
 
-    MellowRandomNumber     db
+    MellowRandomNumber     db   ;$8A
 
     ; 2 slots of 3 bytes each ($8B-$90)
     RinkaSpawners          instanceof RinkaSpawner 2 startfrom 0
 .nextu
     ;--------------------------------------[ End routine specific ]--------------------------------------
 
-    EndMsgWrite            db        ;0=don't write end message, 1=write end message.
-    IsCredits              db        ;0=credits not rolling, 1=credits rolling.
-    SpriteByteCounter      db        ;Used to indicate when Samus sprite load complete.
-    SpritePointerIndex     db        ;Index to proper Samus sprite graphics at end game.
-    SpriteAttribByte       db        ;#$00.  Attribute byte of some sprites.
-    ColorCntIndex          db        ;Index for finding count number for ClrChangeCounter.
-    CreditPageNumber       db        ;Stores current page of credits(#$00 thru #$06).
-    HideShowEndMsg         db        ;0=show end message, 1=erase end message.
-    ClrChangeCounter       db        ;When=#$00, change end Samus sprite colors.
-    WaveSpritePointer      db        ;Address pointer to Samus hand waving sprites in end.
-    WaveSpriteCounter      db        ;Stores length of wave sprite data (#$10).
+    EndMsgWrite            db   ;$7A     ;0=don't write end message, 1=write end message.
+    IsCredits              db   ;$7B     ;0=credits not rolling, 1=credits rolling.
+    SpriteByteCounter      db   ;$7C     ;Used to indicate when Samus sprite load complete.
+    SpritePointerIndex     db   ;$7D     ;Index to proper Samus sprite graphics at end game.
+    SpriteAttribByte       db   ;$7E     ;#$00.  Attribute byte of some sprites.
+    ColorCntIndex          db   ;$7F     ;Index for finding count number for ClrChangeCounter.
+    CreditPageNumber       db   ;$80     ;Stores current page of credits(#$00 thru #$06).
+    HideShowEndMsg         db   ;$81     ;0=show end message, 1=erase end message.
+    ClrChangeCounter       db   ;$82     ;When=#$00, change end Samus sprite colors.
+    WaveSpritePointer      db   ;$83     ;Address pointer to Samus hand waving sprites in end.
+    WaveSpriteCounter      db   ;$84     ;Stores length of wave sprite data (#$10).
 .endu
 
 ;----------------------------------------------------------------------------------------------------
 
-DoorPalChangeDir       db       ;When Samus enters a palette change room, this stores the ScrollDir
-                                  ;she entered with, so that if the next door she enters is also
-                                  ;in that direction, we can change the palette.
+DoorPalChangeDir       db   ;$91     ;When Samus enters a palette change room, this stores the ScrollDir
+                                       ;she entered with, so that if the next door she enters is also
+                                       ;in that direction, we can change the palette.
 
-MetroidOnSamus         db        ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
+MetroidOnSamus         db   ;$92     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
-MissilePickupQtyMax    db        ;Maximum missile drops that can be picked up. Randomly-->
-                                   ;recalculated whenever Samus goes through a door.
-EnergyPickupQtyMax     db        ;Maximum energy drops that can be picked up. Randomly-->
-                                   ;recalculated whenever Samus goes through a door.
-MissilePickupQtyCur    db        ;Number of missile drops currently collected by Samus-->
-                                   ;Reset to 0 when Samus goes through a door.
-EnergyPickupQtyCur     db        ;Number of energy drops currently collected by Samus-->
-                                   ;Reset to 0 when Samus goes through a door.
+MissilePickupQtyMax    db   ;$93     ;Maximum missile drops that can be picked up. Randomly-->
+                                       ;recalculated whenever Samus goes through a door.
+EnergyPickupQtyMax     db   ;$94     ;Maximum energy drops that can be picked up. Randomly-->
+                                       ;recalculated whenever Samus goes through a door.
+MissilePickupQtyCur    db   ;$95     ;Number of missile drops currently collected by Samus-->
+                                       ;Reset to 0 when Samus goes through a door.
+EnergyPickupQtyCur     db   ;$96     ;Number of energy drops currently collected by Samus-->
+                                       ;Reset to 0 when Samus goes through a door.
 
-CannonIndex            db        ;Current cannon being processed
+CannonIndex            db   ;$97     ;Current cannon being processed
 
-MotherBrainStatus      db        ;#$00=Mother brain not in room, #$01=Mother brain in room,-->
-                                   ;#$02=Mother brain hit, #$03=Mother brain dying-->
-                                   ;#$04=Mother brain dissapearing, #$05=Mother brain gone,-->
-                                   ;#$06=Time bomb set, #$07=Time bomb exploded,-->
-                                   ;#$08=Initialize mother brain,-->
-                                   ;#$09, #$0A=Mother brain already dead.
+MotherBrainStatus      db   ;$98     ;#$00=Mother brain not in room, #$01=Mother brain in room,-->
+                                       ;#$02=Mother brain hit, #$03=Mother brain dying-->
+                                       ;#$04=Mother brain dissapearing, #$05=Mother brain gone,-->
+                                       ;#$06=Time bomb set, #$07=Time bomb exploded,-->
+                                       ;#$08=Initialize mother brain,-->
+                                       ;#$09, #$0A=Mother brain already dead.
 
 .union
     ; when mother brain is alive
-    MotherBrainQtyHits     db        ;Number of times mother brain has been hit. Dies at #$20.
+    MotherBrainQtyHits     db   ;$99     ;Number of times mother brain has been hit. Dies at #$20.
 
-    MotherBrainAnimBrainDelay db        ; delay until next brain frame. depends on mother brain health
-    MotherBrainAnimEyeDelay db        ; delay until eye opens or closes. depends on mother brain health
-                                        ; bit7=is eye open? #%0=yes, #%1=no
-    MotherBrainAnimFrameTableID db        ; current id in MotherBrainAnimFrameTable for the brain pulsations
-    MotherBrainHi          db
-    MotherBrainIsHit       db        ;Was mother brain hit by a missile? #$00=no, #$01=yes
-    MotherBrainFlashDelay  db        ;Delay until mother brain no longer flashes from being hit.
+    MotherBrainAnimBrainDelay db ;$9A    ; delay until next brain frame. depends on mother brain health
+    MotherBrainAnimEyeDelay db  ;$9B     ; delay until eye opens or closes. depends on mother brain health
+                                           ; bit7=is eye open? #%0=yes, #%1=no
+    MotherBrainAnimFrameTableID db ;$9C  ; current id in MotherBrainAnimFrameTable for the brain pulsations
+    MotherBrainHi          db   ;$9D
+    MotherBrainIsHit       db   ;$9E     ;Was mother brain hit by a missile? #$00=no, #$01=yes
+    MotherBrainFlashDelay  db   ;$9F     ;Delay until mother brain no longer flashes from being hit.
 .nextu
     ; when mother brain is dead
-    MotherBrainDeathStringID db        ;
-    MotherBrainDeathInstrID db        ;
+    MotherBrainDeathStringID db ;$99
+    MotherBrainDeathInstrID db  ;$9A
 .endu
 
 ; 4 slots of 4 bytes each ($A0-$AF)
@@ -501,81 +498,80 @@ SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0
     ; 4 slots of 8 bytes each ($B0-$CF)
     Mellows                instanceof Mellow 4 startfrom 0
 .nextu
-    ; $B7 is unused
 
-    SpareMemB0             ds 7
-    SpareMemB7             db        ;Written to in title routine and accessed by unused routine.
-    SpareMemB8             ds 3      ;Written to in title routine and accessed by unused routine.
-    SpareMemBB             db        ;Written to in title routine, but never accessed.
+    SpareMemB0             ds 7 ;$B0
+    SpareMemB7             db   ;$B7     ;Written to in title routine and accessed by unused routine.
+    SpareMemB8             ds 3 ;$B8     ;Written to in title routine and accessed by unused routine.
+    SpareMemBB             db   ;$BB     ;Written to in title routine, but never accessed.
 
-    CrossMsl0to3SlowDelay  db        ;This address holds an 8 frame delay. when the delay is up,-->
-                                    ;The crosshair sprites double their speed.
-    CrossMsl4to7SpawnDelay db        ;This address holds a 32 frame delay.  When the delay is-->
-                                    ;up, the second set of crosshair sprites start their movement.
-    SpareMemBE             db
-    SecondCrosshairSprites db        ;#$01=Second crosshair sprites active in intro.
+    CrossMsl0to3SlowDelay  db   ;$BC     ;This address holds an 8 frame delay. when the delay is up,-->
+                                           ;The crosshair sprites double their speed.
+    CrossMsl4to7SpawnDelay db   ;$BD     ;This address holds a 32 frame delay.  When the delay is-->
+                                           ;up, the second set of crosshair sprites start their movement.
+    SpareMemBE             db   ;$BE
+    SecondCrosshairSprites db   ;$BF     ;#$01=Second crosshair sprites active in intro.
 
-    FlashScreen            db        ;#$01=Flash screen during crosshairs routine.
-    PalDataIndex           db   
-    ScreenFlashPalIndex    db        ;Index to palette data to flash screen during intro.
-    IntroStarOffset        db        ;Contains offset into IntroStarPntr table for twinkle effect.
-    FadeDataIndex          db        ;Index to palette data to fade items in and out during intro.
+    FlashScreen            db   ;$C0     ;#$01=Flash screen during crosshairs routine.
+    PalDataIndex           db   ;$C1
+    ScreenFlashPalIndex    db   ;$C2     ;Index to palette data to flash screen during intro.
+    IntroStarOffset        db   ;$C3     ;Contains offset into IntroStarPntr table for twinkle effect.
+    FadeDataIndex          db   ;$C4     ;Index to palette data to fade items in and out during intro.
 
-    SpareMemC5             db        ;Written to in title routine, but never accessed.
-    CrossExplodeLengthIndex db       ;#$00 thru #$04. Index to find cross sprite data.
-    IsUpdatingCrossExplode db        ;#$01=Draw cross on screen during crosshairs routine.
-    SpriteLoadPending      db        ;Set to #$00 after sprite RAM load complete.
-    SpareMemC9             dw        ;Written to in title routine, but never accessed.
-    SpareMemCB             db        ;Written to in title routine, but never accessed.
-    SpareMemCC             db        ;Written to in title routine, but never accessed.
-    SpareMemCD             db        ;Written to in title routine, but never accessed.
-    SpareMemCE             db        ;Written to in title routine, but never accessed.
-    SpareMemCF             db        ;Written to in title routine, but never accessed.
-    SpareMemD0             db        ;Written to in title routine, but never accessed.
-    SpareMemD1             db        ;Written to in title routine, but never accessed.
-    SpareMemD2             db        ;Written to in title routine, but never accessed.
-    SpareMemD3             ds 4      ;Written to in title routine, but never accessed.
-    SpareMemD7             db        ;Written to in title routine, but never accessed.
-    IntroMusicRestart      db        ;After all title routines run twice, restarts intro music.
-    SpareMemD9             ds 7
+    SpareMemC5             db   ;$C5     ;Written to in title routine, but never accessed.
+    CrossExplodeLengthIndex db  ;$C6     ;#$00 thru #$04. Index to find cross sprite data.
+    IsUpdatingCrossExplode db   ;$C7     ;#$01=Draw cross on screen during crosshairs routine.
+    SpriteLoadPending      db   ;$C8     ;Set to #$00 after sprite RAM load complete.
+    SpareMemC9             dw   ;$C9     ;Written to in title routine, but never accessed.
+    SpareMemCB             db   ;$CB     ;Written to in title routine, but never accessed.
+    SpareMemCC             db   ;$CC     ;Written to in title routine, but never accessed.
+    SpareMemCD             db   ;$CD     ;Written to in title routine, but never accessed.
+    SpareMemCE             db   ;$CE     ;Written to in title routine, but never accessed.
+    SpareMemCF             db   ;$CF     ;Written to in title routine, but never accessed.
+    SpareMemD0             db   ;$D0     ;Written to in title routine, but never accessed.
+    SpareMemD1             db   ;$D1     ;Written to in title routine, but never accessed.
+    SpareMemD2             db   ;$D2     ;Written to in title routine, but never accessed.
+    SpareMemD3             ds 4 ;$D3     ;Written to in title routine, but never accessed.
+    SpareMemD7             db   ;$D7     ;Written to in title routine, but never accessed.
+    IntroMusicRestart      db   ;$D8     ;After all title routines run twice, restarts intro music.
+    SpareMemD9             ds 7 ;$D9
 .endu
 
-SoundE0               dw
-; SoundE0+1             = $E1
+SoundE0                dw   ;$E0
+; SoundE0+1                    $E1
 
-SoundE2               dw
-; SoundE2+1             = $E3
+SoundE2                dw   ;$E2
+; SoundE2+1                    $E3
 
-SoundE4               dw
-; SoundE4+1             = $E5
+SoundE4                dw   ;$E4
+; SoundE4+1                    $E5
 
-SoundChannelBase       dw
-; SoundChannelBase+1     = $E7
+SoundChannelBase       dw   ;$E6
+; SoundChannelBase+1           $E7
 
-SpareMemE8             dw
+SpareMemE8             dw   ;$E8
 
-Cntrl0Data             db        ;Temp storage for data of first address sound channel
-VolumeEnvelopeIndex     db        ;Desired address number in VolumeCntrlAdressTbl
+Cntrl0Data             db   ;$EA     ;Temp storage for data of first address sound channel
+VolumeEnvelopeIndex    db   ;$EB     ;Desired address number in VolumeCntrlAdressTbl
 
-VolumeEnvelopePtr      dw
-; VolumeEnvelopePtr+1    = $ED
+VolumeEnvelopePtr      dw   ;$EC
+; VolumeEnvelopePtr+1          $ED
 
-SpareMemEE             dw
+SpareMemEE             dw   ;$EE
 
-ABStatus               db        ;Stores A and B button status in AreaInit. Never used.
+ABStatus               db   ;$F0     ;Stores A and B button status in AreaInit. Never used.
 
-SpareMemF1             ds 9
+SpareMemF1             ds 9 ;$F1
 
-MirrorCntrl            db        ;If bit 3 is set, PPU set to horizontal mirroring-->
-                                   ;else if bit 3 is clear, PPU is set to vertical-->
-                                   ;mirroring. No other bits seem to matter.
+MirrorCntrl            db   ;$FA     ;If bit 3 is set, PPU set to horizontal mirroring-->
+                                       ;else if bit 3 is clear, PPU is set to vertical-->
+                                       ;mirroring. No other bits seem to matter.
 
-SpareMemFB             db
+SpareMemFB             db   ;$FB
 
-ScrollY                db        ;Y value loaded into scroll register.
-ScrollX                db        ;X value loaded into scroll register.
-PPUMASK_ZP             db        ;Data byte to be loaded into PPU control register 1.
-PPUCTRL_ZP             db        ;Data byte to be loaded into PPU control register 0.
+ScrollY                db   ;$FC     ;Y value loaded into scroll register.
+ScrollX                db   ;$FD     ;X value loaded into scroll register.
+PPUMASK_ZP             db   ;$FE     ;Data byte to be loaded into PPU control register 1.
+PPUCTRL_ZP             db   ;$FF     ;Data byte to be loaded into PPU control register 0.
 
 .ende
 
@@ -583,20 +579,20 @@ PPUCTRL_ZP             db        ;Data byte to be loaded into PPU control regist
 
 .enum $0106 export
 
-Health                 dw        ;Lower health digit in upper 4 bits.
-; Health+1               = $0107   ;Upper health digit in lower 4 bits-->
-                                   ;# of full tanks in upper 4 bits.
-MiniBossKillDelayFlag  db        ;Initiate power up music and delay after Kraid/Ridley killed.
-PowerUpDelayFlag       db        ;Initiate power up music and delay after item pickup.
+Health                 dw   ;$0106   ;Lower health digit in upper 4 bits.
+; Health+1                     $0107   ;Upper health digit in lower 4 bits-->
+                                       ;# of full tanks in upper 4 bits.
+MiniBossKillDelayFlag  db   ;$0108   ;Initiate power up music and delay after Kraid/Ridley killed.
+PowerUpDelayFlag       db   ;$0109   ;Initiate power up music and delay after item pickup.
 
-EndTimer               dw        ;Lower byte of end game escape timer.
-; EndTimer+1             = $010B   ;Upper byte of end game escape timer.
+EndTimer               dw   ;$010A   ;Lower byte of end game escape timer.
+; EndTimer+1                   $010B   ;Upper byte of end game escape timer.
 
-EndTimerEnemyHi        db
-EndTimerEnemyIsEnabled db        ;the end timer in the "TIME BOMB SET" message. #$00=no, #$01=yes
+EndTimerEnemyHi        db   ;$010C
+EndTimerEnemyIsEnabled db   ;$010D   ;the end timer in the "TIME BOMB SET" message. #$00=no, #$01=yes
 
-MissileToggle          db        ;0=fire bullets, 1=fire missiles.
-SamusHurt010F          db        ;never read. takes on different values depending on how samus was hit.
+MissileToggle          db   ;$010E   ;0=fire bullets, 1=fire missiles.
+SamusHurt010F          db   ;$010F   ;never read. takes on different values depending on how samus was hit.
 
 .ende
 
@@ -792,169 +788,169 @@ ProjectileWaveDir      = $0502   ; bullet direction, used to get movement string
 
 .enum $0600 export
 
-MusicSQ1PeriodLow      db        ;Loaded into SQ1_LO when playing music
-MusicSQ1PeriodHigh     db        ;Loaded into SQ1_HI when playing music
+MusicSQ1PeriodLow      db   ;$0600   ;Loaded into SQ1_LO when playing music
+MusicSQ1PeriodHigh     db   ;$0601   ;Loaded into SQ1_HI when playing music
 
-SFXPaused              db        ;0=Game not paused, 1=Game paused
-PauseSFXStatus         db        ;Plays PauseMusic SFX if less than #$12
+SFXPaused              db   ;$0602   ;0=Game not paused, 1=Game paused
+PauseSFXStatus         db   ;$0603   ;Plays PauseMusic SFX if less than #$12
 
-MusicSQ2PeriodLow      db        ;Loaded into SQ2_LO when playing music
-MusicSQ2PeriodHigh     db        ;Loaded into SQ2_HI when playing music
+MusicSQ2PeriodLow      db   ;$0604   ;Loaded into SQ2_LO when playing music
+MusicSQ2PeriodHigh     db   ;$0605   ;Loaded into SQ2_HI when playing music
 
-Mem0606                db        ;Don't remove it, it's needed
+Mem0606                db   ;$0606   ;Don't remove it, it's needed (by what?)
 
-WriteMultiChannelData  db        ;1=data needs to be written, 0=no data to write
+WriteMultiChannelData  db   ;$0607   ;1=data needs to be written, 0=no data to write
 
-MusicTriPeriodLow      db        ;Loaded into TRI_LO when playing music
-MisicTriPeriodHigh     db        ;Loaded into TRI_HI when playing music
+MusicTriPeriodLow      db   ;$0608   ;Loaded into TRI_LO when playing music
+MisicTriPeriodHigh     db   ;$0609   ;Loaded into TRI_HI when playing music
 
-SpareMem060A           ds 6
+SpareMem060A           ds 6 ;$060A
 
-TriPeriodLow           db        ;Stores triangle SFX period low for processing
-TriPeriodHigh          db        ;Stroes triangle SFX period high for processing
-TriChangeLow           db        ;Stores triangle SFX change in period low
-TriChangeHigh          db        ;Stores triangle SFX change in period high
+TriPeriodLow           db   ;$0610   ;Stores triangle SFX period low for processing
+TriPeriodHigh          db   ;$0611   ;Stroes triangle SFX period high for processing
+TriChangeLow           db   ;$0612   ;Stores triangle SFX change in period low
+TriChangeHigh          db   ;$0613   ;Stores triangle SFX change in period high
 
-TriPeriodDividedLow    db        ;Low result of DivideTriPeriods division. Used as TriChangeLow.
-TriPeriodDividedHigh   db        ;High result of DivideTriPeriods division. Used as TriChangeHigh.
-TriPeriodDivisor       db        ;Used in DivideTriPeriods as divisor for TriPeriod values.
-DivideData             db        ;Used in DivideTriPeriods
+TriPeriodDividedLow    db   ;$0614   ;Low result of DivideTriPeriods division. Used as TriChangeLow.
+TriPeriodDividedHigh   db   ;$0615   ;High result of DivideTriPeriods division. Used as TriChangeHigh.
+TriPeriodDivisor       db   ;$0616   ;Used in DivideTriPeriods as divisor for TriPeriod values.
+DivideData             db   ;$0617    ;Used in DivideTriPeriods
 
-SpareMem0618           ds 7
+SpareMem0618           ds 7 ;$0618
 
-HasBeamSFX             db        ;Bit 7 set=has long beam, bit 0 set=has ice beam
+HasBeamSFX             db   ;$061F   ;Bit 7 set=has long beam, bit 0 set=has ice beam
 
 ;The following addresses are loaded into $0640 thru $0643 when those
 ;addresses decrement to zero.  These addresses do not decrement.
 
-SQ1FrameCountInit      db        ;Holds number of frames to play SQ1 channel data
-SQ2FrameCountInit      db        ;Holds number of frames to play SQ2 channel data
-TriFrameCountInit      db        ;Holds number of frames to play Triangle channel data
-NoiseFrameCountInit    db        ;Holds number of frames to play Noise channel data
+SQ1FrameCountInit      db   ;$0620   ;Holds number of frames to play SQ1 channel data
+SQ2FrameCountInit      db   ;$0621   ;Holds number of frames to play SQ2 channel data
+TriFrameCountInit      db   ;$0622   ;Holds number of frames to play Triangle channel data
+NoiseFrameCountInit    db   ;$0623   ;Holds number of frames to play Noise channel data
 
-SQ1RepeatCounter       db        ;Number of times to repeat SQ1 music loop
-SQ2RepeatCounter       db        ;Number of times to repeat SQ2 music loop
-TriRepeatCounter       db        ;Number of times to repeat Triangle music loop
-NoiseRepeatCounter     db        ;Number of times to repeat Noise music loop
+SQ1RepeatCounter       db   ;$0624   ;Number of times to repeat SQ1 music loop
+SQ2RepeatCounter       db   ;$0625   ;Number of times to repeat SQ2 music loop
+TriRepeatCounter       db   ;$0626   ;Number of times to repeat Triangle music loop
+NoiseRepeatCounter     db   ;$0627   ;Number of times to repeat Noise music loop
 
-SQ1DutyEnvelope        db        ;Loaded into SQ1_VOL when playing music
-SQ2DutyEnvelope        db        ;Loaded into SQ2_VOL when playing music
-TriLinearCount         db        ;disable\enable counter, linear count length
+SQ1DutyEnvelope        db   ;$0628   ;Loaded into SQ1_VOL when playing music
+SQ2DutyEnvelope        db   ;$0629   ;Loaded into SQ2_VOL when playing music
+TriLinearCount         db   ;$062A   ;disable\enable counter, linear count length
 
-NoteLengthTblOffset    db        ;Stores the offset to find proper note length table
-MusicRepeat            db        ;0=Music does not repeat, Nonzero=music repeats
-TriCounterCntrl        db        ;$F0=disable length cntr, $00=long note, $0F=short note
-SQ1VolumeEnvelopeIndex db        ;Entry number in VolumeEnvelopePtrTable for SQ1
-SQ2VolumeEnvelopeIndex db        ;Entry number in VolumeEnvelopePtrTable for SQ2
-SQ1Base                dw        ;Low byte of base address for SQ1 music data
-; SQ1Base+1              = $0631   ;High byte of base address for SQ1 music data
-SQ2Base                dw        ;Low byte of base address for SQ2 music data
-; SQ2Base+1              = $0633   ;High byte of base address for SQ2 music data
-TriBase                dw        ;Low byte of base address for Triangle music data
-; TriBase+1              = $0635   ;High byte of base address for Triangle music data
-NoiseBase              dw        ;Low byte of base address for Noise music data
-; NoiseBase+1            = $0637   ;High byte of base address for Noise music data
+NoteLengthTblOffset    db   ;$062B   ;Stores the offset to find proper note length table
+MusicRepeat            db   ;$062C   ;0=Music does not repeat, Nonzero=music repeats
+TriCounterCntrl        db   ;$062D   ;$F0=disable length cntr, $00=long note, $0F=short note
+SQ1VolumeEnvelopeIndex db   ;$062E   ;Entry number in VolumeEnvelopePtrTable for SQ1
+SQ2VolumeEnvelopeIndex db   ;$062F   ;Entry number in VolumeEnvelopePtrTable for SQ2
+SQ1Base                dw   ;$0630   ;Low byte of base address for SQ1 music data
+; SQ1Base+1                    $0631   ;High byte of base address for SQ1 music data
+SQ2Base                dw   ;$0632   ;Low byte of base address for SQ2 music data
+; SQ2Base+1                    $0633   ;High byte of base address for SQ2 music data
+TriBase                dw   ;$0634   ;Low byte of base address for Triangle music data
+; TriBase+1                    $0635   ;High byte of base address for Triangle music data
+NoiseBase              dw   ;$0636   ;Low byte of base address for Noise music data
+; NoiseBase+1                  $0637   ;High byte of base address for Noise music data
 
-SQ1MusicIndexIndex     db        ;Index to find SQ1 sound data index. Base=$630,$631
-SQ2MusicIndexIndex     db        ;Index to find SQ2 sound data index. Base=$632,$633
-TriMusicIndexIndex     db        ;Index to find Tri sound data index. Base=$634,$635
-NoiseMusicIndexIndex   db        ;Index to find Noise sound data index. Base=$636,$637
+SQ1MusicIndexIndex     db   ;$0638   ;Index to find SQ1 sound data index. Base=$630,$631
+SQ2MusicIndexIndex     db   ;$0639   ;Index to find SQ2 sound data index. Base=$632,$633
+TriMusicIndexIndex     db   ;$063A   ;Index to find Tri sound data index. Base=$634,$635
+NoiseMusicIndexIndex   db   ;$063B   ;Index to find Noise sound data index. Base=$636,$637
 
-SQ1LoopIndex           db        ;SQ1 Loop start index
-SQ2LoopIndex           db        ;SQ2 loop start index
-TriLoopIndex           db        ;Triangle loop start index
-NoiseLoopIndex         db        ;Noise loop start index
+SQ1LoopIndex           db   ;$063C   ;SQ1 Loop start index
+SQ2LoopIndex           db   ;$063D   ;SQ2 loop start index
+TriLoopIndex           db   ;$063E   ;Triangle loop start index
+NoiseLoopIndex         db   ;$063F   ;Noise loop start index
 
-SQ1MusicFrameCount     db        ;Decrements every sq1 frame. When 0, load new data
-SQ2MusicFrameCount     db        ;Decrements every sq2 frame. when 0, load new data
-TriMusicFrameCount     db        ;Decrements every triangle frame. When 0, load new data
-NoiseMusicFrameCount   db        ;Decrements every noise frame. When 0, load new data
+SQ1MusicFrameCount     db   ;$0640   ;Decrements every sq1 frame. When 0, load new data
+SQ2MusicFrameCount     db   ;$0641   ;Decrements every sq2 frame. when 0, load new data
+TriMusicFrameCount     db   ;$0642   ;Decrements every triangle frame. When 0, load new data
+NoiseMusicFrameCount   db   ;$0643   ;Decrements every noise frame. When 0, load new data
 
-SpareMem0644           ds 4
+SpareMem0644           ds 4 ;$0644
 
-MusicSQ1Sweep          db        ;Value is loaded into SQ1_SWEEP when playing music
-MusicSQ2Sweep          db        ;Value is loaded into SQ2_SWEEP when playing music
-TriSweep               db        ;Loaded into TRI_UNUSED(not used)
+MusicSQ1Sweep          db   ;$0648   ;Value is loaded into SQ1_SWEEP when playing music
+MusicSQ2Sweep          db   ;$0649   ;Value is loaded into SQ2_SWEEP when playing music
+TriSweep               db   ;$064A   ;Loaded into TRI_UNUSED(not used)
 
-ThisSoundChannel       db        ;Least sig. byte of current channel(00,04,08 or 0C)
+ThisSoundChannel       db   ;$064B   ;Least sig. byte of current channel(00,04,08 or 0C)
 
-SpareMem064C           db
+SpareMem064C           db   ;$064C
 
-CurrentSFXFlags        db        ;Stores flags of SFX currently being processed.
+CurrentSFXFlags        db   ;$064D   ;Stores flags of SFX currently being processed.
 
-SpareMem064E           ds 4
+SpareMem064E           ds 4 ;$064E
 
-NoiseInUse             db        ;Noise in use? (Not used)
-SQ1InUse               db        ;1=SQ1 channel being used by SFX, 0=not in use
-SQ2InUse               db        ;2=SQ2 channel being used by SFX, 0=not in use
-TriInUse               db        ;3=Triangle channel being used by SFX, 0=not in use
+NoiseInUse             db   ;$0652   ;Noise in use? (Not used)
+SQ1InUse               db   ;$0653   ;1=SQ1 channel being used by SFX, 0=not in use
+SQ2InUse               db   ;$0654   ;2=SQ2 channel being used by SFX, 0=not in use
+TriInUse               db   ;$0655   ;3=Triangle channel being used by SFX, 0=not in use
 
-SpareMem0656           ds 6
+SpareMem0656           ds 6 ;$0656
 
-ChannelType            db        ;Stores channel type being processed(0,1,2,3 or 4)
-CurrentMusicRepeat     db        ;Stores flags of music to repeat
-MusicInitIndex         db        ;index for loading $62B thru $637(base=$BD31).
+ChannelType            db   ;$065C   ;Stores channel type being processed(0,1,2,3 or 4)
+CurrentMusicRepeat     db   ;$065D   ;Stores flags of music to repeat
+MusicInitIndex         db   ;$065E   ;index for loading $62B thru $637(base=$BD31).
 
-SpareMem065F           db
+SpareMem065F           db   ;$065F
 
-NoiseSFXLength         db        ;Stores number of frames to play Noise SFX
-SQ1SFXLength           db        ;Stores number of frames to play SQ1 SFX
-SQ2SFXLngth            db        ;Stores number of frames to play SQ2 SFX
-TriSFXLength           db        ;Stores number of frames to play Triangle SFX
-MultiSFXLength         db        ;Stores number of frames to play Multi SFX
+NoiseSFXLength         db   ;$0660   ;Stores number of frames to play Noise SFX
+SQ1SFXLength           db   ;$0661   ;Stores number of frames to play SQ1 SFX
+SQ2SFXLngth            db   ;$0662   ;Stores number of frames to play SQ2 SFX
+TriSFXLength           db   ;$0663   ;Stores number of frames to play Triangle SFX
+MultiSFXLength         db   ;$0664   ;Stores number of frames to play Multi SFX
 
-ThisNoiseFrame         db        ;Stores current frame number for noise SFX
-ThisSQ1Frame           db        ;Stores current frame number for sq1 SFX
-ThisSQ2Frame           db        ;Stores current frame number for SQ2 SFX
-ThisTriFrame           db        ;Stores current frame number for triangle SFX
-ThisMultiFrame         db        ;Stores current frame number for Multi SFX
+ThisNoiseFrame         db   ;$0665   ;Stores current frame number for noise SFX
+ThisSQ1Frame           db   ;$0666   ;Stores current frame number for sq1 SFX
+ThisSQ2Frame           db   ;$0667   ;Stores current frame number for SQ2 SFX
+ThisTriFrame           db   ;$0668   ;Stores current frame number for triangle SFX
+ThisMultiFrame         db   ;$0669   ;Stores current frame number for Multi SFX
 
-SQ1VolumeIndex         db        ;Stores index to SQ1 volume data in a volume data tbl
-SQ2VolumeIndex         db        ;Stores index to SQ2 volume data in a volume data tbl
+SQ1VolumeIndex         db   ;$066A   ;Stores index to SQ1 volume data in a volume data tbl
+SQ2VolumeIndex         db   ;$066B   ;Stores index to SQ2 volume data in a volume data tbl
 
-SQ1VolumeData          db        ;stores duty cycle and this frame volume data of SQ1
-SQ2VolumeData          db        ;Stores duty cycle and this frame volume data of SQ2
+SQ1VolumeData          db   ;$066C   ;stores duty cycle and this frame volume data of SQ1
+SQ2VolumeData          db   ;$066D   ;Stores duty cycle and this frame volume data of SQ2
 
-SpareMem066E           dw        ;$066E is unknowingly written to by "sta SQ1VolumeData,x", but never read
+SpareMem066E           dw   ;$066E   ;$066E is unknowingly written to by "sta SQ1VolumeData,x", but never read
 
-NoiseSFXData           db        ;Stores additional info for Noise SFX
-SQ1SFXData             db        ;Stores additional info for SQ1 SFX
-SQ2SFXData             db        ;Stores additional info for SQ2 SFX
-TriSFXData             db        ;Stores additional info for triangle SFX
+NoiseSFXData           db   ;$0670   ;Stores additional info for Noise SFX
+SQ1SFXData             db   ;$0671   ;Stores additional info for SQ1 SFX
+SQ2SFXData             db   ;$0672   ;Stores additional info for SQ2 SFX
+TriSFXData             db   ;$0673   ;Stores additional info for triangle SFX
 
-NoiseSFXData1          db        ;Stores additional info for Noise SFX
-SQ1SFXData1            .db       ;Stores additional info for SQ1 SFX
-SQ1SQ2SFXData          db        ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
-SQ2SFXData1            db        ;Stores additional info for SQ2 SFX
-TriSFXData1            db        ;Stores additional info for triangle SFX
+NoiseSFXData1          db   ;$0674   ;Stores additional info for Noise SFX
+SQ1SFXData1            .db  ;$0675   ;Stores additional info for SQ1 SFX
+SQ1SQ2SFXData          db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
+SQ2SFXData1            db   ;$0676   ;Stores additional info for SQ2 SFX
+TriSFXData1            db   ;$0677   ;Stores additional info for triangle SFX
 
-NoiseSFXData2          db        ;Contains extra data for screw attack SFX
-SQ1SFXData2            .db       ;Stores additional info for SQ1 SFX
-SQ1SFXPeriodLow        db        ;Period low data for processing multi SFX routines
-SQ2SFXData2            db        ;Stores additional info for SQ2 SFX
-TriSFXData2            db        ;Stores additional info for triangle SFX
+NoiseSFXData2          db   ;$0678   ;Contains extra data for screw attack SFX
+SQ1SFXData2            .db  ;$0679   ;Stores additional info for SQ1 SFX
+SQ1SFXPeriodLow        db   ;$0679   ;Period low data for processing multi SFX routines
+SQ2SFXData2            db   ;$067A   ;Stores additional info for SQ2 SFX
+TriSFXData2            db   ;$067B   ;Stores additional info for triangle SFX
 
-SpareMem067C           ds 4
+SpareMem067C           ds 4 ;$067C
 
-NoiseSFXFlag           db        ;Initialization flags for noise SFX
-SQ1SFXFlag             db        ;Initialization flags for SQ1 SFX
-SQ2SFXFlag             db        ;Initialization flags for SQ2 SFX(never used)
-TriSFXFlag             db        ;Initialization flags for triangle SFX
-MultiSFXFlag           db        ;Initialization Flags for SFX and some music
+NoiseSFXFlag           db   ;$0680   ;Initialization flags for noise SFX
+SQ1SFXFlag             db   ;$0681   ;Initialization flags for SQ1 SFX
+SQ2SFXFlag             db   ;$0682   ;Initialization flags for SQ2 SFX(never used)
+TriSFXFlag             db   ;$0683   ;Initialization flags for triangle SFX
+MultiSFXFlag           db   ;$0684   ;Initialization Flags for SFX and some music
 
-MusicInitFlag          db        ;Music init flags
+MusicInitFlag          db   ;$0685   ;Music init flags
 
-ScrewAttack0686        db
+ScrewAttack0686        db   ;$0686
 
-SpareMem0687           db
+SpareMem0687           db   ;$0687
 
-NoiseContSFX           db        ;Continuation flags for noise SFX
-SQ1ContSFX             db        ;Continuation flags for SQ1 SFX
-SQ2ContSFX             db        ;Continuation flags for SQ2 SFX (never used)
-TriContSFX             db        ;Continuation flags for Triangle SFX
-MultiContSFX           db        ;Continuation flags for Multi SFX
+NoiseContSFX           db   ;$0688   ;Continuation flags for noise SFX
+SQ1ContSFX             db   ;$0689   ;Continuation flags for SQ1 SFX
+SQ2ContSFX             db   ;$068A   ;Continuation flags for SQ2 SFX (never used)
+TriContSFX             db   ;$068B   ;Continuation flags for Triangle SFX
+MultiContSFX           db   ;$068C   ;Continuation flags for Multi SFX
 
-CurrentMusic           db        ;Stores the flag of the current music being played
+CurrentMusic           db   ;$068D   ;Stores the flag of the current music being played
 
 .ende
 
@@ -965,7 +961,7 @@ CurrentMusic           db        ;Stores the flag of the current music being pla
 ; 6 slots of 6 bytes each ($0700-$0723)
 Mem0700                instanceof Struct0700 6 startfrom 0
 
-SpareMem0724           ds 4
+SpareMem0724           ds 4   ;$0724
 
 ; 4 slots of 8 bytes each ($0728-$0747)
 PipeBugHoles           instanceof PipeBugHole 4 startfrom 0
@@ -976,17 +972,17 @@ PowerUps               instanceof PowerUp 2 startfrom 0
 ; 5 Zebetite slots of 8 bytes each ($0758-$077F)
 Zebetites              instanceof Zebetite 5 startfrom 0
 
-TileSize               db        ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
-TileInfo0              db        ;
-TileInfo1              db        ;
-TileInfo2              db        ;Tile patterns to replace blasted tiles.
-TileInfo3              db        ;
-TileInfo4              db        ;
-TileInfo5              db        ;
+TileSize               db   ;$0780   ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
+TileInfo0              db   ;$0781   ;
+TileInfo1              db   ;$0782   ;
+TileInfo2              db   ;$0783   ;Tile patterns to replace blasted tiles.
+TileInfo3              db   ;$0784   ;
+TileInfo4              db   ;$0785   ;
+TileInfo5              db   ;$0786   ;
 
-SpareMem0787           ds $19
+SpareMem0787           ds $19 ;$0787
 
-PPUStrIndex            db        ;# of bytes of data in PPUDataString. #$4F bytes max.
+PPUStrIndex            db   ;$07A0   ;# of bytes of data in PPUDataString. #$4F bytes max.
 
 ;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. 
 ;The first two bytes in the string are the address of the starting point in the PPU to write -->
@@ -1000,7 +996,7 @@ PPUStrIndex            db        ;# of bytes of data in PPUDataString. #$4F byte
 ;Any following bytes are the actual data bytes to be written to the PPU.
 ;#$00 separates the data chunks.
 
-PPUDataString          db        ;Thru $07F0. String of data bytes to be written to PPU.
+PPUDataString          db   ;$07A1   ;Thru $07F0. String of data bytes to be written to PPU.
 
 .ende
 
@@ -1030,62 +1026,61 @@ UnusedIntro684C        = $684C   ;Unused. Would have contained a 16bit hex numbe
 
 .enum $6872 export
 
-EndingType             db        ;1=worst ending, 5=best ending
+EndingType             db   ;$6872   ;1=worst ending, 5=best ending
 
-SpareMem6873           ds 2
+SpareMem6873           ds 2 ;$6873
 
-SamusDataIndex         db        ;Index for Samus saved game stats(not used). #$00, #$10, #$20.
+SamusDataIndex         db   ;$6875   ;Index for Samus saved game stats(not used). #$00, #$10, #$20.
 
-SamusStat00            db        ;Unused memory address for storing Samus info.
-TankCount              db        ;Number of energy tanks.
-SamusGear              db        ;Stores power-up items Samus has.
-MissileCount           db        ;Stores current number of missiles.
-MaxMissiles            db        ;Maximum amount of missiles Samus can carry
-KraidStatueStatus      db        ;bit 0 set, the statues blink, -->
-RidleyStatueStatus     db        ;bit 7 set, statues are up.
-SamusAge               ds 4      ;Samus' age.
-; SamusAge+1             = $687E
-; SamusAge+2             = $687F
-; SamusAge+3             = $6880   ; not considered for ending
-SamusStat0B            dw        ;SamusStat0B keeps track of how many times Samus has-->
-; SamusStat0B+1          = $6882   ;died, but this info is never accessed anywhere in the game.
+SamusStat00            db   ;$6876   ;Unused memory address for storing Samus info.
+TankCount              db   ;$6877   ;Number of energy tanks.
+SamusGear              db   ;$6878   ;Stores power-up items Samus has.
+MissileCount           db   ;$6879   ;Stores current number of missiles.
+MaxMissiles            db   ;$687A   ;Maximum amount of missiles Samus can carry
+KraidStatueStatus      db   ;$687B   ;bit 0 set, the statues blink, -->
+RidleyStatueStatus     db   ;$687C   ;bit 7 set, statues are up.
+SamusAge               ds 4 ;$687D   ;In-game time used for ending. Units of 256 frames.
+; SamusAge+1                   $687E   ;Units of 53248 frames.
+; SamusAge+2                   $687F   ;Units of 13631488 frames.
+; SamusAge+3                   $6880   ;Units of 3489660928 frames. Not considered for ending.
+SamusStat0B            dw   ;$6881   ;SamusStat0B keeps track of how many times Samus has-->
+; SamusStat0B+1                $6882   ;died, but this info is never accessed anywhere in the game.
 
-AtEnding               db        ;1=End scenes playing, 0=Not at ending.
+AtEnding               db   ;$6883   ;1=End scenes playing, 0=Not at ending.
 
-EraseGame              db        ;MSB set=erase selected saved game(not used in password carts).
+EraseGame              db   ;$6884   ;MSB set=erase selected saved game(not used in password carts).
 
-DataSlot               db        ;#$00 thru #$02. Stored Samus data to load.
-                                   ;Unused leftover from the original FDS version of the game.
+DataSlot               db   ;$6885   ;#$00 thru #$02. Stored Samus data to load.
+                                       ;Unused leftover from the original FDS version of the game.
 
-NumberOfUniqueItems    db        ;Counts number of power-ups and red doors-->
-                                   ;opened.  Does not count different beams-->
-                                   ;picked up (ice, long, wave). increments by 2.
+NumberOfUniqueItems    db   ;$6886   ;Counts number of power-ups and red doors-->
+                                       ;opened.  Does not count different beams-->
+                                       ;picked up (ice, long, wave). increments by 2.
 
-UniqueItemHistory      ds $100   ;Thru $68FC. History of Unique items collected.-->
-;EndItemHistory         = $68FC   ;Two bytes per item.
+UniqueItemHistory      ds $100   ;$6887-$68FC. History of Unique items collected. Two bytes per item.
 
-KraidRidleyPresent     db        ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
+KraidRidleyPresent     db   ;$6987   ;#$01=Kraid/Ridley present, #$00=Kraid/Ridley not present.
 
 ; 18 bytes ($6988-$6999)
 PasswordByte           ds $12
-; PasswordByte+$00       = $6988   ;Stores status of items 0 thru 7.
-; PasswordByte+$01       = $6989   ;Stores status of items 8 thru 15.
-; PasswordByte+$02       = $698A   ;Stores status of items 16 thru 23.
-; PasswordByte+$03       = $698B   ;Stores status of items 24 thru 31.
-; PasswordByte+$04       = $698C   ;Stores status of items 32 thru 39.
-; PasswordByte+$05       = $698D   ;Stores status of items 40 thru 47.
-; PasswordByte+$06       = $698E   ;Stores status of items 48 thru 55.
-; PasswordByte+$07       = $698F   ;Stores status of items 56 thru 58(bits 0 thru 2).
-; PasswordByte+$08       = $6990   ;start location(bits 0 thru 5), Samus suit status (bit 7).
-; PasswordByte+$09       = $6991   ;Stores SamusGear.
-; PasswordByte+$0A       = $6992   ;Stores MissileCount.
-; PasswordByte+$0B       = $6993   ;Stores SamusAge.
-; PasswordByte+$0C       = $6994   ;Stores SamusAge+1.
-; PasswordByte+$0D       = $6995   ;Stores SamusAge+2.
-; PasswordByte+$0E       = $6996   ;Stores SamusAge+3.
-; PasswordByte+$0F       = $6997   ;Stores Statue statuses(bits 4 thu 7).
-; PasswordByte+$10       = $6998   ;Stores value RandomNumber1.
-; PasswordByte+$11       = $6999   ;Stores sum of $6988 thru $6998(Checksum).
+; PasswordByte+$00             $6988   ;Stores status of items 0 thru 7.
+; PasswordByte+$01             $6989   ;Stores status of items 8 thru 15.
+; PasswordByte+$02             $698A   ;Stores status of items 16 thru 23.
+; PasswordByte+$03             $698B   ;Stores status of items 24 thru 31.
+; PasswordByte+$04             $698C   ;Stores status of items 32 thru 39.
+; PasswordByte+$05             $698D   ;Stores status of items 40 thru 47.
+; PasswordByte+$06             $698E   ;Stores status of items 48 thru 55.
+; PasswordByte+$07             $698F   ;Stores status of items 56 thru 58(bits 0 thru 2).
+; PasswordByte+$08             $6990   ;start location(bits 0 thru 5), Samus suit status (bit 7).
+; PasswordByte+$09             $6991   ;Stores SamusGear.
+; PasswordByte+$0A             $6992   ;Stores MissileCount.
+; PasswordByte+$0B             $6993   ;Stores SamusAge.
+; PasswordByte+$0C             $6994   ;Stores SamusAge+1.
+; PasswordByte+$0D             $6995   ;Stores SamusAge+2.
+; PasswordByte+$0E             $6996   ;Stores SamusAge+3.
+; PasswordByte+$0F             $6997   ;Stores Statue statuses(bits 4 thu 7).
+; PasswordByte+$10             $6998   ;Stores value RandomNumber1.
+; PasswordByte+$11             $6999   ;Stores sum of $6988 thru $6998(Checksum).
 
 ; 24 bytes ($699A-$69B1)
 ;These 24 memory addresses store the 24 characters
@@ -1093,11 +1088,11 @@ PasswordByte           ds $12
 ;Upper two bits of PasswordChar bytes will always be %00.
 PasswordChar           ds $18
 
-NARPASSWORD            db        ;0 = invinsible Samus not active, 1 = invinsible Samus active.
-JustInBailey           db        ;0 = Samus has suit, 1 = Samus is without suit.
-ItemHistory            ds $100   ;Thru $6A73. Unique item history saved game data (not used).
+NARPASSWORD            db   ;$69B2   ;0 = invinsible Samus not active, 1 = invinsible Samus active.
+JustInBailey           db   ;$69B3   ;0 = Samus has suit, 1 = Samus is without suit.
+ItemHistory            ds $100   ;$69B4-$6A73. Unique item history saved game data (not used).
 
-SpareMem6A74           ds $40
+SpareMem6AB4           ds $40   ;$6AB4
 
 ;---------------------------------------[ More enemy RAM ]-------------------------------------------
 
@@ -1107,7 +1102,7 @@ EnsExtra               instanceof EnExtra $10 startfrom 0
 ; 16 slots of 8 bytes each ($6BF4-$6C73)
 Cannons                instanceof Cannon $10 startfrom 0
 
-SpareRAM6C74           ds $18C
+SpareRAM6C74           ds $18C   ;$6C74
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 
@@ -1129,12 +1124,12 @@ WorldMapRAM            = $7000   ;Thru $73FF. The map is 1Kb in size (1024 bytes
 MetroidRepelSpeed      dw        ;$77F0 for negative, $77F1 for positive
 MetroidAccel           ds 4      ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
 MetroidMaxSpeed        dw        ;$77F6 for red metroid, $77F7 for green metroid
-MetroidLatch0400       db        ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
-MetroidLatch0410       db          ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
-MetroidLatch0420       db          ;bit 7 is sign of x speed
-MetroidLatch0430       db
-MetroidLatch0440       db
-MetroidLatch0450       db
+MetroidLatch0400       db   ;$77F8   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
+MetroidLatch0410       db   ;$77F9   ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
+MetroidLatch0420       db   ;$77FA   ;bit 7 is sign of x speed
+MetroidLatch0430       db   ;$77FB
+MetroidLatch0440       db   ;$77FC
+MetroidLatch0450       db   ;$77FD
 
 .ende
 
