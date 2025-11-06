@@ -41,7 +41,7 @@
     spare05          db
     animIndex        db
     delay            db
-    wramPtr          dw
+    roomRAMPtr       dw
     type             db
     spare0B          ds 5
 .endst
@@ -77,7 +77,7 @@
 
 .struct Zebetite
     status           db
-    vramPtr          dw   ;Pointer to top-left tile of Zebetite in the nametable.
+    roomRAMPtr       dw   ;Pointer to top-left tile of Zebetite in the nametable.
     qtyHits          db   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
     healingDelay     db   ;Heals 1 hit when counts down from #$40 to #$00.
     isHit            db   ;#$01 if zebetite got hit by a missile this frame, else #$00
@@ -176,11 +176,11 @@ Temp08_PositionY       = $08
 Temp09_PositionX       = $09
 Temp0B_PositionHi      = $0B
 
-; MakeCartRAMPtr
+; MakeRoomRAMPtr
 Temp02_PositionY       = $02
 Temp03_PositionX       = $03
-Temp04_CartRAMPtr      = $04
-; Temp04_CartRAMPtr+1    = $05
+Temp04_RoomRAMPtr      = $04
+; Temp04_RoomRAMPtr+1    = $05
 ;Temp0B_PositionHi      = $0B
 
 ; IsObjectVisible
@@ -281,8 +281,8 @@ CartRAMWorkPtr         dw   ;$37     ;Low byte of pointer to current position in
                                        ;The CartRAMWorkPtr points to the current memory address-->
                                        ;in the room RAM that is being loaded.
 
-CartRAMPtr             dw   ;$39     ;Low byte of pointer to room RAM (#$00).
-; CartRAMPtr+1                 $3A     ;High byte of pointer to room RAM (#$60 or #$64).
+RoomRAMPtr             dw   ;$39     ;Low byte of pointer to room RAM (#$00).
+; RoomRAMPtr+1                 $3A     ;High byte of pointer to room RAM (#$60 or #$64).
                                        ;Room RAM is a screen buffer where the objects that make-->
                                        ;up a room are loaded.  There are two room RAM memory-->
                                        ;areas and they are the exact same size as the two name-->
@@ -352,8 +352,8 @@ RoomNumber             db   ;$5A     ;Room number currently being loaded. #$FF=n
 SpritePagePos          db   ;$5B     ;Index into sprite RAM used to load object sprite data.
 
 ; 4 slots of 2 bytes each ($5C-$63)
-DoorCartRAMPtr         dsw 4;$5C
-; DoorCartRAMPtr+1             $5D
+DoorRoomRAMPtr         dsw 4;$5C
+; DoorRoomRAMPtr+1             $5D
 
 SamusInLava            db   ;$64     ;#$01=Samus in lava, #$00=She is not.
 ObjectCounter          db   ;$65     ;Counts such things as object explosion time.

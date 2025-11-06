@@ -808,8 +808,8 @@ DeleteOffscreenRoomSprites_Tourian:
         lda Zebetites.0.status,x
         beq @endIf_B
         ; branch if zebetite is in the current nametable
-        jsr GetVRAMPtrHi
-        eor Zebetites.0.vramPtr+1,x
+        jsr GetRoomRAMPtrHi
+        eor Zebetites.0.roomRAMPtr+1,x
         bne @endIf_B
             ; zebetite is in the opposite nametable
             ; clear status
@@ -960,9 +960,9 @@ SpawnZebetiteRoutine:
     and #$10
     eor #$10
     ora #$84
-    sta Zebetites.0.vramPtr,x
-    jsr GetVRAMPtrHi
-    sta Zebetites.0.vramPtr+1,x
+    sta Zebetites.0.roomRAMPtr,x
+    jsr GetRoomRAMPtrHi
+    sta Zebetites.0.roomRAMPtr+1,x
     
     lda #$01
     sta Zebetites.0.status,x
@@ -973,11 +973,12 @@ SpawnZebetiteRoutine:
     sta Zebetites.0.isHit,x
     rts
 
-GetVRAMPtrHi:
+GetRoomRAMPtrHi:
+    ; return #$61 for nametable 0 and #$65 for nametable 3
     jsr GetNameTableAtScrollDir_
     asl
     asl
-    ora #$21+$40
+    ora #(>RoomRAMA)+1.b
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1272,14 +1273,14 @@ MotherBrain_9F02_08:
         lda L9F39,y
         clc
         adc #$42
-        sta TileBlasts.0.wramPtr
+        sta TileBlasts.0.roomRAMPtr
         php
         lda MotherBrainHi
         asl
         asl
         plp
         adc #$61
-        sta TileBlasts.0.wramPtr+1
+        sta TileBlasts.0.roomRAMPtr+1
         lda #$00
         sta PageIndex
         lda PPUStrIndex
@@ -1359,12 +1360,12 @@ MotherBrain_SpawnDoor:
     lda #$10
     sta TileBlasts.0.animFrame
     lda #$40
-    sta TileBlasts.0.wramPtr
+    sta TileBlasts.0.roomRAMPtr
     lda MotherBrainHi
     asl
     asl
     ora #$61
-    sta TileBlasts.0.wramPtr+1
+    sta TileBlasts.0.roomRAMPtr+1
     lda #$00
     sta PageIndex
     jmp CommonJump_DrawTileBlast
@@ -1552,7 +1553,7 @@ MotherBrain_Disintegrate:
 @disintegrate:
     ; add ($6144 + MotherBrainHi*$0400) to byte
     adc #$44
-    sta TileBlasts.0.wramPtr
+    sta TileBlasts.0.roomRAMPtr
     php
     lda MotherBrainHi
     asl
@@ -1560,7 +1561,7 @@ MotherBrain_Disintegrate:
     ora #$61
     plp
     adc #$00
-    sta TileBlasts.0.wramPtr+1
+    sta TileBlasts.0.roomRAMPtr+1
     ; clear 2x2 tile region at that location
     lda #$00
     sta TileBlasts.0.animFrame
@@ -1641,9 +1642,9 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
         @slotFound:
         ; set pointer
         lda #$8C
-        sta TileBlasts.0.wramPtr,x
-        lda Temp04_CartRAMPtr+1.b
-        sta TileBlasts.0.wramPtr+1,x
+        sta TileBlasts.0.roomRAMPtr,x
+        lda Temp04_RoomRAMPtr+1.b
+        sta TileBlasts.0.roomRAMPtr+1,x
         ; set to clear 2x3 tile region
         lda #$01
         sta TileBlasts.0.animFrame,x
@@ -1662,14 +1663,14 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
     @checkZebetite:
         ; tile is not #$98, check if samus shot a zebetite
         ; $04 = $04 & #$FE
-        lda Temp04_CartRAMPtr
+        lda Temp04_RoomRAMPtr
         lsr
         bcc @endIf_andFE
-            dec Temp04_CartRAMPtr
+            dec Temp04_RoomRAMPtr
         @endIf_andFE:
         ; load tile id of left tile of block samus shot
         ldy #$00
-        lda (Temp04_CartRAMPtr),y
+        lda (Temp04_RoomRAMPtr),y
         ; exit if bit 0 of tile id is set (not the case for zebetites)
         lsr
         bcs @exit
@@ -1685,12 +1686,12 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
             lda Zebetites.0.status,y
             beq @notTheRightZebetite
             ; and if missile is touching that zebetite
-            lda Temp04_CartRAMPtr
+            lda Temp04_RoomRAMPtr
             and #$9E
-            cmp Zebetites.0.vramPtr,y
+            cmp Zebetites.0.roomRAMPtr,y
             bne @notTheRightZebetite
-            lda Temp04_CartRAMPtr+1.b
-            cmp Zebetites.0.vramPtr+1,y
+            lda Temp04_RoomRAMPtr+1.b
+            cmp Zebetites.0.roomRAMPtr+1,y
             beq @theRightZebetite
             @notTheRightZebetite:
                 ; missile is not touching that zebetite
@@ -1999,10 +2000,10 @@ LA2BA:
     lda ZebetiteAnimFrameTable,y
     sta TileBlasts.1.animFrame
     ; set vram pointer
-    lda Zebetites.0.vramPtr,x
-    sta TileBlasts.1.wramPtr
-    lda Zebetites.0.vramPtr+1,x
-    sta TileBlasts.1.wramPtr+1
+    lda Zebetites.0.roomRAMPtr,x
+    sta TileBlasts.1.roomRAMPtr
+    lda Zebetites.0.roomRAMPtr+1,x
+    sta TileBlasts.1.roomRAMPtr+1
     ; if a ppu string is in the buffer, dont update gfx
     lda PPUStrIndex
     bne LA2DA

@@ -1786,9 +1786,9 @@ MoreInit:
         iny
         bne LC86F
 
-    ldy CartRAMPtr+1.b
+    ldy RoomRAMPtr+1.b
     sty $01
-    ldy CartRAMPtr
+    ldy RoomRAMPtr
     sty $00
     lda PPUCTRL_ZP
     and #$FB        ; PPU increment = 1
@@ -4041,7 +4041,7 @@ Door_DeleteOffscreenEnemies:
         sbc #$20 ; BUG: should be #$10
         tax
         bpl @loop_enemies
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     tay
     ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
     @loop_pipeBugHoles:
@@ -4301,10 +4301,10 @@ GotoProjectileHitDoorOrStatue:
 ; bullet <--> background crash detection
 ; return carry clear if collided, set otherwise
 UpdateBullet_CollisionWithBG:
-    jsr GetObjCartRAMPtr
+    jsr GetObjRoomRAMPtr
     ; get tile id that bullet touches
     ldy #$00
-    lda (Temp04_CartRAMPtr),y
+    lda (Temp04_RoomRAMPtr),y
     ; branch if tile id >= #$A0 (air tiles)
     cmp #$A0
     bcs UpdateBullet_Move
@@ -4398,11 +4398,11 @@ Lx086:
     jmp DrawBomb
 
 BombExplosion_CollisionWithBG:
-    jsr GetObjCartRAMPtr
+    jsr GetObjRoomRAMPtr
     ; store bomb's cart ram pointer at $0B.$0A
-    lda Temp04_CartRAMPtr
+    lda Temp04_RoomRAMPtr
     sta $0A
-    lda Temp04_CartRAMPtr+1.b
+    lda Temp04_RoomRAMPtr+1.b
     sta $0B
     ; bomb center if ProjectileDieDelay == 1
     ldx PageIndex
@@ -4417,16 +4417,16 @@ BombExplosion_CollisionWithBG:
         ; branch always
         txa
         bne Lx087
-            lda Temp04_CartRAMPtr
+            lda Temp04_RoomRAMPtr
             and #$20
             beq Exit6
         Lx087:
         ; check if underflowed to attributes
-        lda Temp04_CartRAMPtr+1.b
+        lda Temp04_RoomRAMPtr+1.b
         and #$03
         cmp #$03
         bne Lx088
-        lda Temp04_CartRAMPtr
+        lda Temp04_RoomRAMPtr
         cmp #$C0
         bcc Lx088
             ; underflowed to attributes
@@ -4451,16 +4451,16 @@ Lx089:
         ; branch always
         txa
         bne Lx090
-            lda Temp04_CartRAMPtr
+            lda Temp04_RoomRAMPtr
             and #$20
             bne Exit6
         Lx090:
         ; check if overflowed to attributes
-        lda Temp04_CartRAMPtr+1.b
+        lda Temp04_RoomRAMPtr+1.b
         and #$03
         cmp #$03
         bne Lx091
-        lda Temp04_CartRAMPtr
+        lda Temp04_RoomRAMPtr
         cmp #$C0
         bcc Lx091
             ; overflowed to attributes
@@ -4482,11 +4482,11 @@ Lx089:
         ; branch always
         txa
         bne Lx093
-            lda Temp04_CartRAMPtr
+            lda Temp04_RoomRAMPtr
             lsr
             bcc Exit7
         Lx093:
-        lda Temp04_CartRAMPtr
+        lda Temp04_RoomRAMPtr
         and #$1F
         cmp #$1E
         bcc Lx094
@@ -4498,9 +4498,9 @@ Lx089:
             ; check opposite nametable
             lda #$20-$02
             jsr LD77F
-            lda Temp04_CartRAMPtr+1.b
+            lda Temp04_RoomRAMPtr+1.b
             eor #$04
-            sta Temp04_CartRAMPtr+1.b
+            sta Temp04_RoomRAMPtr+1.b
         Lx094:
         jmp BombCurrentTile
     Lx095:
@@ -4512,11 +4512,11 @@ Lx089:
         ; branch always
         txa
         bne Lx096
-            lda Temp04_CartRAMPtr
+            lda Temp04_RoomRAMPtr
             lsr
             bcs Exit7
         Lx096:
-        lda Temp04_CartRAMPtr
+        lda Temp04_RoomRAMPtr
         and #$1F
         cmp #$02
         bcs BombCurrentTile
@@ -4528,14 +4528,14 @@ Lx089:
             ; check opposite nametable
             lda #$20-$02
             jsr LD78B
-            lda Temp04_CartRAMPtr+1.b
+            lda Temp04_RoomRAMPtr+1.b
             eor #$04
-            sta Temp04_CartRAMPtr+1.b
+            sta Temp04_RoomRAMPtr+1.b
     BombCurrentTile:
     txa
     pha
     ldy #$00
-    lda (Temp04_CartRAMPtr),y
+    lda (Temp04_RoomRAMPtr),y
     jsr CheckBlastTile
     bcc Lx097
         cmp #$A0
@@ -4550,7 +4550,7 @@ Exit7:
 LD77F:
     clc
     adc $0A
-    sta Temp04_CartRAMPtr
+    sta Temp04_RoomRAMPtr
     lda $0B
     adc #$00
     jmp LD798
@@ -4560,19 +4560,19 @@ LD78B:
     lda $0A
     sec
     sbc $00
-    sta Temp04_CartRAMPtr
+    sta Temp04_RoomRAMPtr
     lda $0B
     sbc #$00
 LD798:
     and #$07
     ora #>RoomRAMA.b
-    sta Temp04_CartRAMPtr+1.b
+    sta Temp04_RoomRAMPtr+1.b
 RTS_X098:
     rts
 
 ;-------------------------------------[ Get object coordinates ]------------------------------------
 
-GetObjCartRAMPtr:
+GetObjRoomRAMPtr:
     ;Load index into object RAM to find proper object.
     ldx PageIndex
     ;Load and save temp copy of object y coord.
@@ -4585,7 +4585,7 @@ GetObjCartRAMPtr:
     lda ObjHi,x
     sta Temp0B_PositionHi
     ;($E96A)Find object position in room RAM.
-    jmp MakeCartRAMPtr
+    jmp MakeRoomRAMPtr
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -5166,14 +5166,14 @@ UpdateStatue_StartRaising:
 ; return carry set on failure
 UpdateStatueBGTiles:
     ; set destination pointer low byte
-    lda StatueTileBlastWRAMPtrLoTable,y
-    sta TileBlasts.12.wramPtr
+    lda StatueTileBlastRoomRAMPtrLoTable,y
+    sta TileBlasts.12.roomRAMPtr
     ; set destination pointer high byte
     lda StatueHi
     asl
     asl
-    ora StatueTileBlastWRAMPtrHiTable,y
-    sta TileBlasts.12.wramPtr+1
+    ora StatueTileBlastRoomRAMPtrHiTable,y
+    sta TileBlasts.12.roomRAMPtr+1
     ; set 2x3 tile region of solid blank tiles
     lda #$09
     sta TileBlasts.12.animFrame
@@ -5188,12 +5188,12 @@ UpdateStatueBGTiles:
     rts
 
 ; Table used by above subroutine
-StatueTileBlastWRAMPtrLoTable:
+StatueTileBlastRoomRAMPtrLoTable:
     .byte <$6130 ; non-raised kraid top left corner
     .byte <$60AC ; non-raised ridley top left corner
     .byte <$60F0 ; raised kraid top left corner
     .byte <$606C ; raised ridley top left corner
-StatueTileBlastWRAMPtrHiTable:
+StatueTileBlastRoomRAMPtrHiTable:
     .byte >$6130
     .byte >$60AC
     .byte >$60F0
@@ -5235,11 +5235,11 @@ UpdateAllStatues_Bridge:
         asl
         asl
         ora #$62
-        sta TileBlasts.0.wramPtr+1,x
+        sta TileBlasts.0.roomRAMPtr+1,x
         tya
         asl
         adc #$08
-        sta TileBlasts.0.wramPtr,x
+        sta TileBlasts.0.roomRAMPtr,x
         ; continue looping if there are still more tile blasts to make
         jsr Xminus16
         dey
@@ -5306,10 +5306,10 @@ CheckOneItem:
     sta PowerUpDrawX                ;
     lda PowerUps.0.hi,x             ;
     sta PowerUpDrawHi               ;
-    jsr GetObjCartRAMPtr                ;($D79F)Find object position in room RAM.
+    jsr GetObjRoomRAMPtr                ;($D79F)Find object position in room RAM.
     ldx ItemIndex                   ;Index to proper power up item.
     ldy #$00                        ;Reset index.
-    lda (Temp04_CartRAMPtr),y                     ;Load pointer into room RAM.
+    lda (Temp04_RoomRAMPtr),y                     ;Load pointer into room RAM.
     cmp #$A0                        ;Is object being placed on top of a solid tile?-->
     bcc RTS_DB36                       ;If so, branch to exit.
     lda PowerUps.0.type,x           ;
@@ -7281,7 +7281,7 @@ CheckUpdateNameTable:
     @horizontal:
     jmp CheckUpdateNameTableHorizontal
 
-Table11:
+CheckUpdateNameTableVertical_ScrollYThresholds:
     .byte $07
     .byte $00
 
@@ -7291,16 +7291,19 @@ PPUAddrs:
     .byte $20                       ;High byte of nametable #0(PPU).
     .byte $2C                       ;High byte of nametable #3(PPU)
 
-WRAMAddrs:
+RoomRAMAddrs:
     .byte >RoomRAMA         ;High byte of RoomRAMA(cart RAM).
     .byte >RoomRAMB         ;High byte of RoomRAMB(cart RAM).
 
 GetNameAddrs:
-    jsr GetNameTableAtScrollDir     ;($EB85)Get current name table number.
-    and #$01                        ;Update name table 0 or 3.
-    tay                             ;
-    lda PPUAddrs,y                  ;Get high PPU addr of nametable(dest).
-    ldx WRAMAddrs,y                 ;Get high cart RAM addr of nametable(src).
+    ;Get current name table number.
+    jsr GetNameTableAtScrollDir
+    and #$01 ;useless instruction
+    tay
+    ;Get high PPU addr of nametable(dest).
+    lda PPUAddrs,y
+    ;Get high cart RAM addr of nametable(src).
+    ldx RoomRAMAddrs,y
     rts
 
 ;----------------------------------------------------------------------------------------------------
@@ -7311,7 +7314,7 @@ CheckUpdateNameTableVertical:
     ldx ScrollDir
     lda ScrollY
     and #$07        ; compare value = 0 if ScrollDir = down, else 7
-    cmp Table11,x
+    cmp CheckUpdateNameTableVertical_ScrollYThresholds,x
     bne RTS_X173     ; exit if not equal (no nametable update)
 
 EndOfRoomVertical:
@@ -7344,7 +7347,7 @@ UpdateNameTable:
     lda ScrollDir
     lsr             ; A = 0 if vertical scrolling, 1 if horizontal
     tax
-    lda Table01,x
+    lda @controlBitsTable,x
     sta $04         ; $04 = control
     ldy #$01
     sty PPUDataPending      ; data pending = YES
@@ -7375,9 +7378,9 @@ UpdateNameTable:
     stx PPUStrIndex
     jsr EndPPUString
 
-Table01:
+@controlBitsTable:
     .byte $20                       ;Horizontal write. PPU inc = 1, length = 32 tiles.
-    .byte $9E                       ;Vertical write... PPU inc = 32, length = 30 tiles.
+    .byte $1E | $80                 ;Vertical write... PPU inc = 32, length = 30 tiles.
 
 ;---------------------------------[Write PPU attribute table data ]----------------------------------
 
@@ -7571,8 +7574,9 @@ ScrollRight:
 RTS_X196:
     rts
 
-Table02:
-    .byte $07,$00
+CheckUpdateNameTableHorizontal_ScrollXThresholds:
+    .byte $07
+    .byte $00
 
 ; check if it's time to update nametable (when scrolling is HORIZONTAL)
 
@@ -7580,7 +7584,7 @@ CheckUpdateNameTableHorizontal:
     ldx ScrollDir
     lda ScrollX
     and #$07        ; keep lower 3 bits
-    cmp Table02-2,x ; compare value = 0 if ScrollDir = right, else 7
+    cmp CheckUpdateNameTableHorizontal_ScrollXThresholds-2,x ; compare value = 0 if ScrollDir = right, else 7
     bne RTS_X196      ; exit if not equal (no nametable update)
 
 EndOfRoomHorizontal:
@@ -7750,9 +7754,9 @@ LE7DE:
 ; object<-->background crash detection
 
 LE7E6:
-    jsr MakeCartRAMPtr              ;($E96A)Find object position in room RAM.
+    jsr MakeRoomRAMPtr              ;($E96A)Find object position in room RAM.
     ldy #$00
-    lda (Temp04_CartRAMPtr),y     ; get tile value
+    lda (Temp04_RoomRAMPtr),y     ; get tile value
     ; branch if bullet hit solid blank tile
     cmp #$4E
     beq ProjectileHitDoorOrStatue
@@ -7796,12 +7800,12 @@ ProjectileHitDoorOrStatue:
     ; go through all doors
     @loop:
         ; check if projectile tile column is the same as door tile column otherwise check next door
-        lda Temp04_CartRAMPtr+1.b
-        eor DoorCartRAMPtr+1.b,x
+        lda Temp04_RoomRAMPtr+1.b
+        eor DoorRoomRAMPtr+1.b,x
         and #$04
         bne @next
-        lda Temp04_CartRAMPtr
-        eor DoorCartRAMPtr,x
+        lda Temp04_RoomRAMPtr
+        eor DoorRoomRAMPtr,x
         and #$1F
         bne @next
         ; get obj slot
@@ -7845,7 +7849,7 @@ ProjectileHitDoorOrStatue:
     ; lowest nybble of pointer to kraid statue is #$0 or #$1
     ; lowest nybble of pointer to ridley statue is #$C or #$D
     ; therefore, by using bit 3 of the pointer, we can distinguish between the statues
-    lda Temp04_CartRAMPtr
+    lda Temp04_RoomRAMPtr
     jsr Adiv8       ; / 8
     and #$01
     ; set statue is hit flag for appropriate statue
@@ -8063,21 +8067,21 @@ LE95F:
 ;Find object's equivalent position in room RAM based on object's coordinates.
 ;In: $02 = ObjY, $03 = ObjX, $0B = ObjHi. Out: $04 = cart RAM pointer.
 
-MakeCartRAMPtr:
+MakeRoomRAMPtr:
     ;Set pointer to $6xxx(cart RAM).
     lda #RoomRAMA >> 10.b
-    sta Temp04_CartRAMPtr+1.b
+    sta Temp04_RoomRAMPtr+1.b
     ;Object Y room position.
     lda Temp02_PositionY
     ;Drop 3 LSBs. Only use multiples of 8.
     and #$F8
     ;Move upper 2 bits to lower 2 bits of $05
     asl
-    rol Temp04_CartRAMPtr+1.b
+    rol Temp04_RoomRAMPtr+1.b
     asl
-    rol Temp04_CartRAMPtr+1.b
+    rol Temp04_RoomRAMPtr+1.b
     ;move bits 3, 4, 5 to upper 3 bits of $04.
-    sta Temp04_CartRAMPtr
+    sta Temp04_RoomRAMPtr
     ;Object X room position.
     lda Temp03_PositionX
     ;A=ObjX/8.
@@ -8085,8 +8089,8 @@ MakeCartRAMPtr:
     lsr
     lsr
     ;Put bits 0 thru 4 into $04.
-    ora Temp04_CartRAMPtr
-    sta Temp04_CartRAMPtr
+    ora Temp04_RoomRAMPtr
+    sta Temp04_RoomRAMPtr
     ;Object nametable.
     lda Temp0B_PositionHi
     ; A=ObjHi*4.
@@ -8095,8 +8099,8 @@ MakeCartRAMPtr:
     ;Set bit 2 if object is on nametable 3.
     and #$04
     ;Include nametable bit in $05.
-    ora Temp04_CartRAMPtr+1.b
-    sta Temp04_CartRAMPtr+1.b
+    ora Temp04_RoomRAMPtr+1.b
+    sta Temp04_RoomRAMPtr+1.b
     ;Return pointer in $04 = 01100HYY YYYXXXXX.
     rts
 
@@ -8163,9 +8167,9 @@ Lx220:
     inc TileBlasts.0.routine,x
     lda $04
     and #$DE
-    sta TileBlasts.0.wramPtr,x
+    sta TileBlasts.0.roomRAMPtr,x
     lda $05
-    sta TileBlasts.0.wramPtr+1,x
+    sta TileBlasts.0.roomRAMPtr+1,x
     lda InArea
     cmp #$11                        ; In Norfair?
     bne Lx221
@@ -8190,14 +8194,17 @@ Exit18:
 ;------------------------------------------[ Select room RAM ]---------------------------------------
 
 SelectRoomRAM:
-    jsr GetNameTableAtScrollDir     ;($EB85)Find name table to draw room on.
-    asl                             ;
-    asl                             ;
-    ora #$60                        ;A=#$64 for name table 3, A=#$60 for name table 0.
-    sta CartRAMPtr+1.b                ;
-    lda #$00                        ;
-    sta CartRAMPtr                  ;Save two byte pointer to start of proper room RAM.
-    rts                             ;
+    ;Find name table to draw room on.
+    jsr GetNameTableAtScrollDir
+    ;A=#$64 for name table 3, A=#$60 for name table 0.
+    asl
+    asl
+    ora #>RoomRAMA.b
+    ;Save two byte pointer to start of proper room RAM.
+    sta RoomRAMPtr+1.b
+    lda #$00
+    sta RoomRAMPtr
+    rts
 
 ;------------------------------------[ write attribute table data ]----------------------------------
 
@@ -8255,9 +8262,9 @@ LEA5D:
 
 DrawObject:
     sta $0E                         ;Store object position byte(%yyyyxxxx).
-    lda CartRAMPtr                  ;
+    lda RoomRAMPtr                  ;
     sta CartRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
-    lda CartRAMPtr+1.b                ;(start at beginning of the room).
+    lda RoomRAMPtr+1.b                ;(start at beginning of the room).
     sta CartRAMWorkPtr+1.b            ;
     lda $0E                         ;Reload object position byte.
     jsr Adiv16                      ;($C2BF)/16. Lower nibble contains object y position.-->
@@ -8446,7 +8453,7 @@ LEB4D:
     sta EnsExtra.0.status,x                  ;Indicate object slot is taken.
     lda #$00
     sta EnIsHit,x
-    jsr GetNameTableAtScrollDir       ;($EB85)Get name table to place enemy on.
+    jsr GetNameTableAtScrollDir       ;Get name table to place enemy on.
     sta EnsExtra.0.hi,x               ;Store name table.
 LEB6E:
     ldy EnsExtra.0.type,x               ;Load A with index to enemy data.
@@ -8494,15 +8501,17 @@ IsSlotTaken:
 ;          +-----+-----+                                   | +-----+-----+ |
 ;                                                          +---------------+
 ;
-;The same diagonal traversal of the name tables illustrated above applies to vetricle traversal as
+;The same diagonal traversal of the name tables illustrated above applies to vertical traversal as
 ;well. Since Samus can only travel between 2 name tables and not 4, the name table placement for
 ;objects is simplified.  The following code determines which name table to use next:
 
-GetNameTableAtScrollDir:
-    lda PPUCTRL_ZP                   ;
-    eor ScrollDir                   ;Store #$01 if object should be loaded onto name table 3-->
-    and #$01                        ;store #$00 if it should be loaded onto name table 0.
-    rts                             ;
+GetNameTableAtScrollDir: ; 07:EB85
+    ;Store #$01 if object should be loaded onto name table 3.
+    ;Store #$00 if it should be loaded onto name table 0.
+    lda PPUCTRL_ZP
+    eor ScrollDir
+    and #$01
+    rts
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -8562,7 +8571,7 @@ SpawnDoorRoutine:
     pla
     and #$01        ; A = door side (0=right, 1=left)
     tay
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     sta ObjHi,x
     lda DoorXs,y    ; get door's X coordinate
     sta ObjX,x
@@ -8571,7 +8580,7 @@ SpawnDoorRoutine:
     ; block scroll at nametable the door is in
     lda DoorScrollBlocks,y
     tay
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     eor #$01
     tax
     tya
@@ -8610,7 +8619,7 @@ SpawnElevatorRoutine:
     sty ObjY+$20       ; elevator Y coord
     lda #$80
     sta ObjX+$20       ; elevator X coord
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     sta ObjHi+$20       ; high Y coord
     lda #_id_ObjFrame_Elevator.b
     sta ObjAnimFrame+$20       ; elevator frame
@@ -8624,7 +8633,7 @@ SpawnElevatorRoutine:
 
 LoadStatues:
     ; set statues object hi position
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     sta StatueHi
     
     ; set kraid statue y position
@@ -8688,7 +8697,7 @@ LoadPipeBugHole:
     jsr Amul16       ; * 16
     ora #$00
     sta PipeBugHoles.0.x,x
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     sta PipeBugHoles.0.hi,x
 @exit:
     lda #$03
@@ -8715,7 +8724,7 @@ DeleteOffscreenRoomSprites:
 
     ; If the enemy is in the opposite nametable and is offscreen, delete it.
     ldx #$50
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     tay
     @loop_enemies:
         tya
@@ -8747,7 +8756,7 @@ DeleteOffscreenRoomSprites:
     ; doors
     jsr Doors_RemoveIfOffScreen
     jsr EraseScrollBlockOnNameTableAtScrollDir
-    jsr GetNameTableAtScrollDir     ;(EB85)
+    jsr GetNameTableAtScrollDir
     asl
     asl
     tay
@@ -8755,7 +8764,7 @@ DeleteOffscreenRoomSprites:
     ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0.b
     @loop_tileBlasts:
         tya
-        eor TileBlasts.0.wramPtr+1,x
+        eor TileBlasts.0.roomRAMPtr+1,x
         and #$04
         bne @dontDeleteTileBlast
             sta TileBlasts.0.routine,x
@@ -8832,7 +8841,7 @@ LED57:
     rts
 
 EraseScrollBlockOnNameTableAtScrollDir:
-    jsr GetNameTableAtScrollDir     ;($EB85)
+    jsr GetNameTableAtScrollDir
     eor #$01
     tay
     lda #$00
@@ -9014,9 +9023,9 @@ SpawnPowerUp:
     ora #$08
     ;Store center X coord
     sta PowerUps.0.x,x
-    ;($EB85)Get name table to place item on.
-    ;Store name table Item is located on.
+    ;Get name table to place item on.
     jsr GetNameTableAtScrollDir
+    ;Store name table Item is located on.
     sta PowerUps.0.hi,x
 @exit:
     ;Get next data byte(Always #$00).
@@ -9111,7 +9120,7 @@ SpawnMellow:
     adc RandomNumber2
     sta Mellows.0.x,x
     ; set nametable
-    jsr GetNameTableAtScrollDir      ;($EB85)
+    jsr GetNameTableAtScrollDir
     sta Mellows.0.hi,x
     ; set status to resting
     lda #$01
@@ -9404,7 +9413,7 @@ AttribMaskTable:
 ;------------------------[ Initialize room RAM and associated attribute table ]-----------------------
 
 InitTables:
-    lda CartRAMPtr+1.b                ;#$60 or #$64.
+    lda RoomRAMPtr+1.b                ;#$60 or #$64.
     tay                             ;
     tax                             ;Save value to create counter later.
     iny                             ;
@@ -11350,9 +11359,9 @@ EnemyBGCollideOrApplySpeed:
         bcc Lx369
     Lx368:
         ; get tile id at enemy's position
-        jsr GetEnemyCartRAMPtr
+        jsr GetEnemyRoomRAMPtr
         ldy #$00
-        lda (Temp04_CartRAMPtr),y
+        lda (Temp04_RoomRAMPtr),y
         ; return carry clear if tile is solid
         cmp #$A0
         bcc RTS_X370
@@ -11404,7 +11413,7 @@ UpdateEnemyFireball_Frozen:
     Lx372:
     jmp LF97C
 
-GetEnemyCartRAMPtr:
+GetEnemyRoomRAMPtr:
     ldx PageIndex
     lda EnY,x
     sta Temp02_PositionY
@@ -11412,7 +11421,7 @@ GetEnemyCartRAMPtr:
     sta Temp03_PositionX
     lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
-    jmp MakeCartRAMPtr              ;($E96A)Find enemy position in room RAM.
+    jmp MakeRoomRAMPtr              ;($E96A)Find enemy position in room RAM.
 
 UpdateEnemyFireball_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
@@ -12110,9 +12119,9 @@ UpdateTileBlast_Init:
     ; tile respawns after 320 frames
     lda #$50
     sta TileBlasts.0.delay,x
-    lda TileBlasts.0.wramPtr,x     ; low WRAM addr of blasted tile
+    lda TileBlasts.0.roomRAMPtr,x     ; low WRAM addr of blasted tile
     sta $00
-    lda TileBlasts.0.wramPtr+1,x     ; high WRAM addr
+    lda TileBlasts.0.roomRAMPtr+1,x     ; high WRAM addr
     sta $01
 
 UpdateTileBlast_Animating:
@@ -12161,11 +12170,11 @@ UpdateTileBlast_Respawned:
     lda #$00
     sta TileBlasts.0.routine,x
     ; ($03, $02) = position of center of tile
-    lda TileBlasts.0.wramPtr,x
+    lda TileBlasts.0.roomRAMPtr,x
     clc
     adc #$21
     sta $00
-    lda TileBlasts.0.wramPtr+1,x
+    lda TileBlasts.0.roomRAMPtr+1,x
     sta $01
     jsr GetPosAtNameTableAddr
     ; check if colliding with Samus
@@ -12218,10 +12227,10 @@ DrawTileBlast: ;($FEDC)
     cmp #$1F
     bcs GetTileBlastFramePtr@RTS
     ldx PageIndex
-    ; $01.$00 = TileBlastWRAMPtr
-    lda TileBlasts.0.wramPtr,x
+    ; $01.$00 = TileBlastRoomRAMPtr
+    lda TileBlasts.0.roomRAMPtr,x
     sta $00
-    lda TileBlasts.0.wramPtr+1,x
+    lda TileBlasts.0.roomRAMPtr+1,x
     sta $01
     jsr GetTileBlastFramePtr
     ; $11 = room RAM index = 0

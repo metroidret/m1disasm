@@ -1576,13 +1576,13 @@ WriteDoorBGTiles_Common:
     lda ObjHi,x
     sta Temp0B_PositionHi
     ; call
-    jsr MakeCartRAMPtr
+    jsr MakeRoomRAMPtr
     ldy #$00 ; init y for loop
     pla
     ; cart ram pointer of door is now in $04-$05
     ; write 6 air or door tiles in a vertical line to cart ram
     @loop:
-        sta (Temp04_CartRAMPtr),y
+        sta (Temp04_RoomRAMPtr),y
         tax
         tya
         clc
@@ -1596,10 +1596,10 @@ WriteDoorBGTiles_Common:
     jsr Adiv8
     and #$06
     tay
-    lda Temp04_CartRAMPtr
-    sta DoorCartRAMPtr,y
-    lda Temp04_CartRAMPtr+1.b
-    sta DoorCartRAMPtr+1,y
+    lda Temp04_RoomRAMPtr
+    sta DoorRoomRAMPtr,y
+    lda Temp04_RoomRAMPtr+1.b
+    sta DoorRoomRAMPtr+1,y
     rts
 
 ; x coordinate of door's background tiles in pixels
