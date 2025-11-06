@@ -856,7 +856,7 @@ WriteTileBlast:
 WritePPUByte:
     sta PPUDataString,x             ;Store data byte at end of PPUDataString.
 
-NextPPUByte:
+NextPPUByte: ;($C36E)
     inx                             ;PPUDataString has increased in size by 1 byte.
     cpx #$4F                        ;PPU byte writer can only write a maximum of #$4F bytes
     bcc RTS_C37D                           ;If PPU string not full, branch to get more data.
@@ -925,12 +925,15 @@ LC3BC:
     jsr EndPPUString                ;($C376)else branch to process PPU byte.
 
 SeparateControlBits:
-    sta $04                         ;Store current byte
-    and #$BF                        ;
-    sta PPUDataString,x             ;Remove RLE bit and save control bit in PPUDataString.
-    and #$3F                        ;
-    sta $05                         ;Extract counter bits and save them for use above.
-    jmp NextPPUByte                 ;($C36E)
+    ;Store current byte
+    sta Temp04_ControlBits
+    ;Remove RLE bit and save control bit in PPUDataString.
+    and #$BF
+    sta PPUDataString,x
+    ;Extract counter bits and save them for use above.
+    and #$3F
+    sta Temp05_BytesCounter
+    jmp NextPPUByte
 
 ;----------------------------------------[ Math routines ]-------------------------------------------
 
@@ -1695,7 +1698,7 @@ CopyGFXBlock:
         lda ($01),y
         sta PPUDATA
         ;Decrement low byte of data length.
-        dec $05                         
+        dec $05
         ;Branch if high byte does not need decrementing.
         bne @endIf
             ;Low byte has reached 0. High byte needs decrementing.
@@ -2950,7 +2953,7 @@ CheckHealthStatus: ;($CDFA)
         lda SamusKnockbackIsBomb
         sta SamusKnockbackIsBomb77
         beq Lx005
-            ; play hurt sfx if 
+            ; play hurt sfx if samus was hurt
             bpl Lx004
                 jsr SFX_SamusHit
             Lx004:
@@ -3056,7 +3059,7 @@ Exit3:
 
 ;----------------------------------------[ Subtract health ]-----------------------------------------
 
-SubtractHealth:
+SubtractHealth: ; 07:CE92
     ;Check to see if health needs to be changed. If not, branch to exit.
     lda HealthChange
     ora HealthChange+1.b
@@ -5434,7 +5437,7 @@ MapScrollRoutine:
     beq @else_A
         ; scrolling horizontally
         ;Branch if scrolling left.
-        bcc @endIf_A                       
+        bcc @endIf_A
             ;Scrolling right.
             ;Unless the scroll x offset is 0, the actual room x pos -->
             ;needs to be decremented in order to be correct.
@@ -5649,7 +5652,7 @@ LDCF5:
     ldx PageIndex
 LDCFC:
     ; Branch ahead if not in Tourian
-    lda InArea 
+    lda InArea
     cmp #$13
     bne Lx135
         ; we are in tourian
@@ -6688,7 +6691,7 @@ RTS_E268:
 LavaAndMoveCheck:
     ; don't exit if samus is on elevator
     lda ObjAction
-    cmp #sa_Elevator                
+    cmp #sa_Elevator
     beq @endIf_A
         ; exit if samus is dead (sa_Dead or sa_Dead2)
         cmp #sa_Dead
@@ -6748,7 +6751,7 @@ SamusMoveVertically: ; unreferenced label
     ;Calculate Samus' screen y position.
     lda ObjY
     sec
-    sbc ScrollY                     
+    sbc ScrollY
     sta SamusScrY
     ;Load temp copy of delta y. branch if Samus is moving downwards
     lda $00
@@ -6796,7 +6799,7 @@ SamusMoveVertically: ; unreferenced label
         lsr
         lsr
         ; branch if delta y became zero
-        beq SamusMoveHorizontally       
+        beq SamusMoveHorizontally
     @endIf_C:
     ;Store number of pixels to move Samus this frame.
     sta ObjectCounter
@@ -6808,12 +6811,12 @@ SamusMoveVertically: ; unreferenced label
             ;Samus bounce after hitting the ground in ball form.
             ;branch if Samus isn't rolled into a ball
             lda ObjAction
-            cmp #sa_Roll                    
+            cmp #sa_Roll
             bne @landingNoBall
             ;Divide vertical speed by 2.
             lsr ObjSpeedY
             ;branch if Speed is not falling fast enough to bounce (speed < 2px/frame)
-            beq @landingNoBounce        
+            beq @landingNoBounce
             ; continue division of vertical speed by 2
             ror SamusSpeedSubPixelY
             ; negate vertical speed
@@ -6883,7 +6886,7 @@ SamusMoveHorizontally:
     lda SamusDoorData
     beq Exit10
     ; samus has entered a door, Door leads to the left.
-    lda #$01                        
+    lda #$01
     bne LE362 ;Branch always.
 
 ;Samus is moving right.
@@ -7140,7 +7143,7 @@ MoveSamusUp:
         bne Lx154
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
         Lx154:
-        lda #240
+        lda #SCRN_VY
         sta ObjY
     Lx155:
     dec ObjY
@@ -7182,7 +7185,7 @@ MoveSamusDown:
         inc SamusScrY
     Lx160:
     lda ObjY
-    cmp #239
+    cmp #SCRN_VY-1.b
     bne Lx162
         lda ScrollDir
         and #$02
@@ -7325,55 +7328,61 @@ EndOfRoomVertical:
     ; $01.00 = (ScrollY & 0xF8) << 2 = tile index
     lda ScrollY
     and #$F8        ; keep upper 5 bits
-    sta $00
+    sta Temp00_RoomRAMPtr
     lda #$00
-    asl $00
+    asl Temp00_RoomRAMPtr
     rol
-    asl $00
+    asl Temp00_RoomRAMPtr
     rol
 
-UpdateNameTable:
-    sta $01
+UpdateNameTable: ; 07:E590
+    sta Temp00_RoomRAMPtr+1.b
     ; $03.02 = $01.00 + PPU nametable addr = pointer to PPU nametable tile
     jsr GetNameAddrs
-    ora $01
-    sta $03
+    ora Temp00_RoomRAMPtr+1.b
+    sta Temp02_PPURAMPtr+1.b
     ; $01.00 += cart RAM nametable addr = pointer to cart RAM nametable tile
     txa
-    ora $01
-    sta $01
-    lda $00
-    sta $02
+    ora Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr
+    sta Temp02_PPURAMPtr
     lda ScrollDir
     lsr             ; A = 0 if vertical scrolling, 1 if horizontal
     tax
     lda @controlBitsTable,x
-    sta $04         ; $04 = control
+    sta Temp04_ControlBits
     ldy #$01
     sty PPUDataPending      ; data pending = YES
     dey
     ldx PPUStrIndex
     ; PPU starting address = $03.02
-    lda $03
+    lda Temp02_PPURAMPtr+1.b
     jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
-    lda $02
+    lda Temp02_PPURAMPtr
     jsr WritePPUByte
     ; Control byte = $04
-    lda $04
+    lda Temp04_ControlBits
     jsr SeparateControlBits         ;($C3C6)
     @loop_data:
-        lda ($00),y
+        ; y is #$00 here
+        lda (Temp00_RoomRAMPtr),y
         jsr WritePPUByte
-        sty $06         ; backup Y to $06
-        ldy #$01        ; WRAM pointer increment = 1...
-        bit $04  ; ... if bit 7 (PPU inc) of $04 clear
+        ; backup Y to $06
+        sty Temp06_Zero
+        ; if bit 7 (PPU inc) of $04 clear, WRAM pointer increment = 1
+        ; else ptr inc = 32
+        ldy #$01
+        bit Temp04_ControlBits
         bpl @inc1
-            ldy #$20        ; else ptr inc = 32
+            ldy #$20
         @inc1:
         jsr AddYToPtr00                 ;($C2A8)
-        ldy $06         ; restore Y from $06
-        dec $05         ; decrement number of bytes of data remaining if branch if there's any left
-    bne @loop_data
+        ; restore Y from $06
+        ldy Temp06_Zero
+        ; decrement number of bytes of data remaining if branch if there's any left
+        dec Temp05_BytesCounter
+        bne @loop_data
     ; End PPU string.
     stx PPUStrIndex
     jsr EndPPUString
@@ -7596,7 +7605,7 @@ EndOfRoomHorizontal:
     lda ScrollX
     and #$F8        ; keep upper five bits (redundant)
     jsr Adiv8       ; / 8 (make 'em lower five)
-    sta $00
+    sta Temp00_RoomRAMPtr
     lda #$00
     jmp UpdateNameTable
 
@@ -9272,7 +9281,7 @@ LEF3F:
     @loop:
         ldy $11                         ;Macro index loaded into Y.
         lda (MacroPtr),y                ;Get tile number.
-        inc $11                         
+        inc $11
         ;Write tile number to room RAM.
         ldy TilePosTable,x
         sta ($00),y
@@ -9428,10 +9437,10 @@ InitTables:
     ldx RoomPal                     ;Index into table below (Lowest 2 bits).
     lda ATDataTable,x               ;Load attribute table data from table below.
     ldy #$C0                        ;Low byte of start of all attribute tables.
-    LF012:
+    @loop:
         sta ($00),y                     ;Fill attribute table.
         iny                             ;
-        bne LF012                       ;Loop until entire attribute table is filled.
+        bne @loop                       ;Loop until entire attribute table is filled.
     rts
 
 ;Data to fill attribute tables with.
@@ -9442,22 +9451,30 @@ ATDataTable:
     .byte %11111111
 
 FillRoomRAM:
-    pha                             ;Temporarily store A.
-    txa                             ;
-    sty $01                         ;Calculate value to store in X to use as upper byte-->
-    clc                             ;counter for initilaizing room RAM(X=#$FC).-->
-    sbc $01                         ;Since carry bit is cleared, result is one less than expected.
-    tax                             ;
-    pla                             ;Restore value to fill room RAM with(#$FF).
-    ldy #$00                        ;Lower address byte to start at.
-    sty $00                         ;
-    LF029:
-        sta ($00),y                     ;
-        dey                             ;
-        bne LF029                       ;
-        dec $01                         ;Loop until all the room RAM is filled with #$FF(black).
-        inx                             ;
-        bne LF029                       ;
+    ;Temporarily store A.
+    pha
+    ;Calculate value to store in X to use as upper byte counter for initilaizing room RAM.
+    ;(X = RoomRAMPtrHi+3 - RoomRAMPtrHi - clc = #$FC)
+    ;Since carry bit is cleared, result is one less than expected.
+    txa
+    sty $01
+    clc
+    sbc $01
+    tax
+    ;Restore value to fill room RAM with(#$FF).
+    pla
+    ;Lower address byte to start at.
+    ldy #$00
+    sty $00
+    ;Loop until all the room RAM is filled with #$FF(black).
+    @loop_outer:
+        @loop_inner:
+            sta ($00),y
+            dey
+            bne @loop_inner
+        dec $01
+        inx
+        bne @loop_outer
     rts
 
 ;----------------------------------------------------------------------------------------------------
@@ -9640,7 +9657,7 @@ Lx275:
         bne Lx278
 
 GotoSubtractHealth:
-    jmp SubtractHealth              ;($CE92)
+    jmp SubtractHealth
 
 
 CollisionDetectionEnemy_CheckWithObjectYSlot:
@@ -11627,7 +11644,7 @@ InitEnResetAnimIndex: ; referenced in areas_common.asm
         jmp ClearEnAnimDelay
     Lx384:
         ; displacement is less than 8 pixels
-        ; exit if enemy is doing its resting animation 
+        ; exit if enemy is doing its resting animation
         lda EnemyRestingAnimIndex,y
         cmp EnsExtra.0.resetAnimIndex,x
         beq Exit13
@@ -11731,7 +11748,7 @@ UpdateSkreeProjectile:
         ; deal 5 damage to Samus
         lda #$50
         sta HealthChange
-        jsr SubtractHealth              ;($CE92)
+        jsr SubtractHealth
     @endIf_A:
     pla
     tax

@@ -1609,7 +1609,7 @@ CheckPassword: ; 00:8C5E
     L8C69:
     ;Set IncorrectPassword SFX flag.
     lda MultiSFXFlag
-    ora #sfxMulti_IncorrectPassword 
+    ora #sfxMulti_IncorrectPassword
     sta MultiSFXFlag
     ;Set Timer3 time for 120 frames (2 seconds).
     lda #$0C
@@ -2836,7 +2836,7 @@ UnusedIntroRoutine5: ; 00:946C
     @loop_infinite:
         ; cancel repeatedly forever
         ; pretty sure this is a bug
-        lda #$00 
+        lda #$00
         sta PPUDataString,x
         beq @loop_infinite
 @RTS:

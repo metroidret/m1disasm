@@ -219,6 +219,16 @@ Temp04_NumBlocksToCheck = $04
 Temp06_NextPointYOffset = $06    ; either 0 or 8 when checking vertically and horizontally respectively
 Temp07_NextPointXOffset = $07    ; either 8 or 0 when checking vertically and horizontally respectively
 
+; UpdateNameTable
+Temp00_RoomRAMPtr      = $00
+; Temp00_RoomRAMPtr+1    = $01
+Temp02_PPURAMPtr       = $02
+; Temp02_PPURAMPtr+1     = $03
+Temp04_ControlBits     = $04
+Temp05_BytesCounter    = $05
+Temp06_Zero            = $06
+
+
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
 
@@ -396,7 +406,7 @@ SamusKnockbackIsBomb77 db   ;$77     ;set to SamusKnockbackIsBomb
 
 SpareMem78             db   ;$78
 
-ItemRoomMusicStatus    db   ;$7C     ;#$00=Item room music not playing.
+ItemRoomMusicStatus    db   ;$79     ;#$00=Item room music not playing.
                                        ;#$01=Play item room music.
                                        ;#$80=Stop item room music once door scroll complete.
                                        ;#$81=Item room music already playing. Don't restart.
