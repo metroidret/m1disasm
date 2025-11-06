@@ -1,4 +1,4 @@
-MacroDefs:
+MetatileDefs:
     .byte $FF, $FF, $F0, $F0
     .byte $F1, $F1, $F1, $F1
     .byte $A4, $FF, $A4, $FF

@@ -18,11 +18,11 @@
 
 ;Norfair Metatile Definitions
 
-;The macro definitions are simply index numbers into the pattern tables that represent the 4 quadrants
-;of the macro definition. The bytes correspond to the following position in order: lower right tile,
+;The metatile definitions are simply index numbers into the pattern tables that represent the 4 quadrants
+;of the metatile definition. The bytes correspond to the following position in order: lower right tile,
 ;lower left tile, upper right tile, upper left tile.
 
-MacroDefs:
+MetatileDefs:
     .byte $F1, $F1, $F1, $F1
     .byte $FF, $FF, $F0, $F0
     .byte $64, $64, $64, $64

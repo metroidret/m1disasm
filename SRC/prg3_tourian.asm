@@ -83,7 +83,7 @@ AreaPointers:
     .word SpecItmsTbl               ;($A83B)Beginning of special items table.
     .word RmPtrTbl                  ;($A7D1)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A7FB)Beginning of structure pointer table.
-    .word MacroDefs                 ;($AE49)Beginning of macro definitions.
+    .word MetatileDefs              ;($AE49)Beginning of metatile definitions.
     .word EnFramePtrTable1          ;($A42C)Address table into enemy animation data. Two-->
     .word EnFramePtrTable2          ;($A52C)tables needed to accommodate all entries.
     .word EnPlacePtrTable           ;($A540)Pointers to enemy frame placement data.
@@ -2206,7 +2206,7 @@ TileBlastFrame10:
 
 .include "tourian/structures.asm"
 
-;----------------------------------------[ Macro definitions ]---------------------------------------
+;----------------------------------------[ Metatile definitions ]---------------------------------------
 
 .include "tourian/metatiles.asm"
 

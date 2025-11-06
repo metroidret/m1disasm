@@ -18,11 +18,11 @@
 
 ;Brinstar Metatiles
 
-;The macro definitions are simply index numbers into the pattern tables that represent the 4 quadrants
-;of the macro definition. The bytes correspond to the following position in order: lower right tile,
+;The metatile definitions are simply index numbers into the pattern tables that represent the 4 quadrants
+;of the metatile definition. The bytes correspond to the following position in order: lower right tile,
 ;lower left tile, upper right tile, upper left tile.
 
-MacroDefs:
+MetatileDefs:
     .byte $F1, $F1, $F1, $F1
     .byte $FF, $FF, $F0, $F0
     .byte $64, $64, $64, $64
@@ -87,7 +87,7 @@ MacroDefs:
     .byte $30, $00, $BC, $BD
     .byte $CD, $CE, $CF, $D0
     .byte $D1, $D2, $D3, $D4
-    .byte $90, $91, $92, $93
+    .byte $90, $91, $92, $93        ;Not used.
 ;Not used.
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0

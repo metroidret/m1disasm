@@ -91,7 +91,7 @@ AreaPointers:
     .word SpecItmsTbl               ;($A20D)Beginning of special items table.
     .word RmPtrTbl                  ;($A17F)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A1D3)Beginning of structure pointer table.
-    .word MacroDefs                 ;($AB23)Beginning of macro definitions.
+    .word MetatileDefs              ;($AB23)Beginning of metatile definitions.
     .word EnFramePtrTable1          ;($9BF0)Address table into enemy animation data. Two-->
     .word EnFramePtrTable2          ;($9CF0)tables needed to accommodate all entries.
     .word EnPlacePtrTable           ;($9D04)Pointers to enemy frame placement data.
@@ -722,7 +722,7 @@ TileBlastFrame10:
 
 .include "ridley/structures.asm"
 
-;----------------------------------------[ Macro definitions ]---------------------------------------
+;----------------------------------------[ Metatile definitions ]---------------------------------------
 
 .include "ridley/metatiles.asm"
 

@@ -700,25 +700,29 @@ WriteScroll:
 ;----------------------------------[ Add y index to stored addresses ]-------------------------------
 
 ;Add Y to pointer at $0000.
-AddYToPtr00:
-    tya                             ;
-    clc                             ;Add value stored in Y to lower address-->
-    adc $00                         ;byte stored in $00.
-    sta $00                         ;
-    bcc LC2B2                       ;Increment $01(upper address byte) if carry-->
-        inc $01                     ;has occurred.
-    LC2B2:
+AddYToPtr00: ; 07:C2A8
+    ;Add value stored in Y to lower address byte stored in $00.
+    tya
+    clc
+    adc $00
+    sta $00
+    ;Increment $01(upper address byte) if carry has occurred.
+    bcc @RTS
+        inc $01
+    @RTS:
     rts
 
 ;Add Y to pointer at $0002
 AddYToPtr02:
-    tya                             ;
-    clc                             ;Add value stored in Y to lower address-->
-    adc $02                         ;byte stored in $02.
-    sta $02                         ;
-    bcc RTS_C2BD                       ;Increment $01(upper address byte) if carry-->
-        inc $03                     ;has occurred.
-    RTS_C2BD:
+    ;Add value stored in Y to lower address byte stored in $02.
+    tya
+    clc
+    adc $02
+    sta $02
+    ;Increment $03(upper address byte) if carry has occurred.
+    bcc @RTS
+        inc $03
+    @RTS:
     rts
 
 ;--------------------------------[ Simple divide and multiply routines ]-----------------------------
@@ -6568,7 +6572,7 @@ BitScan:
         inx                             ;Increment X to keep of # of bits checked.
         cpx #$08                        ;Have all 8 bit been tested?-->
         bne @loop                       ;If not, branch to check the next bit.
-@exitLoop:
+    @exitLoop:
     txa                             ;Return which bit number was set.
     ldx $0E                         ;Restore X.
 RTS_E1F0:
@@ -8272,21 +8276,21 @@ LEA5D:
 DrawObject:
     sta $0E                         ;Store object position byte(%yyyyxxxx).
     lda RoomRAMPtr                  ;
-    sta CartRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
+    sta RoomRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
     lda RoomRAMPtr+1.b                ;(start at beginning of the room).
-    sta CartRAMWorkPtr+1.b            ;
+    sta RoomRAMWorkPtr+1.b            ;
     lda $0E                         ;Reload object position byte.
     jsr Adiv16                      ;($C2BF)/16. Lower nibble contains object y position.-->
     tax                             ;Transfer it to X, prepare for loop.
     beq LEA80                         ;Skip y position calculation loop as y position=0 and-->
                                         ;does not need to be calculated.
     LEA72:
-        lda CartRAMWorkPtr              ;Low byte of pointer working in room RAM.
+        lda RoomRAMWorkPtr              ;Low byte of pointer working in room RAM.
         clc                             ;
         adc #$40                        ;Advance two rows in room RAM(one y unit).
-        sta CartRAMWorkPtr              ;
+        sta RoomRAMWorkPtr              ;
         bcc LEA7D                           ;If carry occurred, increment high byte of pointer-->
-            inc CartRAMWorkPtr+1.b            ;in room RAM.
+            inc RoomRAMWorkPtr+1.b            ;in room RAM.
         LEA7D:
         dex                             ;
         bne LEA72                          ;Repeat until at desired y position(X=0).
@@ -8295,12 +8299,12 @@ LEA80:
     lda $0E                         ;Reload object position byte.
     and #$0F                        ;Remove y position upper nibble.
     asl                             ;Each x unit is 2 tiles.
-    adc CartRAMWorkPtr              ;
-    sta CartRAMWorkPtr              ;Add x position to room RAM work pointer.
+    adc RoomRAMWorkPtr              ;
+    sta RoomRAMWorkPtr              ;Add x position to room RAM work pointer.
     bcc LEA8D                           ;If carry occurred, increment high byte of room RAM work-->
-    inc CartRAMWorkPtr+1.b            ;pointer, else branch to draw object.
+    inc RoomRAMWorkPtr+1.b            ;pointer, else branch to draw object.
 
-;CartRAMWorkPtr now points to the object's starting location (upper left corner)
+;RoomRAMWorkPtr now points to the object's starting location (upper left corner)
 ;on the room RAM which will eventually be loaded into a name table.
 
 LEA8D:
@@ -9221,119 +9225,147 @@ AddToPtr00: ;($EF09)
 ;----------------------------------[ Draw structure routines ]----------------------------------------
 
 ;Draws one row of the structure.
-;A = number of 2x2 tile macros to draw horizontally.
+;A = number of 2x2 tile metatiles to draw horizontally.
 
 DrawStructRow:
-    ;Row length(in macros). Range #$00 thru #$0F.
+    ;Row length(in metatiles). Range #$00 thru #$0F.
     and #$0F
     bne LEF19
         ;#$00 in row length=16.
         lda #$10
     LEF19:
-    ;Store horizontal macro count.
-    sta $0E
+    ;Store horizontal metatile count.
+    sta Temp0E_MetatileCounter
     ;Get length byte again. Upper nibble contains x coord offset(if any).
     lda (StructPtr),y
     jsr Adiv16
-    ;*2, because a macro is 2 tiles wide.
+    ;*2, because a metatile is 2 tiles wide.
     asl
-    ;Add x coord offset to CartRAMWorkPtr and save in $00.
-    adc CartRAMWorkPtr
-    sta $00
+    ;Add x coord offset to RoomRAMWorkPtr and save in $00.
+    adc RoomRAMWorkPtr
+    sta Temp00_RoomRAMPtr
     ;Save high byte of work pointer in $01.
     lda #$00
-    adc CartRAMWorkPtr+1.b
-    sta $01
+    adc RoomRAMWorkPtr+1.b
+    sta Temp00_RoomRAMPtr+1.b
     ;$0000 = work pointer.
 
-DrawMacro:
+DrawMetatile:
     ;High byte of current location in room RAM.
-    lda $01
-    ;Check high byte of room RAM address for both room RAMs-->
-    ;to see if the attribute table data for the room RAM has-->
-    ;been reached.  If so, branch to check lower byte as well.
-    ;If not at end of room RAM, branch to draw macro.
+    lda Temp00_RoomRAMPtr+1.b
+    ;Check high byte of room RAM address for both room RAMs to see if the attribute table data-->
+    ;for the room RAM has been reached.
+    ;If so, branch to check lower byte as well.
+    ;If not at end of room RAM, branch to draw metatile.
     cmp #$63
     beq @checkLowByte
     cmp #$67
-    bcc LEF3F
+    bcc @checkSuccess
     beq @checkLowByte
     ;Return if have gone past room RAM(should never happen).
     rts
 
 @checkLowByte:
     ;Low byte of current nametable address.
-    lda $00
-    ;Reached attrib table? If not, branch to draw the macro.
+    lda Temp00_RoomRAMPtr
+    ;Reached attrib table? If not, branch to draw the metatile.
     cmp #$A0
-    bcc LEF3F
+    bcc @checkSuccess
     ;Can't draw any more of the structure, exit.
     rts
 
-LEF3F:
-    inc $10                         ;Increase struct data index.
-    ldy $10                         ;Load struct data index into Y.
-    lda (StructPtr),y               ;Get macro number.
-    asl                             ;
-    asl                             ;A=macro number * 4. Each macro is 4 bytes long.
-    sta $11                         ;Store macro index.
-    ldx #$03                        ;Prepare to copy four tile numbers.
+@checkSuccess:
+    ;Increase struct data index.
+    inc Temp10_StructIndex
+    ;Load struct data index into Y.
+    ldy Temp10_StructIndex
+    ;Get metatile number. A=metatile number * 4. Each metatile is 4 bytes long.
+    lda (StructPtr),y
+    asl
+    asl
+    ;Store metatile index.
+    sta Temp11_MetatileIndex
+    ;Prepare to copy four tile numbers.
+    ldx #$03
     @loop:
-        ldy $11                         ;Macro index loaded into Y.
-        lda (MacroPtr),y                ;Get tile number.
-        inc $11
+        ;Metatile index loaded into Y.
+        ldy Temp11_MetatileIndex
+        ;Get tile number.
+        lda (MetatilePtr),y
+        inc Temp11_MetatileIndex
         ;Write tile number to room RAM.
         ldy TilePosTable,x
-        sta ($00),y
+        sta (Temp00_RoomRAMPtr),y
         ;Done four tiles yet? If not, loop to do another.
         dex
         bpl @loop
-    jsr UpdateAttrib                ;($EF9E)Update attribute table if necessary
-    ldy #$02                        ;Macro width(in tiles).
-    jsr AddYToPtr00                 ;($C2A8)Add 2 to pointer to move to next macro.
-    lda $00                         ;Low byte of current room RAM work pointer.
-    and #$1F                        ;Still room left in current row?-->
-    bne LEF72                       ;If yes, branch to do another macro.
+    ;Update attribute table if necessary
+    jsr UpdateAttrib
+    ;Add metatile width(in tiles) to pointer to move to next metatile.
+    ldy #$02
+    jsr AddYToPtr00
+    ;Low byte of current room RAM work pointer.
+    lda Temp00_RoomRAMPtr
+    ;Still room left in current row? If yes, branch to do another metatile.
+    and #$1F
+    bne LEF72
 
 ;End structure row early to prevent it from wrapping on to the next row..
-    lda $10                         ;Struct index.
-    clc                             ;
-    adc $0E                         ;Add number of macros remaining in current row.
-    sec                             ;
-    sbc #$01                        ;-1 from macros remaining in current row.
-    jmp AdvanceRow                  ;($EF78)Move to next row of structure.
+    ;Struct index.
+    lda Temp10_StructIndex
+    ;Add number of metatiles remaining in current row.
+    clc
+    adc Temp0E_MetatileCounter
+    ;-1 from metatiles remaining in current row.
+    sec
+    sbc #$01
+    ;($EF78)Move to next row of structure.
+    jmp AdvanceRow
 
 LEF72:
-    dec $0E                         ;Have all macros been drawn on this row?-->
-    bne DrawMacro                   ;If not, branch to draw another macro.
-    lda $10                         ;Load struct index.
+    ;Have all metatiles been drawn on this row? If not, branch to draw another metatile.
+    dec Temp0E_MetatileCounter
+    bne DrawMetatile
+    ;Load struct index.
+    lda Temp10_StructIndex
 
 AdvanceRow:
-    sec                             ;Since carry bit is set,-->
-    adc StructPtr                   ;addition will be one more than expected.
-    sta StructPtr                   ;Update the struct pointer.
-    bcc LEF81                           ;
-        inc StructPtr+1.b                 ;Update high byte of struct pointer if carry occured.
-    LEF81:
-    lda #$40                        ;
-    clc                             ;
-    adc CartRAMWorkPtr              ;Advance to next macro row in room RAM(two tile rows).
-    sta CartRAMWorkPtr              ;
-    bcc DrawStruct                  ;Begin drawing next structure row.
-    inc CartRAMWorkPtr+1.b            ;Increment high byte of pointer if necessary.
+    ;Since carry bit is set, addition will be one more than expected.
+    ;Update the struct pointer.
+    sec
+    adc StructPtr
+    sta StructPtr
+    ;Update high byte of struct pointer if carry occured.
+    bcc @endIf_A
+        inc StructPtr+1.b
+    @endIf_A:
+    ;Advance to next metatile row in room RAM(two tile rows).
+    lda #$40
+    clc
+    adc RoomRAMWorkPtr
+    sta RoomRAMWorkPtr
+    ;Increment high byte of pointer if necessary.
+    bcc @endIf_B
+        inc RoomRAMWorkPtr+1.b
+    @endIf_B:
+    ;Begin drawing next structure row.
 
 DrawStruct:
-    ldy #$00                        ;Reset struct index.
-    sty $10                         ;
-    lda (StructPtr),y               ;Load data byte.
-    cmp #$FF                        ;End-of-struct?-->
-    beq RTS_EF99                    ;If so, branch to exit.
-    jmp DrawStructRow               ;($EF13)Draw a row of macros.
-RTS_EF99:
+    ;Reset struct index.
+    ldy #$00
+    sty Temp10_StructIndex
+    ;Load data byte.
+    lda (StructPtr),y
+    ;End-of-struct? If so, branch to exit.
+    cmp #$FF
+    beq @RTS
+    ;($EF13)Draw a row of metatiles.
+    jmp DrawStructRow
+@RTS:
     rts
 
-;The following table is used to draw macros in room RAM. Each macro is 2 x 2 tiles.
-;The following table contains the offsets required to place the tiles in each macro.
+;The following table is used to draw metatiles in room RAM. Each metatile is 2 x 2 tiles.
+;The following table contains the offsets required to place the tiles in each metatile.
 
 TilePosTable:
     .byte $21                       ;Lower right tile.
@@ -9345,79 +9377,95 @@ TilePosTable:
 
 ;The following routine updates attribute bits for one 2x2 tile section on the screen.
 
-UpdateAttrib:
-    lda ObjectPal                   ;Load attribute data of structure.
-    cmp RoomPal                     ;Is it the same as the room's default attribute data?-->
-    beq RTS_EFF3                       ;If so, no need to modify the attribute table, exit.
+UpdateAttrib: ; 07:EF9E
+    ;Load attribute data of structure.
+    lda ObjectPal
+    ;Is it the same as the room's default attribute data?-->
+    ;If so, no need to modify the attribute table, exit.
+    cmp RoomPal
+    beq @RTS
 
 ;Figure out cart RAM address of the byte containing the relevant bits.
 
-    lda $00                         ;
-    sta $02                         ;
-    lda $01                         ;
-    lsr                             ;
-    ror $02                         ;
-    lsr                             ;
-    ror $02                         ;
-    lda $02                         ;The following section of code calculates the-->
-    and #$07                        ;proper attribute byte that corresponds to the-->
-    sta $03                         ;macro that has just been placed in the room RAM.
-    lda $02                         ;
-    lsr                             ;
-    lsr                             ;
-    and #$38                        ;
-    ora $03                         ;
-    ora #$C0                        ;
-    sta $02                         ;
-    lda #$63                        ;
-    sta $03                         ;$0002 contains pointer to attribute byte.
+    ;The following section of code calculates the proper attribute byte that-->
+    ;corresponds to the metatile that has just been placed in the room RAM.
+    lda Temp00_RoomRAMPtr
+    sta Temp02_AttribPtr
+    lda Temp00_RoomRAMPtr+1.b
+    lsr
+    ror Temp02_AttribPtr
+    lsr
+    ror Temp02_AttribPtr
+    lda Temp02_AttribPtr
+    and #$07
+    sta Temp02_AttribPtr+1.b
+    lda Temp02_AttribPtr
+    lsr
+    lsr
+    and #$38
+    ora Temp02_AttribPtr+1.b
+    ora #$C0
+    sta Temp02_AttribPtr
+    lda #$63
+    sta Temp02_AttribPtr+1.b
+    ;$0002 contains pointer to attribute byte.
 
-    ldx #$00                        ;
-    bit $00                         ;
-    bvc LEFCE                           ;
-        ldx #$02                        ;The following section of code figures out which-->
-    LEFCE:
-    lda $00                         ;pair of bits to modify in the attribute table byte-->
-    and #$02                        ;for the macro that has just been placed in the-->
-    beq LEFD5                           ;room RAM.
-        inx                             ;
+    ;The following section of code figures out which pair of bits to modify in-->
+    ;the attribute table byte for the metatile that has just been placed in the room RAM.
+    ldx #$00
+    bit Temp00_RoomRAMPtr
+    bvc @endIf_A
+        ldx #$02
+    @endIf_A:
+    lda Temp00_RoomRAMPtr
+    and #$02
+    beq @endIf_B
+        inx
+    @endIf_B:
 
-;X now contains which macro attribute table bits to modify:
+;X now contains which metatile attribute table bits to modify:
 ;+---+---+
 ;| 0 | 1 |
 ;+---+---+
 ;| 2 | 3 |
 ;+---+---+
-;Where each box represents a macro(2x2 tiles).
+;Where each box represents a metatile(2x2 tiles).
 
 ;The following code clears the old attribute table bits and sets the new ones.
-LEFD5:
-    lda $01                         ;Load high byte of work pointer in room RAM.
-    and #$04                        ;
-    ora $03                         ;Choose proper attribute table associated with the-->
-    sta $03                         ;current room RAM.
-    lda AttribMaskTable,x           ;Choose appropriate attribute table bit mask from table below.
-    ldy #$00                        ;
-    and ($02),y                     ;clear the old attribute table bits.
-    sta ($02),y                     ;
-    lda ObjectPal                   ;Load new attribute table data(#$00 thru #$03).
-    LEFE8:
-        dex                             ;
-        bmi LEFEF                       ;
-        asl                             ;
-        asl                             ;Attribute table bits shifted one step left
-        bcc LEFE8                       ;Loop until attribute table bits are in the proper location.
-LEFEF:
-    ora ($02),y                     ;
-    sta ($02),y                     ;Set attribute table bits.
-RTS_EFF3:
+    ;Load high byte of work pointer in room RAM.
+    lda Temp00_RoomRAMPtr+1.b
+    and #$04
+    ;Choose proper attribute table associated with the current room RAM.
+    ora Temp02_AttribPtr+1.b
+    sta Temp02_AttribPtr+1.b
+    ;Choose appropriate attribute table bit mask from table below.
+    lda AttribMaskTable,x
+    ;clear the old attribute table bits.
+    ldy #$00
+    and (Temp02_AttribPtr),y
+    sta (Temp02_AttribPtr),y
+    ;Load new attribute table data(#$00 thru #$03).
+    lda ObjectPal
+    @loop:
+        dex
+        bmi @exitLoop
+        ;Attribute table bits shifted one step left
+        asl
+        asl
+        ;Loop until attribute table bits are in the proper location.
+        bcc @loop
+    @exitLoop:
+    ;Set attribute table bits.
+    ora (Temp02_AttribPtr),y
+    sta (Temp02_AttribPtr),y
+@RTS:
     rts
 
 AttribMaskTable:
-    .byte %11111100                 ;Upper left macro.
-    .byte %11110011                 ;Upper right macro.
-    .byte %11001111                 ;Lower left macro.
-    .byte %00111111                 ;Lower right macro.
+    .byte %11111100                 ;Upper left metatile.
+    .byte %11110011                 ;Upper right metatile.
+    .byte %11001111                 ;Lower left metatile.
+    .byte %00111111                 ;Lower right metatile.
 
 ;------------------------[ Initialize room RAM and associated attribute table ]-----------------------
 

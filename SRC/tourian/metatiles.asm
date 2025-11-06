@@ -18,11 +18,11 @@
 
 ;Tourian Metatile Data
 
-;The macro definitions are simply index numbers into the pattern tables that represent the 4 quadrants
-;of the macro definition. The bytes correspond to the following position in order: lower right tile,
+;The metatile definitions are simply index numbers into the pattern tables that represent the 4 quadrants
+;of the metatile definition. The bytes correspond to the following position in order: lower right tile,
 ;lower left tile, upper right tile, upper left tile.
 
-MacroDefs:
+MetatileDefs:
     .byte $A7, $A7, $A7, $A7
     .byte $FF, $FF, $A6, $A6
     .byte $A2, $A2, $FF, $FF

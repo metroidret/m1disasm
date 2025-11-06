@@ -18,11 +18,11 @@
 
 ;Tourian Structure Data
 
-;The first byte of the structure definition states how many macros are in the first row of the
-;structure. The the number of bytes after the macro number byte is equal to the value of the macro
-;number byte and those bytes define what each macro in the row are. For example, if the macro number
-;byte is #$08, the next 8 bytes represent 8 macros. The macro description bytes are the macro numbers
-;and are multiplied by 4 to find the index to the desired macro in MacroDefs.  Any further bytes in
+;The first byte of the structure definition states how many metatiles are in the first row of the
+;structure. The the number of bytes after the metatile number byte is equal to the value of the metatile
+;number byte and those bytes define what each metatile in the row are. For example, if the metatile number
+;byte is #$08, the next 8 bytes represent 8 metatiles. The metatile description bytes are the metatile numbers
+;and are multiplied by 4 to find the index to the desired metatile in MetatileDefs.  Any further bytes in
 ;the structure definition represent the next rows.  #$FF marks the end of the structure definition.
 
 Structure00:

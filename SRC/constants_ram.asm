@@ -228,6 +228,15 @@ Temp04_ControlBits     = $04
 Temp05_BytesCounter    = $05
 Temp06_Zero            = $06
 
+; DrawMetatile
+;Temp00_RoomRAMPtr      = $00
+; Temp00_RoomRAMPtr+1    = $01
+Temp02_AttribPtr       = $02
+; Temp03_AttribPtr+1     = $03
+Temp0E_MetatileCounter = $0E
+Temp10_StructIndex     = $10
+Temp11_MetatileIndex   = $11
+
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
@@ -286,9 +295,9 @@ RoomPtr                dw   ;$33     ;Low byte of room pointer address.
 StructPtr              dw   ;$35     ;Low bute of structure pointer address.
 ; StructPtr+1                  $36     ;High byte of structure pointer address.
 
-CartRAMWorkPtr         dw   ;$37     ;Low byte of pointer to current position in room RAM.
-; CartRAMWorkPtr+1             $38     ;High byte of pointer to current position in room RAM.
-                                       ;The CartRAMWorkPtr points to the current memory address-->
+RoomRAMWorkPtr         dw   ;$37     ;Low byte of pointer to current position in room RAM.
+; RoomRAMWorkPtr+1             $38     ;High byte of pointer to current position in room RAM.
+                                       ;The RoomRAMWorkPtr points to the current memory address-->
                                        ;in the room RAM that is being loaded.
 
 RoomRAMPtr             dw   ;$39     ;Low byte of pointer to room RAM (#$00).
@@ -306,8 +315,8 @@ RoomPtrTable           dw   ;$3B     ;Low byte of start of room pointer table.
 StructPtrTable         dw   ;$3D     ;Low byte of start of structure pointer table.
 ; StructPtrTable+1             $3E     ;High byte of structure pointer table.
 
-MacroPtr               dw   ;$3F     ;Low byte of pointer into macro definitions.
-; MacroPtr+1                   $40     ;High byte of pointer into macro definitions.
+MetatilePtr            dw   ;$3F     ;Low byte of pointer into metatile definitions.
+; MetatilePtr+1                $40     ;High byte of pointer into metatile definitions.
 
 EnmyFrameTbl1Ptr       dw   ;$41     ;Low byte of pointer into address table to find enemy animations.
 ; EnmyFrameTbl1Ptr+1           $42     ;High byte of pointer into address table to find enemy animations.

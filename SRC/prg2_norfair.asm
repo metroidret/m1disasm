@@ -83,7 +83,7 @@ AreaPointers:
     .word SpecItmsTbl               ;($A2D9)Beginning of special items table.
     .word RmPtrTbl                  ;($A21B)Beginning of room pointer table.
     .word StrctPtrTbl               ;($A277)Beginning of structure pointer table.
-    .word MacroDefs                 ;($AEEC)Beginning of macro definitions.
+    .word MetatileDefs              ;($AEEC)Beginning of metatile definitions.
     .word EnFramePtrTable1          ;($9C64)Address table into enemy animation data. Two-->
     .word EnFramePtrTable2          ;($9D64)tables needed to accommodate all entries.
     .word EnPlacePtrTable           ;($9D78)Pointers to enemy frame placement data.
@@ -755,7 +755,7 @@ TileBlastFrame10:
 
 .include "norfair/structures.asm"
 
-;----------------------------------------[ Macro definitions ]---------------------------------------
+;----------------------------------------[ Metatile definitions ]---------------------------------------
 
 .include "norfair/metatiles.asm"
 
