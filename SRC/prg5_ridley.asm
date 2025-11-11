@@ -141,15 +141,15 @@ AreaPalToggle:
     .byte _id_Palette05+1
 
     .byte $00
-AreaFireballKilledAnimIndex:
-    .byte EnAnim_FireballKilled - EnAnimTbl
+AreaEnProjectileKilledAnimIndex:
+    .byte EnAnim_EnProjectileKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_Explosion - EnAnimTbl
 
     .byte EnAnim_DessgeegaIdleCeiling - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl
-AreaFireballFallingAnimIndex:
+AreaEnProjectileFallingAnimIndex:
     .byte EnAnim_DessgeegaCeilingHopping - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl
-AreaFireballSplatterAnimIndex:
+AreaEnProjectileSplatterAnimIndex:
     .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_36 - EnAnimTbl
 AreaMellowAnimIndex:
     .byte EnAnim_Mella - EnAnimTbl
@@ -167,7 +167,7 @@ ChooseEnemyAIRoutine:
         .word PipeBugAIRoutine ; 07 - zebbo
         .word RemoveEnemy_ ; 08 - same as 4
         .word RidleyAIRoutine ; 09 - ridley
-        .word RidleyProjectileAIRoutine ; 0A - ridley fireball
+        .word RidleyFireballAIRoutine ; 0A - ridley fireball
         .word RemoveEnemy_ ; 0B - same as 4
         .word MultiviolaAIRoutine ; 0C - bouncy orbs
         .word RemoveEnemy_ ; 0D - same as 4
@@ -403,7 +403,7 @@ L977B:
     .byte %00000000 ; 0E - polyp (unused)
     .byte %00000000 ; 0F - same as 4
 
-EnemyFireballRisingAnimIndexTable:
+EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl
@@ -412,22 +412,22 @@ EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyFireballPosOffsetX:
+EnProjectilePosOffsetX:
     .byte $08, $F8
     .byte $00, $00
     .byte $00, $00
     .byte $08, $F8
-EnemyFireballPosOffsetY:
+EnProjectilePosOffsetY:
     .byte $00
     .byte $00
     .byte $00
     .byte $F8
 
-EnemyFireballMovementPtrTable:
-    .word EnemyFireballMovement0
-    .word EnemyFireballMovement1
-    .word EnemyFireballMovement2
-    .word EnemyFireballMovement3
+EnProjectileMovementPtrTable:
+    .word EnProjectileMovement0
+    .word EnProjectileMovement1
+    .word EnProjectileMovement2
+    .word EnProjectileMovement3
 
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -527,8 +527,8 @@ EnemyMovement11_L:
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_StopMovementSeahorse
 
-EnemyFireballMovement0:
-EnemyFireballMovement1:
+EnProjectileMovement0:
+EnProjectileMovement1:
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -538,7 +538,7 @@ EnemyFireballMovement1:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnemyFireballMovement2:
+EnProjectileMovement2:
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -548,7 +548,7 @@ EnemyFireballMovement2:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnemyFireballMovement3:
+EnProjectileMovement3:
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1

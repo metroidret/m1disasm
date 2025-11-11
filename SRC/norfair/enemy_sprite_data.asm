@@ -4,8 +4,8 @@ EnAnimTbl: ;($9BDA)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_FireballKilled:
-    .byte _id_EnFrame_FireballKilled, $FF
+EnAnim_EnProjectileKilled:
+    .byte _id_EnFrame_EnProjectileKilled, $FF
 
 EnAnim_RidleyIdleFacingRight:
     .byte _id_EnFrame_RidleyIdleFacingRight0, _id_EnFrame_RidleyIdleFacingRight1, $FF
@@ -88,20 +88,20 @@ EnAnim_PolypRock:
 EnAnim_PolypRockShatter:
     .byte _id_EnFrame_PolypRockShatter0, _id_EnFrame_PolypRockShatter1, $F7, $FF
 
-EnAnim_DragonFireballUpRight:
-    .byte _id_EnFrame_DragonFireballUpRight, $FF
+EnAnim_DragonEnProjectileUpRight:
+    .byte _id_EnFrame_DragonEnProjectileUpRight, $FF
 
-EnAnim_DragonFireballDownRight:
-    .byte _id_EnFrame_DragonFireballDownRight, $FF
+EnAnim_DragonEnProjectileDownRight:
+    .byte _id_EnFrame_DragonEnProjectileDownRight, $FF
 
-EnAnim_DragonFireballUpLeft:
-    .byte _id_EnFrame_DragonFireballUpLeft, $FF
+EnAnim_DragonEnProjectileUpLeft:
+    .byte _id_EnFrame_DragonEnProjectileUpLeft, $FF
 
-EnAnim_DragonFireballDownLeft:
-    .byte _id_EnFrame_DragonFireballDownLeft, $FF
+EnAnim_DragonEnProjectileDownLeft:
+    .byte _id_EnFrame_DragonEnProjectileDownLeft, $FF
 
-EnAnim_DragonFireballSplatter:
-    .byte _id_EnFrame_DragonFireballSplatter0, _id_EnFrame_DragonFireballSplatter0, _id_EnFrame_DragonFireballSplatter0, _id_EnFrame_DragonFireballSplatter0, _id_EnFrame_DragonFireballSplatter0, _id_EnFrame_DragonFireballSplatter1, _id_EnFrame_DragonFireballSplatter1, _id_EnFrame_DragonFireballSplatter1, _id_EnFrame_DragonFireballSplatter1, _id_EnFrame_DragonFireballSplatter2, _id_EnFrame_DragonFireballSplatter2, _id_EnFrame_DragonFireballSplatter2, $F7, $FF
+EnAnim_DragonEnProjectileSplatter:
+    .byte _id_EnFrame_DragonEnProjectileSplatter0, _id_EnFrame_DragonEnProjectileSplatter0, _id_EnFrame_DragonEnProjectileSplatter0, _id_EnFrame_DragonEnProjectileSplatter0, _id_EnFrame_DragonEnProjectileSplatter0, _id_EnFrame_DragonEnProjectileSplatter1, _id_EnFrame_DragonEnProjectileSplatter1, _id_EnFrame_DragonEnProjectileSplatter1, _id_EnFrame_DragonEnProjectileSplatter1, _id_EnFrame_DragonEnProjectileSplatter2, _id_EnFrame_DragonEnProjectileSplatter2, _id_EnFrame_DragonEnProjectileSplatter2, $F7, $FF
 
 EnAnim_NovaOnFloor:
     .byte _id_EnFrame_NovaOnFloor0, _id_EnFrame_NovaOnFloor1, $FF
@@ -144,7 +144,7 @@ EnAnim_GametRestingFacingRight:
 EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame00
     PtrTableEntry EnFramePtrTable1, EnFrame01
-    PtrTableEntry EnFramePtrTable1, EnFrame_FireballKilled
+    PtrTableEntry EnFramePtrTable1, EnFrame_EnProjectileKilled
     PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdleFacingRight0
     PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdleFacingRight1
     PtrTableEntry EnFramePtrTable1, EnFrame_RidleyHoppingFacingRight0
@@ -201,13 +201,13 @@ EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame38
     PtrTableEntry EnFramePtrTable1, EnFrame39
     PtrTableEntry EnFramePtrTable1, EnFrame3A
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballUpRight
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballDownRight
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballUpLeft
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballDownLeft
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballSplatter0
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballSplatter2
-    PtrTableEntry EnFramePtrTable1, EnFrame_DragonFireballSplatter1
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileUpRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileDownRight
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileUpLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileDownLeft
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter0
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter2
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter1
     PtrTableEntry EnFramePtrTable1, EnFrame_PolypRock
     PtrTableEntry EnFramePtrTable1, EnFrame_PolypRockShatter0
     PtrTableEntry EnFramePtrTable1, EnFrame_PolypRockShatter1
@@ -357,8 +357,8 @@ EnFrame01:
     .byte $24
     .byte $FF
 
-;Fireball killed.
-EnFrame_FireballKilled:
+;EnProjectile killed.
+EnFrame_EnProjectileKilled:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
     .byte $FF
@@ -913,14 +913,14 @@ EnFrame_DragonExplode:
     .byte $E9
     .byte $FF
 
-;Dragon fireball up-right.
+;Dragon EnProjectile up-right.
 EnFrame35:
 EnFrame36:
 EnFrame37:
 EnFrame38:
 EnFrame39:
 EnFrame3A:
-EnFrame_DragonFireballUpRight:
+EnFrame_DragonEnProjectileUpRight:
     .byte ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
     .byte $E1
@@ -928,8 +928,8 @@ EnFrame_DragonFireballUpRight:
     .byte $F1
     .byte $FF
 
-;Dragon fireball down-right.
-EnFrame_DragonFireballDownRight:
+;Dragon EnProjectile down-right.
+EnFrame_DragonEnProjectileDownRight:
     .byte OAMDATA_VFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
     .byte $E1
@@ -937,8 +937,8 @@ EnFrame_DragonFireballDownRight:
     .byte $F1
     .byte $FF
 
-;Dragon fireball up-left.
-EnFrame_DragonFireballUpLeft:
+;Dragon EnProjectile up-left.
+EnFrame_DragonEnProjectileUpLeft:
     .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
     .byte $E1
@@ -946,8 +946,8 @@ EnFrame_DragonFireballUpLeft:
     .byte $F1
     .byte $FF
 
-;Dragon fireball down-left.
-EnFrame_DragonFireballDownLeft:
+;Dragon EnProjectile down-left.
+EnFrame_DragonEnProjectileDownLeft:
     .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7, $04, $04
     .byte $E0
     .byte $E1
@@ -955,24 +955,24 @@ EnFrame_DragonFireballDownLeft:
     .byte $F1
     .byte $FF
 
-;Dragon fireball splatter.
-EnFrame_DragonFireballSplatter0:
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter0:
     .byte ($3 << 4) + _id_EnPlace7, $00, $00
     .byte $E2
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $3
     .byte $E2
     .byte $FF
 
-;Dragon fireball splatter.
-EnFrame_DragonFireballSplatter2:
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter2:
     .byte ($3 << 4) + _id_EnPlace8, $00, $00
     .byte $E2
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $E2
     .byte $FF
 
-;Dragon fireball splatter.
-EnFrame_DragonFireballSplatter1:
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter1:
     .byte ($3 << 4) + _id_EnPlace8, $00, $00
     .byte $FE
     .byte $FE

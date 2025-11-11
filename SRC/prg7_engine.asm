@@ -2374,7 +2374,7 @@ UpdateWorld:
     jsr UpdateAllStatues            ;($D9D4)Display of Ridley & Kraid statues.
     jsr UpdateAllEnemyExplosions    ; destruction of enemies
     jsr UpdateAllMellows            ; update of Mellow/Memu enemies
-    jsr UpdateAllEnemyFireballs
+    jsr UpdateAllEnProjectiles
     jsr UpdateAllSkreeProjectiles   ; destruction of green spinners
     jsr SamusEnterDoor              ;($8B13)Check if Samus entered a door.
     jsr UpdateAllDoors              ; display of doors
@@ -9656,7 +9656,7 @@ Lx269:
         bmi Lx275
             jmp LF09F
 
-; enemy fireball <--> samus detection
+; enemy projectile <--> samus detection
 Lx275:
     ; get samus coord data
     ldx #$00
@@ -9667,17 +9667,17 @@ Lx275:
         beq Lx277
         cmp #$05
         beq Lx277
-        ; check next fireball if samus has i-frames
+        ; check next projectile if samus has i-frames
         lda SamusInvincibleDelay
         bne Lx277
-        ; check next fireball if samus is dead
+        ; check next projectile if samus is dead
         jsr IsSamusDead
         beq Lx277
         
         jsr GetRadiusSumsOfObjXSlotAndEnYSlot
         jsr GetEnemyYSlotPosition
         jsr CheckCollisionOfXSlotAndYSlot
-        jsr CollisionDetectionFireball_ReactToCollisionWithSamus
+        jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus
     Lx277:
         jsr Yplus16
         cmp #$C0
@@ -10039,7 +10039,7 @@ Lx292:
 Lx293:
     rts
 
-CollisionDetectionFireball_ReactToCollisionWithSamus_F2DF:
+CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF:
     lda Temp10_DistHi
     ora EnIsHit,y
     sta EnIsHit,y
@@ -10048,11 +10048,11 @@ CollisionDetectionFireball_ReactToCollisionWithSamus_F2DF:
 SetEnemyTouchingSamusFlags:
     jsr LF340
     bne Lx292 ; branch always
-CollisionDetectionFireball_ReactToCollisionWithSamus:
+CollisionDetectionEnProjectile_ReactToCollisionWithSamus:
     ; exit if collision didn't happen
     bcs RTS_X294
     
-    jsr CollisionDetectionFireball_ReactToCollisionWithSamus_F2DF
+    jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF
     tya
     pha
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
@@ -11129,55 +11129,55 @@ RTS_X354:
     rts
 
 
-SpawnFireball:
+SpawnEnProjectile:
     ; exit if bit 4 of EnData05 is set (what does this bit represent?)
     lda EnData05,x
     and #$10
     beq RTS_X354
     ; exit if ??? (something about status?)
-    lda SpawnFireball_87
+    lda SpawnEnProjectile_87
     and EnsExtra.0.status,x
     beq RTS_X354
     
-    ; branch if bit 7 of SpawnFireball_87 is unset
-    lda SpawnFireball_87
+    ; branch if bit 7 of SpawnEnProjectile_87 is unset
+    lda SpawnEnProjectile_87
     bpl Lx355
         ; exit if EnsExtra.0.jumpDsplcmnt is zero
         ldy EnsExtra.0.jumpDsplcmnt,x
         bne RTS_X354
     Lx355:
     
-    ; attempt to find open enemy fireball slot
-    jsr SpawnFireball_FindSlot
+    ; attempt to find open enemy projectile slot
+    jsr SpawnEnProjectile_FindSlot
     ; exit if all slots are occupied
-    bcs RTS_SpawnFireball_FindSlot
+    bcs RTS_SpawnEnProjectile_FindSlot
     
     ; a is #$00 here
     sta EnIsHit,y
-    jsr SpawnFireball_F92C
+    jsr SpawnEnProjectile_F92C
     ; rotate horizontal facing dir flag into carry
     lda EnData05,x
     lsr
-    ; push SpawnFireball_AnimTableIndex to stack for later
-    lda SpawnFireball_AnimTableIndex
+    ; push SpawnEnProjectile_AnimTableIndex to stack for later
+    lda SpawnEnProjectile_AnimTableIndex
     pha
-    ; SpawnFireball_AnimTableIndex*2 + horizontal facing dir
+    ; SpawnEnProjectile_AnimTableIndex*2 + horizontal facing dir
     rol
     ; get anim index from table
     tax
-    lda EnemyFireballRisingAnimIndexTable,x
+    lda EnProjectileRisingAnimIndexTable,x
     pha
-    ; init anim index for fireball
+    ; init anim index for projectile
     tya
     tax
     pla
     jsr InitEnAnimIndex
     
-    ; set fireball status to resting
+    ; set projectile status to resting
     ldx PageIndex
     lda #enemyStatus_Resting ;#$01
     sta EnsExtra.0.status,y
-    ; use horizontal facing dir flag to set fireball x speed
+    ; use horizontal facing dir flag to set projectile x speed
     and EnData05,x
     tax
     lda EnSpeedX_Table15,x
@@ -11187,64 +11187,64 @@ SpawnFireball:
     sta EnSpeedY,y
     
     ldx PageIndex
-    jsr SpawnFireball_F8F8
+    jsr SpawnEnProjectile_F8F8
     
-    ; get and apply x and y offsets to enemy position to make fireball position
+    ; get and apply x and y offsets to enemy position to make projectile position
     ; put horizontal facing dir flag into carry
     lda EnData05,x
     lsr
-    pla ; SpawnFireball_AnimTableIndex
+    pla ; SpawnEnProjectile_AnimTableIndex
     tax
-    lda EnemyFireballPosOffsetY,x
+    lda EnProjectilePosOffsetY,x
     sta $04
     txa
     rol
     tax
-    lda EnemyFireballPosOffsetX,x
+    lda EnProjectilePosOffsetX,x
     sta $05
-    jsr SpawnFireball_SetFireballPosition
+    jsr SpawnEnProjectile_SetEnProjectilePosition
     
-    ; exit if bit 6 of SpawnFireball_87 is unset
+    ; exit if bit 6 of SpawnEnProjectile_87 is unset
     ldx PageIndex
-    bit SpawnFireball_87
-    bvc RTS_SpawnFireball_FindSlot
-    ; set animation for enemy that shot the fireball depending on the direction its facing
+    bit SpawnEnProjectile_87
+    bvc RTS_SpawnEnProjectile_FindSlot
+    ; set animation for enemy that shot the projectile depending on the direction its facing
     lda EnData05,x
     and #$01
     tay
-    lda SpawnFireball_83,y
+    lda SpawnEnProjectile_83,y
     jmp SetEnAnimIndex
 
-SpawnFireball_FindSlot:
+SpawnEnProjectile_FindSlot:
     ldy #$60
     clc
     @loop:
         lda EnsExtra.0.status,y
-        beq RTS_SpawnFireball_FindSlot
+        beq RTS_SpawnEnProjectile_FindSlot
         jsr Yplus16
         cmp #$C0
         bne @loop
-RTS_SpawnFireball_FindSlot:
+RTS_SpawnEnProjectile_FindSlot:
     rts
 
-SpawnFireball_F8F8:
+SpawnEnProjectile_F8F8:
     ; exit if anim table index is 0 or 1 (does this ever happen?)
-    lda SpawnFireball_AnimTableIndex
+    lda SpawnEnProjectile_AnimTableIndex
     cmp #$02
     bcc @RTS
     ; shift horizontal facing dir flag into carry
     ldx PageIndex ; redundant instruction
     lda EnData05,x
     lsr
-    ; SpawnFireball_EnData0A*2 + horizontal facing dir
-    lda SpawnFireball_EnData0A
+    ; SpawnEnProjectile_EnData0A*2 + horizontal facing dir
+    lda SpawnEnProjectile_EnData0A
     rol
     and #$07
     sta EnData0A,y
-    ; set fireball status to active
+    ; set projectile status to active
     lda #enemyStatus_Active
     sta EnsExtra.0.status,y
-    ; clear fireball anim delay and movement
+    ; clear projectile anim delay and movement
     lda #$00
     sta EnDelay,y
     sta EnsExtra.0.animDelay,y
@@ -11252,15 +11252,15 @@ SpawnFireball_F8F8:
 @RTS:
     rts
 
-SpawnFireball_SetFireballPosition:
+SpawnEnProjectile_SetEnProjectilePosition:
     ldx PageIndex
-    ; loads position of enemy that shot the fireball into temp
+    ; loads position of enemy that shot the projectile into temp
     jsr StoreEnemyPositionToTemp
     tya
     tax
     ; apply offsets to that position
     jsr ApplySpeedToPosition
-    ; save as position of fireball
+    ; save as position of projectile
     jmp LoadEnemyPositionFromTemp
 
 ; Table used by above subroutine
@@ -11268,7 +11268,7 @@ EnSpeedX_Table15:
     .byte $02
     .byte $FE
 
-SpawnFireball_F92C:
+SpawnEnProjectile_F92C:
     lda #$02
     sta EnsExtra.0.radY,y
     sta EnsExtra.0.radX,y
@@ -11277,16 +11277,16 @@ SpawnFireball_F92C:
     rts
 
 
-UpdateAllEnemyFireballs:
+UpdateAllEnProjectiles:
     ldx #$B0
     Lx359:
-        jsr UpdateEnemyFireball
+        jsr UpdateEnProjectile
         ldx PageIndex
         jsr Xminus16
         cmp #$60
         bne Lx359
         ; fallthrough
-UpdateEnemyFireball:
+UpdateEnProjectile:
     stx PageIndex
     lda EnData05,x
     and #$02
@@ -11297,16 +11297,16 @@ UpdateEnemyFireball:
     beq Exit19
     jsr ChooseRoutine
         .word ExitSub     ;($C45C) rts
-        .word UpdateEnemyFireball_Resting
-        .word UpdateEnemyFireball_Active       ; spit dragon's fireball
+        .word UpdateEnProjectile_Resting
+        .word UpdateEnProjectile_Active       ; spit dragon's projectile
         .word ExitSub     ;($C45C) rts
-        .word UpdateEnemyFireball_Frozen
-        .word UpdateEnemyFireball_Pickup
+        .word UpdateEnProjectile_Frozen
+        .word UpdateEnProjectile_Pickup
 
 Exit19:
     rts
 
-UpdateEnemyFireball_Resting:
+UpdateEnProjectile_Resting:
     jsr EnemyBecomePickupIfHit
     jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
@@ -11327,14 +11327,14 @@ LF987:
     sta EnDelay,x
     beq Lx362
 
-UpdateEnemyFireball_Active:
+UpdateEnProjectile_Active:
     jsr EnemyBecomePickupIfHit
     lda EnData0A,x
     and #$FE
     tay
-    lda EnemyFireballMovementPtrTable,y
+    lda EnProjectileMovementPtrTable,y
     sta $0A
-    lda EnemyFireballMovementPtrTable+1,y
+    lda EnProjectileMovementPtrTable+1,y
     sta $0B
 Lx362:
     ldy EnMovementIndex,x
@@ -11381,7 +11381,7 @@ Lx362:
     bmi Lx365
     
     ldy EnData0A,x
-    lda AreaFireballFallingAnimIndex,y
+    lda AreaEnProjectileFallingAnimIndex,y
     sta EnsExtra.0.resetAnimIndex,x
 Lx365:
     jsr EnemyBGCollideOrApplySpeed
@@ -11395,7 +11395,7 @@ Lx365:
     beq Lx366
         iny
     Lx366:
-    lda AreaFireballSplatterAnimIndex,y
+    lda AreaEnProjectileSplatterAnimIndex,y
     jsr InitEnAnimIndex
     jsr LF518
     lda #$0A
@@ -11467,7 +11467,7 @@ EnemyBecomePickup:
 Exit20:
     rts
 
-UpdateEnemyFireball_Frozen:
+UpdateEnProjectile_Frozen:
     lda EnsExtra.0.animFrame,x
     cmp #$F7
     beq Lx371
@@ -11488,9 +11488,9 @@ GetEnemyRoomRAMPtr:
     sta Temp0B_PositionHi
     jmp MakeRoomRAMPtr              ;($E96A)Find enemy position in room RAM.
 
-UpdateEnemyFireball_Pickup:
+UpdateEnProjectile_Pickup:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    lda AreaFireballKilledAnimIndex
+    lda AreaEnProjectileKilledAnimIndex
     jsr InitEnAnimIndex
     jmp LF97C
 

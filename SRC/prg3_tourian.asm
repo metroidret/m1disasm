@@ -142,15 +142,15 @@ AreaPalToggle:
     .byte _id_Palette05+1
 
     .byte $00
-AreaFireballKilledAnimIndex:
-    .byte EnAnim_FireballKilled - EnAnimTbl
+AreaEnProjectileKilledAnimIndex:
+    .byte EnAnim_EnProjectileKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_Explosion - EnAnimTbl
 
     .byte $00, $00
-AreaFireballFallingAnimIndex:
+AreaEnProjectileFallingAnimIndex:
     .byte $00, $00
-AreaFireballSplatterAnimIndex:
+AreaEnProjectileSplatterAnimIndex:
     .byte $00, EnAnim_CannonBulletExplode - EnAnimTbl
 AreaMellowAnimIndex:
     .byte $00
@@ -406,7 +406,7 @@ L977B:
     .byte %00000000 ; 0E - same as 3
     .byte %00000000 ; 0F - same as 3
 
-EnemyFireballRisingAnimIndexTable:
+EnemyEnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte EnAnim_26 - EnAnimTbl, EnAnim_26 - EnAnimTbl
     .byte EnAnim_26 - EnAnimTbl, EnAnim_26 - EnAnimTbl
@@ -415,22 +415,22 @@ EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyFireballPosOffsetX:
+EnemyEnProjectilePosOffsetX:
     .byte $0C, $F4
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyFireballPosOffsetY:
+EnemyEnProjectilePosOffsetY:
     .byte $F4
     .byte $00
     .byte $00
     .byte $00
 
-EnemyFireballMovementPtrTable:
-    .word EnemyFireballMovement0
-    .word EnemyFireballMovement1
-    .word EnemyFireballMovement2
-    .word EnemyFireballMovement3
+EnemyEnProjectileMovementPtrTable:
+    .word EnemyEnProjectileMovement0
+    .word EnemyEnProjectileMovement1
+    .word EnemyEnProjectileMovement2
+    .word EnemyEnProjectileMovement3
 
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -497,16 +497,16 @@ EnemyMovement11_R:
 EnemyMovement11_L:
     ; nothing
 
-EnemyFireballMovement0:
-EnemyFireballMovement1:
+EnemyEnProjectileMovement0:
+EnemyEnProjectileMovement1:
     SignMagSpeed $50,  2,  2
     .byte $FF
 
-EnemyFireballMovement2:
+EnemyEnProjectileMovement2:
     SignMagSpeed $50,  0,  3
     .byte $FF
 
-EnemyFireballMovement3:
+EnemyEnProjectileMovement3:
     .byte $FF
 
 RemoveEnemy_:
@@ -622,7 +622,7 @@ UpdateCannon_RunInstructions:
     ; branch if it's an angle instruction
     bpl @setAngle
         cmp #$FF
-        bne @shootFireball
+        bne @shootEnProjectile
             ; instruction is restart
             ldy Cannons.0.instrListID,x
             ; restart to first instruction
@@ -630,12 +630,12 @@ UpdateCannon_RunInstructions:
             sta Cannons.0.instrID,x
             ; go back to get instuction
             beq @getInstruction ; branch always
-        @shootFireball:
-            ; instruction is shoot fireball
+        @shootEnProjectile:
+            ; instruction is shoot projectile
             ; change to next instruction
             inc Cannons.0.instrID,x
             ; shoot
-            jsr Cannon_ShootFireball
+            jsr Cannon_ShootEnProjectile
             ldy Cannons.0.instrListID,x
             ; go back to get instuction
             jmp @getInstruction
@@ -644,14 +644,14 @@ UpdateCannon_RunInstructions:
         sta Cannons.0.angle,x
         rts
 
-Cannon_ShootFireball:
+Cannon_ShootEnProjectile:
     ; push instruction byte #$FC, #$FD or #$FE
     pha
     ; exit if mother brain is dying or dead
     lda MotherBrainStatus
     cmp #$04
     bcs @exit
-    ; loop through all enemy fireballs
+    ; loop through all enemy projectiles
     ldy #$60
     @loop:
         ; branch if slot is empty
@@ -664,7 +664,7 @@ Cannon_ShootFireball:
         tay
         cmp #$A0
         bne @loop
-    ; no fireball slots found, exit
+    ; no projectile slots found, exit
 @exit:
     pla
     rts
@@ -672,17 +672,17 @@ Cannon_ShootFireball:
 @slotFound:
     ; store slot
     sty PageIndex
-    ; set fireball position to cannon position
+    ; set projectile position to cannon position
     lda Cannons.0.y,x
     sta EnY,y
     lda Cannons.0.x,x
     sta EnX,y
     lda Cannons.0.hi,x
     sta EnsExtra.0.hi,y
-    ; set fireball status to active
+    ; set projectile status to active
     lda #enemyStatus_Active
     sta EnsExtra.0.status,y
-    ; init fireball animation timers
+    ; init projectile animation timers
     lda #$00
     sta EnDelay,y
     sta EnsExtra.0.animDelay,y
@@ -694,17 +694,17 @@ Cannon_ShootFireball:
     ; save to x and EnData0A
     tax
     sta EnData0A,y
-    ; set fireball facing direction
+    ; set projectile facing direction
     ora #$02
     sta EnData05,y
-    ; set fireball animation
-    lda CannonFireballAnimTable-2,x
+    ; set projectile animation
+    lda CannonEnProjectileAnimTable-2,x
     sta EnsExtra.0.resetAnimIndex,y
     sta EnsExtra.0.animIndex,y
     ; store offset into temp
-    lda CannonFireballXOffsetTable-2,x
+    lda CannonEnProjectileXOffsetTable-2,x
     sta Temp05_SpeedX
-    lda CannonFireballYOffsetTable-2,x
+    lda CannonEnProjectileYOffsetTable-2,x
     sta Temp04_SpeedY
     ; store cannon position into temp
     ldx CannonIndex
@@ -718,12 +718,12 @@ Cannon_ShootFireball:
     tax
     ; apply offset to cannon position
     jsr CommonJump_ApplySpeedToPosition
-    ; use as fireball position
+    ; use as projectile position
     jsr LoadEnemyPositionFromTemp_
     ldx CannonIndex
     rts
 
-CannonFireballAnimTable:
+CannonEnProjectileAnimTable:
     .byte EnAnim_CannonBulletDownRight - EnAnimTbl ; cannon instr #$FE : diagonal right
     .byte EnAnim_CannonBulletDownLeft - EnAnimTbl ; cannon instr #$FD : diagonal left
     .byte EnAnim_CannonBulletDown - EnAnimTbl ; cannon instr #$FC : straight down
@@ -1039,11 +1039,11 @@ CannonAnimFrameTable:
     .byte _id_EnFrame_CannonRight
     .byte _id_EnFrame_CannonUpRight
 
-CannonFireballXOffsetTable:
+CannonEnProjectileXOffsetTable:
     .byte $09 ; cannon instr #$FE : diagonal right
     .byte $F7 ; cannon instr #$FD : diagonal left
     .byte $00 ; cannon instr #$FC : straight down
-CannonFireballYOffsetTable:
+CannonEnProjectileYOffsetTable:
     .byte $09 ; cannon instr #$FE : diagonal right
     .byte $09 ; cannon instr #$FD : diagonal left
     .byte $0B ; cannon instr #$FC : straight down

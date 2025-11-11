@@ -40,8 +40,8 @@ CommonJump_EnemyFlipAfterDisplacement: ;$801B
     jmp EnemyFlipAfterDisplacement
 CommonJump_0A: ;$801E
     jmp LFBCA
-CommonJump_SpawnFireball: ;$8021
-    jmp SpawnFireball
+CommonJump_SpawnEnProjectile: ;$8021
+    jmp SpawnEnProjectile
 CommonJump_ChooseRoutine: ;$8024
     jmp ChooseRoutine               ;($C27C)
 CommonJump_ApplySpeedToPosition: ;$8027

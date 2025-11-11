@@ -4,8 +4,8 @@ EnAnimTbl: ;($A406)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_FireballKilled:
-    .byte _id_EnFrame_FireballKilled, $FF
+EnAnim_EnProjectileKilled:
+    .byte _id_EnFrame_EnProjectileKilled, $FF
 
 EnAnim_Metroid:
     .byte _id_EnFrame_Metroid0, _id_EnFrame_Metroid1, $FF
@@ -50,7 +50,7 @@ EnAnim_26:
 EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame00
     PtrTableEntry EnFramePtrTable1, EnFrame01
-    PtrTableEntry EnFramePtrTable1, EnFrame_FireballKilled
+    PtrTableEntry EnFramePtrTable1, EnFrame_EnProjectileKilled
     PtrTableEntry EnFramePtrTable1, EnFrame_Metroid0
     PtrTableEntry EnFramePtrTable1, EnFrame_Metroid1
     PtrTableEntry EnFramePtrTable1, EnFrame_MetroidExplode
@@ -258,7 +258,7 @@ EnFrame01:
     .byte $24
     .byte $FF
 
-EnFrame_FireballKilled:
+EnFrame_EnProjectileKilled:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
     .byte $FF

@@ -4,8 +4,8 @@ EnAnimTbl: ;($9D6A)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
-EnAnim_FireballKilled:
-    .byte _id_EnFrame_FireballKilled, $FF
+EnAnim_EnProjectileKilled:
+    .byte _id_EnFrame_EnProjectileKilled, $FF
 
 EnAnim_SidehopperFloorIdle:
     .byte _id_EnFrame_SidehopperFloorIdle0, _id_EnFrame_SidehopperFloorIdle1, $FF
@@ -151,7 +151,7 @@ EnAnim_KraidExplodeFacingLeft:
 EnFramePtrTable1:
     PtrTableEntry EnFramePtrTable1, EnFrame00
     PtrTableEntry EnFramePtrTable1, EnFrame01
-    PtrTableEntry EnFramePtrTable1, EnFrame_FireballKilled
+    PtrTableEntry EnFramePtrTable1, EnFrame_EnProjectileKilled
     PtrTableEntry EnFramePtrTable1, EnFrame_Waver2FacingRight
     PtrTableEntry EnFramePtrTable1, EnFrame_Waver2FacingLeft
     PtrTableEntry EnFramePtrTable1, EnFrame05
@@ -376,8 +376,8 @@ EnFrame01:
     .byte $24
     .byte $FF
 
-;Fireball killed.
-EnFrame_FireballKilled:
+;EnProjectile killed.
+EnFrame_EnProjectileKilled:
     .byte ($0 << 4) + _id_EnPlace0, $00, $00
     .byte $04
     .byte $FF

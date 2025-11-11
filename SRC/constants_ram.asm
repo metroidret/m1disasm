@@ -437,13 +437,13 @@ ItemRoomMusicStatus    db   ;$79     ;#$00=Item room music not playing.
     EnemyStatusPreAI       db   ;$81     ;set to enemy status before enemy ai routine is run
     Enemy82                db   ;$82
 
-    SpawnFireball_83       dw   ;$83     ;right facing anim index for enemy that shoots the fireball
-    ; SpawnFireball_83+1           $84     ;left facing anim index for enemy that shoots the fireball
-    SpawnFireball_AnimTableIndex .db ;$85 ;index into EnemyFireballRisingAnimIndexTable
+    SpawnEnProjectile_83       dw   ;$83     ;right facing anim index for enemy that shoots the projectile
+    ; SpawnEnProjectile_83+1           $84     ;left facing anim index for enemy that shoots the projectile
+    SpawnEnProjectile_AnimTableIndex .db ;$85 ;index into EnProjectileRisingAnimIndexTable
     EnemyFlipAfterDisplacementAnimIndex dw ;$85 ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
     ; EnemyFlipAfterDisplacementAnimIndex+1   $86 ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
-    SpawnFireball_87       db   ;$87     ;fireball status?
-    SpawnFireball_EnData0A db   ;$88
+    SpawnEnProjectile_87       db   ;$87     ;projectile status?
+    SpawnEnProjectile_EnData0A db   ;$88
 
     SpareMem89             db   ;$89
 
@@ -736,7 +736,7 @@ StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
 
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
-; slot 6 to B is for enemy fireballs
+; slot 6 to B is for enemy projectiles
 ; slot C to D is for enemy explosions
 ; slot E is for mother brain
 ; slot F is for mellow handler enemy
@@ -747,7 +747,7 @@ EnSpeedX               = $0403   ; unknown - x speed?
 EnIsHit                = $0404   ;bit2: touching Samus
                                    ;bit1 set: touch Samus from the top
                                    ;bit0 set: touch Samus from the left
-                                   ;bit5: hit by weapon (projectile or screw attack) (except fireballs)
+                                   ;bit5: hit by weapon (projectile or screw attack) (except enemy projectiles)
                                    ;bit4 set: hit by weapon from the top
                                    ;bit3 set: hit by weapon from the left
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left

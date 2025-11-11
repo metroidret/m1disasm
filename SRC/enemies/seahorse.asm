@@ -22,23 +22,23 @@ SeahorseAIRoutine:
         beq L9B59
         
         lda #$02
-        sta SpawnFireball_87
+        sta SpawnEnProjectile_87
         lda #$00
-        sta SpawnFireball_EnData0A
+        sta SpawnEnProjectile_EnData0A
         lda #EnAnim_DragonIdleFacingRight - EnAnimTbl.b
-        sta SpawnFireball_83
+        sta SpawnEnProjectile_83
         lda #EnAnim_DragonIdleFacingLeft - EnAnimTbl.b
-        sta SpawnFireball_83+1.b
+        sta SpawnEnProjectile_83+1.b
         lda #$03
-        sta SpawnFireball_AnimTableIndex
-        jsr CommonJump_SpawnFireball
+        sta SpawnEnProjectile_AnimTableIndex
+        jsr CommonJump_SpawnEnProjectile
         lda NoiseSFXFlag
         ora #sfxNoise_SpitFlame
         sta NoiseSFXFlag
         lda EnData05,x
         and #$01
         tay
-        lda SpawnFireball_83,y
+        lda SpawnEnProjectile_83,y
         jsr CommonJump_InitEnAnimIndex
         beq L9B59
     L9B3C:

@@ -140,15 +140,15 @@ AreaPalToggle:
     .byte _id_Palette05+1
 
     .byte $00
-AreaFireballKilledAnimIndex:
-    .byte EnAnim_FireballKilled - EnAnimTbl
+AreaEnProjectileKilledAnimIndex:
+    .byte EnAnim_EnProjectileKilled - EnAnimTbl
 AreaExplosionAnimIndex:
     .byte EnAnim_Explosion - EnAnimTbl
 
     .byte $00, $00
-AreaFireballFallingAnimIndex:
+AreaEnProjectileFallingAnimIndex:
     .byte $00, $00
-AreaFireballSplatterAnimIndex:
+AreaEnProjectileSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
     .byte EnAnim_Memu - EnAnimTbl
@@ -402,7 +402,7 @@ L977B:
     .byte %00000000 ; 0E - same as 2
     .byte %00000000 ; 0F - same as 2
 
-EnemyFireballRisingAnimIndexTable:
+EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte EnAnim_KraidNailMovingFacingLeft - EnAnimTbl, EnAnim_KraidNailIdleFacingLeft - EnAnimTbl
     .byte EnAnim_Memu - EnAnimTbl, EnAnim_Memu - EnAnimTbl
@@ -411,22 +411,22 @@ EnemyFireballRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyFireballPosOffsetX:
+EnProjectilePosOffsetX:
     .byte $0C, $F4
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyFireballPosOffsetY:
+EnProjectilePosOffsetY:
     .byte $F4
     .byte $00
     .byte $00
     .byte $00
 
-EnemyFireballMovementPtrTable:
-    .word EnemyFireballMovement0
-    .word EnemyFireballMovement1
-    .word EnemyFireballMovement2
-    .word EnemyFireballMovement3
+EnProjectileMovementPtrTable:
+    .word EnProjectileMovement0
+    .word EnProjectileMovement1
+    .word EnProjectileMovement2
+    .word EnProjectileMovement3
 
 TileBlastFramePtrTable:
     .word TileBlastFrame00
@@ -653,7 +653,7 @@ EnemyMovement11_L:
     SignMagSpeed $50, -2,  7
     EnemyMovementInstr_Restart
 
-EnemyFireballMovement0:
+EnProjectileMovement0:
     SignMagSpeed $04,  3, -3
     SignMagSpeed $05,  3, -2
     SignMagSpeed $06,  3, -1
@@ -663,7 +663,7 @@ EnemyFireballMovement0:
     SignMagSpeed $50,  3,  3
     .byte $FF
 
-EnemyFireballMovement1:
+EnProjectileMovement1:
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -673,7 +673,7 @@ EnemyFireballMovement1:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnemyFireballMovement2:
+EnProjectileMovement2:
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -683,7 +683,7 @@ EnemyFireballMovement2:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnemyFireballMovement3:
+EnProjectileMovement3:
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1

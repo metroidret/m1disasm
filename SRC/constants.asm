@@ -46,8 +46,6 @@
 
 ;------------------------------------------[ Misc. defines ]-----------------------------------------
 
-modeTitle              = 1
-
 ;Special item types.
 it_Squeept             = $1
 it_PowerUp             = $2

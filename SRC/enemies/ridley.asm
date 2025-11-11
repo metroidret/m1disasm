@@ -34,7 +34,7 @@ RidleyBranch_Exit:
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
-RidleyProjectileAIRoutine:
+RidleyFireballAIRoutine:
     ; push EnData05 to stack
     lda EnData05,x
     pha
