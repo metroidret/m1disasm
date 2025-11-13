@@ -139,10 +139,10 @@
                                     ;4 bits for x coord change and 4 bits for y coord change.
     complete         db   ;#$01=sprite has completed its task, #$00 if not complete.
     spareB           db   ;Not used.
-    xRun             db   ;x displacement of sprite movement(run).
-    yRise            db   ;y displacement of sprite movement(rise).
-    xDir             db   ;MSB set=decrease sprite x pos, else increase sprite x pos.
-    yDir             db   ;MSB set=decrease sprite y pos, else increase sprite y pos.
+    speedX           db   ;x speed of sprite movement (in 16ths of pixel per frame).
+    speedY           db   ;y speed of sprite movement (in 16ths of pixel per frame).
+    dirX             db   ;MSB set=decrease sprite x pos, else increase sprite x pos.
+    dirY             db   ;MSB set=decrease sprite y pos, else increase sprite y pos.
 .endst
 
 ;-------------------------------------------[ Defines ]----------------------------------------------
@@ -236,6 +236,10 @@ Temp02_AttribPtr       = $02
 Temp0E_MetatileCounter = $0E
 Temp10_StructIndex     = $10
 Temp11_MetatileIndex   = $11
+
+; UpdateCrossMissileCoords@CalcDisplacement
+Temp00_FrameCountMask  = $00
+Temp04_Displacement    = $04
 
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->

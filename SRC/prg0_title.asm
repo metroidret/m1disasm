@@ -958,8 +958,8 @@ InitCrossMissiles: ; 00:8897
     sta IntroSprs.6.y               ;
     sta IntroSprs.7.y               ;Change sprite 6 and 7 initial y position.
     lda #$16                        ;
-    sta IntroSprs.6.yRise           ;Change sprite 6 and 7 y displacement. The combination-->
-    sta IntroSprs.7.yRise           ;of these two changes the slope of the sprite movement.
+    sta IntroSprs.6.speedY           ;Change sprite 6 and 7 y displacement. The combination-->
+    sta IntroSprs.7.speedY           ;of these two changes the slope of the sprite movement.
     rts
 
 ;The following tables are loaded into RAM as initial sprite control values for the crosshair sprites.
@@ -1048,22 +1048,22 @@ UpdateCrossMissiles: ; 00:88FE
     
     ;Multiply the rise and run of the 8 sprites by 2.-->
     ;This doubles their speed.
-    asl IntroSprs.0.xRun
-    asl IntroSprs.0.yRise
-    asl IntroSprs.1.xRun
-    asl IntroSprs.1.yRise
-    asl IntroSprs.2.xRun
-    asl IntroSprs.2.yRise
-    asl IntroSprs.3.xRun
-    asl IntroSprs.3.yRise
-    asl IntroSprs.4.xRun
-    asl IntroSprs.4.yRise
-    asl IntroSprs.5.xRun
-    asl IntroSprs.5.yRise
-    asl IntroSprs.6.xRun
-    asl IntroSprs.6.yRise
-    asl IntroSprs.7.xRun
-    asl IntroSprs.7.yRise
+    asl IntroSprs.0.speedX
+    asl IntroSprs.0.speedY
+    asl IntroSprs.1.speedX
+    asl IntroSprs.1.speedY
+    asl IntroSprs.2.speedX
+    asl IntroSprs.2.speedY
+    asl IntroSprs.3.speedX
+    asl IntroSprs.3.speedY
+    asl IntroSprs.4.speedX
+    asl IntroSprs.4.speedY
+    asl IntroSprs.5.speedX
+    asl IntroSprs.5.speedY
+    asl IntroSprs.6.speedX
+    asl IntroSprs.6.speedY
+    asl IntroSprs.7.speedX
+    asl IntroSprs.7.speedY
     
 L8936: ; 00:8936
     ;Move sprite 0.
@@ -2992,117 +2992,117 @@ Hex16ToDec: ; 00:94DA
 ;used in the intro and ending portions of the game.
 
 bank0_PalPntrTbl: ; 00:9560
-    .word bank0_Palette00                 ;($9586)
-    .word bank0_Palette01                 ;($95AA)
-    .word bank0_Palette02                 ;($95CE)
-    .word bank0_Palette03                 ;($95F2)
-    .word bank0_Palette04                 ;($9616)
-    .word bank0_Palette05                 ;($963A)
-    .word bank0_Palette06                 ;($965E)
-    .word bank0_Palette07                 ;($9682)
-    .word bank0_Palette08                 ;($96A6)
-    .word bank0_Palette09                 ;($96CA)
-    .word bank0_Palette0A                 ;($96EE)
-    .word bank0_Palette0B                 ;($9712)
-    .word bank0_Palette0C                 ;($9736)
-    .word bank0_Palette0D                 ;($975A)
-    .word bank0_Palette0E                 ;($977E)
-    .word bank0_Palette0F                 ;($97A2)
-    .word bank0_Palette10                 ;($97C6)
-    .word bank0_Palette11                 ;($97EA)
-    .word bank0_Palette12                 ;($97F2)
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette00
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette01
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette02
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette03
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette04
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette05
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette06
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette07
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette08
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette09
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0A
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0B
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0C
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0D
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0E
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0F
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette10
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette11
+    PtrTableEntry bank0_PalPntrTbl, bank0_Palette12
 
-bank0_Palette00:
+bank0_Palette00: ; 00:9586
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette01:
+bank0_Palette01: ; 00:95AA
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette02:
+bank0_Palette02: ; 00:95CE
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette03:
+bank0_Palette03: ; 00:95F2
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette04:
+bank0_Palette04: ; 00:9616
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette05:
+bank0_Palette05: ; 00:963A
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette06:
+bank0_Palette06: ; 00:965E
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette07:
+bank0_Palette07: ; 00:9682
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette08:
+bank0_Palette08: ; 00:96A6
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette09:
+bank0_Palette09: ; 00:96CA
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0A:
+bank0_Palette0A: ; 00:96EE
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0B:
+bank0_Palette0B: ; 00:9712
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0C:
+bank0_Palette0C: ; 00:9736
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
     PPUStringEnd
 
-bank0_Palette0D:
+bank0_Palette0D: ; 00:975A
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0E:
+bank0_Palette0E: ; 00:977E
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0F:
+bank0_Palette0F: ; 00:97A2
     PPUString $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette10:
+bank0_Palette10: ; 00:97C6
     PPUString $3F00, \
         $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette11:
+bank0_Palette11: ; 00:97EA
     PPUString $3F00, \
         $0F, $30, $30, $21
     PPUStringEnd
 
-bank0_Palette12:
+bank0_Palette12: ; 00:97F2
     PPUString $3F00, \
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
     PPUStringEnd
@@ -3115,67 +3115,99 @@ EndGamePal0C:
     PPUStringRepeat $3F10, $0F, $10
     PPUStringEnd
 
+
 UpdateCrossMissileCoords: ; 00:981E
-    lda IntroSprs.0.xRun,x          ;Load sprite run(sprite x component).
-    jsr CalcDisplacement            ;($9871)Calculate sprite displacement in x direction.
-    ldy IntroSprs.0.xDir,x          ;Get byte describing if sprite increasing or decreasing pos.
-    bpl L982E                       ;
-        eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-        clc                             ;value in A (result from CalcDisplacement) to twos complement.
-        adc #$01                        ;
-    L982E:
-    clc                             ;
-    adc IntroSprs.0.x,x             ;Add change to sprite x coord.
-    sta IntroSprs.0.x,x             ;
-    sec                             ;
-    sbc IntroSprs.0.crossMissileXChange,x ;Subtract total sprite movemnt value from current sprite x pos.
-    php                             ;Transfer processor status to A.
-    pla                             ;
-    eor IntroSprs.0.xDir,x          ;Eor carry bit with direction byte to see if sprite has-->
-    lsr                             ;reached its end point.
-    bcc L9864                       ;Branch if sprite has reached the end of x movement.
-        lda IntroSprs.0.yRise,x         ;Load sprite rise(sprite y component).
-        jsr CalcDisplacement            ;($9871)Calculate sprite displacement in y direction.
-        ldy IntroSprs.0.yDir,x          ;Get byte describing if sprite increasing or decreasing pos.
-        bpl L9851                       ;
-            eor #$FF                        ;If MSB is set, sprite is decreasing position. convert-->
-            clc                             ;value in A (result from CalcDisplacement) to twos complement.
-            adc #$01                        ;
-        L9851:
-        clc                             ;
-        adc IntroSprs.0.y,x             ;Add change to sprite y coord.
-        sta IntroSprs.0.y,x             ;
-        sec                             ;
-        sbc IntroSprs.0.crossMissileYChange,x ;Subtract total sprite movemnt value from current sprite y pos.
-        php                             ;Transfer processor status to A.
-        pla                             ;
-        eor IntroSprs.0.yDir,x          ;Eor carry bit with direction byte to see if sprite has-->
-        lsr                             ;reached its end point.
-        bcs RTS_9870                       ;Branch if sprite has not reached the end of y movement.
-    L9864:
-        lda IntroSprs.0.crossMissileYChange,x ;After sprite has reached its final position, this code-->
-        sta IntroSprs.0.y,x            ;explicitly writes final the x and y coords to to sprite-->
-        lda IntroSprs.0.crossMissileXChange,x ;position addresses to make sure the sprites don't-->
-        sta IntroSprs.0.x,x            ;overshoot their mark.
-    RTS_9870:
+    ;Load sprite run(sprite x component).
+    lda IntroSprs.0.speedX,x
+    ;Calculate sprite displacement in x direction.
+    jsr @CalcDisplacement
+    ;Get byte describing if sprite increasing or decreasing pos.
+    ldy IntroSprs.0.dirX,x
+    bpl @endIf_A
+        ;If MSB is set, sprite is decreasing position.
+        ;negate sprite displacement.
+        eor #$FF
+        clc
+        adc #$01
+    @endIf_A:
+    ;Add displacement to sprite x coord.
+    clc
+    adc IntroSprs.0.x,x
+    sta IntroSprs.0.x,x
+    ;Subtract total sprite movemnt value from current sprite x pos.
+    sec
+    sbc IntroSprs.0.crossMissileXChange,x
+    ;Transfer processor status to A.
+    php
+    pla
+    ;Eor carry bit with direction byte to see if sprite has reached its end point.
+    eor IntroSprs.0.dirX,x
+    lsr
+    ;Branch if sprite has reached the end of x movement.
+    bcc @endIf_B
+        ;Load sprite rise(sprite y component).
+        lda IntroSprs.0.speedY,x
+        ;Calculate sprite displacement in y direction.
+        jsr @CalcDisplacement
+        ;Get byte describing if sprite increasing or decreasing pos.
+        ldy IntroSprs.0.dirY,x
+        bpl @endIf_C
+            ;If MSB is set, sprite is decreasing position.
+            ;negate sprite displacement.
+            eor #$FF
+            clc
+            adc #$01
+        @endIf_C:
+        ;Add displacement to sprite y coord.
+        clc
+        adc IntroSprs.0.y,x
+        sta IntroSprs.0.y,x
+        ;Subtract total sprite movemnt value from current sprite y pos.
+        sec
+        sbc IntroSprs.0.crossMissileYChange,x
+        ;Transfer processor status to A.
+        php
+        pla
+        ;Eor carry bit with direction byte to see if sprite has reached its end point.
+        eor IntroSprs.0.dirY,x
+        lsr
+        ;Branch if sprite has not reached the end of y movement.
+        bcs @RTS
+    @endIf_B:
+    ;After sprite has reached its final position, this code explicitly writes final x and y coords
+    ;to the sprite position addresses to make sure the sprites don't overshoot their mark.
+    lda IntroSprs.0.crossMissileYChange,x
+    sta IntroSprs.0.y,x
+    lda IntroSprs.0.crossMissileXChange,x
+    sta IntroSprs.0.x,x
+@RTS:
     rts
 
-CalcDisplacement: ; 00:9871
-    sta $04                         ;
-    lda #$08                        ;Time division. The higher the number, the slower the sprite.
-    sta $00                         ;
-    L9877:
-        lsr $04                         ;
-        bcc L9883                       ;
-        lda FrameCount                  ;
-        and $00                         ;Calculate the change in the sprite position by taking the-->
-        bne L9883                       ;value in a and dividing it by the time division. The time-->
-        inc $04                         ;time division in this case is #$08.
-    L9883:
-        lsr $00                         ;
-        bne L9877                       ;
-    lda $04                         ;
-    rts                             ;Return A/time.
+@CalcDisplacement: ; 00:9871
+    ;store sprite speed
+    sta Temp04_Displacement
+    ;Time division. The higher the number, the slower the sprite.
+    ;time division in this case is #$08.
+    ;the real divisor will be the closest power of two above this number (#$10).
+    lda #$08
+    sta Temp00_FrameCountMask
+    @loop:
+        ;Calculate the change in the sprite position by dividing speed
+        lsr Temp04_Displacement
+        bcc @endIf_D
+        ; the frame count is used to dither the division result over time
+        ; the greater the fractional part of the result is, the greater chances 1 will be added to the result.
+        lda FrameCount
+        and Temp00_FrameCountMask
+        bne @endIf_D
+        inc Temp04_Displacement
+    @endIf_D:
+        lsr Temp00_FrameCountMask
+        bne @loop
+    ;Return displacement (speed/16).
+    lda Temp04_Displacement
+    rts
+
 
 ;This function decrements the y coordinate of the 40 intro star sprites.
 DecSpriteYCoord: ; 00:988A
@@ -3209,6 +3241,7 @@ DecSpriteYCoord: ; 00:988A
     sta SpriteLoadPending
 @RTS:
     rts
+
 
 LoadStarSprites: ; 00:98AE
     ;Store RAM contents of $6E00 thru $6E9F in sprite RAM at locations $0260 thru $02FF.
