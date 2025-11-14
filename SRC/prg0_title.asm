@@ -820,14 +820,14 @@ DoTwoSparkleUpdates: ; 00:87D6
 SparkleUpdate: ; 00:87D9
     ;If $6EA5 has not reached #$00, skip next routine.
     lda IntroSprs.0.nextDelay,x
-    bne L87E1
+    bne @endIf_A
         ;($881A)Update sparkle sprite screen position.
         jsr DoSparkleSpriteCoord
-    L87E1:
+    @endIf_A:
     
     ;If sprite is already done, skip routine.
     lda IntroSprs.0.complete,x
-    bne RTS_8819
+    bne @RTS
     
     dec IntroSprs.0.nextDelay,x
 
@@ -846,7 +846,7 @@ SparkleUpdate: ; 00:87D9
     ;Decrement IntroSprChangeDelay.
     dec IntroSprs.0.changeDelay,x
     ;If 0, time to change sprite graphic.
-    bne L8816
+    bne @endIf_B
         ;The sparkle sprite graphic is-->
         ;changed back and forth between pattern table-->
         ;graphic $C6 and $C5. (BUG! Should be $C6 and $C7)
@@ -861,63 +861,93 @@ SparkleUpdate: ; 00:87D9
         asl ; a = #OAMDATA_HFLIP
         eor IntroSprs.0.attrib,x
         sta IntroSprs.0.attrib,x
-    L8816:
+    @endIf_B:
     jmp WriteIntroSprite ;($887B)Transfer sprite info into sprite RAM.
-RTS_8819:
-    rts
-
-DoSparkleSpriteCoord: ; 00:881A
-    txa                             ;
-    jsr Adiv8                       ;($C2C0)Y=0 when working with top sparkle sprite-->
-    tay                             ;and y=2 when working with bottom sparkle sprite.
-    lda SparkleAddressTbl,y         ;Base is $89AF.
-    sta $00                         ;When working with top sparkle sprite, E1,E0=$89B3-->
-    lda SparkleAddressTbl+1,y       ;and when botton sparkle sprite, E1,E0=$89E9.
-    sta $01                         ;
-    ldy IntroSprs.0.index,x         ;Loads index for finding sparkle data (x=$00 or $10).
-    lda ($00),y                     ;
-    bpl L8835                       ;If data byte MSB is set, set $6EA9 to #$01 and move to-->
-        lda #$01                        ;next index for sparkle sprite data.
-        sta IntroSprs.0.byteType,x  ;
-    L8835:
-    bne L883C                       ;
-        lda #$01                        ;If value is equal to zero, sparkle sprite-->
-        sta IntroSprs.0.complete,x      ;processing is complete.
-    L883C:
-    sta IntroSprs.0.nextDelay,x     ;
-    iny                             ;
-    lda ($00),y                     ;Get x/y position byte.
-    dec IntroSprs.0.byteType,x      ;If MSB of second byte is set, branch.
-    bmi L8850                       ;
-        lda #$00                        ;This code is run when the MSB of the first byte-->
-        sta IntroSprs.0.sparkleYChange,x ;is set.  This allows the sprite to change X coord-->
-        lda ($00),y                     ;by more than 7.  Ensures Y coord does not change.
-        bmi L8867                       ;
-    L8850:
-        pha                             ;Store value twice so X and Y-->
-        pha                             ;coordinates can be extracted.
-        lda #$00                        ;
-        sta IntroSprs.0.byteType,x      ;Set IntroSpr0ByteType to #$00 after processing.
-        pla                             ;
-        jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
-        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
-        sta IntroSprs.0.sparkleYChange,x ;Twos complement stored if Y coord decreasing.
-        pla                             ;
-        and #$0F                        ;Discard upper 4 bits.
-        jsr NibbleSubtract              ;($8871)Check if nibble to be converted to twos complement.
-    L8867:
-    sta IntroSprs.0.sparkleXChange,x ;Store amount to move spite in x direction.
-    inc IntroSprs.0.index,x         ;
-    inc IntroSprs.0.index,x         ;Add two to find index for next data byte.
-    rts
-
-NibbleSubtract: ; 00:8871
-    cmp #$08                        ;If bit 3 is set, nibble is a negative number-->
-    bcc @RTS                        ;and lower three bits are converted to twos-->
-    and #$07                        ;complement for subtraction, else exit.
-    jsr TwosComplement              ;($C3D4)Prepare for subtraction with twos complement.
 @RTS:
     rts
+
+
+DoSparkleSpriteCoord: ; 00:881A
+    ;($C2C0)Y=0 when working with top sparkle sprite and y=2 when working with bottom sparkle sprite.
+    txa
+    jsr Adiv8
+    tay
+    ; loads either TopSparkleDataTbl or BottomSparkleDataTbl into $00 depending on-->
+    ; which sparkle we're processing
+    lda SparkleAddressTbl,y
+    sta $00
+    lda SparkleAddressTbl+1,y
+    sta $01
+    ;Loads index for finding sparkle data (x=$00 or $10).
+    ldy IntroSprs.0.index,x
+    lda ($00),y
+    ;If data byte MSB is set, set $6EA9 to #$01 and move to next index for sparkle sprite data.
+    bpl @endIf_A
+        lda #$01
+        sta IntroSprs.0.byteType,x
+    @endIf_A:
+    ;If value is equal to zero, sparkle sprite processing is complete.
+    bne @endIf_B
+        lda #$01
+        sta IntroSprs.0.complete,x
+    @endIf_B:
+    sta IntroSprs.0.nextDelay,x
+    iny
+    ;Get x/y position byte.
+    lda ($00),y
+    ;decrement byteType
+    dec IntroSprs.0.byteType,x
+    ;If byteType was zero, branch.
+    bmi @else_C
+        ;This code is run when the MSB of the first byte is set.
+        ;This allows the sprite to change X coord by more than 7.
+        ;Ensures Y coord does not change.
+        lda #$00
+        sta IntroSprs.0.sparkleYChange,x
+        ; second byte is used as sparkleXChange
+        lda ($00),y
+        bmi @endIf_C ; branch always
+    @else_C:
+        ;Parse sign-magnitude speeds
+        ;Store value twice so X and Y coordinates can be extracted.
+        pha
+        pha
+        ;Set IntroSpr0ByteType to #$00 after processing.
+        lda #$00
+        sta IntroSprs.0.byteType,x
+        
+        pla
+        ;Get high nibble for y
+        jsr Adiv16
+        ;Check if nibble to be converted to twos complement.
+        jsr @NibbleSubtract
+        ;Store amount to move sprite in y direction.
+        sta IntroSprs.0.sparkleYChange,x
+        
+        pla
+        ;Get low nibble for x
+        and #$0F
+        ;Check if nibble to be converted to twos complement.
+        jsr @NibbleSubtract
+    @endIf_C:
+    ;Store amount to move sprite in x direction.
+    sta IntroSprs.0.sparkleXChange,x
+    ;Add two to find index for next instruction.
+    inc IntroSprs.0.index,x
+    inc IntroSprs.0.index,x
+    rts
+
+@NibbleSubtract: ; 00:8871
+    ; return nibble if sign bit of the nibble isn't set (if value is positive)
+    cmp #$08
+    bcc @RTS
+    ; value is negative
+    ; return negation of lower three bits of nibble
+    and #$07
+    jsr TwosComplement
+@RTS:
+    rts
+
 
 ;Load the four bytes for the intro sprites into sprite RAM.
 WriteIntroSprite: ; 00:887B
