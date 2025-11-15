@@ -92,7 +92,6 @@ ui_ICEBEAM             = %000111 << 10 ;(Not considered a unique item).
 ui_ENERGYTANK          = %001000 << 10
 ui_MISSILES            = %001001 << 10
 ui_MISSILEDOOR         = %001010 << 10
-;ui_BOMBS               = %001100 << 10 ; this doesnt seem to be correct
 ui_MOTHERBRAIN         = %001110 << 10
 ui_ZEBETITE1           = %001111 << 10
 ui_ZEBETITE2           = %010000 << 10

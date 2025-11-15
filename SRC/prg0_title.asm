@@ -1480,28 +1480,28 @@ FadeInPalData: ; 00:8B73
 ProcessUniqueItems: ; 00:8B79
     ;Store NumberOfUniqueItems at $03.
     lda NumberOfUniqueItems
-    sta $03
+    sta Temp03_NumberOfUniqueItems
     ;Set $04 to #$00.
     ldy #$00
-    sty $04
-    L8B82:
+    sty Temp04_UniqueItemIndex
+    @loop:
         ;Use $04 at index into unique item list.
-        ldy $04
+        ldy Temp04_UniqueItemIndex
         ;Load the two bytes representing the aquired Unique item and store them in $00 and $01.
         iny
         lda UniqueItemHistory-1,y
-        sta $00
+        sta Temp00_ItemData
         iny
         lda UniqueItemHistory-1,y
-        sta $01
+        sta Temp00_ItemData+1.b
         ;Increment $04 by two (load unique item complete).
-        sty $04
+        sty Temp04_UniqueItemIndex
         ;Find unique item.
         jsr UniqueItemSearch
         ;If all unique items processed, return, else branch to process next unique item.
-        ldy $04
-        cpy $03
-        bcc L8B82
+        ldy Temp04_UniqueItemIndex
+        cpy Temp03_NumberOfUniqueItems
+        bcc @loop
     rts
 
 UniqueItemSearch: ; 00:8B9C
@@ -1513,121 +1513,147 @@ UniqueItemSearch: ; 00:8B9C
         tay
         ;Load unique item reference starting at $9029(2 bytes).
         lda ItemData,y
-        cmp $00
+        cmp Temp00_ItemData
         bne L8BAF
             ;Get next byte of unique item.
             lda ItemData+1,y
-            cmp $01
+            cmp Temp00_ItemData+1.b
             ;If unique item found, branch to UniqueItemFound.
             beq UniqueItemFound
         L8BAF:
-        ;If the unique item is a Zebetite, return, else branch to find next unique item.
+        ;If we've gone through all items, return, else branch to find next unique item.
+        ;(BUG! This checks one item too many and goes oob of the ItemData table)
         inx
-        cpx #>ui_ZEBETITE1.b
+        cpx #(ItemData@end - ItemData) / 2 + 1.b
         bcc L8B9E
     rts
 
 ;The following routine sets the item bits for aquired items in addresses $6988 thru $698E.-->
-;Items 1 thru 7 masked in $6988, 8 thru 15 in $6989, etc.
-
+;Items 0 thru 7 masked in $6988, 8 thru 15 in $6989, etc.
 UniqueItemFound: ; 00:8BB5
-    txa                             ;
-    jsr Adiv8                       ;($C2C0)Divide by 8.
-    sta $05                         ;Shifts 5 MSBs to LSBs of item # and saves results in $05.
-    jsr Amul8                       ;($C2C6)Multiply by 8.
-    sta $02                         ;Restores 5 MSBs of item # and drops 3 LSBs; saves in $02.
-    txa                             ;
-    sec                             ;
-    sbc $02                         ;
-    sta $06                         ;Remove 5 MSBs and stores 3 LSBs in $06.
-    ldx $05                         ;
-    lda PasswordByte,x              ;
-    ldy $06                         ;
-    ora PasswordBitmaskTbl,y        ;
-    sta PasswordByte,x              ;Masks each unique item in the proper item address-->
-    rts                             ;(addresses $6988 thru $698E).
+    ;Shifts 5 MSBs to LSBs of item # and saves results in $05.
+    txa
+    jsr Adiv8
+    sta Temp05_PasswordByteIndex
+    ;Restores 5 MSBs of item # and drops 3 LSBs; saves in $02.
+    jsr Amul8
+    sta Temp02_ItemDataIndex5MSB
+    ;Remove 5 MSBs and stores 3 LSBs in $06.
+    txa
+    sec
+    sbc Temp02_ItemDataIndex5MSB
+    sta Temp06_PasswordBitIndex
+    ;Masks each unique item in the proper item address (addresses $6988 thru $698E).
+    ldx Temp05_PasswordByteIndex
+    lda PasswordByte,x
+    ldy Temp06_PasswordBitIndex
+    ora PasswordBitmaskTbl,y
+    sta PasswordByte,x
+    rts
+
 
 LoadUniqueItems: ; 00:8BD4
-    lda #$00                        ;
-    sta NumberOfUniqueItems         ;
-    sta $05                         ;$05 offset of password byte currently processing(0 thru 7).
-    sta $06                         ;$06 bit of password byte currently processing(0 thru 7).
-    lda #$3B                        ;
-    sta $07                         ;Maximum number of unique items(59 or #$3B).
-    ldy $05                         ;
-    lda PasswordByte,y              ;
-    sta $08                         ;$08 stores contents of password byte currently processing.
-    ldx #$00                        ;
-    stx $09                         ;Stores number of unique items processed(#$0 thru #$3B).
-    ldx $06                         ;
-    beq ProcessNewItemByte          ;If start of new byte, branch.
+    lda #$00
+    sta NumberOfUniqueItems
+    ;$05 offset of password byte currently processing(0 thru 7).
+    sta Temp05_PasswordByteIndex
+    ;$06 bit of password byte currently processing(0 thru 7).
+    sta Temp06_PasswordBitIndex
+    ;Maximum number of unique items(59 or #$3B).
+    lda #(ItemData@end - ItemData) / 2.b
+    sta Temp07_ItemDataIndexMax
+    ;$08 stores contents of password byte currently processing.
+    ldy Temp05_PasswordByteIndex
+    lda PasswordByte,y
+    sta Temp08_PasswordByte
+    ;Stores number of unique items processed(#$0 thru #$3B).
+    ldx #$00
+    stx Temp09_ItemDataIndex
+    ;If start of new byte, branch. (this is always the case)
+    ldx Temp06_PasswordBitIndex
+    beq @processItemBit
 
     ;This code does not appear to ever be executed.
     ldx #$01
     stx $02
     clc
-    L8BF5:
+    @loop_unused:
         ror
         sta $08
         ldx $02
         cpx $06
-        beq ProcessNewItemByte
+        beq @processItemBit
         inc $02
-        jmp L8BF5
+        jmp @loop_unused
 
-ProcessNextItem: ; 00:8C03
-    ldy $05                         ;Locates next password byte to process-->
-    lda PasswordByte,y              ;and loads it into $08.
-    sta $08                         ;
+@processItemByte: ; 00:8C03
+    ;Locates next password byte to process and loads it into $08.
+    ldy Temp05_PasswordByteIndex
+    lda PasswordByte,y
+    sta Temp08_PasswordByte
 
-ProcessNewItemByte: ; 00:8C0A
-    lda $08                         ;
-    ror                             ;Rotates next bit to be processed to the carry flag.
-    sta $08                         ;
-    bcc L8C14                       ;
-        jsr SamusHasItem            ;($8C39)Store item in unique item history.
-    L8C14:
-    ldy $06                         ;If last bit of item byte has been-->
-    cpy #$07                        ;checked, move to next byte.
-    bcs L8C27                       ;
-    inc $06                         ;
-    inc $09                         ;
-    ldx $09                         ;If all 59 unique items have been-->
-    cpx $07                         ;searched through, exit.
-    bcs RTS_8C38                    ;
-    jmp ProcessNewItemByte          ;($8C0A)Repeat routine for next item byte.
+@processItemBit: ; 00:8C0A
+        ;Rotates next bit to be processed to the carry flag.
+        lda Temp08_PasswordByte
+        ror
+        sta Temp08_PasswordByte
+        ;If Samus has this item, store item in unique item history.
+        bcc @endIf_A
+            jsr SamusHasItem
+        @endIf_A:
+        ;If last bit of item byte has been checked, move to next byte.
+        ldy Temp06_PasswordBitIndex
+        cpy #$07
+        bcs @moveToNextByte
+        ; move to next bit
+        inc Temp06_PasswordBitIndex
+        ;If all 59 unique items have been searched through, exit.
+        inc Temp09_ItemDataIndex
+        ldx Temp09_ItemDataIndex
+        cpx Temp07_ItemDataIndexMax
+        bcs @RTS
+        ;Repeat routine for next item bit.
+        jmp @processItemBit
 
-L8C27:
-    ldy #$00                        ;
-    sty $06                         ;
-    inc $05                         ;
-    inc $09                         ;
-    ldx $09                         ;If all 59 unique items have been-->
-    cpx $07                         ;searched through, exit.
-    bcs RTS_8C38                       ;
-    jmp ProcessNextItem             ;($8C03)Process next item.
+@moveToNextByte:
+    ; move to bit 0 of next byte
+    ldy #$00
+    sty Temp06_PasswordBitIndex
+    inc Temp05_PasswordByteIndex
+    ;If all 59 unique items have been searched through, exit.
+    inc Temp09_ItemDataIndex
+    ldx Temp09_ItemDataIndex
+    cpx Temp07_ItemDataIndexMax
+    bcs @RTS
+    ;Process next item byte.
+    jmp @processItemByte
 
-RTS_8C38:
+@RTS:
     rts
 
 SamusHasItem: ; 00:8C39
-    lda $05                         ;$05 becomes the upper part of the item offset-->
-    jsr Amul8                       ;while $06 becomes the lower part of the item offset.
-    clc                             ;
-    adc $06                         ;
-    asl                             ;* 2. Each item is two bytes in length.
-    tay                             ;
-    lda ItemData+1,y                ;
-    sta $01                         ;$00 and $01 store the two bytes of-->
-    lda ItemData,y                  ;the unique item to process.
-    sta $00                         ;
-    ldy NumberOfUniqueItems         ;
-    sta UniqueItemHistory,y         ;Store the two bytes of the unique item-->
-    lda $01                         ;in RAM in the unique item history.
-    iny                             ;
-    sta UniqueItemHistory,y         ;
-    iny                             ;
-    sty NumberOfUniqueItems         ;Keeps a running total of unique items.
+    ;Reconstitute ItemDataIndex from $05 and $06
+    lda Temp05_PasswordByteIndex
+    jsr Amul8
+    clc
+    adc Temp06_PasswordBitIndex
+    ;* 2. Each item is two bytes in length.
+    asl
+    tay
+    ;$00 and $01 store the two bytes of the unique item to process.
+    lda ItemData+1,y
+    sta Temp00_ItemData+1.b
+    lda ItemData,y
+    sta Temp00_ItemData
+    ;Store the two bytes of the unique item in RAM in the unique item history.
+    ldy NumberOfUniqueItems
+    sta UniqueItemHistory,y
+    lda $01
+    iny
+    sta UniqueItemHistory,y
+    iny
+    ;Keeps a running total of unique items.
+    sty NumberOfUniqueItems
     rts
 
 CheckPassword: ; 00:8C5E
@@ -1653,17 +1679,17 @@ CalculatePassword: ; 00:8C7A
     lda #$00
     ldy #$0F
     ;Clears the 16 first password bytes (and also the 16 first password characters, for some reason)
-    L8C7E:
+    @loop_A:
         sta PasswordByte,y
         sta PasswordChar,y
         dey
-        bpl L8C7E
+        bpl @loop_A
     
     jsr ProcessUniqueItems          ;($8B79)Determine what items Samus has collected.
     ;Branch if mother brain has not been defeated
-    lda PasswordByte+$07
-    and #$04
-    beq L8C9E
+    lda PasswordByte+(((ItemData@MotherBrain-ItemData)/2)/8)
+    and #1<<(((ItemData@MotherBrain-ItemData)/2)&7).b
+    beq @endIf_A
         ;Mother brain was defeated
         ;Restore mother brain, zebetites and all missile doors in Tourian as punishment for-->
         ;dying in the escape.
@@ -1673,7 +1699,7 @@ CalculatePassword: ; 00:8C7A
         lda PasswordByte+$06
         and #$03
         sta PasswordByte+$06
-    L8C9E:
+    @endIf_A:
     
     ;Store InArea in bits 0 thru 5 in address $6990.
     lda InArea
@@ -2088,7 +2114,7 @@ PasswordBitmaskTbl: ; 00:9021
 ;on world map. See constants.asm for values of IIIIII.
 
 ItemData: ; 00:9029
-    ItemData_MaruMari:
+@MaruMari:
     .word ui_MARUMARI    + ($02 << 5) + $0E  ;Maru Mari at coord 02,0E                    (Item 0)
 
     .word ui_MISSILES    + ($12 << 5) + $0B  ;Missiles at coord 12,0B                     (Item 1)
@@ -2097,7 +2123,7 @@ ItemData: ; 00:9029
     .word ui_ENERGYTANK  + ($19 << 5) + $07  ;Energy tank at coord 19,07                  (Item 4)
     .word ui_MISSILEDOOR + ($19 << 5) + $05  ;Red door to bombs at coord 1A,05            (Item 5)
 
-    ItemData_Bombs:
+@Bombs:
     .word ui_BOMBS       + ($19 << 5) + $05  ;Bombs at coord 19,05                        (Item 6)
 
     .word ui_MISSILEDOOR + ($13 << 5) + $09  ;Red door to ice beam at coord 13,09         (Item 7)
@@ -2105,7 +2131,7 @@ ItemData: ; 00:9029
     .word ui_ENERGYTANK  + ($1B << 5) + $03  ;Energy tank at coord 1B,03                  (Item 9)
     .word ui_MISSILEDOOR + ($0F << 5) + $02  ;Red door to varia suit at coord 0F,02       (Item 10)
 
-    ItemData_Varia:
+@Varia:
     .word ui_VARIA       + ($0F << 5) + $02  ;Varia suit at coord 0F,02                   (Item 11)
 
     .word ui_ENERGYTANK  + ($09 << 5) + $0E  ;Energy tank at coord 09,0E                  (Item 12)
@@ -2121,12 +2147,12 @@ ItemData: ; 00:9029
     .word ui_MISSILES    + ($13 << 5) + $0F  ;Missiles at coord 13,0F                     (Item 22)
     .word ui_MISSILEDOOR + ($1B << 5) + $11  ;Red door to high jump at coord 1C,11        (Item 23)
 
-    ItemData_HighJump:
+@HighJump:
     .word ui_HIGHJUMP    + ($1B << 5) + $11  ;High jump at coord 1B,11                    (Item 24)
 
     .word ui_MISSILEDOOR + ($0F << 5) + $10  ;Red door to screw attack at coord 0E,10     (Item 25)
 
-    ItemData_ScrewAttack:
+@ScrewAttack:
     .word ui_SCREWATTACK + ($0F << 5) + $10  ;Screw attack at coord 0D,1D                 (Item 26)
 
     .word ui_MISSILES    + ($13 << 5) + $16  ;Missiles at coord 13,16                     (Item 27)
@@ -2160,7 +2186,11 @@ ItemData: ; 00:9029
     .word ui_ZEBETITE3                       ;3rd Zebetite in mother brain room           (Item 55)
     .word ui_ZEBETITE4                       ;4th Zebetite in mother brain room           (Item 56)
     .word ui_ZEBETITE5                       ;5th Zebetite in mother brain room           (Item 57)
+
+@MotherBrain:
     .word ui_MOTHERBRAIN                     ;Mother brain                                (Item 58)
+
+@end:
 
 ClearAll: ; 00:909F
     jsr ScreenOff                   ;($C439)Turn screen off.
@@ -3453,8 +3483,8 @@ Restart: ; 00:9A39
     and #gr_MARUMARI
     beq L9A5C
         ;Else load Maru Mari data into PasswordByte00.
-        lda #1<<(((ItemData_MaruMari-ItemData)/2)&7).b
-        sta PasswordByte+(((ItemData_MaruMari-ItemData)/2)/8)
+        lda #1<<(((ItemData@MaruMari-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData@MaruMari-ItemData)/2)/8)
     L9A5C:
     
     ;If Samus does not have bombs, branch.-->
@@ -3462,9 +3492,9 @@ Restart: ; 00:9A39
     and #gr_BOMBS
     beq L9A6B
         ;Else load bomb data into PasswordByte00.
-        lda PasswordByte+(((ItemData_Bombs-ItemData)/2)/8)
-        ora #1<<(((ItemData_Bombs-ItemData)/2)&7).b
-        sta PasswordByte+(((ItemData_Bombs-ItemData)/2)/8)
+        lda PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
+        ora #1<<(((ItemData@Bombs-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
     L9A6B:
     
     ;If Samus does not have varia suit, branch.-->
@@ -3472,8 +3502,8 @@ Restart: ; 00:9A39
     and #gr_VARIA
     beq L9A77
         ;Else load varia suit data into PasswordByte01.
-        lda #1<<(((ItemData_Varia-ItemData)/2)&7).b
-        sta PasswordByte+(((ItemData_Varia-ItemData)/2)/8)
+        lda #1<<(((ItemData@Varia-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData@Varia-ItemData)/2)/8)
     L9A77:
     
     ;If Samus does not have high jump, branch.-->
@@ -3481,8 +3511,8 @@ Restart: ; 00:9A39
     and #gr_HIGHJUMP
     beq L9A83
         ;Else load high jump data into PasswordByte03.
-        lda #1<<(((ItemData_HighJump-ItemData)/2)&7).b
-        sta PasswordByte+(((ItemData_HighJump-ItemData)/2)/8)
+        lda #1<<(((ItemData@HighJump-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData@HighJump-ItemData)/2)/8)
     L9A83:
     
     ;If Samus does not have Maru Mari, branch.
@@ -3491,9 +3521,9 @@ Restart: ; 00:9A39
     and #gr_MARUMARI
     beq L9A92
         ;Else load screw attack data into PasswordByte03.
-        lda PasswordByte+(((ItemData_ScrewAttack-ItemData)/2)/8)
-        ora #1<<(((ItemData_ScrewAttack-ItemData)/2)&7).b
-        sta PasswordByte+(((ItemData_ScrewAttack-ItemData)/2)/8)
+        lda PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
+        ora #1<<(((ItemData@ScrewAttack-ItemData)/2)&7).b
+        sta PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
     L9A92:
     
     lda SamusGear                   ;

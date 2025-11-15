@@ -241,6 +241,19 @@ Temp11_MetatileIndex   = $11
 Temp00_FrameCountMask  = $00
 Temp04_Displacement    = $04
 
+; ProcessUniqueItems/LoadUniqueItems
+Temp00_ItemData        = $00
+; Temp00_ItemData+1      = $01
+Temp02_ItemDataIndex5MSB = $02
+Temp03_NumberOfUniqueItems = $03
+Temp04_UniqueItemIndex = $04
+Temp05_PasswordByteIndex = $05
+Temp06_PasswordBitIndex = $06
+Temp07_ItemDataIndexMax = $07
+Temp08_PasswordByte    = $08
+Temp09_ItemDataIndex   = $09
+
+
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
