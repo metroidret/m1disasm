@@ -2259,8 +2259,9 @@ ItemData: ; 00:9029
 @end:
 
 ClearAll: ; 00:909F
-    jsr ScreenOff                   ;($C439)Turn screen off.
-    jsr ClearNameTables             ;Turn off screen, clear sprites and name tables.
+    ;Turn off screen, clear sprites and name tables.
+    jsr ScreenOff
+    jsr ClearNameTables
     jsr EraseAllSprites             ;
     lda PPUCTRL_ZP                  ;Set Name table address to $2000.
     and #$FC                        ;
@@ -3831,7 +3832,7 @@ RollCredits: ; 00:9BFC
     cmp #$02                        ;If not 20 frames left in Timer3, branch to exit.
     bne RTS_9C44                       ;
     jsr ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
-    jsr ClearNameTable0             ;($C16D)clear name table 0 and sprites.-->
+    jsr ClearNameTables@nameTable0  ;($C16D)clear name table 0 and sprites.-->
     jsr EraseAllSprites             ;($C1A3)prepares screen for credits.
     lda #$0D                        ;
     sta PalDataPending              ;Change to proper palette for credits.

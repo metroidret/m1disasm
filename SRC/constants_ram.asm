@@ -261,7 +261,11 @@ Temp02_MissileTankCount = $02
 
 ; PasswordScramble/UnscramblePassword
 Temp00_PasswordByte    = $00
-Temp02_ScrambleCount    = $02
+Temp02_ScrambleCount   = $02
+
+; PasswordScramble/UnscramblePassword
+Temp00_FillValue       = $00
+Temp01_NameTablePlus1  = $01
 
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
@@ -529,12 +533,16 @@ MotherBrainStatus      db   ;$98     ;#$00=Mother brain not in room, #$01=Mother
     MotherBrainAnimFrameTableID db ;$9C  ; current id in MotherBrainAnimFrameTable for the brain pulsations
     MotherBrainHi          db   ;$9D
     MotherBrainIsHit       db   ;$9E     ;Was mother brain hit by a missile? #$00=no, #$01=yes
-    MotherBrainFlashDelay  db   ;$9F     ;Delay until mother brain no longer flashes from being hit.
+.nextu
+    ; when mother brain is disappearing
+    MotherBrainDeathStringID db ;$99     ; disintegration batch id used to get the right string of instructions
+    MotherBrainDeathInstrID db  ;$9A     ; current disintegration instruction id
 .nextu
     ; when mother brain is dead
-    MotherBrainDeathStringID db ;$99
-    MotherBrainDeathInstrID db  ;$9A
+    MotherBrainTimeBombCounter db ;$99     ; counts from #-$80 up to #$00 until time bomb is set
 .endu
+MotherBrainFlashDelay  db   ;$9F     ;Primarily delay until mother brain no longer flashes from being hit. 
+                                       ;Also delay until the next batch of disintegration.
 
 ; 4 slots of 4 bytes each ($A0-$AF)
 SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0

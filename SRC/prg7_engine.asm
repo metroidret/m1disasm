@@ -364,25 +364,36 @@ IncrementRoutine:
 ;-------------------------------------[ Clear name tables ]------------------------------------------
 
 ClearNameTables: ;($C158)
-    jsr ClearNameTable0             ;($C16D)Always clear name table 0 first.
-    lda GameMode                    ;
-    beq LC165                       ;Branch if mode = Play.
-    lda TitleRoutine                ;
-    cmp #_id_EndGame.b                        ;If running the end game routine, clear-->
-    beq LC169                       ;name table 2, else clear name table 1.
-LC165:
-    lda #$02                        ;Name table to clear + 1 (name table 1).
-    bne LC16F                       ;Branch always.
-LC169:
-    lda #$03                        ;Name table to clear + 1 (name table 2).
-    bne LC16F                       ;Branch always.
+    ;Always clear name table 0 first.
+    jsr @nameTable0
+    ;Branch if mode = Play.
+    lda GameMode
+    beq @nameTable1
+    ;If running the end game routine, clear name table 2, else clear name table 1.
+    lda TitleRoutine
+    cmp #_id_EndGame.b
+    beq @nameTable2
 
-ClearNameTable0:
-    lda #$01                        ;Name table to clear + 1 (name table 0).
-LC16F:
-    sta $01                         ;Stores name table to clear.
-    lda #$FF                        ;
-    sta $00                         ;Value to fill with.
+@nameTable1:
+    ;Name table to clear + 1 (name table 1).
+    lda #$01+1
+    bne @nameTableCommon ;Branch always.
+
+@nameTable2:
+    ;Name table to clear + 1 (name table 2).
+    lda #$02+1
+    bne @nameTableCommon ;Branch always.
+
+@nameTable0:
+    ;Name table to clear + 1 (name table 0).
+    lda #$00+1
+@nameTableCommon:
+    ;Stores name table to clear.
+    sta Temp01_NameTablePlus1
+    ;Value to fill with.
+    lda #$FF
+    sta Temp00_FillValue
+    ; fallthrough
 
 ClearNameTable:
     ;Reset PPU address latch.
@@ -394,7 +405,7 @@ ClearNameTable:
     ;Store control bits in PPU.
     sta PPUCTRL
     ;Name table = X - 1.
-    ldx $01
+    ldx Temp01_NameTablePlus1
     dex
     ;get high PPU address.  pointer table at $C19F.
     lda HiPPUTable,x
@@ -407,7 +418,7 @@ ClearNameTable:
     ;Inner loop value.
     ldy #$00
     ;Fill-value.
-    lda $00
+    lda Temp00_FillValue
     @loop_outer:
         @loop_inner:
             ;Loops until the desired name table is cleared.
@@ -2321,24 +2332,34 @@ SavedDataTable:
 
 ;Determine what type of ending is to be shown, based on Samus' age.
 ChooseEnding:
-    ldy #$01                        ;
-LCAF7:
-    lda SamusAge+2                  ;If SamusAge+2 anything but #$00, load worst-->
-    bne LCB09                           ;ending(more than 37 hours of gameplay).
-    lda SamusAge+1                  ;
-    cmp AgeTable-1,y                ;Loop four times to determine-->
-    bcs LCB09                           ;ending type from table below.
-    iny                             ;
-    cpy #$05                        ;
-    bne LCAF7                       ;
-LCB09:
-    sty EndingType                  ;Store the ending # (1..5), 5=best ending
-    lda #$00                        ;
-    cpy #$04                        ;Was the best or 2nd best ending achieved?
-    bcc LCB14                           ;Branch if not (suit stays on)
-        lda #$01                        ;
-    LCB14:
-    sta JustInBailey                ;Suit OFF, baby!
+    ldy #$01
+    @loop:
+        ;If SamusAge+2 anything but #$00, load worst ending(more than 37 hours of gameplay).
+        ;(BUG! Should be checking SamusAge+3 here too)
+        lda SamusAge+2
+        bne @endingFound
+        ;If SamusAge+1 is slower or equal to the threshold in AgeTable, confirm ending
+        lda SamusAge+1
+        cmp AgeTable-1,y
+        bcs @endingFound
+        ;SamusAge+1 is faster than that threshold
+        iny
+        ;loop if there exists a better ending to check
+        cpy #$05
+        bne @loop
+        ;this is the best ending, dont loop anymore
+@endingFound:
+    ;Store the ending number (1..5), 5=best ending
+    sty EndingType
+
+    ;Was the best or 2nd best ending achieved? Branch if not (suit stays on)
+    lda #$00
+    cpy #$04
+    bcc @endIf_A
+        ;Suit OFF, baby!
+        lda #$01
+    @endIf_A:
+    sta JustInBailey                
     rts
 
 ;Table used by above subroutine to determine ending type.
@@ -2351,11 +2372,15 @@ AgeTable:
 ;--------------------------------[ Clear screen data (not used) ]------------------------------------
 
 ClearScreenData:
-    jsr ScreenOff                   ;($C439)Turn off screen.
-    lda #$FF                        ;
-    sta $00                         ;Prepare to fill nametable with #$FF.
-    jsr ClearNameTable              ;($C175)Clear selected nametable.
-    jmp EraseAllSprites             ;($C1A3)Clear sprite data.
+    ;Turn off screen.
+    jsr ScreenOff
+    ;Prepare to fill nametable with #$FF.
+    lda #$FF
+    sta Temp00_FillValue
+    ;Clear selected nametable.
+    jsr ClearNameTable
+    ;Clear sprite data.
+    jmp EraseAllSprites
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -2383,7 +2408,7 @@ UpdateWorld:
     jsr DisplayBar                  ;($E0C1)Display of status bar.
     jsr UpdateAllPipeBugHoles
     jsr CheckMissileToggle
-    jsr UpdateAllPowerUps                 ;($DB37)Display of power-up items.
+    jsr UpdateAllPowerUps           ;($DB37)Display of power-up items.
     jsr UpdateTourianItems          ;($FDE3)
 
 ;Clear remaining sprite RAM
@@ -2407,19 +2432,26 @@ SelectSamusPal: ;$CB73
     tya
     pha
 
+    ;CF contains Varia status (1 = Samus has it)
     lda SamusGear
     asl
     asl
-    asl                             ;CF contains Varia status (1 = Samus has it)
-    lda MissileToggle               ;A = 1 if Samus is firing missiles, else 0
-    rol                             ;Bit 0 of A = 1 if Samus is wearing Varia
+    asl
+    ;A = 1 if Samus is firing missiles, else 0
+    lda MissileToggle
+    rol
+    ; now a is #$000000mv, where m is missile toggle and v is whether she has varia
+    ; offset by first samus palette id (carry is clear)
     adc #_id_Palette01+1.b
-    ldy JustInBailey                ;In suit?-->
-    beq @endIf                           ;If so, Branch.
+    ;In suit? If so, Branch.
+    ldy JustInBailey
+    beq @endIf
+        ;Add #$17 to the palette number to reach "no suit" palettes.
         clc
-        adc #_id_Palette18-_id_Palette01.b ;Add #$17 to the pal # to reach "no suit"-palettes.
+        adc #_id_Palette18-_id_Palette01.b
     @endIf:
-    sta PalDataPending              ;Palette will be written next NMI.
+    ;Palette will be written next NMI.
+    sta PalDataPending
 
     ;Restore the contents of y.
     pla
@@ -9244,16 +9276,20 @@ SpawnCannon_exit:
 
 SpawnMotherBrain:
     jsr GotoSpawnMotherBrainRoutine
+    ; branch if mother brain is not dead
     lda #>ui_MOTHERBRAIN.b
     sta Temp06_ItemID+1.b
     lda #<ui_MOTHERBRAIN.b
     sta Temp06_ItemID
     jsr CheckForItem
     bcc SpawnMotherBrain_exit
+        ; mother brain is dead
+        ; set status to redraw time bomb message that had been scrolled offscreen
         lda #$08
         sta MotherBrainStatus
+        ; set time bomb message counter to first part of the message
         lda #$00
-        sta MotherBrainQtyHits
+        sta MotherBrainTimeBombCounter
     SpawnMotherBrain_exit:
     lda #$01
     bne SpawnCannon_exit ; branch always

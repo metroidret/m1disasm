@@ -568,6 +568,7 @@ UpdateAllCannons:
 
 @updateIfPossible:
     stx CannonIndex
+    ; update cannon if it exists
     ldy Cannons.0.status,x
     bne UpdateCannon
 RTS_9B4B:
@@ -929,15 +930,19 @@ SpawnCannonRoutine:
 ;-------------------------------------------------------------------------------
 ; Mother Brain Handler
 SpawnMotherBrainRoutine:
+    ; set status to idle
     lda #$01
     sta MotherBrainStatus
+    ; set hi position
     jsr GetNameTableAtScrollDir_
     sta MotherBrainHi
+    ; lock horizontal scrolling behind mother brain
     eor #$01
     tax
     lda L9D3C
     ora ScrollBlockOnNameTable3,x
     sta ScrollBlockOnNameTable3,x
+    ; init anim delays
     lda #$20
     sta MotherBrainAnimBrainDelay
     sta MotherBrainAnimEyeDelay
@@ -1055,21 +1060,21 @@ MotherBrainStatusHandler:
     beq RTS_9DF1
     jsr CommonJump_ChooseRoutine
         .word Exit__    ;#$00=Mother brain not in room,
-        .word MotherBrain_9E22     ;#$01=Mother brain in room
-        .word MotherBrain_9E36     ;#$02=Mother brain hit
-        .word MotherBrain_9E52     ;#$03=Mother brain dying
-        .word MotherBrain_9E86     ;#$04=Mother brain dissapearing
-        .word MotherBrain_9F02_05     ;#$05=Mother brain gone
-        .word MotherBrain_9F49     ;#$06=Time bomb set,
+        .word MotherBrain_Idle     ;#$01=Mother brain in room
+        .word MotherBrain_Hurt     ;#$02=Mother brain hit
+        .word MotherBrain_Killed     ;#$03=Mother brain dying
+        .word MotherBrain_Disappear     ;#$04=Mother brain dissapearing
+        .word MotherBrain_TimeBombMessage     ;#$05=Mother brain gone
+        .word MotherBrain_SetTimeBomb     ;#$06=Time bomb set,
         .word MotherBrain_9FC0     ;#$07=Time bomb exploded
-        .word MotherBrain_9F02_08     ;#$08=Initialize mother brain already dead (part 1)
+        .word MotherBrain_TimeBombMessage_ScrollBackOnScreen     ;#$08=Initialize mother brain already dead (part 1)
         .word MotherBrain_9FDA     ;#$09=Initialize mother brain already dead (part 2)
         .word Exit__    ;#$0A=Mother brain already dead.
 RTS_9DF1:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E22_CollideWithSamus:
+MotherBrain_Idle_CollideWithSamus:
     ; exit if samus is not in the same nametable as mother brain
     lda ObjHi
     eor MotherBrainHi
@@ -1101,11 +1106,11 @@ MotherBrain_9E22_CollideWithSamus:
     jmp CommonJump_SubtractHealth
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E22:
-    jsr MotherBrain_9E22_CollideWithSamus
-    jsr MotherBrain_9E22_HandleBeingHit
-    jsr MotherBrain_9E22_UpdateAnimBrain
-    jsr MotherBrain_9E22_UpdateAnimEye
+MotherBrain_Idle: ; 03:9E22
+    jsr MotherBrain_Idle_CollideWithSamus
+    jsr MotherBrain_Idle_HandleBeingHit
+    jsr MotherBrain_Idle_UpdateAnimBrain
+    jsr MotherBrain_Idle_UpdateAnimEye
 L9E2E:
     jsr MotherBrain_DrawSprites
 ClearMotherBrainIsHit:
@@ -1114,16 +1119,18 @@ ClearMotherBrainIsHit:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E36:
+MotherBrain_Hurt: ; 03:9E36
+    ; update flashing palette
     jsr UpdateMotherBrainFlashDelay
     lda MotherBrainFlashPalettesTable,y
     sta PalDataPending
+    ; clear is hit flag
     jmp ClearMotherBrainIsHit
 
-MotherBrainFlashPalettesTable:
+MotherBrainFlashPalettesTable: ; 03:9E41
     .byte _id_Palette07+1, _id_Palette06+1
 
-UpdateMotherBrainFlashDelay:
+UpdateMotherBrainFlashDelay: ; 03:9E43
     ; decrement delay
     dec MotherBrainFlashDelay
     ; branch if delay is not zero
@@ -1147,89 +1154,126 @@ UpdateMotherBrainFlashDelay:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E52:
+MotherBrain_Killed: ; 03:9E52
+    ; update flashing palette
     jsr UpdateMotherBrainFlashDelay
     lda MotherBrainFlashPalettesTable,y
     sta PalDataPending
+    ; shake the screen vertically
     tya
     asl
     asl
     sta ScrollY
+    ; branch if mother brain status is not idle (flashing is not complete)
     ldy MotherBrainStatus
     dey
-    bne L9E83
-    sty MotherBrainQtyHits
-    tya
-    tax
-    L9E68:
+    bne @endIf_A
+        ; mother brain status is idle, because the UpdateMotherBrainFlashDelay is done flashing
+        ; init mother brain death string id to zero, for the disintegration
+        sty MotherBrainDeathStringID
+        ; despawn all enemies(rinka) and enProjectiles(cannon bullet)
         tya
-        sta EnsExtra.0.status,x
-        jsr Xplus16
-        cpx #$C0
-        bne L9E68
-    lda #$04
-    sta MotherBrainStatus
-    lda #$28
-    sta MotherBrainFlashDelay
-    lda NoiseSFXFlag
-    ora #sfxNoise_SilenceMusic
-    sta NoiseSFXFlag
-L9E83:
+        tax
+        @loop:
+            tya
+            sta EnsExtra.0.status,x
+            jsr Xplus16
+            cpx #$C0
+            bne @loop
+        ; set mother brain status to disappearing
+        lda #$04
+        sta MotherBrainStatus
+        ; set delay until first disintegration to 40 frames
+        lda #$28
+        sta MotherBrainFlashDelay
+        ; silence music
+        lda NoiseSFXFlag
+        ora #sfxNoise_SilenceMusic
+        sta NoiseSFXFlag
+    @endIf_A:
     jmp L9E2E
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E86:
+MotherBrain_Disappear: ; 03:9E86
+    ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
     sta NoiseSFXFlag
-    jsr MotherBrain_Disintegrate
-    inc MotherBrainAnimBrainDelay
+    ; disintegrate mother brain's bg tiles
+    jsr MotherBrain_Disappear_Disintegrate
+    ; increment disintegrate instruction id
+    inc MotherBrainDeathInstrID
+    ; decrement mother brain delay and set mb state to idle when it's zero
     jsr UpdateMotherBrainFlashDelay
+    ; for the first 4 enemies, if they are pickups, despawn them
+    ; (aren't enemies supposed to be all despawned here anyway?)
     ldx #$00
-    L9E98:
+    @loop:
         lda EnsExtra.0.status,x
-        cmp #$05
-        bne L9EA4
-            lda #$00
+        cmp #enemyStatus_Pickup
+        bne @endIf_A
+            lda #enemyStatus_NoEnemy
             sta EnsExtra.0.status,x
-        L9EA4:
+        @endIf_A:
         jsr Xplus16
         cmp #$40
-        bne L9E98
+        bne @loop
+    ; branch if PPUStrIndex is not zero
     lda PPUStrIndex
-    bne L9EB5
-        lda L9F00,y
+    bne @endIf_B
+        ; PPUStrIndex is zero
+        ; flash palette
+        lda MotherBrain_Disappear_PaletteTable,y
         sta PalDataPending
-    L9EB5:
+    @endIf_B:
+    ; exit if status is not idle (delay is not yet zero)
     ldy MotherBrainStatus
     dey
-    bne RTS_9ED5
-    sty MotherBrainAnimBrainDelay
+    bne @RTS
+
+    ; delay is zero
+    ; time to move on to next disintegration batch
+    ; set disintegrate instruction id to zero
+    sty MotherBrainDeathInstrID
+    ; set status to disappearing
     lda #$04
     sta MotherBrainStatus
+    ; set delay until next batch to 28 frames
     lda #$1C
     sta MotherBrainFlashDelay
-    ldy MotherBrainQtyHits
-    inc MotherBrainQtyHits
+    ; increment death string id
+    ldy MotherBrainDeathStringID
+    inc MotherBrainDeathStringID
+    ; branch if death string id was 4
     cpy #$04
-    beq L9ED3
+    beq @endIf_C
+        ; death string id was not 4
+        ; exit if it was less than 4
         ldx #$00
-        bcc RTS_9ED5
-        jmp L9ED6
+        bcc @RTS
+        ; it was more than 4
+        ; mother brain is fully disintegrated, let's move on
+        jmp @endIf_D
 
-    L9ED3:
+    @endIf_C:
+    ; death string id was 4
+    ; delay until next batch will be 14 frames instead
     lsr MotherBrainFlashDelay
-RTS_9ED5:
+@RTS:
     rts
 
-L9ED6:
+@endIf_D: ; 03:9ED6
+    ; play escape music
     lda MusicInitFlag
     ora #music_Escape
     sta MusicInitFlag
+    ; set mother brain status to gone
     lda #$05
     sta MotherBrainStatus
-    lda #$80
-    sta MotherBrainQtyHits
+    ; set time bomb counter to #-$80 (will count up to #$00)
+    ; 2.6 seconds until time bomb is set
+    lda #-$80
+    sta MotherBrainTimeBombCounter
     rts
 
 ; high nybble of a is y position
@@ -1257,49 +1301,82 @@ Xplus16:
     ; unused
     rts
 
-L9F00: .byte _id_Palette08+1, _id_Palette09+1
+MotherBrain_Disappear_PaletteTable: ; 03:9F00
+    .byte _id_Palette08+1, _id_Palette09+1
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9F02_05:
-MotherBrain_9F02_08:
-    lda MotherBrainQtyHits
-    bmi L9F33
+MotherBrain_TimeBombMessage: ; 03:9F02
+MotherBrain_TimeBombMessage_ScrollBackOnScreen:
+    ; branch if counter is negative (time bomb has yet to be set)
+    lda MotherBrainTimeBombCounter
+    bmi @endIf_A
+        ; branch if counter is 8
         cmp #$08
-        beq L9F36
+        beq @complete
         ; draw the TIME BOMB SET GET OUT FAST! message
+        ; there are 8 parts of the message, each in a TileBlast
+        ; the MotherBrainTimeBombCounter is used as an index for which part to draw
         tay
-        lda L9F41,y
+        ; set TileBlast frame for this part
+        lda @animFrameTable,y
         sta TileBlasts.0.animFrame
-        lda L9F39,y
+        ; set low byte of roomRAM pointer to upper-left tile for TileBlast
+        lda @roomRAMPtrTable,y
         clc
-        adc #$42
+        adc #<$6142
         sta TileBlasts.0.roomRAMPtr
+        ; save carry to stack
         php
+        ; set hi byte of roomRAM pointer from mother brain hi
+        ; also add carry from stack
         lda MotherBrainHi
         asl
         asl
         plp
-        adc #$61
+        adc #>$6142
         sta TileBlasts.0.roomRAMPtr+1
+        ; prepare to draw TileBlasts.0
         lda #$00
         sta PageIndex
+        ; exit if PPUStrIndex is not zero
+        ; (counter will not be incremented, so the same part will be attempted again next frame)
         lda PPUStrIndex
-        bne RTS_9F38
+        bne @RTS
+        ; try to draw TileBlast and exit without incrementing counter if failed
         jsr CommonJump_DrawTileBlast
-        bcs RTS_9F38
-    L9F33:
-    inc MotherBrainQtyHits
+        bcs @RTS
+        ; TileBlast was drawn successfully, move on to next part
+    @endIf_A:
+    ; increment counter
+    inc MotherBrainTimeBombCounter
     rts
 
-L9F36:
+@complete:
     inc MotherBrainStatus
-RTS_9F38:
+@RTS:
     rts
 
-L9F39:  .byte $00, $40, $08, $48, $80, $C0, $88, $C8
-L9F41:  .byte $08, $02, $09, $03, $0A, $04, $0B, $05
+@roomRAMPtrTable:
+    .byte $6142 - $6142
+    .byte $6182 - $6142
+    .byte $614A - $6142
+    .byte $618A - $6142
+    .byte $61C2 - $6142
+    .byte $6202 - $6142
+    .byte $61CA - $6142
+    .byte $620A - $6142
 
-MotherBrain_9F49:
+@animFrameTable:
+    .byte $08 ; TIME B
+    .byte $02 ; GET OU
+    .byte $09 ; OMB SET
+    .byte $03 ; T FAST!
+    .byte $0A
+    .byte $04 ; TIME
+    .byte $0B
+    .byte $05
+
+MotherBrain_SetTimeBomb: ; 03:9F49
     ; try to spawn door until it succeeds
     jsr MotherBrain_SpawnDoor
     bcs @RTS
@@ -1319,9 +1396,10 @@ MotherBrain_9F49:
 @RTS:
     rts
 
-L9F65:  .byte $80, $B0, $A0, $90
+L9F65: ; 03:9F65
+    .byte $80, $B0, $A0, $90
 
-MotherBrain_SpawnDoor:
+MotherBrain_SpawnDoor: ; 03:9F69
     ; get obj slot
     lda MapPosX
     clc
@@ -1371,7 +1449,7 @@ MotherBrain_SpawnDoor:
     jmp CommonJump_DrawTileBlast
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9FC0:
+MotherBrain_9FC0: ; 03:9FC0
     ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
@@ -1393,10 +1471,11 @@ MotherBrain_9FC0:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9FDA:
+MotherBrain_9FDA: ; 03:9FDA
     ; try to spawn door until it succeeds
     jsr MotherBrain_SpawnDoor
     bcs @RTS
+    ; door was spawned successfully
     ; place end timer enemy
     lda MotherBrainHi
     sta EndTimerEnemyHi
@@ -1410,7 +1489,7 @@ MotherBrain_9FDA:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E22_HandleBeingHit:
+MotherBrain_Idle_HandleBeingHit:
     ; exit if mother brain was not hit
     lda MotherBrainIsHit
     beq @RTS
@@ -1449,7 +1528,7 @@ MotherBrain_9E22_HandleBeingHit:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E22_UpdateAnimBrain:
+MotherBrain_Idle_UpdateAnimBrain:
     ; decrement brain delay
     dec MotherBrainAnimBrainDelay
     ; exit if brain delay is not zero
@@ -1470,7 +1549,7 @@ MotherBrain_9E22_UpdateAnimBrain:
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9E22_UpdateAnimEye:
+MotherBrain_Idle_UpdateAnimEye:
     ; decrement eye delay
     dec MotherBrainAnimEyeDelay
     ; exit if eye delay is not #$00 or #$80
@@ -1530,7 +1609,7 @@ MotherBrainAnimFrameTable:
 ; mother brain's eyes
     .byte _id_EnFrame_MotherBrainEyes
 
-MotherBrain_Disintegrate:
+MotherBrain_Disappear_Disintegrate:
     ; exit if mother brain disintegration step is zero
     ldy MotherBrainDeathStringID
     beq @RTS
