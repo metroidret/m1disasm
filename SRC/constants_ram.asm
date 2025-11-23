@@ -259,6 +259,10 @@ Temp02_RidleyStatueStatus = $02
 Temp00_EnergyTankCount = $00
 Temp02_MissileTankCount = $02
 
+; PasswordScramble/UnscramblePassword
+Temp00_PasswordByte    = $00
+Temp02_ScrambleCount    = $02
+
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.

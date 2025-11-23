@@ -975,13 +975,18 @@ InitCrossMissiles: ; 00:8897
     ldx #$3F
 
     @loop:
-        lda InitCrossMissile0and4Tbl,x        ;Load data from tables below.
-        cmp PPUCTRL_ZP                  ;BUG: supposed to be #$FF. Expected behavior:-->
-        beq @endIf_A                       ;if #$FF, skip loading that byte and move to next item.
-            sta IntroSprs.0.y,x             ;Store initial values for sprites 0 thru 3.
-            sta IntroSprs.4.y,x             ;Store initial values for sprites 4 thru 7.
+        ;Load data from tables below.
+        lda InitCrossMissile0and4Tbl,x
+        ;BUG: supposed to be #$FF. Expected behavior:-->
+        ;if #$FF, skip loading that byte and move to next item.
+        cmp PPUCTRL_ZP                  
+        beq @endIf_A
+            ;Store initial values for sprites 0 thru 3.
+            sta IntroSprs.0.y,x
+            ;Store initial values for sprites 4 thru 7.
+            sta IntroSprs.4.y,x
         @endIf_A:
-        dex                             ;
+        dex
         bpl @loop                       ;Loop until all data is loaded.
 
     lda #$B8                        ;Special case for sprite 6 and 7.
@@ -1188,9 +1193,8 @@ UpdateCrossExplode: ; 00:8976
         ;If not, branch to load next set of sprite data.
         bne L898D
 
-    ;Increment index into CrossExplodeLengthTbl every-->
-    ;other frame.  This updates the cross sprites-->
-    ;every two frames.
+    ;Increment index into CrossExplodeLengthTbl every other frame.
+    ;This updates the cross sprites every two frames.
     lda FrameCount
     lsr
     bcc RTS_89A9
@@ -1199,8 +1203,8 @@ RTS_89A9:
     rts
 
 ;The following table tells the routine above how many data bytes to load from CrossExplodeDataTbl.
-;The more data that is loaded, the bigger the cross that is drawn on the screen.  The table below
-;starts the cross out small, it then grows bigger and gets small again.
+;The more data that is loaded, the bigger the cross that is drawn on the screen.
+;The table below starts the cross out small, it then grows bigger and gets small again.
 
 CrossExplodeLengthTbl: ; 00:89AA
     .byte CrossExplodeDataTbl@end_0 - CrossExplodeDataTbl
@@ -1216,7 +1220,7 @@ SparkleAddressTbl: ; 00:89AF
     .word BottomSparkleDataTbl      ;($89E9)Table for bottom sparkle data.
 
 ;The following two tables are the data tables for controlling the movement of the sparkle sprites
-;in the title routine.  Here's how thw data in the tables work: The first byte is a counter byte.
+;in the title routine.  Here's how the data in the tables work: The first byte is a counter byte.
 ;It is loaded into a memory address and decremented every frame. Whilt that value is not 0, the
 ;second byte is used to change the sprite's x and y coordinates in the screen.  The upper 4 bits
 ;of the second byte are amount to change the y coordinates every frame.  If bit 7 is set, the
@@ -1935,33 +1939,35 @@ LoadTanksAndMissiles: ; 00:8D3D
 ValidatePassword: ; 00:8DDE
     ;If invincible Samus already active, branch.
     lda NARPASSWORD
-    bne L8DF7
+    bne @passwordIsNotNARPASSWORD
 
     ;Check if NARPASSWORD was entered at the password screen
     ldy #$0F
-    L8DE5:
+    @loop_NARPASSWORD:
         lda PasswordChar,y
         cmp NARPASSWORDTbl,y
-        bne L8DF7
+        bne @passwordIsNotNARPASSWORD
         dey
-        bpl L8DE5
+        bpl @loop_NARPASSWORD
 
     ;NARPASSWORD was entered, activate invincible Samus
     lda #$01
     sta NARPASSWORD
-    bne L8E05
+    bne @validPassword ; branch always
 
-L8DF7:
+@passwordIsNotNARPASSWORD:
     ;NARPASSWORD was not entered, continue to process password
     jsr UnscramblePassword          ;($8E4E)Unscramble password.
     jsr PasswordChecksum            ;($8E21)Calculate password checksum.
     cmp PasswordByte+$11            ;Verify proper checksum.
-    beq L8E05                       ;
-    sec                             ;If password is invalid, sets carry flag.
-    bcs RTS_8E06                    ;
-L8E05:
-    clc                             ;If password is valid, clears carry flag.
-RTS_8E06:
+    beq @validPassword
+    ;If password is invalid, sets carry flag.
+    sec
+    bcs @RTS ; branch always
+@validPassword:
+    ;If password is valid, clears carry flag.
+    clc
+@RTS:
     rts
 
 ;The table below is used by the code above. It checks to see if NARPASSWORD has been entered.
@@ -1972,59 +1978,71 @@ NARPASSWORDTbl: ; 00:8E07
     .stringmap charmap, "NARPASSWORD00000"
 
 PasswordChecksumAndScramble: ; 00:8E17
-    jsr PasswordChecksum            ;($8E21)Store the combined added value of-->
-    sta PasswordByte+$11            ;addresses $6988 thu $6998 in $6999.
-    jsr PasswordScramble            ;($8E2D)Scramble password.
+    ;Store the combined added value of addresses $6988 thu $6998 in $6999.
+    jsr PasswordChecksum
+    sta PasswordByte+$11
+    ;Scramble password.
+    jsr PasswordScramble
     rts
 
 ;Add the values at addresses $6988 thru $6998 together.
 PasswordChecksum: ; 00:8E21
     ldy #$10
     lda #$00
-    L8E25:
+    @loop:
         clc
         adc PasswordByte,y
         dey
-        bpl L8E25
+        bpl @loop
     rts
 
 PasswordScramble: ; 00:8E2D
     lda PasswordByte+$10
-    sta $02
-    L8E32:
-        lda PasswordByte                ;Store contents of $6988 in $00 for-->
-        sta $00                         ;further processing after rotation.
-        ldx #$00                        ;
-        ldy #$0F                        ;
-        L8E3B:
-            ror PasswordByte,x              ;Rotate right, including carry, all values in-->
-            inx                             ;addresses $6988 thru $6997.
-            dey                             ;
-            bpl L8E3B                       ;
-        ror $00                         ;Rotate right $6988 to ensure the LSB-->
-        lda $00                         ;from address $6997 is rotated to the-->
-        sta PasswordByte                ;MSB of $6988.
-        dec $02                         ;
-        bne L8E32                       ;Continue rotating until $02 = 0.
+    sta Temp02_ScrambleCount
+    @loop_A:
+        ;Store contents of $6988 in $00 for further processing after rotation.
+        lda PasswordByte
+        sta Temp00_PasswordByte
+        ldx #$00
+        ldy #$0F
+        @loop_B:
+            ;Rotate right, including carry, all values in addresses $6988 thru $6997.
+            ror PasswordByte,x
+            inx
+            dey
+            bpl @loop_B
+        ;Rotate right $6988 to ensure the LSB from address $6997 is rotated to the MSB of $6988.
+        ror Temp00_PasswordByte
+        lda Temp00_PasswordByte
+        sta PasswordByte
+        ;Continue rotating until $02 = 0.
+        dec Temp02_ScrambleCount
+        bne @loop_A
     rts
 
 UnscramblePassword: ; 00:8E4E
-    lda PasswordByte+$10            ;Stores random number used to scramble the password.
-    sta $02                         ;
-    L8E53:
-        lda PasswordByte+$0F            ;Preserve MSB that may have been rolled from $6988.
-        sta $00                         ;
-        ldx #$0F                        ;
-        L8E5A:
-            rol PasswordByte,x              ;The following loop rolls left the first 16 bytes-->
-            dex                             ;of the password one time.
-            bpl L8E5A                       ;
-        rol $00                         ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
-        lda $00                         ;
-        sta PasswordByte+$0F            ;
-        dec $02                         ;
-        bne L8E53                       ;Loop repeats the number of times decided by the random-->
-    rts                             ;number in $6998 to properly unscramble the password.
+    ;Stores random number used to scramble the password.
+    lda PasswordByte+$10
+    sta Temp02_ScrambleCount
+    @loop_A:
+        ;Preserve MSB that may have been rolled from $6988.
+        lda PasswordByte+$0F
+        sta Temp00_PasswordByte
+        ldx #$0F
+        @loop_B:
+            ;The following loop rolls left the first 16 bytes of the password one time.
+            rol PasswordByte,x
+            dex
+            bpl @loop_B
+        ;Rolls byte in $6997 to ensure MSB from $6988 is not lost.
+        rol Temp00_PasswordByte
+        lda Temp00_PasswordByte
+        sta PasswordByte+$0F
+        ;Loop repeats the number of times decided by the random-->
+        ;number in $6998 to properly unscramble the password.
+        dec Temp02_ScrambleCount
+        bne @loop_A
+    rts
 
 ;The following code takes the 18 password bytes and converts them into 24 characters
 ;to be displayed to the player as the password.  NOTE: the two MSBs will always be 0.
@@ -2051,33 +2069,42 @@ LoadPasswordChar: ; 00:8E6C
     rts
 
 SixUpperBits: ; 00:8F2D
-    lda PasswordByte,y              ;Uses six upper bits to create a new byte.-->
-    lsr                             ;Bits are right shifted twice and two lower-->
-    lsr                             ;bits are discarded.
+    ;Uses six upper bits to create a new byte.
+    ;Bits are right shifted twice and two lower bits are discarded.
+    lda PasswordByte,y
+    lsr
+    lsr
     rts
 
 TwoLowerAndFourUpper: ; 00:8F33
-    lda PasswordByte,y              ;
-    and #$03                        ;Saves two lower bits and stores them-->
-    jsr Amul16                      ;($C2C5)in bits 4 and 5.
-    sta $00                         ;
-    lda PasswordByte+1,y            ;Saves upper 4 bits and stores them-->
-    jsr Adiv16                      ;($C2BF)bits 0, 1, 2 and 3.
-    ora $00                         ;Add two sets of bits together to make a byte-->
-    rts                             ;where bits 6 and 7 = 0.
+    ;Saves two lower bits and stores them in bits 4 and 5.
+    lda PasswordByte,y
+    and #$03                        
+    jsr Amul16
+    sta $00
+    ;Saves upper 4 bits and stores them bits 0, 1, 2 and 3.
+    lda PasswordByte+1,y            
+    jsr Adiv16
+    ;Add two sets of bits together to make a byte where bits 6 and 7 = 0.
+    ora $00
+    rts
 
 FourLowerAndTwoUpper: ; 00:8F46
-    lda PasswordByte,y              ;
-    and #$0F                        ;Keep lower 4 bits.
-    asl                             ;Move lower 4 bits to bits 5, 4, 3 and 2.
-    asl                             ;
-    sta $00                         ;
-    lda PasswordByte+1,y            ;Move upper two bits-->
-    rol                             ;to bits 1 and 0.
-    rol                             ;
-    rol                             ;
-    and #$03                        ;Add two sets of bits together to make a byte-->
-    ora $00                         ;where bits 6 and 7 = 0.
+    ;Keep lower 4 bits.
+    ;Move lower 4 bits to bits 5, 4, 3 and 2.
+    lda PasswordByte,y
+    and #$0F
+    asl
+    asl
+    sta $00
+    ;Move upper two bits to bits 1 and 0.
+    lda PasswordByte+1,y            
+    rol
+    rol
+    rol
+    and #$03
+    ;Add two sets of bits together to make a byte where bits 6 and 7 = 0.
+    ora $00
     rts
 
 SixLowerBits: ; 00:8F5A
@@ -2107,34 +2134,42 @@ ConsolidatePassword: ; 00:8F60
     rts
 
 SixLowerAndTwoUpper: ; 00:8FF1
-    lda PasswordChar,y              ;Remove upper two bits and transfer-->
-    asl                             ;lower six bits to upper six bits.
-    asl                             ;
-    sta $00                         ;
-    lda PasswordChar+1,y            ;Move bits 4and 5 to lower two-->
-    jsr Adiv16                      ;($C2BF)bits and discard the rest.
-    ora $00                         ;Combine the two bytes together.
+    ;Remove upper two bits and transfer lower six bits to upper six bits.
+    lda PasswordChar,y
+    asl
+    asl
+    sta $00
+    ;Move bits 4 and 5 to lower two bits and discard the rest.
+    lda PasswordChar+1,y
+    jsr Adiv16
+    ;Combine the two bytes together.
+    ora $00
     rts
 
 FourLowerAndFiveThruTwo: ; 00:9001
-    lda PasswordChar,y              ;Take four lower bits and transfer-->
-    jsr Amul16                      ;($C2C5)them to upper four bits. Discard the rest.
-    sta $00                         ;
-    lda PasswordChar+1,y            ;Remove two lower bits and transfer-->
-    lsr                             ;bits 5 thru 2 to lower four bits.
-    lsr                             ;
-    ora $00                         ;Combine the two bytes together.
+    ;Take four lower bits and transfer them to upper four bits. Discard the rest.
+    lda PasswordChar,y              
+    jsr Amul16
+    sta $00
+    ;Remove two lower bits and transfer bits 5 thru 2 to lower four bits.
+    lda PasswordChar+1,y            
+    lsr
+    lsr
+    ;Combine the two bytes together.
+    ora $00
     rts
 
 TwoLowerAndSixLower: ; 00:9011
-    lda PasswordChar,y              ;Shifts two lower bits to two higest bits-->
-    ror                             ;and discards the rest
-    ror                             ;
-    ror                             ;
-    and #$C0                        ;
-    sta $00                         ;
-    lda PasswordChar+1,y            ;Add six lower bits to previous results.
-    ora $00                         ;
+    ;Shifts two lower bits to two higest bits and discards the rest
+    lda PasswordChar,y
+    ror
+    ror
+    ror
+    and #$C0
+    sta $00
+    ;Add six lower bits to previous results.
+    lda PasswordChar+1,y            
+    ora $00
     rts
 
 PasswordBitmaskTbl: ; 00:9021
