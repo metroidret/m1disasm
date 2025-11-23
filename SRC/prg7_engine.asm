@@ -41,12 +41,12 @@ RandomNumbers: ;$C000
         clc
         adc #$05
         sta RandomNumber1
-        
+
         lda RandomNumber2
         clc
         adc #$13
         sta RandomNumber2
-        
+
         dex
         bne @loop
     pla
@@ -138,11 +138,11 @@ Startup:
     sty ScrollY
     sty PPUSCROLL ;Clear hardware scroll x
     sty PPUSCROLL ;Clear hardware scroll y
-    
+
     ;Title screen mode
     iny ;Y = #$01
     sty GameMode
-    
+
     jsr ClearNameTables
     jsr EraseAllSprites
 
@@ -205,7 +205,7 @@ MainLoop:
     jsr GoMainRoutine
     ;Increment frame counter.
     inc FrameCount
-    
+
     ;Wait for next NMI to end.
     lda #$00
     sta NMIStatus
@@ -307,7 +307,7 @@ GoMainRoutine:
         ;only using TitleRoutine instead of MainRoutine as index into a jump table.
         jmp MainTitleRoutine
     @endIf_A:
-    
+
     ;Has START been pressed? If not, execute current routine as normal.
     lda Joy1Change
     and #BUTTON_START
@@ -578,10 +578,10 @@ ReadOnePad:
     ldy Joy1Status,x
     ;Store at $00.
     sty $00
-    
+
     ;Store current joypad status.
     sta Joy1Status,x
-    
+
     ;Branch if no buttons changed.
     eor $00
     beq @endIf_A
@@ -596,7 +596,7 @@ ReadOnePad:
     sta Joy1Change,x
     ;Store any changed buttons in JoyRetrig address.
     sta Joy1Retrig,x
-    
+
     ldy #$20
     ;Checks to see if same buttons are being pressed this frame as last frame.
     lda Joy1Status,x
@@ -638,7 +638,7 @@ UpdateTimer:
         ;Decrement Timer3 every 10 frames.
         ldx #$02
     @endIf_A:
-    
+
     ; decrement the chosen timers
     @loop_decTimer:
         ;Don't decrease if timer is already zero.
@@ -1073,7 +1073,7 @@ ScreenNmiOff:
     lda PPUMASK_ZP
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
     jsr WriteAndWait                ;($C43D)Wait for end of NMI.
-    
+
     ;Prepare to turn off NMI in PPU.
     lda PPUCTRL_ZP
     and #~PPUCTRL_VBLKNMI_ON.b
@@ -1126,7 +1126,7 @@ WaitTimer:
     ;Exit if timer hasn't hit zero yet
     lda Timer3
     bne RTS_C4A9
-    
+
     lda NextRoutine
     ;Set GameOver as next routine.
     cmp #_id_PrepareGameOver
@@ -1397,7 +1397,7 @@ InitTitleGFX:
 LoadSamusGFX:
     ldy #_id_GFX_Samus.b
     jsr LoadGFX
-    
+
     ;Branch if wearing suit
     lda JustInBailey
     beq @endIf_A
@@ -1405,158 +1405,158 @@ LoadSamusGFX:
         ldy #_id_GFX_SamusSuitless.b
         jsr LoadGFX
     @endIf_A:
-    
+
     ldy #_id_GFX_IntroSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Font_Complete.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Font_Hud.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitBrinstarGFX:
     ldy #_id_GFX_BrinBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_CREBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_CREBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_BrinstarSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitNorfairGFX:
     ldy #_id_GFX_CREBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_CREBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_NorfBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_NorfBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_NorfairSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitTourianGFX:
     ldy #_id_GFX_CREBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_BossBG.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_TourBG.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Zebetite.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_TourianFont.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_TourianSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Font_Tourian.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_ExclamationPoint.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitKraidGFX:
     ldy #_id_GFX_CREBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_CREBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_BossBG.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_KraiBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_KraiBG3.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_KraidSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitRidleyGFX:
     ldy #_id_GFX_CREBG1.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_CREBG2.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_BossBG.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_RidlBG.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_RidleySprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitGFX6:
     ldy #_id_GFX_EndingSprites.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_TheEndFont.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_0FC0.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
 InitPasswordFontGFX:
     ldy #_id_GFX_Font_Complete.b
     jsr LoadGFX
-    
+
     ldy #_id_GFX_Solid_1FC0.b
     jmp LoadGFX
 
@@ -1669,15 +1669,15 @@ LoadGFX:
     ;Switch to ROM bank containing the GFX data.
     ldy $00
     jsr ROMSwitch
-    
+
     ;Set the PPU to increment by 1.
     lda PPUCTRL_ZP
     and #~PPUCTRL_INCR_DOWN.b
     sta PPUCTRL_ZP
     sta PPUCTRL
-    
+
     jsr CopyGFXBlock                ;($C7D5)Copy graphics into pattern tables.
-    
+
     ;Switch back to the previous bank.
     ldy CurrentBank
     jmp ROMSwitch
@@ -1976,17 +1976,17 @@ UpdateAge:
     ;Exit if at title/password screen.
     lda GameMode
     bne @RTS
-    
+
     ;Exit if game engine is notrunning.
     lda MainRoutine
     cmp #_id_GameEngine.b
     bne @RTS
-    
+
     ;Only update age when FrameCount is zero-->
     ;(which is approx. every 4.266666666667 seconds).
     ldx FrameCount
     bne @RTS
-    
+
     ;Minor Age = Minor Age + 1.
     inc SamusAge,x
     ;Has Minor Age reached $D0?-->
@@ -2038,13 +2038,13 @@ PauseMode:
         nop
     .endif
     bne Exit14
-    
+
     ;Is escape timer active?
     ;Sorry, can't quit if this is during escape scence.
     ldy EndTimer+1
     iny
     bne Exit14
-    
+
     ;Clear pause game indicator.
     sta GamePaused
     ;Display password is the next routine to run.
@@ -2383,7 +2383,7 @@ UpdateWorld:
     jsr DisplayBar                  ;($E0C1)Display of status bar.
     jsr UpdateAllPipeBugHoles
     jsr CheckMissileToggle
-    jsr UpdateItems                 ;($DB37)Display of power-up items.
+    jsr UpdateAllPowerUps                 ;($DB37)Display of power-up items.
     jsr UpdateTourianItems          ;($FDE3)
 
 ;Clear remaining sprite RAM
@@ -2406,7 +2406,7 @@ SelectSamusPal: ;$CB73
     ;Temp storage of Y on the stack.
     tya
     pha
-    
+
     lda SamusGear
     asl
     asl
@@ -2420,7 +2420,7 @@ SelectSamusPal: ;$CB73
         adc #_id_Palette18-_id_Palette01.b ;Add #$17 to the pal # to reach "no suit"-palettes.
     @endIf:
     sta PalDataPending              ;Palette will be written next NMI.
-    
+
     ;Restore the contents of y.
     pla
     tay
@@ -3018,7 +3018,7 @@ Lx009:
     lda FrameCount
     and #$01
     bne CheckHealthBeep
-    
+
     ; make samus invisible
     tay
     sty ObjAnimDelay
@@ -3090,7 +3090,7 @@ SubtractHealth: ; 07:CE92
     ;Samus has Varia, divide damage by 2.
     lsr HealthChange
     lsr HealthChange+1.b
-    ;If Health+1 moved a bit into the carry flag while--> 
+    ;If Health+1 moved a bit into the carry flag while-->
     ;dividing, add #$4F to Health for proper division results.
     bcc LCEBF
     lda #$4F
@@ -3104,7 +3104,7 @@ LCEBF:
     ;Amount to subtract from Health.
     lda HealthChange
     sec
-    ;($C3FB)Perform base 10 subtraction.
+    ;Perform base 10 subtraction.
     jsr Base10Subtract
     ;Save results.
     sta Health
@@ -3114,7 +3114,7 @@ LCEBF:
     sta $03
     ;Amount to subtract from Health+1.
     lda HealthChange+1.b
-    ;($C3FB)Perform base 10 subtraction.
+    ;Perform base 10 subtraction.
     jsr Base10Subtract
     ;Save Results.
     sta Health+1
@@ -3125,7 +3125,7 @@ LCEBF:
     ora Health+1
     beq LCEE6
         ;Samus not dead. Branch to exit.
-        bcs LCF2B
+        bcs GotoClearHealthChange_
     LCEE6:
     ;Samus is dead.
     ;Set health to #$00.
@@ -3142,30 +3142,44 @@ LCEBF:
 
 ;----------------------------------------[ Add health ]----------------------------------------------
 
-AddHealth:
-    lda Health                    ;Prepare to add to Health.
-    sta $03                         ;
-    lda HealthChange              ;Amount to add to Health.
-    clc                             ;
-    jsr Base10Add                   ;($C3DA)Perform base 10 addition.
-    sta Health                    ;Save results.
+AddHealth: ; 07:CEF9
+    ;Prepare to add to Health.
+    lda Health
+    sta $03
+    ;Amount to add to Health.
+    lda HealthChange
+    clc
+    ;Perform base 10 addition.
+    jsr Base10Add
+    ;Save results.
+    sta Health
 
-    lda Health+1                    ;Prepare to add to Health+1.
-    sta $03                         ;
-    lda HealthChange+1.b              ;Amount to add to Health+1.
-    jsr Base10Add                   ;($C3DA)Perform base 10 addition.
-    sta Health+1                    ;Save results.
+    ;Prepare to add to Health+1.
+    lda Health+1
+    sta $03
+    ;Amount to add to Health+1.
+    lda HealthChange+1.b
+    ;Perform base 10 addition.
+    jsr Base10Add
+    ;Save results.
+    sta Health+1
 
-    lda TankCount                   ;
-    jsr Amul16                      ;($C2C5)*16. Move tank count to upper 4 bits.
-    ora #$0F                        ;Set lower 4 bits.
-    cmp Health+1                    ;
-    bcs LCF2B                           ;Is life less than max? if so, branch.
-    and #$F9                        ;Life is more than max amount.
-    sta Health+1                    ;
-    lda #$99                        ;Set life to max amount.
-    sta Health                    ;
-LCF2B:
+    ;Move tank count to upper 4 bits.
+    lda EnergyTankCount
+    jsr Amul16
+    ;Set lower 4 bits.
+    ora #$0F
+    cmp Health+1
+    ;Is life less than max? if so, branch.
+    bcs @endIf_A
+        ;Life is more than max amount.
+        ;Set life to max amount.
+        and #$F9
+        sta Health+1
+        lda #$99
+        sta Health
+    @endIf_A:
+GotoClearHealthChange_:
     jmp ClearHealthChange           ;($F323)
 
 ;----------------------------------------------------------------------------------------------------
@@ -3473,7 +3487,7 @@ SamusRoll:
     lda Joy1Status
     and #BUTTON_DOWN     ; DOWN pressed?
     bne Lx032     ; branch if yes
-    ;break out of "ball mode"
+        ;break out of "ball mode"
         lda ObjRadY
         clc
         adc #$08
@@ -3529,47 +3543,55 @@ StopVertMovement: ;($D147)
 ; CheckBombLaunch
 ; ===============
 ; This routine is called only when Samus is rolled into a ball.
-; It does the following:
-; - Checks if Samus has bombs
-; - If so, checks if the FIRE button has been pressed
-; - If so, checks if there are any object "slots" available
-;   (only 3 bullets/bombs can be active at the same time)
-; - If so, a bomb is launched.
 
 CheckBombLaunch:
+    ; exit if Samus doesn't have Bombs
     lda SamusGear
     lsr
-    bcc RTS_X036    ; exit if Samus doesn't have Bombs
+    bcc @RTS
+    ; move status of FIRE button to bit 7
     lda Joy1Change
     ora Joy1Retrig
-    asl             ; bit 7 = status of FIRE button
-    bpl RTS_X036    ; exit if FIRE not pressed
+    asl
+    ; exit if FIRE not pressed
+    bpl @RTS
+    ; exit if samus's y speed is < 0.0px/frame or >= 1.0px/frame
+    ; exit if samus is on an elevator
     lda ObjSpeedY
     ora SamusOnElevator
-    bne RTS_X036
-    ldx #$D0        ; try object slot D
+    bne @RTS
+
+    ; try object slot D
+    ldx #$D0
     lda ObjAction,x
-    beq Lx035      ; launch bomb if slot available
-    ldx #$E0        ; try object slot E
+    ; launch bomb if slot available
+    beq @bombSlotFound
+    ; slot D is occupied, try object slot E
+    ldx #$E0
     lda ObjAction,x
-    beq Lx035      ; launch bomb if slot available
-    ldx #$F0        ; try object slot F
+    ; launch bomb if slot available
+    beq @bombSlotFound
+    ; slot E is occupied, try object slot F
+    ldx #$F0
     lda ObjAction,x
-    bne RTS_X036    ; no bomb slots available, exit
-; launch bomb... give it same coords as Samus
-Lx035:
+    ; if slot F is occupied, no bomb slots available, exit
+    bne @RTS
+    ; slot F is available
+@bombSlotFound:
+    ; launch bomb... give it same coords as Samus
     lda ObjHi
     sta ObjHi,x
     lda ObjX
     sta ObjX,x
+    ; 4 pixels further down than Samus' center
     lda ObjY
     clc
-    adc #$04        ; 4 pixels further down than Samus' center
+    adc #$04
     sta ObjY,x
     lda #wa_LayBomb
     sta ObjAction,x
     jsr SFX_BombLaunch
-RTS_X036:
+@RTS:
     rts
 
 SamusPntUp:
@@ -3665,13 +3687,13 @@ FireWeaponForwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
     bne @exit
-    
+
     ; search for open samus projectile slot
     jsr SearchOpenProjectileSlot
     ; exit if no slots are available
     bne @exit
-    
-    
+
+
     jsr InitBullet
     jsr CheckHorizontalWaveBulletFire
     jsr CheckIceBulletFire
@@ -3726,12 +3748,12 @@ FireWeaponUpwards:
     ; exit if there is a metroid on samus
     lda MetroidOnSamus
     bne @exit
-    
+
     ; search for open samus projectile slot
     jsr SearchOpenProjectileSlot
     ; exit if no slots are available
     bne @exit
-    
+
     jsr InitBullet
     jsr CheckVerticalWaveBulletFire
     jsr CheckIceBulletFire
@@ -4170,13 +4192,13 @@ Lx071:
     ; move to next instruction if timer == duration
     cmp ProjectileWaveInstrTimer,x
     beq MoveToNextProjectileWaveInstr
-    
+
     ; timer is not yet == duration
     ; increment timer
     inc ProjectileWaveInstrTimer,x
     ; move to speed byte of instruction
     iny
-    
+
     ; get y speed from instruction
     lda ($0A),y
     jsr EnemyGetDeltaY_8296
@@ -4189,7 +4211,7 @@ Lx071:
     ; set x speed
     ldx PageIndex
     sta ObjSpeedX,x
-    
+
     ; y = x speed
     tay
     ; flip x speed if wave bullet is facing left
@@ -4200,7 +4222,7 @@ Lx071:
         jsr TwosComplement              ;($C3D4)
         sta ObjSpeedX,x
     Lx073:
-    
+
     jsr UpdateBullet_CollisionWithBG
     bcs Lx074
         ; move bullet even if collided
@@ -4622,7 +4644,7 @@ ElevatorIdle:
     Lx099:
     and Joy1Status
     beq DrawElevator
-    
+
     ; start elevator!
     ; clear samus variables
     jsr StopVertMovement
@@ -4790,7 +4812,7 @@ ElevatorD8BF:
         sta TitleRoutine
         rts
     @endIf_A:
-    
+
     ; determine destination area
     ; branch if elevator is going down
     tya
@@ -4913,7 +4935,7 @@ SamusCollisionWithSolidEntities: ;($D976)
     lda #$00
     sta SamusOnElevator
     sta OnFrozenEnemy
-    
+
     ; set y to #$00, object slot of samus
     tay
     ldx #$50 ; prepare x for the loop
@@ -4990,7 +5012,7 @@ UpdateAllStatues:
     ; exit if no statue present
     ldy StatueStatus
     beq Exit8
-    
+
     ; branch if statue status is not #$01
     dey
     bne @endIf_A
@@ -4999,11 +5021,11 @@ UpdateAllStatues:
         ; kraid statue
         ; y is #$00 here
         jsr UpdateStatueBGTiles
-        
+
         ; ridley statue
         ldy #$01
         jsr UpdateStatueBGTiles
-        
+
         ; branch if bg tile update has failed
         bcs @endIf_B
             ; bg tile update was successful
@@ -5011,7 +5033,7 @@ UpdateAllStatues:
             inc StatueStatus
         @endIf_B:
     @endIf_A:
-    
+
     ; branch if statue status is not #$02
     ldy StatueStatus
     cpy #$02
@@ -5024,7 +5046,7 @@ UpdateAllStatues:
             ldy #$02
             jsr UpdateStatueBGTiles
         @endIf_D:
-        
+
         ; branch if ridley statue is not raised
         lda RidleyStatueStatus
         bpl @endIf_E
@@ -5032,7 +5054,7 @@ UpdateAllStatues:
             ldy #$03
             jsr UpdateStatueBGTiles
         @endIf_E:
-        
+
         ; branch if bg tile update has failed (or if no tile update occurred)
         bcs @endIf_F
             ; bg tile update was successful
@@ -5040,7 +5062,7 @@ UpdateAllStatues:
             inc StatueStatus
         @endIf_F:
     @endIf_C:
-    
+
     ; update kraid statue
     ldx #(KraidStatueStatus-(KraidStatueStatus-$60)).b
     jsr UpdateStatue
@@ -5091,7 +5113,7 @@ UpdateStatue_Raise:
     lda KraidStatueY-$60,x
     and #$0F
     beq RTS_X127
-    
+
     ; set raise state to raising
     inc KraidStatueRaiseState-$60,x
     ; move statue upwards by one pixel
@@ -5144,13 +5166,13 @@ UpdateStatue_StartRaising:
     lda KraidStatueStatus-$60,x
     beq @exit
     bmi @exit
-    
+
     ; statue is blinking
     ; branch if statue is raising or raised
     lda KraidStatueRaiseState-$60,x
     cmp #$01
     bne @exit
-    
+
     ; statue is not raised
     ; branch if statue is not hit
     lda KraidStatueIsHit-$60,x
@@ -5210,19 +5232,19 @@ UpdateAllStatues_Bridge:
     ; exit if the bridge is already spawned
     lda StatuesBridgeIsSpawned
     bmi Exit0
-    
+
     ; exit if samus is in a door
     lda DoorEntryStatus
     bne Exit0
-    
+
     ; exit if either statue is not raised
     lda KraidStatueStatus
     and RidleyStatueStatus
     bpl Exit0
-    
+
     ; set StatuesBridgeIsSpawned flag to not spawn the bridge again
     sta StatuesBridgeIsSpawned
-    
+
     ; loop through all 8 blasts to create for the bridge
     ldx #(8-1)*_sizeof_TileBlasts.0.b
     ldy #$08
@@ -5263,13 +5285,13 @@ CheckMissileToggle:
     ; exit if Samus has no missiles
     lda MissileCount
     beq Exit0
-    
+
     ; exit if SELECT was not just pressed and was not auto-fired
     lda Joy1Change
     ora Joy1Retrig
     and #BUTTON_SELECT
     beq Exit0
-    
+
     ; toggle missiles on/off
     lda MissileToggle
     eor #$01
@@ -5294,129 +5316,196 @@ RTS_DB36:
 
 ;------------------------------------------[ Update items ]-----------------------------------------
 
-UpdateItems:
-    lda #$40                        ;PowerUp drawing RAM starts at $0340.
-    sta PageIndex                   ;
-    ldx #$00                        ;Check first item slot.
-    jsr CheckOneItem                ;($DB42)Check current item slot.
-    ldx #_sizeof_PowerUps.0         ;Check second item slot.
+UpdateAllPowerUps:
+    ;PowerUp drawing RAM starts at $0340.
+    lda #$40
+    sta PageIndex
+    ;Check first item slot.
+    ldx #$00
+    jsr UpdateOnePowerUp
+    ;Check second item slot.
+    ldx #_sizeof_PowerUps.0
+    ; fallthrough
+UpdateOnePowerUp: ; 07:DB42
+    ;First or second item slot index(#$00 or #$08).
+    stx ItemIndex
+    ;Exit if no item present in item slot(#$FF)
+    ldy PowerUps.0.type,x
+    iny
+    beq RTS_DB36
 
-CheckOneItem:
-    stx ItemIndex                   ;First or second item slot index(#$00 or #$08).
-    ldy PowerUps.0.type,x           ;
-    iny                             ;Is no item present in item slot(#$FF)?-->
-    beq RTS_DB36                           ;If so, branch to exit.
+    ;Store y, x and name table coordinates of power up item.
+    lda PowerUps.0.y,x
+    sta PowerUpDrawY
+    lda PowerUps.0.x,x
+    sta PowerUpDrawX
+    lda PowerUps.0.hi,x
+    sta PowerUpDrawHi
+    ;Find object position in room RAM.
+    jsr GetObjRoomRAMPtr
+    ;Index to proper power up item.
+    ldx ItemIndex
+    ;Load pointer into room RAM.
+    ldy #$00
+    lda (Temp04_RoomRAMPtr),y
+    ;Exit if power-up is buried inside a solid tile
+    cmp #$A0
+    bcc RTS_DB36
 
-    lda PowerUps.0.y,x              ;
-    sta PowerUpDrawY                ;
-    lda PowerUps.0.x,x              ;Store y, x and name table coordinates of power up item.
-    sta PowerUpDrawX                ;
-    lda PowerUps.0.hi,x             ;
-    sta PowerUpDrawHi               ;
-    jsr GetObjRoomRAMPtr                ;($D79F)Find object position in room RAM.
-    ldx ItemIndex                   ;Index to proper power up item.
-    ldy #$00                        ;Reset index.
-    lda (Temp04_RoomRAMPtr),y                     ;Load pointer into room RAM.
-    cmp #$A0                        ;Is object being placed on top of a solid tile?-->
-    bcc RTS_DB36                       ;If so, branch to exit.
-    lda PowerUps.0.type,x           ;
-    and #$0F                        ;Load power up type byte and keep only bits 0 thru 3.
-    ora #_id_ObjFrame_BombItem.b           ;Set bits 4 and 6.
-    sta PowerUpDrawAnimFrame        ;Save index to find object animation.
-    lda FrameCount                  ;
-    lsr                             ;Color affected every other frame.
-    and #$03                        ;the 2 LSBs of object control byte change palette of object.
-    ora #$80                        ;Indicate ObjectCntrl contains valid data by setting MSB.
-    sta ObjectCntrl                 ;Change color of item every other frame.
-    lda SpritePagePos               ;Load current index into sprite RAM.
-    pha                             ;Temp save sprite RAM position.
-    lda PowerUps.0.data07,x         ;this read is redundant
-    jsr ObjDrawFrame                   ;($DE4A)Display special item.
-
-    pla                             ;Restore sprite page position byte.
-    cmp SpritePagePos               ;Was power up item successfully drawn?-->
-    beq Exit9                       ;If not, branch to exit.
-    tax                             ;Store sprite page position in x.
-    ldy ItemIndex                   ;Load index to proper power up data slot.
-    lda PowerUps.0.type,y           ;Reload power up type data.
-    ldy #$01                        ;Set power up color for ice beam orb.
-    cmp #pu_ICEBEAM                        ;Is power up item the ice beam?-->
-    beq LDB9F                       ;If so, branch.
-    dey                             ;Set power up color for long/wave beam orb.
-    cmp #pu_WAVEBEAM                        ;Is power up item the wave beam?-->
-    beq LDB9F                       ;If so, branch.
-    cmp #pu_LONGBEAM                        ;Is power up item the long beam?-->
-    bne LDBA5                       ;If not, branch.
+    ;Load power up type byte and keep only bits 0 thru 3.
+    lda PowerUps.0.type,x
+    and #$0F
+    ;Set bits 4 and 6.
+    ora #_id_ObjFrame_BombItem.b
+    ;Save index to find object animation.
+    sta PowerUpDrawAnimFrame
+    ;Change color of item every other frame.
+    ;FrameCount/2
+    lda FrameCount
+    lsr
+    ;the 2 LSBs of object control byte change palette of object.
+    and #$03
+    ;Indicate ObjectCntrl contains valid data by setting MSB.
+    ora #$80
+    sta ObjectCntrl
+    ;Load current index into sprite RAM.
+    lda SpritePagePos
+    ;Temp save sprite RAM position.
+    pha
+    lda PowerUps.0.data07,x ;this read is useless
+    ;Display power-up
+    jsr ObjDrawFrame
+    ;Restore sprite page position byte.
+    pla
+    ;Was power up item successfully drawn? If not, branch to exit.
+    cmp SpritePagePos
+    beq Exit9
+    ;Store sprite page position in x.
+    tax
+    ;Load index to proper power up data slot.
+    ldy ItemIndex
+    ;Reload power up type data.
+    lda PowerUps.0.type,y
+    ;Set power up color for ice beam orb.
+    ldy #$01
+    ;Is power up item the ice beam? If so, branch.
+    cmp #pu_ICEBEAM
+    beq LDB9F
+    ;Set power up color for long/wave beam orb.
+    dey
+    ;Is power up item the wave beam? If so, branch.
+    cmp #pu_WAVEBEAM
+    beq LDB9F
+    ;Is power up item the long beam? If not, branch.
+    cmp #pu_LONGBEAM
+    bne LDBA5
     LDB9F:
-        tya                             ;Transfer color data to A.
-        sta SpriteRAM.1.attrib,x             ;Store power up color for beam weapon.
-        lda #$FF                        ;Indicate power up obtained is a beam weapon.
+        ;Store power up color for beam weapon.
+        tya
+        sta SpriteRAM.1.attrib,x
+        ;Indicate power up obtained is a beam weapon.
+        lda #$FF
 
     LDBA5:
-    pha                             ;Temporarily store power up type.
-    ldx #$00                        ;Index to object 0(Samus).
-    ldy #$40                        ;Index to object 1(power up).
-    jsr AreObjectsTouching          ;($DC7F)Determine if Samus is touching power up.
-    pla                             ;Restore power up type byte.
-    bcs Exit9                       ;Carry clear=Samus touching power up. Carry set=not touching.
+    ;Temporarily store power up type.
+    pha
+    ;Index to object 0(Samus).
+    ldx #$00
+    ;Index to object 1(power up).
+    ldy #$40
+    ;Determine if Samus is touching power up.
+    jsr AreObjectsTouching
+    ;Carry clear=Samus touching power up. Carry set=not touching.
+    ;Restore power up type byte.
+    pla
+    ; exit if samus is not touching the power-up
+    bcs Exit9
 
-    tay                             ;Store power-up type byte in Y.
-    jsr PowerUpMusic                ;($CBF9)Power up obtained! Play power up music.
-    ldx ItemIndex                   ;X=index to power up item slot.
-    iny                             ;Is item obtained a beam weapon?-->
-    beq LDBC6                       ;If so, branch.
-        lda PowerUps.0.hi,x             ;
-        sta Temp08_ItemHi               ;Temp storage of nametable and power-up type in $08-->
-        lda PowerUps.0.type,x           ;and $09 respectively.
-        sta Temp09_ItemType             ;
-        jsr GetItemXYPos                ;($DC1C)Get proper X and Y coords of item, save in history.
+    ; samus is touching the power-up
+    ;Store power-up type byte in Y.
+    tay
+    ;($CBF9)Power up obtained! Play power up music.
+    jsr PowerUpMusic
+    ;X=index to power up item slot.
+    ldx ItemIndex
+    ;Is item obtained a beam weapon? If so, branch.
+    iny
+    beq LDBC6
+        ;Temp storage of nametable and power-up type in $08 and $09 respectively.
+        lda PowerUps.0.hi,x
+        sta Temp08_ItemHi
+        lda PowerUps.0.type,x
+        sta Temp09_ItemType
+        ;($DC1C)Get proper X and Y coords of item, save in history.
+        jsr GetItemXYPos
     LDBC6:
-    lda PowerUps.0.type,x           ;Get power-up type byte again.
-    tay                             ;
-    cpy #pu_ENERGYTANK                        ;Is power-up item a missile or energy tank?-->
-    bcs MissileEnergyTank           ;If so, branch.
-    cpy #pu_WAVEBEAM                        ;Is item the wave beam or ice beam?-->
-    bcc LDBDA                       ;If not, branch.
-        lda SamusGear                   ;Clear status of wave beam and ice beam power ups.
+    ;Get power-up type byte again.
+    lda PowerUps.0.type,x
+    tay
+    ;Is power-up item a missile or energy tank? If so, branch.
+    cpy #pu_ENERGYTANK
+    bcs MissileEnergyTank
+    ;Is item the wave beam or ice beam? If not, branch.
+    cpy #pu_WAVEBEAM
+    bcc LDBDA
+        ;Remove beam weapon data from Samus gear byte.
+        ;Since the current item is a beam, it will replace the beam Samus previously had.
+        lda SamusGear
         and #~(gr_WAVEBEAM | gr_ICEBEAM).b
-        sta SamusGear                   ;Remove beam weapon data from Samus gear byte.
+        sta SamusGear
     LDBDA:
-    jsr MakeBitMask                 ;($DB2F)Create a bit mask for beam weapon just obtained.
-    ora SamusGear                   ;
-    sta SamusGear                   ;Update Samus gear with new beam weapon.
+    ;Create a bit mask for power-up just obtained.
+    jsr MakeBitMask
+    ;Update Samus gear with new power-up.
+    ora SamusGear
+    sta SamusGear
 LDBE3:
-    lda #$FF                        ;
-    sta PowerUpDelayFlag            ;Initiate delay while power up music plays.
-    sta PowerUps.0.type,x           ;Clear out item data from RAM.
-    ldy ItemRoomMusicStatus         ;Is Samus not in an item room?-->
-    beq LDBF1                       ;If not, branch.
-        ldy #$01                        ;Restart item room music after special item music is done.
+    ;Initiate delay while power up music plays.
+    lda #$FF
+    sta PowerUpDelayFlag
+    ;Clear out item data from RAM.
+    sta PowerUps.0.type,x
+    ;Is Samus not in an item room? If not, branch.
+    ldy ItemRoomMusicStatus
+    beq LDBF1
+        ;Restart item room music after special item music is done.
+        ldy #$01
     LDBF1:
-    sty ItemRoomMusicStatus         ;
-    jmp SelectSamusPal              ;($CB73)Set Samus new palette.
+    sty ItemRoomMusicStatus
+    ;Set Samus new palette.
+    jmp SelectSamusPal
 
 Exit9:
-    rts                             ;Exit for multiple routines above.
+    ;Exit for multiple routines above.
+    rts
 
 MissileEnergyTank:
-    beq LDC00                       ;Branch if item is an energy tank.
-        lda #$05                        ;
-        jsr AddToMaxMissiles            ;($DD97)Increase missile capacity by 5.
-        bne LDBE3                       ;Branch always.
+    ;Branch if item is an energy tank.
+    beq LDC00
+        ;Increase missile capacity by 5.
+        lda #$05
+        jsr AddToMaxMissiles
+        bne LDBE3 ;Branch always.
 
     LDC00:
-    lda TankCount                   ;
-    cmp #$06                        ;Has Samus got 6 energy tanks?-->
-    beq LDC0A                       ;If so, she can't have any more.-->
-        inc TankCount                   ;Otherwise give her a new tank.
+    ;Has Samus got 6 energy tanks? If so, she can't have any more.
+    lda EnergyTankCount
+    cmp #$06
+    beq LDC0A
+        ;Otherwise give her a new tank.
+        inc EnergyTankCount
     LDC0A:
-    lda TankCount                   ;
-    jsr Amul16                      ;Get tank count and shift into upper nibble.
-    ora #$09                        ;
-    sta Health+1                    ;Set new tank count. Upper health digit set to 9.
-    lda #$99                        ;Max out low health digit.
-    sta Health                      ;Health is now FULL!
-    bne LDBE3                       ;Branch always.
+    ;Get tank count and shift into upper nibble.
+    lda EnergyTankCount
+    jsr Amul16
+    ;Set new tank count. Upper health digit set to 9.
+    ora #$09
+    sta Health+1
+    ;Max out low health digit.
+    lda #$99
+    sta Health
+    ;Health is now FULL!
+    bne LDBE3 ;Branch always.
 
 ;It is possible for the current nametable in the PPU to not be the actual nametable the special item
 ;is on so this function checks for the proper location of the special item so the item ID can be
@@ -5484,7 +5573,7 @@ MapScrollRoutine:
         adc Temp06_ItemY
         sta Temp06_ItemY
     @endIf_B:
-    
+
     ;($DC67)Create an item ID to put into unique item history.
     jsr CreateItemID
 AddItemToHistory:
@@ -5606,12 +5695,12 @@ GetSpriteCntrlData:
     ;Clear index into placement data.
     ldy #$00
     sty Temp0F_PlaceIndex
-    
+
     ;Load control byte from frame pointer data.
     lda (Temp00_FramePtr),y
     sta Temp04_MetaspriteFlipFlags ;Store value in $04 for processing below.
     tax ;Keep a copy of the value in x as well.
-    
+
     ;Transfer bits 4 and 5 of the control byte into $05 bits 0 and 1(sprite color bits).
     jsr Adiv16                      ;($C2BF)Move upper 4 bits to lower 4 bits.
     and #$03
@@ -5623,7 +5712,7 @@ GetSpriteCntrlData:
     ora #OAMDATA_PRIORITY
     ora Temp05_Cntrl
     sta Temp05_Cntrl
-    
+
     ;Extract bit from control byte that controls the object mirroring.
     lda ObjectCntrl
     and #OAMDATA_HFLIP>>2.b
@@ -5677,11 +5766,11 @@ LDCFC:
     jsr LoadTableAt977B ; TableAtL977B[EnemyType[x]]*2
     and #$20
     sta EnsExtra.0.type,x
-    
+
     ; enemy becomes a pickup
     lda #enemyStatus_Pickup
     sta EnsExtra.0.status,x
-    
+
     lda #$60
     sta EnData0D,x
     lda RandomNumber1
@@ -5713,12 +5802,12 @@ LDD30:
         ldy EnergyPickupQtyMax
         cpy EnergyPickupQtyCur
         beq LDD5B
-        
+
         inc EnergyPickupQtyCur
         ; exit if it is not big energy (small energy pickup)
         cmp #_id_EnFrame_BigEnergyPickup.b
         bne RTS_X137
-        
+
         ; fail if enemy can't drop big energy
         lsr $00
         bcs RTS_X137
@@ -5812,7 +5901,7 @@ DrawEnemy_NotBlank:
     ; hi coord
     lda EnsExtra.0.hi,x
     sta Temp06_PositionHi
-    
+
     ; load pointer to enemy frame data into $00-$01
     lda EnsExtra.0.animFrame,x
     asl
@@ -5828,7 +5917,7 @@ DrawEnemy_NotBlank:
         lda (EnmyFrameTbl2Ptr),y
     Lx145:
     sta Temp00_FramePtr+1.b
-    
+
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     ; load pointer to enemy place data into $02-$03
     tay
@@ -5843,7 +5932,7 @@ DrawEnemy_NotBlank:
     bne Lx146
         ; place is EnPlace1
         ; therefore, this enemy is exploding
-        
+
         ; increment explosion timer
         ldx PageIndex
         inc EnSpeedSubPixelY,x
@@ -5863,7 +5952,7 @@ DrawEnemy_NotBlank:
             ; complete enemy's death
             jmp LDCF5
     Lx146:
-    
+
     ldx PageIndex
     ; write y radius to EnsExtra.0.radY
     iny ; y = #$01
@@ -5877,7 +5966,7 @@ DrawEnemy_NotBlank:
     sta EnsExtra.0.radX,x
     ; write x radius to temp $09
     sta Temp09_RadiusX
-    
+
     ; save y to $11
     iny
     sty Temp11_FrameIndex
@@ -6424,7 +6513,7 @@ LE11C:
 
 LE14A:
     ldx SpritePagePos               ;Restore initial sprite page pos.
-    lda TankCount                   ;
+    lda EnergyTankCount                   ;
     beq RTS_E172                          ;Branch to exit if Samus has no energy tanks.
 
 ;Display full/empty energy tanks.
@@ -7857,7 +7946,7 @@ ProjectileHitDoorOrStatue:
         dex
         dex
     bpl @loop
-    
+
     ; if it wasn't a door, it was a statue
     ; lowest nybble of pointer to kraid statue is #$0 or #$1
     ; lowest nybble of pointer to ridley statue is #$C or #$D
@@ -8378,7 +8467,7 @@ EnemyLoop:
     ;End of enemy/door data? If so, branch to finish room setup.
     cmp #$FF
     beq EndOfRoom
-    
+
     ;Discard upper four bits of data.
     and #$0F
     jsr ChooseRoutine               ;Jump to proper enemy/door handling routine.
@@ -8648,7 +8737,7 @@ LoadStatues:
     ; set statues object hi position
     jsr GetNameTableAtScrollDir
     sta StatueHi
-    
+
     ; set kraid statue y position
     lda #$40
     ldx RidleyStatueStatus
@@ -8656,7 +8745,7 @@ LoadStatues:
         lda #$30
     @elseIf_A:
     sta RidleyStatueY
-    
+
     ; set ridley statue y position
     lda #$60
     ldx KraidStatueStatus
@@ -8664,7 +8753,7 @@ LoadStatues:
         lda #$50
     @elseIf_B:
     sta KraidStatueY
-    
+
     ; clear StatuesBridgeIsSpawned
     ; y is #$00 here
     sty StatuesBridgeIsSpawned
@@ -8885,14 +8974,14 @@ Projectile_RemoveIfOffScreen:
     lda ProjectileStatus,x
     cmp #wa_BulletExplode+1.b
     bcc @RTS
-    
+
     ; exit if projectile is in current nametable
     tya
     eor ProjectileHi,x
     ; shift bit 0 into carry
     lsr
     bcs @RTS
-    
+
     ; projectile exists but is not on screen
     ; remove projectile
     sta ProjectileStatus,x
@@ -8905,7 +8994,7 @@ PowerUp_RemoveIfOffScreen:
     tya
     cmp PowerUps.0.hi,x
     bne Exit11
-    
+
     ; remove power-up
     lda #$FF
     sta PowerUps.0.type,x
@@ -9122,7 +9211,7 @@ SpawnMellow:
     ; exit if slot is occupied
     lda Mellows.0.status,x
     bne @RTS
-    
+
     ; slot is available, spawn mellow
     ; set y pos to random number
     txa
@@ -9594,7 +9683,7 @@ CollisionDetection:
         ldy #$00
         jsr IsSamusDead
         beq Lx269
-        
+
         jsr AreObjectsTouching          ;($DC7F)
         jsr CollisionDetectionDoor_F277
     Lx268:
@@ -9613,13 +9702,13 @@ Lx269:
             cmp #enemyStatus_Explode
         Lx270:
         beq NextEnemy      ; next slot
-        
+
         ; skip projectile collision if enemy is a pickup
         jsr GetEnemyXSlotPosition
         lda EnsExtra.0.status,x
         cmp #enemyStatus_Pickup
         beq Lx274
-        
+
         ; first projectile slot
         ldy #$D0
         Lx271:
@@ -9673,7 +9762,7 @@ Lx275:
         ; check next projectile if samus is dead
         jsr IsSamusDead
         beq Lx277
-        
+
         jsr GetRadiusSumsOfObjXSlotAndEnYSlot
         jsr GetEnemyYSlotPosition
         jsr CheckCollisionOfXSlotAndYSlot
@@ -9839,14 +9928,14 @@ CheckCollisionOfXSlotAndYSlot:
     ; put horizontal/vertical room flag in $03
     and ScrollDir
     sta Temp03_ScrollDir
-    
+
     ;subtract y slot entity's y position from x slot entity's y position
     lda Temp07_XSlotPositionY
     sec
     sbc Temp06_YSlotPositionY
     ;Store difference in $00.
     sta Temp00_Diff
-    
+
     ; branch if room is horizontal
     lda Temp03_ScrollDir
     bne @else_sameHiY
@@ -9886,7 +9975,7 @@ CheckCollisionOfXSlotAndYSlot:
 
     ; both things are overlapping on the y axis
     ; do the x axis
-    
+
     ; multiply by 2.
     ;  now bit7-3 is clear, bit 2 is set, bit 1 is dist hi y
     ;  bit 0 will be dist hi x
@@ -9953,7 +10042,7 @@ LF270:
 CollisionDetectionDoor_F277:
     ; exit if collision didn't happen
     bcs Exit17
-    
+
 SetProjectileIsHit:
     lda Temp10_DistHi
 SetSamusIsHitFlags:
@@ -9965,25 +10054,25 @@ Exit17:
 CollisionDetectionEnemy_ReactToCollisionWithSamus:
     ; exit if collision didn't happen
     bcs Exit17
-    
+
     jsr SetEnemyTouchingSamusFlags
     ;branch if screw attack is active.
     jsr IsScrewAttackActive
     ldy #$00
     bcc Lx289
-    
+
     ; screw attack is not active
     ; exit if enemy is frozen, pickup or hurt
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
     bcs Exit17
-    
+
     ; enemy is not frozen
     ; set SamusHurt010F to enemy type
     lda EnsExtra.0.type,x
 Lx287:
     sta SamusHurt010F
-    
+
     ; branch if enemy type bit 7 is set (when does this happen?)
     tay
     bmi Lx288
@@ -9993,7 +10082,7 @@ Lx287:
         and #$10
         bne Exit17
     Lx288:
-    
+
     ldy #$00
     jsr SetSamusIsHitByEnemy
     jmp LF306
@@ -10024,7 +10113,7 @@ RTS_X290:
 CollisionDetectionEnemy_ReactToCollisionWithProjectile:
     ; exit if collision didn't happen
     bcs Lx293
-    
+
     ; save weapon action to enemy
     lda ObjAction,y
     sta EnWeaponAction,x
@@ -10051,7 +10140,7 @@ SetEnemyTouchingSamusFlags:
 CollisionDetectionEnProjectile_ReactToCollisionWithSamus:
     ; exit if collision didn't happen
     bcs RTS_X294
-    
+
     jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF
     tya
     pha
@@ -10265,7 +10354,7 @@ LF416:
     ldx PageIndex
     lda EnSpecialAttribs,x
     bpl Lx301
-    
+
     lda ObjectCntrl
     bmi Lx301
     lda #$83 | OAMDATA_PRIORITY.b
@@ -10329,12 +10418,12 @@ UpdateEnemy_Pickup: ;($F483)
 
     ; delete pickup
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    
+
     ; if anim frame is #$80, it is a missile pickup
     ldy EnsExtra.0.animFrame,x
     cpy #_id_EnFrame_MissilePickup.b
     beq @pickupMissile
-    
+
     ; health pickup
     tya
     pha
@@ -10467,7 +10556,7 @@ EnemyReactToSamusWeapon:
     lda EnIsHit,x
     and #$20
     beq RTS_X315
-    
+
     ; branch if enemy was not attacked by ice beam
     lda EnWeaponAction,x
     cmp #wa_IceBeam
@@ -10479,7 +10568,7 @@ EnemyReactToSamusWeapon:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
     beq Lx317
-    
+
     ; freeze enemy
     ; set state to frozen
     jsr LF515
@@ -10511,7 +10600,7 @@ Lx317:
     lda EnHealth,x
     cmp #$FF
     beq Lx316
-    
+
     ; play enemy hurt sound effect
     ; check if enemy is a miniboss
     bit $0A
@@ -10553,7 +10642,7 @@ Lx319:
         cmp #wa_Missile
         bne Lx316
     Lx320:
-    
+
     ; update EnPrevStatus
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
@@ -10562,7 +10651,7 @@ Lx319:
     Lx321:
     ora $0A
     sta EnPrevStatus,x
-    
+
     ; branch if enemy is a miniboss
     asl
     bmi Lx322
@@ -10580,11 +10669,11 @@ Lx319:
         cpy #wa_ScrewAttack
         beq ExplodeEnemy
     Lx322:
-    
+
     ; set enemy state to hurt
     lda #enemyStatus_Hurt
     sta EnsExtra.0.status,x
-    
+
     ; set EnSpecialAttribs to
     ; #$0A if enemy is not a miniboss
     ; #$03 if enemy is a miniboss
@@ -10594,7 +10683,7 @@ Lx319:
         lda #$03
     Lx323:
     sta EnSpecialAttribs,x
-    
+
     ; check attack type
     ; if enemy is attacked by wave beam, decrement health by 2
     cpy #wa_WaveBeam
@@ -10623,7 +10712,7 @@ ExplodeEnemy:
     ; set status to explode
     lda #enemyStatus_Explode
     sta EnsExtra.0.status,x
-    
+
     ; branch if enemy is a miniboss
     bit $0A
     bvs Lx327
@@ -10775,13 +10864,13 @@ UpdateEnemy_ForceSpeedTowardsSamus:
     ; branch if samus is in the same nametable as the enemy
     jsr LoadEnHiToYAndLoadEorHiToCarry
     bcc Lx334
-    
+
     ; samus is in the other nametable
     ; load (EnsExtra.0.hi != PPUCTRL_ZP) into a
     tya
     eor PPUCTRL_ZP
     bcs Lx336 ; branch always
-    
+
     Lx334:
         ; samus is in the same nametable as the enemy on the x axis
         ; compare enemy pos to samus pos
@@ -10831,7 +10920,7 @@ Lx337:
     tya
     eor PPUCTRL_ZP
     bcs Lx340 ; branch always
-    
+
     Lx338:
         ; samus is in the same nametable as the enemy on the y axis
         ; compare enemy pos to samus pos
@@ -10897,14 +10986,14 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     ldy EnsExtra.0.type,x
     lda EnemyDistanceToSamusThreshold,y
     beq RTS_X346
-    
+
     ; push to y
     tay
     ; unset bit 4 and bit 3 of EnData05 and exit if enemy is invisible
     lda EnData05,x
     and #$02
     beq Lx345
-    
+
     ; pop from y
     tya
     ; mask out bit 3 from EnData05
@@ -10921,7 +11010,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     sta $02
     ; save mask to $06
     sty $06
-    
+
     ; check y axis
     lda ObjY
     sta $00
@@ -10935,7 +11024,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
         sty $00
         ldy EnX,x
     Lx343:
-    
+
     ; rotate samus hi bit into bit 7 of her position
     lda ObjHi
     lsr
@@ -10955,7 +11044,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
         jsr TwosComplement              ;($C3D4)
     Lx344:
     ; now a contains absolute distance between enemy and samus on a specific axis, divided by 2
-    
+
     ; divide further by 8
     lsr
     lsr
@@ -11050,7 +11139,7 @@ UpdateEnemy_Resting_TryBecomingActive:
         sta EnSpeedY,x
         lda EnSpeedXTable,y
         sta EnSpeedX,x
-        
+
         lda EnData05,x
         bmi Lx350
             ; bit 7 of EnData05 is not set
@@ -11110,7 +11199,7 @@ CrawlerAIRoutine_ShouldCrawlerMove:
 
 InitEnemyForceSpeedTowardsSamusDelayAndHealth:
     ldy EnsExtra.0.type,x
-    
+
     ; initialoze EnData0D
     lda EnemyForceSpeedTowardsSamusDelayTbl,y
     sta EnData0D,x
@@ -11138,7 +11227,7 @@ SpawnEnProjectile:
     lda SpawnEnProjectile_87
     and EnsExtra.0.status,x
     beq RTS_X354
-    
+
     ; branch if bit 7 of SpawnEnProjectile_87 is unset
     lda SpawnEnProjectile_87
     bpl Lx355
@@ -11146,12 +11235,12 @@ SpawnEnProjectile:
         ldy EnsExtra.0.jumpDsplcmnt,x
         bne RTS_X354
     Lx355:
-    
+
     ; attempt to find open enemy projectile slot
     jsr SpawnEnProjectile_FindSlot
     ; exit if all slots are occupied
     bcs RTS_SpawnEnProjectile_FindSlot
-    
+
     ; a is #$00 here
     sta EnIsHit,y
     jsr SpawnEnProjectile_F92C
@@ -11172,7 +11261,7 @@ SpawnEnProjectile:
     tax
     pla
     jsr InitEnAnimIndex
-    
+
     ; set projectile status to resting
     ldx PageIndex
     lda #enemyStatus_Resting ;#$01
@@ -11185,10 +11274,10 @@ SpawnEnProjectile:
     ; y speed
     lda #$00
     sta EnSpeedY,y
-    
+
     ldx PageIndex
     jsr SpawnEnProjectile_F8F8
-    
+
     ; get and apply x and y offsets to enemy position to make projectile position
     ; put horizontal facing dir flag into carry
     lda EnData05,x
@@ -11203,7 +11292,7 @@ SpawnEnProjectile:
     lda EnProjectilePosOffsetX,x
     sta $05
     jsr SpawnEnProjectile_SetEnProjectilePosition
-    
+
     ; exit if bit 6 of SpawnEnProjectile_87 is unset
     ldx PageIndex
     bit SpawnEnProjectile_87
@@ -11379,7 +11468,7 @@ Lx362:
     lda EnSpeedY,x
     beq Lx365
     bmi Lx365
-    
+
     ldy EnData0A,x
     lda AreaEnProjectileFallingAnimIndex,y
     sta EnsExtra.0.resetAnimIndex,x
@@ -11528,7 +11617,7 @@ Lx376:
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 Lx377:
-    
+
     lda EnExplosionAnimDelay,x
     cmp #$09
     bne Lx378
@@ -11650,7 +11739,7 @@ EnemyFlipAfterDisplacement:
     ; load (enemy type * 2 + horizontal facing direction) into y
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection
-    
+
     lda EnsExtra.0.jumpDsplcmnt,x
     ; branch if EnData1F is not zero
     inc EnsExtra.0.data1F,x
@@ -11725,12 +11814,12 @@ UpdateSkreeProjectile:
     lda SkreeProjectiles.0.dieDelay,x
     beq @RTS
     dec SkreeProjectiles.0.dieDelay,x
-    
+
     ; y = x/2
     txa
     lsr
     tay
-    
+
     ; prepare parameters to ApplySpeedToPosition
     ; y speed
     lda SkreeProjectileSpeedTable,y
@@ -11747,12 +11836,12 @@ UpdateSkreeProjectile:
     ; nametable
     lda SkreeProjectiles.0.hi,x
     sta Temp0B_PositionHi
-    
+
     ; apply speed to position in parameters
     jsr ApplySpeedToPosition
     ; kill projectile if the projectile moved outside the bounds of the room
     bcc KillSkreeProjectile
-    
+
     ; save the new position from parameters to skree projectile variables
     ; y pos
     lda Temp08_PositionY
@@ -11770,14 +11859,14 @@ UpdateSkreeProjectile:
     ; oops this write is redundant
     lda SkreeProjectiles.0.hi,x
     sta PowerUpDrawHi
-    
+
     ;Save index to find object animation.
     lda #_id_ObjFrame_SkreeProjectile.b
     sta PowerUpDrawAnimFrame
     txa
     pha
     jsr ObjDrawFrame
-    
+
     ; exit if samus is in i-frames
     lda SamusInvincibleDelay
     bne @endIf_A
@@ -11820,14 +11909,14 @@ UpdateAllMellows:
     ; exit if mellow handler enemy isn't there
     lda EnsExtra.15.status
     beq @RTS
-    
+
     ldx #$F0
     stx PageIndex
     ; delete mellow handler enemy if ???
     lda EnsExtra.15.resetAnimIndex
     cmp AreaMellowAnimIndex
     bne RemoveMellowHandlerEnemy
-    
+
     lda #$03
     jsr UpdateEnemyAnim
     lda RandomNumber1
@@ -12025,7 +12114,7 @@ ApplySpeedToPosition:
     lda ScrollDir
     and #$02
     sta Temp02_ScrollDir
-    
+
     ; apply y speed to y position
     lda Temp04_SpeedY
     clc
@@ -12064,7 +12153,7 @@ ApplySpeedToPosition:
         ; save new y position
         sta Temp08_PositionY
     @endIf_A:
-    
+
     ; apply x speed to x position
     lda Temp05_SpeedX
     clc
@@ -12125,7 +12214,7 @@ UpdateTourianItems: ; $FDE3
         sta Temp06_ItemID+1.b
         jsr AddItemToHistory
     @endIf_A:
-    
+
     ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
     ldx #_sizeof_Zebetites - _sizeof_Zebetites.0.b
     @loop:
@@ -12199,15 +12288,15 @@ UpdateTileBlast_WaitToRespawn:
     lda FrameCount
     and #$03
     bne SetTileAnim@RTS
-    
+
     ; exit if timer not reached zero
     dec TileBlasts.0.delay,x
     bne SetTileAnim@RTS
-    
+
     inc TileBlasts.0.routine,x
     ldy TileBlasts.0.type,x
     lda TileBlastRespawnAnimIndexTable,y
-    
+
 SetTileAnim:
     sta TileBlasts.0.animIndex,x
     sta TileBlasts.0.spare05,x
@@ -12266,7 +12355,7 @@ UpdateTileBlast_Respawned:
     sta Temp05_YSlotRadX
     jsr CheckCollisionOfXSlotAndYSlot
     bcs GetTileBlastFramePtr@RTS
-    
+
     ; tile hit Samus
     jsr SamusHurt_F311
     ; deal 5 damage to samus

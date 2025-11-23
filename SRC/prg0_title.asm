@@ -122,7 +122,7 @@ InitializeAfterReset: ; 00:8071
     sty ScreenFlashPalIndex         ;Reset index into screen flash palette data.
     sty IntroStarOffset             ;Reset index into IntroStarPntr table.
     sty FadeDataIndex               ;Reset index into fade out palette data.
-    
+
     ;Set $0000 to point to address $6000.
     sty $00
     ldx #>RoomRAMA.b
@@ -284,7 +284,7 @@ METROIDSparkle: ; 00:814D
     ;Wait until 3 seconds have passed since last routine before continuing.
     lda Timer3
     bne @RTS
-    
+
     ;Check if sparkle sprites are done moving.
     lda IntroSprs.0.complete
     and IntroSprs.1.complete
@@ -338,14 +338,14 @@ Crosshairs: ; 00:8182
     ;Wait 80 frames from last routine before running this one.
     lda Timer3
     bne @RTS
-    
+
     ;Check if first 4 sprites have completed their movements.  If not, branch.
     lda IntroSprs.0.complete
     and IntroSprs.1.complete
     and IntroSprs.2.complete
     and IntroSprs.3.complete
     beq @notComplete
-    
+
     ;Prepare to flash screen and draw cross.
     ;Branch if second crosshair sprites are already active.
     lda #$01
@@ -367,7 +367,7 @@ Crosshairs: ; 00:8182
     and IntroSprs.6.complete
     and IntroSprs.7.complete
     beq @notComplete
-    
+
     ;Prepare to flash screen and draw cross.
     ;Draw cross animation on screen.
     lda #$01
@@ -549,7 +549,7 @@ PrepIntroRestart: ; 00:82A3
     ;Check if delay timer has expired.  If not, branch to exit.
     lda Timer3
     bne @RTS
-    
+
     sta SpareMemD2 ;Not accessed by game.
     sta SpareMemBB ;Not accessed by game.
     sta IsSamus ;Clear IsSamus memory address.
@@ -689,7 +689,7 @@ PPUString_DrawIntroBackground: ; 00:82F4
         PPUString $2227, \
             "    PRESS START      "
     .endif
-    
+
 
     ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
     PPUString $2269, \
@@ -824,11 +824,11 @@ SparkleUpdate: ; 00:87D9
         ;($881A)Update sparkle sprite screen position.
         jsr DoSparkleSpriteCoord
     @endIf_A:
-    
+
     ;If sprite is already done, skip routine.
     lda IntroSprs.0.complete,x
     bne @RTS
-    
+
     dec IntroSprs.0.nextDelay,x
 
     ;Updates sparkle sprite Y coord.
@@ -915,7 +915,7 @@ DoSparkleSpriteCoord: ; 00:881A
         ;Set IntroSpr0ByteType to #$00 after processing.
         lda #$00
         sta IntroSprs.0.byteType,x
-        
+
         pla
         ;Get high nibble for y
         jsr Adiv16
@@ -923,7 +923,7 @@ DoSparkleSpriteCoord: ; 00:881A
         jsr @NibbleSubtract
         ;Store amount to move sprite in y direction.
         sta IntroSprs.0.sparkleYChange,x
-        
+
         pla
         ;Get low nibble for x
         and #$0F
@@ -955,16 +955,16 @@ WriteIntroSprite: ; 00:887B
     sec ;Subtract #$01 from first byte to get proper y coordinate.
     sbc #$01
     sta SpriteRAM.4.y,x
-    
+
     lda IntroSprs.0.tileID,x
     sta SpriteRAM.4.tileID,x
-    
+
     lda IntroSprs.0.attrib,x
     sta SpriteRAM.4.attrib,x
-    
+
     lda IntroSprs.0.x,x
     sta SpriteRAM.4.x,x
-    
+
     rts
 
 InitCrossMissiles: ; 00:8897
@@ -1071,11 +1071,11 @@ UpdateCrossMissiles: ; 00:88FE
     ;Has CrossMsl0to3SlowDelay already hit 0? If so, branch.
     lda CrossMsl0to3SlowDelay
     beq L8936
-    
+
     dec CrossMsl0to3SlowDelay
     ;Is CrossMsl0to3SlowDelay now equal to 0? if not, branch.
     bne L8936
-    
+
     ;Multiply the rise and run of the 8 sprites by 2.-->
     ;This doubles their speed.
     asl IntroSprs.0.speedX
@@ -1094,7 +1094,7 @@ UpdateCrossMissiles: ; 00:88FE
     asl IntroSprs.6.speedY
     asl IntroSprs.7.speedX
     asl IntroSprs.7.speedY
-    
+
 L8936: ; 00:8936
     ;Move sprite 0.
     ldx #$00
@@ -1133,7 +1133,7 @@ UpdateCrossMissile: ; 00:8963
     ;If the current sprite has finished its movements, exit this routine.
     lda IntroSprs.0.complete,x
     bne @RTS
-    
+
     ;Calculate new sprite position.
     jsr UpdateCrossMissileCoords
     ;If sprite not at final position, branch to move next frame.
@@ -1152,7 +1152,7 @@ UpdateCrossExplode: ; 00:8976
     ;If not ready to draw crosshairs, branch to exit.
     lda IsUpdatingCrossExplode
     beq RTS_89A9
-    
+
     ;Check to see if before last index in table.
     ldy CrossExplodeLengthIndex
     cpy #$04
@@ -1684,7 +1684,7 @@ CalculatePassword: ; 00:8C7A
         sta PasswordChar,y
         dey
         bpl @loop_A
-    
+
     jsr ProcessUniqueItems          ;($8B79)Determine what items Samus has collected.
     ;Branch if mother brain has not been defeated
     lda PasswordByte+(((ItemData@MotherBrain-ItemData)/2)/8)
@@ -1700,7 +1700,7 @@ CalculatePassword: ; 00:8C7A
         and #$03
         sta PasswordByte+$06
     @endIf_A:
-    
+
     ;Store InArea in bits 0 thru 5 in address $6990.
     lda InArea
     and #$3F
@@ -1710,15 +1710,15 @@ CalculatePassword: ; 00:8C7A
         ora #$80
     @endIf_suitless:
     sta PasswordByte+$08
-    
+
     ;SamusGear stored in $6991.
     lda SamusGear
     sta PasswordByte+$09
-    
+
     ;MissileCount stored in $6992.
     lda MissileCount
     sta PasswordByte+$0A
-    
+
     lda #$00
     sta $00
     ;Set bit 7 of $00 if Kraid statue is up.
@@ -1756,7 +1756,7 @@ CalculatePassword: ; 00:8C7A
     ;Stores statue statuses in 4 MSB at $6997.
     lda $00
     sta PasswordByte+$0F
-    
+
     ;Store SamusAge in $6993, SamusAge+1 in $6994, SamusAge+2 in $6995 and SamusAge+3 in $6996.
     ldy #$03
     @loop_SamusAge:
@@ -1764,7 +1764,7 @@ CalculatePassword: ; 00:8C7A
         sta PasswordByte+$0B,y
         dey
         bpl @loop_SamusAge
-    
+
     ;Store the value of $2E at $6998 when any of the 4 LSB are set.
     ;(Does not allow RandomNumber1 to be a multiple of 16).
     @loop_random:
@@ -1773,7 +1773,7 @@ CalculatePassword: ; 00:8C7A
         and #$0F
         beq @loop_random
     sta PasswordByte+$10
-    
+
     jsr PasswordChecksumAndScramble ;($8E17)Calculate checksum and scramble password.
     jmp LoadPasswordChar            ;($8E6C)Calculate password characters.
 
@@ -1781,10 +1781,10 @@ LoadPasswordData: ; 00:8D12
     ;If invincible Samus active, skip further password processing.
     lda NARPASSWORD
     bne RTS_8D3C
-    
+
     jsr LoadUniqueItems             ;($8BD4)Load unique items from password.
     jsr LoadTanksAndMissiles        ;($8D3D)Calculate number of missiles from password.
-    
+
     ;If MSB in PasswordByte08 is set, Samus is not wearing her suit.
     ldy #$00
     lda PasswordByte+$08
@@ -1793,12 +1793,12 @@ LoadPasswordData: ; 00:8D12
         iny
     L8D27:
     sty JustInBailey
-    
+
     ;Extract first 5 bits from PasswordByte08 and use it to determine starting area.
     lda PasswordByte+$08
     and #$3F
     sta InArea
-    
+
     ;Load Samus' age.
     ldy #$03
     L8D33:
@@ -1811,93 +1811,124 @@ RTS_8D3C:
     rts
 
 LoadTanksAndMissiles: ; 00:8D3D
-    lda PasswordByte+$09            ;Loads Samus gear.
-    sta SamusGear                   ;Save Samus gear.
-    lda PasswordByte+$0A            ;Loads current number of missiles.
-    sta MissileCount                ;Save missile count.
-    lda #$00                        ;
-    sta $00                         ;
-    sta $02                         ;
-    lda PasswordByte+$0F            ;
-    and #$80                        ;If MSB is set, Kraid statue is up.
-    beq L8D5C                       ;
-        lda $00                         ;
-        ora #$80                        ;If Kraid statue is up, set MSB in $00.
-        sta $00                         ;
-    L8D5C:
-    lda PasswordByte+$0F            ;
-    and #$40                        ;If bit 6 is set, Kraid is defeated.
-    beq L8D69                       ;
-        lda $00                         ;
-        ora #$01                        ;If Kraid is defeated, set LSB in $00.
-        sta $00                         ;
-    L8D69:
-    lda $00                         ;
-    sta KraidStatueStatus           ;Store Kraid status.
-    lda PasswordByte+$0F            ;
-    and #$20                        ;If bit 5 is set, Ridley statue is up.
-    beq L8D7B                       ;
-        lda $02                         ;
-        ora #$80                        ;If Ridley statue is up, set MSB in $02.
-        sta $02                         ;
-    L8D7B:
-    lda PasswordByte+$0F            ;
-    and #$10                        ;If bit 4 is set, Ridley is defeated.
-    beq L8D88                       ;
-        lda $02                         ;
-        ora #$02                        ;If Ridley is defeated, set bit 1 of $02.
-        sta $02                         ;
-    L8D88:
-    lda $02                         ;
-    sta RidleyStatueStatus          ;Store Ridley status.
-    lda #$00                        ;
-    sta $00                         ;
-    sta $02                         ;
-    ldy #$00                        ;
-L8D95:
-    lda UniqueItemHistory+1,y       ;Load second byte of item and compare-->
-    and #$FC                        ;the 6 MSBs to #$20. If it matches,-->
-    cmp #$20                        ;an energy tank has been found.
-    bne L8DA3                       ;
-        inc $00                         ;Increment number of energy tanks found.
-        jmp IncrementToNextItem         ;
-    L8DA3:
-    cmp #$24                        ;Load second byte of item and compare the 6 MSBs to-->
-    bne IncrementToNextItem         ;#$24. If it matches, missiles have been found.
-    inc $02                         ;Increment number of missiles found.
+    ;Loads Samus gear from password.
+    lda PasswordByte+$09
+    sta SamusGear
+    ;Loads current number of missiles from password.
+    lda PasswordByte+$0A
+    sta MissileCount
 
-IncrementToNextItem: ; 00:8DA9
-    iny                             ;
-    iny                             ;Increment twice. Each item is 2 bytes.
-    cpy #$84                        ;7 extra item slots in unique item history.
-    bcc L8D95                       ;Loop until all unique item history checked.
-    lda $00                         ;
-    cmp #$06                        ;Ensure the Tank Count does not exceed 6-->
-    bcc L8DB7                       ;tanks. Then stores the number of-->
-        lda #$06                        ;energy tanks found in TankCount.
-    L8DB7:
-    sta TankCount                   ;
-    lda #$00                        ;
-    ldy $02                         ;
-    beq L8DC6                       ;Branch if no missiles found.
-        clc                             ;
-        L8DC1:
-            adc #$05                        ;
-            dey                             ;For every missile item found, this-->
-            bne L8DC1                       ;loop adds 5 missiles to MaxMissiles.
-    L8DC6:
-    ldy KraidStatueStatus           ;
-    beq L8DCF                       ;
-        adc #$4B                        ;75 missiles are added to MaxMissiles-->
-        bcs L8DD8                       ;if Kraid has been defeated and another-->
-L8DCF:
-    ldy RidleyStatueStatus          ;75 missiles are added if the ridley-->
-    beq L8DDA                       ;has been defeated.
-        adc #$4B                        ;
-        bcc L8DDA                       ;
-    L8DD8:
-        lda #$FF                        ;If number of missiles exceeds 255, it stays at 255.
-L8DDA:
+    ;initialize temp vars for kraid and ridley statues's state
+    lda #$00
+    sta Temp00_KraidStatueStatus
+    sta Temp02_RidleyStatueStatus
+    ;If MSB is set, Kraid statue is up.
+    lda PasswordByte+$0F
+    and #$80
+    beq @endIf_kraidRaised
+        ;Kraid statue is up, set MSB in $00.
+        lda Temp00_KraidStatueStatus
+        ora #$80
+        sta Temp00_KraidStatueStatus
+    @endIf_kraidRaised:
+    ;If bit 6 is set, Kraid is defeated.
+    lda PasswordByte+$0F
+    and #$40
+    beq @endIf_kraidKilled
+        ;Kraid is defeated, set LSB in $00.
+        lda Temp00_KraidStatueStatus
+        ora #$01
+        sta Temp00_KraidStatueStatus
+    @endIf_kraidKilled:
+    ;Store Kraid status.
+    lda Temp00_KraidStatueStatus
+    sta KraidStatueStatus
+    ;If bit 5 is set, Ridley statue is up.
+    lda PasswordByte+$0F
+    and #$20
+    beq @endIf_ridleyRaised
+        ;Ridley statue is up, set MSB in $02.
+        lda Temp02_RidleyStatueStatus
+        ora #$80
+        sta Temp02_RidleyStatueStatus
+    @endIf_ridleyRaised:
+    ;If bit 4 is set, Ridley is defeated.
+    lda PasswordByte+$0F
+    and #$10
+    beq @endIf_ridleyKilled
+        ;Ridley is defeated, set bit 1 of $02.
+        lda Temp02_RidleyStatueStatus
+        ora #$02
+        sta Temp02_RidleyStatueStatus
+    @endIf_ridleyKilled:
+    ;Store Ridley status.
+    lda Temp02_RidleyStatueStatus
+    sta RidleyStatueStatus
+
+    ;initialize temp vars for energy tank count and missile tank count
+    lda #$00
+    sta Temp00_EnergyTankCount
+    sta Temp02_MissileTankCount
+    ldy #$00
+    @loop_tanks:
+        ;Load second byte of item
+        lda UniqueItemHistory+1,y
+        ;Compare the 6 MSBs to #$20. If it matches, an energy tank has been found.
+        and #$FC
+        cmp #>ui_ENERGYTANK.b
+        bne @endIf_etank
+            ;Increment number of energy tanks found.
+            inc Temp00_EnergyTankCount
+            jmp @IncrementToNextItem
+        @endIf_etank:
+        ;Compare the 6 MSBs to #$24. If it matches, missiles have been found.
+        cmp #>ui_MISSILES.b
+        bne @IncrementToNextItem
+            ;Increment number of missiles found.
+            inc Temp02_MissileTankCount
+    @IncrementToNextItem: ; 00:8DA9
+        ;Increment twice. Each item is 2 bytes.
+        ;7 extra item slots in unique item history.
+        ;Loop until all unique item history checked.
+        iny
+        iny
+        cpy #$84
+        bcc @loop_tanks
+    ;Ensure the Tank Count does not exceed 6 tanks.
+    lda Temp00_EnergyTankCount
+    cmp #$06
+    bcc @endIf_A
+        lda #$06
+    @endIf_A:
+    ;Then stores the number of energy tanks found in EnergyTankCount.
+    sta EnergyTankCount
+    ;init missile max count to 0
+    lda #$00
+    ;Branch if no missile tanks found.
+    ldy Temp02_MissileTankCount
+    beq @endIf_B
+        clc
+        ;For every missile tank found, this loop adds 5 missiles to MaxMissiles.
+        @loop_mul5:
+            adc #$05
+            dey
+            bne @loop_mul5
+    @endIf_B:
+    ;75 missiles are added to MaxMissiles if Kraid has been defeated
+    ldy KraidStatueStatus
+    beq @endIf_C
+        adc #$4B
+        bcs @capMaxMissiles
+    @endIf_C:
+    ;another 75 missiles are added if the ridley has been defeated.
+    ldy RidleyStatueStatus
+    beq @endIf_D
+        adc #$4B
+        bcc @endIf_D
+    @capMaxMissiles:
+        ;If number of missiles exceeds 255, it stays at 255.
+        lda #$FF
+@endIf_D:
     sta MaxMissiles
     rts
 
@@ -1905,7 +1936,7 @@ ValidatePassword: ; 00:8DDE
     ;If invincible Samus already active, branch.
     lda NARPASSWORD
     bne L8DF7
-    
+
     ;Check if NARPASSWORD was entered at the password screen
     ldy #$0F
     L8DE5:
@@ -1914,12 +1945,12 @@ ValidatePassword: ; 00:8DDE
         bne L8DF7
         dey
         bpl L8DE5
-    
+
     ;NARPASSWORD was entered, activate invincible Samus
     lda #$01
     sta NARPASSWORD
     bne L8E05
-    
+
 L8DF7:
     ;NARPASSWORD was not entered, continue to process password
     jsr UnscramblePassword          ;($8E4E)Unscramble password.
@@ -2295,7 +2326,7 @@ LoadPasswordScreen: ; 00:911A
 EnterPassword: ; 00:9147
     ;($C1A3)Remove sprites from screen.
     jsr EraseAllSprites
-    
+
     ;Check to see if START has been pressed.
     lda Joy1Change
     and #BUTTON_START
@@ -2304,12 +2335,12 @@ EnterPassword: ; 00:9147
         ;Check if password is correct.
         jmp CheckPassword
     @endIf_A:
-    
+
     ;Prepare to write the password screen data to PPU.
     ldx #$01
     stx PPUDataPending
     ldx PPUStrIndex
-    
+
     ;Upper byte of PPU string.
     lda #$21
     jsr WritePPUByte
@@ -2319,7 +2350,7 @@ EnterPassword: ; 00:9147
     ;PPU string length.
     lda #$0F
     jsr WritePPUByte
-    
+
     lda Timer3
     beq @else_B
         ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
@@ -2343,19 +2374,19 @@ EnterPassword: ; 00:9147
         iny
         cpy #$0F
         bne @loop
-    
+
     ;If button A pressed, branch.
     lda Joy1Change
     bmi @endIf_C
         ;Check if backspace pressed.
         jmp CheckBackspace
     @endIf_C:
-    
+
     ;Initiate BombLaunch SFX if a character has been written to the screen.
     lda TriSFXFlag
     ora #sfxTri_BombLaunch
     sta TriSFXFlag
-    
+
     ;Check to see if password cursor is on character 19 thru 24.  If not, branch.
     lda PasswordCursor
     cmp #$12
@@ -2416,7 +2447,7 @@ LoadRowAndColumn: ; 00:91BF
     ;Store the currently selected password character in the proper PasswordChar RAM location.
     pla
     sta PasswordChar,x
-    
+
     ;Increment PasswordCursor.
     lda PasswordCursor
     clc
@@ -2593,13 +2624,13 @@ InitializeGame: ; 00:92D4
         ;Starting in Brinstar. Get first item in each table.
         dex
     L92F9:
-    
+
     ;Set Samus restart position on screen.
     lda RestartYPosTbl,x
     sta ObjY
     lda RestartXPosTbl,x
     sta ObjX
-    
+
     ;SamusStat0B's low and high bytes keep track of how many times Samus has-->
     ;died or beaten the game as they are incremented every time this routine-->
     ;is run, but they are not accessed anywhere else.
@@ -2607,7 +2638,7 @@ InitializeGame: ; 00:92D4
     bne L930D
         inc SamusStat0B+1
     L930D:
-    
+
     lda #_id_MoreInit.b
     sta MainRoutine                 ;Initialize starting area.
     jsr ScreenNmiOff                ;($C45D)Turn off screen.
@@ -2638,7 +2669,7 @@ InitializeStats: ; 00:932B
     ;Set all of Samus' stats to 0 when starting new game.
     lda #$00
     sta SamusStat00
-    sta TankCount
+    sta EnergyTankCount
     sta SamusGear
     sta MissileCount
     sta MaxMissiles
@@ -2659,7 +2690,7 @@ DisplayPassword: ; 00:9359
     ;Wait for "GAME OVER" to be displayed for 160 frames (2.6 seconds).
     lda Timer3
     bne RTS_9324
-    
+
     ;Turn off screen, erase sprites and nametables.
     jsr ClearAll
     ;Clears screen and writes "PASS WORD".
@@ -2778,7 +2809,7 @@ LoadPasswordTiles: ; 00:93F9
     lda #$16
     sta TileSize
     ldx #$05
-    
+
     ;Transfer password characters to TileInfo addresses.
     @loop:
         lda PasswordChar,y
@@ -2836,7 +2867,7 @@ PreparePPUProcess_: ; 00:9449
 PrepareEraseTiles: ; 00:9450
     stx $00                         ;PPU low address byte
     sty $01                         ;PPU high address byte
-    
+
     ;Address of byte where tile size of tile to be erased is stored.
     ldx #<TileSize.b
     ldy #>TileSize.b
@@ -2879,7 +2910,7 @@ UnusedIntroRoutine5: ; 00:946C
     lda $05
     and #$0F
     ; fallthrough
-    
+
 @subroutine:
     ; store nybble to current location in PPUDataString buffer
     sta PPUDataString,x
@@ -2907,7 +2938,7 @@ UpdateSaveDataDay: ; 00:948F
     ; push y
     tya
     pha
-    
+
     ; y = y*16
     jsr Amul16
     tay
@@ -2923,7 +2954,7 @@ UpdateSaveDataDay: ; 00:948F
     sta UnusedIntro683C+1,x
     lda $07
     sta UnusedIntro683C,x
-    
+
     ; pop y
     pla
     tay
@@ -2934,7 +2965,7 @@ UpdateSaveDataGameOverCountAndEnergyTank: ; 00:94AF
     ; push y
     tya
     pha
-    
+
     ; y = y*16
     jsr Amul16
     tay
@@ -2950,7 +2981,7 @@ UpdateSaveDataGameOverCountAndEnergyTank: ; 00:94AF
     sta UnusedIntro6833+1,x
     lda $07
     sta UnusedIntro6833,x
-    
+
     ; push UnusedIntro6842,y to stack
     lda UnusedIntro6842,y
     pha
@@ -2961,7 +2992,7 @@ UpdateSaveDataGameOverCountAndEnergyTank: ; 00:94AF
     ; save pushed value
     pla
     sta UnusedIntro6839,y
-    
+
     ; pop y
     pla
     tay
@@ -3014,10 +3045,10 @@ Hex16ToDec: ; 00:94DA
         bcs @loop_D
     ; undo the last subtraction
     adc #$0A
-    
+
     ; all digits have now been isolated:
     ; thousands in $03, hundreds in $02, tens in $01, ones in a
-    
+
     ; store ones in $06
     sta $06
     ; add tens multiplied by 16 to $06
@@ -3425,7 +3456,7 @@ NMIScreenWrite: ; 00:9A07
     lda TitleRoutine
     cmp #$1D
     bcc Exit100
-    
+
     jsr LoadCredits                 ;($9C45)Display end credits on screen.
     ;If not time to write end message, branch
     lda EndMsgWrite
@@ -3462,7 +3493,7 @@ Restart: ; 00:9A39
     lda Joy1Status
     and #BUTTON_START
     beq Exit100
-    
+
     ;Erase PasswordByte00 thru PasswordByte11.
     ldy #$11
     lda #$00
@@ -3470,14 +3501,14 @@ Restart: ; 00:9A39
         sta PasswordByte,y
         dey
         bpl @loop_erasePassword
-    
+
     ;Erase Unique item history.
     iny ;Y = #$00.
     L9A4A:
         sta UniqueItemHistory,y
         iny
         bne L9A4A
-    
+
     ;If Samus does not have Maru Mari, branch.-->
     lda SamusGear
     and #gr_MARUMARI
@@ -3486,7 +3517,7 @@ Restart: ; 00:9A39
         lda #1<<(((ItemData@MaruMari-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@MaruMari-ItemData)/2)/8)
     L9A5C:
-    
+
     ;If Samus does not have bombs, branch.-->
     lda SamusGear
     and #gr_BOMBS
@@ -3496,7 +3527,7 @@ Restart: ; 00:9A39
         ora #1<<(((ItemData@Bombs-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
     L9A6B:
-    
+
     ;If Samus does not have varia suit, branch.-->
     lda SamusGear
     and #gr_VARIA
@@ -3505,7 +3536,7 @@ Restart: ; 00:9A39
         lda #1<<(((ItemData@Varia-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Varia-ItemData)/2)/8)
     L9A77:
-    
+
     ;If Samus does not have high jump, branch.-->
     lda SamusGear
     and #gr_HIGHJUMP
@@ -3514,7 +3545,7 @@ Restart: ; 00:9A39
         lda #1<<(((ItemData@HighJump-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@HighJump-ItemData)/2)/8)
     L9A83:
-    
+
     ;If Samus does not have Maru Mari, branch.
     lda SamusGear
     ;A programmer error?  Should check for screw attack data.
@@ -3525,7 +3556,7 @@ Restart: ; 00:9A39
         ora #1<<(((ItemData@ScrewAttack-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
     L9A92:
-    
+
     lda SamusGear                   ;
     sta PasswordByte+$09              ;Store Samus gear data in PasswordByte09.
     lda #$00                        ;
@@ -3534,7 +3565,7 @@ Restart: ; 00:9A39
         lda #$80                        ;load suitless Samus data into PasswordByte08.
     L9AA1:
     sta PasswordByte+$08              ;
-    
+
     jmp InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
 
 EndGame: ; 00:9AA7

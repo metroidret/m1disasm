@@ -253,6 +253,11 @@ Temp07_ItemDataIndexMax = $07
 Temp08_PasswordByte    = $08
 Temp09_ItemDataIndex   = $09
 
+; LoadTanksAndMissiles
+Temp00_KraidStatueStatus = $00
+Temp02_RidleyStatueStatus = $02
+Temp00_EnergyTankCount = $00
+Temp02_MissileTankCount = $02
 
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
@@ -1069,7 +1074,7 @@ SpareMem6873           ds 2 ;$6873
 SamusDataIndex         db   ;$6875   ;Index for Samus saved game stats(not used). #$00, #$10, #$20.
 
 SamusStat00            db   ;$6876   ;Unused memory address for storing Samus info.
-TankCount              db   ;$6877   ;Number of energy tanks.
+EnergyTankCount        db   ;$6877   ;Number of energy tanks.
 SamusGear              db   ;$6878   ;Stores power-up items Samus has.
 MissileCount           db   ;$6879   ;Stores current number of missiles.
 MaxMissiles            db   ;$687A   ;Maximum amount of missiles Samus can carry
