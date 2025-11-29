@@ -25,9 +25,9 @@ SeahorseAIRoutine:
         sta SpawnEnProjectile_87
         lda #$00
         sta SpawnEnProjectile_EnData0A
-        lda #EnAnim_DragonIdleFacingRight - EnAnimTbl.b
+        lda #EnAnim_DragonIdle_R - EnAnimTbl.b
         sta SpawnEnProjectile_83
-        lda #EnAnim_DragonIdleFacingLeft - EnAnimTbl.b
+        lda #EnAnim_DragonIdle_L - EnAnimTbl.b
         sta SpawnEnProjectile_83+1.b
         lda #$03
         sta SpawnEnProjectile_AnimTableIndex
@@ -63,5 +63,5 @@ L9B59:
     jmp CommonEnemyJump_00_01_02
 
 SeahorseTable:
-    .byte EnAnim_DragonPrepareToSpitFacingRight - EnAnimTbl, EnAnim_DragonPrepareToSpitFacingLeft - EnAnimTbl
+    .byte EnAnim_DragonPrepareToSpit_R - EnAnimTbl, EnAnim_DragonPrepareToSpit_L - EnAnimTbl
 

@@ -182,10 +182,10 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
     .byte EnAnim_ViolaExplode - EnAnimTbl, EnAnim_ViolaExplode - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_ZebboExplodeFacingRight - EnAnimTbl, EnAnim_ZebboExplodeFacingLeft - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_ZebboExplode_R - EnAnimTbl, EnAnim_ZebboExplode_L - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
     .byte EnAnim_RidleyExplode - EnAnimTbl, EnAnim_RidleyExplode - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - ridley fireball
     .byte EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0B - same as 4
     .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4
@@ -218,10 +218,10 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
     .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_ZebboRestingFacingRight - EnAnimTbl, EnAnim_ZebboRestingFacingLeft - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_ZebboResting_R - EnAnimTbl, EnAnim_ZebboResting_L - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - ridley
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - ridley fireball
     .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 0B - same as 4
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4
@@ -236,10 +236,10 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
     .byte EnAnim_ViolaOnFloor - EnAnimTbl, EnAnim_ViolaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_ZebboFacingRight - EnAnimTbl, EnAnim_ZebboFacingLeft - EnAnimTbl ; 07 - zebbo
+    .byte EnAnim_Zebbo_R - EnAnimTbl, EnAnim_Zebbo_L - EnAnimTbl ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - ridley
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - ridley fireball
+    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - ridley
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - ridley fireball
     .byte EnAnim_HoltzIdle - EnAnimTbl, EnAnim_HoltzIdle - EnAnimTbl ; 0B - same as 4
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orbs
     .byte EnAnim_34 - EnAnimTbl, EnAnim_34 - EnAnimTbl ; 0D - same as 4

@@ -138,9 +138,9 @@ AreaEnProjectileKilledAnimIndex:
 AreaExplosionAnimIndex:
     .byte EnAnim_Explosion - EnAnimTbl
 ; EnProjectile rising?
-    .byte EnAnim_DragonEnProjectileUpRight - EnAnimTbl, EnAnim_DragonEnProjectileUpLeft - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTbl, EnAnim_DragonEnProjectileUp_L - EnAnimTbl
 AreaEnProjectileFallingAnimIndex:
-    .byte EnAnim_DragonEnProjectileDownRight - EnAnimTbl, EnAnim_DragonEnProjectileDownLeft - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileDown_R - EnAnimTbl, EnAnim_DragonEnProjectileDown_L - EnAnimTbl
 AreaEnProjectileSplatterAnimIndex:
     .byte EnAnim_DragonEnProjectileSplatter - EnAnimTbl, EnAnim_PolypRockShatter - EnAnimTbl
 AreaMellowAnimIndex:
@@ -175,10 +175,10 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
     .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametExplodeFacingRight - EnAnimTbl, EnAnim_GametExplodeFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_GametExplode_R - EnAnimTbl, EnAnim_GametExplode_L - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
     .byte EnAnim_RidleyExplode - EnAnimTbl, EnAnim_RidleyExplode - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orb
     .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - seahorse
@@ -206,36 +206,36 @@ EnemyHealthTbl:
 EnemyRestingAnimIndex:
     .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 00 - swooper has not seen samus
     .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl ; 02 - ripper II
+    .byte EnAnim_RipperII_R - EnAnimTbl, EnAnim_RipperII_L - EnAnimTbl ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
     .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametRestingFacingRight - EnAnimTbl, EnAnim_GametRestingFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_GametResting_R - EnAnimTbl, EnAnim_GametResting_L - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse
+    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - seahorse
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
     .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 00 - swooper has not seen samus
     .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_RipperIIFacingRight - EnAnimTbl, EnAnim_RipperIIFacingLeft - EnAnimTbl ; 02 - ripper II
+    .byte EnAnim_RipperII_R - EnAnimTbl, EnAnim_RipperII_L - EnAnimTbl ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
     .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametActiveFacingRight - EnAnimTbl, EnAnim_GametActiveFacingLeft - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_GametActive_R - EnAnimTbl, EnAnim_GametActive_L - EnAnimTbl ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdleFacingRight - EnAnimTbl, EnAnim_RidleyIdleFacingLeft - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireballFacingRight - EnAnimTbl, EnAnim_RidleyFireballFacingLeft - EnAnimTbl ; 0A - same as 3
+    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdleFacingRight - EnAnimTbl, EnAnim_DragonIdleFacingLeft - EnAnimTbl ; 0D - seahorse
+    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - seahorse
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -400,7 +400,7 @@ EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte EnAnim_PolypRock - EnAnimTbl, EnAnim_PolypRock - EnAnimTbl
-    .byte EnAnim_DragonEnProjectileUpRight - EnAnimTbl, EnAnim_DragonEnProjectileUpLeft - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTbl, EnAnim_DragonEnProjectileUp_L - EnAnimTbl
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
