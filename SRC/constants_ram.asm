@@ -467,12 +467,13 @@ ItemRoomMusicStatus    db   ;$79     ;#$00=Item room music not playing.
     EnemyStatusPreAI       db   ;$81     ;set to enemy status before enemy ai routine is run
     Enemy82                db   ;$82
 
-    SpawnEnProjectile_83       dw   ;$83     ;right facing anim index for enemy that shoots the projectile
-    ; SpawnEnProjectile_83+1           $84     ;left facing anim index for enemy that shoots the projectile
+    SpawnEnProjectile_AnimIndex dw ;$83     ;right facing anim index for enemy that shoots the projectile
+    ; SpawnEnProjectile_AnimIndex+1   $84     ;left facing anim index for enemy that shoots the projectile
     SpawnEnProjectile_AnimTableIndex .db ;$85 ;index into EnProjectileRisingAnimIndexTable
     EnemyFlipAfterDisplacementAnimIndex dw ;$85 ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
     ; EnemyFlipAfterDisplacementAnimIndex+1   $86 ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
-    SpawnEnProjectile_87       db   ;$87     ;projectile status?
+    SpawnEnProjectile_ExpectedStatus db ;$87 ;expected status for the enemy that shoots an enProjectile, won't shoot if status doesn't match
+                                                ;this functionnality is not used: the expected status is always the current status
     SpawnEnProjectile_EnData0A db   ;$88
 
     SpareMem89             db   ;$89
@@ -800,7 +801,8 @@ EnSpeedSubPixelX       = $0407   ; unknown - x counter
 EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.
 EnDelay                = $0409   ;Delay counter between enemy actions.
 EnData0A               = $040A   ; unknown -- For crawlers, orientation
-                                   ; 00-on floor, 01-on wall going down, 02-on ceiling, 03-on wall going up
+                                   ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
+                                   ; For enProjectiles, it's the EnProjectileMovement id
 EnHealth               = $040B   ;Current health of enemy.
 EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
 EnData0D               = $040D   ;Resting: force speed towards samus delay

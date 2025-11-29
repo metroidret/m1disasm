@@ -11259,13 +11259,14 @@ SpawnEnProjectile:
     lda EnData05,x
     and #$10
     beq RTS_X354
-    ; exit if ??? (something about status?)
-    lda SpawnEnProjectile_87
+    ; exit if status doesn't match expected status (never exit)
+    ; (draygon sets this to #$02 and polyp sets this to #$02|$01)
+    lda SpawnEnProjectile_ExpectedStatus
     and EnsExtra.0.status,x
     beq RTS_X354
 
-    ; branch if bit 7 of SpawnEnProjectile_87 is unset
-    lda SpawnEnProjectile_87
+    ; branch if bit 7 of SpawnEnProjectile_ExpectedStatus is unset (always)
+    lda SpawnEnProjectile_ExpectedStatus
     bpl Lx355
         ; exit if EnsExtra.0.jumpDsplcmnt is zero
         ldy EnsExtra.0.jumpDsplcmnt,x
@@ -11329,15 +11330,15 @@ SpawnEnProjectile:
     sta $05
     jsr SpawnEnProjectile_SetEnProjectilePosition
 
-    ; exit if bit 6 of SpawnEnProjectile_87 is unset
+    ; exit if bit 6 of SpawnEnProjectile_ExpectedStatus is unset (always)
     ldx PageIndex
-    bit SpawnEnProjectile_87
+    bit SpawnEnProjectile_ExpectedStatus
     bvc RTS_SpawnEnProjectile_FindSlot
     ; set animation for enemy that shot the projectile depending on the direction its facing
     lda EnData05,x
     and #$01
     tay
-    lda SpawnEnProjectile_83,y
+    lda SpawnEnProjectile_AnimIndex,y
     jmp SetEnAnimIndex
 
 SpawnEnProjectile_FindSlot:

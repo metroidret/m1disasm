@@ -21,12 +21,17 @@ CrawlerAIRoutine:
     cmp #enemyStatus_Explode
     beq Crawler03
 
+    ; check crawler orientation
+    ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
     lda EnData0A,x
     and #$03
     cmp #$01
     bne Crawler01
     ; crawler is on wall moving down
-    ; flip direction if it's near the bottom
+    ; if it's near the bottom of the screen (about to walk into lava), turn around to not walk into it
+    ; (BUG! this doesn't check that its a horizontal room, so it will turn around in vertical rooms too.
+    ; for example, at the bottom of the top screen in the shaft to brinstar->kraid elevator,
+    ; the zoomer will never walk on the underside of the platform it's on)
     ldy EnY,x
     .if BANK == 1 || BANK == 4
         cpy #$E4
@@ -34,10 +39,29 @@ CrawlerAIRoutine:
         cpy #$EB
     .endif
     bne Crawler01
+    ; it is near the bottom, make it turn around vertically
+    
+    ; whats noteworthy here is that changing the orientation alone is not enough
+    ; you must also horizontally flip the crawler
+    ; see this example, a crawler is walking down a wall to its right:
+    ;  |=###
+    ;  V=###
+    ; change only orientation (incorrect)
+    ; =^ ###
+    ; =| ###
+    ; change only horizontal flip (incorrect)
+    ; =| ###
+    ; =V ###
+    ; change both orientation and horizontal flip (correct)
+    ;  ^=###
+    ;  |=###
+    
+    ; horizontal flip
     jsr CrawlerFlipDirection
+    ; set orientation to moving up the wall
     lda #$03
     sta EnData0A,x
-    bne Crawler02
+    bne Crawler02 ; branch always
 Crawler01:
     ; move crawler in its direction
     jsr JumpByRTSToMovementRoutine
@@ -111,6 +135,7 @@ CrawlerReorientSprite:
 
 CrawlerInsideCornerCheck:
     ; inside corner check, check if collided with wall
+    ; (carry flag was updated by JumpByRTSToMovementRoutine called before this)
     ldx PageIndex
     bcs RTS_Crawler06
     ; flip direction if tried to move offscreen
@@ -133,35 +158,41 @@ CrawlerInsideCornerCheck:
 
 CrawlerOutsideCornerCheck:
     ; outside corner check, check if there's no floor beneath the crawler
-    jsr Crawler11
+    jsr CrawlerOutsideCornerGetNextOrientation
     jsr JumpByRTSToMovementRoutine
     ldx PageIndex
     bcc @RTS
         ; at outside corner, stick to wall
-        jsr Crawler11
+        jsr CrawlerOutsideCornerGetNextOrientation
         sta EnData0A,x
         jsr CrawlerReorientSprite
     @RTS:
     rts
 
-Crawler11:
+CrawlerOutsideCornerGetNextOrientation:
+    ; returns the orientation needed to turn an outside corner, relative to current orientation
     ldy EnData0A,x
     iny
     tya
     and #$03
     rts
 
+; a: orientation
 JumpByRTSToMovementRoutine:
-    ; Y = orientation * 2 + direction
+    ; Y = (orientation * 2 + direction)*2
+    ; shift direction bit into carry
     ldy EnData05,x
     sty $00
     lsr $00
+    ; rotate it left into orientation in a
     rol
+    ; *2 because pointers are 2 bytes
     asl
     tay
+    ; push movement routine pointer into stack
     lda CrawlerMovementRoutinesTable+1,y
     pha
     lda CrawlerMovementRoutinesTable,y
     pha
+    ; return to the pushed pointer
     rts
-
