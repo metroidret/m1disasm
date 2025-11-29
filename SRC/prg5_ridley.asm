@@ -517,7 +517,7 @@ EnemyMovement10_R:
 EnemyMovement10_L:
     ; nothing
 
-; unused (seahorse)
+; unused (dragon)
 EnemyMovement11_R:
 EnemyMovement11_L:
     SignMagSpeed $14,  0, -1
@@ -525,7 +525,7 @@ EnemyMovement11_L:
     EnemyMovementInstr_ClearEnJumpDsplcmnt
     SignMagSpeed $30,  0,  0
     SignMagSpeed $14,  0,  1
-    EnemyMovementInstr_StopMovementSeahorse
+    EnemyMovementInstr_StopMovementDragon
 
 EnProjectileMovement0:
 EnProjectileMovement1:

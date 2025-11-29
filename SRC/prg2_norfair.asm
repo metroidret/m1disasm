@@ -163,7 +163,7 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy_ ; 0A - same as 3
         .word SqueeptAIRoutine ; 0B - lava jumper
         .word MultiviolaAIRoutine ; 0C - bouncy orb
-        .word SeahorseAIRoutine ; 0D - seahorse
+        .word DragonAIRoutine ; 0D - dragon
         .word PolypAIRoutine ; 0E - rock launcher thing
         .word RemoveEnemy_ ; 0F - same as 3
 
@@ -181,7 +181,7 @@ EnemyDeathAnimIndex:
     .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - seahorse
+    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -199,7 +199,7 @@ EnemyHealthTbl:
     .byte $FF ; 0A - same as 3
     .byte $FF ; 0B - lava jumper
     .byte $08 ; 0C - bouncy orb
-    .byte $06 ; 0D - seahorse
+    .byte $06 ; 0D - dragon
     .byte $FF ; 0E - rock launcher thing
     .byte $00 ; 0F - same as 3
 
@@ -217,7 +217,7 @@ EnemyRestingAnimIndex:
     .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - seahorse
+    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -235,7 +235,7 @@ EnemyActiveAnimIndex:
     .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
     .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl ; 0B - lava jumper
     .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - seahorse
+    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -253,7 +253,7 @@ L967B:
     .byte $00 ; 0A - same as 3
     .byte $00 ; 0B - lava jumper
     .byte $02 | $80 ; 0C - bouncy orb
-    .byte $00 ; 0D - seahorse
+    .byte $00 ; 0D - dragon
     .byte $00 ; 0E - rock launcher thing
     .byte $00 ; 0F - same as 3
 
@@ -271,7 +271,7 @@ L968B:
     .byte %00000000 ; 0A - same as 3
     .byte %00000000 ; 0B - lava jumper
     .byte %00000101 ; 0C - bouncy orb
-    .byte %10001001 ; 0D - seahorse
+    .byte %10001001 ; 0D - dragon
     .byte %00000000 ; 0E - rock launcher thing
     .byte %00000000 ; 0F - same as 3
 
@@ -289,7 +289,7 @@ EnemyForceSpeedTowardsSamusDelayTbl:
     .byte $00 ; 0A - same as 3
     .byte $00 ; 0B - lava jumper
     .byte $00 ; 0C - bouncy orb
-    .byte $01 ; 0D - seahorse
+    .byte $01 ; 0D - dragon
     .byte $00 ; 0E - rock launcher thing
     .byte $00 ; 0F - same as 3
 
@@ -307,7 +307,7 @@ EnemyDistanceToSamusThreshold:
     .byte $00 ; 0A - same as 3
     .byte $00 ; 0B - lava jumper
     .byte $00 ; 0C - bouncy orb
-    .byte $C | (1 << 7) ; 0D - seahorse
+    .byte $C | (1 << 7) ; 0D - dragon
     .byte $00 ; 0E - rock launcher thing
     .byte $00 ; 0F - same as 3
 
@@ -325,7 +325,7 @@ EnemyInitDelayTbl:
     .byte $01 ; 0A - same as 3
     .byte $10 ; 0B - lava jumper
     .byte $01 ; 0C - bouncy orb
-    .byte $20 ; 0D - seahorse
+    .byte $20 ; 0D - dragon
     .byte $00 ; 0E - rock launcher thing
     .byte $00 ; 0F - same as 3
 
@@ -343,7 +343,7 @@ EnemyMovementChoiceOffset:
     .byte EnemyMovementChoice03 - EnemyMovementChoices ; 0A - same as 3
     .byte EnemyMovementChoice_Squeept - EnemyMovementChoices ; 0B - lava jumper
     .byte EnemyMovementChoice_Multiviola - EnemyMovementChoices ; 0C - bouncy orb
-    .byte EnemyMovementChoice_Dragon - EnemyMovementChoices ; 0D - seahorse
+    .byte EnemyMovementChoice_Dragon - EnemyMovementChoices ; 0D - dragon
     .byte EnemyMovementChoice_GerutaIdle - EnemyMovementChoices ; 0E - rock launcher thing (enemy doesn't move)
     .byte $00 ; 0F - same as 3
 
@@ -392,7 +392,7 @@ L977B:
     .byte %01000100 ; 0A - same as 3
     .byte %01000100 ; 0B - lava jumper
     .byte %01000000 ; 0C - bouncy orb
-    .byte %00000000 ; 0D - seahorse
+    .byte %00000000 ; 0D - dragon
     .byte %00000000 ; 0E - rock launcher thing
     .byte %00000000 ; 0F - same as 3
 
@@ -507,7 +507,7 @@ EnemyMovement10_R:
 EnemyMovement10_L:
     ; nothing
 
-; seahorse
+; dragon
 EnemyMovement11_R:
 EnemyMovement11_L:
     SignMagSpeed $14,  0, -1
@@ -515,7 +515,7 @@ EnemyMovement11_L:
     EnemyMovementInstr_ClearEnJumpDsplcmnt
     SignMagSpeed $30,  0,  0
     SignMagSpeed $14,  0,  1
-    EnemyMovementInstr_StopMovementSeahorse
+    EnemyMovementInstr_StopMovementDragon
 
 EnProjectileMovement0:
     SignMagSpeed $0A,  3, -5
@@ -656,7 +656,7 @@ LoadEnemyPositionFromTemp_:
 
 ;-------------------------------------------------------------------------------
 
-.include "enemies/seahorse.asm"
+.include "enemies/dragon.asm"
 
 ;-------------------------------------------------------------------------------
 

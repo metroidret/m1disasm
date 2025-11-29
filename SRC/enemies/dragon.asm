@@ -1,5 +1,5 @@
 ; Lava Seahorse Routine
-SeahorseAIRoutine:
+DragonAIRoutine:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
     bne L9AF5
@@ -47,7 +47,7 @@ SeahorseAIRoutine:
     lda EnData05,x
     and #$01
     tay
-    lda SeahorseTable,y
+    lda DragonEnAnimTable,y
     jsr CommonJump_InitEnAnimIndex
     jmp L9B59
 
@@ -62,6 +62,6 @@ L9B59:
     sta $01
     jmp CommonEnemyJump_00_01_02
 
-SeahorseTable:
+DragonEnAnimTable:
     .byte EnAnim_DragonPrepareToSpit_R - EnAnimTbl, EnAnim_DragonPrepareToSpit_L - EnAnimTbl
 

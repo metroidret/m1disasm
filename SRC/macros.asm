@@ -111,7 +111,7 @@
     .endr
 .endm
 
-.macro EnemyMovementInstr_StopMovementSeahorse
+.macro EnemyMovementInstr_StopMovementDragon
     .byte $FA
 .endm
 
