@@ -8592,7 +8592,7 @@ LEB4D:
 LEB6E:
     ldy EnsExtra.0.type,x               ;Load A with index to enemy data.
     asl EnData05,x                     ;*2
-    jsr LFB7B
+    jsr InitEnemyFacingDirectionAxisAndDelay
     jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
 
 IsSlotTaken:
@@ -11744,11 +11744,11 @@ UpdatePipeBugHole:
     sta EnsExtra.0.status,x
     ; set enemy facing direction depending on scroll direction
     and ScrollDir
-    asl ; to compensate for the ror instruction in LFB7B
+    asl ; to compensate for the ror instruction in InitEnemyFacingDirectionAxisAndDelay
     sta EnData05,x
     ; set enemy delay
     ldy EnsExtra.0.type,x
-    jsr LFB7B
+    jsr InitEnemyFacingDirectionAxisAndDelay
     ; init health and stuff
     jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
 
@@ -11758,8 +11758,9 @@ UpdatePipeBugHole:
     sta EnDelay,x
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
-LFB7B:
+InitEnemyFacingDirectionAxisAndDelay: ; 07:FB7B
     ; rotate bit 7 of L977B into bit 7 of EnData05
+    ; updates facing direction axis to enemy's default
     jsr LoadTableAt977B
     ror EnData05,x
     ; load initial delay for enemy movement.
