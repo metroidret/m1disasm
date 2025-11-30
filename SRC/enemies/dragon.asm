@@ -73,8 +73,10 @@ L9B4F:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq L9B59
-    jsr CommonJump_0A
+        ; enemy is not exploding, set animation to active
+        jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
 L9B59:
+    ; change animation frame every frame
     lda #$01
     sta $00
     sta $01

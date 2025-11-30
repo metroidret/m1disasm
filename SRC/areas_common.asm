@@ -38,8 +38,8 @@ CommonJump_InitEnResetAnimIndex: ;$8018 (unused?)
     jmp InitEnResetAnimIndex
 CommonJump_EnemyFlipAfterDisplacement: ;$801B
     jmp EnemyFlipAfterDisplacement
-CommonJump_0A: ;$801E
-    jmp LFBCA
+CommonJump_InitEnActiveAnimIndex_NoL967BOffset: ;$801E
+    jmp InitEnActiveAnimIndex_NoL967BOffset
 CommonJump_SpawnEnProjectile: ;$8021
     jmp SpawnEnProjectile
 CommonJump_ChooseRoutine: ;$8024

@@ -11826,12 +11826,16 @@ InitEnResetAnimIndex: ; referenced in areas_common.asm
         jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
 
-LFBCA:
+InitEnActiveAnimIndex_NoL967BOffset: ; 07:FBCA
+    ; y = enemy type * 2 + horizontal facing direction
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection
+    ; exit if enemy is in its active animation
     lda EnemyActiveAnimIndex,y
     cmp EnsExtra.0.resetAnimIndex,x
     beq Exit13
+    ; enemy is not in its active animation
+    ; set animation to active animation
     sta EnsExtra.0.resetAnimIndex,x
     jmp SetEnAnimIndex
 
