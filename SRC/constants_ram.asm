@@ -1,148 +1,159 @@
 ;-------------------------------------------[ Structs ]----------------------------------------------
 
 .struct OAMSprite
-    y                db
-    tileID           db
-    attrib           db
-    x                db
+    y                      db
+    tileID                 db
+    attrib                 db
+    x                      db
 .endst
 
 .struct RinkaSpawner
-    status           db   ;#$00=use even indices to RinkaSpawnPosTbl,-->
-                            ;#$01=use odd indices to RinkaSpawnPosTbl,-->
-                            ;#$FF=inactive
-    hi               db
-    posIndex         db
+    status                 db   ;#$00=use even indices to RinkaSpawnPosTbl,-->
+                                  ;#$01=use odd indices to RinkaSpawnPosTbl,-->
+                                  ;#$FF=inactive
+    hi                     db
+    posIndex               db
 .endst
 
 .struct SkreeProjectile
-    dieDelay         db   ;Delay until projectile dies.
-    y                db
-    x                db
-    hi               db
+    dieDelay               db   ;Delay until projectile dies.
+    y                      db
+    x                      db
+    hi                     db
 .endst
 
 .struct Mellow
-    status           db
-    y                db
-    x                db
-    hi               db
-    attackState      db
-    attackTimer      db
-    isHit            db
-    unused           db
+    status                 db
+    y                      db
+    x                      db
+    hi                     db
+    attackState            db
+    attackTimer            db
+    isHit                  db
+    unused                 db
 .endst
 
 .struct TileBlast
-    routine          db
-    spare01          dw
-    animFrame        db
-    animDelay        db
-    spare05          db
-    animIndex        db
-    delay            db
-    roomRAMPtr       dw
-    type             db
-    spare0B          ds 5
+    routine                db
+    spare01                dw
+    animFrame              db
+    animDelay              db
+    spare05                db
+    animIndex              db
+    delay                  db
+    roomRAMPtr             dw
+    type                   db
+    spare0B                ds 5
 .endst
 
 .struct Struct0700 ; unused
-    data00           db
-    data01           db
-    data02           db
-    data03           db
-    data04           db
-    data05           db
+    data00                 db
+    data01                 db
+    data02                 db
+    data03                 db
+    data04                 db
+    data05                 db
 .endst
 
 .struct PipeBugHole
-    status           db   ;bit0-3: spawned enemy type (often $7, pipe bug)
-                                   ;bit7: strong variant
-                                   ;#$FF=no hole
-    enemySlot        db   ; enemy slot to spawn pipe bug in
-    y                db   ; y position of hole
-    x                db   ; x position of hole
-    hi               db   ; nametable position of hole
-    unused           ds 3
+    status                 db   ;bit0-3: spawned enemy type (often $7, pipe bug)
+                                  ;bit7: strong variant
+                                  ;#$FF=no hole
+    enemySlot              db   ; enemy slot to spawn pipe bug in
+    y                      db   ; y position of hole
+    x                      db   ; x position of hole
+    hi                     db   ; nametable position of hole
+    unused                 ds 3
 .endst
 
 .struct PowerUp
-    type             db   ;Holds the byte describing what power-up is on name table.
-    y                db   ;Y coordinate of the power-up.
-    x                db   ;X coordiante of the power-up
-    hi               db   ;#$00 if on name table 0, #$01 if on name table 3.
-    unused           ds 3
-    data07           db   ;stored to A before ObjDrawFrame immediately overwrites it
+    type                   db   ;Holds the byte describing what power-up is on name table.
+    y                      db   ;Y coordinate of the power-up.
+    x                      db   ;X coordiante of the power-up
+    hi                     db   ;#$00 if on name table 0, #$01 if on name table 3.
+    unused                 ds 3
+    data07                 db   ;stored to A before ObjDrawFrame immediately overwrites it
 .endst
 
 .struct Zebetite
-    status           db
-    roomRAMPtr       dw   ;Pointer to top-left tile of Zebetite in the nametable.
-    qtyHits          db   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
-    healingDelay     db   ;Heals 1 hit when counts down from #$40 to #$00.
-    isHit            db   ;#$01 if zebetite got hit by a missile this frame, else #$00
-    unused           dw
+    status                 db
+    roomRAMPtr             dw   ;Pointer to top-left tile of Zebetite in the nametable.
+    qtyHits                db   ;Number of missile hits dealt to Zebetite. Dies at 8 hits.
+    healingDelay           db   ;Heals 1 hit when counts down from #$40 to #$00.
+    isHit                  db   ;#$01 if zebetite got hit by a missile this frame, else #$00
+    unused                 dw
 .endst
 
 .struct EnExtra
-    status           db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
-                            ;#$04=Enemy frozen.
-    radY             db   ;Distance in pixels from middle of enemy to top or botom.
-    radX             db   ;Distance in pixels from middle of enemy to left or right.
-    animFrame        db   ;Index into enemy animation frame data.
-    animDelay        db   ;Number of frames to delay between animation frames.
-    resetAnimIndex   db   ;Index to beginning of animation sequence.
-    animIndex        db   ;Index to current animation.
-    hi               db   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
-    subPixelY        db   ; Unknown
-    subPixelX        db   ; Unknown
-    accelY           db   ; Unknown
-    accelX           db   ; Unknown
-    data1C           db   ; Unused
-    jumpDsplcmnt     db   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
-    type             db   ;Enemy type used as index into enemy data tables.
-    data1F           db   ;For EnemyFlipAfterDisplacement:
-                            ;#$00:         displacement = abs(jumpDsplcmnt)
-                            ;#$40:         displacement = jumpDsplcmnt
-                            ;#$80 or #$C0: displacement = -jumpDsplcmnt
-                          ;For EnemyIfMoveFailed:
-                            ;#$00:         bounce
-                            ;#$40:         land on floor/right wall
-                            ;#$80 or #$C0: land on ceiling/left wall
+    status                 db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
+                                  ;#$04=Enemy frozen.
+    radY                   db   ;Distance in pixels from middle of enemy to top or botom.
+    radX                   db   ;Distance in pixels from middle of enemy to left or right.
+    animFrame              db   ;Index into enemy animation frame data.
+    animDelay              db   ;Number of frames to delay between animation frames.
+    resetAnimIndex         db   ;Index to beginning of animation sequence.
+    animIndex              db   ;Index to current animation.
+    hi                     db   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
+    subPixelY              db   ; Unknown
+    subPixelX              db   ; Unknown
+    accelY                 db   ; Unknown
+    accelX                 db   ; Unknown
+    data1C                 db   ; Unused
+    jumpDsplcmnt           db   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
+    type                   db   ;Enemy type used as index into enemy data tables.
+    data1F                 db   ;For EnemyFlipAfterDisplacement:
+                                  ;#$00:         displacement = abs(jumpDsplcmnt)
+                                  ;#$40:         displacement = jumpDsplcmnt
+                                  ;#$80 or #$C0: displacement = -jumpDsplcmnt
+                                ;For EnemyIfMoveFailed:
+                                  ;#$00:         bounce
+                                  ;#$40:         land on floor/right wall
+                                  ;#$80 or #$C0: land on ceiling/left wall
 .endst
 
 .struct Cannon
-    status           db
-    y                db
-    x                db
-    hi               db
-    instrListID      db
-    angle            db
-    instrDelay       db
-    instrID          db
+    status                 db
+    y                      db
+    x                      db
+    hi                     db
+    instrListID            db
+    angle                  db
+    instrDelay             db
+    instrID                db
 .endst
 
 .struct IntroSpr
-    y                db   ;Loaded into byte 0 of sprite RAM(Y position).
-    tileID           db   ;Loaded into byte 1 of sprite RAM(Pattern table index).
-    attrib           db   ;Loaded into byte 2 of sprite RAM(Control byte).
-    x                db   ;Loaded into byte 3 of sprite RAM(X position).
-    index            db   ;Index to next sparkle sprite data byte.
-    nextDelay        db   ;Decrements each frame. When 0, load new sparkle sprite data.
-    sparkleYChange   .db  ;Sparkle sprite y coordinate change.
-    crossMissileXChange db ;Cross missile sprite x total movement distance.
-    sparkleXChange   .db  ;Sparkle sprite x coordinate change.
-    crossMissileYChange db ;Cross missile sprite y total movement distance.
-    changeDelay      db   ;decrements each frame from #$20. At 0, change sparkle sprite.
-    byteType         db   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
-                                    ;bits for x coord change. if #$00, next data byte contains-->
-                                    ;4 bits for x coord change and 4 bits for y coord change.
-    complete         db   ;#$01=sprite has completed its task, #$00 if not complete.
-    spareB           db   ;Not used.
-    speedX           db   ;x speed of sprite movement (in 16ths of pixel per frame).
-    speedY           db   ;y speed of sprite movement (in 16ths of pixel per frame).
-    dirX             db   ;MSB set=decrease sprite x pos, else increase sprite x pos.
-    dirY             db   ;MSB set=decrease sprite y pos, else increase sprite y pos.
+    y                      db   ;Loaded into byte 0 of sprite RAM(Y position).
+    tileID                 db   ;Loaded into byte 1 of sprite RAM(Pattern table index).
+    attrib                 db   ;Loaded into byte 2 of sprite RAM(Control byte).
+    x                      db   ;Loaded into byte 3 of sprite RAM(X position).
+    index                  db   ;Index to next sparkle sprite data byte.
+    nextDelay              db   ;Decrements each frame. When 0, load new sparkle sprite data.
+    sparkleYChange         .db  ;Sparkle sprite y coordinate change.
+    crossMissileXChange    db   ;Cross missile sprite x total movement distance.
+    sparkleXChange         .db  ;Sparkle sprite x coordinate change.
+    crossMissileYChange    db   ;Cross missile sprite y total movement distance.
+    changeDelay            db   ;decrements each frame from #$20. At 0, change sparkle sprite.
+    byteType               db   ;#$00 or #$01. When #$01, next sparkle data byte uses all 8-->
+                                  ;bits for x coord change. if #$00, next data byte contains-->
+                                  ;4 bits for x coord change and 4 bits for y coord change.
+    complete               db   ;#$01=sprite has completed its task, #$00 if not complete.
+    spareB                 db   ;Not used.
+    speedX                 db   ;x speed of sprite movement (in 16ths of pixel per frame).
+    speedY                 db   ;y speed of sprite movement (in 16ths of pixel per frame).
+    dirX                   db   ;MSB set=decrease sprite x pos, else increase sprite x pos.
+    dirY                   db   ;MSB set=decrease sprite y pos, else increase sprite y pos.
+.endst
+
+.struct AreaPointersStruct
+    RoomPtrTable           dw   ;$3B     ;Start of room pointer table.
+    StructPtrTable         dw   ;$3D     ;Start of structure pointer table.
+    MetatileDefs           dw   ;$3F     ;Pointer into metatile definitions.
+    EnFramePtrTable1       dw   ;$41     ;Pointer into address table to find enemy animations.
+    EnFramePtrTable2       dw   ;$43     ;Same as above except in a second table because there are-->
+                                           ;too many entries to fit into one table.
+    EnPlacePtrTable        dw   ;$45     ;Pointer into enemy frame placement table.
+    EnAnimTable            dw   ;$47     ;Start of EnemyAnimIndexTbl.
 .endst
 
 ;-------------------------------------------[ Defines ]----------------------------------------------
@@ -339,26 +350,7 @@ RoomRAMPtr             dw   ;$39     ;Low byte of pointer to room RAM (#$00).
                                        ;RAM conatins a completed room in it, the entire contents-->
                                        ;of the room RAM is loaded into the PPU.
 
-RoomPtrTable           dw   ;$3B     ;Low byte of start of room pointer table.
-; RoomPtrTable+1               $3C     ;High byte of start of room pointer table.
-
-StructPtrTable         dw   ;$3D     ;Low byte of start of structure pointer table.
-; StructPtrTable+1             $3E     ;High byte of structure pointer table.
-
-MetatilePtr            dw   ;$3F     ;Low byte of pointer into metatile definitions.
-; MetatilePtr+1                $40     ;High byte of pointer into metatile definitions.
-
-EnmyFrameTbl1Ptr       dw   ;$41     ;Low byte of pointer into address table to find enemy animations.
-; EnmyFrameTbl1Ptr+1           $42     ;High byte of pointer into address table to find enemy animations.
-
-EnmyFrameTbl2Ptr       dw   ;$43     ;Same as above except in a second table because there are-->
-; EnmyFrameTbl2Ptr+1           $44     ;too many entries to fit into one table.
-
-EnmyPlaceTblPtr        dw   ;$45     ;Low byte of pointer into enemy frame placement table.
-; EnmyPlaceTblPtr+1            $46     ;High byte of pointer into enemy frame placement table.
-
-EnemyAnimPtr           dw   ;$47     ;Low byte of start of EnemyAnimIndexTbl.
-; EnemyAnimPtr+1               $48     ;High byte of start of EnemyAnimIndexTbl.
+AreaPointers_RAM       instanceof AreaPointersStruct ;$3B-$48
 
 ScrollDir              db   ;$49     ;0=Up, 1=Down, 2=Left, 3=Right.
 

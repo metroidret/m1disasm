@@ -18,9 +18,9 @@ RidleyBranch_Explode:
     beq RidleyBranch_Exit
 
 RidleyBranch_Normal:
-    lda #EnAnim_RidleyHopping_R - EnAnimTbl.b
+    lda #EnAnim_RidleyHopping_R - EnAnimTable.b
     sta EnemyFlipAfterDisplacementAnimIndex
-    lda #EnAnim_RidleyHopping_L - EnAnimTbl.b
+    lda #EnAnim_RidleyHopping_L - EnAnimTable.b
     sta EnemyFlipAfterDisplacementAnimIndex+1.b
     jsr CommonJump_EnemyFlipAfterDisplacement
     jsr RidleyTryToLaunchProjectile

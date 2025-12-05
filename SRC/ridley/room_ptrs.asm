@@ -18,7 +18,7 @@
 
 ;Ridley Room Pointers
 
-RmPtrTbl:
+RoomPtrTable:
     .word Room00
     .word Room01
     .word Room02

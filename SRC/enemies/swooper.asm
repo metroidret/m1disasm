@@ -32,9 +32,9 @@ UpdateSwooperAnim:
     
     ; default to swooping animation
     .if BANK == 2
-        lda #EnAnim_GerutaSwooping - EnAnimTbl.b
+        lda #EnAnim_GerutaSwooping - EnAnimTable.b
     .elif BANK == 5
-        lda #EnAnim_HoltzSwooping - EnAnimTbl.b
+        lda #EnAnim_HoltzSwooping - EnAnimTable.b
     .endif
     ; branch if y speed is positive (swooper is swooping downwards)
     ldy EnSpeedY,x
@@ -42,9 +42,9 @@ UpdateSwooperAnim:
         ; swooper is not swooping downwards
         ; set animation to idle
         .if BANK == 2
-            lda #EnAnim_GerutaIdle - EnAnimTbl.b
+            lda #EnAnim_GerutaIdle - EnAnimTable.b
         .elif BANK == 5
-            lda #EnAnim_HoltzIdle - EnAnimTbl.b
+            lda #EnAnim_HoltzIdle - EnAnimTable.b
         .endif
     L9904:
     sta EnsExtra.0.resetAnimIndex,x

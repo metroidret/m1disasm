@@ -93,44 +93,44 @@ CrawlerReorientSprite:
 
 .if BANK == 1
     CrawlerAnimIndexTable:
-        .byte EnAnim_ZoomerOnFloor - EnAnimTbl
-        .byte EnAnim_ZoomerOnFloor - EnAnimTbl
-        .byte EnAnim_ZoomerOnLeftWall - EnAnimTbl
-        .byte EnAnim_ZoomerOnRightWall - EnAnimTbl
-        .byte EnAnim_ZoomerOnCeiling - EnAnimTbl
-        .byte EnAnim_ZoomerOnCeiling - EnAnimTbl
-        .byte EnAnim_ZoomerOnRightWall - EnAnimTbl
-        .byte EnAnim_ZoomerOnLeftWall - EnAnimTbl
+        .byte EnAnim_ZoomerOnFloor - EnAnimTable
+        .byte EnAnim_ZoomerOnFloor - EnAnimTable
+        .byte EnAnim_ZoomerOnLeftWall - EnAnimTable
+        .byte EnAnim_ZoomerOnRightWall - EnAnimTable
+        .byte EnAnim_ZoomerOnCeiling - EnAnimTable
+        .byte EnAnim_ZoomerOnCeiling - EnAnimTable
+        .byte EnAnim_ZoomerOnRightWall - EnAnimTable
+        .byte EnAnim_ZoomerOnLeftWall - EnAnimTable
 .elif BANK == 2
     CrawlerAnimIndexTable:
-        .byte EnAnim_NovaOnFloor - EnAnimTbl
-        .byte EnAnim_NovaOnFloor - EnAnimTbl
-        .byte EnAnim_NovaOnLeftWall - EnAnimTbl
-        .byte EnAnim_NovaOnRightWall - EnAnimTbl
-        .byte EnAnim_NovaOnCeiling - EnAnimTbl
-        .byte EnAnim_NovaOnCeiling - EnAnimTbl
-        .byte EnAnim_NovaOnRightWall - EnAnimTbl
-        .byte EnAnim_NovaOnLeftWall - EnAnimTbl
+        .byte EnAnim_NovaOnFloor - EnAnimTable
+        .byte EnAnim_NovaOnFloor - EnAnimTable
+        .byte EnAnim_NovaOnLeftWall - EnAnimTable
+        .byte EnAnim_NovaOnRightWall - EnAnimTable
+        .byte EnAnim_NovaOnCeiling - EnAnimTable
+        .byte EnAnim_NovaOnCeiling - EnAnimTable
+        .byte EnAnim_NovaOnRightWall - EnAnimTable
+        .byte EnAnim_NovaOnLeftWall - EnAnimTable
 .elif BANK == 4
     CrawlerAnimIndexTable:
-        .byte EnAnim_ZeelaOnFloor - EnAnimTbl
-        .byte EnAnim_ZeelaOnFloor - EnAnimTbl
-        .byte EnAnim_ZeelaOnLeftWall - EnAnimTbl
-        .byte EnAnim_ZeelaOnRightWall - EnAnimTbl
-        .byte EnAnim_ZeelaOnCeiling - EnAnimTbl
-        .byte EnAnim_ZeelaOnCeiling - EnAnimTbl
-        .byte EnAnim_ZeelaOnRightWall - EnAnimTbl
-        .byte EnAnim_ZeelaOnLeftWall - EnAnimTbl
+        .byte EnAnim_ZeelaOnFloor - EnAnimTable
+        .byte EnAnim_ZeelaOnFloor - EnAnimTable
+        .byte EnAnim_ZeelaOnLeftWall - EnAnimTable
+        .byte EnAnim_ZeelaOnRightWall - EnAnimTable
+        .byte EnAnim_ZeelaOnCeiling - EnAnimTable
+        .byte EnAnim_ZeelaOnCeiling - EnAnimTable
+        .byte EnAnim_ZeelaOnRightWall - EnAnimTable
+        .byte EnAnim_ZeelaOnLeftWall - EnAnimTable
 .elif BANK == 5
     CrawlerAnimIndexTable:
-        .byte EnAnim_ViolaOnFloor - EnAnimTbl
-        .byte EnAnim_ViolaOnFloor - EnAnimTbl
-        .byte EnAnim_ViolaOnLeftWall - EnAnimTbl
-        .byte EnAnim_ViolaOnRightWall - EnAnimTbl
-        .byte EnAnim_ViolaOnCeiling - EnAnimTbl
-        .byte EnAnim_ViolaOnCeiling - EnAnimTbl
-        .byte EnAnim_ViolaOnRightWall - EnAnimTbl
-        .byte EnAnim_ViolaOnLeftWall - EnAnimTbl
+        .byte EnAnim_ViolaOnFloor - EnAnimTable
+        .byte EnAnim_ViolaOnFloor - EnAnimTable
+        .byte EnAnim_ViolaOnLeftWall - EnAnimTable
+        .byte EnAnim_ViolaOnRightWall - EnAnimTable
+        .byte EnAnim_ViolaOnCeiling - EnAnimTable
+        .byte EnAnim_ViolaOnCeiling - EnAnimTable
+        .byte EnAnim_ViolaOnRightWall - EnAnimTable
+        .byte EnAnim_ViolaOnLeftWall - EnAnimTable
 .endif
 
 CrawlerInsideCornerCheck:

@@ -81,15 +81,18 @@ PalPntrTbl:
     PtrTableEntry PalPntrTbl, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
     PtrTableEntry PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
 
-AreaPointers:
+SpecItmsTblPtr:
     .word SpecItmsTbl               ;($A3D6)Beginning of special items table.
-    .word RmPtrTbl                  ;($A314)Beginning of room pointer table.
-    .word StrctPtrTbl               ;($A372)Beginning of structure pointer table.
-    .word MetatileDefs              ;($AEF0)Beginning of metatile definitions.
-    .word EnFramePtrTable1          ;($9DE0)Pointer table into enemy animation data. Two-->
-    .word EnFramePtrTable2          ;($9EE0)tables needed to accommodate all entries.
-    .word EnPlacePtrTable           ;($9F0E)Pointers to enemy frame placement data.
-    .word EnAnimTbl                 ;($9D6A)index to values in addr tables for enemy animations.
+
+.DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
+    RoomPtrTable:       .word RoomPtrTable              ;($A314)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable            ;($A372)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs              ;($AEF0)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1          ;($9DE0)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2          ;($9EE0)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable           ;($9F0E)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable               ;($9D6A)Index to values in addr tables for enemy animations.
+.ENDST
 
 ; Tourian-specific jump table (dummied out in other banks)
 ;  Each line is RTS, NOP, NOP in this bank
@@ -136,9 +139,9 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTbl
+    .byte EnAnim_EnProjectileKilled - EnAnimTable
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTable
 
     .byte $00, $00
 AreaEnProjectileFallingAnimIndex:
@@ -146,7 +149,7 @@ AreaEnProjectileFallingAnimIndex:
 AreaEnProjectileSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_Mellow - EnAnimTbl
+    .byte EnAnim_Mellow - EnAnimTable
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -171,19 +174,19 @@ ChooseEnemyAIRoutine:
 
 ; Animation related table ?
 EnemyDeathAnimIndex:
-    .byte EnAnim_SidehopperFloorExplode - EnAnimTbl, EnAnim_SidehopperFloorExplode - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingExplode - EnAnimTbl, EnAnim_SidehopperCeilingExplode - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_WaverExplode_R - EnAnimTbl, EnAnim_WaverExplode_L - EnAnimTbl ; 02 - Waver
-    .byte EnAnim_RipperExplode_R - EnAnimTbl, EnAnim_RipperExplode_L - EnAnimTbl ; 03 - Ripper
-    .byte EnAnim_SkreeExplode - EnAnimTbl, EnAnim_SkreeExplode - EnAnimTbl ; 04 - Skree
-    .byte EnAnim_ZoomerExplode - EnAnimTbl, EnAnim_ZoomerExplode - EnAnimTbl ; 05 - Zoomer (crawler)
-    .byte EnAnim_RioExplode - EnAnimTbl, EnAnim_RioExplode - EnAnimTbl ; 06 - Rio (swoopers)
-    .byte EnAnim_ZebExplode_R - EnAnimTbl, EnAnim_ZebExplode_L - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_KraidExplode_R - EnAnimTbl, EnAnim_KraidExplode_L - EnAnimTbl ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_SidehopperFloorExplode - EnAnimTable, EnAnim_SidehopperFloorExplode - EnAnimTable ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingExplode - EnAnimTable, EnAnim_SidehopperCeilingExplode - EnAnimTable ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_WaverExplode_R - EnAnimTable, EnAnim_WaverExplode_L - EnAnimTable ; 02 - Waver
+    .byte EnAnim_RipperExplode_R - EnAnimTable, EnAnim_RipperExplode_L - EnAnimTable ; 03 - Ripper
+    .byte EnAnim_SkreeExplode - EnAnimTable, EnAnim_SkreeExplode - EnAnimTable ; 04 - Skree
+    .byte EnAnim_ZoomerExplode - EnAnimTable, EnAnim_ZoomerExplode - EnAnimTable ; 05 - Zoomer (crawler)
+    .byte EnAnim_RioExplode - EnAnimTable, EnAnim_RioExplode - EnAnimTable ; 06 - Rio (swoopers)
+    .byte EnAnim_ZebExplode_R - EnAnimTable, EnAnim_ZebExplode_L - EnAnimTable ; 07 - Zeb
+    .byte EnAnim_KraidExplode_R - EnAnimTable, EnAnim_KraidExplode_L - EnAnimTable ; 08 - Kraid (crashes due to bug)
     .byte $00, $00 ; 09 - Kraid's lint (crashes)
     .byte $00, $00 ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0C - Null
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
@@ -208,38 +211,38 @@ EnemyHealthTbl:
 
 ; ResetAnimIndex table for resting enemy
 EnemyRestingAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_Waver0_R - EnAnimTbl, EnAnim_Waver0_L - EnAnimTbl ; 02 - Waver
-    .byte EnAnim_Ripper_R - EnAnimTbl, EnAnim_Ripper_L - EnAnimTbl ; 03 - Ripper
-    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - Skree
-    .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)
-    .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl ; 06 - Rio (swoopers)
-    .byte EnAnim_ZebResting_R - EnAnimTbl, EnAnim_ZebResting_L - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_Kraid_R - EnAnimTbl, EnAnim_Kraid_L - EnAnimTbl ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_KraidLint_R - EnAnimTbl, EnAnim_KraidLint_L - EnAnimTbl ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_KraidNailIdle_R - EnAnimTbl, EnAnim_KraidNailIdle_L - EnAnimTbl ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0C - Null
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTable, EnAnim_SidehopperFloorIdle - EnAnimTable ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTable, EnAnim_SidehopperCeilingIdle - EnAnimTable ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0_R - EnAnimTable, EnAnim_Waver0_L - EnAnimTable ; 02 - Waver
+    .byte EnAnim_Ripper_R - EnAnimTable, EnAnim_Ripper_L - EnAnimTable ; 03 - Ripper
+    .byte EnAnim_Skree - EnAnimTable, EnAnim_Skree - EnAnimTable ; 04 - Skree
+    .byte EnAnim_ZoomerOnFloor - EnAnimTable, EnAnim_ZoomerOnFloor - EnAnimTable ; 05 - Zoomer (crawler)
+    .byte EnAnim_Rio - EnAnimTable, EnAnim_Rio - EnAnimTable ; 06 - Rio (swoopers)
+    .byte EnAnim_ZebResting_R - EnAnimTable, EnAnim_ZebResting_L - EnAnimTable ; 07 - Zeb
+    .byte EnAnim_Kraid_R - EnAnimTable, EnAnim_Kraid_L - EnAnimTable ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLint_R - EnAnimTable, EnAnim_KraidLint_L - EnAnimTable ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailIdle_R - EnAnimTable, EnAnim_KraidNailIdle_L - EnAnimTable ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle - EnAnimTbl, EnAnim_SidehopperFloorIdle - EnAnimTbl ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingIdle - EnAnimTbl, EnAnim_SidehopperCeilingIdle - EnAnimTbl ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_Waver0_R - EnAnimTbl, EnAnim_Waver0_L - EnAnimTbl ; 02 - Waver
-    .byte EnAnim_Ripper_R - EnAnimTbl, EnAnim_Ripper_L - EnAnimTbl ; 03 - Ripper
-    .byte EnAnim_Skree - EnAnimTbl, EnAnim_Skree - EnAnimTbl ; 04 - Skree
-    .byte EnAnim_ZoomerOnFloor - EnAnimTbl, EnAnim_ZoomerOnFloor - EnAnimTbl ; 05 - Zoomer (crawler)
-    .byte EnAnim_Rio - EnAnimTbl, EnAnim_Rio - EnAnimTbl ; 06 - Rio (swoopers)
-    .byte EnAnim_Zeb_R - EnAnimTbl, EnAnim_Zeb_L - EnAnimTbl ; 07 - Zeb
-    .byte EnAnim_Kraid_R - EnAnimTbl, EnAnim_Kraid_L - EnAnimTbl ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_KraidLint_R - EnAnimTbl, EnAnim_KraidLint_L - EnAnimTbl ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_KraidNailMoving_R - EnAnimTbl, EnAnim_KraidNailMoving_L - EnAnimTbl ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl ; 0C - Null
+    .byte EnAnim_SidehopperFloorIdle - EnAnimTable, EnAnim_SidehopperFloorIdle - EnAnimTable ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle - EnAnimTable, EnAnim_SidehopperCeilingIdle - EnAnimTable ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0_R - EnAnimTable, EnAnim_Waver0_L - EnAnimTable ; 02 - Waver
+    .byte EnAnim_Ripper_R - EnAnimTable, EnAnim_Ripper_L - EnAnimTable ; 03 - Ripper
+    .byte EnAnim_Skree - EnAnimTable, EnAnim_Skree - EnAnimTable ; 04 - Skree
+    .byte EnAnim_ZoomerOnFloor - EnAnimTable, EnAnim_ZoomerOnFloor - EnAnimTable ; 05 - Zoomer (crawler)
+    .byte EnAnim_Rio - EnAnimTable, EnAnim_Rio - EnAnimTable ; 06 - Rio (swoopers)
+    .byte EnAnim_Zeb_R - EnAnimTable, EnAnim_Zeb_L - EnAnimTable ; 07 - Zeb
+    .byte EnAnim_Kraid_R - EnAnimTable, EnAnim_Kraid_L - EnAnimTable ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLint_R - EnAnimTable, EnAnim_KraidLint_L - EnAnimTable ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailMoving_R - EnAnimTable, EnAnim_KraidNailMoving_L - EnAnimTable ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
@@ -432,8 +435,8 @@ L977B:
 ; Enemy animation related table?
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_KraidNailMoving_L - EnAnimTbl, EnAnim_KraidNailIdle_L - EnAnimTbl
-    .byte EnAnim_Mellow - EnAnimTbl, EnAnim_Mellow - EnAnimTbl
+    .byte EnAnim_KraidNailMoving_L - EnAnimTable, EnAnim_KraidNailIdle_L - EnAnimTable
+    .byte EnAnim_Mellow - EnAnimTable, EnAnim_Mellow - EnAnimTable
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00

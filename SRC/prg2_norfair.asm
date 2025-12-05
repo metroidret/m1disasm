@@ -79,15 +79,18 @@ PalPntrTbl:
     PtrTableEntry PalPntrTbl, Palette1A                 ;($A20B)Suitless Samus power suit with missiles selected palette.
     PtrTableEntry PalPntrTbl, Palette1B                 ;($A213)Suitless Samus varia suit with missiles selected palette.
 
-AreaPointers:
+SpecItmsTblPtr:
     .word SpecItmsTbl               ;($A2D9)Beginning of special items table.
-    .word RmPtrTbl                  ;($A21B)Beginning of room pointer table.
-    .word StrctPtrTbl               ;($A277)Beginning of structure pointer table.
-    .word MetatileDefs              ;($AEEC)Beginning of metatile definitions.
-    .word EnFramePtrTable1          ;($9C64)Address table into enemy animation data. Two-->
-    .word EnFramePtrTable2          ;($9D64)tables needed to accommodate all entries.
-    .word EnPlacePtrTable           ;($9D78)Pointers to enemy frame placement data.
-    .word EnAnimTbl                 ;($9BDA)Index to values in addr tables for enemy animations.
+
+.DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
+    RoomPtrTable:       .word RoomPtrTable              ;($A21B)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable            ;($A277)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs              ;($AEEC)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1          ;($9C64)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2          ;($9D64)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable           ;($9D78)Pointers to enemy frame placement data.
+    EnAnimTable:       .word EnAnimTable               ;($9BDA)Index to values in addr tables for enemy animations.
+.ENDST
 
 ; Tourian-specific jump table (dummied out in other banks)
 ;  Each line is RTS, NOP, NOP in this bank
@@ -134,17 +137,17 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTbl
+    .byte EnAnim_EnProjectileKilled - EnAnimTable
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTable
 ; EnProjectile rising?
-    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTbl, EnAnim_DragonEnProjectileUp_L - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTable, EnAnim_DragonEnProjectileUp_L - EnAnimTable
 AreaEnProjectileFallingAnimIndex:
-    .byte EnAnim_DragonEnProjectileDown_R - EnAnimTbl, EnAnim_DragonEnProjectileDown_L - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileDown_R - EnAnimTable, EnAnim_DragonEnProjectileDown_L - EnAnimTable
 AreaEnProjectileSplatterAnimIndex:
-    .byte EnAnim_DragonEnProjectileSplatter - EnAnimTbl, EnAnim_PolypRockShatter - EnAnimTbl
+    .byte EnAnim_DragonEnProjectileSplatter - EnAnimTable, EnAnim_PolypRockShatter - EnAnimTable
 AreaMellowAnimIndex:
-    .byte EnAnim_Mella - EnAnimTbl
+    .byte EnAnim_Mella - EnAnimTable
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -168,20 +171,20 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy_ ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaExplode - EnAnimTbl, EnAnim_GerutaExplode - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_RipperIIExplode - EnAnimTbl, EnAnim_RipperIIExplode - EnAnimTbl ; 02 - ripper II
+    .byte EnAnim_GerutaExplode - EnAnimTable, EnAnim_GerutaExplode - EnAnimTable ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaExplode - EnAnimTable, EnAnim_GerutaExplode - EnAnimTable ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIExplode - EnAnimTable, EnAnim_RipperIIExplode - EnAnimTable ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaExplode - EnAnimTbl, EnAnim_NovaExplode - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametExplode_R - EnAnimTbl, EnAnim_GametExplode_L - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_NovaExplode - EnAnimTable, EnAnim_NovaExplode - EnAnimTable ; 06 - crawler
+    .byte EnAnim_GametExplode_R - EnAnimTable, EnAnim_GametExplode_L - EnAnimTable ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyExplode - EnAnimTbl, EnAnim_RidleyExplode - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
-    .byte EnAnim_SqueeptExplode - EnAnimTbl, EnAnim_SqueeptExplode - EnAnimTbl ; 0B - lava jumper
-    .byte EnAnim_MultiviolaExplode - EnAnimTbl, EnAnim_MultiviolaExplode - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonExplode - EnAnimTbl, EnAnim_DragonExplode - EnAnimTbl ; 0D - dragon
+    .byte EnAnim_RidleyExplode - EnAnimTable, EnAnim_RidleyExplode - EnAnimTable ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
+    .byte EnAnim_SqueeptExplode - EnAnimTable, EnAnim_SqueeptExplode - EnAnimTable ; 0B - lava jumper
+    .byte EnAnim_MultiviolaExplode - EnAnimTable, EnAnim_MultiviolaExplode - EnAnimTable ; 0C - bouncy orb
+    .byte EnAnim_DragonExplode - EnAnimTable, EnAnim_DragonExplode - EnAnimTable ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -204,38 +207,38 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaIdle - EnAnimTbl, EnAnim_GerutaIdle - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R - EnAnimTbl, EnAnim_RipperII_L - EnAnimTbl ; 02 - ripper II
+    .byte EnAnim_GerutaIdle - EnAnimTable, EnAnim_GerutaIdle - EnAnimTable ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaIdle - EnAnimTable, EnAnim_GerutaIdle - EnAnimTable ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R - EnAnimTable, EnAnim_RipperII_L - EnAnimTable ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametResting_R - EnAnimTbl, EnAnim_GametResting_L - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_NovaOnFloor - EnAnimTable, EnAnim_NovaOnFloor - EnAnimTable ; 06 - crawler
+    .byte EnAnim_GametResting_R - EnAnimTable, EnAnim_GametResting_L - EnAnimTable ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
-    .byte EnAnim_SqueeptFalling - EnAnimTbl, EnAnim_SqueeptFalling - EnAnimTbl ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
+    .byte EnAnim_SqueeptFalling - EnAnimTable, EnAnim_SqueeptFalling - EnAnimTable ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R - EnAnimTable, EnAnim_DragonIdle_L - EnAnimTable ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaSwooping - EnAnimTbl, EnAnim_GerutaSwooping - EnAnimTbl ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R - EnAnimTbl, EnAnim_RipperII_L - EnAnimTbl ; 02 - ripper II
+    .byte EnAnim_GerutaSwooping - EnAnimTable, EnAnim_GerutaSwooping - EnAnimTable ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaSwooping - EnAnimTable, EnAnim_GerutaSwooping - EnAnimTable ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R - EnAnimTable, EnAnim_RipperII_L - EnAnimTable ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor - EnAnimTbl, EnAnim_NovaOnFloor - EnAnimTbl ; 06 - crawler
-    .byte EnAnim_GametActive_R - EnAnimTbl, EnAnim_GametActive_L - EnAnimTbl ; 07 - gamet
+    .byte EnAnim_NovaOnFloor - EnAnimTable, EnAnim_NovaOnFloor - EnAnimTable ; 06 - crawler
+    .byte EnAnim_GametActive_R - EnAnimTable, EnAnim_GametActive_L - EnAnimTable ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R - EnAnimTbl, EnAnim_RidleyIdle_L - EnAnimTbl ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTbl, EnAnim_RidleyFireball_L - EnAnimTbl ; 0A - same as 3
-    .byte EnAnim_SqueeptJumping - EnAnimTbl, EnAnim_SqueeptJumping - EnAnimTbl ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTbl, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTbl ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTbl, EnAnim_DragonIdle_L - EnAnimTbl ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
+    .byte EnAnim_SqueeptJumping - EnAnimTable, EnAnim_SqueeptJumping - EnAnimTable ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R - EnAnimTable, EnAnim_DragonIdle_L - EnAnimTable ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -399,8 +402,8 @@ L977B:
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_PolypRock - EnAnimTbl, EnAnim_PolypRock - EnAnimTbl
-    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTbl, EnAnim_DragonEnProjectileUp_L - EnAnimTbl
+    .byte EnAnim_PolypRock - EnAnimTable, EnAnim_PolypRock - EnAnimTable
+    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTable, EnAnim_DragonEnProjectileUp_L - EnAnimTable
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00

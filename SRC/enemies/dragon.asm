@@ -37,9 +37,9 @@ DragonAIRoutine:
         lda #$00
         sta SpawnEnProjectile_EnData0A
         ; shooting animation (supposed to be parameter to SpawnEnProjectile, but unused there)
-        lda #EnAnim_DragonIdle_R - EnAnimTbl.b
+        lda #EnAnim_DragonIdle_R - EnAnimTable.b
         sta SpawnEnProjectile_AnimIndex
-        lda #EnAnim_DragonIdle_L - EnAnimTbl.b
+        lda #EnAnim_DragonIdle_L - EnAnimTable.b
         sta SpawnEnProjectile_AnimIndex+1.b
         ; set projectile animation
         lda #$03
@@ -83,5 +83,5 @@ L9B59:
     jmp CommonEnemyJump_00_01_02
 
 DragonEnAnimTable:
-    .byte EnAnim_DragonPrepareToSpit_R - EnAnimTbl, EnAnim_DragonPrepareToSpit_L - EnAnimTbl
+    .byte EnAnim_DragonPrepareToSpit_R - EnAnimTable, EnAnim_DragonPrepareToSpit_L - EnAnimTable
 

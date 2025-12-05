@@ -1844,8 +1844,8 @@ MoreInit:
 CopyAreaPointers:
     ldx #$0D
     @loop:
-        lda AreaPointers+2,x
-        sta RoomPtrTable,x
+        lda AreaPointers_ROM,x
+        sta AreaPointers_RAM,x
         dex
         bpl @loop
     rts
@@ -5938,25 +5938,25 @@ DrawEnemy_NotBlank:
     lda EnsExtra.0.animFrame,x
     asl
     tay
-    lda (EnmyFrameTbl1Ptr),y
+    lda (AreaPointers_RAM.EnFramePtrTable1),y
     bcc Lx144
-        lda (EnmyFrameTbl2Ptr),y
+        lda (AreaPointers_RAM.EnFramePtrTable2),y
     Lx144:
     sta Temp00_FramePtr
     iny
-    lda (EnmyFrameTbl1Ptr),y
+    lda (AreaPointers_RAM.EnFramePtrTable1),y
     bcc Lx145
-        lda (EnmyFrameTbl2Ptr),y
+        lda (AreaPointers_RAM.EnFramePtrTable2),y
     Lx145:
     sta Temp00_FramePtr+1.b
 
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     ; load pointer to enemy place data into $02-$03
     tay
-    lda (EnmyPlaceTblPtr),y
+    lda (AreaPointers_RAM.EnPlacePtrTable),y
     sta Temp02_PlacePtr
     iny
-    lda (EnmyPlaceTblPtr),y
+    lda (AreaPointers_RAM.EnPlacePtrTable),y
     sta Temp02_PlacePtr+1.b
     ; branch if place is not EnPlace1
     ldy #$00
@@ -6452,7 +6452,7 @@ UpdateEnemyAnim:
     sta EnsExtra.0.animDelay,x               ;Save new animation delay value.
     ldy EnsExtra.0.animIndex,x               ;Load enemy animation index.
 LE0AD:
-    lda (EnemyAnimPtr),y            ;Get animation data.
+    lda (AreaPointers_RAM.EnAnimTable),y            ;Get animation data.
     cmp #$FF                        ;End of animation?
     beq LE0BC                          ;If so, branch to reset animation.
     sta EnsExtra.0.animFrame,x               ;Store current animation frame data.
@@ -8377,10 +8377,10 @@ SetupRoom:
     lda RoomNumber                  ;Room number to load.
     asl                             ;*2(for loading address of room pointer).
     tay                             ;
-    lda (RoomPtrTable),y            ;Low byte of 16-bit room pointer.-->
+    lda (AreaPointers_RAM.RoomPtrTable),y            ;Low byte of 16-bit room pointer.-->
     sta RoomPtr                     ;Base copied from $959A to $3B.
     iny                             ;
-    lda (RoomPtrTable),y            ;High byte of 16-bit room pointer.-->
+    lda (AreaPointers_RAM.RoomPtrTable),y            ;High byte of 16-bit room pointer.-->
     sta RoomPtr+1.b                   ;Base copied from $959B to $3C.
     ldy #$00                        ;
     lda (RoomPtr),y                 ;First byte of room data.
@@ -8438,10 +8438,10 @@ LEA8D:
     txa                             ;Restore structure pointer to A.
     asl                             ;*2. Structure pointers are two bytes in size.
     tay                             ;
-    lda (StructPtrTable),y          ;Low byte of 16-bit structure ptr.
+    lda (AreaPointers_RAM.StructPtrTable),y          ;Low byte of 16-bit structure ptr.
     sta StructPtr                   ;
     iny                             ;
-    lda (StructPtrTable),y          ;High byte of 16-bit structure ptr.
+    lda (AreaPointers_RAM.StructPtrTable),y          ;High byte of 16-bit structure ptr.
     sta StructPtr+1.b                 ;
     jsr DrawStruct                  ;($EF8C)Draw one structure.
     lda #$03                        ;Move to next set of structure data.
@@ -9039,9 +9039,9 @@ Exit11:
 ;the appropriate routine to load those items.
 
 ScanForItems:
-    lda AreaPointers               ;Low byte of ptr to 1st item data.
+    lda SpecItmsTblPtr               ;Low byte of ptr to 1st item data.
     sta $00                         ;
-    lda AreaPointers+1             ;High byte of ptr to 1st item data.
+    lda SpecItmsTblPtr+1             ;High byte of ptr to 1st item data.
 
 ScanOneItem:
     sta $01                         ;
@@ -9416,7 +9416,7 @@ DrawMetatile:
         ;Metatile index loaded into Y.
         ldy Temp11_MetatileIndex
         ;Get tile number.
-        lda (MetatilePtr),y
+        lda (AreaPointers_RAM.MetatileDefs),y
         inc Temp11_MetatileIndex
         ;Write tile number to room RAM.
         ldy TilePosTable,x

@@ -79,15 +79,18 @@ PalPntrTbl:
     PtrTableEntry PalPntrTbl, Palette1A                 ;($A7C1)Suitless Samus power suit with missiles selected palette.
     PtrTableEntry PalPntrTbl, Palette1B                 ;($A7C9)Suitless Samus varia suit with missiles selected palette.
 
-AreaPointers:
+SpecItmsTblPtr:
     .word SpecItmsTbl               ;($A83B)Beginning of special items table.
-    .word RmPtrTbl                  ;($A7D1)Beginning of room pointer table.
-    .word StrctPtrTbl               ;($A7FB)Beginning of structure pointer table.
-    .word MetatileDefs              ;($AE49)Beginning of metatile definitions.
-    .word EnFramePtrTable1          ;($A42C)Address table into enemy animation data. Two-->
-    .word EnFramePtrTable2          ;($A52C)tables needed to accommodate all entries.
-    .word EnPlacePtrTable           ;($A540)Pointers to enemy frame placement data.
-    .word EnAnimTbl                 ;($A406)Index to values in addr tables for enemy animations.
+
+.DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
+    RoomPtrTable:       .word RoomPtrTable              ;($A7D1)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable            ;($A7FB)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs              ;($AE49)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1          ;($A42C)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2          ;($A52C)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable           ;($A540)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable               ;($A406)Index to values in addr tables for enemy animations.
+.ENDST
 
 ; Special Tourian Routines
 GotoClearCurrentMetroidLatchAndMetroidOnSamus:
@@ -143,15 +146,15 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTbl
+    .byte EnAnim_EnProjectileKilled - EnAnimTable
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTbl
+    .byte EnAnim_Explosion - EnAnimTable
 
     .byte $00, $00
 AreaEnProjectileFallingAnimIndex:
     .byte $00, $00
 AreaEnProjectileSplatterAnimIndex:
-    .byte $00, EnAnim_CannonBulletExplode - EnAnimTbl
+    .byte $00, EnAnim_CannonBulletExplode - EnAnimTable
 AreaMellowAnimIndex:
     .byte $00
 
@@ -178,11 +181,11 @@ ChooseEnemyAIRoutine:
 
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_MetroidExplode - EnAnimTbl, EnAnim_MetroidExplode - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_MetroidExplode - EnAnimTbl, EnAnim_MetroidExplode - EnAnimTbl ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_RinkaExplode - EnAnimTbl, EnAnim_RinkaExplode - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_MetroidExplode - EnAnimTable, EnAnim_MetroidExplode - EnAnimTable ; 00 - red metroid
+    .byte EnAnim_MetroidExplode - EnAnimTable, EnAnim_MetroidExplode - EnAnimTable ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
+    .byte EnAnim_RinkaExplode - EnAnimTable, EnAnim_RinkaExplode - EnAnimTable ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -214,11 +217,11 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_RinkaSpawning - EnAnimTbl, EnAnim_RinkaSpawning - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 00 - red metroid
+    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
+    .byte EnAnim_RinkaSpawning - EnAnimTable, EnAnim_RinkaSpawning - EnAnimTable ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -232,11 +235,11 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 00 - red metroid
-    .byte EnAnim_Metroid - EnAnimTbl, EnAnim_Metroid - EnAnimTbl ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTbl, EnAnim_16 - EnAnimTbl ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTbl, EnAnim_18 - EnAnimTbl ; 03 - disappears
-    .byte EnAnim_Rinka - EnAnimTbl, EnAnim_Rinka - EnAnimTbl ; 04 - rinka
+    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 00 - red metroid
+    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 01 - green metroid
+    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
+    .byte EnAnim_Rinka - EnAnimTable, EnAnim_Rinka - EnAnimTable ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -408,8 +411,8 @@ L977B:
 
 EnemyEnProjectileRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_26 - EnAnimTbl, EnAnim_26 - EnAnimTbl
-    .byte EnAnim_26 - EnAnimTbl, EnAnim_26 - EnAnimTbl
+    .byte EnAnim_26 - EnAnimTable, EnAnim_26 - EnAnimTable
+    .byte EnAnim_26 - EnAnimTable, EnAnim_26 - EnAnimTable
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -725,9 +728,9 @@ Cannon_ShootEnProjectile:
     rts
 
 CannonEnProjectileAnimTable:
-    .byte EnAnim_CannonBulletDownRight - EnAnimTbl ; cannon instr #$FE : diagonal right
-    .byte EnAnim_CannonBulletDownLeft - EnAnimTbl ; cannon instr #$FD : diagonal left
-    .byte EnAnim_CannonBulletDown - EnAnimTbl ; cannon instr #$FC : straight down
+    .byte EnAnim_CannonBulletDownRight - EnAnimTable ; cannon instr #$FE : diagonal right
+    .byte EnAnim_CannonBulletDownLeft - EnAnimTable ; cannon instr #$FD : diagonal left
+    .byte EnAnim_CannonBulletDown - EnAnimTable ; cannon instr #$FC : straight down
 
 DrawCannon_Normal:
     ldy Cannons.0.angle,x

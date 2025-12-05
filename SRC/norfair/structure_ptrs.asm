@@ -18,7 +18,7 @@
 
 ;Norfair Structure Pointer Table
 
-StrctPtrTbl:
+StructPtrTable:
     .word Structure00
     .word Structure01
     .word Structure02

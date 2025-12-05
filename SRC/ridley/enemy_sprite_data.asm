@@ -1,6 +1,6 @@
 ;-----------------------------------[ Enemy animation data tables ]----------------------------------
 
-EnAnimTbl: ;($9B85)
+EnAnimTable: ;($9B85)
 EnAnim_00:
     .byte _id_EnFrame00, _id_EnFrame01, $FF
 
