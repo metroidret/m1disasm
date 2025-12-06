@@ -9039,50 +9039,71 @@ Exit11:
 ;the appropriate routine to load those items.
 
 ScanForItems:
-    lda SpecItmsTblPtr               ;Low byte of ptr to 1st item data.
-    sta $00                         ;
-    lda SpecItmsTblPtr+1             ;High byte of ptr to 1st item data.
+    ;Low byte of ptr to 1st item data.
+    lda SpecItmsTblPtr
+    sta $00
+    ;High byte of ptr to 1st item data.
+    lda SpecItmsTblPtr+1
+    @loop_scanItemY:
+        sta $01
+        ;Index starts at #$00.
+        ldy #$00
+        ;Load map Ypos of item.
+        lda ($00),y
+        ;The upcoming screen is the one Samus is moving towards.
+        ;Branch if item y == upcoming screen y.
+        cmp MapPosY
+        beq @itemYFound
+        ;Exit if item y > upcoming screen y.
+        bcs Exit11
+        
+        ;item y < upcoming screen y.
+        ;we must continue to loop through items until we find an item with the right height.
+        iny
+        ;Low byte of ptr to next item data.
+        lda ($00),y
+        tax
+        iny
+        ;AND with hi byte of item ptr.
+        and ($00),y
+        ;if result is FFh, then this was the last item(item ptr = FFFF). Branch to exit.
+        cmp #$FF
+        beq Exit11
 
-ScanOneItem:
-    sta $01                         ;
-    ldy #$00                        ;Index starts at #$00.
-    lda ($00),y                     ;Load map Ypos of item.-->
-    cmp MapPosY                ;Does it equal Samus' Ypos on map?-->
-    beq LEDBE                       ;If yes, check Xpos too.
+        ;High byte of ptr to next item data.
+        lda ($00),y
+        ;Write low byte for next item.
+        stx $00
+        ;Process next item.
+        jmp @loop_scanItemY
 
-    bcs Exit11                      ;Exit if item Y pos >  Samus Y Pos.
-    iny                             ;
-    lda ($00),y                     ;Low byte of ptr to next item data.
-    tax                             ;
-    iny                             ;
-    and ($00),y                     ;AND with hi byte of item ptr.
-    cmp #$FF                        ;if result is FFh, then this was the last item-->
-    beq Exit11                      ;(item ptr = FFFF). Branch to exit.
+@itemYFound:
+    ;Get ready to look at byte containing X pos.
+    ;Add 3 to pointer at $0000.
+    lda #$03
+    jsr AddToPtr00
 
-    lda ($00),y                     ;High byte of ptr to next item data.
-    stx $00                         ;Write low byte for next item.
-    jmp ScanOneItem                 ;Process next item.
+    @loop_scanItemX:
+        ldy #$00
+        ;Load map Xpos of item.
+        lda ($00),y
+        ;Branch if item x == upcoming screen x.
+        cmp MapPosX
+        beq @itemXFound
+        ;Exit if item x > upcoming screen x.
+        bcs Exit11
 
-LEDBE:
-    lda #$03                        ;Get ready to look at byte containing X pos.
-    jsr AddToPtr00                  ;($EF09)Add 3 to pointer at $0000.
+        iny
+        ;Check for another item on same Y pos.
+        ;This will double return if there are no more items (from ScanForItems_AnotherItem routine and from this routine)
+        jsr ScanForItems_AnotherItem
+        ;Try next X coord.
+        jmp @loop_scanItemX
 
-ScanItemX:
-    ldy #$00                        ;
-    lda ($00),y                     ;Load map Xpos of object.-->
-    cmp MapPosX                ;Does it equal Samus' Xpos on map?-->
-    beq LEDD4                       ;If so, then load object.
-    bcs Exit11                      ;Exit if item pos X > Samus Pos X.
-
-    iny
-    ;Check for another item on same Y pos.
-    ;This will double return if there are no more items (from AnotherItem routine and from this routine)
-    jsr AnotherItem
-    ;Try next X coord.
-    jmp ScanItemX
-
-LEDD4:
-    lda #$02                        ;Move ahead two bytes to find item data.
+@itemXFound:
+    ;This item is in the upcoming screen. Spawn this item.
+    ;Move ahead two bytes to find item data.
+    lda #$02
 
 ChooseSpawningRoutine:
     jsr AddToPtr00                  ;($EF09)Add A to pointer at $0000.
@@ -9325,9 +9346,9 @@ SpawnDoor:
 SpawnPalette:
     lda ScrollDir
     sta DoorPalChangeDir
-    bne SpawnMotherBrain_exit
+    bne SpawnMotherBrain_exit ; branch always, because it's in horizontal rooms
 
-AnotherItem: ;($EF00)
+ScanForItems_AnotherItem: ;($EF00)
     ;Is there another item with same Y pos? If so, A is amount to add to ptr. to find X pos.
     lda ($00),y
     cmp #$FF
