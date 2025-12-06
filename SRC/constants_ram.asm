@@ -802,6 +802,7 @@ EnData0D               = $040D   ;Resting: force speed towards samus delay
                                    ;Pickup: die delay (* 4)
 EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
 EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
+                                   ;When enemy is hurt, this is used as hitstun delay
 
 ; 4 slots of 8 bytes each ($04C0-$04DF)
 EnExplosionY           = $0400

@@ -8688,10 +8688,10 @@ SpawnDoorRoutine:
     ldy MapPosX
     txa
     jsr Amul16       ; * 16
-    bcc @endif_A
+    bcc @endIf_A
         ; left door, Y = MapPosX - 1 so adjacent doors stay open
         dey
-    @endif_A:
+    @endIf_A:
     tya
     jsr LEE41
     jsr CheckForItem
@@ -8921,42 +8921,42 @@ DeleteOffscreenRoomSprites:
     ; elevator
     sec
     sbc ObjHi+$20
-    bne Lx246
+    bne @endIf_elevator
         sta ElevatorStatus
-    Lx246:
+    @endIf_elevator:
     ; unused RAM $0700-$0723
     ldx #_sizeof_Mem0700 - _sizeof_Mem0700.0.b
-    Lx247:
+    @loop_Mem0700:
         lda Mem0700.0.data04,x
-        bne Lx248
+        bne @dontDeleteMem0700
             lda #$FF
             sta Mem0700.0.data00,x
-        Lx248:
+        @dontDeleteMem0700:
         txa
         sec
         sbc #_sizeof_Mem0700.0
         tax
-        bpl Lx247
+        bpl @loop_Mem0700
     ; statues
     cpy StatueHi
-    bne Lx249
+    bne @dontDeleteStatues
         lda #$00
         sta StatueStatus
-    Lx249:
+    @dontDeleteStatues:
     ; pipe bug holes
     ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
-    Lx250:
+    @loop_pipeBugHoles:
         tya
         cmp PipeBugHoles.0.hi,x
-        bne Lx251
+        bne @dontDeletePipeBugHoles
             lda #$FF
             sta PipeBugHoles.0.status,x
-        Lx251:
+        @dontDeletePipeBugHoles:
         txa
         sec
         sbc #_sizeof_PipeBugHoles.0
         tax
-        bpl Lx250
+        bpl @loop_pipeBugHoles
     ; power-ups
     ldx #$00
     jsr PowerUp_RemoveIfOffScreen
@@ -8967,11 +8967,13 @@ DeleteOffscreenRoomSprites:
 
 UpdateDoorData:
     ; 3 if ScrollDir = down, 2 if left, 1 if right, 0 if up
-    txa                             ;
-    eor #$03                        ;
-    and ScrollBlockOnNameTable3,y   ;Moves door info from one name table to the next-->
+    txa
+    eor #$03
+    ;Moves door info from one name table to the next-->
+    ;when the room is transferred across name tables.
+    and ScrollBlockOnNameTable3,y
 LED57:
-    sta ScrollBlockOnNameTable3,y   ;when the room is transferred across name tables.
+    sta ScrollBlockOnNameTable3,y
     rts
 
 EraseScrollBlockOnNameTableAtScrollDir:
@@ -9689,39 +9691,42 @@ CollisionDetection:
         beq Lx266
         cmp #$03
         beq Lx266
-        jsr GetMellowXSlotPosition
-        jsr IsSamusDead
-        beq Lx262
-        lda SamusInvincibleDelay
-        bne Lx262
-        ldy #$00
-        jsr CollisionDetectionMellow_CheckWithObjectYSlot
-        jsr CollisionDetectionMellow_ReactToCollisionWithSamus
-    ; check for crash with samus's projectiles
-    Lx262:
-        ldy #$D0
-        Lx263:
-            ; try next projectile if this one is not active
-            lda ObjAction,y
-            beq Lx265
-            ; try next projectile if it is not a bullet, unknown7, bomb or missile
-            cmp #wa_BulletExplode
-            bcc Lx264
-            cmp #wa_Unknown7
-            beq Lx264
-            cmp #wa_BombExplode
-            beq Lx264
-            cmp #wa_Missile
-            bne Lx265
-            Lx264:
-                ; projectile is of the right type
-                ; hit mellow if they collided
+            ; check for collision with samus
+            jsr GetMellowXSlotPosition
+            ; skip check if samus is dead
+            jsr IsSamusDead
+            beq Lx262
+            ; skip check if samus is invincible
+            lda SamusInvincibleDelay
+            bne Lx262
+                ldy #$00
                 jsr CollisionDetectionMellow_CheckWithObjectYSlot
-                jsr CollisionDetectionMellow_ReactToCollisionWithProjectile
-            Lx265:
-            jsr Yplus16
-            bne Lx263
-    Lx266:
+                jsr CollisionDetectionMellow_ReactToCollisionWithSamus
+            Lx262:
+            ; check for collision with samus's projectiles
+            ldy #$D0
+            Lx263:
+                ; try next projectile if this one is not active
+                lda ObjAction,y
+                beq Lx265
+                ; try next projectile if it is not a bullet, unknown7, bomb or missile
+                cmp #wa_BulletExplode
+                bcc Lx264
+                cmp #wa_Unknown7
+                beq Lx264
+                cmp #wa_BombExplode
+                beq Lx264
+                cmp #wa_Missile
+                bne Lx265
+                Lx264:
+                    ; projectile is of the right type
+                    ; hit mellow if they collided
+                    jsr CollisionDetectionMellow_CheckWithObjectYSlot
+                    jsr CollisionDetectionMellow_ReactToCollisionWithProjectile
+                Lx265:
+                jsr Yplus16
+                bne Lx263
+        Lx266:
         ; each Mellow occupies 8 bytes
         txa
         sec
@@ -10411,17 +10416,21 @@ LF416:
     ldx PageIndex
     lda EnSpecialAttribs,x
     bpl Lx301
-
+    ; enemy is tough
+    ; branch if bit 7 is not set
     lda ObjectCntrl
     bmi Lx301
-    lda #$83 | OAMDATA_PRIORITY.b
+        ; use palette 3 for tough enemy
+        lda #$80 | $3 | OAMDATA_PRIORITY.b
 LF423:
-    sta ObjectCntrl
-Lx301:
+        sta ObjectCntrl
+    Lx301:
+    ; if enemy exists, draw enemy
     lda EnsExtra.0.status,x
     beq LF42D
         jsr DrawEnemy
     LF42D:
+    ; clear is hit flags
     ldx PageIndex
     lda #$00
     sta EnIsHit,x
@@ -10552,28 +10561,35 @@ UpdateEnemy_Pickup: ;($F483)
     jmp LF416
 ;--------------------------------------------
 UpdateEnemy_Hurt:
+    ; decrement hitstun delay
     dec EnSpecialAttribs,x
-    bne Lx313
-    ; Preserve upper two bits of EnSpecialAttribs
-    lda EnPrevStatus,x
-    tay
-    and #$C0
-    sta EnSpecialAttribs,x
-    tya
-
-    and #$3F
-    sta EnsExtra.0.status,x
-    pha
-    jsr LoadTableAt977B
-    and #$20
-    beq Lx312
-        pla
-        jsr LF515
+    bne @exit
+        ; hitstun delay is over
+        ; Restore upper two bits of EnSpecialAttribs
+        lda EnPrevStatus,x
+        tay
+        and #$C0
+        sta EnSpecialAttribs,x
+        ; Restore previous enemy status
+        tya
+        and #$3F
+        sta EnsExtra.0.status,x
         pha
-    Lx312:
-    pla
-Lx313:
-    lda #$A0
+        ; branch if enemy is not a metroid
+        jsr LoadTableAt977B
+        and #$20
+        beq @endIf_A
+            ; this is a metroid
+            ; it must have just been hit by a missile while frozen
+            ; keep being frozen
+            pla
+            jsr LF515
+            pha
+        @endIf_A:
+        pla
+    @exit:
+    ; use palette 0 for hurt enemy
+    lda #$80 | $0 | OAMDATA_PRIORITY.b
     jmp LF423
 
 LF515:
