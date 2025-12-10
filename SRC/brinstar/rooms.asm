@@ -32,7 +32,7 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00:
+Room00_BANK{BANK}:
     .byte $02
     .byte $40, $01, $02
     .byte $48, $01, $02
@@ -43,13 +43,13 @@ Room00:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room01:
+Room01_BANK{BANK}:
     .byte $02
     .byte $07, $02, $02
     .byte $87, $02, $02
     .byte $FF
 
-Room02:
+Room02_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $0E, $0B, $03
@@ -65,7 +65,7 @@ Room02:
     .byte $41, $02, $A3 ; Waver
     .byte $FF
 
-Room03:
+Room03_BANK{BANK}:
     .byte $02
     .byte $00, $0B, $03
     .byte $02, $09, $03
@@ -89,7 +89,7 @@ Room03:
     .byte $51, $03, $C5 ; Ripper
     .byte $FF
 
-Room04:
+Room04_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $04, $0A, $03
@@ -110,7 +110,7 @@ Room04:
     .byte $31, $05, $39 ; Zoomer
     .byte $FF
 
-Room05:
+Room05_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $0E, $0B, $03
@@ -133,7 +133,7 @@ Room05:
     .byte $51, $05, $B7 ; Zoomer
     .byte $FF
 
-Room06:
+Room06_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $0E, $0B, $03
@@ -155,7 +155,7 @@ Room06:
     .byte $41, $05, $28 ; Zoomer
     .byte $FF
 
-Room07:
+Room07_BANK{BANK}:
     .byte $03
     .byte $00, $0D, $03
     .byte $08, $0D, $03
@@ -174,7 +174,7 @@ Room07:
     .byte $31, $05, $67 ; Zoomer
     .byte $FF
 
-Room08:
+Room08_BANK{BANK}:
     .byte $03
     .byte $00, $1E, $03
     .byte $04, $1E, $03
@@ -194,7 +194,7 @@ Room08:
     .byte $CC, $1E, $03
     .byte $FF
 
-Room09:
+Room09_BANK{BANK}:
     .byte $03
     .byte $00, $11, $01
     .byte $08, $11, $01
@@ -210,7 +210,7 @@ Room09:
     .byte $41, $05, $2B ; Zoomer
     .byte $FF
 
-Room0A:
+Room0A_BANK{BANK}:
     .byte $00
     .byte $00, $14, $00
     .byte $08, $14, $00
@@ -233,7 +233,7 @@ Room0A:
     .byte $02, $A0 ; Red door
     .byte $FF
 
-Room0B:
+Room0B_BANK{BANK}:
     .byte $00
     .byte $00, $15, $00
     .byte $01, $16, $00
@@ -248,7 +248,7 @@ Room0B:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0C:
+Room0C_BANK{BANK}:
     .byte $02
     .byte $00, $1B, $02
     .byte $08, $1B, $02
@@ -267,7 +267,7 @@ Room0C:
     .byte $31, $02, $AA ; Waver
     .byte $FF
 
-Room0D:
+Room0D_BANK{BANK}:
     .byte $02
     .byte $00, $1B, $02
     .byte $08, $1B, $02
@@ -286,7 +286,7 @@ Room0D:
     .byte $51, $02, $44 ; Waver
     .byte $FF
 
-Room0E:
+Room0E_BANK{BANK}:
     .byte $02
     .byte $00, $1B, $02
     .byte $08, $1B, $02
@@ -302,7 +302,7 @@ Room0E:
     .byte $31, $02, $BD ; Waver
     .byte $FF
 
-Room0F:
+Room0F_BANK{BANK}:
     .byte $03
     .byte $00, $1B, $02
     .byte $08, $1B, $02
@@ -320,7 +320,7 @@ Room0F:
     .byte $41, $05, $49 ; Zoomer
     .byte $FF
 
-Room10:
+Room10_BANK{BANK}:
     .byte $02
     .byte $00, $17, $02
     .byte $08, $17, $02
@@ -344,7 +344,7 @@ Room10:
     .byte $11, $02, $A7 ; Waver
     .byte $FF
 
-Room11:
+Room11_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $02, $06, $03
@@ -361,7 +361,7 @@ Room11:
     .byte $21, $02, $7D ; Waver
     .byte $FF
 
-Room12:
+Room12_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $02, $11, $01
@@ -380,7 +380,7 @@ Room12:
     .byte $31, $04, $1E ; Skree
     .byte $FF
 
-Room13:
+Room13_BANK{BANK}:
     .byte $03
     .byte $00, $11, $01
     .byte $07, $10, $03
@@ -396,7 +396,7 @@ Room13:
     .byte $11, $05, $C8 ; Zoomer
     .byte $FF
 
-Room14:
+Room14_BANK{BANK}:
     .byte $01
     .byte $00, $11, $01
     .byte $08, $11, $01
@@ -408,7 +408,7 @@ Room14:
     .byte $41, $04, $2E ; Skree
     .byte $FF
 
-Room15:
+Room15_BANK{BANK}:
     .byte $03
     .byte $00, $10, $03
     .byte $08, $10, $03
@@ -427,7 +427,7 @@ Room15:
     .byte $17, $07, $C5 ; Zeb
     .byte $FF
 
-Room16:
+Room16_BANK{BANK}:
     .byte $01
     .byte $00, $11, $01
     .byte $08, $11, $01
@@ -442,7 +442,7 @@ Room16:
     .byte $47, $87, $B9 ; Zeb
     .byte $FF
 
-Room17:
+Room17_BANK{BANK}:
     .byte $03
     .byte $00, $11, $01
     .byte $08, $10, $03
@@ -460,7 +460,7 @@ Room17:
     .byte $41, $05, $B4 ; Zoomer
     .byte $FF
 
-Room18:
+Room18_BANK{BANK}:
     .byte $01
     .byte $00, $0B, $03
     .byte $01, $11, $01
@@ -486,7 +486,7 @@ Room18:
     .byte $21, $05, $D9 ; Zoomer
     .byte $FF
 
-Room19:
+Room19_BANK{BANK}:
     .byte $01
     .byte $00, $10, $03
     .byte $04, $1F, $01
@@ -506,7 +506,7 @@ Room19:
     .byte $31, $06, $3C ; Rio
     .byte $FF
 
-Room1A:
+Room1A_BANK{BANK}:
     .byte $02
     .byte $00, $28, $02
     .byte $01, $2D, $02
@@ -523,7 +523,7 @@ Room1A:
     .byte $11, $85, $CA ; Zoomer
     .byte $FF
 
-Room1B:
+Room1B_BANK{BANK}:
     .byte $00
     .byte $00, $14, $00
     .byte $04, $15, $00
@@ -545,7 +545,7 @@ Room1B:
     .byte $11, $05, $A4 ; Zoomer
     .byte $FF
 
-Room1C:
+Room1C_BANK{BANK}:
     .byte $00
     .byte $00, $15, $00
     .byte $01, $0D, $03
@@ -563,7 +563,7 @@ Room1C:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room1D:
+Room1D_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $08, $0E, $01
@@ -576,7 +576,7 @@ Room1D:
     .byte $31, $06, $42 ; Rio
     .byte $FF
 
-Room1E:
+Room1E_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $02, $2A, $01
@@ -602,7 +602,7 @@ Room1E:
     .byte $01, $03, $C8 ; Ripper
     .byte $FF
 
-Room1F:
+Room1F_BANK{BANK}:
     .byte $01
     .byte $00, $27, $01
     .byte $08, $27, $01
@@ -621,7 +621,7 @@ Room1F:
     .byte $31, $02, $8B ; Waver
     .byte $FF
 
-Room20:
+Room20_BANK{BANK}:
     .byte $01
     .byte $00, $27, $01
     .byte $08, $27, $01
@@ -641,7 +641,7 @@ Room20:
     .byte $21, $05, $C5 ; Zoomer
     .byte $FF
 
-Room21:
+Room21_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $08, $0E, $01
@@ -661,7 +661,7 @@ Room21:
     .byte $51, $06, $7A ; Rio
     .byte $FF
 
-Room22:
+Room22_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $08, $0E, $01
@@ -679,7 +679,7 @@ Room22:
     .byte $21, $03, $85 ; Ripper
     .byte $FF
 
-Room23:
+Room23_BANK{BANK}:
     .byte $02
     .byte $00, $27, $01
     .byte $08, $27, $01
@@ -701,7 +701,7 @@ Room23:
     .byte $31, $83, $A8 ; Ripper
     .byte $FF
 
-Room24:
+Room24_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $08, $0E, $01
@@ -731,7 +731,7 @@ Room24:
     .byte $41, $05, $47 ; Zoomer
     .byte $FF
 
-Room25:
+Room25_BANK{BANK}:
     .byte $02
     .byte $00, $27, $01
     .byte $05, $27, $01
@@ -757,7 +757,7 @@ Room25:
     .byte $21, $02, $48 ; Waver
     .byte $FF
 
-Room26:
+Room26_BANK{BANK}:
     .byte $01
     .byte $00, $0E, $01
     .byte $08, $27, $01
@@ -778,7 +778,7 @@ Room26:
     .byte $11, $02, $C6 ; Waver
     .byte $FF
 
-Room27:
+Room27_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $02, $11, $01
@@ -798,7 +798,7 @@ Room27:
     .byte $31, $06, $27 ; Rio
     .byte $FF
 
-Room28:
+Room28_BANK{BANK}:
     .byte $00
     .byte $00, $2D, $02
     .byte $08, $2D, $02
@@ -816,7 +816,7 @@ Room28:
     .byte $31, $05, $7D ; Zoomer
     .byte $FF
 
-Room29:
+Room29_BANK{BANK}:
     .byte $02
     .byte $00, $2D, $02
     .byte $08, $2D, $02
@@ -831,7 +831,7 @@ Room29:
     .byte $21, $05, $CB ; Zoomer
     .byte $FF
 
-Room2A:
+Room2A_BANK{BANK}:
     .byte $00
     .byte $00, $11, $01
     .byte $08, $11, $01
@@ -850,7 +850,7 @@ Room2A:
     .byte $31, $06, $26 ; Rio
     .byte $FF
 
-Room2B:
+Room2B_BANK{BANK}:
     .byte $02
     .byte $00, $30, $00
     .byte $01, $1A, $02
@@ -889,7 +889,7 @@ Room2B:
     .byte $06 ; Statues
     .byte $FF
 
-Room2C:
+Room2C_BANK{BANK}:
     .byte $00
     .byte $00, $16, $00
     .byte $07, $16, $00
@@ -907,7 +907,7 @@ Room2C:
     .byte $02, $A1 ; Blue door
     .byte $FF
 
-Room2D:
+Room2D_BANK{BANK}:
     .byte $03
     .byte $00, $11, $01
     .byte $08, $11, $01
@@ -921,7 +921,7 @@ Room2D:
     .byte $02, $A1 ; Blue door
     .byte $FF
 
-Room2E:
+Room2E_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $0E, $0B, $03

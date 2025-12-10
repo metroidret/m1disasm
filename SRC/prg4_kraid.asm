@@ -56,46 +56,46 @@ GFX_KraiBG3:
 ;----------------------------------------------------------------------------------------------------
 
 PalPntrTbl:
-    PtrTableEntry PalPntrTbl, Palette00                 ;($A155)Room palette.
-    PtrTableEntry PalPntrTbl, Palette01                 ;($A179)Samus power suit palette.
-    PtrTableEntry PalPntrTbl, Palette02                 ;($A185)Samus varia suit palette.
-    PtrTableEntry PalPntrTbl, Palette03                 ;($A17F)Samus power suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette04                 ;($A18B)Samus varia suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette05                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette06                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette07                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette08                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette09                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0A                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0B                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0C                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0D                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0E                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette0F                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette10                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette11                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette12                 ;($A191)
-    PtrTableEntry PalPntrTbl, Palette13                 ;($A191)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntry PalPntrTbl, Palette14                 ;($A198)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette15                 ;($A19F)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette16                 ;($A1A6)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette17                 ;($A1AD)Unused?
-    PtrTableEntry PalPntrTbl, Palette18                 ;($A1B5)Suitless Samus power suit palette.
-    PtrTableEntry PalPntrTbl, Palette19                 ;($A1BD)Suitless Samus varia suit palette.
-    PtrTableEntry PalPntrTbl, Palette1A                 ;($A1C5)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette1B                 ;($A1CD)Suitless Samus varia suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette00                 ;($A155)Room palette.
+    PtrTableEntryBank PalPntrTbl, Palette01                 ;($A179)Samus power suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette02                 ;($A185)Samus varia suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette03                 ;($A17F)Samus power suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette04                 ;($A18B)Samus varia suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette05                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette06                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette07                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette08                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette09                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0A                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0B                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0C                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0D                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0E                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette0F                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette10                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette11                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette12                 ;($A191)
+    PtrTableEntryBank PalPntrTbl, Palette13                 ;($A191)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryBank PalPntrTbl, Palette14                 ;($A198)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette15                 ;($A19F)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette16                 ;($A1A6)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette17                 ;($A1AD)Unused?
+    PtrTableEntryBank PalPntrTbl, Palette18                 ;($A1B5)Suitless Samus power suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette19                 ;($A1BD)Suitless Samus varia suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette1A                 ;($A1C5)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A1CD)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
     .word SpecItmsTbl               ;($A26D)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
-    RoomPtrTable:       .word RoomPtrTable              ;($A1D5)Beginning of room pointer table.
-    StructPtrTable:     .word StructPtrTable            ;($A21F)Beginning of structure pointer table.
-    MetatileDefs:       .word MetatileDefs              ;($AC32)Beginning of metatile definitions.
-    EnFramePtrTable1:   .word EnFramePtrTable1          ;($9CF7)Pointer table into enemy animation data. Two-->
-    EnFramePtrTable2:   .word EnFramePtrTable2          ;($9DF7)tables needed to accommodate all entries.
-    EnPlacePtrTable:    .word EnPlacePtrTable           ;($9E25)Pointers to enemy frame placement data.
-    EnAnimTable:        .word EnAnimTable               ;($9C86)Index to values in addr tables for enemy animations.
+    RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A1D5)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable_BANK{BANK}            ;($A21F)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs_BANK{BANK}              ;($AC32)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1_BANK{BANK}          ;($9CF7)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2_BANK{BANK}          ;($9DF7)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable_BANK{BANK}           ;($9E25)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable_BANK{BANK}               ;($9C86)Index to values in addr tables for enemy animations.
 .ENDST
 
 ; Tourian-specific jump table (dummied out in other banks)
@@ -159,17 +159,17 @@ AreaMellowAnimIndex:
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
-        .word SidehopperFloorAIRoutine ; 00 - sidehopper
-        .word SidehopperCeilingAIRoutine ; 01 - ceiling sidehopper
+        .word SidehopperFloorAIRoutine_BANK{BANK} ; 00 - sidehopper
+        .word SidehopperCeilingAIRoutine_BANK{BANK} ; 01 - ceiling sidehopper
         .word RTS_95CB ; 02 - unused enemy type that doesn't properly clear itself
-        .word RipperAIRoutine ; 03 - ripper
-        .word SkreeAIRoutine ; 04 - skree
-        .word CrawlerAIRoutine ; 05 - crawler
+        .word RipperAIRoutine_BANK{BANK} ; 03 - ripper
+        .word SkreeAIRoutine_BANK{BANK} ; 04 - skree
+        .word CrawlerAIRoutine_BANK{BANK} ; 05 - crawler
         .word RTS_95CB ; 06 - same as 2
-        .word PipeBugAIRoutine ; 07 - geega
-        .word KraidAIRoutine ; 08 - kraid
-        .word KraidLintAIRoutine ; 09 - kraid lint
-        .word KraidNailAIRoutine ; 0A - kraid nail
+        .word PipeBugAIRoutine_BANK{BANK} ; 07 - geega
+        .word KraidAIRoutine_BANK{BANK} ; 08 - kraid
+        .word KraidLintAIRoutine_BANK{BANK} ; 09 - kraid lint
+        .word KraidNailAIRoutine_BANK{BANK} ; 0A - kraid nail
         .word RTS_95CB ; 0B - same as 2
         .word RTS_95CB ; 0C - same as 2
         .word RTS_95CB ; 0D - same as 2
@@ -339,17 +339,17 @@ EnemyInitDelayTbl:
     .byte $00 ; 0F - same as 2
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_SidehopperFloor - EnemyMovementChoices ; 00 - sidehopper
-    .byte EnemyMovementChoice_SidehopperCeiling - EnemyMovementChoices ; 01 - ceiling sidehopper
+    .byte EnemyMovementChoice_SidehopperFloor_BANK{BANK} - EnemyMovementChoices ; 00 - sidehopper
+    .byte EnemyMovementChoice_SidehopperCeiling_BANK{BANK} - EnemyMovementChoices ; 01 - ceiling sidehopper
     .byte $00 ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnemyMovementChoice_Ripper - EnemyMovementChoices ; 03 - ripper
-    .byte EnemyMovementChoice_Skree - EnemyMovementChoices ; 04 - skree
-    .byte EnemyMovementChoice_Zeela - EnemyMovementChoices ; 05 - crawler (enemy moves manually)
+    .byte EnemyMovementChoice_Ripper_BANK{BANK} - EnemyMovementChoices ; 03 - ripper
+    .byte EnemyMovementChoice_Skree_BANK{BANK} - EnemyMovementChoices ; 04 - skree
+    .byte EnemyMovementChoice_Zeela_BANK{BANK} - EnemyMovementChoices ; 05 - crawler (enemy moves manually)
     .byte $00 ; 06 - same as 2
-    .byte EnemyMovementChoice_Geega - EnemyMovementChoices ; 07 - geega
-    .byte EnemyMovementChoice_Kraid - EnemyMovementChoices ; 08 - kraid
-    .byte EnemyMovementChoice_KraidLint - EnemyMovementChoices ; 09 - kraid lint
-    .byte EnemyMovementChoice_KraidNail - EnemyMovementChoices ; 0A - kraid nail
+    .byte EnemyMovementChoice_Geega_BANK{BANK} - EnemyMovementChoices ; 07 - geega
+    .byte EnemyMovementChoice_Kraid_BANK{BANK} - EnemyMovementChoices ; 08 - kraid
+    .byte EnemyMovementChoice_KraidLint_BANK{BANK} - EnemyMovementChoices ; 09 - kraid lint
+    .byte EnemyMovementChoice_KraidNail_BANK{BANK} - EnemyMovementChoices ; 0A - kraid nail
     .byte $00 ; 0B - same as 2
     .byte $00 ; 0C - same as 2
     .byte $00 ; 0D - same as 2
@@ -357,24 +357,24 @@ EnemyMovementChoiceOffset:
     .byte $00 ; 0F - same as 2
 
 EnemyMovementPtrs:
-    .word EnemyMovement00_R, EnemyMovement00_L
-    .word EnemyMovement01_R, EnemyMovement01_L
-    .word EnemyMovement02_R, EnemyMovement02_L
-    .word EnemyMovement03_R, EnemyMovement03_L
-    .word EnemyMovement04_R, EnemyMovement04_L
-    .word EnemyMovement05_R, EnemyMovement05_L
-    .word EnemyMovement06_R, EnemyMovement06_L
-    .word EnemyMovement07_R, EnemyMovement07_L
-    .word EnemyMovement08_R, EnemyMovement08_L
-    .word EnemyMovement09_R, EnemyMovement09_L
-    .word EnemyMovement0A_R, EnemyMovement0A_L
-    .word EnemyMovement0B_R, EnemyMovement0B_L
-    .word EnemyMovement0C_R, EnemyMovement0C_L
-    .word EnemyMovement0D_R, EnemyMovement0D_L
-    .word EnemyMovement0E_R, EnemyMovement0E_L
-    .word EnemyMovement0F_R, EnemyMovement0F_L
-    .word EnemyMovement10_R, EnemyMovement10_L
-    .word EnemyMovement11_R, EnemyMovement11_L
+    .word EnemyMovement00_R_BANK{BANK}, EnemyMovement00_L_BANK{BANK}
+    .word EnemyMovement01_R_BANK{BANK}, EnemyMovement01_L_BANK{BANK}
+    .word EnemyMovement02_R_BANK{BANK}, EnemyMovement02_L_BANK{BANK}
+    .word EnemyMovement03_R_BANK{BANK}, EnemyMovement03_L_BANK{BANK}
+    .word EnemyMovement04_R_BANK{BANK}, EnemyMovement04_L_BANK{BANK}
+    .word EnemyMovement05_R_BANK{BANK}, EnemyMovement05_L_BANK{BANK}
+    .word EnemyMovement06_R_BANK{BANK}, EnemyMovement06_L_BANK{BANK}
+    .word EnemyMovement07_R_BANK{BANK}, EnemyMovement07_L_BANK{BANK}
+    .word EnemyMovement08_R_BANK{BANK}, EnemyMovement08_L_BANK{BANK}
+    .word EnemyMovement09_R_BANK{BANK}, EnemyMovement09_L_BANK{BANK}
+    .word EnemyMovement0A_R_BANK{BANK}, EnemyMovement0A_L_BANK{BANK}
+    .word EnemyMovement0B_R_BANK{BANK}, EnemyMovement0B_L_BANK{BANK}
+    .word EnemyMovement0C_R_BANK{BANK}, EnemyMovement0C_L_BANK{BANK}
+    .word EnemyMovement0D_R_BANK{BANK}, EnemyMovement0D_L_BANK{BANK}
+    .word EnemyMovement0E_R_BANK{BANK}, EnemyMovement0E_L_BANK{BANK}
+    .word EnemyMovement0F_R_BANK{BANK}, EnemyMovement0F_L_BANK{BANK}
+    .word EnemyMovement10_R_BANK{BANK}, EnemyMovement10_L_BANK{BANK}
+    .word EnemyMovement11_R_BANK{BANK}, EnemyMovement11_L_BANK{BANK}
     .word $0000, $0000
     .word $0000, $0000
 
@@ -426,82 +426,82 @@ EnProjectilePosOffsetY:
     .byte $00
 
 EnProjectileMovementPtrTable:
-    .word EnProjectileMovement0
-    .word EnProjectileMovement1
-    .word EnProjectileMovement2
-    .word EnProjectileMovement3
+    .word EnProjectileMovement0_BANK{BANK}
+    .word EnProjectileMovement1_BANK{BANK}
+    .word EnProjectileMovement2_BANK{BANK}
+    .word EnProjectileMovement3_BANK{BANK}
 
 TileBlastFramePtrTable:
-    .word TileBlastFrame00
-    .word TileBlastFrame01
-    .word TileBlastFrame02
-    .word TileBlastFrame03
-    .word TileBlastFrame04
-    .word TileBlastFrame05
-    .word TileBlastFrame06
-    .word TileBlastFrame07
-    .word TileBlastFrame08
-    .word TileBlastFrame09
-    .word TileBlastFrame0A
-    .word TileBlastFrame0B
-    .word TileBlastFrame0C
-    .word TileBlastFrame0D
-    .word TileBlastFrame0E
-    .word TileBlastFrame0F
-    .word TileBlastFrame10
+    .word TileBlastFrame00_BANK{BANK}
+    .word TileBlastFrame01_BANK{BANK}
+    .word TileBlastFrame02_BANK{BANK}
+    .word TileBlastFrame03_BANK{BANK}
+    .word TileBlastFrame04_BANK{BANK}
+    .word TileBlastFrame05_BANK{BANK}
+    .word TileBlastFrame06_BANK{BANK}
+    .word TileBlastFrame07_BANK{BANK}
+    .word TileBlastFrame08_BANK{BANK}
+    .word TileBlastFrame09_BANK{BANK}
+    .word TileBlastFrame0A_BANK{BANK}
+    .word TileBlastFrame0B_BANK{BANK}
+    .word TileBlastFrame0C_BANK{BANK}
+    .word TileBlastFrame0D_BANK{BANK}
+    .word TileBlastFrame0E_BANK{BANK}
+    .word TileBlastFrame0F_BANK{BANK}
+    .word TileBlastFrame10_BANK{BANK}
 
 EnemyMovementChoices:
-EnemyMovementChoice_SidehopperFloor:
+EnemyMovementChoice_SidehopperFloor_BANK{BANK}:
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice_SidehopperCeiling:
+EnemyMovementChoice_SidehopperCeiling_BANK{BANK}:
     EnemyMovementChoiceEntry $03, $04
-EnemyMovementChoice_Ripper:
+EnemyMovementChoice_Ripper_BANK{BANK}:
     EnemyMovementChoiceEntry $06
-EnemyMovementChoice_Skree:
+EnemyMovementChoice_Skree_BANK{BANK}:
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice_Geega:
+EnemyMovementChoice_Geega_BANK{BANK}:
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice_Zeela: ; enemy moves manually
+EnemyMovementChoice_Zeela_BANK{BANK}: ; enemy moves manually
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice_Kraid:
+EnemyMovementChoice_Kraid_BANK{BANK}:
     EnemyMovementChoiceEntry $0C, $0D
-EnemyMovementChoice_KraidLint:
+EnemyMovementChoice_KraidLint_BANK{BANK}:
     EnemyMovementChoiceEntry $0E
-EnemyMovementChoice_KraidNail:
+EnemyMovementChoice_KraidNail_BANK{BANK}:
     EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ; unused (???)
-EnemyMovement00_R:
+EnemyMovement00_R_BANK{BANK}:
     SignMagSpeed $20,  2,  2
     EnemyMovementInstr_FE
 
-EnemyMovement00_L:
+EnemyMovement00_L_BANK{BANK}:
     SignMagSpeed $20, -2,  2
     EnemyMovementInstr_FE
 
-EnemyMovement01_R:
-EnemyMovement01_L:
-EnemyMovement02_R:
-EnemyMovement02_L:
-EnemyMovement03_R:
-EnemyMovement03_L:
-EnemyMovement04_R:
-EnemyMovement04_L:
-EnemyMovement05_R:
-EnemyMovement05_L:
+EnemyMovement01_R_BANK{BANK}:
+EnemyMovement01_L_BANK{BANK}:
+EnemyMovement02_R_BANK{BANK}:
+EnemyMovement02_L_BANK{BANK}:
+EnemyMovement03_R_BANK{BANK}:
+EnemyMovement03_L_BANK{BANK}:
+EnemyMovement04_R_BANK{BANK}:
+EnemyMovement04_L_BANK{BANK}:
+EnemyMovement05_R_BANK{BANK}:
+EnemyMovement05_L_BANK{BANK}:
     ; nothing
 
 ; ripper
-EnemyMovement06_R:
+EnemyMovement06_R_BANK{BANK}:
     SignMagSpeed $01,  1,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement06_L:
+EnemyMovement06_L_BANK{BANK}:
     SignMagSpeed $01, -1,  0
     EnemyMovementInstr_Restart
 
 ; skree
-EnemyMovement07_R:
+EnemyMovement07_R_BANK{BANK}:
     SignMagSpeed $04,  2,  2
     SignMagSpeed $01,  2,  4
     SignMagSpeed $01,  2,  2
@@ -514,7 +514,7 @@ EnemyMovement07_R:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
-EnemyMovement07_L:
+EnemyMovement07_L_BANK{BANK}:
     SignMagSpeed $04, -2,  2
     SignMagSpeed $01, -2,  4
     SignMagSpeed $01, -2,  2
@@ -527,52 +527,52 @@ EnemyMovement07_L:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
-EnemyMovement08_R:
-EnemyMovement08_L:
-EnemyMovement09_R:
-EnemyMovement09_L:
-EnemyMovement0A_R:
-EnemyMovement0A_L:
-EnemyMovement0B_R:
-EnemyMovement0B_L:
+EnemyMovement08_R_BANK{BANK}:
+EnemyMovement08_L_BANK{BANK}:
+EnemyMovement09_R_BANK{BANK}:
+EnemyMovement09_L_BANK{BANK}:
+EnemyMovement0A_R_BANK{BANK}:
+EnemyMovement0A_L_BANK{BANK}:
+EnemyMovement0B_R_BANK{BANK}:
+EnemyMovement0B_L_BANK{BANK}:
     ; nothing
 
 ; kraid
-EnemyMovement0C_R:
+EnemyMovement0C_R_BANK{BANK}:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0C_L:
+EnemyMovement0C_L_BANK{BANK}:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0D_R:
+EnemyMovement0D_R_BANK{BANK}:
     SignMagSpeed $32,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32, -1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0D_L:
+EnemyMovement0D_L_BANK{BANK}:
     SignMagSpeed $32, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32,  1,  1
     EnemyMovementInstr_FE
 
 ; kraid lint
-EnemyMovement0E_R:
+EnemyMovement0E_R_BANK{BANK}:
     SignMagSpeed $50,  4,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement0E_L:
+EnemyMovement0E_L_BANK{BANK}:
     SignMagSpeed $50, -4,  0
     EnemyMovementInstr_Restart
 
 ; kraid nail
-EnemyMovement0F_R:
+EnemyMovement0F_R_BANK{BANK}:
     SignMagSpeed $02,  3, -7
     SignMagSpeed $04,  3, -6
     SignMagSpeed $04,  3, -5
@@ -586,7 +586,7 @@ EnemyMovement0F_R:
     SignMagSpeed $50,  3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement0F_L:
+EnemyMovement0F_L_BANK{BANK}:
     SignMagSpeed $02, -3, -7
     SignMagSpeed $04, -3, -6
     SignMagSpeed $04, -3, -5
@@ -600,7 +600,7 @@ EnemyMovement0F_L:
     SignMagSpeed $50, -3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_R:
+EnemyMovement10_R_BANK{BANK}:
     SignMagSpeed $02,  4, -7
     SignMagSpeed $04,  4, -6
     SignMagSpeed $04,  4, -5
@@ -614,7 +614,7 @@ EnemyMovement10_R:
     SignMagSpeed $50,  4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_L:
+EnemyMovement10_L_BANK{BANK}:
     SignMagSpeed $02, -4, -7
     SignMagSpeed $04, -4, -6
     SignMagSpeed $04, -4, -5
@@ -628,7 +628,7 @@ EnemyMovement10_L:
     SignMagSpeed $50, -4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_R:
+EnemyMovement11_R_BANK{BANK}:
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
     SignMagSpeed $04,  2, -5
@@ -642,7 +642,7 @@ EnemyMovement11_R:
     SignMagSpeed $50,  2,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_L:
+EnemyMovement11_L_BANK{BANK}:
     SignMagSpeed $02, -2, -7
     SignMagSpeed $04, -2, -6
     SignMagSpeed $04, -2, -5
@@ -656,7 +656,7 @@ EnemyMovement11_L:
     SignMagSpeed $50, -2,  7
     EnemyMovementInstr_Restart
 
-EnProjectileMovement0:
+EnProjectileMovement0_BANK{BANK}:
     SignMagSpeed $04,  3, -3
     SignMagSpeed $05,  3, -2
     SignMagSpeed $06,  3, -1
@@ -666,7 +666,7 @@ EnProjectileMovement0:
     SignMagSpeed $50,  3,  3
     .byte $FF
 
-EnProjectileMovement1:
+EnProjectileMovement1_BANK{BANK}:
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -676,7 +676,7 @@ EnProjectileMovement1:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement2:
+EnProjectileMovement2_BANK{BANK}:
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -686,7 +686,7 @@ EnProjectileMovement2:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement3:
+EnProjectileMovement3_BANK{BANK}:
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1
@@ -696,7 +696,7 @@ EnProjectileMovement3:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-CommonEnemyJump_00_01_02:
+CommonEnemyJump_00_01_02_BANK{BANK}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -741,75 +741,75 @@ CommonEnemyJump_00_01_02:
 ;  are in are in kraid.asm. Extract those functions from that file if you plan
 ;  on removing it.
 
-AreaRoutineStub:
+AreaRoutineStub_BANK{BANK}:
     rts
 
 ; What's this table?
-TileBlastFrame00:
+TileBlastFrame00_BANK{BANK}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01:
+TileBlastFrame01_BANK{BANK}:
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-TileBlastFrame02:
+TileBlastFrame02_BANK{BANK}:
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-TileBlastFrame03:
+TileBlastFrame03_BANK{BANK}:
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-TileBlastFrame04:
+TileBlastFrame04_BANK{BANK}:
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-TileBlastFrame05:
+TileBlastFrame05_BANK{BANK}:
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-TileBlastFrame06:
+TileBlastFrame06_BANK{BANK}:
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-TileBlastFrame07:
+TileBlastFrame07_BANK{BANK}:
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-TileBlastFrame08:
+TileBlastFrame08_BANK{BANK}:
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-TileBlastFrame09:
+TileBlastFrame09_BANK{BANK}:
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
-TileBlastFrame0A:
+TileBlastFrame0A_BANK{BANK}:
     .byte $22
     .byte $74, $75
     .byte $76, $77
 
-TileBlastFrame0B:
+TileBlastFrame0B_BANK{BANK}:
     .byte $22
     .byte $78, $79
     .byte $7A, $7B
 
-TileBlastFrame0C:
-TileBlastFrame0D:
-TileBlastFrame0E:
-TileBlastFrame0F:
-TileBlastFrame10:
+TileBlastFrame0C_BANK{BANK}:
+TileBlastFrame0D_BANK{BANK}:
+TileBlastFrame0E_BANK{BANK}:
+TileBlastFrame0F_BANK{BANK}:
+TileBlastFrame10_BANK{BANK}:
     ;nothing
 
 .include "kraid/enemy_sprite_data.asm"

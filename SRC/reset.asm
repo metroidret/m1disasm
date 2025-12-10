@@ -18,7 +18,6 @@
 
 ;Common Reset Routine
 
-RESET: ;($BFB0)
     ;Disables interrupt.
     sei
     ;Sets processor to binary mode.

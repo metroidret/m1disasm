@@ -1,34 +1,34 @@
 ; SkreeRoutine
-SkreeAIRoutine:
+SkreeAIRoutine_BANK{BANK}:
     ; skree uses EnemyDistanceToSamusThreshold to see if samus is close enough on the x axis to start falling
     ; when samus gets close enough, bit 3 of EnData05 will get set, which will make the skree active
     
     ; branch if enemy is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
-    beq SkreeExit_Resting
+    beq SkreeExit_Resting_BANK{BANK}
     ; branch if enemy is exploding
     cmp #enemyStatus_Explode
-    beq SkreeExit_Explode
+    beq SkreeExit_Explode_BANK{BANK}
     
     ; branch if skree has not reached the ground
     lda EnMovementInstrIndex,x
     cmp #$0F
-    bcc SkreeExit_Active
+    bcc SkreeExit_Active_BANK{BANK}
     ; branch if skree was on the ground for more than 1 frame
     cmp #$11
-    bcs SkreeBlowUpIntoProjectiles
+    bcs SkreeBlowUpIntoProjectiles_BANK{BANK}
     ; skree just landed on the ground
     ; set blow up delay to roughly 1 second
     lda #$3A
     sta EnsExtra.0.jumpDsplcmnt,x
-    bne SkreeExit_Active
+    bne SkreeExit_Active_BANK{BANK}
 
-SkreeBlowUpIntoProjectiles:
+SkreeBlowUpIntoProjectiles_BANK{BANK}:
     ; decrement blow up delay
     dec EnsExtra.0.jumpDsplcmnt,x
     ; exit if delay is not zero
-    bne SkreeExit_Active
+    bne SkreeExit_Active_BANK{BANK}
 
     ; remove skree
     lda #enemyStatus_NoEnemy
@@ -53,19 +53,19 @@ SkreeBlowUpIntoProjectiles:
         dey
         bpl @loop
 
-SkreeExit_Active:
+SkreeExit_Active_BANK{BANK}:
     ; skree is active
     ; change animation frame every 2 frames
     lda #$02
     jmp CommonJump_00
 
-SkreeExit_Resting:
+SkreeExit_Resting_BANK{BANK}:
     ; skree is resting (hanging on the ceiling)
     ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_01
 
-SkreeExit_Explode:
+SkreeExit_Explode_BANK{BANK}:
     ; skree is exploding
     jmp CommonJump_02
 

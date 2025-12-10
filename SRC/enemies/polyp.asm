@@ -1,5 +1,5 @@
 ; Polyp Routine (mini volcano)
-PolypAIRoutine:
+PolypAIRoutine_BANK{BANK}:
     ; set radius to 0
     lda #$00
     sta EnsExtra.0.radY,x
@@ -35,7 +35,7 @@ PolypAIRoutine:
         and #$07
     .endif
     ; exit if polyp isn't trying to shoot
-    bne RTS_Polyp
+    bne RTS_Polyp_BANK{BANK}
 
     ; polyp is trying to shoot
     ; rotate horizontal facing flag into carry
@@ -49,7 +49,7 @@ PolypAIRoutine:
     rol EnData05,x
     ; exit if misfired (25% random chance)
     and #$03
-    beq RTS_Polyp
+    beq RTS_Polyp_BANK{BANK}
     ; store random number (1, 2 or 3) into SpawnEnProjectile_EnData0A
     ; this chooses between EnProjectileMovement1, EnProjectileMovement2 or EnProjectileMovement3
     sta SpawnEnProjectile_EnData0A
@@ -59,6 +59,6 @@ PolypAIRoutine:
     ; spawn projectile
     jmp CommonJump_SpawnEnProjectile
 
-RTS_Polyp:
+RTS_Polyp_BANK{BANK}:
     rts
 
