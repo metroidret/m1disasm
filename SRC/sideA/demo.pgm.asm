@@ -1628,209 +1628,209 @@ L7142:
     eor #$08
     rts
 
-ObjectAnimIndexTbl: ;($714F)
-ObjAnim_00:
+UnknownAnimIndexTbl: ;($714F)
+UnkAnim_00:
     .byte $00, $01, $02, $FF
-ObjAnim_04:
+UnkAnim_04:
     .byte $03, $04, $05, $FF
-ObjAnim_08:
+UnkAnim_08:
     .byte $13, $06, $FF
-ObjAnim_0B:
+UnkAnim_0B:
     .byte $07, $FF
-ObjAnim_0D:
+UnkAnim_0D:
     .byte $17, $08, $FF
-ObjAnim_10:
+UnkAnim_10:
     .byte $21, $FF
-ObjAnim_12:
+UnkAnim_12:
     .byte $22, $FF
-ObjAnim_14:
+UnkAnim_14:
     .byte $01, $0F, $FF
-ObjAnim_17:
+UnkAnim_17:
     .byte $04, $10, $FF
-ObjAnim_1A:
+UnkAnim_1A:
     .byte $13, $14, $15, $16, $FF
-ObjAnim_1F:
+UnkAnim_1F:
     .byte $17, $18, $19, $1A, $FF
-ObjAnim_24:
+UnkAnim_24:
     .byte $20, $1F, $FF
-ObjAnim_27:
+UnkAnim_27:
     .byte $00, $13, $FF
-ObjAnim_2A:
+UnkAnim_2A:
     .byte $03, $17, $FF
-ObjAnim_2D:
+UnkAnim_2D:
     .byte $1B, $1C, $1D, $1E, $FF
-ObjAnim_32:
+UnkAnim_32:
     .byte $1E, $1D, $1C, $1B, $FF
-ObjAnim_37:
+UnkAnim_37:
     .byte $28, $29, $FF
-ObjAnim_3A:
+UnkAnim_3A:
     .byte $2A, $FF
-ObjAnim_3C:
+UnkAnim_3C:
     .byte $1F, $20, $FF
-ObjAnim_3F:
+UnkAnim_3F:
     .byte $11, $FF
-ObjAnim_41:
+UnkAnim_41:
     .byte $12, $FF
-ObjAnim_43:
+UnkAnim_43:
     .byte $09, $0A, $0B, $FF
-ObjAnim_47:
+UnkAnim_47:
     .byte $0C, $0D, $0E, $FF
-ObjAnim_4B:
+UnkAnim_4B:
     .byte $2C, $FF
-ObjAnim_4D:
+UnkAnim_4D:
     .byte $2C, $2C, $2C, $2C, $2C, $2C, $2C, $2C, $2D, $2D, $2D, $2D, $2D, $2E, $2E, $2E
     .byte $2F, $2F, $FF
-ObjAnim_60:
+UnkAnim_60:
     .byte $2F, $2F, $2E, $2E, $2E, $2D, $2D, $2D, $2D, $2D, $2C, $2C, $2C, $2C, $2C, $2C
     .byte $2C, $2C, $FF
-ObjAnim_73:
+UnkAnim_73:
     .byte $30, $2B, $FF
-ObjAnim_76:
+UnkAnim_76:
     .byte $31, $FF
-ObjAnim_78:
+UnkAnim_78:
     .byte $31, $31, $31, $31, $31, $31, $31, $31, $32, $32, $32, $32, $32, $33, $33, $33
     .byte $34, $34, $FF
-ObjAnim_8B:
+UnkAnim_8B:
     .byte $34, $34, $33, $33, $33, $32, $32, $32, $32, $32, $31, $31, $31, $31, $31, $31
     .byte $31, $31, $FF
-ObjAnim_9E:
+UnkAnim_9E:
     .byte $35, $FF
-ObjAnim_A0:
+UnkAnim_A0:
     .byte $37, $36, $FF
-ObjAnim_A3:
+UnkAnim_A3:
     .byte $39, $38, $FF
-ObjAnim_A6:
+UnkAnim_A6:
     .byte $3A, $3B, $FF
-ObjAnim_A9:
+UnkAnim_A9:
     .byte $3C, $F7, $49, $F7, $FF
-ObjAnim_AE:
+UnkAnim_AE:
     .byte $3D, $3E, $3F, $FF
-ObjAnim_B2:
+UnkAnim_B2:
     .byte $40, $41, $42, $FF
-ObjAnim_B6:
+UnkAnim_B6:
     .byte $43, $FF
-ObjAnim_B8:
+UnkAnim_B8:
     .byte $44, $FF
-ObjAnim_BA:
+UnkAnim_BA:
     .byte $45, $FF
-ObjAnim_BC:
+UnkAnim_BC:
     .byte $46, $FF
-ObjAnim_BE:
+UnkAnim_BE:
     .byte $47, $FF
-ObjAnim_C0:
+UnkAnim_C0:
     .byte $48, $FF
-ObjAnim_C2:
+UnkAnim_C2:
     .byte $07, $F7, $F7, $07, $F7, $F7, $F7, $07, $F7, $F7, $F7, $F7, $07, $F7, $FF
-ObjAnim_D1:
+UnkAnim_D1:
     .byte $23, $F7, $F7, $23, $F7, $F7, $F7, $23, $F7, $F7, $F7, $F7, $23, $F7, $FF
-ObjAnim_E0:
+UnkAnim_E0:
     .byte $07, $F7, $F7, $F7, $F7, $07, $F7, $F7, $F7, $07, $F7, $F7, $07, $F7, $FF
-ObjAnim_EF:
+UnkAnim_EF:
     .byte $23, $F7, $F7, $F7, $F7, $23, $F7, $F7, $F7, $23, $F7, $F7, $23, $F7, $FF
     
-ObjFramePtrTable: ;($724D)
-    .word ObjFrame00
-    .word ObjFrame01
-    .word ObjFrame02
-    .word ObjFrame03
-    .word ObjFrame04
-    .word ObjFrame05
-    .word ObjFrame06
-    .word ObjFrame07
-    .word ObjFrame08
-    .word ObjFrame09
-    .word ObjFrame0A
-    .word ObjFrame0B
-    .word ObjFrame0C
-    .word ObjFrame0D
-    .word ObjFrame0E
-    .word ObjFrame0F
-    .word ObjFrame10
-    .word ObjFrame11
-    .word ObjFrame12
-    .word ObjFrame13
-    .word ObjFrame14
-    .word ObjFrame15
-    .word ObjFrame16
-    .word ObjFrame17
-    .word ObjFrame18
-    .word ObjFrame19
-    .word ObjFrame1A
-    .word ObjFrame1B
-    .word ObjFrame1C
-    .word ObjFrame1D
-    .word ObjFrame1E
-    .word ObjFrame1F
-    .word ObjFrame20
-    .word ObjFrame21
-    .word ObjFrame22
-    .word ObjFrame23
-    .word ObjFrame24
-    .word ObjFrame25
-    .word ObjFrame26
-    .word ObjFrame27
-    .word ObjFrame28
-    .word ObjFrame29
-    .word ObjFrame2A
-    .word ObjFrame2B
-    .word ObjFrame2C
-    .word ObjFrame2D
-    .word ObjFrame2E
-    .word ObjFrame2F
-    .word ObjFrame30
-    .word ObjFrame31
-    .word ObjFrame32
-    .word ObjFrame33
-    .word ObjFrame34
-    .word ObjFrame35
-    .word ObjFrame36
-    .word ObjFrame37
-    .word ObjFrame38
-    .word ObjFrame39
-    .word ObjFrame3A
-    .word ObjFrame3B
-    .word ObjFrame3C
-    .word ObjFrame3D
-    .word ObjFrame3E
-    .word ObjFrame3F
-    .word ObjFrame40
-    .word ObjFrame41
-    .word ObjFrame42
-    .word ObjFrame43
-    .word ObjFrame44
-    .word ObjFrame45
-    .word ObjFrame46
-    .word ObjFrame47
-    .word ObjFrame48
-    .word ObjFrame49
-    .word ObjFrame4A
+UnkFramePtrTable: ;($724D)
+    .word UnkFrame00
+    .word UnkFrame01
+    .word UnkFrame02
+    .word UnkFrame03
+    .word UnkFrame04
+    .word UnkFrame05
+    .word UnkFrame06
+    .word UnkFrame07
+    .word UnkFrame08
+    .word UnkFrame09
+    .word UnkFrame0A
+    .word UnkFrame0B
+    .word UnkFrame0C
+    .word UnkFrame0D
+    .word UnkFrame0E
+    .word UnkFrame0F
+    .word UnkFrame10
+    .word UnkFrame11
+    .word UnkFrame12
+    .word UnkFrame13
+    .word UnkFrame14
+    .word UnkFrame15
+    .word UnkFrame16
+    .word UnkFrame17
+    .word UnkFrame18
+    .word UnkFrame19
+    .word UnkFrame1A
+    .word UnkFrame1B
+    .word UnkFrame1C
+    .word UnkFrame1D
+    .word UnkFrame1E
+    .word UnkFrame1F
+    .word UnkFrame20
+    .word UnkFrame21
+    .word UnkFrame22
+    .word UnkFrame23
+    .word UnkFrame24
+    .word UnkFrame25
+    .word UnkFrame26
+    .word UnkFrame27
+    .word UnkFrame28
+    .word UnkFrame29
+    .word UnkFrame2A
+    .word UnkFrame2B
+    .word UnkFrame2C
+    .word UnkFrame2D
+    .word UnkFrame2E
+    .word UnkFrame2F
+    .word UnkFrame30
+    .word UnkFrame31
+    .word UnkFrame32
+    .word UnkFrame33
+    .word UnkFrame34
+    .word UnkFrame35
+    .word UnkFrame36
+    .word UnkFrame37
+    .word UnkFrame38
+    .word UnkFrame39
+    .word UnkFrame3A
+    .word UnkFrame3B
+    .word UnkFrame3C
+    .word UnkFrame3D
+    .word UnkFrame3E
+    .word UnkFrame3F
+    .word UnkFrame40
+    .word UnkFrame41
+    .word UnkFrame42
+    .word UnkFrame43
+    .word UnkFrame44
+    .word UnkFrame45
+    .word UnkFrame46
+    .word UnkFrame47
+    .word UnkFrame48
+    .word UnkFrame49
+    .word UnkFrame4A
 
-ObjPlacePtrTable: ;($72E3)
-    .word ObjPlace0
-    .word ObjPlace1
-    .word ObjPlace2
-    .word ObjPlace3
-    .word ObjPlace4
-    .word ObjPlace5
-    .word ObjPlace6
-    .word ObjPlace7
+UnkPlacePtrTable: ;($72E3)
+    .word UnkPlace0
+    .word UnkPlace1
+    .word UnkPlace2
+    .word UnkPlace3
+    .word UnkPlace4
+    .word UnkPlace5
+    .word UnkPlace6
+    .word UnkPlace7
 
-ObjPlace6:
+UnkPlace6:
     .byte $E9, $FC, $EB, $FC
-ObjPlace0:
+UnkPlace0:
     .byte $F1, $F8, $F1, $00, $F9, $F0, $F9, $F8, $F9, $00, $01, $F8, $01, $00, $01, $08
     .byte $09, $F8, $09, $00, $09, $08, $F9, $F4, $F9, $F6, $ED, $F4, $EF, $F4
-ObjPlace1:
+UnkPlace1:
     .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
-ObjPlace2:
+UnkPlace2:
     .byte $F9, $F6, $F9, $FE, $F9, $06, $01, $F6, $01, $FE, $01, $06
-ObjPlace3:
+UnkPlace3:
     .byte $FC, $F0, $FC, $F8, $FC, $00, $FC, $08
-ObjPlace4:
+UnkPlace4:
     .byte $FC, $FC, $F8, $F8, $F8, $00, $00, $F8, $00, $00
-ObjPlace5:
+UnkPlace5:
     .byte $E8, $00, $F0, $00, $F8, $00, $00, $00, $08, $00, $10, $00
-ObjPlace7:
+UnkPlace7:
     .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
     .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
@@ -1846,213 +1846,213 @@ L7363:
 
 
 
-ObjFrame00:
+UnkFrame00:
     .byte $00, $10, $06, $00, $01, $FE, $10, $11, $20, $21, $FE, $FE, $31, $FF
-ObjFrame01:
+UnkFrame01:
     .byte $00, $10, $06, $02, $03, $FE, $12, $13, $22, $23, $FE, $32, $33, $34, $FF
-ObjFrame02:
+UnkFrame02:
     .byte $00, $10, $06, $05, $06, $FE, $15, $16, $25, $26, $27, $35, $36, $FF
-ObjFrame03:
+UnkFrame03:
     .byte $40, $10, $06, $00, $01, $FD, $20, $FE, $41, $40, $FD, $60, $20, $21, $FE, $FE
     .byte $31, $FF
-ObjFrame04:
+UnkFrame04:
     .byte $40, $10, $06, $02, $03, $FD, $20, $FE, $43, $42, $FD, $60, $22, $23, $FE, $32
     .byte $33, $34, $FF
-ObjFrame05:
+UnkFrame05:
     .byte $40, $10, $06, $05, $06, $FD, $20, $FE, $45, $44, $FD, $60, $25, $26, $27, $35
     .byte $36, $FF
-ObjFrame06:
+UnkFrame06:
     .byte $00, $10, $06, $0B, $0C, $FE, $1B, $1C, $2B, $2C, $FE, $3B, $3C, $FE, $17, $FF
-ObjFrame07:
+UnkFrame07:
     .byte $00, $10, $06, $09, $FD, $60, $09, $FD, $20, $FE, $19, $FD, $60, $19, $FD, $20
     .byte $29, $2A, $FE, $39, $FD, $60, $39, $FF
-ObjFrame08:
+UnkFrame08:
     .byte $40, $10, $06, $FD, $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B
     .byte $3C, $FE, $17, $FF
-ObjFrame09:
+UnkFrame09:
     .byte $00, $10, $06, $00, $01, $46, $47, $48, $20, $21, $FE, $FE, $31, $FF
-ObjFrame0A:
+UnkFrame0A:
     .byte $00, $10, $06, $00, $01, $46, $47, $48, $22, $23, $FE, $32, $33, $34, $FF
-ObjFrame0B:
+UnkFrame0B:
     .byte $00, $10, $06, $00, $01, $46, $47, $48, $25, $26
     .byte $27, $35, $36, $FF
-ObjFrame0C:
+UnkFrame0C:
     .byte $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49, $FD, $60
     .byte $20, $21, $FE, $FE, $31, $FF
-ObjFrame0D:
+UnkFrame0D:
     .byte $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49
     .byte $FD, $60, $22, $23, $FE, $32, $33, $34, $FF
-ObjFrame0E:
+UnkFrame0E:
     .byte $40, $10, $06, $00, $01, $FD, $20
     .byte $4B, $4A, $49, $FD, $60, $25, $26, $27, $35, $36, $FF
-ObjFrame0F:
+UnkFrame0F:
     .byte $00, $10, $06, $00, $01
     .byte $FE, $10, $11, $22, $07, $08, $32, $FF
-ObjFrame10:
+UnkFrame10:
     .byte $40, $10, $06, $00, $01, $FD, $20, $FE
     .byte $41, $40, $FD, $60, $22, $07, $08, $32, $FF
-ObjFrame11:
+UnkFrame11:
     .byte $00, $10, $06, $00, $01, $46, $47
     .byte $48, $22, $07, $08, $32, $FF
-ObjFrame12:
+UnkFrame12:
     .byte $40, $10, $06, $00, $01, $FD, $20, $4B, $4A, $49
     .byte $FD, $60, $22, $07, $08, $32, $FF
-ObjFrame13:
+UnkFrame13:
     .byte $01, $10, $06, $52, $53, $62, $63, $72, $73
     .byte $FF
-ObjFrame14:
+UnkFrame14:
     .byte $02, $10, $06, $54, $55, $56, $64, $65, $66, $FF
-ObjFrame15:
+UnkFrame15:
     .byte $C1, $10, $06, $52, $53
     .byte $62, $63, $72, $73, $FF
-ObjFrame16:
+UnkFrame16:
     .byte $C2, $10, $06, $54, $55, $56, $64, $65, $66, $FF
-ObjFrame17:
+UnkFrame17:
     .byte $41
     .byte $10, $06, $52, $53, $62, $63, $72, $73, $FF
-ObjFrame18:
+UnkFrame18:
     .byte $42, $10, $06, $54, $55, $56, $64
     .byte $65, $66, $FF
-ObjFrame19:
+UnkFrame19:
     .byte $81, $10, $06, $52, $53, $62, $63, $72, $73, $FF
-ObjFrame1A:
+UnkFrame1A:
     .byte $82, $10, $06
     .byte $54, $55, $56, $64, $65, $66, $FF
-ObjFrame1B:
+UnkFrame1B:
     .byte $01, $08, $06, $FC, $02, $00, $50, $51, $60
     .byte $61, $FF
-ObjFrame1C:
+UnkFrame1C:
     .byte $81, $08, $06, $FC, $FE, $00, $50, $51, $60, $61, $FF
-ObjFrame1D:
+UnkFrame1D:
     .byte $C1, $08, $06
     .byte $FC, $FE, $00, $50, $51, $60, $61, $FF
-ObjFrame1E:
+UnkFrame1E:
     .byte $41, $08, $06, $FC, $02, $00, $50, $51
     .byte $60, $61, $FF
-ObjFrame1F:
+UnkFrame1F:
     .byte $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $FD, $60, $2E
     .byte $2D, $FE, $FD, $20, $3B, $3C, $FF
-ObjFrame20:
+UnkFrame20:
     .byte $06, $10, $06, $FE, $69, $58, $59, $FE, $5A
     .byte $5B, $FD, $60, $2E, $2D, $FE, $FD, $20, $3B, $3C, $FF
-ObjFrame21:
+UnkFrame21:
     .byte $00, $10, $06, $0B, $0C
     .byte $FE, $1B, $1C, $2B, $2C, $FE, $3B, $3C, $FE, $FE, $17, $FF
-ObjFrame22:
+UnkFrame22:
     .byte $40, $10, $06, $FD
     .byte $20, $0E, $0D, $FE, $1E, $1D, $2E, $2D, $FE, $FD, $60, $3B, $3C, $FE, $FE, $17
     .byte $FF
-ObjFrame23:
+UnkFrame23:
     .byte $03, $04, $08, $FE, $28, $FD, $60, $28, $FF
-ObjFrame24:
+UnkFrame24:
     .byte $03, $04, $10, $28, $38, $38
     .byte $FD, $60, $28, $FF
-ObjFrame25:
+UnkFrame25:
     .byte $01, $10, $08, $4C, $4D, $5C, $5D, $6C, $6D, $FF
-ObjFrame26:
+UnkFrame26:
     .byte $01, $10
     .byte $08, $4C, $4D, $5C, $5D, $5A, $5B, $FF
-ObjFrame27:
+UnkFrame27:
     .byte $01, $10, $08, $4C, $4D, $5C, $5D, $6A
     .byte $6B, $FF
-ObjFrame28:
+UnkFrame28:
     .byte $04, $02, $02, $30, $FF
-ObjFrame29:
+UnkFrame29:
     .byte $04, $02, $02, $37, $FF
-ObjFrame2A:
+UnkFrame2A:
     .byte $04, $00, $00, $04
     .byte $FF
-ObjFrame2B:
+UnkFrame2B:
     .byte $46, $10, $06, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $2E, $2D, $FE
     .byte $FD, $60, $3B, $3C, $FF
-ObjFrame2C:
+UnkFrame2C:
     .byte $75, $18, $08, $0F, $1F, $2F, $FD, $E3, $2F, $1F, $0F
     .byte $FF
-ObjFrame2D:
+UnkFrame2D:
     .byte $75, $18, $08, $4D, $5D, $6D, $FD, $E3, $6D, $5D, $4D, $FF
-ObjFrame2E:
+UnkFrame2E:
     .byte $75, $18, $04
     .byte $6A, $6B, $6C, $FD, $E3, $6C, $6B, $6A, $FF
-ObjFrame2F:
+UnkFrame2F:
     .byte $75, $00, $00, $3F, $FE, $4F, $FD
     .byte $E3, $4F, $FE, $3F, $FF
-ObjFrame30:
+UnkFrame30:
     .byte $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE, $78
     .byte $77, $2E, $2D, $FE, $FD, $60, $3B, $3C, $FF
-ObjFrame31:
+UnkFrame31:
     .byte $35, $18, $08, $0F, $1F, $2F, $FD
     .byte $A3, $2F, $1F, $0F, $FF
-ObjFrame32:
+UnkFrame32:
     .byte $35, $18, $08, $4D, $5D, $6D, $FD, $A3, $6D, $5D, $4D
     .byte $FF
-ObjFrame33:
+UnkFrame33:
     .byte $35, $18, $04, $6A, $6B, $6C, $FD, $A3, $6C, $6B, $6A, $FF
-ObjFrame34:
+UnkFrame34:
     .byte $35, $00, $00
     .byte $3F, $FE, $4F, $FD, $A3, $4F, $FE, $3F, $FF
-ObjFrame35:
+UnkFrame35:
     .byte $07, $00, $00, $FC, $FC, $00, $09
     .byte $09, $19, $19, $29, $2A, $FF
-ObjFrame36:
+UnkFrame36:
     .byte $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B
     .byte $22, $07, $08, $32, $FF
-ObjFrame37:
+UnkFrame37:
     .byte $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $22
     .byte $07, $08, $32, $FF
-ObjFrame38:
+UnkFrame38:
     .byte $46, $10, $06, $69, $FD, $20, $FE, $7A, $79, $FE, $78, $77
     .byte $FD, $60, $22, $07, $08, $32, $FF
-ObjFrame39:
+UnkFrame39:
     .byte $46, $10, $06, $FE, $69, $FD, $20, $7A, $79
     .byte $FE, $78, $77, $FD, $60, $22, $07, $08, $32, $FF
-ObjFrame3A:
+UnkFrame3A:
     .byte $04, $04, $04, $70, $FF
-ObjFrame3B:
+UnkFrame3B:
     .byte $14
     .byte $04, $04, $71, $FF
-ObjFrame3C:
+UnkFrame3C:
     .byte $04, $0C, $0C, $FE, $74, $FD, $60, $74, $FD, $A0, $74, $FD
     .byte $E0, $74, $FF
-ObjFrame3D:
+UnkFrame3D:
     .byte $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $20, $21, $FE
     .byte $FE, $31, $FF
-ObjFrame3E:
+UnkFrame3E:
     .byte $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $22, $23, $FE
     .byte $32, $33, $34, $FF
-ObjFrame3F:
+UnkFrame3F:
     .byte $06, $10, $06, $69, $FE, $58, $59, $FE, $5A, $5B, $25, $26
     .byte $27, $35, $36, $FF
-ObjFrame40:
+UnkFrame40:
     .byte $46, $10, $06, $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77
     .byte $FD, $60, $20, $21, $FE, $FE, $31, $FF
-ObjFrame41:
+UnkFrame41:
     .byte $46, $10, $06, $69, $FE, $FD, $20, $7A
     .byte $79, $FE, $78, $77, $FD, $60, $22, $23, $FE, $32, $33, $34, $FF
-ObjFrame42:
+UnkFrame42:
     .byte $46, $10, $06
     .byte $69, $FE, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26, $27, $35, $36
     .byte $FF
-ObjFrame43:
+UnkFrame43:
     .byte $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $20, $21, $FE, $FE, $31
     .byte $FF
-ObjFrame44:
+UnkFrame44:
     .byte $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $22, $23, $FE, $32, $33
     .byte $34, $FF
-ObjFrame45:
+UnkFrame45:
     .byte $06, $10, $06, $FE, $69, $58, $59, $FE, $5A, $5B, $25, $26, $27, $35
     .byte $36, $FF
-ObjFrame46:
+UnkFrame46:
     .byte $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60
     .byte $20, $21, $FE, $FE, $31, $FF
-ObjFrame47:
+UnkFrame47:
     .byte $46, $10, $06, $FE, $69, $FD, $20, $7A, $79, $FE
     .byte $78, $77, $FD, $60, $22, $23, $FE, $32, $33, $34, $FF
-ObjFrame48:
+UnkFrame48:
     .byte $46, $10, $06, $FE, $69
     .byte $FD, $20, $7A, $79, $FE, $78, $77, $FD, $60, $25, $26, $27, $35, $36, $FF
-ObjFrame49:
+UnkFrame49:
     .byte $04, $0C, $0C, $FE, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
-ObjFrame4A:
+UnkFrame4A:
     .byte $04, $04, $04, $8A, $FF
 
 L77EB:
