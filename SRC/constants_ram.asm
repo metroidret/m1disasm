@@ -50,9 +50,12 @@ RandomNumber2          = $29     ;throughout the game.
 Joy2Port               = $2B     ;Controller port from which to read Joypad 2 (0=Joypad 1 port, 1=Joypad 2 port)
 GamePaused             = $2B
 
-ScrollDir              = $43        ;0=Up, 1=Down, 2=Left, 3=Right.
+ScrollDir              = $43     ;0=Up, 1=Down, 2=Left, 3=Right.
 
-SpriteLoadPending      = $50        ;Set to #$00 after sprite RAM load complete.
+PageIndex              = $45     ;Index to object data.
+                                   ;#$D0, #$E0, #$F0 = projectile indices(including bombs).
+
+SpriteLoadPending      = $50     ;Set to #$00 after sprite RAM load complete.
 
 SpritePagePos          = $55     ;Index into sprite RAM used to load object sprite data.
 

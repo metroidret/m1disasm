@@ -123,7 +123,7 @@ MoreInit: ;($6C58)
     inx
     stx $2A
     inx
-    stx $43
+    stx ScrollDir
     lda $B5CF
     sta $4A
     lda $B5D0
@@ -222,7 +222,7 @@ SamusInit: ;($6D0A)
     lda $6E
     and #$0F
     beq L6D41
-        lsr $43
+        lsr ScrollDir
         ldy #$2F
     L6D41:
     sty $73
@@ -373,7 +373,7 @@ PrepareContinueScreen: ;($6E2E)
         inc $6F
         iny
         sty $55
-        sty $45
+        sty PageIndex
         sty $65
         sty ObjHi
         jsr L6E00
@@ -389,7 +389,7 @@ PrepareContinueScreen: ;($6E2E)
             inc ObjAnimFrame
             txa
             pha
-            jsr L81C6
+            jsr ObjDrawFrame
             pla
             tax
             dex
@@ -467,7 +467,7 @@ SamusIntro: ;($6EA3)
     jsr SetSamusAnim
     lda #$00
     sta $55
-    sta $45
+    sta PageIndex
     jmp L81C3
 
 L6EDF:
@@ -629,7 +629,7 @@ L6FBD:
     bne L6FA6
 L6FC1:
     ldx #$00
-    stx $45
+    stx PageIndex
     inx
     stx $4F
     jsr L6FCE
@@ -654,9 +654,9 @@ L6FEA:
     lda $15
     and #$CF
     beq L6FF5
-    jsr SetSamusStand@NoFootstep
-    lda $15
-L6FF5:
+        jsr SetSamusStand@NoFootstep
+        lda $15
+    L6FF5:
     and #$07
     bne L6FFF
     lda $13
@@ -666,23 +666,23 @@ L6FFF:
     jsr BitScan
     cmp #$02
     bcs L7008
-    sta $47
-L7008:
+        sta $47
+    L7008:
     tax
-    lda $703B,x
+    lda L703B,x
     sta ObjAction
 L700F:
     lda $13
     ora $17
     asl a
     bpl L7019
-    jsr L75A4
-L7019:
+        jsr L75A4
+    L7019:
     bit $13
     bpl L7022
-    lda #$02
-    sta ObjAction
-L7022:
+        lda #$02
+        sta ObjAction
+    L7022:
     lda #$04
     jsr L7121
     lda ObjAction
@@ -694,7 +694,8 @@ L7022:
         .word L7377
         .word L746B
         .word SetSamusPntUp
-    
+
+L703B:
     .byte $01, $01, $03, $04
     
 L703F:
@@ -763,19 +764,19 @@ L7090:
     lda $15
     and #$08
     beq L70AF
-    lda #$35
-    sta ObjAnimResetIndex
-L70AF:
+        lda #$35
+        sta ObjAnimResetIndex
+    L70AF:
     bit $15
     bmi L70B6
-    jsr L74FD
-L70B6:
+        jsr L74FD
+    L70B6:
     lda #$00
     cmp ObjAnimResetIndex
     bne L70C2
-    lda #$0C
-    sta ObjAnimResetIndex
-L70C2:
+        lda #$0C
+        sta ObjAnimResetIndex
+    L70C2:
     lda $5E
     beq L70CA
     lda $13
@@ -789,15 +790,15 @@ L70CA:
 L70D7:
     lda SamusOnElevator
     bne L70DF
-    jsr L706B
-L70DF:
+        jsr L706B
+    L70DF:
     jsr L7173
     dec $4D
     bne L70ED
-    lda #$09
-    sta $4D
-    jsr SFX_SamusWalk
-L70ED:
+        lda #$09
+        sta $4D
+        jsr SFX_SamusWalk
+    L70ED:
     jsr L72E2
     lda $13
     bpl L70FF
@@ -810,8 +811,8 @@ L70FF:
     ora $17
     asl a
     bpl L7107
-    jsr L718B
-L7107:
+        jsr L718B
+    L7107:
     lda $15
     and #$03
     bne L7113
@@ -843,7 +844,7 @@ L7121:
         sta $65
     L7140:
     jsr L7146
-    jmp L81C6
+    jmp ObjDrawFrame
 
 
 
@@ -867,12 +868,12 @@ L7150:
     lda ObjAnimResetIndex
     cmp #$0E
     beq L716F
-    cmp #$0C
-    sec
-    bne RTS_7172
-    bit ObjSpeedY
-    bpl RTS_7172
-L716F:
+        cmp #$0C
+        sec
+        bne RTS_7172
+        bit ObjSpeedY
+        bpl RTS_7172
+    L716F:
     cmp ObjAnimIndex
 RTS_7172:
     rts
@@ -1180,7 +1181,7 @@ SamusRun_CheckHorzMovementMidair: ;($733C)
         cmp #$0E
         beq RTS_7371
         stx $47
-        lda $744D,x
+        lda L744C+1,x
         jmp SetSamusAnim
     L735D:
     lda SamusAccelY
@@ -1294,15 +1295,15 @@ L741A:
     cmp #$06
     bne L7433
     lda ObjAnimResetIndex
-    cmp $744F,y
+    cmp L744C+3,y
     bne L743E
-    lda $7450,y
+    lda L744C+4,y
     jmp L743E
 L7433:
     lda ObjAnimResetIndex
-    cmp $744C,y
+    cmp L744C,y
     bne L743E
-    lda $744D,y
+    lda L744C+1,y
 L743E:
     jsr SetSamusAnim
     lda #$08
@@ -1534,7 +1535,7 @@ L75C6:
     lda #$0C
     sta SamusJumpDsplcmnt,y
     ldx $47
-    lda $761A,x
+    lda L7616+4,x
     sta ObjSpeedX,y
     lda #$00
     sta ObjSpeedY,y
@@ -1546,7 +1547,7 @@ L75C6:
     ora $47
     and #$03
     tax
-    lda $7616,x
+    lda L7616,x
     sta $05
     lda #$FA
     sta $04
@@ -1560,13 +1561,15 @@ L7610:
 L7612:
     tya
     jmp SetSamusNextAnim
+
+L7616:
     .byte $0C
-L7617:
     .byte $F4
-    php
-    sed
+    .byte $08
+    .byte $F8
     .byte $04
     .byte $FC
+
 L761C:
     lda $8D
     bne L7664
@@ -1656,7 +1659,7 @@ L76AD:
     cpy #$D0
     bne RTS_76F0
     ldx $47
-    lda $76D6,x
+    lda L76D6,x
     
 L76BB:
     jsr L76E5
@@ -1749,11 +1752,11 @@ L7759:
     lda #$80
     sta $74
 L775D:
-    lda $8EA2
+    lda L8EA2
     beq L776C
     jsr L6FBB
     lda #$00
-    sta $8EA2
+    sta L8EA2
     beq L7759
 L776C:
     lda $52
@@ -1779,7 +1782,7 @@ L778E:
 L7796:
     jsr L71AE
     jsr L7146
-    jmp L81C6
+    jmp ObjDrawFrame
 
 
 
@@ -1895,7 +1898,7 @@ L7840:
     jsr L784C
     ldx #$F0
 L784C:
-    stx $45
+    stx PageIndex
     lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
@@ -1920,7 +1923,7 @@ L786C:
     jsr L795B
     jsr L7986
 L7879:
-    ldx $45
+    ldx PageIndex
     bcc L7890
     lda CurSamusStat.SamusGear
     and #$04
@@ -1979,11 +1982,11 @@ L78D6:
     iny
     lda ($0A),y
     jsr LAF46
-    ldx $45
+    ldx PageIndex
     sta ObjSpeedY,x
     lda ($0A),y
     jsr LAFDF
-    ldx $45
+    ldx PageIndex
     sta ObjSpeedX,x
     tay
     lda $0502,x
@@ -2098,7 +2101,7 @@ L7986:
     clc
     jmp L8D13
 L79A1:
-    ldx $45
+    ldx PageIndex
     lda ObjSpeedX,x
     sta $05
     lda ObjSpeedY,x
@@ -2169,7 +2172,7 @@ L7A0B:
 L7A0E:
     inc SamusJumpDsplcmnt,x
     jsr L7A24
-    ldx $45
+    ldx PageIndex
     lda ObjAnimFrame,x
     sec
     sbc #$F7
@@ -2183,7 +2186,7 @@ L7A24:
     sta $0A
     lda $05
     sta $0B
-    ldx $45
+    ldx PageIndex
     ldy SamusJumpDsplcmnt,x
     dey
     beq L7A61
@@ -2204,7 +2207,7 @@ L7A48:
     lda $04
     cmp #$C0
     bcc L7A61
-    lda $43
+    lda ScrollDir
     and #$02
     bne RTS_7A64
     lda #$80
@@ -2231,7 +2234,7 @@ L7A76:
     lda $04
     cmp #$C0
     bcc L7A8F
-    lda $43
+    lda ScrollDir
     and #$02
     bne RTS_7A64
     lda #$80
@@ -2253,7 +2256,7 @@ L7AA2:
     and #$1F
     cmp #$1E
     bcc L7ABB
-    lda $43
+    lda ScrollDir
     and #$02
     beq RTS_7AFB
     lda #$1E
@@ -2278,7 +2281,7 @@ L7ACE:
     and #$1F
     cmp #$02
     bcs L7AE7
-    lda $43
+    lda ScrollDir
     and #$02
     beq RTS_7AFB
     lda #$1E
@@ -2323,7 +2326,7 @@ L7B15:
 RTS_7B1B:
     rts
 L7B1C:
-    ldx $45
+    ldx PageIndex
     lda ObjY,x
     sta $02
     lda ObjX,x
@@ -2333,7 +2336,7 @@ L7B1C:
     jmp L8CBF
 L7B30:
     ldx #$20
-    stx $45
+    stx PageIndex
     lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
@@ -2375,7 +2378,7 @@ L7B83:
     lda FrameCount
     lsr a
     bcc RTS_7B1B
-    jmp L81C6
+    jmp ObjDrawFrame
 
 
 
@@ -2385,9 +2388,9 @@ L7B8B:
     lda $73
     ora #$08
     sta $73
-    lda $43
+    lda ScrollDir
     and #$01
-    sta $43
+    sta ScrollDir
     inc ObjAction,x
     jmp L7B83
 L7BA1:
@@ -2520,7 +2523,7 @@ L7C7C:
     jsr CopyAreaPointers
     jsr DestroyEnemies
     ldx #$20
-    stx $45
+    stx PageIndex
     lda #$6B
     sta ObjAnimResetIndex
     lda #$5F
@@ -2561,7 +2564,7 @@ L7CCC:
     lda #$00
     sta ObjAction
     jsr SetSamusStand
-    ldx $45
+    ldx PageIndex
     lda #$01
     sta ObjAction,x
     lda SamusJumpDsplcmnt,x
@@ -2629,7 +2632,7 @@ RTS_7D51:
     rts
 L7D52:
     lda #$60
-    sta $45
+    sta PageIndex
     ldy StatueStatus
     beq RTS_7D51
     dey
@@ -2676,7 +2679,7 @@ L7D98:
     lsr a
     bcc RTS_7DF9
 L7DB4:
-    jmp L81C6
+    jmp ObjDrawFrame
     dey
     pla
     adc $66
@@ -2745,10 +2748,10 @@ L7E26:
     lda #$09
     sta $05C3
     lda #$C0
-    sta $45
+    sta PageIndex
     jsr L9E4F
     lda #$60
-    sta $45
+    sta PageIndex
     rts
 
 StatueTileBlastWRAMPtrLoTable: ;($7E48)
@@ -2817,7 +2820,7 @@ RTS_7EAC:
     rts
 L7EAD:
     lda #$40
-    sta $45
+    sta PageIndex
     ldx #$00
     jsr L7EB8
     ldx #$08
@@ -2850,7 +2853,7 @@ L7EB8:
     lda $55
     pha
     lda $074F,x
-    jsr L81C6
+    jsr ObjDrawFrame
     pla
     cmp $55
     beq RTS_7F6C
@@ -2941,7 +2944,7 @@ L7F94:
     sta $07
     lda $49
     sta $06
-    lda $43
+    lda ScrollDir
     lsr a
     php
     beq L7FAA
@@ -3015,7 +3018,7 @@ MAIN_TwosComplement: ;($8001)
     .byte $80
     cpy #$40
 L800B:
-    ldx $45
+    ldx PageIndex
     ldy ObjAnimDelay,x
     beq L8017
     dec ObjAnimDelay,x
@@ -3069,7 +3072,7 @@ L803F:
     lda $65
     bpl L806B
     asl $65
-    jsr L83AF
+    jsr SpriteAttrsOverride
 L806B:
     txa
     and #$0F
@@ -3080,7 +3083,7 @@ L8071:
     jsr L82A4
     plp
     plp
-    ldx $45
+    ldx PageIndex
 L8078:
     lda $6E
     cmp #$13
@@ -3109,7 +3112,7 @@ L8089:
 L80AC:
     and #$07
     tay
-    lda $81B1,y
+    lda ItemDropTbl,y
     sta $B463,x
     cmp #$80
     bne L80C7
@@ -3131,7 +3134,7 @@ L80C7:
     lsr $00
     bcs RTS_80C6
 L80D7:
-    ldx $45
+    ldx PageIndex
     lda $6E
     cmp #$13
     beq L80E2
@@ -3158,7 +3161,7 @@ L80F1:
     jsr L8113
     bne L80D7
 L8107:
-    ldx $45
+    ldx PageIndex
     lda $B463,x
     cmp #$F7
     bne L812C
@@ -3210,7 +3213,7 @@ L814F:
     ldy #$00
     cpx #$02
     bne L8181
-    ldx $45
+    ldx PageIndex
     inc $0406,x
     lda $0406,x
     pha
@@ -3225,22 +3228,22 @@ L814F:
     bne L8181
     jmp L8071
 L8181:
-    ldx $45
+    ldx PageIndex
     iny
     lda ($00),y
     sta $B461,x
-    jsr L81B9
+    jsr ReduceYRadius
     iny
     lda ($00),y
     sta $B462,x
     sta $09
     iny
     sty $11
-    jsr L8356
+    jsr IsObjectVisible
     txa
     asl a
     sta $08
-    ldx $45
+    ldx PageIndex
     lda $0405,x
     and #$FD
     ora $08
@@ -3248,29 +3251,38 @@ L8181:
     lda $08
     beq L81CF
     jmp L8255
-    .byte $80
-    sta ($89,x)
-    .byte $80
-    sta ($89,x)
-    sta ($89,x)
-L81B9:
+
+
+
+ItemDropTbl: ;($81B1)
+    .byte $80, $81, $89, $80, $81, $89, $81, $89
+
+
+
+ReduceYRadius: ;($81B9)
     sec
     sbc #$10
-    bcs L81C0
-    lda #$00
-L81C0:
+    bcs @endIf_A
+        lda #$00
+    @endIf_A:
     sta $08
     rts
+
+
+
 L81C3:
     jsr L800B
-L81C6:
-    ldx $45
+
+
+
+ObjDrawFrame: ;($81C6)
+    ldx PageIndex
     lda ObjAnimFrame,x
     cmp #$F7
     bne L81D2
-L81CF:
-    jmp L82A4
-L81D2:
+    L81CF:
+        jmp L82A4
+    L81D2:
     cmp #$07
     bne L81DC
     lda $65
@@ -3299,7 +3311,7 @@ L81DC:
     beq L8233
     cpx #$0E
     bne L8233
-    ldx $45
+    ldx PageIndex
     inc $5F
     lda $5F
     pha
@@ -3312,27 +3324,27 @@ L81DC:
     pla
     cmp #$19
     bne L8233
-    ldx $45
+    ldx PageIndex
     lda #$08
     sta ObjAction,x
     pla
     pla
     jmp L82A4
 L8233:
-    ldx $45
+    ldx PageIndex
     iny
     lda ($00),y
     sta ObjRadY,x
-    jsr L81B9
+    jsr ReduceYRadius
     iny
     lda ($00),y
     sta ObjRadX,x
     sta $09
     iny
     sty $11
-    jsr L8356
+    jsr IsObjectVisible
     txa
-    ldx $45
+    ldx PageIndex
     sta ObjOnScreen,x
     tax
     beq L825A
@@ -3341,7 +3353,8 @@ L8255:
     jmp L8290
 L825A:
     jmp L82A4
-L825D:
+
+WriteSpriteRAM: ;($825D)
     ldy $0F
     jsr L82E2
     adc $10
@@ -3372,7 +3385,7 @@ L8290:
 L8292:
     lda ($00),y
     cmp #$FC
-    bcc L825D
+    bcc WriteSpriteRAM
     beq L82C8
     cmp #$FD
     beq L82B2
@@ -3392,13 +3405,13 @@ L82B2:
     iny
     asl $65
     bcc L82BC
-    jsr L83AF
-    bne L82C2
-L82BC:
-    lsr $65
-    lda ($00),y
-    sta $05
-L82C2:
+        jsr SpriteAttrsOverride
+        bne L82C2
+    L82BC:
+        lsr $65
+        lda ($00),y
+        sta $05
+    L82C2:
     iny
     sty $11
     jmp L8292
@@ -3417,6 +3430,9 @@ L82C8:
     sta $0E
     inc $11
     jmp L8290
+
+
+
 L82E2:
     lda ($02),y
     tay
@@ -3434,10 +3450,10 @@ L82F2:
     and #$0E
     lsr a
     tay
-    lda L83C0,y
+    lda ExplodeIndexTbl,y
     ldy $4F
     bne L8306
-    ldy $45
+    ldy PageIndex
     adc $0406,y
     jmp L8308
 L8306:
@@ -3472,7 +3488,7 @@ L832D:
     clc
     rts
 L832F:
-    ldy $45
+    ldy PageIndex
     lda $0406,y
     ldy $4F
     beq L833A
@@ -3497,7 +3513,10 @@ L8349:
     clc
     adc ($02),y
     jmp L8324
-L8356:
+
+
+
+IsObjectVisible: ;($8356)
     ldx #$01
     lda $0A
     tay
@@ -3508,7 +3527,7 @@ L8356:
     sec
     sbc $FD
     sta $0E
-    lda $43
+    lda ScrollDir
     and #$02
     bne L8393
     cpy $FC
@@ -3555,7 +3574,10 @@ L83AD:
     dex
 RTS_83AE:
     rts
-L83AF:
+
+
+
+SpriteAttrsOverride: ;($83AF)
     lsr $65
     lda ($00),y
     and #$C0
@@ -3566,15 +3588,35 @@ L83AF:
     sta $65
     rts
 
-L83C0:
-    .byte $00, $18, $30, $FC, $F8, $F4, $F0, $EE, $EC, $EA, $E8, $E7, $E6, $E6, $E5, $E5
-    .byte $E4, $E4, $E3, $E5, $E7, $E9, $EB, $EF, $F3, $F7, $FB, $FE, $FC, $FA, $F8, $F6
-    .byte $F4, $F2, $F0, $EE, $ED, $EB, $EA, $E9, $E8, $E7, $E6, $E6, $E6, $E6, $E6, $E8
-    .byte $EA, $EC, $EE, $FE, $FC, $FA, $F8, $F7, $F6, $F5, $F4, $F3, $F2, $F1, $F1, $F0
-    .byte $F0, $EF, $EF, $EF, $EF, $EF, $EF, $F0, $F0, $F1, $F2
+;--------------------------------[ Explosion placement data ]---------------------------------------
+
+;The following table has the index values into the table after it for finding the placement data
+;for an exploding object.
+
+ExplodeIndexTbl: ;($83C0)
+    .byte ExplodePlacementTopTbl-ExplodePlacementTbl
+    .byte ExplodePlacementMiddleTbl-ExplodePlacementTbl
+    .byte ExplodePlacementBottomTbl-ExplodePlacementTbl
+
+ExplodePlacementTbl:
+
+;Top sprites.
+ExplodePlacementTopTbl: ;($83C3)
+    .byte $FC, $F8, $F4, $F0, $EE, $EC, $EA, $E8, $E7, $E6, $E6, $E5, $E5, $E4, $E4, $E3
+    .byte $E5, $E7, $E9, $EB, $EF, $F3, $F7, $FB
+
+;Middle sprites.
+ExplodePlacementMiddleTbl: ;($83DB)
+    .byte $FE, $FC, $FA, $F8, $F6, $F4, $F2, $F0, $EE, $ED, $EB, $EA, $E9, $E8, $E7, $E6
+    .byte $E6, $E6, $E6, $E6, $E8, $EA, $EC, $EE
+
+;Bottom sprites.
+ExplodePlacementBottomTbl: ;($83F3)
+    .byte $FE, $FC, $FA, $F8, $F7, $F6, $F5, $F4, $F3, $F2, $F1, $F1, $F0, $F0, $EF, $EF
+    .byte $EF, $EF, $EF, $EF, $F0, $F0, $F1, $F2
 
 L840B:
-    ldx $45
+    ldx PageIndex
     ldy $B460,x
     cpy #$05
     beq RTS_8432
@@ -3820,9 +3862,9 @@ ToggleSamusHi: ;($85B4)
 
 
 ToggleScroll: ;($85BD)
-    lda $43
+    lda ScrollDir
     eor #$03
-    sta $43
+    sta ScrollDir
     lda $73
     eor #$08
     rts
@@ -3831,7 +3873,7 @@ ToggleScroll: ;($85BD)
 
 IsSamusInLava: ;($85C8)
     lda #$01
-    cmp $43
+    cmp ScrollDir
     bcs RTS_85D3
     lda #$D8
     cmp ObjY
@@ -4142,7 +4184,7 @@ MoveSamusUp: ;($87C2)
     L87F3:
     lda ObjY
     bne L8806
-        lda $43
+        lda ScrollDir
         and #$02
         bne L8801
             jsr ToggleSamusHi
@@ -4188,7 +4230,7 @@ MoveSamusDown: ;($880E)
     lda ObjY
     cmp #$EF
     bne L8854
-        lda $43
+        lda ScrollDir
         and #$02
         bne L884F
             jsr ToggleSamusHi
@@ -4205,11 +4247,11 @@ RTS_885B:
 
 
 ScrollUp: ;($885C)
-    lda $43
+    lda ScrollDir
     beq L886C
         cmp #$01
         bne L8882
-        dec $43
+        dec ScrollDir
         lda $FC
         beq L886C
         dec $49
@@ -4233,11 +4275,11 @@ L8882:
 
 
 ScrollDown: ;($8884)
-    ldx $43
+    ldx ScrollDir
     dex
     beq L8893
     bpl L88B3
-    inc $43
+    inc ScrollDir
     lda $FC
     beq L8893
     inc $49
@@ -4274,7 +4316,7 @@ CheckUpdateNameTable: ;($88B5)
     ldx $54
     inx
     bne RTS_88B4
-    lda $43
+    lda ScrollDir
     and #$02
     bne L88C6
     jmp L88DC
@@ -4306,13 +4348,13 @@ GetNameAddrs: ;($88CF)
 
 
 L88DC:
-    ldx $43
+    ldx ScrollDir
     lda $FC
     and #$07
     cmp $88C9,x
     bne RTS_88B4
 L88E7:
-    ldx $43
+    ldx ScrollDir
     cpx $44
     bne RTS_88B4
     lda $FC
@@ -4333,7 +4375,7 @@ L88FB:
     sta $01
     lda $00
     sta $02
-    lda $43
+    lda ScrollDir
     lsr a
     tax
     lda $894B,x
@@ -4422,7 +4464,7 @@ L89B9:
 L89BB:
     lda ObjX
     bne L89C9
-    lda $43
+    lda ScrollDir
     and #$02
     beq L89C9
     jsr ToggleSamusHi
@@ -4459,7 +4501,7 @@ L89FB:
 L89FD:
     inc ObjX
     bne L8A0B
-    lda $43
+    lda ScrollDir
     and #$02
     beq L8A0B
     jsr ToggleSamusHi
@@ -4471,12 +4513,12 @@ L8A0D:
     sta $52
     rts
 L8A12:
-    lda $43
+    lda ScrollDir
     cmp #$02
     beq L8A24
     cmp #$03
     bne L8A3B
-    dec $43
+    dec ScrollDir
     lda $FD
     beq L8A24
     dec $4A
@@ -4502,12 +4544,12 @@ L8A3B:
 
 
 L8A3D:
-    lda $43
+    lda ScrollDir
     cmp #$03
     beq L8A4F
     cmp #$02
     bne L8A68
-    inc $43
+    inc ScrollDir
     lda $FD
     beq L8A4F
     inc $4A
@@ -4534,13 +4576,13 @@ RTS_8A69:
     .byte $07
     .byte $00
 L8A6C:
-    ldx $43
+    ldx ScrollDir
     lda $FD
     and #$07
     cmp L8A68,x
     bne RTS_8A69
 L8A77:
-    ldx $43
+    ldx ScrollDir
     cpx $44
     bne RTS_8A69
     lda $FD
@@ -4550,7 +4592,7 @@ L8A77:
     lda #$00
     jmp L88FB
 L8A8B:
-    lda $43
+    lda ScrollDir
     lsr a
     beq L8A9E
     rol a
@@ -4602,7 +4644,7 @@ RTS_8ADA:
 
 
 L8ADB:
-    ldx $45
+    ldx PageIndex
     lda $B461,x
     clc
     adc #$08
@@ -4611,7 +4653,7 @@ L8ADB:
 
 
 L8AE6:
-    ldx $45
+    ldx PageIndex
     lda #$00
     sec
     sbc $B461,x
@@ -4631,13 +4673,13 @@ L8AFD:
     sta $0B
     rts
 L8B0D:
-    ldx $45
+    ldx PageIndex
     lda ObjRadY,x
     clc
     adc #$08
     jmp L8B20
 L8B18:
-    ldx $45
+    ldx PageIndex
     lda #$00
     sec
     sbc ObjRadY,x
@@ -4726,7 +4768,7 @@ L8B8F:
     lda SamusOnElevator,y
     lsr a
     bcs L8BBA
-    ldx $45
+    ldx PageIndex
     lda ObjAction,x
     eor #$0B
     bne L8BD2
@@ -4749,13 +4791,13 @@ L8BD0:
 L8BD2:
     jmp L6F78
 L8BD5:
-    ldx $45
+    ldx PageIndex
     lda ObjRadX,x
     clc
     adc #$08
     jmp L8BE8
 L8BE0:
-    ldx $45
+    ldx PageIndex
     lda #$00
     sec
     sbc ObjRadX,x
@@ -4820,13 +4862,13 @@ L8C35:
     adc $04
     rts
 L8C46:
-    ldx $45
+    ldx PageIndex
     lda $B462,x
     clc
     adc #$08
     jmp L8C59
 L8C51:
-    ldx $45
+    ldx PageIndex
     lda #$00
     sec
     sbc $B462,x
@@ -4862,7 +4904,7 @@ L8C77:
     sbc #$0F
 L8C89:
     tax
-    lda $43
+    lda ScrollDir
     and #$02
     bne L8C92
     inc $0B
@@ -4882,7 +4924,7 @@ L8C9B:
     txa
     adc #$00
     beq RTS_8CB3
-    lda $43
+    lda ScrollDir
     and #$02
     beq RTS_8CB3
     inc $0B
@@ -4928,7 +4970,7 @@ L8CE3:
     bcc L8CFA
     adc #$0F
     sta $02
-    lda $43
+    lda ScrollDir
     and #$02
     bne L8CFA
     inc $0B
@@ -4938,7 +4980,7 @@ L8CFA:
     adc $07
     sta $03
     bcc RTS_8D0B
-    lda $43
+    lda ScrollDir
     and #$02
     beq RTS_8D0B
     inc $0B
@@ -5139,7 +5181,7 @@ EnemyLoop: ;($8E29)
 EndOfRoom: ;($8E49)
     ldx #$F0
     stx $54
-    lda $43
+    lda ScrollDir
     sta $44
     and #$02
     bne L8E58
@@ -5187,13 +5229,14 @@ L8E7D:
     jmp L8E79
 L8E96:
     lda #$01
-    sta $8EA2
+    sta L8EA2
 L8E9B:
     pla
 L8E9C:
     and #$3F
     sta $B46E,x
     rts
+L8EA2:
     .byte $00
 L8EA3:
     tay
@@ -5405,7 +5448,7 @@ OnNameTable0: ;($8FE9)
 
 
 DeleteOffscreenRoomSprites: ;($8FF1)
-    ldx $43
+    ldx ScrollDir
     dex
     ldy #$00
     jsr UpdateDoorData
@@ -5807,7 +5850,7 @@ SpawnDoor: ;($924A)
 
 
 SpawnPalette: ;($9250)
-    lda $43
+    lda ScrollDir
     sta $8C
     bne L921C
 
@@ -5883,17 +5926,17 @@ L9281:
     lda $00
     and #$1F
     bne L92C8
-    lda $10
-    clc
-    adc $0E
-    sec
-    sbc #$01
-    jmp L92CE
-L92C8:
-    dec $0E
-    bne L9281
-    lda $10
-L92CE:
+        lda $10
+        clc
+        adc $0E
+        sec
+        sbc #$01
+        jmp L92CE
+    L92C8:
+        dec $0E
+        bne L9281
+        lda $10
+    L92CE:
     sec
     adc $2F
     sta $2F
@@ -6481,7 +6524,7 @@ L9B65:
     tay
     lsr a
     sta $0066,y
-    lda $43
+    lda ScrollDir
     and #$02
     bne L9B9D
     ldx #$04
@@ -6524,7 +6567,7 @@ L9BCB:
     ldx #$B0
 L9BCD:
     jsr L9BD9
-    lda $45
+    lda PageIndex
     sec
 L9BD3:
     sbc #$10
@@ -6532,7 +6575,7 @@ L9BD3:
     bmi L9BCD
     rts
 L9BD9:
-    stx $45
+    stx PageIndex
     lda ObjAction,x
     jsr MAIN_ChooseRoutine
         .word RTS_D07F
@@ -6654,7 +6697,7 @@ L9CB3:
     sta ObjAction,x
     jsr L9CC8
 L9CC3:
-    ldx $45
+    ldx PageIndex
 L9CC5:
     jmp L9C03
 L9CC8:
@@ -6674,7 +6717,7 @@ L9CD6:
     bcs L9D15
     jsr L9D4D
     jsr L9CC8
-    ldx $45
+    ldx PageIndex
     lda $8C
     beq L9CF9
     txa
@@ -6721,7 +6764,7 @@ L9D18:
     jsr L7695
     jsr L6F9A
     jsr SelectSamusPal
-    ldx $45
+    ldx PageIndex
     lda #$02
     sta ObjAction,x
 L9D3F:
@@ -6766,7 +6809,7 @@ L9D6B:
     txa
     cpy #$C0
     bne L9D6B
-    ldx $45
+    ldx PageIndex
     txa
     jsr MAIN_Adiv8
     and #$06
@@ -6787,12 +6830,12 @@ L9D8E:
     ldx #$C0
     L9D90:
         jsr L9D9A
-        ldx $45
+        ldx PageIndex
         jsr LA0E1
         bne L9D90
 
 L9D9A:
-    stx $45
+    stx PageIndex
     lda $0500,x
     beq RTS_9D8B
     jsr MAIN_ChooseRoutine
@@ -6899,7 +6942,7 @@ L9E4F:
     lda $07A0
     cmp #$1F
     bcs RTS_9E4E
-    ldx $45
+    ldx PageIndex
     lda $0508,x
     sta $00
     lda $0509,x
@@ -6970,7 +7013,7 @@ L9EAF:
 
 
 L9EC7:
-    ldx $45
+    ldx PageIndex
     ldy $0504,x
     beq L9ED3
     dec $0504,x
@@ -6987,7 +7030,7 @@ L9ED3:
     sta $0506,x
     jsr L9E4F
     bcc RTS_9EF2
-    ldx $45
+    ldx PageIndex
     dec $0506,x
 RTS_9EF2:
     rts
@@ -7309,7 +7352,7 @@ LA0E1:
 LA0E7:
     lda #$02
     sta $10
-    and $43
+    and ScrollDir
     sta $03
     lda $07
     sec
@@ -7523,11 +7566,11 @@ LA232:
     ldx #$50
 LA234:
     jsr LA23E
-    ldx $45
+    ldx PageIndex
     jsr LA0E1
     bne LA234
 LA23E:
-    stx $45
+    stx PageIndex
     ldy $B460,x
     beq LA24C
     cpy #$03
@@ -7566,13 +7609,13 @@ LA26C:
     sta $08
     lda $B462,x
     sta $09
-    jsr L8356
+    jsr IsObjectVisible
     txa
     bne LA294
     pla
     pla
 LA294:
-    ldx $45
+    ldx PageIndex
     rts
 LA297:
     lda $0405,x
@@ -7636,7 +7679,7 @@ LA2FD:
     jsr L840B
     jsr LAD08
 LA303:
-    ldx $45
+    ldx PageIndex
     lda $040F,x
     bpl LA312
     lda $65
@@ -7649,7 +7692,7 @@ LA312:
     beq LA31A
     jsr L8107
 LA31A:
-    ldx $45
+    ldx PageIndex
     lda #$00
     sta $0404,x
     sta $040E,x
@@ -7788,8 +7831,8 @@ LA405:
     sta $B460,x
     rts
 LA40B:
-    lda $43
-    ldx $45
+    lda ScrollDir
+    ldx PageIndex
     cmp #$02
     bcc RTS_A458
     lda $0400,x
@@ -7857,7 +7900,7 @@ LA48F:
 LA494:
     jsr L6F8E
 LA497:
-    ldx $45
+    ldx PageIndex
     jsr LAD60
     and #$20
     beq LA4A7
@@ -7918,7 +7961,7 @@ LA4FE:
     bcs LA515
     lda #$00
     jsr L8078
-    ldx $45
+    ldx PageIndex
 LA515:
     jsr LA731
     lda $B603,y
@@ -7947,7 +7990,7 @@ LA533:
     lda #$03
 LA549:
     sta $0407,x
-    ldy $45
+    ldy PageIndex
     lda $0400,y
     sta $0400,x
     lda $0401,y
@@ -7955,7 +7998,7 @@ LA549:
     lda $B467,y
     sta $B467,x
 LA560:
-    ldx $45
+    ldx PageIndex
     rts
 LA563:
     jsr LAD60
@@ -8019,7 +8062,7 @@ LA5BA:
     bpl LA5FC
     lda #$FE
     jsr LA6A0
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcc LA5E2
     jsr LA63F
@@ -8045,7 +8088,7 @@ LA5ED:
 LA5FC:
     lda #$FB
     jsr LA6A0
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcs LA611
     jsr LA63F
@@ -8156,7 +8199,7 @@ LA6B7:
     cmp #$07
     bne LA6C3
     jsr L6F64
-    ldx $45
+    ldx PageIndex
 LA6C3:
     inc $B460,x
     jsr LA586
@@ -8265,16 +8308,16 @@ LA774:
     tax
     pla
     jsr LA57A
-    ldx $45
+    ldx PageIndex
     lda #$01
     sta $B460,y
     and $0405,x
     tax
-    lda $A817,x
+    lda LA817,x
     sta $0403,y
     lda #$00
     sta $0402,y
-    ldx $45
+    ldx PageIndex
     jsr LA7E5
     lda $0405,x
     lsr a
@@ -8288,7 +8331,7 @@ LA774:
     lda $B793,x
     sta $05
     jsr LA80A
-    ldx $45
+    ldx PageIndex
     bit $82
     bvc RTS_A7E4
     lda $0405,x
@@ -8311,7 +8354,7 @@ LA7E5:
     lda $80
     cmp #$02
     bcc RTS_A809
-    ldx $45
+    ldx PageIndex
     lda $0405,x
     lsr a
     lda $83
@@ -8327,12 +8370,14 @@ LA7E5:
 RTS_A809:
     rts
 LA80A:
-    ldx $45
+    ldx PageIndex
     jsr L8AFD
     tya
     tax
     jsr LAC7C
     jmp LA936
+
+LA817:
     .byte $02, $FE
     
 LA819:
@@ -8346,12 +8391,12 @@ LA828:
     ldx #$B0
 LA82A:
     jsr LA836
-    ldx $45
+    ldx PageIndex
     jsr LA0E1
     cmp #$60
     bne LA82A
 LA836:
-    stx $45
+    stx PageIndex
     lda $0405,x
     and #$02
     bne LA842
@@ -8374,7 +8419,7 @@ RTS_A856:
 LA857:
     jsr LA948
     jsr LA90B
-    ldx $45
+    ldx PageIndex
     bcs LA869
     lda $B460,x
     beq RTS_A856
@@ -8415,11 +8460,11 @@ LA8A0:
     lda ($0A),y
 LA8AB:
     jsr LAF46
-    ldx $45
+    ldx PageIndex
     sta $0402,x
     lda ($0A),y
     jsr LAFDF
-    ldx $45
+    ldx PageIndex
     sta $0403,x
     tay
     lda $040A,x
@@ -8440,7 +8485,7 @@ LA8CC:
     sta $B465,x
 LA8DF:
     jsr LA90B
-    ldx $45
+    ldx PageIndex
     bcs LA902
     lda $B460,x
     beq RTS_A957
@@ -8480,7 +8525,7 @@ LA917:
     lda ($04),y
     cmp #$A0
     bcc RTS_A947
-    ldx $45
+    ldx PageIndex
 LA924:
     lda $0403,x
     sta $05
@@ -8527,7 +8572,7 @@ LA964:
 LA967:
     jmp LA869
 LA96A:
-    ldx $45
+    ldx PageIndex
     lda $0400,x
     sta $02
     lda $0401,x
@@ -8546,12 +8591,12 @@ LA97E:
 LA98A:
     ldx #$C0
 LA98C:
-    stx $45
+    stx PageIndex
     lda $B460,x
     beq LA996
     jsr LA9A1
 LA996:
-    lda $45
+    lda PageIndex
     clc
     adc #$08
     tax
@@ -8602,14 +8647,14 @@ LA9DF:
     ldy #$18
     LA9E1:
         jsr LA9EC
-        lda $45
+        lda PageIndex
         sec
     LA9E7:
         sbc #$08
         tay
         bne LA9E1
 LA9EC:
-    sty $45
+    sty PageIndex
     ldx $0728,y
     inx
     beq RTS_A9A0
@@ -8628,7 +8673,7 @@ LAA03:
     bne RTS_AA74
     lda $0728,y
     jsr L8E7D
-    ldy $45
+    ldy PageIndex
     lda $072A,y
     sta $0400,x
     lda $072B,y
@@ -8648,7 +8693,7 @@ LAA03:
     lda #$01
     sta $0409,x
     sta $B460,x
-    and $43
+    and ScrollDir
     asl a
     sta $0405,x
     ldy $B46E,x
@@ -8667,7 +8712,7 @@ LAA68:
 RTS_AA74:
     rts
 LAA75:
-    ldx $45
+    ldx PageIndex
     jsr LA731
     lda $B46D,x
     inc $B46F,x
@@ -8700,7 +8745,7 @@ LAAAC:
     beq RTS_AA74
     jmp LA57A
 LAAB7:
-    ldx $45
+    ldx PageIndex
     jsr LA731
     lda $B653,y
     cmp $B465,x
@@ -8709,7 +8754,7 @@ LAAB7:
     jmp LA57D
 LAACA:
     lda #$40
-    sta $45
+    sta PageIndex
     ldx #$0C
 LAAD0:
     jsr LAAD9
@@ -8725,7 +8770,7 @@ LAAD9:
     txa
     lsr a
     tay
-    lda $AB4A,y
+    lda LAB4A,y
     sta $04
     lda $AB4B,y
     sta $05
@@ -8754,7 +8799,7 @@ LAAD9:
     txa
 LAB1F:
     pha
-    jsr L81C6
+    jsr ObjDrawFrame
     lda $6A
     bne LAB42
     ldy #$00
@@ -8793,7 +8838,7 @@ LAB52:
     lda $B550
     beq RTS_AB81
     ldx #$F0
-    stx $45
+    stx PageIndex
     lda $B555
     cmp $B5DC
     bne LAB82
@@ -8925,9 +8970,9 @@ LAC12:
     lsr $85
     and #$03
     tay
-    lda $AC47,y
+    lda LA547,y
     sta $04
-    lda $AC48,y
+    lda LA547+1,y
     sta $05
     jsr LAC4C
     lda $08
@@ -8945,9 +8990,10 @@ LAC3F:
 LAC41:
     jsr LAC7C
     jmp LAC59
-    .byte $02
-    inc $FF01,x
-    .byte $02
+
+LA547:
+    .byte $02, $FE, $01, $FF, $02
+
 LAC4C:
     lda $B3,x
     sta $0B
@@ -8977,7 +9023,7 @@ LAC71:
 RTS_AC7B:
     rts
 LAC7C:
-    lda $43
+    lda ScrollDir
     and #$02
     sta $02
     lda $04
@@ -9065,7 +9111,7 @@ LACF2:
     sta $07
     jmp L7FCA
 LAD08:
-    ldx $45
+    ldx PageIndex
     lda $0405,x
     asl a
     bmi RTS_AD5F
@@ -9117,7 +9163,7 @@ LAD60:
     asl a
     rts
 LAD68:
-    ldx $45
+    ldx PageIndex
     bcs RTS_ADAA
     lda $0405,x
     bpl LAD77
@@ -9154,7 +9200,7 @@ LADA6:
 RTS_ADAA:
     rts
 LADAB:
-    ldx $45
+    ldx PageIndex
     bcs RTS_ADE3
     lda $0405,x
     bpl LADBA
@@ -9186,7 +9232,7 @@ LADDF:
 RTS_ADE3:
     rts
 LADE4:
-    ldx $45
+    ldx PageIndex
     bcs RTS_AE1D
     jsr LAD60
     bpl LAE0E
@@ -9218,7 +9264,7 @@ LAE19:
 RTS_AE1D:
     rts
 LAE1E:
-    ldx $45
+    ldx PageIndex
     bcs RTS_AE60
     jsr LAD60
     bpl LAE50
@@ -9410,7 +9456,7 @@ LAF6E:
     beq LAF82
     jsr L8AE6
 LAF73:
-    ldx $45
+    ldx PageIndex
     bcs LAF82
     ldy $0406,x
     iny
@@ -9438,7 +9484,7 @@ LAF9F:
     beq LAFAB
     jsr L8AE6
 LAFA4:
-    ldx $45
+    ldx PageIndex
     bcc LAFAB
     jmp LAF08
 LAFAB:
@@ -9572,7 +9618,7 @@ LB093:
 
 
 EnemyMoveOnePixelUp: ;($B0A5)
-    ldx $45
+    ldx PageIndex
     lda $0400,x
     sec
     sbc $B461,x
@@ -9583,13 +9629,13 @@ EnemyMoveOnePixelUp: ;($B0A5)
 LB0B6:
     ldy #$00
     sty $00
-    ldx $45
+    ldx PageIndex
     bcc RTS_B0FA
     inc $00
     ldy $0400,x
     bne LB0D9
     ldy #$F0
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcs LB0D9
     lda $FC
@@ -9623,7 +9669,7 @@ RTS_B0FA:
 
 
 EnemyMoveOnePixelDown: ;($B0FB)
-    ldx $45
+    ldx PageIndex
     lda $0400,x
     clc
     adc $B461,x
@@ -9634,14 +9680,14 @@ EnemyMoveOnePixelDown: ;($B0FB)
 LB10C:
     ldy #$00
     sty $00
-    ldx $45
+    ldx PageIndex
     bcc RTS_B156
     inc $00
     ldy $0400,x
     cpy #$EF
     bne LB131
     ldy #$FF
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcs LB131
     lda $FC
@@ -9677,7 +9723,7 @@ RTS_B156:
 
 
 EnemyMoveOnePixelLeft: ;($B157)
-    ldx $45
+    ldx PageIndex
     lda $0401,x
     sec
     sbc $B462,x
@@ -9688,12 +9734,12 @@ EnemyMoveOnePixelLeft: ;($B157)
 LB168:
     ldy #$00
     sty $00
-    ldx $45
+    ldx PageIndex
     bcc RTS_B1AD
     inc $00
     ldy $0401,x
     bne LB18A
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcc LB18A
     lda $FD
@@ -9728,7 +9774,7 @@ RTS_B1AD:
 
 
 EnemyMoveOnePixelRight: ;($B1AE)
-    ldx $45
+    ldx PageIndex
     lda $0401,x
     clc
     adc $B462,x
@@ -9739,12 +9785,12 @@ EnemyMoveOnePixelRight: ;($B1AE)
 LB1BF:
     ldy #$00
     sty $00
-    ldx $45
+    ldx PageIndex
     bcc RTS_B209
     inc $00
     inc $0401,x
     bne LB1E6
-    lda $43
+    lda ScrollDir
     cmp #$02
     bcc LB1E6
     lda $FD
@@ -10030,10 +10076,10 @@ LB385:
     lda ObjHi
     sta $03FC
     lda #$F0
-    sta $45
+    sta PageIndex
     lda #$00
     sta $55
-    jsr L81C6
+    jsr ObjDrawFrame
     pla
     lsr a
     lsr a
