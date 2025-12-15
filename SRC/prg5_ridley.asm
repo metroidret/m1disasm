@@ -88,7 +88,7 @@ PalPntrTbl:
     PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A177)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl               ;($A20D)Beginning of special items table.
+    .word SpecItmsTbl_BANK{BANK}               ;($A20D)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
     RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A17F)Beginning of room pointer table.
@@ -113,7 +113,7 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    jmp RTS_Polyp                       ;Area specific routine.
+    jmp RTS_Polyp_BANK{BANK}                       ;Area specific routine.
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -145,17 +145,17 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTable
+    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTable
+    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
 
-    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTable, EnAnim_ViolaOnFloor - EnAnimTable
+    .byte EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaEnProjectileFallingAnimIndex:
-    .byte EnAnim_DessgeegaCeilingHopping - EnAnimTable, EnAnim_ViolaOnFloor - EnAnimTable
+    .byte EnAnim_DessgeegaCeilingHopping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaEnProjectileSplatterAnimIndex:
-    .byte EnAnim_ViolaOnFloor - EnAnimTable, EnAnim_36 - EnAnimTable
+    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_36_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaMellowAnimIndex:
-    .byte EnAnim_Mella - EnAnimTable
+    .byte EnAnim_Mella_BANK{BANK} - EnAnimTable_BANK{BANK}
 
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
@@ -178,20 +178,20 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy__BANK{BANK} ; 0F - same as 4
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_HoltzExplode - EnAnimTable, EnAnim_HoltzExplode - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_HoltzExplode - EnAnimTable, EnAnim_HoltzExplode - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_DessgeegaExplodeFloor - EnAnimTable, EnAnim_DessgeegaExplodeFloor - EnAnimTable ; 02 - dessgeegas
-    .byte EnAnim_DessgeegaExplodeCeiling - EnAnimTable, EnAnim_DessgeegaExplodeCeiling - EnAnimTable ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaExplodeFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaExplodeFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaExplodeCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaExplodeCeiling_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_ViolaExplode - EnAnimTable, EnAnim_ViolaExplode - EnAnimTable ; 06 - crawler
-    .byte EnAnim_ZebboExplode_R - EnAnimTable, EnAnim_ZebboExplode_L - EnAnimTable ; 07 - zebbo
+    .byte EnAnim_ViolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_ZebboExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZebboExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_RidleyExplode - EnAnimTable, EnAnim_RidleyExplode - EnAnimTable ; 09 - ridley
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - ridley fireball
-    .byte EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0B - same as 4
-    .byte EnAnim_MultiviolaExplode - EnAnimTable, EnAnim_MultiviolaExplode - EnAnimTable ; 0C - bouncy orbs
-    .byte EnAnim_34 - EnAnimTable, EnAnim_34 - EnAnimTable ; 0D - same as 4
+    .byte EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - ridley
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - ridley fireball
+    .byte EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 4
+    .byte EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orbs
+    .byte EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
@@ -214,38 +214,38 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 4
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_HoltzIdle - EnAnimTable, EnAnim_HoltzIdle - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_HoltzIdle - EnAnimTable, EnAnim_HoltzIdle - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_DessgeegaIdleFloor - EnAnimTable, EnAnim_DessgeegaIdleFloor - EnAnimTable ; 02 - dessgeegas
-    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTable, EnAnim_DessgeegaIdleCeiling - EnAnimTable ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaIdleFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaIdleFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_ViolaOnFloor - EnAnimTable, EnAnim_ViolaOnFloor - EnAnimTable ; 06 - crawler
-    .byte EnAnim_ZebboResting_R - EnAnimTable, EnAnim_ZebboResting_L - EnAnimTable ; 07 - zebbo
+    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_ZebboResting_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZebboResting_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - ridley
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - ridley fireball
-    .byte EnAnim_HoltzIdle - EnAnimTable, EnAnim_HoltzIdle - EnAnimTable ; 0B - same as 4
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orbs
-    .byte EnAnim_34 - EnAnimTable, EnAnim_34 - EnAnimTable ; 0D - same as 4
+    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - ridley
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - ridley fireball
+    .byte EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 4
+    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orbs
+    .byte EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_HoltzSwooping - EnAnimTable, EnAnim_HoltzSwooping - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_HoltzSwooping - EnAnimTable, EnAnim_HoltzSwooping - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_DessgeegaIdleFloor - EnAnimTable, EnAnim_DessgeegaIdleFloor - EnAnimTable ; 02 - dessgeegas
-    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTable, EnAnim_DessgeegaIdleCeiling - EnAnimTable ; 03 - ceiling dessgeegas
+    .byte EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_DessgeegaIdleFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaIdleFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - dessgeegas
+    .byte EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ceiling dessgeegas
     .byte $00, $00 ; 04 - disappears
     .byte $00, $00 ; 05 - same as 4
-    .byte EnAnim_ViolaOnFloor - EnAnimTable, EnAnim_ViolaOnFloor - EnAnimTable ; 06 - crawler
-    .byte EnAnim_Zebbo_R - EnAnimTable, EnAnim_Zebbo_L - EnAnimTable ; 07 - zebbo
+    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_Zebbo_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Zebbo_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - zebbo
     .byte $00, $00 ; 08 - same as 4
-    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - ridley
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - ridley fireball
-    .byte EnAnim_HoltzIdle - EnAnimTable, EnAnim_HoltzIdle - EnAnimTable ; 0B - same as 4
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orbs
-    .byte EnAnim_34 - EnAnimTable, EnAnim_34 - EnAnimTable ; 0D - same as 4
+    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - ridley
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - ridley fireball
+    .byte EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 4
+    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orbs
+    .byte EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - same as 4
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
@@ -409,8 +409,8 @@ L977B:
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_34 - EnAnimTable, EnAnim_34 - EnAnimTable
-    .byte EnAnim_DessgeegaIdleCeiling - EnAnimTable, EnAnim_ViolaOnFloor - EnAnimTable
+    .byte EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_34_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DessgeegaIdleCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00

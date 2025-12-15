@@ -22,16 +22,16 @@ KraidBranch_Explode_BANK{BANK}:
     beq KraidBranch_Exit_BANK{BANK} ; branch always
 
 KraidBranch_Normal_BANK{BANK}:
-    jsr KraidUpdateAllProjectiles
-    jsr KraidTryToLaunchLint
-    jsr KraidTryToLaunchNail
+    jsr KraidUpdateAllProjectiles_BANK{BANK}
+    jsr KraidTryToLaunchLint_BANK{BANK}
+    jsr KraidTryToLaunchNail_BANK{BANK}
     ; fallthrough
 
 KraidBranch_Exit_BANK{BANK}:
     ; change animation frame every 10 frames
     lda #$0A
     sta $00
-    jmp CommonEnemyStub ;sidehopper.asm
+    jmp CommonEnemyStub_BANK{BANK} ;sidehopper.asm
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
@@ -116,7 +116,7 @@ KraidUpdateProjectile_BANK{BANK}:
     cmp #$0A
     beq @branchA
     cmp #$09
-    bne KraidUpdateProjectile_Exit
+    bne KraidUpdateProjectile_Exit_BANK{BANK}
 
 @branchA:
     ; remove projectile if it is invisible
@@ -131,12 +131,12 @@ KraidUpdateProjectile_BANK{BANK}:
     beq @remove
     ; exit if projectile is not frozen
     cpy #enemyStatus_Frozen-1.b
-    bne KraidUpdateProjectile_Exit
+    bne KraidUpdateProjectile_Exit_BANK{BANK}
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting
     lda EnPrevStatus,x
     cmp #$01
-    bne KraidUpdateProjectile_Exit
+    bne KraidUpdateProjectile_Exit_BANK{BANK}
     ; projectile state before being frozen was resting
     beq @resting ; branch always
 
@@ -179,29 +179,29 @@ KraidUpdateProjectile_BANK{BANK}:
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
 ;  a crash when attempting to spawn him
-    .IF BANK != 1
+    .if BANK != 1
         ; push x to stack
         txa
         pha
-    .ENDIF
+    .endif
     ; store kraid's position in temp
     ldx #$00
-    jsr StoreEnemyPositionToTemp_
-    .IF BANK != 1
+    jsr StoreEnemyPositionToTemp__BANK{BANK}
+    .if BANK != 1
         ; pull x from stack
         pla
         tax
-    .ENDIF
+    .endif
     ; apply offset to kraid's position
     jsr CommonJump_ApplySpeedToPosition
 
-    .IF BANK == 1
+    .if BANK == 1
         ; load projectile's enemy slot offset into x
         ; (BUG! this is actually kraid's enemy slot offset) 
         ldx PageIndex
-    .ENDIF
+    .endif
     ; exit if initial position for projectile is out of bounds
-    bcc KraidUpdateProjectile_Exit
+    bcc KraidUpdateProjectile_Exit_BANK{BANK}
     ; set projectile status to enemyStatus_Resting if it was enemyStatus_NoEnemy
     lda EnsExtra.0.status,x
     bne LoadEnemyPositionFromTemp__BANK{BANK}

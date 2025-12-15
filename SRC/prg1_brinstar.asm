@@ -82,7 +82,7 @@ PalPntrTbl:
     PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl               ;($A3D6)Beginning of special items table.
+    .word SpecItmsTbl_BANK{BANK}               ;($A3D6)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
     RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A314)Beginning of room pointer table.

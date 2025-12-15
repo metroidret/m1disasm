@@ -9,5 +9,5 @@ MultiviolaAIRoutine_BANK{BANK}:
     lda #$02
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 

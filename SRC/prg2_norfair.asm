@@ -80,7 +80,7 @@ PalPntrTbl:
     PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A213)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl               ;($A2D9)Beginning of special items table.
+    .word SpecItmsTbl_BANK{BANK}               ;($A2D9)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
     RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A21B)Beginning of room pointer table.
@@ -105,7 +105,7 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    jmp RTS_Polyp                       ;Area specific routine.(RTS)
+    jmp RTS_Polyp_BANK{BANK}                       ;Area specific routine.(RTS)
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -137,17 +137,17 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTable
+    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTable
+    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
 ; EnProjectile rising?
-    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTable, EnAnim_DragonEnProjectileUp_L - EnAnimTable
+    .byte EnAnim_DragonEnProjectileUp_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileUp_L_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaEnProjectileFallingAnimIndex:
-    .byte EnAnim_DragonEnProjectileDown_R - EnAnimTable, EnAnim_DragonEnProjectileDown_L - EnAnimTable
+    .byte EnAnim_DragonEnProjectileDown_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileDown_L_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaEnProjectileSplatterAnimIndex:
-    .byte EnAnim_DragonEnProjectileSplatter - EnAnimTable, EnAnim_PolypRockShatter - EnAnimTable
+    .byte EnAnim_DragonEnProjectileSplatter_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_PolypRockShatter_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaMellowAnimIndex:
-    .byte EnAnim_Mella - EnAnimTable
+    .byte EnAnim_Mella_BANK{BANK} - EnAnimTable_BANK{BANK}
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
@@ -171,20 +171,20 @@ ChooseEnemyAIRoutine:
         .word RemoveEnemy__BANK{BANK} ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_GerutaExplode - EnAnimTable, EnAnim_GerutaExplode - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaExplode - EnAnimTable, EnAnim_GerutaExplode - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_RipperIIExplode - EnAnimTable, EnAnim_RipperIIExplode - EnAnimTable ; 02 - ripper II
+    .byte EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperIIExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaExplode - EnAnimTable, EnAnim_NovaExplode - EnAnimTable ; 06 - crawler
-    .byte EnAnim_GametExplode_R - EnAnimTable, EnAnim_GametExplode_L - EnAnimTable ; 07 - gamet
+    .byte EnAnim_NovaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_GametExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyExplode - EnAnimTable, EnAnim_RidleyExplode - EnAnimTable ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
-    .byte EnAnim_SqueeptExplode - EnAnimTable, EnAnim_SqueeptExplode - EnAnimTable ; 0B - lava jumper
-    .byte EnAnim_MultiviolaExplode - EnAnimTable, EnAnim_MultiviolaExplode - EnAnimTable ; 0C - bouncy orb
-    .byte EnAnim_DragonExplode - EnAnimTable, EnAnim_DragonExplode - EnAnimTable ; 0D - dragon
+    .byte EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
+    .byte EnAnim_SqueeptExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
+    .byte EnAnim_DragonExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -207,38 +207,38 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_GerutaIdle - EnAnimTable, EnAnim_GerutaIdle - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaIdle - EnAnimTable, EnAnim_GerutaIdle - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R - EnAnimTable, EnAnim_RipperII_L - EnAnimTable ; 02 - ripper II
+    .byte EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperII_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor - EnAnimTable, EnAnim_NovaOnFloor - EnAnimTable ; 06 - crawler
-    .byte EnAnim_GametResting_R - EnAnimTable, EnAnim_GametResting_L - EnAnimTable ; 07 - gamet
+    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_GametResting_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametResting_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
-    .byte EnAnim_SqueeptFalling - EnAnimTable, EnAnim_SqueeptFalling - EnAnimTable ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTable, EnAnim_DragonIdle_L - EnAnimTable ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
+    .byte EnAnim_SqueeptFalling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptFalling_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_GerutaSwooping - EnAnimTable, EnAnim_GerutaSwooping - EnAnimTable ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaSwooping - EnAnimTable, EnAnim_GerutaSwooping - EnAnimTable ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R - EnAnimTable, EnAnim_RipperII_L - EnAnimTable ; 02 - ripper II
+    .byte EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperII_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor - EnAnimTable, EnAnim_NovaOnFloor - EnAnimTable ; 06 - crawler
-    .byte EnAnim_GametActive_R - EnAnimTable, EnAnim_GametActive_L - EnAnimTable ; 07 - gamet
+    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
+    .byte EnAnim_GametActive_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametActive_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R - EnAnimTable, EnAnim_RidleyIdle_L - EnAnimTable ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R - EnAnimTable, EnAnim_RidleyFireball_L - EnAnimTable ; 0A - same as 3
-    .byte EnAnim_SqueeptJumping - EnAnimTable, EnAnim_SqueeptJumping - EnAnimTable ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise - EnAnimTable, EnAnim_MultiviolaSpinningCounterclockwise - EnAnimTable ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R - EnAnimTable, EnAnim_DragonIdle_L - EnAnimTable ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
+    .byte EnAnim_SqueeptJumping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptJumping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -402,8 +402,8 @@ L977B:
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_PolypRock - EnAnimTable, EnAnim_PolypRock - EnAnimTable
-    .byte EnAnim_DragonEnProjectileUp_R - EnAnimTable, EnAnim_DragonEnProjectileUp_L - EnAnimTable
+    .byte EnAnim_PolypRock_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_PolypRock_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DragonEnProjectileUp_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileUp_L_BANK{BANK} - EnAnimTable_BANK{BANK}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -602,12 +602,12 @@ L9963:
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
@@ -622,7 +622,7 @@ L9963:
     bne L9993
         jmp L984D
     L9993:
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
 ;-------------------------------------------------------------------------------
 ; Crawler Routine

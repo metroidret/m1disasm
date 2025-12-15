@@ -1,13 +1,13 @@
 ; Ridley Routine
-RidleyAIRoutine:
+RidleyAIRoutine_BANK{BANK}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    bcc RidleyBranch_Normal
-    beq RidleyBranch_Explode
+    bcc RidleyBranch_Normal_BANK{BANK}
+    beq RidleyBranch_Explode_BANK{BANK}
     cmp #enemyStatus_Pickup
-    bne RidleyBranch_Exit
+    bne RidleyBranch_Exit_BANK{BANK}
 
-RidleyBranch_Explode:
+RidleyBranch_Explode_BANK{BANK}:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
     sta EnsExtra.1.status
@@ -15,26 +15,26 @@ RidleyBranch_Explode:
     sta EnsExtra.3.status
     sta EnsExtra.4.status
     sta EnsExtra.5.status
-    beq RidleyBranch_Exit
+    beq RidleyBranch_Exit_BANK{BANK}
 
-RidleyBranch_Normal:
-    lda #EnAnim_RidleyHopping_R - EnAnimTable.b
+RidleyBranch_Normal_BANK{BANK}:
+    lda #EnAnim_RidleyHopping_R_BANK{BANK} - EnAnimTable_BANK{BANK}.b
     sta EnemyFlipAfterDisplacementAnimIndex
-    lda #EnAnim_RidleyHopping_L - EnAnimTable.b
+    lda #EnAnim_RidleyHopping_L_BANK{BANK} - EnAnimTable_BANK{BANK}.b
     sta EnemyFlipAfterDisplacementAnimIndex+1.b
     jsr CommonJump_EnemyFlipAfterDisplacement
-    jsr RidleyTryToLaunchProjectile
+    jsr RidleyTryToLaunchProjectile_BANK{BANK}
 
-RidleyBranch_Exit:
+RidleyBranch_Exit_BANK{BANK}:
     ; change animation frame every 3 frames
     lda #$03
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
-RidleyFireballAIRoutine:
+RidleyFireballAIRoutine_BANK{BANK}:
     ; push EnData05 to stack
     lda EnData05,x
     pha
@@ -42,7 +42,7 @@ RidleyFireballAIRoutine:
     lda #$02
     sta $00
     sta $01
-    jsr CommonEnemyJump_00_01_02
+    jsr CommonEnemyJump_00_01_02_BANK{BANK}
     ; compare past EnData05 to current EnData05
     pla
     ldx PageIndex
@@ -72,16 +72,16 @@ RidleyFireballAIRoutine:
 
 ;-------------------------------------------------------------------------------
 ; Ridley Subroutine
-RidleyTryToLaunchProjectile:
+RidleyTryToLaunchProjectile_BANK{BANK}:
     ; load projectile counter into y (#$60 if it is zero)
     ldy RidleyProjectileCounter
-    bne L9A7F
+    bne @endIf_A
         ldy #$60
-    L9A7F:
+    @endIf_A:
     ; exit if bit 1 of FrameCount is set
     lda FrameCount
     and #$02
-    bne RTS_9AA9
+    bne @RTS
     ; decrement projectile counter
     dey
     sty RidleyProjectileCounter
@@ -90,43 +90,43 @@ RidleyTryToLaunchProjectile:
     asl
     ; exit if (projectile counter * 2) is not #$0A, #$1A, #$2A, #$3A, #$4A, #$5A, #$6A or #$7A
     ; projectile will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
-    bmi RTS_9AA9
+    bmi @RTS
     and #$0F
     cmp #$0A
-    bne RTS_9AA9
+    bne @RTS
 
     ; loop for all projectiles
     ldx #$50
-    L9A94:
+    @loop_A:
         ; branch if no projectile in enemy slot
         lda EnsExtra.0.status,x
-        beq RidleyTryToLaunchProjectile_FoundEnemySlot
+        beq RidleyTryToLaunchProjectile_FoundEnemySlot_BANK{BANK}
         ; branch if projectile is invisible
         lda EnData05,x
         and #$02
-        beq RidleyTryToLaunchProjectile_FoundEnemySlot
+        beq RidleyTryToLaunchProjectile_FoundEnemySlot_BANK{BANK}
         ; enemy slot is occupied, check the next slot
         txa
         sec
         sbc #$10
         tax
-        bne L9A94
+        bne @loop_A
     
     ; all projectiles are currently launched
     ; undo decrement projectile counter so that it will try to launch again the next frame
     ; (BUG! this is actually Kraid's lint counter, probably a remnant-->
     ; of copy-pasting the KraidTryToLaunchLint routine to make this one)
     inc KraidLintCounter
-RTS_9AA9:
+@RTS:
     rts
 
-RidleyTryToLaunchProjectile_FoundEnemySlot:
+RidleyTryToLaunchProjectile_FoundEnemySlot_BANK{BANK}:
     ; set y to x
     txa
     tay
     ; put ridley's position in temp
     ldx #$00
-    jsr StoreEnemyPositionToTemp_
+    jsr StoreEnemyPositionToTemp__BANK{BANK}
     ; set x to y
     tya
     tax
@@ -136,7 +136,7 @@ RidleyTryToLaunchProjectile_FoundEnemySlot:
     ; set x offset based on horizontal facing direction
     and #$01
     tay
-    lda RidleyProjectileOffsetX,y
+    lda RidleyProjectileOffsetX_BANK{BANK},y
     sta Temp05_SpeedX
     ; set y offset
     lda #$F8
@@ -144,7 +144,7 @@ RidleyTryToLaunchProjectile_FoundEnemySlot:
     ; apply offset to ridley's position for use as projectile's position
     jsr CommonJump_ApplySpeedToPosition
     ; exit if projectile's initial position is out of bounds
-    bcc RTS_9AA9
+    bcc RidleyTryToLaunchProjectile_BANK{BANK}@RTS
     ; set EnSpecialAttribs to #$00
     lda #$00
     sta EnSpecialAttribs,x
@@ -155,9 +155,9 @@ RidleyTryToLaunchProjectile_FoundEnemySlot:
     lda #enemyStatus_Resting
     sta EnsExtra.0.status,x
     ; set projectile's position to its initial position
-    jsr LoadEnemyPositionFromTemp_
+    jsr LoadEnemyPositionFromTemp__BANK{BANK}
     jmp CommonJump_0E
 
-RidleyProjectileOffsetX:
+RidleyProjectileOffsetX_BANK{BANK}:
     .byte $08, -$08
 

@@ -6,7 +6,7 @@ RipperAIRoutine_BANK{BANK}:
         jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
     @dontUpdateAnim:
     .if BANK == 1 || BANK == 4
-        jmp CommonEnemyStub2 ;sidehopper.asm
+        jmp CommonEnemyStub2_BANK{BANK} ;sidehopper.asm
     .elif BANK == 2
         ; this is for Ripper II's rocket booster flames
         ; change animation frame every 3 frames

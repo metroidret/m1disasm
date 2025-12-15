@@ -161,6 +161,9 @@
 
 ; Temps ($00-$0B and $0E-$11)
 
+; (BUG! NMI routine overwrites Temp00 and Temp01 without restoring their value.
+;  Routines that can be interrupted by NMI (like UpdateAttrib) will lose the values in those variables.)
+
 ; entity to entity collision detection
 Temp00_Diff            = $00
 Temp01_DiffHi          = $01

@@ -2,149 +2,149 @@
 
 EnAnimTable_BANK{BANK}: ;($9D6A)
 EnAnim_00_BANK{BANK}:
-    .byte _id_EnFrame00, _id_EnFrame01, $FF
+    .byte _id_EnFrame00_BANK{BANK}, _id_EnFrame01_BANK{BANK}, $FF
 
 EnAnim_EnProjectileKilled_BANK{BANK}:
-    .byte _id_EnFrame_EnProjectileKilled, $FF
+    .byte _id_EnFrame_EnProjectileKilled_BANK{BANK}, $FF
 
 EnAnim_SidehopperFloorIdle_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperFloorIdle0, _id_EnFrame_SidehopperFloorIdle1, $FF
+    .byte _id_EnFrame_SidehopperFloorIdle0_BANK{BANK}, _id_EnFrame_SidehopperFloorIdle1_BANK{BANK}, $FF
 
 EnAnim_SidehopperFloorStartHopping_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperFloorIdle1
+    .byte _id_EnFrame_SidehopperFloorIdle1_BANK{BANK}
 EnAnim_SidehopperFloorHopping_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperFloorHopping, $FF
+    .byte _id_EnFrame_SidehopperFloorHopping_BANK{BANK}, $FF
 
 EnAnim_SidehopperCeilingIdle_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperCeilingIdle0, _id_EnFrame_SidehopperCeilingIdle1, $FF
+    .byte _id_EnFrame_SidehopperCeilingIdle0_BANK{BANK}, _id_EnFrame_SidehopperCeilingIdle1_BANK{BANK}, $FF
 
 EnAnim_SidehopperCeilingStartHopping_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperCeilingIdle1
+    .byte _id_EnFrame_SidehopperCeilingIdle1_BANK{BANK}
 EnAnim_SidehopperCeilingHopping_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperCeilingHopping, $FF
+    .byte _id_EnFrame_SidehopperCeilingHopping_BANK{BANK}, $FF
 
 EnAnim_11_BANK{BANK}:
-    .byte _id_EnFrame_Ripper_L, _id_EnFrame_Waver1_L
+    .byte _id_EnFrame_Ripper_L_BANK{BANK}, _id_EnFrame_Waver1_L_BANK{BANK}
 EnAnim_Waver0_L_BANK{BANK}:
-    .byte _id_EnFrame_Waver0_L, $FF
+    .byte _id_EnFrame_Waver0_L_BANK{BANK}, $FF
 
 EnAnim_15_BANK{BANK}:
-    .byte _id_EnFrame_Ripper_R, _id_EnFrame_Waver1_R
+    .byte _id_EnFrame_Ripper_R_BANK{BANK}, _id_EnFrame_Waver1_R_BANK{BANK}
 EnAnim_Waver0_R_BANK{BANK}:
-    .byte _id_EnFrame_Waver0_R, $FF
+    .byte _id_EnFrame_Waver0_R_BANK{BANK}, $FF
 
 EnAnim_Ripper_L_BANK{BANK}:
-    .byte _id_EnFrame_Ripper_L, $FF
+    .byte _id_EnFrame_Ripper_L_BANK{BANK}, $FF
 
 EnAnim_Ripper_R_BANK{BANK}:
-    .byte _id_EnFrame_Ripper_R, $FF
+    .byte _id_EnFrame_Ripper_R_BANK{BANK}, $FF
 
 EnAnim_Waver1_L_BANK{BANK}:
-    .byte _id_EnFrame_Waver1_L,
+    .byte _id_EnFrame_Waver1_L_BANK{BANK},
 EnAnim_Waver2_L_BANK{BANK}:
-    .byte _id_EnFrame_Waver2_L, $FF
+    .byte _id_EnFrame_Waver2_L_BANK{BANK}, $FF
 
 EnAnim_Waver1_R_BANK{BANK}:
-    .byte _id_EnFrame_Waver1_R
+    .byte _id_EnFrame_Waver1_R_BANK{BANK}
 EnAnim_Waver2_R_BANK{BANK}:
-    .byte _id_EnFrame_Waver2_R, $FF
+    .byte _id_EnFrame_Waver2_R_BANK{BANK}, $FF
 
 EnAnim_Skree_BANK{BANK}:
-    .byte _id_EnFrame_Skree0, _id_EnFrame_Skree1, _id_EnFrame_Skree2, $FF
+    .byte _id_EnFrame_Skree0_BANK{BANK}, _id_EnFrame_Skree1_BANK{BANK}, _id_EnFrame_Skree2_BANK{BANK}, $FF
 
 EnAnim_SidehopperFloorExplode_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperFloorExplode, $FF
+    .byte _id_EnFrame_SidehopperFloorExplode_BANK{BANK}, $FF
 
 EnAnim_SidehopperCeilingExplode_BANK{BANK}:
-    .byte _id_EnFrame_SidehopperCeilingExplode, $FF
+    .byte _id_EnFrame_SidehopperCeilingExplode_BANK{BANK}, $FF
 
 EnAnim_WaverExplode_L_BANK{BANK}:
-    .byte _id_EnFrame_WaverExplode_L, $FF
+    .byte _id_EnFrame_WaverExplode_L_BANK{BANK}, $FF
 
 EnAnim_WaverExplode_R_BANK{BANK}:
-    .byte _id_EnFrame_WaverExplode_R, $FF
+    .byte _id_EnFrame_WaverExplode_R_BANK{BANK}, $FF
 
 EnAnim_RipperExplode_L_BANK{BANK}:
-    .byte _id_EnFrame_RipperExplode_L, $FF
+    .byte _id_EnFrame_RipperExplode_L_BANK{BANK}, $FF
 
 EnAnim_RipperExplode_R_BANK{BANK}:
-    .byte _id_EnFrame_RipperExplode_R, $FF
+    .byte _id_EnFrame_RipperExplode_R_BANK{BANK}, $FF
 
 EnAnim_SkreeExplode_BANK{BANK}:
-    .byte _id_EnFrame_SkreeExplode, $FF
+    .byte _id_EnFrame_SkreeExplode_BANK{BANK}, $FF
 
 EnAnim_ZoomerOnFloor_BANK{BANK}:
-    .byte _id_EnFrame_ZoomerOnFloor0, _id_EnFrame_ZoomerOnFloor1, $FF
+    .byte _id_EnFrame_ZoomerOnFloor0_BANK{BANK}, _id_EnFrame_ZoomerOnFloor1_BANK{BANK}, $FF
 
 EnAnim_ZoomerOnRightWall_BANK{BANK}:
-    .byte _id_EnFrame_ZoomerOnRightWall0, _id_EnFrame_ZoomerOnRightWall1, $FF
+    .byte _id_EnFrame_ZoomerOnRightWall0_BANK{BANK}, _id_EnFrame_ZoomerOnRightWall1_BANK{BANK}, $FF
 
 EnAnim_ZoomerOnCeiling_BANK{BANK}:
-    .byte _id_EnFrame_ZoomerOnCeiling0, _id_EnFrame_ZoomerOnCeiling1, $FF
+    .byte _id_EnFrame_ZoomerOnCeiling0_BANK{BANK}, _id_EnFrame_ZoomerOnCeiling1_BANK{BANK}, $FF
 
 EnAnim_ZoomerOnLeftWall_BANK{BANK}:
-    .byte _id_EnFrame_ZoomerOnLeftWall0, _id_EnFrame_ZoomerOnLeftWall1, $FF
+    .byte _id_EnFrame_ZoomerOnLeftWall0_BANK{BANK}, _id_EnFrame_ZoomerOnLeftWall1_BANK{BANK}, $FF
 
 EnAnim_ZoomerExplode_BANK{BANK}:
-    .byte _id_EnFrame_ZoomerExplode, $FF
+    .byte _id_EnFrame_ZoomerExplode_BANK{BANK}, $FF
 
 EnAnim_Explosion_BANK{BANK}:
-    .byte _id_EnFrame_Explosion0, $F7, _id_EnFrame_Explosion1, $F7, $FF
+    .byte _id_EnFrame_Explosion0_BANK{BANK}, $F7, _id_EnFrame_Explosion1_BANK{BANK}, $F7, $FF
 
 EnAnim_Rio_BANK{BANK}:
-    .byte _id_EnFrame_Rio0, _id_EnFrame_Rio1, $FF
+    .byte _id_EnFrame_Rio0_BANK{BANK}, _id_EnFrame_Rio1_BANK{BANK}, $FF
 
 EnAnim_RioExplode_BANK{BANK}:
-    .byte _id_EnFrame_RioExplode, $FF
+    .byte _id_EnFrame_RioExplode_BANK{BANK}, $FF
 
 EnAnim_Zeb_L_BANK{BANK}:
-    .byte _id_EnFrame_Zeb0_L, _id_EnFrame_Zeb1_L, $FF
+    .byte _id_EnFrame_Zeb0_L_BANK{BANK}, _id_EnFrame_Zeb1_L_BANK{BANK}, $FF
 
 EnAnim_Zeb_R_BANK{BANK}:
-    .byte _id_EnFrame_Zeb0_R, _id_EnFrame_Zeb1_R, $FF
+    .byte _id_EnFrame_Zeb0_R_BANK{BANK}, _id_EnFrame_Zeb1_R_BANK{BANK}, $FF
 
 EnAnim_ZebExplode_L_BANK{BANK}:
-    .byte _id_EnFrame_ZebExplode_L, $FF
+    .byte _id_EnFrame_ZebExplode_L_BANK{BANK}, $FF
 
 EnAnim_ZebExplode_R_BANK{BANK}:
-    .byte _id_EnFrame_ZebExplode_R, $FF
+    .byte _id_EnFrame_ZebExplode_R_BANK{BANK}, $FF
 
 EnAnim_ZebResting_L_BANK{BANK}:
-    .byte _id_EnFrame_Zeb0_L, $FF
+    .byte _id_EnFrame_Zeb0_L_BANK{BANK}, $FF
 
 EnAnim_ZebResting_R_BANK{BANK}:
-    .byte _id_EnFrame_Zeb0_R, $FF
+    .byte _id_EnFrame_Zeb0_R_BANK{BANK}, $FF
 
 EnAnim_KraidLint_R_BANK{BANK}:
-    .byte _id_EnFrame_KraidLint_R, $FF
+    .byte _id_EnFrame_KraidLint_R_BANK{BANK}, $FF
 
 EnAnim_KraidLint_L_BANK{BANK}:
-    .byte _id_EnFrame_KraidLint_L, $FF
+    .byte _id_EnFrame_KraidLint_L_BANK{BANK}, $FF
 
 EnAnim_KraidNailMoving_R_BANK{BANK}:
-    .byte _id_EnFrame_KraidNail1_R, _id_EnFrame_KraidNail2_R, _id_EnFrame_KraidNail3_R
+    .byte _id_EnFrame_KraidNail1_R_BANK{BANK}, _id_EnFrame_KraidNail2_R_BANK{BANK}, _id_EnFrame_KraidNail3_R_BANK{BANK}
 EnAnim_KraidNailIdle_R_BANK{BANK}:
-    .byte _id_EnFrame_KraidNail0_R, $FF
+    .byte _id_EnFrame_KraidNail0_R_BANK{BANK}, $FF
 
 EnAnim_KraidNailMoving_L_BANK{BANK}:
-    .byte _id_EnFrame_KraidNail1_L, _id_EnFrame_KraidNail2_L, _id_EnFrame_KraidNail3_L
+    .byte _id_EnFrame_KraidNail1_L_BANK{BANK}, _id_EnFrame_KraidNail2_L_BANK{BANK}, _id_EnFrame_KraidNail3_L_BANK{BANK}
 EnAnim_KraidNailIdle_L_BANK{BANK}:
-    .byte _id_EnFrame_KraidNail0_L, $FF
+    .byte _id_EnFrame_KraidNail0_L_BANK{BANK}, $FF
 
 EnAnim_Mellow_BANK{BANK}:
-    .byte _id_EnFrame_Mellow0, _id_EnFrame_Mellow1, $FF
+    .byte _id_EnFrame_Mellow0_BANK{BANK}, _id_EnFrame_Mellow1_BANK{BANK}, $FF
 
 EnAnim_Kraid_R_BANK{BANK}:
-    .byte _id_EnFrame_Kraid0_R, _id_EnFrame_Kraid1_R, $FF
+    .byte _id_EnFrame_Kraid0_R_BANK{BANK}, _id_EnFrame_Kraid1_R_BANK{BANK}, $FF
 
 EnAnim_Kraid_L_BANK{BANK}:
-    .byte _id_EnFrame_Kraid0_L, _id_EnFrame_Kraid1_L, $FF
+    .byte _id_EnFrame_Kraid0_L_BANK{BANK}, _id_EnFrame_Kraid1_L_BANK{BANK}, $FF
 
 EnAnim_KraidExplode_R_BANK{BANK}:
-    .byte _id_EnFrame_KraidExplode_R, $FF
+    .byte _id_EnFrame_KraidExplode_R_BANK{BANK}, $FF
 
 EnAnim_KraidExplode_L_BANK{BANK}:
-    .byte _id_EnFrame_KraidExplode_L, $FF
+    .byte _id_EnFrame_KraidExplode_L_BANK{BANK}, $FF
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
@@ -278,8 +278,8 @@ EnFramePtrTable1_BANK{BANK}:
     PtrTableEntry EnFramePtrTable1, EnFrame7E_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame7F_BANK{BANK}
 EnFramePtrTable2_BANK{BANK}:
-    PtrTableEntry EnFramePtrTable1, EnFrame_MissilePickup_BANK{BANK}
-    PtrTableEntry EnFramePtrTable1, EnFrame_SmallEnergyPickup_BANK{BANK}
+    PtrTableEntryBank EnFramePtrTable1, EnFrame_MissilePickup
+    PtrTableEntryBank EnFramePtrTable1, EnFrame_SmallEnergyPickup
     PtrTableEntry EnFramePtrTable1, EnFrame82_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame83_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame84_BANK{BANK}
@@ -287,7 +287,7 @@ EnFramePtrTable2_BANK{BANK}:
     PtrTableEntry EnFramePtrTable1, EnFrame86_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame87_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame88_BANK{BANK}
-    PtrTableEntry EnFramePtrTable1, EnFrame_BigEnergyPickup_BANK{BANK}
+    PtrTableEntryBank EnFramePtrTable1, EnFrame_BigEnergyPickup
     PtrTableEntry EnFramePtrTable1, EnFrame8A_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame8B_BANK{BANK}
     PtrTableEntry EnFramePtrTable1, EnFrame8C_BANK{BANK}
@@ -303,8 +303,8 @@ EnFramePtrTable2_BANK{BANK}:
     PtrTableEntry EnFramePtrTable1, EnFrame_KraidExplode_L_BANK{BANK}
 
 EnPlacePtrTable_BANK{BANK}:
-    PtrTableEntry EnPlacePtrTable, EnPlace0_BANK{BANK}
-    PtrTableEntry EnPlacePtrTable, EnPlace1_BANK{BANK}
+    PtrTableEntryBank EnPlacePtrTable, EnPlace0
+    PtrTableEntryBank EnPlacePtrTable, EnPlace1
     PtrTableEntry EnPlacePtrTable, EnPlace2_BANK{BANK}
     PtrTableEntry EnPlacePtrTable, EnPlace3_BANK{BANK}
     PtrTableEntry EnPlacePtrTable, EnPlace4_BANK{BANK}
@@ -322,6 +322,7 @@ EnPlacePtrTable_BANK{BANK}:
 
 ;------------------------------[ Enemy sprite placement data tables ]--------------------------------
 
+;Health pickup
 EnPlace0_BANK{BANK}:
     .byte $FC, $FC
 
@@ -383,14 +384,14 @@ EnFrame_EnProjectileKilled_BANK{BANK}:
     .byte $FF
 
 EnFrame_Waver2_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $FC, $04, $00
     .byte $D0
     .byte $D1
     .byte $FF
 
 EnFrame_Waver2_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $FC, $04, $00
     .byte $D0
     .byte $D1
@@ -417,7 +418,7 @@ EnFrame16_BANK{BANK}:
 EnFrame17_BANK{BANK}:
 EnFrame18_BANK{BANK}:
 EnFrame_SidehopperFloorIdle0_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace5, $08, $0A
+    .byte ($2 << 4) + _id_EnPlace5_BANK{BANK}, $08, $0A
     .byte $A3
     .byte $B3
     .byte $A4
@@ -430,7 +431,7 @@ EnFrame_SidehopperFloorIdle0_BANK{BANK}:
     .byte $FF
 
 EnFrame_SidehopperFloorIdle1_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace5, $08, $0A
+    .byte ($2 << 4) + _id_EnPlace5_BANK{BANK}, $08, $0A
     .byte $A5
     .byte $B3
     .byte $FE
@@ -443,7 +444,7 @@ EnFrame_SidehopperFloorIdle1_BANK{BANK}:
     .byte $FF
 
 EnFrame_SidehopperFloorHopping_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace6, $08, $0A
+    .byte ($2 << 4) + _id_EnPlace6_BANK{BANK}, $08, $0A
     .byte $B5
     .byte $B3
     .byte $A4
@@ -454,7 +455,7 @@ EnFrame_SidehopperFloorHopping_BANK{BANK}:
     .byte $FF
 
 EnFrame_SidehopperCeilingIdle0_BANK{BANK}:
-    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5_BANK{BANK}, $08, $0A
     .byte $A3
     .byte $B3
     .byte $A4
@@ -467,7 +468,7 @@ EnFrame_SidehopperCeilingIdle0_BANK{BANK}:
     .byte $FF
 
 EnFrame_SidehopperCeilingIdle1_BANK{BANK}:
-    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5_BANK{BANK}, $08, $0A
     .byte $A5
     .byte $B3
     .byte $FE
@@ -480,7 +481,7 @@ EnFrame_SidehopperCeilingIdle1_BANK{BANK}:
     .byte $FF
 
 EnFrame_SidehopperCeilingHopping_BANK{BANK}:
-    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace6, $08, $0A
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace6_BANK{BANK}, $08, $0A
     .byte $B5
     .byte $B3
     .byte $A4
@@ -492,14 +493,14 @@ EnFrame_SidehopperCeilingHopping_BANK{BANK}:
 
 ;Ripper facing right.
 EnFrame_Ripper_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $FC, $04, $00
     .byte $C0
     .byte $C1
     .byte $FF
 
 EnFrame_Waver1_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $E0
     .byte $E1
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
@@ -508,7 +509,7 @@ EnFrame_Waver1_R_BANK{BANK}:
     .byte $FF
 
 EnFrame_Waver0_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $F0
     .byte $F1
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
@@ -518,14 +519,14 @@ EnFrame_Waver0_R_BANK{BANK}:
 
 ;Ripper facing left.
 EnFrame_Ripper_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $FC, $04, $00
     .byte $C0
     .byte $C1
     .byte $FF
 
 EnFrame_Waver1_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $E0
     .byte $E1
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
@@ -534,7 +535,7 @@ EnFrame_Waver1_L_BANK{BANK}:
     .byte $FF
 
 EnFrame_Waver0_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $06, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $06, $08
     .byte $F0
     .byte $F1
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
@@ -546,7 +547,7 @@ EnFrame_Waver0_L_BANK{BANK}:
 EnFrame25_BANK{BANK}:
 EnFrame26_BANK{BANK}:
 EnFrame_Skree0_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace8, $0C, $08
+    .byte ($2 << 4) + _id_EnPlace8_BANK{BANK}, $0C, $08
     .byte $CE
     .byte $FC, $00, $FC
     .byte $DE
@@ -558,7 +559,7 @@ EnFrame_Skree0_BANK{BANK}:
 
 ;Skree.
 EnFrame_Skree1_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace8, $0C, $08
+    .byte ($2 << 4) + _id_EnPlace8_BANK{BANK}, $0C, $08
     .byte $CE
     .byte $CF
     .byte $EF
@@ -566,7 +567,7 @@ EnFrame_Skree1_BANK{BANK}:
 
 ;Skree.
 EnFrame_Skree2_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace8, $0C, $08
+    .byte ($2 << 4) + _id_EnPlace8_BANK{BANK}, $0C, $08
     .byte $CE
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
     .byte $CF
@@ -682,7 +683,7 @@ EnFrame55_BANK{BANK}:
 EnFrame56_BANK{BANK}:
 EnFrame57_BANK{BANK}:
 EnFrame_ZoomerOnFloor0_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CC
     .byte $CD
     .byte $DC
@@ -691,7 +692,7 @@ EnFrame_ZoomerOnFloor0_BANK{BANK}:
 
 ;Zoomer on floor.
 EnFrame_ZoomerOnFloor1_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CC
     .byte $CD
     .byte $DC
@@ -700,7 +701,7 @@ EnFrame_ZoomerOnFloor1_BANK{BANK}:
 
 ;Zoomer on right wall.
 EnFrame_ZoomerOnRightWall0_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CA
     .byte $CB
     .byte $DA
@@ -709,7 +710,7 @@ EnFrame_ZoomerOnRightWall0_BANK{BANK}:
 
 ;Zoomer on right wall.
 EnFrame_ZoomerOnRightWall1_BANK{BANK}:
-    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CA
     .byte $CB
     .byte $DA
@@ -718,7 +719,7 @@ EnFrame_ZoomerOnRightWall1_BANK{BANK}:
 
 ;Zoomer on ceiling.
 EnFrame_ZoomerOnCeiling0_BANK{BANK}:
-    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CC
     .byte $CD
     .byte $DC
@@ -727,7 +728,7 @@ EnFrame_ZoomerOnCeiling0_BANK{BANK}:
 
 ;Zoomer on ceiling.
 EnFrame_ZoomerOnCeiling1_BANK{BANK}:
-    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CC
     .byte $CD
     .byte $DC
@@ -736,7 +737,7 @@ EnFrame_ZoomerOnCeiling1_BANK{BANK}:
 
 ;Zoomer on left wall.
 EnFrame_ZoomerOnLeftWall0_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CA
     .byte $CB
     .byte $DA
@@ -745,7 +746,7 @@ EnFrame_ZoomerOnLeftWall0_BANK{BANK}:
 
 ;Zoomer on left wall.
 EnFrame_ZoomerOnLeftWall1_BANK{BANK}:
-    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7, $08, $08
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_BANK{BANK}, $08, $08
     .byte $CA
     .byte $CB
     .byte $DA
@@ -763,7 +764,7 @@ EnFrame_ZoomerExplode_BANK{BANK}:
 
 ;Explosion.
 EnFrame_Explosion0_BANK{BANK}:
-    .byte ($0 << 4) + _id_EnPlaceA, $00, $00
+    .byte ($0 << 4) + _id_EnPlaceA_BANK{BANK}, $00, $00
     .byte $75
     .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
     .byte $75
@@ -775,7 +776,7 @@ EnFrame_Explosion0_BANK{BANK}:
 
 ;Explosion.
 EnFrame_Explosion1_BANK{BANK}:
-    .byte ($0 << 4) + _id_EnPlaceA, $00, $00
+    .byte ($0 << 4) + _id_EnPlaceA_BANK{BANK}, $00, $00
     .byte $FE
     .byte $FE
     .byte $FE
@@ -799,7 +800,7 @@ EnFrame_Explosion1_BANK{BANK}:
 
 ;Rio.
 EnFrame_Rio0_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlaceB, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceB_BANK{BANK}, $08, $08
     .byte $E2
     .byte $E3
     .byte $E4
@@ -811,7 +812,7 @@ EnFrame_Rio0_BANK{BANK}:
 
 ;Rio.
 EnFrame_Rio1_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlaceB, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceB_BANK{BANK}, $08, $08
     .byte $E2
     .byte $E3
     .byte $FE
@@ -833,7 +834,7 @@ EnFrame_RioExplode_BANK{BANK}:
 
 ;Zeb facing left.
 EnFrame_Zeb0_L_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlaceA, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceA_BANK{BANK}, $08, $08
     .byte $C2
     .byte $C3
     .byte $D2
@@ -842,7 +843,7 @@ EnFrame_Zeb0_L_BANK{BANK}:
 
 ;Zeb facing left.
 EnFrame_Zeb1_L_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlaceA, $08, $08
+    .byte ($2 << 4) + _id_EnPlaceA_BANK{BANK}, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -860,7 +861,7 @@ EnFrame_ZebExplode_L_BANK{BANK}:
 
 ;Zeb facing right.
 EnFrame_Zeb0_R_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA_BANK{BANK}, $08, $08
     .byte $C2
     .byte $C3
     .byte $D2
@@ -869,7 +870,7 @@ EnFrame_Zeb0_R_BANK{BANK}:
 
 ;Zeb facing right.
 EnFrame_Zeb1_R_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA, $08, $08
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA_BANK{BANK}, $08, $08
     .byte $C2
     .byte $C4
     .byte $D2
@@ -957,7 +958,7 @@ EnFrame7D_BANK{BANK}:
 EnFrame7E_BANK{BANK}:
 EnFrame7F_BANK{BANK}:
 EnFrame_MissilePickup_BANK{BANK}:
-    .byte ($0 << 4) + _id_EnPlace6, $08, $04
+    .byte ($0 << 4) + _id_EnPlace6_BANK{BANK}, $08, $04
     .byte $FE
     .byte $FE
     .byte $14
@@ -990,7 +991,7 @@ EnFrame8C_BANK{BANK}:
 EnFrame8D_BANK{BANK}:
 EnFrame8E_BANK{BANK}:
 EnFrame_Mellow0_BANK{BANK}:
-    .byte ($3 << 4) + _id_EnPlaceF, $04, $08
+    .byte ($3 << 4) + _id_EnPlaceF_BANK{BANK}, $04, $08
     .byte $FD, $3
     .byte $EC
     .byte $FD, OAMDATA_HFLIP + $3
@@ -999,7 +1000,7 @@ EnFrame_Mellow0_BANK{BANK}:
 
 ;Mellow.
 EnFrame_Mellow1_BANK{BANK}:
-    .byte ($3 << 4) + _id_EnPlaceF, $04, $08
+    .byte ($3 << 4) + _id_EnPlaceF_BANK{BANK}, $04, $08
     .byte $FD, $3
     .byte $ED
     .byte $FD, OAMDATA_HFLIP + $3
@@ -1007,7 +1008,7 @@ EnFrame_Mellow1_BANK{BANK}:
     .byte $FF
 
 EnFrame_Kraid0_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace2, $10, $0C
+    .byte ($2 << 4) + _id_EnPlace2_BANK{BANK}, $10, $0C
     .byte $C5
     .byte $C6
     .byte $C7
@@ -1023,7 +1024,7 @@ EnFrame_Kraid0_R_BANK{BANK}:
     .byte $FF
 
 EnFrame_Kraid1_R_BANK{BANK}:
-    .byte ($2 << 4) + _id_EnPlace2, $10, $0C
+    .byte ($2 << 4) + _id_EnPlace2_BANK{BANK}, $10, $0C
     .byte $C5
     .byte $C6
     .byte $C7
@@ -1039,7 +1040,7 @@ EnFrame_Kraid1_R_BANK{BANK}:
     .byte $FF
 
 EnFrame_Kraid0_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $10, $0C
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_BANK{BANK}, $10, $0C
     .byte $C5
     .byte $C6
     .byte $C7
@@ -1055,7 +1056,7 @@ EnFrame_Kraid0_L_BANK{BANK}:
     .byte $FF
 
 EnFrame_Kraid1_L_BANK{BANK}:
-    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2, $10, $0C
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_BANK{BANK}, $10, $0C
     .byte $C5
     .byte $C6
     .byte $C7

@@ -19,7 +19,7 @@ CommonEnemyStub2_BANK{BANK}:
 CommonEnemyStub_BANK{BANK}:
     lda #$08
     sta $01
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
 ; Ceiling Sidehopper Routine
 SidehopperCeilingAIRoutine_BANK{BANK}:

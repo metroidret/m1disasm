@@ -37,9 +37,9 @@ DragonAIRoutine_BANK{BANK}:
         lda #$00
         sta SpawnEnProjectile_EnData0A
         ; shooting animation (supposed to be parameter to SpawnEnProjectile, but unused there)
-        lda #EnAnim_DragonIdle_R - EnAnimTable.b
+        lda #EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}.b
         sta SpawnEnProjectile_AnimIndex
-        lda #EnAnim_DragonIdle_L - EnAnimTable.b
+        lda #EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK}.b
         sta SpawnEnProjectile_AnimIndex+1.b
         ; set projectile animation
         lda #$03
@@ -80,8 +80,8 @@ DragonAIRoutine_BANK{BANK}:
     lda #$01
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
 @prepareToSpitEnAnimTable:
-    .byte EnAnim_DragonPrepareToSpit_R - EnAnimTable, EnAnim_DragonPrepareToSpit_L - EnAnimTable
+    .byte EnAnim_DragonPrepareToSpit_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonPrepareToSpit_L_BANK{BANK} - EnAnimTable_BANK{BANK}
 

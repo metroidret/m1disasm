@@ -68,11 +68,11 @@ PipeBugAIRoutine_BANK{BANK}:
     sta Temp04_SpeedY
 
     ; apply speed
-    jsr StoreEnemyPositionToTemp_
+    jsr StoreEnemyPositionToTemp__BANK{BANK}
     jsr CommonJump_ApplySpeedToPosition
     ; remove bug if it is out of bounds
     bcc @delete
-    jsr LoadEnemyPositionFromTemp_
+    jsr LoadEnemyPositionFromTemp__BANK{BANK}
     ; fallthrough
 
 ;Exit 1

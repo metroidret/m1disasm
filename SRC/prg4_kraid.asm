@@ -86,7 +86,7 @@ PalPntrTbl:
     PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A1CD)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl               ;($A26D)Beginning of special items table.
+    .word SpecItmsTbl_BANK{BANK}               ;($A26D)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
     RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A1D5)Beginning of room pointer table.
@@ -111,7 +111,7 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    jmp AreaRoutineStub ; Just an RTS
+    jmp AreaRoutineStub_BANK{BANK} ; Just an RTS
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -144,9 +144,9 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTable
+    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTable
+    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
 
     .byte $00, $00
 AreaEnProjectileFallingAnimIndex:
@@ -154,7 +154,7 @@ AreaEnProjectileFallingAnimIndex:
 AreaEnProjectileSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_Memu - EnAnimTable
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}
 
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
@@ -177,19 +177,19 @@ ChooseEnemyAIRoutine:
         .word RTS_95CB ; 0F - same as 2
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_SidehopperFloorExplode - EnAnimTable, EnAnim_SidehopperFloorExplode - EnAnimTable ; 00 - sidehopper
-    .byte EnAnim_SidehopperCeilingExplode - EnAnimTable, EnAnim_SidehopperCeilingExplode - EnAnimTable ; 01 - ceiling sidehopper
-    .byte EnAnim_WaverExplode_R - EnAnimTable, EnAnim_WaverExplode_L - EnAnimTable ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_RipperExplode_R - EnAnimTable, EnAnim_RipperExplode_L - EnAnimTable ; 03 - ripper
-    .byte EnAnim_SkreeExplode - EnAnimTable, EnAnim_SkreeExplode - EnAnimTable ; 04 - skree
-    .byte EnAnim_ZeelaExplode - EnAnimTable, EnAnim_ZeelaExplode - EnAnimTable ; 05 - crawler
-    .byte EnAnim_Geega_L - EnAnimTable, EnAnim_Geega_L - EnAnimTable ; 06 - same as 2
-    .byte EnAnim_GeegaExplode_R - EnAnimTable, EnAnim_GeegaExplode_L - EnAnimTable ; 07 - geega
-    .byte EnAnim_KraidExplode_R - EnAnimTable, EnAnim_KraidExplode_L - EnAnimTable ; 08 - kraid
+    .byte EnAnim_SidehopperFloorExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - ceiling sidehopper
+    .byte EnAnim_WaverExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_WaverExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_RipperExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ripper
+    .byte EnAnim_SkreeExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SkreeExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - skree
+    .byte EnAnim_ZeelaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZeelaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - crawler
+    .byte EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - same as 2
+    .byte EnAnim_GeegaExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GeegaExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - geega
+    .byte EnAnim_KraidExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - kraid
     .byte $00, $00 ; 09 - kraid lint
     .byte $00, $00 ; 0A - kraid nail
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0B - same as 2
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0C - same as 2
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 2
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
@@ -213,37 +213,37 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 2
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle - EnAnimTable, EnAnim_SidehopperFloorIdle - EnAnimTable ; 00 - sidehopper
-    .byte EnAnim_SidehopperCeilingIdle - EnAnimTable, EnAnim_SidehopperCeilingIdle - EnAnimTable ; 01 - ceiling sidehopper
-    .byte EnAnim_Waver0_R - EnAnimTable, EnAnim_Waver0_L - EnAnimTable ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_Ripper_R - EnAnimTable, EnAnim_Ripper_L - EnAnimTable ; 03 - ripper
-    .byte EnAnim_Skree - EnAnimTable, EnAnim_Skree - EnAnimTable ; 04 - skree
-    .byte EnAnim_ZeelaOnFloor - EnAnimTable, EnAnim_ZeelaOnFloor - EnAnimTable ; 05 - crawler
-    .byte EnAnim_Geega_L - EnAnimTable, EnAnim_Geega_L - EnAnimTable ; 06 - same as 2
-    .byte EnAnim_GeegaResting_R - EnAnimTable, EnAnim_GeegaResting_L - EnAnimTable ; 07 - geega
-    .byte EnAnim_Kraid_R - EnAnimTable, EnAnim_Kraid_L - EnAnimTable ; 08 - kraid
-    .byte EnAnim_KraidLint_R - EnAnimTable, EnAnim_KraidLint_L - EnAnimTable ; 09 - kraid lint
-    .byte EnAnim_KraidNailIdle_R - EnAnimTable, EnAnim_KraidNailIdle_L - EnAnimTable ; 0A - kraid nail
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0B - same as 2
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0C - same as 2
+    .byte EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - ceiling sidehopper
+    .byte EnAnim_Waver0_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Waver0_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_Ripper_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Ripper_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ripper
+    .byte EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - skree
+    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - crawler
+    .byte EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - same as 2
+    .byte EnAnim_GeegaResting_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GeegaResting_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - geega
+    .byte EnAnim_Kraid_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Kraid_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - kraid
+    .byte EnAnim_KraidLint_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidLint_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - kraid lint
+    .byte EnAnim_KraidNailIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - kraid nail
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 2
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle - EnAnimTable, EnAnim_SidehopperFloorIdle - EnAnimTable ; 00 - sidehopper
-    .byte EnAnim_SidehopperCeilingIdle - EnAnimTable, EnAnim_SidehopperCeilingIdle - EnAnimTable ; 01 - ceiling sidehopper
-    .byte EnAnim_Waver0_R - EnAnimTable, EnAnim_Waver0_L - EnAnimTable ; 02 - unused enemy type that doesn't properly clear itself
-    .byte EnAnim_Ripper_R - EnAnimTable, EnAnim_Ripper_L - EnAnimTable ; 03 - ripper
-    .byte EnAnim_Skree - EnAnimTable, EnAnim_Skree - EnAnimTable ; 04 - skree
-    .byte EnAnim_ZeelaOnFloor - EnAnimTable, EnAnim_ZeelaOnFloor - EnAnimTable ; 05 - crawler
-    .byte EnAnim_Geega_L - EnAnimTable, EnAnim_Geega_L - EnAnimTable ; 06 - same as 2
-    .byte EnAnim_Geega_R - EnAnimTable, EnAnim_Geega_L - EnAnimTable ; 07 - geega
-    .byte EnAnim_Kraid_R - EnAnimTable, EnAnim_Kraid_L - EnAnimTable ; 08 - kraid
-    .byte EnAnim_KraidLint_R - EnAnimTable, EnAnim_KraidLint_L - EnAnimTable ; 09 - kraid lint
-    .byte EnAnim_KraidNailMoving_R - EnAnimTable, EnAnim_KraidNailMoving_L - EnAnimTable ; 0A - kraid nail
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0B - same as 2
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable ; 0C - same as 2
+    .byte EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - sidehopper
+    .byte EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - ceiling sidehopper
+    .byte EnAnim_Waver0_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Waver0_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - unused enemy type that doesn't properly clear itself
+    .byte EnAnim_Ripper_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Ripper_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - ripper
+    .byte EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - skree
+    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - crawler
+    .byte EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - same as 2
+    .byte EnAnim_Geega_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Geega_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - geega
+    .byte EnAnim_Kraid_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Kraid_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - kraid
+    .byte EnAnim_KraidLint_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidLint_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - kraid lint
+    .byte EnAnim_KraidNailMoving_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailMoving_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - kraid nail
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - same as 2
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - same as 2
     .byte $00, $00 ; 0D - same as 2
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
@@ -407,8 +407,8 @@ L977B:
 
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_KraidNailMoving_L - EnAnimTable, EnAnim_KraidNailIdle_L - EnAnimTable
-    .byte EnAnim_Memu - EnAnimTable, EnAnim_Memu - EnAnimTable
+    .byte EnAnim_KraidNailMoving_L_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Memu_BANK{BANK} - EnAnimTable_BANK{BANK}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00

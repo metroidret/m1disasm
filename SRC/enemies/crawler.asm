@@ -8,14 +8,14 @@ CrawlerAIRoutine_BANK{BANK}:
     lda EnemyStatusPreAI
     .if BANK == 1 || BANK == 4
         cmp #enemyStatus_Resting
-        beq SkreeExit_Resting
+        beq SkreeExit_Resting_BANK{BANK}
         cmp #enemyStatus_Explode
-        beq SkreeExit_Explode
+        beq SkreeExit_Explode_BANK{BANK}
     .elif BANK == 2 || BANK == 5
         cmp #enemyStatus_Resting
-        beq CrawlerExit_Resting
+        beq CrawlerExit_Resting_BANK{BANK}
         cmp #enemyStatus_Explode
-        beq CrawlerExit_Explode
+        beq CrawlerExit_Explode_BANK{BANK}
     .endif
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
@@ -57,17 +57,17 @@ CrawlerAIRoutine_BANK{BANK}:
     ;  |=###
     
     ; horizontal flip
-    jsr CrawlerFlipDirection
+    jsr CrawlerFlipDirection_BANK{BANK}
     ; set orientation to moving up the wall
     lda #$03
     sta EnData0A,x
     bne @afterLavaTurnAround ; branch always
 @move:
     ; move crawler in its direction
-    jsr JumpByRTSToMovementRoutine
-    jsr CrawlerInsideCornerCheck
+    jsr JumpByRTSToMovementRoutine_BANK{BANK}
+    jsr CrawlerInsideCornerCheck_BANK{BANK}
 @afterLavaTurnAround:
-    jsr CrawlerOutsideCornerCheck
+    jsr CrawlerOutsideCornerCheck_BANK{BANK}
 @exit:
     ; change animation frame every 3 frames
     lda #$03
@@ -93,41 +93,41 @@ CrawlerReorientSprite_BANK{BANK}:
 
 CrawlerAnimIndexTable_BANK{BANK}:
 .if BANK == 1
-    .byte EnAnim_ZoomerOnFloor - EnAnimTable
-    .byte EnAnim_ZoomerOnFloor - EnAnimTable
-    .byte EnAnim_ZoomerOnLeftWall - EnAnimTable
-    .byte EnAnim_ZoomerOnRightWall - EnAnimTable
-    .byte EnAnim_ZoomerOnCeiling - EnAnimTable
-    .byte EnAnim_ZoomerOnCeiling - EnAnimTable
-    .byte EnAnim_ZoomerOnRightWall - EnAnimTable
-    .byte EnAnim_ZoomerOnLeftWall - EnAnimTable
+    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
 .elif BANK == 2
-    .byte EnAnim_NovaOnFloor - EnAnimTable
-    .byte EnAnim_NovaOnFloor - EnAnimTable
-    .byte EnAnim_NovaOnLeftWall - EnAnimTable
-    .byte EnAnim_NovaOnRightWall - EnAnimTable
-    .byte EnAnim_NovaOnCeiling - EnAnimTable
-    .byte EnAnim_NovaOnCeiling - EnAnimTable
-    .byte EnAnim_NovaOnRightWall - EnAnimTable
-    .byte EnAnim_NovaOnLeftWall - EnAnimTable
+    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
 .elif BANK == 4
-    .byte EnAnim_ZeelaOnFloor - EnAnimTable
-    .byte EnAnim_ZeelaOnFloor - EnAnimTable
-    .byte EnAnim_ZeelaOnLeftWall - EnAnimTable
-    .byte EnAnim_ZeelaOnRightWall - EnAnimTable
-    .byte EnAnim_ZeelaOnCeiling - EnAnimTable
-    .byte EnAnim_ZeelaOnCeiling - EnAnimTable
-    .byte EnAnim_ZeelaOnRightWall - EnAnimTable
-    .byte EnAnim_ZeelaOnLeftWall - EnAnimTable
+    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
 .elif BANK == 5
-    .byte EnAnim_ViolaOnFloor - EnAnimTable
-    .byte EnAnim_ViolaOnFloor - EnAnimTable
-    .byte EnAnim_ViolaOnLeftWall - EnAnimTable
-    .byte EnAnim_ViolaOnRightWall - EnAnimTable
-    .byte EnAnim_ViolaOnCeiling - EnAnimTable
-    .byte EnAnim_ViolaOnCeiling - EnAnimTable
-    .byte EnAnim_ViolaOnRightWall - EnAnimTable
-    .byte EnAnim_ViolaOnLeftWall - EnAnimTable
+    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
 .endif
 
 CrawlerInsideCornerCheck_BANK{BANK}:
@@ -160,7 +160,7 @@ CrawlerOutsideCornerCheck_BANK{BANK}:
     ldx PageIndex
     bcc @RTS
         ; at outside corner, stick to wall
-        jsr CrawlerOutsideCornerGetNextOrientation
+        jsr CrawlerOutsideCornerGetNextOrientation_BANK{BANK}
         sta EnData0A,x
         jsr CrawlerReorientSprite_BANK{BANK}
     @RTS:

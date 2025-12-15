@@ -20,10 +20,10 @@ SwooperAIRoutine00_BANK{BANK}:
         ; bit 4 of EnData05 is set
         ; swoop towards samus
         lda #$01
-        jsr SwooperChangeEnemyType
+        jsr SwooperChangeEnemyType_BANK{BANK}
 @draw:
     jsr UpdateSwooperAnim_BANK{BANK}
-    jmp CommonEnemyJump_00_01_02
+    jmp CommonEnemyJump_00_01_02_BANK{BANK}
 
 UpdateSwooperAnim_BANK{BANK}:
     lda EnsExtra.0.status,x
@@ -32,9 +32,9 @@ UpdateSwooperAnim_BANK{BANK}:
     
     ; default to swooping animation
     .if BANK == 2
-        lda #EnAnim_GerutaSwooping - EnAnimTable.b
+        lda #EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}.b
     .elif BANK == 5
-        lda #EnAnim_HoltzSwooping - EnAnimTable.b
+        lda #EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}.b
     .endif
     ; branch if y speed is positive (swooper is swooping downwards)
     ldy EnSpeedY,x
@@ -42,9 +42,9 @@ UpdateSwooperAnim_BANK{BANK}:
         ; swooper is not swooping downwards
         ; set animation to idle
         .if BANK == 2
-            lda #EnAnim_GerutaIdle - EnAnimTable.b
+            lda #EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}.b
         .elif BANK == 5
-            lda #EnAnim_HoltzIdle - EnAnimTable.b
+            lda #EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}.b
         .endif
     @endIf_A:
     sta EnsExtra.0.resetAnimIndex,x
@@ -71,7 +71,7 @@ SwooperAIRoutine01_BANK{BANK}:
         ; status changed from active to resting
         ; swoop straight down
         lda #$00
-        jsr SwooperChangeEnemyType
+        jsr SwooperChangeEnemyType_BANK{BANK}
 
 SwooperExit_Resting_BANK{BANK}:
     ; change animation frame every 8 frames for resting swooper
@@ -111,7 +111,7 @@ L9923_BANK{BANK}:
         lda #$00
         sta EnsExtra.0.accelY,x
 @endIf_A:
-    jsr UpdateSwooperAnim
+    jsr UpdateSwooperAnim_BANK{BANK}
     ; change animation frame every 3 frames for active swooper
     lda #$03
     jmp CommonJump_00
