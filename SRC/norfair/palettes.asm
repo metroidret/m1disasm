@@ -19,37 +19,37 @@
 ;Norfair Palette Definitions
 
 ;Default room palette.
-Palette00:
+Palette00_BANK{BANK}:
     PPUString $3F00, \
         $0F, $20, $10, $00, $0F, $28, $16, $04, $0F, $16, $11, $04, $0F, $31, $13, $15, $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $14, $23, $2C, $0F, $16, $24, $37
     PPUStringEnd
 
 ;Samus power suit palette.
-Palette01:
+Palette01_BANK{BANK}:
     PPUString $3F12, \
         $19, $27
     PPUStringEnd
 
 ;Samus power suit with missiles selected palette.
-Palette03:
+Palette03_BANK{BANK}:
     PPUString $3F12, \
         $2C, $27
     PPUStringEnd
 
 ;Samus varia suit palette.
-Palette02:
+Palette02_BANK{BANK}:
     PPUString $3F12, \
         $19, $35
     PPUStringEnd
 
 ;Samus varia suit with missiles selected palette.
-Palette04:
+Palette04_BANK{BANK}:
     PPUString $3F12, \
         $2C, $24
     PPUStringEnd
 
 ;Alternate room palette.
-Palette05:
+Palette05_BANK{BANK}:
     PPUString $3F00, \
         $0F, $20, $10, $00, $0F, $28, $16, $04, $0F, $16, $11, $04, $0F, $35, $1B, $16
     PPUString $3F14, \
@@ -57,65 +57,65 @@ Palette05:
     PPUStringEnd
 
 ;Samus fade in palettes. Same regardless of varia suit and suitless.
-Palette06:
-Palette07:
-Palette08:
-Palette09:
-Palette0A:
-Palette0B:
-Palette0C:
-Palette0D:
-Palette0E:
-Palette0F:
-Palette10:
-Palette11:
-Palette12:
-Palette13:
+Palette06_BANK{BANK}:
+Palette07_BANK{BANK}:
+Palette08_BANK{BANK}:
+Palette09_BANK{BANK}:
+Palette0A_BANK{BANK}:
+Palette0B_BANK{BANK}:
+Palette0C_BANK{BANK}:
+Palette0D_BANK{BANK}:
+Palette0E_BANK{BANK}:
+Palette0F_BANK{BANK}:
+Palette10_BANK{BANK}:
+Palette11_BANK{BANK}:
+Palette12_BANK{BANK}:
+Palette13_BANK{BANK}:
     PPUString $3F11, \
         $04, $09, $07
     PPUStringEnd
 
-Palette14:
+Palette14_BANK{BANK}:
     PPUString $3F11, \
         $05, $09, $17
     PPUStringEnd
 
-Palette15:
+Palette15_BANK{BANK}:
     PPUString $3F11, \
         $06, $0A, $26
     PPUStringEnd
 
-Palette16:
+Palette16_BANK{BANK}:
     PPUString $3F11, \
         $16, $19, $27
     PPUStringEnd
 
 ;Unused?
-Palette17:
+Palette17_BANK{BANK}:
     PPUString $3F00, \
         $0F, $30, $30, $21
     PPUStringEnd
 
 ;Suitless Samus power suit palette.
-Palette18:
+Palette18_BANK{BANK}:
     PPUString $3F10, \
         $0F, $15, $34, $17
     PPUStringEnd
 
 ;Suitless Samus varia suit palette.
-Palette19:
+Palette19_BANK{BANK}:
     PPUString $3F10, \
         $0F, $15, $34, $19
     PPUStringEnd
 
 ;Suitless Samus power suit with missiles selected palette.
-Palette1A:
+Palette1A_BANK{BANK}:
     PPUString $3F10, \
         $0F, $15, $34, $28
     PPUStringEnd
 
 ;Suitless Samus varia suit with missiles selected palette.
-Palette1B:
+Palette1B_BANK{BANK}:
     PPUString $3F10, \
         $0F, $15, $34, $29
     PPUStringEnd

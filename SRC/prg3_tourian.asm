@@ -50,46 +50,46 @@ GFX_RidleySprites:
 ;----------------------------------------------------------------------------------------------------
 
 PalPntrTbl:
-    PtrTableEntry PalPntrTbl, Palette00                 ;($A718)Room palette.
-    PtrTableEntry PalPntrTbl, Palette01                 ;($A73C)Samus power suit palette.
-    PtrTableEntry PalPntrTbl, Palette02                 ;($A748)Samus varia suit palette.
-    PtrTableEntry PalPntrTbl, Palette03                 ;($A742)Samus power suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette04                 ;($A74E)Samus varia suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette05                 ;($A754)
-    PtrTableEntry PalPntrTbl, Palette06                 ;($A754)Mother Brain hurt palette.
-    PtrTableEntry PalPntrTbl, Palette07                 ;($A759)Mother Brain hurt palette.
-    PtrTableEntry PalPntrTbl, Palette08                 ;($A75E)Mother Brain dying palette.
-    PtrTableEntry PalPntrTbl, Palette09                 ;($A773)Mother Brain dying palette.
-    PtrTableEntry PalPntrTbl, Palette0A                 ;($A788)Time bomb explosion palette.
-    PtrTableEntry PalPntrTbl, Palette0B                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette0C                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette0D                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette0E                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette0F                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette10                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette11                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette12                 ;($A78D)
-    PtrTableEntry PalPntrTbl, Palette13                 ;($A78D)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntry PalPntrTbl, Palette14                 ;($A794)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette15                 ;($A79B)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette16                 ;($A7A2)Samus fade in palette.
-    PtrTableEntry PalPntrTbl, Palette17                 ;($A7A9)Unused?
-    PtrTableEntry PalPntrTbl, Palette18                 ;($A7B1)Suitless Samus power suit palette.
-    PtrTableEntry PalPntrTbl, Palette19                 ;($A7B9)Suitless Samus varia suit palette.
-    PtrTableEntry PalPntrTbl, Palette1A                 ;($A7C1)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntry PalPntrTbl, Palette1B                 ;($A7C9)Suitless Samus varia suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette00                 ;($A718)Room palette.
+    PtrTableEntryBank PalPntrTbl, Palette01                 ;($A73C)Samus power suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette02                 ;($A748)Samus varia suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette03                 ;($A742)Samus power suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette04                 ;($A74E)Samus varia suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette05                 ;($A754)
+    PtrTableEntryBank PalPntrTbl, Palette06                 ;($A754)Mother Brain hurt palette.
+    PtrTableEntryBank PalPntrTbl, Palette07                 ;($A759)Mother Brain hurt palette.
+    PtrTableEntryBank PalPntrTbl, Palette08                 ;($A75E)Mother Brain dying palette.
+    PtrTableEntryBank PalPntrTbl, Palette09                 ;($A773)Mother Brain dying palette.
+    PtrTableEntryBank PalPntrTbl, Palette0A                 ;($A788)Time bomb explosion palette.
+    PtrTableEntryBank PalPntrTbl, Palette0B                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette0C                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette0D                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette0E                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette0F                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette10                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette11                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette12                 ;($A78D)
+    PtrTableEntryBank PalPntrTbl, Palette13                 ;($A78D)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryBank PalPntrTbl, Palette14                 ;($A794)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette15                 ;($A79B)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette16                 ;($A7A2)Samus fade in palette.
+    PtrTableEntryBank PalPntrTbl, Palette17                 ;($A7A9)Unused?
+    PtrTableEntryBank PalPntrTbl, Palette18                 ;($A7B1)Suitless Samus power suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette19                 ;($A7B9)Suitless Samus varia suit palette.
+    PtrTableEntryBank PalPntrTbl, Palette1A                 ;($A7C1)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A7C9)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl               ;($A83B)Beginning of special items table.
+    .word SpecItmsTbl_BANK{BANK}               ;($A83B)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
-    RoomPtrTable:       .word RoomPtrTable              ;($A7D1)Beginning of room pointer table.
-    StructPtrTable:     .word StructPtrTable            ;($A7FB)Beginning of structure pointer table.
-    MetatileDefs:       .word MetatileDefs              ;($AE49)Beginning of metatile definitions.
-    EnFramePtrTable1:   .word EnFramePtrTable1          ;($A42C)Pointer table into enemy animation data. Two-->
-    EnFramePtrTable2:   .word EnFramePtrTable2          ;($A52C)tables needed to accommodate all entries.
-    EnPlacePtrTable:    .word EnPlacePtrTable           ;($A540)Pointers to enemy frame placement data.
-    EnAnimTable:        .word EnAnimTable               ;($A406)Index to values in addr tables for enemy animations.
+    RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A7D1)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable_BANK{BANK}            ;($A7FB)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs_BANK{BANK}              ;($AE49)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1_BANK{BANK}          ;($A42C)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2_BANK{BANK}          ;($A52C)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable_BANK{BANK}           ;($A540)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable_BANK{BANK}               ;($A406)Index to values in addr tables for enemy animations.
 .ENDST
 
 ; Special Tourian Routines
@@ -146,15 +146,15 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled - EnAnimTable
+    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion - EnAnimTable
+    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
 
     .byte $00, $00
 AreaEnProjectileFallingAnimIndex:
     .byte $00, $00
 AreaEnProjectileSplatterAnimIndex:
-    .byte $00, EnAnim_CannonBulletExplode - EnAnimTable
+    .byte $00, EnAnim_CannonBulletExplode_BANK{BANK} - EnAnimTable_BANK{BANK}
 AreaMellowAnimIndex:
     .byte $00
 
@@ -162,30 +162,30 @@ AreaMellowAnimIndex:
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
-        .word MetroidAIRoutine ; 00 - red metroid
-        .word MetroidAIRoutine ; 01 - green metroid
+        .word MetroidAIRoutine_BANK{BANK} ; 00 - red metroid
+        .word MetroidAIRoutine_BANK{BANK} ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
-        .word RemoveEnemy_ ; 03 - disappears
-        .word RinkaAIRoutine ; 04 - rinka
-        .word RemoveEnemy_ ; 05 - same as 3
-        .word RemoveEnemy_ ; 06 - same as 3
-        .word RemoveEnemy_ ; 07 - same as 3
-        .word RemoveEnemy_ ; 08 - same as 3
-        .word RemoveEnemy_ ; 09 - same as 3
-        .word RemoveEnemy_ ; 0A - same as 3
-        .word RemoveEnemy_ ; 0B - same as 3
-        .word RemoveEnemy_ ; 0C - same as 3
-        .word RemoveEnemy_ ; 0D - same as 3
-        .word RemoveEnemy_ ; 0E - same as 3
-        .word RemoveEnemy_ ; 0F - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 03 - disappears
+        .word RinkaAIRoutine_BANK{BANK} ; 04 - rinka
+        .word RemoveEnemy__BANK{BANK} ; 05 - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 06 - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 07 - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 08 - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 09 - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0A - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0B - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0C - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0D - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0E - same as 3
+        .word RemoveEnemy__BANK{BANK} ; 0F - same as 3
 
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_MetroidExplode - EnAnimTable, EnAnim_MetroidExplode - EnAnimTable ; 00 - red metroid
-    .byte EnAnim_MetroidExplode - EnAnimTable, EnAnim_MetroidExplode - EnAnimTable ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
-    .byte EnAnim_RinkaExplode - EnAnimTable, EnAnim_RinkaExplode - EnAnimTable ; 04 - rinka
+    .byte EnAnim_MetroidExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MetroidExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - red metroid
+    .byte EnAnim_MetroidExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MetroidExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - green metroid
+    .byte EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - disappears
+    .byte EnAnim_RinkaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RinkaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -217,11 +217,11 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 00 - red metroid
-    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
-    .byte EnAnim_RinkaSpawning - EnAnimTable, EnAnim_RinkaSpawning - EnAnimTable ; 04 - rinka
+    .byte EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - red metroid
+    .byte EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - green metroid
+    .byte EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - disappears
+    .byte EnAnim_RinkaSpawning_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RinkaSpawning_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -235,11 +235,11 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 00 - red metroid
-    .byte EnAnim_Metroid - EnAnimTable, EnAnim_Metroid - EnAnimTable ; 01 - green metroid
-    .byte EnAnim_16 - EnAnimTable, EnAnim_16 - EnAnimTable ; 02 - i dunno but it takes 30 damage with varia
-    .byte EnAnim_18 - EnAnimTable, EnAnim_18 - EnAnimTable ; 03 - disappears
-    .byte EnAnim_Rinka - EnAnimTable, EnAnim_Rinka - EnAnimTable ; 04 - rinka
+    .byte EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - red metroid
+    .byte EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Metroid_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - green metroid
+    .byte EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_16_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - i dunno but it takes 30 damage with varia
+    .byte EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_18_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - disappears
+    .byte EnAnim_Rinka_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Rinka_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - rinka
     .byte $00, $00 ; 05 - same as 3
     .byte $00, $00 ; 06 - same as 3
     .byte $00, $00 ; 07 - same as 3
@@ -343,11 +343,11 @@ EnemyInitDelayTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 00 - red metroid
-    .byte EnemyMovementChoice_MetroidGreen - EnemyMovementChoices ; 01 - green metroid
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 02 - i dunno but it takes 30 damage with varia (enemy doesn't move)
-    .byte EnemyMovementChoice_MetroidRed - EnemyMovementChoices ; 03 - disappears
-    .byte EnemyMovementChoice_Rinka - EnemyMovementChoices ; 04 - rinka (enemy moves manually)
+    .byte EnemyMovementChoice_MetroidRed_BANK{BANK} - EnemyMovementChoices ; 00 - red metroid
+    .byte EnemyMovementChoice_MetroidGreen_BANK{BANK} - EnemyMovementChoices ; 01 - green metroid
+    .byte EnemyMovementChoice_MetroidRed_BANK{BANK} - EnemyMovementChoices ; 02 - i dunno but it takes 30 damage with varia (enemy doesn't move)
+    .byte EnemyMovementChoice_MetroidRed_BANK{BANK} - EnemyMovementChoices ; 03 - disappears
+    .byte EnemyMovementChoice_Rinka_BANK{BANK} - EnemyMovementChoices ; 04 - rinka (enemy moves manually)
     .byte $00 ; 05 - same as 3
     .byte $00 ; 06 - same as 3
     .byte $00 ; 07 - same as 3
@@ -361,24 +361,24 @@ EnemyMovementChoiceOffset:
     .byte $00 ; 0F - same as 3
 
 EnemyMovementPtrs:
-    .word EnemyMovement00_R, EnemyMovement00_L
-    .word EnemyMovement01_R, EnemyMovement01_L
-    .word EnemyMovement02_R, EnemyMovement02_L
-    .word EnemyMovement03_R, EnemyMovement03_L
-    .word EnemyMovement04_R, EnemyMovement04_L
-    .word EnemyMovement05_R, EnemyMovement05_L
-    .word EnemyMovement06_R, EnemyMovement06_L
-    .word EnemyMovement07_R, EnemyMovement07_L
-    .word EnemyMovement08_R, EnemyMovement08_L
-    .word EnemyMovement09_R, EnemyMovement09_L
-    .word EnemyMovement0A_R, EnemyMovement0A_L
-    .word EnemyMovement0B_R, EnemyMovement0B_L
-    .word EnemyMovement0C_R, EnemyMovement0C_L
-    .word EnemyMovement0D_R, EnemyMovement0D_L
-    .word EnemyMovement0E_R, EnemyMovement0E_L
-    .word EnemyMovement0F_R, EnemyMovement0F_L
-    .word EnemyMovement10_R, EnemyMovement10_L
-    .word EnemyMovement11_R, EnemyMovement11_L
+    .word EnemyMovement00_R_BANK{BANK}, EnemyMovement00_L_BANK{BANK}
+    .word EnemyMovement01_R_BANK{BANK}, EnemyMovement01_L_BANK{BANK}
+    .word EnemyMovement02_R_BANK{BANK}, EnemyMovement02_L_BANK{BANK}
+    .word EnemyMovement03_R_BANK{BANK}, EnemyMovement03_L_BANK{BANK}
+    .word EnemyMovement04_R_BANK{BANK}, EnemyMovement04_L_BANK{BANK}
+    .word EnemyMovement05_R_BANK{BANK}, EnemyMovement05_L_BANK{BANK}
+    .word EnemyMovement06_R_BANK{BANK}, EnemyMovement06_L_BANK{BANK}
+    .word EnemyMovement07_R_BANK{BANK}, EnemyMovement07_L_BANK{BANK}
+    .word EnemyMovement08_R_BANK{BANK}, EnemyMovement08_L_BANK{BANK}
+    .word EnemyMovement09_R_BANK{BANK}, EnemyMovement09_L_BANK{BANK}
+    .word EnemyMovement0A_R_BANK{BANK}, EnemyMovement0A_L_BANK{BANK}
+    .word EnemyMovement0B_R_BANK{BANK}, EnemyMovement0B_L_BANK{BANK}
+    .word EnemyMovement0C_R_BANK{BANK}, EnemyMovement0C_L_BANK{BANK}
+    .word EnemyMovement0D_R_BANK{BANK}, EnemyMovement0D_L_BANK{BANK}
+    .word EnemyMovement0E_R_BANK{BANK}, EnemyMovement0E_L_BANK{BANK}
+    .word EnemyMovement0F_R_BANK{BANK}, EnemyMovement0F_L_BANK{BANK}
+    .word EnemyMovement10_R_BANK{BANK}, EnemyMovement10_L_BANK{BANK}
+    .word EnemyMovement11_R_BANK{BANK}, EnemyMovement11_L_BANK{BANK}
     .word $0000, $0000
     .word $0000, $0000
     
@@ -411,8 +411,8 @@ L977B:
 
 EnemyEnProjectileRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_26 - EnAnimTable, EnAnim_26 - EnAnimTable
-    .byte EnAnim_26 - EnAnimTable, EnAnim_26 - EnAnimTable
+    .byte EnAnim_26_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_26_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_26_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_26_BANK{BANK} - EnAnimTable_BANK{BANK}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -429,95 +429,95 @@ EnemyEnProjectilePosOffsetY:
     .byte $00
     .byte $00
 
-EnemyEnProjectileMovementPtrTable:
-    .word EnemyEnProjectileMovement0
-    .word EnemyEnProjectileMovement1
-    .word EnemyEnProjectileMovement2
-    .word EnemyEnProjectileMovement3
+EnProjectileMovementPtrTable:
+    .word EnProjectileMovement0_BANK{BANK}
+    .word EnProjectileMovement1_BANK{BANK}
+    .word EnProjectileMovement2_BANK{BANK}
+    .word EnProjectileMovement3_BANK{BANK}
 
 TileBlastFramePtrTable:
-    .word TileBlastFrame00
-    .word TileBlastFrame01
-    .word TileBlastFrame02
-    .word TileBlastFrame03
-    .word TileBlastFrame04
-    .word TileBlastFrame05
-    .word TileBlastFrame06
-    .word TileBlastFrame07
-    .word TileBlastFrame08
-    .word TileBlastFrame09
-    .word TileBlastFrame0A
-    .word TileBlastFrame0B
-    .word TileBlastFrame0C
-    .word TileBlastFrame0D
-    .word TileBlastFrame0E
-    .word TileBlastFrame0F
-    .word TileBlastFrame10
+    .word TileBlastFrame00_BANK{BANK}
+    .word TileBlastFrame01_BANK{BANK}
+    .word TileBlastFrame02_BANK{BANK}
+    .word TileBlastFrame03_BANK{BANK}
+    .word TileBlastFrame04_BANK{BANK}
+    .word TileBlastFrame05_BANK{BANK}
+    .word TileBlastFrame06_BANK{BANK}
+    .word TileBlastFrame07_BANK{BANK}
+    .word TileBlastFrame08_BANK{BANK}
+    .word TileBlastFrame09_BANK{BANK}
+    .word TileBlastFrame0A_BANK{BANK}
+    .word TileBlastFrame0B_BANK{BANK}
+    .word TileBlastFrame0C_BANK{BANK}
+    .word TileBlastFrame0D_BANK{BANK}
+    .word TileBlastFrame0E_BANK{BANK}
+    .word TileBlastFrame0F_BANK{BANK}
+    .word TileBlastFrame10_BANK{BANK}
 
 EnemyMovementChoices:
-EnemyMovementChoice_MetroidRed:
+EnemyMovementChoice_MetroidRed_BANK{BANK}:
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice_MetroidGreen:
+EnemyMovementChoice_MetroidGreen_BANK{BANK}:
     EnemyMovementChoiceEntry $01
-EnemyMovementChoice_Rinka: ; enemy moves manually
+EnemyMovementChoice_Rinka_BANK{BANK}: ; enemy moves manually
     ; nothing
 
-EnemyMovement00_R:
-EnemyMovement00_L:
-EnemyMovement01_R:
-EnemyMovement01_L:
-EnemyMovement02_R:
-EnemyMovement02_L:
-EnemyMovement03_R:
-EnemyMovement03_L:
-EnemyMovement04_R:
-EnemyMovement04_L:
-EnemyMovement05_R:
-EnemyMovement05_L:
-EnemyMovement06_R:
-EnemyMovement06_L:
-EnemyMovement07_R:
-EnemyMovement07_L:
-EnemyMovement08_R:
-EnemyMovement08_L:
-EnemyMovement09_R:
-EnemyMovement09_L:
-EnemyMovement0A_R:
-EnemyMovement0A_L:
-EnemyMovement0B_R:
-EnemyMovement0B_L:
-EnemyMovement0C_R:
-EnemyMovement0C_L:
-EnemyMovement0D_R:
-EnemyMovement0D_L:
-EnemyMovement0E_R:
-EnemyMovement0E_L:
-EnemyMovement0F_R:
-EnemyMovement0F_L:
-EnemyMovement10_R:
-EnemyMovement10_L:
-EnemyMovement11_R:
-EnemyMovement11_L:
+EnemyMovement00_R_BANK{BANK}:
+EnemyMovement00_L_BANK{BANK}:
+EnemyMovement01_R_BANK{BANK}:
+EnemyMovement01_L_BANK{BANK}:
+EnemyMovement02_R_BANK{BANK}:
+EnemyMovement02_L_BANK{BANK}:
+EnemyMovement03_R_BANK{BANK}:
+EnemyMovement03_L_BANK{BANK}:
+EnemyMovement04_R_BANK{BANK}:
+EnemyMovement04_L_BANK{BANK}:
+EnemyMovement05_R_BANK{BANK}:
+EnemyMovement05_L_BANK{BANK}:
+EnemyMovement06_R_BANK{BANK}:
+EnemyMovement06_L_BANK{BANK}:
+EnemyMovement07_R_BANK{BANK}:
+EnemyMovement07_L_BANK{BANK}:
+EnemyMovement08_R_BANK{BANK}:
+EnemyMovement08_L_BANK{BANK}:
+EnemyMovement09_R_BANK{BANK}:
+EnemyMovement09_L_BANK{BANK}:
+EnemyMovement0A_R_BANK{BANK}:
+EnemyMovement0A_L_BANK{BANK}:
+EnemyMovement0B_R_BANK{BANK}:
+EnemyMovement0B_L_BANK{BANK}:
+EnemyMovement0C_R_BANK{BANK}:
+EnemyMovement0C_L_BANK{BANK}:
+EnemyMovement0D_R_BANK{BANK}:
+EnemyMovement0D_L_BANK{BANK}:
+EnemyMovement0E_R_BANK{BANK}:
+EnemyMovement0E_L_BANK{BANK}:
+EnemyMovement0F_R_BANK{BANK}:
+EnemyMovement0F_L_BANK{BANK}:
+EnemyMovement10_R_BANK{BANK}:
+EnemyMovement10_L_BANK{BANK}:
+EnemyMovement11_R_BANK{BANK}:
+EnemyMovement11_L_BANK{BANK}:
     ; nothing
 
-EnemyEnProjectileMovement0:
-EnemyEnProjectileMovement1:
+EnProjectileMovement0_BANK{BANK}:
+EnProjectileMovement1_BANK{BANK}:
     SignMagSpeed $50,  2,  2
     .byte $FF
 
-EnemyEnProjectileMovement2:
+EnProjectileMovement2_BANK{BANK}:
     SignMagSpeed $50,  0,  3
     .byte $FF
 
-EnemyEnProjectileMovement3:
+EnProjectileMovement3_BANK{BANK}:
     .byte $FF
 
-RemoveEnemy_:
+RemoveEnemy__BANK{BANK}:
     lda #$00
     sta EnsExtra.0.status,x
     rts
 
-CommonEnemyJump_00_01_02:
+CommonEnemyJump_00_01_02_BANK{BANK}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -599,7 +599,7 @@ UpdateCannon:
         lda FrameCount
         and #$02
         bne RTS_9B4B
-        lda #_id_EnFrame_CannonTimeBombSet.b
+        lda #_id_EnFrame_CannonTimeBombSet_BANK{BANK}.b
         jmp DrawCannon_Escape
 
 UpdateCannon_RunInstructions:
@@ -728,9 +728,9 @@ Cannon_ShootEnProjectile:
     rts
 
 CannonEnProjectileAnimTable:
-    .byte EnAnim_CannonBulletDownRight - EnAnimTable ; cannon instr #$FE : diagonal right
-    .byte EnAnim_CannonBulletDownLeft - EnAnimTable ; cannon instr #$FD : diagonal left
-    .byte EnAnim_CannonBulletDown - EnAnimTable ; cannon instr #$FC : straight down
+    .byte EnAnim_CannonBulletDownRight_BANK{BANK} - EnAnimTable_BANK{BANK} ; cannon instr #$FE : diagonal right
+    .byte EnAnim_CannonBulletDownLeft_BANK{BANK} - EnAnimTable_BANK{BANK} ; cannon instr #$FD : diagonal left
+    .byte EnAnim_CannonBulletDown_BANK{BANK} - EnAnimTable_BANK{BANK} ; cannon instr #$FC : straight down
 
 DrawCannon_Normal:
     ldy Cannons.0.angle,x
@@ -1038,14 +1038,14 @@ CannonInstrList4: .byte $06, $05, $FC, $04, $05, $FF
 ; cannon instr list 5 means the cannon won't do anything
 
 CannonAnimFrameTable:
-    .byte _id_EnFrame_CannonUp
-    .byte _id_EnFrame_CannonUpLeft
-    .byte _id_EnFrame_CannonLeft
-    .byte _id_EnFrame_CannonDownLeft
-    .byte _id_EnFrame_CannonDown
-    .byte _id_EnFrame_CannonDownRight
-    .byte _id_EnFrame_CannonRight
-    .byte _id_EnFrame_CannonUpRight
+    .byte _id_EnFrame_CannonUp_BANK{BANK}
+    .byte _id_EnFrame_CannonUpLeft_BANK{BANK}
+    .byte _id_EnFrame_CannonLeft_BANK{BANK}
+    .byte _id_EnFrame_CannonDownLeft_BANK{BANK}
+    .byte _id_EnFrame_CannonDown_BANK{BANK}
+    .byte _id_EnFrame_CannonDownRight_BANK{BANK}
+    .byte _id_EnFrame_CannonRight_BANK{BANK}
+    .byte _id_EnFrame_CannonUpRight_BANK{BANK}
 
 CannonEnProjectileXOffsetTable:
     .byte $09 ; cannon instr #$FE : diagonal right
@@ -1604,13 +1604,13 @@ MotherBrain_DrawSprites:
 ; animation frame id table
 MotherBrainAnimFrameTable:
 ; pulsations on the brain
-    .byte _id_EnFrame_MotherBrainPulsations0
-    .byte _id_EnFrame_MotherBrainPulsations1
-    .byte _id_EnFrame_MotherBrainPulsations2
-    .byte _id_EnFrame_MotherBrainPulsations3
+    .byte _id_EnFrame_MotherBrainPulsations0_BANK{BANK}
+    .byte _id_EnFrame_MotherBrainPulsations1_BANK{BANK}
+    .byte _id_EnFrame_MotherBrainPulsations2_BANK{BANK}
+    .byte _id_EnFrame_MotherBrainPulsations3_BANK{BANK}
 
 ; mother brain's eyes
-    .byte _id_EnFrame_MotherBrainEyes
+    .byte _id_EnFrame_MotherBrainEyes_BANK{BANK}
 
 MotherBrain_Disappear_Disintegrate:
     ; exit if mother brain disintegration step is zero
@@ -1997,7 +1997,7 @@ DrawEndTimerEnemy:
     sta EnY+$E0
     lda #$64
     sta EnX+$E0
-    lda #_id_EnFrame1A.b
+    lda #_id_EnFrame1A_BANK{BANK}.b
     sta EnsExtra.14.animFrame
     lda #$E0
     sta PageIndex
@@ -2160,38 +2160,38 @@ ClearCurrentMetroidLatchAndMetroidOnSamus:
 
 ;-------------------------------------------------------------------------------
 
-TileBlastFrame00:
+TileBlastFrame00_BANK{BANK}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01:
+TileBlastFrame01_BANK{BANK}:
     .byte $32
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame02: ; GET OU
+TileBlastFrame02_BANK{BANK}: ; GET OU
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $E0, $DE, $ED, $FF, $E8, $EE
 
-TileBlastFrame03: ; T FAST!
+TileBlastFrame03_BANK{BANK}: ; T FAST!
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $ED, $FF, $DF, $DA, $EC, $ED, $F4, $FF
 
-TileBlastFrame04: ; TIME
+TileBlastFrame04_BANK{BANK}: ; TIME
     .byte $28
     .byte $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame05:
+TileBlastFrame05_BANK{BANK}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame06:
+TileBlastFrame06_BANK{BANK}:
     .byte $62
     .byte $FF, $FF
     .byte $FF, $FF
@@ -2200,62 +2200,62 @@ TileBlastFrame06:
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame07:
+TileBlastFrame07_BANK{BANK}:
     .byte $42
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame08: ; TIME B
+TileBlastFrame08_BANK{BANK}: ; TIME B
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $ED, $E2, $E6, $DE, $FF, $DB
 
-TileBlastFrame09: ; OMB SET
+TileBlastFrame09_BANK{BANK}: ; OMB SET
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $E8, $E6, $DB, $FF, $EC, $DE, $ED, $FF
 
-TileBlastFrame0A:
+TileBlastFrame0A_BANK{BANK}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0B:
+TileBlastFrame0B_BANK{BANK}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0C:
+TileBlastFrame0C_BANK{BANK}:
     .byte $42
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
 
-TileBlastFrame0D:
+TileBlastFrame0D_BANK{BANK}:
     .byte $42
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
 
-TileBlastFrame0E:
+TileBlastFrame0E_BANK{BANK}:
     .byte $42
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
 
-TileBlastFrame0F:
+TileBlastFrame0F_BANK{BANK}:
     .byte $42
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
 
-TileBlastFrame10:
+TileBlastFrame10_BANK{BANK}:
     .byte $62
     .byte $A0, $A0
     .byte $A0, $A0

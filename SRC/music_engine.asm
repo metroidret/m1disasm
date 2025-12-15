@@ -361,7 +361,7 @@ SoundEngine:
     ;is bit zero is set in NoiseSFXFlag(Silence music)?  If yes, branch.
     lda NoiseSFXFlag
     lsr
-    bcs SilenceMusic
+    bcs SoundEngine_SilenceMusic
     ;Is game paused?  If yes, branch.
     lda MainRoutine
     cmp #_id_PauseMode.b
@@ -386,7 +386,7 @@ ClearSFXFlags:
     sta MusicInitFlag
     rts
 
-SilenceMusic:
+SoundEngine_SilenceMusic:
     jsr InitializeSoundAddresses    ;($B404)Prepare to start playing music.
     beq ClearSFXFlags               ;Branch always.
 

@@ -32,7 +32,7 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00:
+Room00_BANK{BANK}:
     .byte $02
     .byte $40, $01, $03
     .byte $48, $01, $03
@@ -40,13 +40,13 @@ Room00:
     .byte $5F, $04, $02
     .byte $FF
 
-Room01:
+Room01_BANK{BANK}:
     .byte $02
     .byte $07, $02, $02
     .byte $87, $02, $02
     .byte $FF
 
-Room02:
+Room02_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $04, $10, $00
@@ -69,7 +69,7 @@ Room02:
     .byte $EE, $06, $00
     .byte $FF
 
-Room03:
+Room03_BANK{BANK}:
     .byte $00
     .byte $00, $06, $00
     .byte $0A, $0D, $00
@@ -94,7 +94,7 @@ Room03:
     .byte $31, $85, $37 ; Zeela
     .byte $FF
 
-Room04:
+Room04_BANK{BANK}:
     .byte $00
     .byte $00, $06, $00
     .byte $07, $06, $00
@@ -121,7 +121,7 @@ Room04:
     .byte $21, $83, $C8 ; Ripper
     .byte $FF
 
-Room05:
+Room05_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $0C, $10, $00
@@ -141,7 +141,7 @@ Room05:
     .byte $11, $03, $CA ; Ripper
     .byte $FF
 
-Room06:
+Room06_BANK{BANK}:
     .byte $00
     .byte $00, $06, $00
     .byte $0E, $06, $00
@@ -170,7 +170,7 @@ Room06:
     .byte $51, $85, $26 ; Zeela
     .byte $FF
 
-Room07:
+Room07_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $0A, $10, $00
@@ -196,7 +196,7 @@ Room07:
     .byte $31, $03, $87 ; Ripper
     .byte $FF
 
-Room08:
+Room08_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $03, $10, $00
@@ -220,7 +220,7 @@ Room08:
     .byte $41, $85, $A6 ; Zeela
     .byte $FF
 
-Room09:
+Room09_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0D, $09, $01
@@ -240,7 +240,7 @@ Room09:
     .byte $31, $03, $83 ; Ripper
     .byte $FF
 
-Room0A:
+Room0A_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0E, $07, $00
@@ -262,7 +262,7 @@ Room0A:
     .byte $11, $03, $28 ; Ripper
     .byte $FF
 
-Room0B:
+Room0B_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $04, $10, $00
@@ -282,7 +282,7 @@ Room0B:
     .byte $BC, $10, $00
     .byte $FF
 
-Room0C:
+Room0C_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $11, $00
@@ -309,7 +309,7 @@ Room0C:
     .byte $41, $05, $C4 ; Zeela
     .byte $FF
 
-Room0D:
+Room0D_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $0F, $02
@@ -332,7 +332,7 @@ Room0D:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0E:
+Room0E_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $0F, $02
@@ -351,7 +351,7 @@ Room0E:
     .byte $CA, $0F, $02
     .byte $FF
 
-Room0F:
+Room0F_BANK{BANK}:
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -369,7 +369,7 @@ Room0F:
     .byte $07, $87, $D8 ; Geega
     .byte $FF
 
-Room10:
+Room10_BANK{BANK}:
     .byte $00
     .byte $00, $12, $00
     .byte $08, $12, $00
@@ -408,8 +408,8 @@ Room11_unused: ; Not used
     .byte $CC, $10, $00
     .byte $FF
 
-Room11:
-Room12:
+Room11_BANK{BANK}:
+Room12_BANK{BANK}:
     .byte $00
     .byte $00, $12, $00
     .byte $08, $12, $00
@@ -433,7 +433,7 @@ Room12:
     .byte $41, $85, $B6 ; Zeela
     .byte $FF
 
-Room13:
+Room13_BANK{BANK}:
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -454,7 +454,7 @@ Room13:
     .byte $37, $87, $DD ; Geega
     .byte $FF
 
-Room14:
+Room14_BANK{BANK}:
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -470,7 +470,7 @@ Room14:
     .byte $01, $85, $95 ; Zeela
     .byte $FF
 
-Room15:
+Room15_BANK{BANK}:
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -494,7 +494,7 @@ Room15:
     .byte $01, $80, $68 ; Sidehopper
     .byte $FF
 
-Room16:
+Room16_BANK{BANK}:
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -515,7 +515,7 @@ Room16:
     .byte $21, $81, $27 ; Ceiling sidehopper
     .byte $FF
 
-Room17:
+Room17_BANK{BANK}:
     .byte $01
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -539,7 +539,7 @@ Room17:
     .byte $31, $04, $48 ; Skree
     .byte $FF
 
-Room18:
+Room18_BANK{BANK}:
     .byte $01
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -560,7 +560,7 @@ Room18:
     .byte $01, $84, $29 ; Skree
     .byte $FF
 
-Room19:
+Room19_BANK{BANK}:
     .byte $03
     .byte $00, $19, $03
     .byte $04, $19, $03
@@ -586,7 +586,7 @@ Room19:
     .byte $CC, $19, $03
     .byte $FF
 
-Room1A:
+Room1A_BANK{BANK}:
     .byte $03
     .byte $00, $13, $03
     .byte $04, $13, $03
@@ -615,7 +615,7 @@ Room1A:
     .byte $31, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room1B:
+Room1B_BANK{BANK}:
     .byte $00
     .byte $00, $1F, $01
     .byte $04, $1D, $01
@@ -653,7 +653,7 @@ Room1B:
     .byte $27, $07, $D9 ; Geega
     .byte $FF
 
-Room1C:
+Room1C_BANK{BANK}:
     .byte $03
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -669,7 +669,7 @@ Room1C:
     .byte $21, $81, $9A ; Ceiling sidehopper
     .byte $FF
 
-Room1D:
+Room1D_BANK{BANK}:
     .byte $01
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -704,7 +704,7 @@ Room1D:
     .byte $01, $48, $95 ; Kraid
     .byte $FF
 
-Room1E:
+Room1E_BANK{BANK}:
     .byte $01
     .byte $00, $1E, $01
     .byte $02, $1D, $01
@@ -723,7 +723,7 @@ Room1E:
     .byte $11, $81, $35 ; Ceiling sidehopper
     .byte $FF
 
-Room1F:
+Room1F_BANK{BANK}:
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -739,7 +739,7 @@ Room1F:
     .byte $17, $07, $CD ; Geega
     .byte $FF
 
-Room20:
+Room20_BANK{BANK}:
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -753,7 +753,7 @@ Room20:
     .byte $41, $80, $BC ; Sidehopper
     .byte $FF
 
-Room21:
+Room21_BANK{BANK}:
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -773,7 +773,7 @@ Room21:
     .byte $21, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room22:
+Room22_BANK{BANK}:
     .byte $03
     .byte $00, $13, $03
     .byte $04, $13, $03
@@ -799,7 +799,7 @@ Room22:
     .byte $41, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room23:
+Room23_BANK{BANK}:
     .byte $00
     .byte $00, $10, $00
     .byte $0E, $06, $00
@@ -821,7 +821,7 @@ Room23:
     .byte $01, $03, $38 ; Ripper
     .byte $FF
 
-Room24:
+Room24_BANK{BANK}:
     .byte $00
     .byte $00, $07, $00
     .byte $0E, $07, $00

@@ -85,6 +85,19 @@
     .word ptr
 .endm
 
+.macro PtrTableEntryBank args ptrTable, ptr
+    .ifndef _id_\2
+        .ifdef _entryNumber_\1
+            .redef _entryNumber_\1 = _entryNumber_\1 + 1
+        .else
+            .def _entryNumber_\1 = 0
+        .endif
+        
+        .def _id_\2 = _entryNumber_\1 export
+    .endif
+    .word \2_BANK{BANK}
+.endm
+
 .macro GFXInfoEntry args gfx, dest
     .byte bank(gfx)
     PtrTableEntry GFXInfo gfx

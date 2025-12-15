@@ -32,7 +32,7 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00:
+Room00_BANK{BANK}:
     .byte $02
     .byte $40, $01, $02
     .byte $48, $01, $02
@@ -43,13 +43,13 @@ Room00:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room01:
+Room01_BANK{BANK}:
     .byte $02
     .byte $07, $02, $02
     .byte $87, $02, $02
     .byte $FF
 
-Room02:
+Room02_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $04, $06, $03
@@ -69,7 +69,7 @@ Room02:
     .byte $EC, $06, $03
     .byte $FF
 
-Room03:
+Room03_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -92,7 +92,7 @@ Room03:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room04:
+Room04_BANK{BANK}:
     .byte $00
     .byte $00, $0D, $00
     .byte $08, $0D, $00
@@ -119,7 +119,7 @@ Room04:
     .byte $02, $A0 ; Red door
     .byte $FF
 
-Room05:
+Room05_BANK{BANK}:
     .byte $00
     .byte $00, $07, $03
     .byte $02, $06, $03
@@ -142,7 +142,7 @@ Room05:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room06:
+Room06_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $04, $0B, $03
@@ -170,7 +170,7 @@ Room06:
     .byte $DC, $0B, $03
     .byte $FF
 
-Room07:
+Room07_BANK{BANK}:
     .byte $03
     .byte $00, $0B, $03
     .byte $04, $0B, $03
@@ -190,7 +190,7 @@ Room07:
     .byte $C8, $0B, $03
     .byte $FF
 
-Room08:
+Room08_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $08, $06, $03
@@ -213,7 +213,7 @@ Room08:
     .byte $21, $82, $A3 ; Ripper II
     .byte $FF
 
-Room09:
+Room09_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $0B, $03
@@ -236,7 +236,7 @@ Room09:
     .byte $41, $06, $79 ; Nova
     .byte $FF
 
-Room0A:
+Room0A_BANK{BANK}:
     .byte $02
     .byte $00, $07, $03
     .byte $05, $06, $03
@@ -262,7 +262,7 @@ Room0A:
     .byte $41, $86, $48 ; Nova
     .byte $FF
 
-Room0B:
+Room0B_BANK{BANK}:
     .byte $01
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -287,7 +287,7 @@ Room0B:
     .byte $51, $02, $1A ; Ripper II
     .byte $FF
 
-Room0C:
+Room0C_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $0D, $18, $01
@@ -304,7 +304,7 @@ Room0C:
     .byte $31, $82, $88 ; Ripper II
     .byte $FF
 
-Room0D:
+Room0D_BANK{BANK}:
     .byte $03
     .byte $10, $0B, $03
     .byte $14, $0B, $03
@@ -328,7 +328,7 @@ Room0D:
     .byte $21, $0D, $E5 ; Dragon
     .byte $FF
 
-Room0E:
+Room0E_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -349,7 +349,7 @@ Room0E:
     .byte $21, $02, $39 ; Ripper II
     .byte $FF
 
-Room0F:
+Room0F_BANK{BANK}:
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0D, $00
@@ -371,7 +371,7 @@ Room0F:
     .byte $31, $06, $AA ; Nova
     .byte $FF
 
-Room10:
+Room10_BANK{BANK}:
     .byte $01
     .byte $00, $0D, $00
     .byte $04, $0D, $00
@@ -391,7 +391,7 @@ Room10:
     .byte $31, $06, $85 ; Nova
     .byte $FF
 
-Room11:
+Room11_BANK{BANK}:
     .byte $03
     .byte $10, $0B, $03
     .byte $14, $0B, $03
@@ -415,7 +415,7 @@ Room11:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room12:
+Room12_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -437,7 +437,7 @@ Room12:
     .byte $21, $0D, $EC ; Dragon
     .byte $FF
 
-Room13:
+Room13_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -459,7 +459,7 @@ Room13:
     .byte $11, $86, $69 ; Nova
     .byte $FF
 
-Room14:
+Room14_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -480,7 +480,7 @@ Room14:
     .byte $51, $8D, $EB ; Dragon
     .byte $FF
 
-Room15:
+Room15_BANK{BANK}:
     .byte $01
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -507,7 +507,7 @@ Room15:
     .byte $51, $06, $7C ; Nova
     .byte $FF
 
-Room16:
+Room16_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -524,7 +524,7 @@ Room16:
     .byte $51, $00, $18 ; Geruta
     .byte $FF
 
-Room17:
+Room17_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -543,7 +543,7 @@ Room17:
     .byte $27, $87, $B9 ; Gamet
     .byte $FF
 
-Room18:
+Room18_BANK{BANK}:
     .byte $03
     .byte $00, $2D, $03
     .byte $08, $2D, $03
@@ -564,7 +564,7 @@ Room18:
     .byte $01, $0D, $EC ; Dragon
     .byte $FF
 
-Room19:
+Room19_BANK{BANK}:
     .byte $00
     .byte $00, $0D, $00
     .byte $08, $0D, $00
@@ -582,7 +582,7 @@ Room19:
     .byte $31, $80, $17 ; Geruta
     .byte $FF
 
-Room1A:
+Room1A_BANK{BANK}:
     .byte $03
     .byte $00, $30, $01
     .byte $08, $30, $01
@@ -601,7 +601,7 @@ Room1A:
     .byte $51, $00, $2C ; Geruta
     .byte $FF
 
-Room1B:
+Room1B_BANK{BANK}:
     .byte $00
     .byte $00, $20, $01
     .byte $04, $20, $01
@@ -626,7 +626,7 @@ Room1B:
     .byte $41, $8B, $E6 ; Squeept
     .byte $FF
 
-Room1C:
+Room1C_BANK{BANK}:
     .byte $02
     .byte $00, $22, $02
     .byte $04, $22, $02
@@ -647,7 +647,7 @@ Room1C:
     .byte $31, $00, $49 ; Geruta
     .byte $FF
 
-Room1D:
+Room1D_BANK{BANK}:
     .byte $02
     .byte $00, $22, $02
     .byte $04, $22, $02
@@ -668,7 +668,7 @@ Room1D:
     .byte $21, $00, $49 ; Geruta
     .byte $FF
 
-Room1E:
+Room1E_BANK{BANK}:
     .byte $02
     .byte $00, $22, $02
     .byte $04, $22, $02
@@ -686,7 +686,7 @@ Room1E:
     .byte $31, $86, $B3 ; Nova
     .byte $FF
 
-Room1F:
+Room1F_BANK{BANK}:
     .byte $02
     .byte $00, $22, $02
     .byte $04, $22, $02
@@ -704,7 +704,7 @@ Room1F:
     .byte $11, $02, $99 ; Ripper II
     .byte $FF
 
-Room20:
+Room20_BANK{BANK}:
     .byte $00
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -729,7 +729,7 @@ Room20:
     .byte $01, $0B, $EB ; Squeept
     .byte $FF
 
-Room21:
+Room21_BANK{BANK}:
     .byte $03
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -750,7 +750,7 @@ Room21:
     .byte $21, $0C, $38 ; Multiviola
     .byte $FF
 
-Room22:
+Room22_BANK{BANK}:
     .byte $03
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -773,7 +773,7 @@ Room22:
     .byte $31, $0C, $55 ; Multiviola
     .byte $FF
 
-Room23:
+Room23_BANK{BANK}:
     .byte $03
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -792,7 +792,7 @@ Room23:
     .byte $17, $87, $B3 ; Gamet
     .byte $FF
 
-Room24:
+Room24_BANK{BANK}:
     .byte $03
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -815,7 +815,7 @@ Room24:
     .byte $31, $0B, $E9 ; Squeept
     .byte $FF
 
-Room25:
+Room25_BANK{BANK}:
     .byte $00
     .byte $00, $2F, $03
     .byte $08, $2F, $03
@@ -832,7 +832,7 @@ Room25:
     .byte $37, $07, $9A ; Gamet
     .byte $FF
 
-Room26:
+Room26_BANK{BANK}:
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0D, $00
@@ -856,7 +856,7 @@ Room26:
     .byte $01, $8B, $E5 ; Squeept
     .byte $FF
 
-Room27:
+Room27_BANK{BANK}:
     .byte $02
     .byte $00, $20, $01
     .byte $04, $20, $01
@@ -878,7 +878,7 @@ Room27:
     .byte $51, $0D, $E9 ; Dragon
     .byte $FF
 
-Room28:
+Room28_BANK{BANK}:
     .byte $02
     .byte $00, $30, $01
     .byte $08, $30, $01
@@ -900,7 +900,7 @@ Room28:
     .byte $21, $00, $2A ; Geruta
     .byte $FF
 
-Room29:
+Room29_BANK{BANK}:
     .byte $00
     .byte $00, $30, $01
     .byte $05, $15, $03
@@ -921,7 +921,7 @@ Room29:
     .byte $21, $86, $99 ; Nova
     .byte $FF
 
-Room2A:
+Room2A_BANK{BANK}:
     .byte $02
     .byte $00, $30, $01
     .byte $08, $30, $01
@@ -943,7 +943,7 @@ Room2A:
     .byte $51, $8B, $EB ; Squeept
     .byte $FF
 
-Room2B:
+Room2B_BANK{BANK}:
     .byte $00
     .byte $00, $30, $01
     .byte $08, $30, $01
@@ -963,7 +963,7 @@ Room2B:
     .byte $01, $0B, $E3 ; Squeept
     .byte $FF
 
-Room2C:
+Room2C_BANK{BANK}:
     .byte $00
     .byte $00, $30, $01
     .byte $08, $30, $01
@@ -980,7 +980,7 @@ Room2C:
     .byte $01, $0C, $59 ; Multiviola
     .byte $FF
 
-Room2D:
+Room2D_BANK{BANK}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03

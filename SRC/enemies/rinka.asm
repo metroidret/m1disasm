@@ -1,14 +1,14 @@
-RinkaAIRoutine:
+RinkaAIRoutine_BANK{BANK}:
     ; branch if enemy is not active
     ldy EnsExtra.0.status,x
     cpy #enemyStatus_Active
-    bne L9AB0
+    bne @moveRinka
 
     ; enemy is active
     ; branch if previous status is not resting
     dey ; set y to #$01
     cpy EnemyStatusPreAI
-    bne L9AB0
+    bne @moveRinka
 
     ; previous status is resting
     ; that means the rinka's speed vector needs to be initialized
@@ -33,13 +33,13 @@ RinkaAIRoutine:
     ; push EnData05/2 to stack
     pha
     ; branch if facing right
-    bcc L9A5A
+    bcc @endIf_A
         ; enemy is facing left
         ; negate $01
         lda #$00
         sbc $01
         sta $01
-    L9A5A:
+    @endIf_A:
     ; $01 now contains the x distance between Samus and the enemy
 
     ; save Samus y pos relative to enemy in $00
@@ -53,13 +53,13 @@ RinkaAIRoutine:
     lsr
     lsr
     ; branch if facing down
-    bcc L9A6E
+    bcc @endIf_B
         ; enemy is facing up
         ; negate $00
         lda #$00
         sbc $00
         sta $00
-    L9A6E:
+    @endIf_B:
     ; $00 now contains the y distance between Samus and the enemy
 
     ; logic or both together
@@ -67,27 +67,29 @@ RinkaAIRoutine:
     ora $01
     ; for bits 7, 6, 5 of this
     ldy #$03
-    L9A74:
+    @loop_A:
         ; shift bit into carry
         asl
         ; branch if that bit is set
-        bcs L9A7A
+        bcs @exitLoop_A
         dey
-        bne L9A74
-L9A7A:
-    ; branch if bits 7, 6, 5 were not set
-    dey
-    bmi L9A83
-        ; bit 7 or 6 or 5 was set
-        ; divide by 2 repeatedly until this isn't the case anymore
-        lsr $00
-        lsr $01
-        bpl L9A7A
-    L9A83:
+        bne @loop_A
+    @exitLoop_A:
+
+    @loop_B:
+        ; branch if bits 7, 6, 5 were not set
+        dey
+        bmi @exitLoop_B
+            ; bit 7 or 6 or 5 was set
+            ; divide by 2 repeatedly until this isn't the case anymore
+            lsr $00
+            lsr $01
+            bpl @loop_B
+    @exitLoop_B:
     ; $00 and $01 now do not have bits 7, 6, 5 set
 
     ; set rinka speed based on $00 and $01
-    jsr SetRinkaSpeed
+    jsr SetRinkaSpeed_BANK{BANK}
     
     ; pull EnData05 from stack
     pla
@@ -96,7 +98,7 @@ L9A7A:
     ; push EnData05/2 to stack
     pha
     ; branch if facing right
-    bcc endIf9A9B
+    bcc @endIf_C
         ; enemy is facing left
         ; negate rinka x speed
         lda #$00
@@ -105,14 +107,14 @@ L9A7A:
         lda #$00
         sbc EnSpeedX,x
         sta EnSpeedX,x
-    endIf9A9B:
+    @endIf_C:
     ; pull EnData05/2 from stack
     pla
     ; shift vertical facing direction into carry
     lsr
     lsr
     ; branch if facing down
-    bcc endIf9AB0
+    bcc @endIf_D
         ; enemy is facing up
         ; negate rinka y speed
         lda #$00
@@ -121,13 +123,13 @@ L9A7A:
         lda #$00
         sbc EnSpeedY,x
         sta EnSpeedY,x
-    endIf9AB0:
+    @endIf_D:
 
-L9AB0:
+@moveRinka:
     ; branch if bit 6 of EnData05 is set (30FPS)
     lda EnData05,x
     asl
-    bmi L9AF4
+    bmi @endIf_E
         ; move rinka
         
         ; apply y sub-pixel speed to sub-pixel position
@@ -160,19 +162,19 @@ L9AB0:
         ; apply speed
         jsr CommonJump_ApplySpeedToPosition
         ; branch if movement succeeded
-        bcs L9AF1
+        bcs @endIf_F
             ; movement failed, remove rinka
             lda #$00
             sta EnsExtra.0.status,x
-        L9AF1:
+        @endIf_F:
         jsr LoadEnemyPositionFromTemp_
-    L9AF4:
+    @endIf_E:
     ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_01
 
 
-SetRinkaSpeed:
+SetRinkaSpeed_BANK{BANK}:
     ; load y speed
     lda $00
     pha

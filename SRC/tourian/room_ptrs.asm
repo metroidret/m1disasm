@@ -18,25 +18,25 @@
 
 ;Tourian Room Pointers
 
-RoomPtrTable:
-    .word Room00
-    .word Room01
-    .word Room02
-    .word Room03
-    .word Room04
-    .word Room05
-    .word Room06
-    .word Room07
-    .word Room08
-    .word Room09
-    .word Room0A
-    .word Room0B
-    .word Room0C
-    .word Room0D
-    .word Room0E
-    .word Room0F
-    .word Room10
-    .word Room11
-    .word Room12
-    .word Room13
-    .word Room14
+RoomPtrTable_BANK{BANK}:
+    .word Room00_BANK{BANK}
+    .word Room01_BANK{BANK}
+    .word Room02_BANK{BANK}
+    .word Room03_BANK{BANK}
+    .word Room04_BANK{BANK}
+    .word Room05_BANK{BANK}
+    .word Room06_BANK{BANK}
+    .word Room07_BANK{BANK}
+    .word Room08_BANK{BANK}
+    .word Room09_BANK{BANK}
+    .word Room0A_BANK{BANK}
+    .word Room0B_BANK{BANK}
+    .word Room0C_BANK{BANK}
+    .word Room0D_BANK{BANK}
+    .word Room0E_BANK{BANK}
+    .word Room0F_BANK{BANK}
+    .word Room10_BANK{BANK}
+    .word Room11_BANK{BANK}
+    .word Room12_BANK{BANK}
+    .word Room13_BANK{BANK}
+    .word Room14_BANK{BANK}
