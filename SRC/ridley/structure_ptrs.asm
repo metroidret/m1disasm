@@ -18,34 +18,34 @@
 
 ;Ridley Structure Pointers
 
-StructPtrTable_BANK{BANK}:
-    .word Structure00_BANK{BANK}
-    .word Structure01_BANK{BANK}
-    .word Structure02_BANK{BANK}
-    .word Structure03_BANK{BANK}
-    .word Structure04_BANK{BANK}
-    .word Structure05_BANK{BANK}
-    .word Structure06_BANK{BANK}
-    .word Structure07_BANK{BANK}
-    .word Structure08_BANK{BANK}
-    .word Structure09_BANK{BANK}
-    .word Structure0A_BANK{BANK}
-    .word Structure0B_BANK{BANK}
-    .word Structure0C_BANK{BANK}
-    .word Structure0D_BANK{BANK}
-    .word Structure0E_BANK{BANK}
-    .word Structure0F_BANK{BANK}
-    .word Structure10_BANK{BANK}
-    .word Structure11_BANK{BANK}
-    .word Structure12_BANK{BANK}
-    .word Structure13_BANK{BANK}
-    .word Structure14_BANK{BANK}
-    .word Structure15_BANK{BANK}
-    .word Structure16_BANK{BANK}
-    .word Structure17_BANK{BANK}
-    .word Structure18_BANK{BANK}
-    .word Structure19_BANK{BANK}
-    .word Structure1A_BANK{BANK}
-    .word Structure1B_BANK{BANK}
-    .word Structure1C_BANK{BANK}
+StructPtrTable_{AREA}:
+    .word Structure00_{AREA}
+    .word Structure01_{AREA}
+    .word Structure02_{AREA}
+    .word Structure03_{AREA}
+    .word Structure04_{AREA}
+    .word Structure05_{AREA}
+    .word Structure06_{AREA}
+    .word Structure07_{AREA}
+    .word Structure08_{AREA}
+    .word Structure09_{AREA}
+    .word Structure0A_{AREA}
+    .word Structure0B_{AREA}
+    .word Structure0C_{AREA}
+    .word Structure0D_{AREA}
+    .word Structure0E_{AREA}
+    .word Structure0F_{AREA}
+    .word Structure10_{AREA}
+    .word Structure11_{AREA}
+    .word Structure12_{AREA}
+    .word Structure13_{AREA}
+    .word Structure14_{AREA}
+    .word Structure15_{AREA}
+    .word Structure16_{AREA}
+    .word Structure17_{AREA}
+    .word Structure18_{AREA}
+    .word Structure19_{AREA}
+    .word Structure1A_{AREA}
+    .word Structure1B_{AREA}
+    .word Structure1C_{AREA}
 

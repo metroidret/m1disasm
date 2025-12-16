@@ -1,5 +1,5 @@
 ; Zoomer Routine (Crawler)
-CrawlerAIRoutine_BANK{BANK}:
+CrawlerAIRoutine_{AREA}:
     ; move only 6 frames out of 8 (0.75px per frame)
     jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
@@ -8,14 +8,14 @@ CrawlerAIRoutine_BANK{BANK}:
     lda EnemyStatusPreAI
     .if BANK == 1 || BANK == 4
         cmp #enemyStatus_Resting
-        beq SkreeExit_Resting_BANK{BANK}
+        beq SkreeExit_Resting_{AREA}
         cmp #enemyStatus_Explode
-        beq SkreeExit_Explode_BANK{BANK}
+        beq SkreeExit_Explode_{AREA}
     .elif BANK == 2 || BANK == 5
         cmp #enemyStatus_Resting
-        beq CrawlerExit_Resting_BANK{BANK}
+        beq CrawlerExit_Resting_{AREA}
         cmp #enemyStatus_Explode
-        beq CrawlerExit_Explode_BANK{BANK}
+        beq CrawlerExit_Explode_{AREA}
     .endif
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
@@ -57,30 +57,30 @@ CrawlerAIRoutine_BANK{BANK}:
     ;  |=###
     
     ; horizontal flip
-    jsr CrawlerFlipDirection_BANK{BANK}
+    jsr CrawlerFlipDirection_{AREA}
     ; set orientation to moving up the wall
     lda #$03
     sta EnData0A,x
     bne @afterLavaTurnAround ; branch always
 @move:
     ; move crawler in its direction
-    jsr JumpByRTSToMovementRoutine_BANK{BANK}
-    jsr CrawlerInsideCornerCheck_BANK{BANK}
+    jsr JumpByRTSToMovementRoutine_{AREA}
+    jsr CrawlerInsideCornerCheck_{AREA}
 @afterLavaTurnAround:
-    jsr CrawlerOutsideCornerCheck_BANK{BANK}
+    jsr CrawlerOutsideCornerCheck_{AREA}
 @exit:
     ; change animation frame every 3 frames
     lda #$03
     jsr CommonJump_UpdateEnemyAnim
-CrawlerExit_Explode_BANK{BANK}:
+CrawlerExit_Explode_{AREA}:
     jmp CommonJump_02
 
 .if BANK == 2 || BANK == 5
-    CrawlerExit_Resting_BANK{BANK}:
+    CrawlerExit_Resting_{AREA}:
         jmp CommonJump_01
 .endif
 
-CrawlerReorientSprite_BANK{BANK}:
+CrawlerReorientSprite_{AREA}:
     ; Y = orientation * 2 + direction
     lda EnData05,x
     lsr
@@ -88,85 +88,85 @@ CrawlerReorientSprite_BANK{BANK}:
     and #$03
     rol
     tay
-    lda CrawlerAnimIndexTable_BANK{BANK},y
+    lda CrawlerAnimIndexTable_{AREA},y
     jmp CommonJump_InitEnAnimIndex
 
-CrawlerAnimIndexTable_BANK{BANK}:
+CrawlerAnimIndexTable_{AREA}:
 .if BANK == 1
-    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZoomerOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnLeftWall_{AREA} - EnAnimTable_{AREA}
 .elif BANK == 2
-    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_NovaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnLeftWall_{AREA} - EnAnimTable_{AREA}
 .elif BANK == 4
-    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ZeelaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ZeelaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnLeftWall_{AREA} - EnAnimTable_{AREA}
 .elif BANK == 5
-    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnCeiling_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnRightWall_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_ViolaOnLeftWall_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnLeftWall_{AREA} - EnAnimTable_{AREA}
 .endif
 
-CrawlerInsideCornerCheck_BANK{BANK}:
+CrawlerInsideCornerCheck_{AREA}:
     ; inside corner check, check if collided with wall
     ; (carry flag was updated by JumpByRTSToMovementRoutine called before this)
     ldx PageIndex
-    bcs RTS_Crawler06_BANK{BANK}
+    bcs RTS_Crawler06_{AREA}
     ; flip direction if tried to move offscreen
     lda $00
-    bne CrawlerFlipDirection_BANK{BANK}
+    bne CrawlerFlipDirection_{AREA}
         ; at inside corner, stick to wall
         ldy EnData0A,x
         dey
         tya
         and #$03
         sta EnData0A,x
-        jmp CrawlerReorientSprite_BANK{BANK}
+        jmp CrawlerReorientSprite_{AREA}
 
-    CrawlerFlipDirection_BANK{BANK}:
+    CrawlerFlipDirection_{AREA}:
         lda EnData05,x
         eor #$01
         sta EnData05,x
-    RTS_Crawler06_BANK{BANK}:
+    RTS_Crawler06_{AREA}:
         rts
 
-CrawlerOutsideCornerCheck_BANK{BANK}:
+CrawlerOutsideCornerCheck_{AREA}:
     ; outside corner check, check if there's no floor beneath the crawler
-    jsr CrawlerOutsideCornerGetNextOrientation_BANK{BANK}
-    jsr JumpByRTSToMovementRoutine_BANK{BANK}
+    jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
+    jsr JumpByRTSToMovementRoutine_{AREA}
     ldx PageIndex
     bcc @RTS
         ; at outside corner, stick to wall
-        jsr CrawlerOutsideCornerGetNextOrientation_BANK{BANK}
+        jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
         sta EnData0A,x
-        jsr CrawlerReorientSprite_BANK{BANK}
+        jsr CrawlerReorientSprite_{AREA}
     @RTS:
     rts
 
-CrawlerOutsideCornerGetNextOrientation_BANK{BANK}:
+CrawlerOutsideCornerGetNextOrientation_{AREA}:
     ; returns the orientation needed to turn an outside corner, relative to current orientation
     ldy EnData0A,x
     iny
@@ -175,7 +175,7 @@ CrawlerOutsideCornerGetNextOrientation_BANK{BANK}:
     rts
 
 ; a: orientation
-JumpByRTSToMovementRoutine_BANK{BANK}:
+JumpByRTSToMovementRoutine_{AREA}:
     ; Y = (orientation * 2 + direction)*2
     ; shift direction bit into carry
     ldy EnData05,x

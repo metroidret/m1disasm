@@ -8,7 +8,7 @@ The code has been manually reworked multiple times in a laborious journey to fin
 
 Versions of WLA-DX prior to v10.7 will not work. The latest release, v10.6 back in late 2023, does not have the newest features like the `substring` function, which are used in this disassembly. Because v10.7 is not yet released, you must compile WLA-DX v10.7 from [its source code](https://github.com/vhelin/wla-dx). Instructions on how to compile can be found in WLA-DX's README.
 
-To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together. Duplicate labels that share a name necessarily have the same NES memory location. For duplicate content that doesn't need to be at the same location, labels must use the _BANK{BANK} suffix.
+To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together. Duplicate labels that share a name necessarily have the same NES memory location. For duplicate content that doesn't need to be at the same location, labels must use the _{AREA} suffix.
 
 ### Contributing
 

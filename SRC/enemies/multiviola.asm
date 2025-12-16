@@ -1,4 +1,4 @@
-MultiviolaAIRoutine_BANK{BANK}:
+MultiviolaAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne @dontUpdateAnim
@@ -9,5 +9,5 @@ MultiviolaAIRoutine_BANK{BANK}:
     lda #$02
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 

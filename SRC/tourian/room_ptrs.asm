@@ -18,25 +18,25 @@
 
 ;Tourian Room Pointers
 
-RoomPtrTable_BANK{BANK}:
-    .word Room00_BANK{BANK}
-    .word Room01_BANK{BANK}
-    .word Room02_BANK{BANK}
-    .word Room03_BANK{BANK}
-    .word Room04_BANK{BANK}
-    .word Room05_BANK{BANK}
-    .word Room06_BANK{BANK}
-    .word Room07_BANK{BANK}
-    .word Room08_BANK{BANK}
-    .word Room09_BANK{BANK}
-    .word Room0A_BANK{BANK}
-    .word Room0B_BANK{BANK}
-    .word Room0C_BANK{BANK}
-    .word Room0D_BANK{BANK}
-    .word Room0E_BANK{BANK}
-    .word Room0F_BANK{BANK}
-    .word Room10_BANK{BANK}
-    .word Room11_BANK{BANK}
-    .word Room12_BANK{BANK}
-    .word Room13_BANK{BANK}
-    .word Room14_BANK{BANK}
+RoomPtrTable_{AREA}:
+    .word Room00_{AREA}
+    .word Room01_{AREA}
+    .word Room02_{AREA}
+    .word Room03_{AREA}
+    .word Room04_{AREA}
+    .word Room05_{AREA}
+    .word Room06_{AREA}
+    .word Room07_{AREA}
+    .word Room08_{AREA}
+    .word Room09_{AREA}
+    .word Room0A_{AREA}
+    .word Room0B_{AREA}
+    .word Room0C_{AREA}
+    .word Room0D_{AREA}
+    .word Room0E_{AREA}
+    .word Room0F_{AREA}
+    .word Room10_{AREA}
+    .word Room11_{AREA}
+    .word Room12_{AREA}
+    .word Room13_{AREA}
+    .word Room14_{AREA}

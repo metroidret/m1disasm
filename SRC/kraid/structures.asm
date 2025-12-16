@@ -25,12 +25,12 @@
 ;and are multiplied by 4 to find the index to the desired metatile in MetatileDefs.  Any further bytes in
 ;the structure definition represent the next rows.  #$FF marks the end of the structure definition.
 
-Structure00_BANK{BANK}:
+Structure00_{AREA}:
     .byte $08,  $01, $01, $01, $01, $01, $01, $01, $01
     .byte $08,  $00, $00, $00, $00, $00, $00, $00, $00
     .byte $FF
 
-Structure01_BANK{BANK}:
+Structure01_{AREA}:
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $01,  $1C
     .byte $01,  $1C
@@ -38,7 +38,7 @@ Structure01_BANK{BANK}:
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $FF
 
-Structure02_BANK{BANK}:
+Structure02_{AREA}:
     .byte $02,  $04, $05
     .byte $02,  $04, $05
     .byte $02,  $04, $05
@@ -49,23 +49,23 @@ Structure02_BANK{BANK}:
     .byte $02,  $04, $05
     .byte $FF
 
-Structure03_BANK{BANK}:
+Structure03_{AREA}:
     .byte $01,  $06
     .byte $01,  $06
     .byte $01,  $06
     .byte $FF
 
-Structure04_BANK{BANK}:
+Structure04_{AREA}:
     .byte $01,  $07
     .byte $01,  $07
     .byte $01,  $07
     .byte $FF
 
-Structure05_BANK{BANK}:
+Structure05_{AREA}:
     .byte $02,  $14, $15
     .byte $FF
 
-Structure06_BANK{BANK}:
+Structure06_{AREA}:
     .byte $02,  $17, $17
     .byte $02,  $17, $1B
     .byte $02,  $17, $1B
@@ -73,7 +73,7 @@ Structure06_BANK{BANK}:
     .byte $02,  $17, $17
     .byte $FF
 
-Structure07_BANK{BANK}:
+Structure07_{AREA}:
     .byte $02,  $1A, $17
     .byte $02,  $17, $17
     .byte $02,  $1B, $1A
@@ -81,25 +81,25 @@ Structure07_BANK{BANK}:
     .byte $02,  $1A, $1B
     .byte $FF
 
-Structure08_BANK{BANK}:
+Structure08_{AREA}:
     .byte $01,  $18
     .byte $01,  $18
     .byte $FF
 
-Structure09_BANK{BANK}:
+Structure09_{AREA}:
     .byte $01,  $19
     .byte $01,  $19
     .byte $FF
 
-Structure0A_BANK{BANK}:
+Structure0A_{AREA}:
     .byte $01,  $09
     .byte $FF
 
-Structure0B_BANK{BANK}:
+Structure0B_{AREA}:
     .byte $01,  $0A
     .byte $FF
 
-Structure0C_BANK{BANK}:
+Structure0C_{AREA}:
     .byte $01,  $1E
     .byte $01,  $1A
     .byte $01,  $1A
@@ -107,142 +107,142 @@ Structure0C_BANK{BANK}:
     .byte $01,  $1E
     .byte $FF
 
-Structure0D_BANK{BANK}:
+Structure0D_{AREA}:
     .byte $04,  $17, $17, $17, $17
     .byte $FF
 
-Structure0E_BANK{BANK}:
+Structure0E_{AREA}:
     .byte $03,  $17, $1D, $17
     .byte $FF
 
-Structure0F_BANK{BANK}:
+Structure0F_{AREA}:
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $01,  $0B
     .byte $FF
 
-Structure10_BANK{BANK}:
+Structure10_{AREA}:
     .byte $04,  $17, $17, $1B, $17
     .byte $04,  $1B, $17, $17, $17
     .byte $04,  $1B, $17, $1B, $1B
     .byte $04,  $17, $1B, $17, $17
     .byte $FF
 
-Structure11_BANK{BANK}:
+Structure11_{AREA}:
     .byte $01,  $17
     .byte $FF
 
-Structure12_BANK{BANK}:
+Structure12_{AREA}:
     .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
     .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
     .byte $FF
 
-Structure13_BANK{BANK}:
+Structure13_{AREA}:
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $FF
 
-Structure14_BANK{BANK}:
+Structure14_{AREA}:
     .byte $02,  $12, $12
     .byte $FF
 
-Structure15_BANK{BANK}:
+Structure15_{AREA}:
     .byte $08,  $10, $10, $10, $10, $10, $10, $10, $10
     .byte $08,  $10, $10, $10, $10, $10, $10, $10, $10
     .byte $FF
 
-Structure16_BANK{BANK}:
+Structure16_{AREA}:
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $02,  $10, $10
     .byte $FF
 
-Structure17_BANK{BANK}:
+Structure17_{AREA}:
     .byte $08,  $13, $0E, $13, $0E, $0E, $13, $0E, $0E
     .byte $08,  $0E, $0E, $13, $13, $0E, $0E, $13, $13
     .byte $FF
 
-Structure18_BANK{BANK}:
+Structure18_{AREA}:
     .byte $08,  $11, $11, $11, $11, $11, $11, $11, $11
     .byte $08,  $11, $11, $11, $11, $11, $11, $11, $11
     .byte $FF
 
-Structure19_BANK{BANK}:
+Structure19_{AREA}:
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $04,  $11, $11, $11, $11
     .byte $FF
 
-Structure1A_BANK{BANK}:
+Structure1A_{AREA}:
     .byte $08,  $20, $22, $22, $22, $22, $22, $22, $22
     .byte $FF
 
-Structure1B_BANK{BANK}:
+Structure1B_{AREA}:
     .byte $01,  $1F
     .byte $FF
 
-Structure1C_BANK{BANK}:
+Structure1C_{AREA}:
     .byte $01,  $21
     .byte $01,  $21
     .byte $01,  $21
     .byte $FF
 
-Structure1D_BANK{BANK}:
+Structure1D_{AREA}:
     .byte $08,  $23, $23, $23, $23, $23, $23, $23, $23
     .byte $08,  $23, $24, $24, $24, $24, $24, $24, $23
     .byte $08,  $23, $23, $23, $23, $23, $23, $23, $23
     .byte $FF
 
-Structure1E_BANK{BANK}:
+Structure1E_{AREA}:
     .byte $01,  $23
     .byte $01,  $23
     .byte $01,  $23
     .byte $01,  $23
     .byte $FF
 
-Structure1F_BANK{BANK}:
+Structure1F_{AREA}:
     .byte $04,  $23, $23, $23, $23
     .byte $04,  $23, $24, $24, $23
     .byte $04,  $23, $24, $24, $23
     .byte $04,  $23, $23, $23, $23
     .byte $FF
 
-Structure20_BANK{BANK}:
+Structure20_{AREA}:
     .byte $01,  $25
     .byte $FF
 
-Structure21_BANK{BANK}:
+Structure21_{AREA}:
     .byte $01,  $26
     .byte $01,  $26
     .byte $01,  $26
     .byte $01,  $26
     .byte $FF
 
-Structure22_BANK{BANK}:
+Structure22_{AREA}:
     .byte $03,  $27, $27, $27
     .byte $FF
 
-Structure23_BANK{BANK}:
+Structure23_{AREA}:
     .byte $03,  $28, $28, $28
     .byte $FF
 
-Structure24_BANK{BANK}:
+Structure24_{AREA}:
     .byte $08,  $13, $13, $13, $13, $13, $13, $13, $13
     .byte $FF
 
-Structure25_BANK{BANK}:
+Structure25_{AREA}:
     .byte $01,  $13
     .byte $01,  $13
     .byte $01,  $13
     .byte $01,  $13
     .byte $FF
 
-Structure26_BANK{BANK}:
+Structure26_{AREA}:
     .byte $04,  $0C, $0C, $0C, $0C
     .byte $04,  $0D, $0D, $0D, $0D
     .byte $FF

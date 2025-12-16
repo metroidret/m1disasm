@@ -32,14 +32,14 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00_BANK{BANK}:
-Room01_BANK{BANK}:
+Room00_{AREA}:
+Room01_{AREA}:
     .byte $02
     .byte $07, $03, $02
     .byte $87, $03, $02
     .byte $FF
 
-Room02_BANK{BANK}:
+Room02_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $01, $08, $03
@@ -57,7 +57,7 @@ Room02_BANK{BANK}:
     .byte $EA, $08, $03
     .byte $FF
 
-Room03_BANK{BANK}:
+Room03_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -76,7 +76,7 @@ Room03_BANK{BANK}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room04_BANK{BANK}:
+Room04_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -86,7 +86,7 @@ Room04_BANK{BANK}:
     .byte $AE, $07, $03
     .byte $FF
 
-Room05_BANK{BANK}:
+Room05_{AREA}:
     .byte $03
     .byte $00, $08, $03
     .byte $04, $08, $03
@@ -106,7 +106,7 @@ Room05_BANK{BANK}:
     .byte $BC, $08, $03
     .byte $FF
 
-Room06_BANK{BANK}:
+Room06_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $05, $08, $03
@@ -125,7 +125,7 @@ Room06_BANK{BANK}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room07_BANK{BANK}:
+Room07_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -150,7 +150,7 @@ Room07_BANK{BANK}:
     .byte $31, $86, $7B ; Viola
     .byte $FF
 
-Room08_BANK{BANK}:
+Room08_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -172,7 +172,7 @@ Room08_BANK{BANK}:
     .byte $27, $87, $96 ; Zebbo
     .byte $FF
 
-Room09_BANK{BANK}:
+Room09_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -194,7 +194,7 @@ Room09_BANK{BANK}:
     .byte $41, $86, $78 ; Viola
     .byte $FF
 
-Room0A_BANK{BANK}:
+Room0A_{AREA}:
     .byte $00
     .byte $00, $07, $03
     .byte $07, $19, $00
@@ -220,7 +220,7 @@ Room0A_BANK{BANK}:
     .byte $51, $86, $D8 ; Viola
     .byte $FF
 
-Room0B_BANK{BANK}:
+Room0B_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -240,7 +240,7 @@ Room0B_BANK{BANK}:
     .byte $21, $86, $A9 ; Viola
     .byte $FF
 
-Room0C_BANK{BANK}:
+Room0C_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -259,7 +259,7 @@ Room0C_BANK{BANK}:
     .byte $41, $82, $79 ; Dessgeega
     .byte $FF
 
-Room0D_BANK{BANK}:
+Room0D_{AREA}:
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $0B, $00
@@ -282,7 +282,7 @@ Room0D_BANK{BANK}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0E_BANK{BANK}:
+Room0E_{AREA}:
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $0B, $00
@@ -305,7 +305,7 @@ Room0E_BANK{BANK}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0F_BANK{BANK}:
+Room0F_{AREA}:
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -326,7 +326,7 @@ Room0F_BANK{BANK}:
     .byte $11, $02, $AA ; Dessgeega
     .byte $FF
 
-Room10_BANK{BANK}:
+Room10_{AREA}:
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -346,7 +346,7 @@ Room10_BANK{BANK}:
     .byte $11, $80, $2B ; Holtz
     .byte $FF
 
-Room11_BANK{BANK}:
+Room11_{AREA}:
     .byte $03
     .byte $00, $08, $03
     .byte $04, $08, $03
@@ -366,7 +366,7 @@ Room11_BANK{BANK}:
     .byte $41, $80, $2B ; Holtz
     .byte $FF
 
-Room12_BANK{BANK}:
+Room12_{AREA}:
     .byte $03
     .byte $00, $07, $03
     .byte $02, $11, $03
@@ -396,7 +396,7 @@ Room12_BANK{BANK}:
     .byte $01, $49, $66 ; Ridley
     .byte $FF
 
-Room13_BANK{BANK}:
+Room13_{AREA}:
     .byte $01
     .byte $00, $07, $03
     .byte $01, $0E, $00
@@ -423,7 +423,7 @@ Room13_BANK{BANK}:
     .byte $51, $83, $3E ; Ceiling dessgeega
     .byte $FF
 
-Room14_BANK{BANK}:
+Room14_{AREA}:
     .byte $01
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -444,7 +444,7 @@ Room14_BANK{BANK}:
     .byte $41, $80, $27 ; Holtz
     .byte $FF
 
-Room15_BANK{BANK}:
+Room15_{AREA}:
     .byte $01
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -468,7 +468,7 @@ Room15_BANK{BANK}:
     .byte $31, $80, $28 ; Holtz
     .byte $FF
 
-Room16_BANK{BANK}:
+Room16_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -486,7 +486,7 @@ Room16_BANK{BANK}:
     .byte $01, $80, $3E ; Holtz
     .byte $FF
 
-Room17_BANK{BANK}:
+Room17_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -505,7 +505,7 @@ Room17_BANK{BANK}:
     .byte $37, $87, $9C ; Zebbo
     .byte $FF
 
-Room18_BANK{BANK}:
+Room18_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -524,7 +524,7 @@ Room18_BANK{BANK}:
     .byte $01, $80, $67 ; Holtz
     .byte $FF
 
-Room19_BANK{BANK}:
+Room19_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -542,7 +542,7 @@ Room19_BANK{BANK}:
     .byte $31, $80, $37 ; Holtz
     .byte $FF
 
-Room1A_BANK{BANK}:
+Room1A_{AREA}:
     .byte $00
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -561,7 +561,7 @@ Room1A_BANK{BANK}:
     .byte $17, $87, $D9 ; Zebbo
     .byte $FF
 
-Room1B_BANK{BANK}:
+Room1B_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -586,7 +586,7 @@ Room1B_BANK{BANK}:
     .byte $37, $87, $9C ; Zebbo
     .byte $FF
 
-Room1C_BANK{BANK}:
+Room1C_{AREA}:
     .byte $02
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -607,7 +607,7 @@ Room1C_BANK{BANK}:
     .byte $31, $0C, $66 ; Multiviola
     .byte $FF
 
-Room1D_BANK{BANK}:
+Room1D_{AREA}:
     .byte $02
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -628,7 +628,7 @@ Room1D_BANK{BANK}:
     .byte $51, $0C, $A6 ; Multiviola
     .byte $FF
 
-Room1E_BANK{BANK}:
+Room1E_{AREA}:
     .byte $00
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -647,7 +647,7 @@ Room1E_BANK{BANK}:
     .byte $51, $0C, $9B ; Multiviola
     .byte $FF
 
-Room1F_BANK{BANK}:
+Room1F_{AREA}:
     .byte $02
     .byte $00, $17, $02
     .byte $04, $17, $02
@@ -665,7 +665,7 @@ Room1F_BANK{BANK}:
     .byte $21, $8C, $48 ; Multiviola
     .byte $FF
 
-Room20_BANK{BANK}:
+Room20_{AREA}:
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $18, $02
@@ -681,7 +681,7 @@ Room20_BANK{BANK}:
     .byte $41, $83, $88 ; Ceiling dessgeega
     .byte $FF
 
-Room21_BANK{BANK}:
+Room21_{AREA}:
     .byte $02
     .byte $20, $18, $02
     .byte $28, $18, $02
@@ -695,7 +695,7 @@ Room21_BANK{BANK}:
     .byte $41, $83, $53 ; Ceiling dessgeega
     .byte $FF
 
-Room22_BANK{BANK}:
+Room22_{AREA}:
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $18, $02
@@ -712,7 +712,7 @@ Room22_BANK{BANK}:
     .byte $51, $03, $8A ; Ceiling dessgeega
     .byte $FF
 
-Room23_BANK{BANK}:
+Room23_{AREA}:
     .byte $00
     .byte $00, $07, $03
     .byte $02, $12, $03
@@ -733,7 +733,7 @@ Room23_BANK{BANK}:
     .byte $31, $86, $7F ; Viola
     .byte $FF
 
-Room24_BANK{BANK}:
+Room24_{AREA}:
     .byte $01
     .byte $00, $12, $03
     .byte $08, $12, $03
@@ -752,7 +752,7 @@ Room24_BANK{BANK}:
     .byte $51, $86, $8B ; Viola
     .byte $FF
 
-Room25_BANK{BANK}:
+Room25_{AREA}:
     .byte $02
     .byte $00, $0B, $00
     .byte $04, $0E, $00
@@ -777,7 +777,7 @@ Room25_BANK{BANK}:
     .byte $31, $83, $BA ; Ceiling dessgeega
     .byte $FF
 
-Room26_BANK{BANK}:
+Room26_{AREA}:
     .byte $02
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -798,7 +798,7 @@ Room26_BANK{BANK}:
     .byte $51, $03, $BC ; Ceiling dessgeega
     .byte $FF
 
-Room27_BANK{BANK}:
+Room27_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -812,7 +812,7 @@ Room27_BANK{BANK}:
     .byte $11, $03, $29 ; Ceiling dessgeega
     .byte $FF
 
-Room28_BANK{BANK}:
+Room28_{AREA}:
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -830,7 +830,7 @@ Room28_BANK{BANK}:
     .byte $11, $80, $27 ; Holtz
     .byte $FF
 
-Room29_BANK{BANK}:
+Room29_{AREA}:
     .byte $00
     .byte $00, $0B, $00
     .byte $0C, $0B, $00

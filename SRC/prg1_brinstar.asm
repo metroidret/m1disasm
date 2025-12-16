@@ -19,6 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 1
+.redef AREA = {"BANK{BANK}"}
 .section "ROM Bank $001" bank 1 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
@@ -52,46 +53,46 @@ GFX_BrinstarSprites:
 ;----------------------------------------------------------------------------------------------------
 
 PalPntrTbl:
-    PtrTableEntryBank PalPntrTbl, Palette00                 ;($A271)Default room palette.
-    PtrTableEntryBank PalPntrTbl, Palette01                 ;($A295)Samus power suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette02                 ;($A2A1)Samus varia suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette03                 ;($A29B)Samus power suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette04                 ;($A2A7)Samus varia suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette05                 ;($A2AD)Alternate room palette.
-    PtrTableEntryBank PalPntrTbl, Palette06                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette07                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette08                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette09                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0A                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0B                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0C                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0D                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0E                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette0F                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette10                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette11                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette12                 ;($A2D0)
-    PtrTableEntryBank PalPntrTbl, Palette13                 ;($A2D0)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntryBank PalPntrTbl, Palette14                 ;($A2D7)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette15                 ;($A2DE)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette16                 ;($A2E5)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette17                 ;($A2EC)Unused?
-    PtrTableEntryBank PalPntrTbl, Palette18                 ;($A2F4)Suitless Samus power suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette19                 ;($A2FC)Suitless Samus varia suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette00                 ;($A271)Default room palette.
+    PtrTableEntryArea PalPntrTbl, Palette01                 ;($A295)Samus power suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette02                 ;($A2A1)Samus varia suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette03                 ;($A29B)Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette04                 ;($A2A7)Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette05                 ;($A2AD)Alternate room palette.
+    PtrTableEntryArea PalPntrTbl, Palette06                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette07                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette08                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette09                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0A                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0B                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0C                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0D                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0E                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette0F                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette10                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette11                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette12                 ;($A2D0)
+    PtrTableEntryArea PalPntrTbl, Palette13                 ;($A2D0)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryArea PalPntrTbl, Palette14                 ;($A2D7)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette15                 ;($A2DE)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette16                 ;($A2E5)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette17                 ;($A2EC)Unused?
+    PtrTableEntryArea PalPntrTbl, Palette18                 ;($A2F4)Suitless Samus power suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette19                 ;($A2FC)Suitless Samus varia suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl_BANK{BANK}               ;($A3D6)Beginning of special items table.
+    .word SpecItmsTbl_{AREA}               ;($A3D6)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
-    RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A314)Beginning of room pointer table.
-    StructPtrTable:     .word StructPtrTable_BANK{BANK}            ;($A372)Beginning of structure pointer table.
-    MetatileDefs:       .word MetatileDefs_BANK{BANK}              ;($AEF0)Beginning of metatile definitions.
-    EnFramePtrTable1:   .word EnFramePtrTable1_BANK{BANK}          ;($9DE0)Pointer table into enemy animation data. Two-->
-    EnFramePtrTable2:   .word EnFramePtrTable2_BANK{BANK}          ;($9EE0)tables needed to accommodate all entries.
-    EnPlacePtrTable:    .word EnPlacePtrTable_BANK{BANK}           ;($9F0E)Pointers to enemy frame placement data.
-    EnAnimTable:        .word EnAnimTable_BANK{BANK}               ;($9D6A)Index to values in addr tables for enemy animations.
+    RoomPtrTable:       .word RoomPtrTable_{AREA}              ;($A314)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable_{AREA}            ;($A372)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs_{AREA}              ;($AEF0)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1_{AREA}          ;($9DE0)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2_{AREA}          ;($9EE0)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable_{AREA}           ;($9F0E)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable_{AREA}               ;($9D6A)Index to values in addr tables for enemy animations.
 .ENDST
 
 ; Tourian-specific jump table (dummied out in other banks)
@@ -107,7 +108,7 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
 
 AreaRoutine: ; L95C3
-    jmp AreaRoutineStub_BANK{BANK} ; Just an RTS
+    jmp AreaRoutineStub_{AREA} ; Just an RTS
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -139,9 +140,9 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_EnProjectileKilled_{AREA} - EnAnimTable_{AREA}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_Explosion_{AREA} - EnAnimTable_{AREA}
 
     .byte $00, $00
 AreaEnProjectileFallingAnimIndex:
@@ -149,23 +150,23 @@ AreaEnProjectileFallingAnimIndex:
 AreaEnProjectileSplatterAnimIndex:
     .byte $00, $00
 AreaMellowAnimIndex:
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
-        .word SidehopperFloorAIRoutine_BANK{BANK} ; 00 - Sidehopper (unused)
-        .word SidehopperCeilingAIRoutine_BANK{BANK} ; 01 - Ceiling sidehopper (unused)
-        .word WaverAIRoutine_BANK{BANK} ; 02 - Waver
-        .word RipperAIRoutine_BANK{BANK} ; 03 - Ripper
-        .word SkreeAIRoutine_BANK{BANK} ; 04 - Skree
-        .word CrawlerAIRoutine_BANK{BANK} ; 05 - Zoomer (crawler)
-        .word RioAIRoutine_BANK{BANK} ; 06 - Rio (swoopers)
-        .word PipeBugAIRoutine_BANK{BANK} ; 07 - Zeb
-        .word KraidAIRoutine_BANK{BANK} ; 08 - Kraid (crashes due to bug)
-        .word KraidLintAIRoutine_BANK{BANK} ; 09 - Kraid's lint (crashes)
-        .word KraidNailAIRoutine_BANK{BANK} ; 0A - Kraid's nail (crashes)
+        .word SidehopperFloorAIRoutine_{AREA} ; 00 - Sidehopper (unused)
+        .word SidehopperCeilingAIRoutine_{AREA} ; 01 - Ceiling sidehopper (unused)
+        .word WaverAIRoutine_{AREA} ; 02 - Waver
+        .word RipperAIRoutine_{AREA} ; 03 - Ripper
+        .word SkreeAIRoutine_{AREA} ; 04 - Skree
+        .word CrawlerAIRoutine_{AREA} ; 05 - Zoomer (crawler)
+        .word RioAIRoutine_{AREA} ; 06 - Rio (swoopers)
+        .word PipeBugAIRoutine_{AREA} ; 07 - Zeb
+        .word KraidAIRoutine_{AREA} ; 08 - Kraid (crashes due to bug)
+        .word KraidLintAIRoutine_{AREA} ; 09 - Kraid's lint (crashes)
+        .word KraidNailAIRoutine_{AREA} ; 0A - Kraid's nail (crashes)
         .word $0000 ; 0B - Null pointers (hard crash)
         .word $0000 ; 0C - Null
         .word $0000 ; 0D - Null
@@ -174,19 +175,19 @@ ChooseEnemyAIRoutine:
 
 ; Animation related table ?
 EnemyDeathAnimIndex:
-    .byte EnAnim_SidehopperFloorExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_WaverExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_WaverExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - Waver
-    .byte EnAnim_RipperExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - Ripper
-    .byte EnAnim_SkreeExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SkreeExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - Skree
-    .byte EnAnim_ZoomerExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZoomerExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - Zoomer (crawler)
-    .byte EnAnim_RioExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RioExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - Rio (swoopers)
-    .byte EnAnim_ZebExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZebExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - Zeb
-    .byte EnAnim_KraidExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_SidehopperFloorExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorExplode_{AREA} - EnAnimTable_{AREA} ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingExplode_{AREA} - EnAnimTable_{AREA} ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_WaverExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_WaverExplode_L_{AREA} - EnAnimTable_{AREA} ; 02 - Waver
+    .byte EnAnim_RipperExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RipperExplode_L_{AREA} - EnAnimTable_{AREA} ; 03 - Ripper
+    .byte EnAnim_SkreeExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SkreeExplode_{AREA} - EnAnimTable_{AREA} ; 04 - Skree
+    .byte EnAnim_ZoomerExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_ZoomerExplode_{AREA} - EnAnimTable_{AREA} ; 05 - Zoomer (crawler)
+    .byte EnAnim_RioExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_RioExplode_{AREA} - EnAnimTable_{AREA} ; 06 - Rio (swoopers)
+    .byte EnAnim_ZebExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_ZebExplode_L_{AREA} - EnAnimTable_{AREA} ; 07 - Zeb
+    .byte EnAnim_KraidExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidExplode_L_{AREA} - EnAnimTable_{AREA} ; 08 - Kraid (crashes due to bug)
     .byte $00, $00 ; 09 - Kraid's lint (crashes)
     .byte $00, $00 ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - Null
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
@@ -211,38 +212,38 @@ EnemyHealthTbl:
 
 ; ResetAnimIndex table for resting enemy
 EnemyRestingAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_Waver0_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Waver0_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - Waver
-    .byte EnAnim_Ripper_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Ripper_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - Ripper
-    .byte EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - Skree
-    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - Zoomer (crawler)
-    .byte EnAnim_Rio_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Rio_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - Rio (swoopers)
-    .byte EnAnim_ZebResting_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZebResting_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - Zeb
-    .byte EnAnim_Kraid_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Kraid_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_KraidLint_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidLint_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_KraidNailIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - Null
+    .byte EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA} ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA} ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Waver0_L_{AREA} - EnAnimTable_{AREA} ; 02 - Waver
+    .byte EnAnim_Ripper_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Ripper_L_{AREA} - EnAnimTable_{AREA} ; 03 - Ripper
+    .byte EnAnim_Skree_{AREA} - EnAnimTable_{AREA}, EnAnim_Skree_{AREA} - EnAnimTable_{AREA} ; 04 - Skree
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA} ; 05 - Zoomer (crawler)
+    .byte EnAnim_Rio_{AREA} - EnAnimTable_{AREA}, EnAnim_Rio_{AREA} - EnAnimTable_{AREA} ; 06 - Rio (swoopers)
+    .byte EnAnim_ZebResting_R_{AREA} - EnAnimTable_{AREA}, EnAnim_ZebResting_L_{AREA} - EnAnimTable_{AREA} ; 07 - Zeb
+    .byte EnAnim_Kraid_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Kraid_L_{AREA} - EnAnimTable_{AREA} ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLint_R_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidLint_L_{AREA} - EnAnimTable_{AREA} ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailIdle_R_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidNailIdle_L_{AREA} - EnAnimTable_{AREA} ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
 
 ; ResetAnimIndex table for active enemy
 EnemyActiveAnimIndex:
-    .byte EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperFloorIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - Sidehopper (unused)
-    .byte EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SidehopperCeilingIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - Ceiling sidehopper (unused)
-    .byte EnAnim_Waver0_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Waver0_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - Waver
-    .byte EnAnim_Ripper_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Ripper_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 03 - Ripper
-    .byte EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Skree_BANK{BANK} - EnAnimTable_BANK{BANK} ; 04 - Skree
-    .byte EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_ZoomerOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 05 - Zoomer (crawler)
-    .byte EnAnim_Rio_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Rio_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - Rio (swoopers)
-    .byte EnAnim_Zeb_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Zeb_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - Zeb
-    .byte EnAnim_Kraid_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Kraid_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 08 - Kraid (crashes due to bug)
-    .byte EnAnim_KraidLint_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidLint_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - Kraid's lint (crashes)
-    .byte EnAnim_KraidNailMoving_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailMoving_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - Kraid's nail (crashes)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - Null pointers (hard crash)
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - Null
+    .byte EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA} ; 00 - Sidehopper (unused)
+    .byte EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA} ; 01 - Ceiling sidehopper (unused)
+    .byte EnAnim_Waver0_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Waver0_L_{AREA} - EnAnimTable_{AREA} ; 02 - Waver
+    .byte EnAnim_Ripper_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Ripper_L_{AREA} - EnAnimTable_{AREA} ; 03 - Ripper
+    .byte EnAnim_Skree_{AREA} - EnAnimTable_{AREA}, EnAnim_Skree_{AREA} - EnAnimTable_{AREA} ; 04 - Skree
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA} ; 05 - Zoomer (crawler)
+    .byte EnAnim_Rio_{AREA} - EnAnimTable_{AREA}, EnAnim_Rio_{AREA} - EnAnimTable_{AREA} ; 06 - Rio (swoopers)
+    .byte EnAnim_Zeb_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Zeb_L_{AREA} - EnAnimTable_{AREA} ; 07 - Zeb
+    .byte EnAnim_Kraid_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Kraid_L_{AREA} - EnAnimTable_{AREA} ; 08 - Kraid (crashes due to bug)
+    .byte EnAnim_KraidLint_R_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidLint_L_{AREA} - EnAnimTable_{AREA} ; 09 - Kraid's lint (crashes)
+    .byte EnAnim_KraidNailMoving_R_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidNailMoving_L_{AREA} - EnAnimTable_{AREA} ; 0A - Kraid's nail (crashes)
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0B - Null pointers (hard crash)
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA} ; 0C - Null
     .byte $00, $00 ; 0D - Null
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
@@ -353,19 +354,19 @@ EnemyInitDelayTbl:
 
 ; Index to a table starting at EnemyMovementChoices
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_SidehopperFloor_BANK{BANK} - EnemyMovementChoices ; 00 - Sidehopper (unused)
-    .byte EnemyMovementChoice_SidehopperCeiling_BANK{BANK} - EnemyMovementChoices ; 01 - Ceiling sidehopper (unused)
-    .byte EnemyMovementChoice_Waver_BANK{BANK} - EnemyMovementChoices ; 02 - Waver
-    .byte EnemyMovementChoice_Ripper_BANK{BANK} - EnemyMovementChoices ; 03 - Ripper
-    .byte EnemyMovementChoice_Skree_BANK{BANK} - EnemyMovementChoices ; 04 - Skree
-    .byte EnemyMovementChoice_Zoomer_BANK{BANK} - EnemyMovementChoices ; 05 - Zoomer (crawler) (enemy moves manually)
-    .byte EnemyMovementChoice_Rio_BANK{BANK} - EnemyMovementChoices ; 06 - Rio (swoopers)
-    .byte EnemyMovementChoice_Zeb_BANK{BANK} - EnemyMovementChoices ; 07 - Zeb
-    .byte EnemyMovementChoice_Kraid_BANK{BANK} - EnemyMovementChoices ; 08 - Kraid (crashes due to bug)
-    .byte EnemyMovementChoice_KraidLint_BANK{BANK} - EnemyMovementChoices ; 09 - Kraid's lint (crashes)
-    .byte EnemyMovementChoice_KraidNail_BANK{BANK} - EnemyMovementChoices ; 0A - Kraid's nail (crashes)
-    .byte EnemyMovementChoice_Zoomer_BANK{BANK} - EnemyMovementChoices ; 0B - Null pointers (hard crash)
-    .byte EnemyMovementChoice08_BANK{BANK} - EnemyMovementChoices ; 0C - Null
+    .byte EnemyMovementChoice_SidehopperFloor_{AREA} - EnemyMovementChoices ; 00 - Sidehopper (unused)
+    .byte EnemyMovementChoice_SidehopperCeiling_{AREA} - EnemyMovementChoices ; 01 - Ceiling sidehopper (unused)
+    .byte EnemyMovementChoice_Waver_{AREA} - EnemyMovementChoices ; 02 - Waver
+    .byte EnemyMovementChoice_Ripper_{AREA} - EnemyMovementChoices ; 03 - Ripper
+    .byte EnemyMovementChoice_Skree_{AREA} - EnemyMovementChoices ; 04 - Skree
+    .byte EnemyMovementChoice_Zoomer_{AREA} - EnemyMovementChoices ; 05 - Zoomer (crawler) (enemy moves manually)
+    .byte EnemyMovementChoice_Rio_{AREA} - EnemyMovementChoices ; 06 - Rio (swoopers)
+    .byte EnemyMovementChoice_Zeb_{AREA} - EnemyMovementChoices ; 07 - Zeb
+    .byte EnemyMovementChoice_Kraid_{AREA} - EnemyMovementChoices ; 08 - Kraid (crashes due to bug)
+    .byte EnemyMovementChoice_KraidLint_{AREA} - EnemyMovementChoices ; 09 - Kraid's lint (crashes)
+    .byte EnemyMovementChoice_KraidNail_{AREA} - EnemyMovementChoices ; 0A - Kraid's nail (crashes)
+    .byte EnemyMovementChoice_Zoomer_{AREA} - EnemyMovementChoices ; 0B - Null pointers (hard crash)
+    .byte EnemyMovementChoice08_{AREA} - EnemyMovementChoices ; 0C - Null
     .byte $00 ; 0D - Null
     .byte $00 ; 0E - Null
     .byte $00 ; 0F - Null
@@ -373,24 +374,24 @@ EnemyMovementChoiceOffset:
 ; EnData08*2 + one of the low bits of EnData05 is used as an index to this pointer table
 ; Pointer table to enemy movement strings
 EnemyMovementPtrs:
-    .word EnemyMovement00_R_BANK{BANK}, EnemyMovement00_L_BANK{BANK}
-    .word EnemyMovement01_R_BANK{BANK}, EnemyMovement01_L_BANK{BANK}
-    .word EnemyMovement02_R_BANK{BANK}, EnemyMovement02_L_BANK{BANK}
-    .word EnemyMovement03_R_BANK{BANK}, EnemyMovement03_L_BANK{BANK}
-    .word EnemyMovement04_R_BANK{BANK}, EnemyMovement04_L_BANK{BANK}
-    .word EnemyMovement05_R_BANK{BANK}, EnemyMovement05_L_BANK{BANK}
-    .word EnemyMovement06_R_BANK{BANK}, EnemyMovement06_L_BANK{BANK}
-    .word EnemyMovement07_R_BANK{BANK}, EnemyMovement07_L_BANK{BANK}
-    .word EnemyMovement08_R_BANK{BANK}, EnemyMovement08_L_BANK{BANK}
-    .word EnemyMovement09_R_BANK{BANK}, EnemyMovement09_L_BANK{BANK}
-    .word EnemyMovement0A_R_BANK{BANK}, EnemyMovement0A_L_BANK{BANK}
-    .word EnemyMovement0B_R_BANK{BANK}, EnemyMovement0B_L_BANK{BANK}
-    .word EnemyMovement0C_R_BANK{BANK}, EnemyMovement0C_L_BANK{BANK}
-    .word EnemyMovement0D_R_BANK{BANK}, EnemyMovement0D_L_BANK{BANK}
-    .word EnemyMovement0E_R_BANK{BANK}, EnemyMovement0E_L_BANK{BANK}
-    .word EnemyMovement0F_R_BANK{BANK}, EnemyMovement0F_L_BANK{BANK}
-    .word EnemyMovement10_R_BANK{BANK}, EnemyMovement10_L_BANK{BANK}
-    .word EnemyMovement11_R_BANK{BANK}, EnemyMovement11_L_BANK{BANK}
+    .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}
+    .word EnemyMovement01_R_{AREA}, EnemyMovement01_L_{AREA}
+    .word EnemyMovement02_R_{AREA}, EnemyMovement02_L_{AREA}
+    .word EnemyMovement03_R_{AREA}, EnemyMovement03_L_{AREA}
+    .word EnemyMovement04_R_{AREA}, EnemyMovement04_L_{AREA}
+    .word EnemyMovement05_R_{AREA}, EnemyMovement05_L_{AREA}
+    .word EnemyMovement06_R_{AREA}, EnemyMovement06_L_{AREA}
+    .word EnemyMovement07_R_{AREA}, EnemyMovement07_L_{AREA}
+    .word EnemyMovement08_R_{AREA}, EnemyMovement08_L_{AREA}
+    .word EnemyMovement09_R_{AREA}, EnemyMovement09_L_{AREA}
+    .word EnemyMovement0A_R_{AREA}, EnemyMovement0A_L_{AREA}
+    .word EnemyMovement0B_R_{AREA}, EnemyMovement0B_L_{AREA}
+    .word EnemyMovement0C_R_{AREA}, EnemyMovement0C_L_{AREA}
+    .word EnemyMovement0D_R_{AREA}, EnemyMovement0D_L_{AREA}
+    .word EnemyMovement0E_R_{AREA}, EnemyMovement0E_L_{AREA}
+    .word EnemyMovement0F_R_{AREA}, EnemyMovement0F_L_{AREA}
+    .word EnemyMovement10_R_{AREA}, EnemyMovement10_L_{AREA}
+    .word EnemyMovement11_R_{AREA}, EnemyMovement11_L_{AREA}
     .word $0000, $0000
     .word $0000, $0000
 
@@ -435,8 +436,8 @@ L977B:
 ; Enemy animation related table?
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
-    .byte EnAnim_KraidNailMoving_L_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_KraidNailIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_Mellow_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_KraidNailMoving_L_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidNailIdle_L_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}, EnAnim_Mellow_{AREA} - EnAnimTable_{AREA}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -456,58 +457,58 @@ EnProjectilePosOffsetY:
 ; Another movement pointer table?
 ; Referenced using EnData0A
 EnProjectileMovementPtrTable:
-    .word EnProjectileMovement0_BANK{BANK}
-    .word EnProjectileMovement1_BANK{BANK}
-    .word EnProjectileMovement2_BANK{BANK}
-    .word EnProjectileMovement3_BANK{BANK}
+    .word EnProjectileMovement0_{AREA}
+    .word EnProjectileMovement1_{AREA}
+    .word EnProjectileMovement2_{AREA}
+    .word EnProjectileMovement3_{AREA}
 
 ; Referenced by LFE83
 TileBlastFramePtrTable:
-    .word TileBlastFrame00_BANK{BANK}
-    .word TileBlastFrame01_BANK{BANK}
-    .word TileBlastFrame02_BANK{BANK}
-    .word TileBlastFrame03_BANK{BANK}
-    .word TileBlastFrame04_BANK{BANK}
-    .word TileBlastFrame05_BANK{BANK}
-    .word TileBlastFrame06_BANK{BANK}
-    .word TileBlastFrame07_BANK{BANK}
-    .word TileBlastFrame08_BANK{BANK}
-    .word TileBlastFrame09_BANK{BANK}
-    .word TileBlastFrame0A_BANK{BANK}
-    .word TileBlastFrame0B_BANK{BANK}
-    .word TileBlastFrame0C_BANK{BANK}
-    .word TileBlastFrame0D_BANK{BANK}
-    .word TileBlastFrame0E_BANK{BANK}
-    .word TileBlastFrame0F_BANK{BANK}
-    .word TileBlastFrame10_BANK{BANK}
+    .word TileBlastFrame00_{AREA}
+    .word TileBlastFrame01_{AREA}
+    .word TileBlastFrame02_{AREA}
+    .word TileBlastFrame03_{AREA}
+    .word TileBlastFrame04_{AREA}
+    .word TileBlastFrame05_{AREA}
+    .word TileBlastFrame06_{AREA}
+    .word TileBlastFrame07_{AREA}
+    .word TileBlastFrame08_{AREA}
+    .word TileBlastFrame09_{AREA}
+    .word TileBlastFrame0A_{AREA}
+    .word TileBlastFrame0B_{AREA}
+    .word TileBlastFrame0C_{AREA}
+    .word TileBlastFrame0D_{AREA}
+    .word TileBlastFrame0E_{AREA}
+    .word TileBlastFrame0F_{AREA}
+    .word TileBlastFrame10_{AREA}
 
 ; If I'm reading the code correctly, this table is accessed with this formula:
 ;  EnData08 = EnemyMovementChoices[(EnemyMovementChoices[EnemyMovementChoiceOffset[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
 ; These values are used as indexes into EnAccelYTable, EnAccelXTable, EnSpeedYTable, EnSpeedXTable.
 EnemyMovementChoices:
-EnemyMovementChoice_SidehopperFloor_BANK{BANK}:
+EnemyMovementChoice_SidehopperFloor_{AREA}:
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice_SidehopperCeiling_BANK{BANK}:
+EnemyMovementChoice_SidehopperCeiling_{AREA}:
     EnemyMovementChoiceEntry $03, $04
-EnemyMovementChoice_Waver_BANK{BANK}:
+EnemyMovementChoice_Waver_{AREA}:
     EnemyMovementChoiceEntry $05
-EnemyMovementChoice_Ripper_BANK{BANK}:
+EnemyMovementChoice_Ripper_{AREA}:
     EnemyMovementChoiceEntry $06
-EnemyMovementChoice_Skree_BANK{BANK}:
+EnemyMovementChoice_Skree_{AREA}:
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice_Rio_BANK{BANK}:
+EnemyMovementChoice_Rio_{AREA}:
     EnemyMovementChoiceEntry $08
-EnemyMovementChoice_Zeb_BANK{BANK}:
+EnemyMovementChoice_Zeb_{AREA}:
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice_Zoomer_BANK{BANK}: ; enemy moves manually
+EnemyMovementChoice_Zoomer_{AREA}: ; enemy moves manually
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice08_BANK{BANK}: ; unused
+EnemyMovementChoice08_{AREA}: ; unused
     EnemyMovementChoiceEntry $0B
-EnemyMovementChoice_Kraid_BANK{BANK}: ; unused
+EnemyMovementChoice_Kraid_{AREA}: ; unused
     EnemyMovementChoiceEntry $0C, $0D
-EnemyMovementChoice_KraidLint_BANK{BANK}: ; unused
+EnemyMovementChoice_KraidLint_{AREA}: ; unused
     EnemyMovementChoiceEntry $0E
-EnemyMovementChoice_KraidNail_BANK{BANK}: ; unused
+EnemyMovementChoice_KraidNail_{AREA}: ; unused
     EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
 ;-------------------------------------------------------------------------------
@@ -526,26 +527,26 @@ EnemyMovementChoice_KraidNail_BANK{BANK}: ; unused
 ; 0xFF is "restart"
 
 ; unused (???)
-EnemyMovement00_R_BANK{BANK}:
+EnemyMovement00_R_{AREA}:
     SignMagSpeed $20,  2,  2
     EnemyMovementInstr_FE
 
-EnemyMovement00_L_BANK{BANK}:
+EnemyMovement00_L_{AREA}:
     SignMagSpeed $20, -2,  2
     EnemyMovementInstr_FE
 
-EnemyMovement01_R_BANK{BANK}:
-EnemyMovement01_L_BANK{BANK}:
-EnemyMovement02_R_BANK{BANK}:
-EnemyMovement02_L_BANK{BANK}:
-EnemyMovement03_R_BANK{BANK}:
-EnemyMovement03_L_BANK{BANK}:
-EnemyMovement04_R_BANK{BANK}:
-EnemyMovement04_L_BANK{BANK}:
+EnemyMovement01_R_{AREA}:
+EnemyMovement01_L_{AREA}:
+EnemyMovement02_R_{AREA}:
+EnemyMovement02_L_{AREA}:
+EnemyMovement03_R_{AREA}:
+EnemyMovement03_L_{AREA}:
+EnemyMovement04_R_{AREA}:
+EnemyMovement04_L_{AREA}:
     ; nothing
 
 ; waver
-EnemyMovement05_R_BANK{BANK}:
+EnemyMovement05_R_{AREA}:
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
     SignMagSpeed $04,  2, -5
@@ -587,7 +588,7 @@ EnemyMovement05_R_BANK{BANK}:
     EnemyMovementInstr_ClearEnJumpDsplcmnt
     EnemyMovementInstr_Restart
 
-EnemyMovement05_L_BANK{BANK}:
+EnemyMovement05_L_{AREA}:
     SignMagSpeed $02, -2, -7
     SignMagSpeed $04, -2, -6
     SignMagSpeed $04, -2, -5
@@ -630,16 +631,16 @@ EnemyMovement05_L_BANK{BANK}:
     EnemyMovementInstr_Restart
 
 ; ripper
-EnemyMovement06_R_BANK{BANK}:
+EnemyMovement06_R_{AREA}:
     SignMagSpeed $01,  1,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement06_L_BANK{BANK}:
+EnemyMovement06_L_{AREA}:
     SignMagSpeed $01, -1,  0
     EnemyMovementInstr_Restart
 
 ; skree
-EnemyMovement07_R_BANK{BANK}:
+EnemyMovement07_R_{AREA}:
     SignMagSpeed $04,  2,  2
     SignMagSpeed $01,  2,  4
     SignMagSpeed $01,  2,  2
@@ -652,7 +653,7 @@ EnemyMovement07_R_BANK{BANK}:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
-EnemyMovement07_L_BANK{BANK}:
+EnemyMovement07_L_{AREA}:
     SignMagSpeed $04, -2,  2
     SignMagSpeed $01, -2,  4
     SignMagSpeed $01, -2,  2
@@ -666,52 +667,52 @@ EnemyMovement07_L_BANK{BANK}:
     EnemyMovementInstr_StopMovement
 
 
-EnemyMovement08_R_BANK{BANK}:
-EnemyMovement08_L_BANK{BANK}:
-EnemyMovement09_R_BANK{BANK}:
-EnemyMovement09_L_BANK{BANK}:
-EnemyMovement0A_R_BANK{BANK}:
-EnemyMovement0A_L_BANK{BANK}:
-EnemyMovement0B_R_BANK{BANK}:
-EnemyMovement0B_L_BANK{BANK}:
+EnemyMovement08_R_{AREA}:
+EnemyMovement08_L_{AREA}:
+EnemyMovement09_R_{AREA}:
+EnemyMovement09_L_{AREA}:
+EnemyMovement0A_R_{AREA}:
+EnemyMovement0A_L_{AREA}:
+EnemyMovement0B_R_{AREA}:
+EnemyMovement0B_L_{AREA}:
     ; nothing
 
 ; unused (kraid)
-EnemyMovement0C_R_BANK{BANK}:
+EnemyMovement0C_R_{AREA}:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0C_L_BANK{BANK}:
+EnemyMovement0C_L_{AREA}:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0D_R_BANK{BANK}:
+EnemyMovement0D_R_{AREA}:
     SignMagSpeed $1E,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E, -1,  1
     EnemyMovementInstr_FE
 
-EnemyMovement0D_L_BANK{BANK}:
+EnemyMovement0D_L_{AREA}:
     SignMagSpeed $1E, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E,  1,  1
     EnemyMovementInstr_FE
 
 ; unused (kraid lint)
-EnemyMovement0E_R_BANK{BANK}:
+EnemyMovement0E_R_{AREA}:
     SignMagSpeed $50,  4,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement0E_L_BANK{BANK}:
+EnemyMovement0E_L_{AREA}:
     SignMagSpeed $50, -4,  0
     EnemyMovementInstr_Restart
 
 ; unused (kraid nail)
-EnemyMovement0F_R_BANK{BANK}:
+EnemyMovement0F_R_{AREA}:
     SignMagSpeed $02,  3, -7
     SignMagSpeed $04,  3, -6
     SignMagSpeed $04,  3, -5
@@ -725,7 +726,7 @@ EnemyMovement0F_R_BANK{BANK}:
     SignMagSpeed $50,  3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement0F_L_BANK{BANK}:
+EnemyMovement0F_L_{AREA}:
     SignMagSpeed $02, -3, -7
     SignMagSpeed $04, -3, -6
     SignMagSpeed $04, -3, -5
@@ -739,7 +740,7 @@ EnemyMovement0F_L_BANK{BANK}:
     SignMagSpeed $50, -3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_R_BANK{BANK}:
+EnemyMovement10_R_{AREA}:
     SignMagSpeed $02,  4, -7
     SignMagSpeed $04,  4, -6
     SignMagSpeed $04,  4, -5
@@ -753,7 +754,7 @@ EnemyMovement10_R_BANK{BANK}:
     SignMagSpeed $50,  4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_L_BANK{BANK}:
+EnemyMovement10_L_{AREA}:
     SignMagSpeed $02, -4, -7
     SignMagSpeed $04, -4, -6
     SignMagSpeed $04, -4, -5
@@ -767,7 +768,7 @@ EnemyMovement10_L_BANK{BANK}:
     SignMagSpeed $50, -4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_R_BANK{BANK}:
+EnemyMovement11_R_{AREA}:
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
     SignMagSpeed $04,  2, -5
@@ -781,7 +782,7 @@ EnemyMovement11_R_BANK{BANK}:
     SignMagSpeed $50,  2,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_L_BANK{BANK}:
+EnemyMovement11_L_{AREA}:
     SignMagSpeed $02, -2, -7
     SignMagSpeed $04, -2, -6
     SignMagSpeed $04, -2, -5
@@ -798,7 +799,7 @@ EnemyMovement11_L_BANK{BANK}:
 ;-------------------------------------------------------------------------------
 
 ; Instruction (?) strings of a different type pointed to by EnProjectileMovementPtrTable
-EnProjectileMovement0_BANK{BANK}:
+EnProjectileMovement0_{AREA}:
     SignMagSpeed $04,  3, -3
     SignMagSpeed $05,  3, -2
     SignMagSpeed $06,  3, -1
@@ -808,7 +809,7 @@ EnProjectileMovement0_BANK{BANK}:
     SignMagSpeed $50,  3,  3
     .byte $FF
 
-EnProjectileMovement1_BANK{BANK}:
+EnProjectileMovement1_{AREA}:
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -818,7 +819,7 @@ EnProjectileMovement1_BANK{BANK}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement2_BANK{BANK}:
+EnProjectileMovement2_{AREA}:
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -828,7 +829,7 @@ EnProjectileMovement2_BANK{BANK}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement3_BANK{BANK}:
+EnProjectileMovement3_{AREA}:
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1
@@ -840,7 +841,7 @@ EnProjectileMovement3_BANK{BANK}:
 
 ;-------------------------------------------------------------------------------
 
-CommonEnemyJump_00_01_02_BANK{BANK}:
+CommonEnemyJump_00_01_02_{AREA}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -891,68 +892,68 @@ CommonEnemyJump_00_01_02_BANK{BANK}:
 ;  are in are in kraid.asm. Extract those functions from that file if you plan
 ;  on removing it.
 
-AreaRoutineStub_BANK{BANK}: ;L9D35
+AreaRoutineStub_{AREA}: ;L9D35
     rts
 
 ; Strings pointed to by TileBlastFramePtrTable
-TileBlastFrame00_BANK{BANK}:
+TileBlastFrame00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01_BANK{BANK}:
+TileBlastFrame01_{AREA}:
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-TileBlastFrame02_BANK{BANK}:
+TileBlastFrame02_{AREA}:
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-TileBlastFrame03_BANK{BANK}:
+TileBlastFrame03_{AREA}:
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-TileBlastFrame04_BANK{BANK}:
+TileBlastFrame04_{AREA}:
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-TileBlastFrame05_BANK{BANK}:
+TileBlastFrame05_{AREA}:
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-TileBlastFrame06_BANK{BANK}:
+TileBlastFrame06_{AREA}:
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-TileBlastFrame07_BANK{BANK}:
+TileBlastFrame07_{AREA}:
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-TileBlastFrame08_BANK{BANK}:
+TileBlastFrame08_{AREA}:
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-TileBlastFrame09_BANK{BANK}:
+TileBlastFrame09_{AREA}:
     .byte $32
     .byte $4E, $4E
     .byte $4E, $4E
     .byte $4E, $4E
 
-TileBlastFrame0A_BANK{BANK}:
-TileBlastFrame0B_BANK{BANK}:
-TileBlastFrame0C_BANK{BANK}:
-TileBlastFrame0D_BANK{BANK}:
-TileBlastFrame0E_BANK{BANK}:
-TileBlastFrame0F_BANK{BANK}:
-TileBlastFrame10_BANK{BANK}:
+TileBlastFrame0A_{AREA}:
+TileBlastFrame0B_{AREA}:
+TileBlastFrame0C_{AREA}:
+TileBlastFrame0D_{AREA}:
+TileBlastFrame0E_{AREA}:
+TileBlastFrame0F_{AREA}:
+TileBlastFrame10_{AREA}:
     ; nothing
 
 .include "brinstar/enemy_sprite_data.asm"

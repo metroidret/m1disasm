@@ -1,5 +1,5 @@
 ; Lava Seahorse Routine
-DragonAIRoutine_BANK{BANK}:
+DragonAIRoutine_{AREA}:
     ; branch if not resting
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
@@ -37,9 +37,9 @@ DragonAIRoutine_BANK{BANK}:
         lda #$00
         sta SpawnEnProjectile_EnData0A
         ; shooting animation (supposed to be parameter to SpawnEnProjectile, but unused there)
-        lda #EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+        lda #EnAnim_DragonIdle_R_{AREA} - EnAnimTable_{AREA}.b
         sta SpawnEnProjectile_AnimIndex
-        lda #EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+        lda #EnAnim_DragonIdle_L_{AREA} - EnAnimTable_{AREA}.b
         sta SpawnEnProjectile_AnimIndex+1.b
         ; set projectile animation
         lda #$03
@@ -80,8 +80,8 @@ DragonAIRoutine_BANK{BANK}:
     lda #$01
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
 @prepareToSpitEnAnimTable:
-    .byte EnAnim_DragonPrepareToSpit_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonPrepareToSpit_L_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DragonPrepareToSpit_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonPrepareToSpit_L_{AREA} - EnAnimTable_{AREA}
 

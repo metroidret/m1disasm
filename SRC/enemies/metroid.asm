@@ -1,4 +1,4 @@
-MetroidAIRoutine_BANK{BANK}:
+MetroidAIRoutine_{AREA}:
     ; Delete self if escape timer is active (EndTimer+1 != #$FF)
     ldy EndTimer+1
     iny
@@ -15,11 +15,11 @@ MetroidAIRoutine_BANK{BANK}:
     ; branch if bit 7 of EnData05 is set
     lda EnData05,x
     asl
-    bmi CommonEnemyJump_00_01_02_BANK{BANK}
+    bmi CommonEnemyJump_00_01_02_{AREA}
     ; branch if metroid is exploding
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq CommonEnemyJump_00_01_02_BANK{BANK}
+    beq CommonEnemyJump_00_01_02_{AREA}
     
     ; branch if metroid latch for this metroid is inactive
     jsr LoadEnemySlotIDIntoY
@@ -296,7 +296,7 @@ MetroidAIRoutine_BANK{BANK}:
         ora #$82 | OAMDATA_PRIORITY.b
         sta ObjectCntrl
     @endIf_Q:
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
 ClearCurrentMetroidLatch:
     jsr LoadEnemySlotIDIntoY

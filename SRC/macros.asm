@@ -85,7 +85,7 @@
     .word ptr
 .endm
 
-.macro PtrTableEntryBank args ptrTable, ptr
+.macro PtrTableEntryArea args ptrTable, ptr
     .ifndef _id_\2
         .ifdef _entryNumber_\1
             .redef _entryNumber_\1 = _entryNumber_\1 + 1
@@ -95,7 +95,7 @@
         
         .def _id_\2 = _entryNumber_\1 export
     .endif
-    .word \2_BANK{BANK}
+    .word \2_{AREA}
 .endm
 
 .macro GFXInfoEntry args gfx, dest

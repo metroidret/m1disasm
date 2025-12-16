@@ -32,7 +32,7 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00_BANK{BANK}:
+Room00_{AREA}:
     .byte $02
     .byte $40, $01, $03
     .byte $48, $01, $03
@@ -40,13 +40,13 @@ Room00_BANK{BANK}:
     .byte $5F, $03, $02
     .byte $FF
 
-Room01_BANK{BANK}:
+Room01_{AREA}:
     .byte $02
     .byte $07, $02, $02
     .byte $87, $02, $02
     .byte $FF
 
-Room02_BANK{BANK}:
+Room02_{AREA}:
     .byte $03
     .byte $00, $0C, $03
     .byte $08, $0C, $03
@@ -67,7 +67,7 @@ Room02_BANK{BANK}:
     .byte $E8, $0A, $03
     .byte $FF
 
-Room03_BANK{BANK}:
+Room03_{AREA}:
     .byte $00
     .byte $00, $0C, $03
     .byte $08, $0C, $03
@@ -86,7 +86,7 @@ Room03_BANK{BANK}:
     .byte $EA, $0A, $03
     .byte $FF
 
-Room04_BANK{BANK}:
+Room04_{AREA}:
     .byte $03
     .byte $00, $09, $03
     .byte $01, $0A, $03
@@ -107,7 +107,7 @@ Room04_BANK{BANK}:
     .byte $E0, $0A, $03
     .byte $FF
 
-Room05_BANK{BANK}:
+Room05_{AREA}:
     .byte $03
     .byte $00, $14, $03
     .byte $08, $14, $03
@@ -118,7 +118,7 @@ Room05_BANK{BANK}:
     .byte $D8, $14, $03
     .byte $FF
 
-Room06_BANK{BANK}:
+Room06_{AREA}:
     .byte $03
     .byte $00, $14, $03
     .byte $08, $14, $03
@@ -131,7 +131,7 @@ Room06_BANK{BANK}:
     .byte $21, $01, $B3 ; Green metroid
     .byte $FF
 
-Room07_BANK{BANK}:
+Room07_{AREA}:
     .byte $03
     .byte $00, $16, $03
     .byte $08, $16, $03
@@ -144,7 +144,7 @@ Room07_BANK{BANK}:
     .byte $41, $00, $B5 ; Red metroid
     .byte $FF
 
-Room08_BANK{BANK}:
+Room08_{AREA}:
     .byte $01
     .byte $00, $16, $03
     .byte $08, $16, $03
@@ -160,7 +160,7 @@ Room08_BANK{BANK}:
     .byte $21, $01, $D4 ; Green metroid
     .byte $FF
 
-Room09_BANK{BANK}:
+Room09_{AREA}:
     .byte $01
     .byte $00, $16, $03
     .byte $08, $16, $03
@@ -176,7 +176,7 @@ Room09_BANK{BANK}:
     .byte $02, $A0 ; Red door
     .byte $FF
 
-Room0A_BANK{BANK}:
+Room0A_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1A, $03
@@ -202,7 +202,7 @@ Room0A_BANK{BANK}:
     .byte $51, $01, $6A ; Green metroid
     .byte $FF
 
-Room0B_BANK{BANK}:
+Room0B_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1A, $03
@@ -228,7 +228,7 @@ Room0B_BANK{BANK}:
     .byte $21, $01, $D4 ; Green metroid
     .byte $FF
 
-Room0C_BANK{BANK}:
+Room0C_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1A, $03
@@ -251,7 +251,7 @@ Room0C_BANK{BANK}:
     .byte $51, $00, $CB ; Red metroid
     .byte $FF
 
-Room0D_BANK{BANK}:
+Room0D_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $18, $03
@@ -273,7 +273,7 @@ Room0D_BANK{BANK}:
     .byte $02, $B0 ; Red door
     .byte $FF
 
-Room0E_BANK{BANK}:
+Room0E_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $18, $03
@@ -292,7 +292,7 @@ Room0E_BANK{BANK}:
     .byte $EE, $1A, $03
     .byte $FF
 
-Room0F_BANK{BANK}:
+Room0F_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1A, $03
@@ -314,7 +314,7 @@ Room0F_BANK{BANK}:
     .byte $B8, $18, $03
     .byte $FF
 
-Room10_BANK{BANK}:
+Room10_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1A, $03
@@ -334,7 +334,7 @@ Room10_BANK{BANK}:
     .byte $E7, $05, $01
     .byte $FF
 
-Room11_BANK{BANK}:
+Room11_{AREA}:
     .byte $03
     .byte $00, $19, $03
     .byte $01, $1F, $01
@@ -352,7 +352,7 @@ Room11_BANK{BANK}:
     .byte $02, $B2 ; 10-missile door
     .byte $FF
 
-Room12_BANK{BANK}:
+Room12_{AREA}:
     .byte $01
     .byte $00, $1F, $01
     .byte $08, $1F, $01
@@ -370,7 +370,7 @@ Room12_BANK{BANK}:
     .byte $02, $A0 ; Red door
     .byte $FF
 
-Room13_BANK{BANK}:
+Room13_{AREA}:
     .byte $00
     .byte $00, $1F, $01
     .byte $08, $1F, $01
@@ -385,7 +385,7 @@ Room13_BANK{BANK}:
     .byte $11, $00, $89 ; Red metroid
     .byte $FF
 
-Room14_BANK{BANK}:
+Room14_{AREA}:
     .byte $00
     .byte $00, $1F, $01
     .byte $08, $1F, $01

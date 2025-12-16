@@ -1,17 +1,17 @@
 ; Kraid, Lint, and Nails
 
 ; Kraid Routine
-KraidAIRoutine_BANK{BANK}:
+KraidAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    bcc KraidBranch_Normal_BANK{BANK} ; 0, 1, 2
-    beq KraidBranch_Explode_BANK{BANK} ; 3
+    bcc KraidBranch_Normal_{AREA} ; 0, 1, 2
+    beq KraidBranch_Explode_{AREA} ; 3
     cmp #enemyStatus_Pickup
-    bne KraidBranch_Exit_BANK{BANK} ; 4, 6
+    bne KraidBranch_Exit_{AREA} ; 4, 6
     ; 5
     ; fallthrough
 
-KraidBranch_Explode_BANK{BANK}:
+KraidBranch_Explode_{AREA}:
     ; delete projectiles
     lda #enemyStatus_NoEnemy
     sta EnsExtra.1.status
@@ -19,47 +19,47 @@ KraidBranch_Explode_BANK{BANK}:
     sta EnsExtra.3.status
     sta EnsExtra.4.status
     sta EnsExtra.5.status
-    beq KraidBranch_Exit_BANK{BANK} ; branch always
+    beq KraidBranch_Exit_{AREA} ; branch always
 
-KraidBranch_Normal_BANK{BANK}:
-    jsr KraidUpdateAllProjectiles_BANK{BANK}
-    jsr KraidTryToLaunchLint_BANK{BANK}
-    jsr KraidTryToLaunchNail_BANK{BANK}
+KraidBranch_Normal_{AREA}:
+    jsr KraidUpdateAllProjectiles_{AREA}
+    jsr KraidTryToLaunchLint_{AREA}
+    jsr KraidTryToLaunchNail_{AREA}
     ; fallthrough
 
-KraidBranch_Exit_BANK{BANK}:
+KraidBranch_Exit_{AREA}:
     ; change animation frame every 10 frames
     lda #$0A
     sta $00
-    jmp CommonEnemyStub_BANK{BANK} ;sidehopper.asm
+    jmp CommonEnemyStub_{AREA} ;sidehopper.asm
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
-KraidLintAIRoutine_BANK{BANK}:
+KraidLintAIRoutine_{AREA}:
     ; branch if lint is invisible
     lda EnData05,x
     and #$02
-    beq KraidLintRemove_BANK{BANK}
+    beq KraidLintRemove_{AREA}
     ; branch if lint is not exploding
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    bne KraidLintMain_BANK{BANK}
+    bne KraidLintMain_{AREA}
 
-KraidLintRemove_BANK{BANK}:
+KraidLintRemove_{AREA}:
     ; lint is dead, clear enemy slot
     lda #enemyStatus_NoEnemy
     sta EnsExtra.0.status,x
-    beq KraidLintDraw_BANK{BANK} ; branch always
+    beq KraidLintDraw_{AREA} ; branch always
 
-KraidLintMain_BANK{BANK}:
+KraidLintMain_{AREA}:
     ; exit if bit7 of EnData05 is set
     lda EnData05,x
     asl
-    bmi KraidLintDraw_BANK{BANK}
+    bmi KraidLintDraw_{AREA}
     ; exit if lint is not active
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
-    bne KraidLintDraw_BANK{BANK}
+    bne KraidLintDraw_{AREA}
 
     ; save deltaY into EnSpeedY
     jsr CommonJump_EnemyGetDeltaY
@@ -74,13 +74,13 @@ KraidLintMain_BANK{BANK}:
     ; check for bg collision and try movement
     jsr CommonJump_EnemyBGCollideOrApplySpeed
     ; exit if movement succeeded
-    bcs KraidLintDraw_BANK{BANK}
+    bcs KraidLintDraw_{AREA}
     ; movement has failed either because lint hit a wall or went out of bounds
     ; lint dies
     lda #enemyStatus_Explode
     sta EnsExtra.0.status,x
 
-KraidLintDraw_BANK{BANK}:
+KraidLintDraw_{AREA}:
     ; draw lint
     lda #$01
     jsr CommonJump_UpdateEnemyAnim
@@ -88,15 +88,15 @@ KraidLintDraw_BANK{BANK}:
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile 2
-KraidNailAIRoutine_BANK{BANK}: ; L9B2C
-    jmp KraidLintAIRoutine_BANK{BANK}
+KraidNailAIRoutine_{AREA}: ; L9B2C
+    jmp KraidLintAIRoutine_{AREA}
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1
-KraidUpdateAllProjectiles_BANK{BANK}: ; L9B2F
+KraidUpdateAllProjectiles_{AREA}: ; L9B2F
     ldx #$50 ; For each of Kraid's projectiles
     @loop:
-        jsr KraidUpdateProjectile_BANK{BANK}
+        jsr KraidUpdateProjectile_{AREA}
         txa
         sec
         sbc #$10
@@ -106,7 +106,7 @@ KraidUpdateAllProjectiles_BANK{BANK}: ; L9B2F
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1.1
-KraidUpdateProjectile_BANK{BANK}:
+KraidUpdateProjectile_{AREA}:
     ; remove projectile if it doesn't exist (a bit odd, but ok)
     ldy EnsExtra.0.status,x
     beq @remove
@@ -116,7 +116,7 @@ KraidUpdateProjectile_BANK{BANK}:
     cmp #$0A
     beq @branchA
     cmp #$09
-    bne KraidUpdateProjectile_Exit_BANK{BANK}
+    bne KraidUpdateProjectile_Exit_{AREA}
 
 @branchA:
     ; remove projectile if it is invisible
@@ -131,12 +131,12 @@ KraidUpdateProjectile_BANK{BANK}:
     beq @remove
     ; exit if projectile is not frozen
     cpy #enemyStatus_Frozen-1.b
-    bne KraidUpdateProjectile_Exit_BANK{BANK}
+    bne KraidUpdateProjectile_Exit_{AREA}
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting
     lda EnPrevStatus,x
     cmp #$01
-    bne KraidUpdateProjectile_Exit_BANK{BANK}
+    bne KraidUpdateProjectile_Exit_{AREA}
     ; projectile state before being frozen was resting
     beq @resting ; branch always
 
@@ -163,10 +163,10 @@ KraidUpdateProjectile_BANK{BANK}:
     lsr
     tay
     ; get y offset from table
-    lda KraidProjectileOffsetY_BANK{BANK}-1,y
+    lda KraidProjectileOffsetY_{AREA}-1,y
     sta Temp04_SpeedY
     ; get projectile type from table
-    lda KraidProjectileType_BANK{BANK}-1,y
+    lda KraidProjectileType_{AREA}-1,y
     sta EnsExtra.0.type,x
     ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
     tya
@@ -174,7 +174,7 @@ KraidUpdateProjectile_BANK{BANK}:
     rol
     tay
     ; get x offset from table
-    lda KraidProjectileOffsetX_BANK{BANK}-2,y
+    lda KraidProjectileOffsetX_{AREA}-2,y
     sta Temp05_SpeedX
 
 ; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
@@ -186,7 +186,7 @@ KraidUpdateProjectile_BANK{BANK}:
     .endif
     ; store kraid's position in temp
     ldx #$00
-    jsr StoreEnemyPositionToTemp__BANK{BANK}
+    jsr StoreEnemyPositionToTemp__{AREA}
     .if BANK != 1
         ; pull x from stack
         pla
@@ -201,15 +201,15 @@ KraidUpdateProjectile_BANK{BANK}:
         ldx PageIndex
     .endif
     ; exit if initial position for projectile is out of bounds
-    bcc KraidUpdateProjectile_Exit_BANK{BANK}
+    bcc KraidUpdateProjectile_Exit_{AREA}
     ; set projectile status to enemyStatus_Resting if it was enemyStatus_NoEnemy
     lda EnsExtra.0.status,x
-    bne LoadEnemyPositionFromTemp__BANK{BANK}
+    bne LoadEnemyPositionFromTemp__{AREA}
     inc EnsExtra.0.status,x
     ; save as projectile's position
     ; fallthrough
 
-LoadEnemyPositionFromTemp__BANK{BANK}:
+LoadEnemyPositionFromTemp__{AREA}:
     lda Temp08_PositionY
     sta EnY,x
     lda Temp09_PositionX
@@ -218,10 +218,10 @@ LoadEnemyPositionFromTemp__BANK{BANK}:
     and #$01
     sta EnsExtra.0.hi,x
 
-KraidUpdateProjectile_Exit_BANK{BANK}:
+KraidUpdateProjectile_Exit_{AREA}:
     rts
 
-StoreEnemyPositionToTemp__BANK{BANK}:
+StoreEnemyPositionToTemp__{AREA}:
     lda EnY,x
     sta Temp08_PositionY
     lda EnX,x
@@ -230,22 +230,22 @@ StoreEnemyPositionToTemp__BANK{BANK}:
     sta Temp0B_PositionHi
     rts
 
-KraidProjectileOffsetY_BANK{BANK}:
+KraidProjectileOffsetY_{AREA}:
     .byte -11,  -3,   5, -10,  -2
-KraidProjectileOffsetX_BANK{BANK}: ;9BD1
+KraidProjectileOffsetX_{AREA}: ;9BD1
 ; First column is for facing right, second for facing left
     .byte  10, -10
     .byte  12, -12
     .byte  14, -14
     .byte  -8,   8
     .byte -12,  12
-KraidProjectileType_BANK{BANK}: ; L9BDB
+KraidProjectileType_{AREA}: ; L9BDB
     .byte $09, $09, $09, $0A, $0A ; Lint x 3, nail x 2
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 2
 ;  Something to do with the lint
-KraidTryToLaunchLint_BANK{BANK}:
+KraidTryToLaunchLint_{AREA}:
     ; load lint counter into y (#$80 if it is zero)
     ldy KraidLintCounter
     bne @endIf_A
@@ -300,7 +300,7 @@ KraidTryToLaunchLint_BANK{BANK}:
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 3
 ;  Something to do with the nails
-KraidTryToLaunchNail_BANK{BANK}:
+KraidTryToLaunchNail_{AREA}:
     ; load nail counter into y (#$60 if it is zero)
     ldy KraidNailCounter
     bne @endIf_A

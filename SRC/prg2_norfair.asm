@@ -19,6 +19,7 @@
 .include "macros.asm"
 
 .redef BANK = 2
+.redef AREA = {"BANK{BANK}"}
 .section "ROM Bank $002" bank 2 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
@@ -50,46 +51,46 @@ GFX_TourianSprites:
 ;----------------------------------------------------------------------------------------------------
 
 PalPntrTbl:
-    PtrTableEntryBank PalPntrTbl, Palette00                 ;($A178)Default room palette.
-    PtrTableEntryBank PalPntrTbl, Palette01                 ;($A19C)Samus power suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette02                 ;($A1A8)Samus varia suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette03                 ;($A1A2)Samus power suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette04                 ;($A1AE)Samus varia suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette05                 ;($A1B4)Alternate room palette.
-    PtrTableEntryBank PalPntrTbl, Palette06                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette07                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette08                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette09                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0A                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0B                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0C                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0D                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0E                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette0F                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette10                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette11                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette12                 ;($A1D7)
-    PtrTableEntryBank PalPntrTbl, Palette13                 ;($A1D7)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntryBank PalPntrTbl, Palette14                 ;($A1DE)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette15                 ;($A1E5)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette16                 ;($A1EC)Samus fade in palette.
-    PtrTableEntryBank PalPntrTbl, Palette17                 ;($A1F3)Unused?
-    PtrTableEntryBank PalPntrTbl, Palette18                 ;($A1FB)Suitless Samus power suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette19                 ;($A203)Suitless Samus varia suit palette.
-    PtrTableEntryBank PalPntrTbl, Palette1A                 ;($A20B)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntryBank PalPntrTbl, Palette1B                 ;($A213)Suitless Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette00                 ;($A178)Default room palette.
+    PtrTableEntryArea PalPntrTbl, Palette01                 ;($A19C)Samus power suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette02                 ;($A1A8)Samus varia suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette03                 ;($A1A2)Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette04                 ;($A1AE)Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette05                 ;($A1B4)Alternate room palette.
+    PtrTableEntryArea PalPntrTbl, Palette06                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette07                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette08                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette09                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0A                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0B                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0C                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0D                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0E                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette0F                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette10                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette11                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette12                 ;($A1D7)
+    PtrTableEntryArea PalPntrTbl, Palette13                 ;($A1D7)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryArea PalPntrTbl, Palette14                 ;($A1DE)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette15                 ;($A1E5)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette16                 ;($A1EC)Samus fade in palette.
+    PtrTableEntryArea PalPntrTbl, Palette17                 ;($A1F3)Unused?
+    PtrTableEntryArea PalPntrTbl, Palette18                 ;($A1FB)Suitless Samus power suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette19                 ;($A203)Suitless Samus varia suit palette.
+    PtrTableEntryArea PalPntrTbl, Palette1A                 ;($A20B)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalPntrTbl, Palette1B                 ;($A213)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
-    .word SpecItmsTbl_BANK{BANK}               ;($A2D9)Beginning of special items table.
+    .word SpecItmsTbl_{AREA}               ;($A2D9)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
-    RoomPtrTable:       .word RoomPtrTable_BANK{BANK}              ;($A21B)Beginning of room pointer table.
-    StructPtrTable:     .word StructPtrTable_BANK{BANK}            ;($A277)Beginning of structure pointer table.
-    MetatileDefs:       .word MetatileDefs_BANK{BANK}              ;($AEEC)Beginning of metatile definitions.
-    EnFramePtrTable1:   .word EnFramePtrTable1_BANK{BANK}          ;($9C64)Pointer table into enemy animation data. Two-->
-    EnFramePtrTable2:   .word EnFramePtrTable2_BANK{BANK}          ;($9D64)tables needed to accommodate all entries.
-    EnPlacePtrTable:    .word EnPlacePtrTable_BANK{BANK}           ;($9D78)Pointers to enemy frame placement data.
-    EnAnimTable:        .word EnAnimTable_BANK{BANK}               ;($9BDA)Index to values in addr tables for enemy animations.
+    RoomPtrTable:       .word RoomPtrTable_{AREA}              ;($A21B)Beginning of room pointer table.
+    StructPtrTable:     .word StructPtrTable_{AREA}            ;($A277)Beginning of structure pointer table.
+    MetatileDefs:       .word MetatileDefs_{AREA}              ;($AEEC)Beginning of metatile definitions.
+    EnFramePtrTable1:   .word EnFramePtrTable1_{AREA}          ;($9C64)Pointer table into enemy animation data. Two-->
+    EnFramePtrTable2:   .word EnFramePtrTable2_{AREA}          ;($9D64)tables needed to accommodate all entries.
+    EnPlacePtrTable:    .word EnPlacePtrTable_{AREA}           ;($9D78)Pointers to enemy frame placement data.
+    EnAnimTable:        .word EnAnimTable_{AREA}               ;($9BDA)Index to values in addr tables for enemy animations.
 .ENDST
 
 ; Tourian-specific jump table (dummied out in other banks)
@@ -105,7 +106,7 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
 
 AreaRoutine:
-    jmp RTS_Polyp_BANK{BANK}                       ;Area specific routine.(RTS)
+    jmp RTS_Polyp_{AREA}                       ;Area specific routine.(RTS)
 
 ;The following routine returns the two's complement of the value stored in A.
 TwosComplement_:
@@ -137,54 +138,54 @@ AreaPalToggle:
 
     .byte $00
 AreaEnProjectileKilledAnimIndex:
-    .byte EnAnim_EnProjectileKilled_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_EnProjectileKilled_{AREA} - EnAnimTable_{AREA}
 AreaExplosionAnimIndex:
-    .byte EnAnim_Explosion_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_Explosion_{AREA} - EnAnimTable_{AREA}
 ; EnProjectile rising?
-    .byte EnAnim_DragonEnProjectileUp_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileUp_L_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DragonEnProjectileUp_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonEnProjectileUp_L_{AREA} - EnAnimTable_{AREA}
 AreaEnProjectileFallingAnimIndex:
-    .byte EnAnim_DragonEnProjectileDown_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileDown_L_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DragonEnProjectileDown_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonEnProjectileDown_L_{AREA} - EnAnimTable_{AREA}
 AreaEnProjectileSplatterAnimIndex:
-    .byte EnAnim_DragonEnProjectileSplatter_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_PolypRockShatter_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_DragonEnProjectileSplatter_{AREA} - EnAnimTable_{AREA}, EnAnim_PolypRockShatter_{AREA} - EnAnimTable_{AREA}
 AreaMellowAnimIndex:
-    .byte EnAnim_Mella_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_Mella_{AREA} - EnAnimTable_{AREA}
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
-        .word SwooperAIRoutine00_BANK{BANK} ; 00 - swooper has not seen samus
-        .word SwooperAIRoutine01_BANK{BANK} ; 01 - swooper targetting samus
-        .word RipperAIRoutine_BANK{BANK} ; 02 - ripper II
-        .word RemoveEnemy__BANK{BANK} ; 03 - disappears
-        .word RemoveEnemy__BANK{BANK} ; 04 - same as 3
-        .word RemoveEnemy__BANK{BANK} ; 05 - same as 3
-        .word CrawlerAIRoutine_BANK{BANK} ; 06 - crawler
-        .word PipeBugAIRoutine_BANK{BANK} ; 07 - gamet
-        .word RemoveEnemy__BANK{BANK} ; 08 - same as 3
-        .word RemoveEnemy__BANK{BANK} ; 09 - same as 3
-        .word RemoveEnemy__BANK{BANK} ; 0A - same as 3
-        .word SqueeptAIRoutine_BANK{BANK} ; 0B - lava jumper
-        .word MultiviolaAIRoutine_BANK{BANK} ; 0C - bouncy orb
-        .word DragonAIRoutine_BANK{BANK} ; 0D - dragon
-        .word PolypAIRoutine_BANK{BANK} ; 0E - rock launcher thing
-        .word RemoveEnemy__BANK{BANK} ; 0F - same as 3
+        .word SwooperAIRoutine00_{AREA} ; 00 - swooper has not seen samus
+        .word SwooperAIRoutine01_{AREA} ; 01 - swooper targetting samus
+        .word RipperAIRoutine_{AREA} ; 02 - ripper II
+        .word RemoveEnemy__{AREA} ; 03 - disappears
+        .word RemoveEnemy__{AREA} ; 04 - same as 3
+        .word RemoveEnemy__{AREA} ; 05 - same as 3
+        .word CrawlerAIRoutine_{AREA} ; 06 - crawler
+        .word PipeBugAIRoutine_{AREA} ; 07 - gamet
+        .word RemoveEnemy__{AREA} ; 08 - same as 3
+        .word RemoveEnemy__{AREA} ; 09 - same as 3
+        .word RemoveEnemy__{AREA} ; 0A - same as 3
+        .word SqueeptAIRoutine_{AREA} ; 0B - lava jumper
+        .word MultiviolaAIRoutine_{AREA} ; 0C - bouncy orb
+        .word DragonAIRoutine_{AREA} ; 0D - dragon
+        .word PolypAIRoutine_{AREA} ; 0E - rock launcher thing
+        .word RemoveEnemy__{AREA} ; 0F - same as 3
 
 EnemyDeathAnimIndex:
-    .byte EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
-    .byte EnAnim_RipperIIExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperIIExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
+    .byte EnAnim_GerutaExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaExplode_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaExplode_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperIIExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_RipperIIExplode_{AREA} - EnAnimTable_{AREA} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
-    .byte EnAnim_GametExplode_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametExplode_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
+    .byte EnAnim_NovaExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_NovaExplode_{AREA} - EnAnimTable_{AREA} ; 06 - crawler
+    .byte EnAnim_GametExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_GametExplode_L_{AREA} - EnAnimTable_{AREA} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
-    .byte EnAnim_SqueeptExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
-    .byte EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
-    .byte EnAnim_DragonExplode_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonExplode_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
+    .byte EnAnim_RidleyExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyExplode_{AREA} - EnAnimTable_{AREA} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyFireball_L_{AREA} - EnAnimTable_{AREA} ; 0A - same as 3
+    .byte EnAnim_SqueeptExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SqueeptExplode_{AREA} - EnAnimTable_{AREA} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_MultiviolaExplode_{AREA} - EnAnimTable_{AREA} ; 0C - bouncy orb
+    .byte EnAnim_DragonExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonExplode_{AREA} - EnAnimTable_{AREA} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -207,38 +208,38 @@ EnemyHealthTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyRestingAnimIndex:
-    .byte EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperII_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
+    .byte EnAnim_GerutaIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaIdle_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaIdle_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RipperII_L_{AREA} - EnAnimTable_{AREA} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
-    .byte EnAnim_GametResting_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametResting_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA} ; 06 - crawler
+    .byte EnAnim_GametResting_R_{AREA} - EnAnimTable_{AREA}, EnAnim_GametResting_L_{AREA} - EnAnimTable_{AREA} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
-    .byte EnAnim_SqueeptFalling_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptFalling_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyIdle_L_{AREA} - EnAnimTable_{AREA} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyFireball_L_{AREA} - EnAnimTable_{AREA} ; 0A - same as 3
+    .byte EnAnim_SqueeptFalling_{AREA} - EnAnimTable_{AREA}, EnAnim_SqueeptFalling_{AREA} - EnAnimTable_{AREA} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise_{AREA} - EnAnimTable_{AREA}, EnAnim_MultiviolaSpinningCounterclockwise_{AREA} - EnAnimTable_{AREA} ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonIdle_L_{AREA} - EnAnimTable_{AREA} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
 EnemyActiveAnimIndex:
-    .byte EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 00 - swooper has not seen samus
-    .byte EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 01 - swooper targetting samus
-    .byte EnAnim_RipperII_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RipperII_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 02 - ripper II
+    .byte EnAnim_GerutaSwooping_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaSwooping_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
+    .byte EnAnim_GerutaSwooping_{AREA} - EnAnimTable_{AREA}, EnAnim_GerutaSwooping_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
+    .byte EnAnim_RipperII_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RipperII_L_{AREA} - EnAnimTable_{AREA} ; 02 - ripper II
     .byte $00, $00 ; 03 - disappears
     .byte $00, $00 ; 04 - same as 3
     .byte $00, $00 ; 05 - same as 3
-    .byte EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_NovaOnFloor_BANK{BANK} - EnAnimTable_BANK{BANK} ; 06 - crawler
-    .byte EnAnim_GametActive_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_GametActive_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 07 - gamet
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA} ; 06 - crawler
+    .byte EnAnim_GametActive_R_{AREA} - EnAnimTable_{AREA}, EnAnim_GametActive_L_{AREA} - EnAnimTable_{AREA} ; 07 - gamet
     .byte $00, $00 ; 08 - same as 3
-    .byte EnAnim_RidleyIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 09 - same as 3
-    .byte EnAnim_RidleyFireball_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_RidleyFireball_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0A - same as 3
-    .byte EnAnim_SqueeptJumping_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_SqueeptJumping_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0B - lava jumper
-    .byte EnAnim_MultiviolaSpinningClockwise_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_MultiviolaSpinningCounterclockwise_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0C - bouncy orb
-    .byte EnAnim_DragonIdle_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonIdle_L_BANK{BANK} - EnAnimTable_BANK{BANK} ; 0D - dragon
+    .byte EnAnim_RidleyIdle_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyIdle_L_{AREA} - EnAnimTable_{AREA} ; 09 - same as 3
+    .byte EnAnim_RidleyFireball_R_{AREA} - EnAnimTable_{AREA}, EnAnim_RidleyFireball_L_{AREA} - EnAnimTable_{AREA} ; 0A - same as 3
+    .byte EnAnim_SqueeptJumping_{AREA} - EnAnimTable_{AREA}, EnAnim_SqueeptJumping_{AREA} - EnAnimTable_{AREA} ; 0B - lava jumper
+    .byte EnAnim_MultiviolaSpinningClockwise_{AREA} - EnAnimTable_{AREA}, EnAnim_MultiviolaSpinningCounterclockwise_{AREA} - EnAnimTable_{AREA} ; 0C - bouncy orb
+    .byte EnAnim_DragonIdle_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonIdle_L_{AREA} - EnAnimTable_{AREA} ; 0D - dragon
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
@@ -333,42 +334,42 @@ EnemyInitDelayTbl:
     .byte $00 ; 0F - same as 3
 
 EnemyMovementChoiceOffset:
-    .byte EnemyMovementChoice_GerutaIdle_BANK{BANK} - EnemyMovementChoices ; 00 - swooper has not seen samus
-    .byte EnemyMovementChoice_GerutaAttacking_BANK{BANK} - EnemyMovementChoices ; 01 - swooper targetting samus
-    .byte EnemyMovementChoice_RipperII_BANK{BANK} - EnemyMovementChoices ; 02 - ripper II
+    .byte EnemyMovementChoice_GerutaIdle_{AREA} - EnemyMovementChoices ; 00 - swooper has not seen samus
+    .byte EnemyMovementChoice_GerutaAttacking_{AREA} - EnemyMovementChoices ; 01 - swooper targetting samus
+    .byte EnemyMovementChoice_RipperII_{AREA} - EnemyMovementChoices ; 02 - ripper II
     .byte $00 ; 03 - disappears
     .byte $00 ; 04 - same as 3
     .byte $00 ; 05 - same as 3
-    .byte EnemyMovementChoice_Gamet_BANK{BANK} - EnemyMovementChoices ; 06 - crawler (enemy moves manually)
-    .byte EnemyMovementChoice_Gamet_BANK{BANK} - EnemyMovementChoices ; 07 - gamet
+    .byte EnemyMovementChoice_Gamet_{AREA} - EnemyMovementChoices ; 06 - crawler (enemy moves manually)
+    .byte EnemyMovementChoice_Gamet_{AREA} - EnemyMovementChoices ; 07 - gamet
     .byte $00 ; 08 - same as 3
-    .byte EnemyMovementChoice02_BANK{BANK} - EnemyMovementChoices ; 09 - same as 3
-    .byte EnemyMovementChoice03_BANK{BANK} - EnemyMovementChoices ; 0A - same as 3
-    .byte EnemyMovementChoice_Squeept_BANK{BANK} - EnemyMovementChoices ; 0B - lava jumper
-    .byte EnemyMovementChoice_Multiviola_BANK{BANK} - EnemyMovementChoices ; 0C - bouncy orb
-    .byte EnemyMovementChoice_Dragon_BANK{BANK} - EnemyMovementChoices ; 0D - dragon
-    .byte EnemyMovementChoice_GerutaIdle_BANK{BANK} - EnemyMovementChoices ; 0E - rock launcher thing (enemy doesn't move)
+    .byte EnemyMovementChoice02_{AREA} - EnemyMovementChoices ; 09 - same as 3
+    .byte EnemyMovementChoice03_{AREA} - EnemyMovementChoices ; 0A - same as 3
+    .byte EnemyMovementChoice_Squeept_{AREA} - EnemyMovementChoices ; 0B - lava jumper
+    .byte EnemyMovementChoice_Multiviola_{AREA} - EnemyMovementChoices ; 0C - bouncy orb
+    .byte EnemyMovementChoice_Dragon_{AREA} - EnemyMovementChoices ; 0D - dragon
+    .byte EnemyMovementChoice_GerutaIdle_{AREA} - EnemyMovementChoices ; 0E - rock launcher thing (enemy doesn't move)
     .byte $00 ; 0F - same as 3
 
 EnemyMovementPtrs:
-    .word EnemyMovement00_R_BANK{BANK}, EnemyMovement00_L_BANK{BANK}
-    .word EnemyMovement01_R_BANK{BANK}, EnemyMovement01_L_BANK{BANK}
-    .word EnemyMovement02_R_BANK{BANK}, EnemyMovement02_L_BANK{BANK}
-    .word EnemyMovement03_R_BANK{BANK}, EnemyMovement03_L_BANK{BANK}
-    .word EnemyMovement04_R_BANK{BANK}, EnemyMovement04_L_BANK{BANK}
-    .word EnemyMovement05_R_BANK{BANK}, EnemyMovement05_L_BANK{BANK}
-    .word EnemyMovement06_R_BANK{BANK}, EnemyMovement06_L_BANK{BANK}
-    .word EnemyMovement07_R_BANK{BANK}, EnemyMovement07_L_BANK{BANK}
-    .word EnemyMovement08_R_BANK{BANK}, EnemyMovement08_L_BANK{BANK}
-    .word EnemyMovement09_R_BANK{BANK}, EnemyMovement09_L_BANK{BANK}
-    .word EnemyMovement0A_R_BANK{BANK}, EnemyMovement0A_L_BANK{BANK}
-    .word EnemyMovement0B_R_BANK{BANK}, EnemyMovement0B_L_BANK{BANK}
-    .word EnemyMovement0C_R_BANK{BANK}, EnemyMovement0C_L_BANK{BANK}
-    .word EnemyMovement0D_R_BANK{BANK}, EnemyMovement0D_L_BANK{BANK}
-    .word EnemyMovement0E_R_BANK{BANK}, EnemyMovement0E_L_BANK{BANK}
-    .word EnemyMovement0F_R_BANK{BANK}, EnemyMovement0F_L_BANK{BANK}
-    .word EnemyMovement10_R_BANK{BANK}, EnemyMovement10_L_BANK{BANK}
-    .word EnemyMovement11_R_BANK{BANK}, EnemyMovement11_L_BANK{BANK}
+    .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}
+    .word EnemyMovement01_R_{AREA}, EnemyMovement01_L_{AREA}
+    .word EnemyMovement02_R_{AREA}, EnemyMovement02_L_{AREA}
+    .word EnemyMovement03_R_{AREA}, EnemyMovement03_L_{AREA}
+    .word EnemyMovement04_R_{AREA}, EnemyMovement04_L_{AREA}
+    .word EnemyMovement05_R_{AREA}, EnemyMovement05_L_{AREA}
+    .word EnemyMovement06_R_{AREA}, EnemyMovement06_L_{AREA}
+    .word EnemyMovement07_R_{AREA}, EnemyMovement07_L_{AREA}
+    .word EnemyMovement08_R_{AREA}, EnemyMovement08_L_{AREA}
+    .word EnemyMovement09_R_{AREA}, EnemyMovement09_L_{AREA}
+    .word EnemyMovement0A_R_{AREA}, EnemyMovement0A_L_{AREA}
+    .word EnemyMovement0B_R_{AREA}, EnemyMovement0B_L_{AREA}
+    .word EnemyMovement0C_R_{AREA}, EnemyMovement0C_L_{AREA}
+    .word EnemyMovement0D_R_{AREA}, EnemyMovement0D_L_{AREA}
+    .word EnemyMovement0E_R_{AREA}, EnemyMovement0E_L_{AREA}
+    .word EnemyMovement0F_R_{AREA}, EnemyMovement0F_L_{AREA}
+    .word EnemyMovement10_R_{AREA}, EnemyMovement10_L_{AREA}
+    .word EnemyMovement11_R_{AREA}, EnemyMovement11_L_{AREA}
     .word $0000, $0000
     .word $0000, $0000
 
@@ -402,8 +403,8 @@ L977B:
 EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
-    .byte EnAnim_PolypRock_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_PolypRock_BANK{BANK} - EnAnimTable_BANK{BANK}
-    .byte EnAnim_DragonEnProjectileUp_R_BANK{BANK} - EnAnimTable_BANK{BANK}, EnAnim_DragonEnProjectileUp_L_BANK{BANK} - EnAnimTable_BANK{BANK}
+    .byte EnAnim_PolypRock_{AREA} - EnAnimTable_{AREA}, EnAnim_PolypRock_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_DragonEnProjectileUp_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonEnProjectileUp_L_{AREA} - EnAnimTable_{AREA}
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
@@ -420,99 +421,99 @@ EnProjectilePosOffsetY:
     .byte $F8
 
 EnProjectileMovementPtrTable:
-    .word EnProjectileMovement0_BANK{BANK}
-    .word EnProjectileMovement1_BANK{BANK}
-    .word EnProjectileMovement2_BANK{BANK}
-    .word EnProjectileMovement3_BANK{BANK}
+    .word EnProjectileMovement0_{AREA}
+    .word EnProjectileMovement1_{AREA}
+    .word EnProjectileMovement2_{AREA}
+    .word EnProjectileMovement3_{AREA}
 
 TileBlastFramePtrTable:
-    .word TileBlastFrame00_BANK{BANK}
-    .word TileBlastFrame01_BANK{BANK}
-    .word TileBlastFrame02_BANK{BANK}
-    .word TileBlastFrame03_BANK{BANK}
-    .word TileBlastFrame04_BANK{BANK}
-    .word TileBlastFrame05_BANK{BANK}
-    .word TileBlastFrame06_BANK{BANK}
-    .word TileBlastFrame07_BANK{BANK}
-    .word TileBlastFrame08_BANK{BANK}
-    .word TileBlastFrame09_BANK{BANK}
-    .word TileBlastFrame0A_BANK{BANK}
-    .word TileBlastFrame0B_BANK{BANK}
-    .word TileBlastFrame0C_BANK{BANK}
-    .word TileBlastFrame0D_BANK{BANK}
-    .word TileBlastFrame0E_BANK{BANK}
-    .word TileBlastFrame0F_BANK{BANK}
-    .word TileBlastFrame10_BANK{BANK}
+    .word TileBlastFrame00_{AREA}
+    .word TileBlastFrame01_{AREA}
+    .word TileBlastFrame02_{AREA}
+    .word TileBlastFrame03_{AREA}
+    .word TileBlastFrame04_{AREA}
+    .word TileBlastFrame05_{AREA}
+    .word TileBlastFrame06_{AREA}
+    .word TileBlastFrame07_{AREA}
+    .word TileBlastFrame08_{AREA}
+    .word TileBlastFrame09_{AREA}
+    .word TileBlastFrame0A_{AREA}
+    .word TileBlastFrame0B_{AREA}
+    .word TileBlastFrame0C_{AREA}
+    .word TileBlastFrame0D_{AREA}
+    .word TileBlastFrame0E_{AREA}
+    .word TileBlastFrame0F_{AREA}
+    .word TileBlastFrame10_{AREA}
 
 EnemyMovementChoices:
-EnemyMovementChoice_RipperII_BANK{BANK}:
+EnemyMovementChoice_RipperII_{AREA}:
     EnemyMovementChoiceEntry $02
-EnemyMovementChoice_Gamet_BANK{BANK}: ; enemy moves manually
+EnemyMovementChoice_Gamet_{AREA}: ; enemy moves manually
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice02_BANK{BANK}: ; unused enemy
+EnemyMovementChoice02_{AREA}: ; unused enemy
     EnemyMovementChoiceEntry $0D
-EnemyMovementChoice03_BANK{BANK}: ; unused enemy
+EnemyMovementChoice03_{AREA}: ; unused enemy
     EnemyMovementChoiceEntry $0E, $0F
-EnemyMovementChoice_Squeept_BANK{BANK}: ; enemy moves manually
+EnemyMovementChoice_Squeept_{AREA}: ; enemy moves manually
     EnemyMovementChoiceEntry $00, $01, $02, $03
-EnemyMovementChoice_Multiviola_BANK{BANK}:
+EnemyMovementChoice_Multiviola_{AREA}:
     EnemyMovementChoiceEntry $10
-EnemyMovementChoice_Dragon_BANK{BANK}:
+EnemyMovementChoice_Dragon_{AREA}:
     EnemyMovementChoiceEntry $11
-EnemyMovementChoice_GerutaIdle_BANK{BANK}: ; enemy doesn't move
+EnemyMovementChoice_GerutaIdle_{AREA}: ; enemy doesn't move
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice_GerutaAttacking_BANK{BANK}:
+EnemyMovementChoice_GerutaAttacking_{AREA}:
     EnemyMovementChoiceEntry $01
 
 
-EnemyMovement00_R_BANK{BANK}:
-EnemyMovement00_L_BANK{BANK}:
-EnemyMovement01_R_BANK{BANK}:
-EnemyMovement01_L_BANK{BANK}:
+EnemyMovement00_R_{AREA}:
+EnemyMovement00_L_{AREA}:
+EnemyMovement01_R_{AREA}:
+EnemyMovement01_L_{AREA}:
     ; nothing
 
 ; ripper II
-EnemyMovement02_R_BANK{BANK}:
+EnemyMovement02_R_{AREA}:
     SignMagSpeed $01,  3,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement02_L_BANK{BANK}:
+EnemyMovement02_L_{AREA}:
     SignMagSpeed $01, -3,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement03_R_BANK{BANK}:
-EnemyMovement03_L_BANK{BANK}:
-EnemyMovement04_R_BANK{BANK}:
-EnemyMovement04_L_BANK{BANK}:
-EnemyMovement05_R_BANK{BANK}:
-EnemyMovement05_L_BANK{BANK}:
-EnemyMovement06_R_BANK{BANK}:
-EnemyMovement06_L_BANK{BANK}:
-EnemyMovement07_R_BANK{BANK}:
-EnemyMovement07_L_BANK{BANK}:
-EnemyMovement08_R_BANK{BANK}:
-EnemyMovement08_L_BANK{BANK}:
-EnemyMovement09_R_BANK{BANK}:
-EnemyMovement09_L_BANK{BANK}:
-EnemyMovement0A_R_BANK{BANK}:
-EnemyMovement0A_L_BANK{BANK}:
-EnemyMovement0B_R_BANK{BANK}:
-EnemyMovement0B_L_BANK{BANK}:
-EnemyMovement0C_R_BANK{BANK}:
-EnemyMovement0C_L_BANK{BANK}:
-EnemyMovement0D_R_BANK{BANK}:
-EnemyMovement0D_L_BANK{BANK}:
-EnemyMovement0E_R_BANK{BANK}:
-EnemyMovement0E_L_BANK{BANK}:
-EnemyMovement0F_R_BANK{BANK}:
-EnemyMovement0F_L_BANK{BANK}:
-EnemyMovement10_R_BANK{BANK}:
-EnemyMovement10_L_BANK{BANK}:
+EnemyMovement03_R_{AREA}:
+EnemyMovement03_L_{AREA}:
+EnemyMovement04_R_{AREA}:
+EnemyMovement04_L_{AREA}:
+EnemyMovement05_R_{AREA}:
+EnemyMovement05_L_{AREA}:
+EnemyMovement06_R_{AREA}:
+EnemyMovement06_L_{AREA}:
+EnemyMovement07_R_{AREA}:
+EnemyMovement07_L_{AREA}:
+EnemyMovement08_R_{AREA}:
+EnemyMovement08_L_{AREA}:
+EnemyMovement09_R_{AREA}:
+EnemyMovement09_L_{AREA}:
+EnemyMovement0A_R_{AREA}:
+EnemyMovement0A_L_{AREA}:
+EnemyMovement0B_R_{AREA}:
+EnemyMovement0B_L_{AREA}:
+EnemyMovement0C_R_{AREA}:
+EnemyMovement0C_L_{AREA}:
+EnemyMovement0D_R_{AREA}:
+EnemyMovement0D_L_{AREA}:
+EnemyMovement0E_R_{AREA}:
+EnemyMovement0E_L_{AREA}:
+EnemyMovement0F_R_{AREA}:
+EnemyMovement0F_L_{AREA}:
+EnemyMovement10_R_{AREA}:
+EnemyMovement10_L_{AREA}:
     ; nothing
 
 ; dragon
-EnemyMovement11_R_BANK{BANK}:
-EnemyMovement11_L_BANK{BANK}:
+EnemyMovement11_R_{AREA}:
+EnemyMovement11_L_{AREA}:
     SignMagSpeed $14,  0, -1
     SignMagSpeed $0A,  0,  0
     EnemyMovementInstr_ClearEnJumpDsplcmnt
@@ -520,7 +521,7 @@ EnemyMovement11_L_BANK{BANK}:
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_StopMovementDragon
 
-EnProjectileMovement0_BANK{BANK}:
+EnProjectileMovement0_{AREA}:
     SignMagSpeed $0A,  3, -5
     SignMagSpeed $07,  3, -3
     SignMagSpeed $07,  3, -1
@@ -530,7 +531,7 @@ EnProjectileMovement0_BANK{BANK}:
     SignMagSpeed $50,  3,  3
     .byte $FF
 
-EnProjectileMovement1_BANK{BANK}:
+EnProjectileMovement1_{AREA}:
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -540,7 +541,7 @@ EnProjectileMovement1_BANK{BANK}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement2_BANK{BANK}:
+EnProjectileMovement2_{AREA}:
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -550,7 +551,7 @@ EnProjectileMovement2_BANK{BANK}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement3_BANK{BANK}:
+EnProjectileMovement3_{AREA}:
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1
@@ -561,12 +562,12 @@ EnProjectileMovement3_BANK{BANK}:
     .byte $FF
 
 ;-------------------------------------------------------------------------------
-RemoveEnemy__BANK{BANK}:
+RemoveEnemy__{AREA}:
     lda #$00
     sta EnsExtra.0.status,x
     rts
 
-CommonEnemyJump_00_01_02_BANK{BANK}:
+CommonEnemyJump_00_01_02_{AREA}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -602,12 +603,12 @@ L9963:
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
@@ -622,7 +623,7 @@ L9963:
     bne L9993
         jmp L984D
     L9993:
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
 ;-------------------------------------------------------------------------------
 ; Crawler Routine
@@ -630,7 +631,7 @@ L9963:
 
 ;-------------------------------------------------------------------------------
 
-StoreEnemyPositionToTemp__BANK{BANK}:
+StoreEnemyPositionToTemp__{AREA}:
     lda EnY,x
     sta Temp08_PositionY
     lda EnX,x
@@ -639,7 +640,7 @@ StoreEnemyPositionToTemp__BANK{BANK}:
     sta Temp0B_PositionHi
     rts
 
-LoadEnemyPositionFromTemp__BANK{BANK}:
+LoadEnemyPositionFromTemp__{AREA}:
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
@@ -667,71 +668,71 @@ LoadEnemyPositionFromTemp__BANK{BANK}:
 
 ;-------------------------------------------------------------------------------
 
-TileBlastFrame00_BANK{BANK}:
+TileBlastFrame00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01_BANK{BANK}:
+TileBlastFrame01_{AREA}:
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-TileBlastFrame02_BANK{BANK}:
+TileBlastFrame02_{AREA}:
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-TileBlastFrame03_BANK{BANK}:
+TileBlastFrame03_{AREA}:
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-TileBlastFrame04_BANK{BANK}:
+TileBlastFrame04_{AREA}:
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-TileBlastFrame05_BANK{BANK}:
+TileBlastFrame05_{AREA}:
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-TileBlastFrame06_BANK{BANK}:
+TileBlastFrame06_{AREA}:
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-TileBlastFrame07_BANK{BANK}:
+TileBlastFrame07_{AREA}:
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-TileBlastFrame08_BANK{BANK}:
+TileBlastFrame08_{AREA}:
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-TileBlastFrame09_BANK{BANK}:
+TileBlastFrame09_{AREA}:
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
-TileBlastFrame0A_BANK{BANK}:
+TileBlastFrame0A_{AREA}:
     .byte $22
     .byte $74, $75
     .byte $75, $74
 
-TileBlastFrame0B_BANK{BANK}:
+TileBlastFrame0B_{AREA}:
     .byte $22
     .byte $76, $76
     .byte $76, $76
 
-TileBlastFrame0C_BANK{BANK}:
-TileBlastFrame0D_BANK{BANK}:
-TileBlastFrame0E_BANK{BANK}:
-TileBlastFrame0F_BANK{BANK}:
-TileBlastFrame10_BANK{BANK}:
+TileBlastFrame0C_{AREA}:
+TileBlastFrame0D_{AREA}:
+TileBlastFrame0E_{AREA}:
+TileBlastFrame0F_{AREA}:
+TileBlastFrame10_{AREA}:
     ;nothing
 
 .include "norfair/enemy_sprite_data.asm"

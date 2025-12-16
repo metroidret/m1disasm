@@ -1,5 +1,5 @@
 ; Swooper routine
-SwooperAIRoutine00_BANK{BANK}:
+SwooperAIRoutine00_{AREA}:
     ; change animation frame every 3 frames for active swooper
     lda #$03
     sta $00
@@ -20,21 +20,21 @@ SwooperAIRoutine00_BANK{BANK}:
         ; bit 4 of EnData05 is set
         ; swoop towards samus
         lda #$01
-        jsr SwooperChangeEnemyType_BANK{BANK}
+        jsr SwooperChangeEnemyType_{AREA}
 @draw:
-    jsr UpdateSwooperAnim_BANK{BANK}
-    jmp CommonEnemyJump_00_01_02_BANK{BANK}
+    jsr UpdateSwooperAnim_{AREA}
+    jmp CommonEnemyJump_00_01_02_{AREA}
 
-UpdateSwooperAnim_BANK{BANK}:
+UpdateSwooperAnim_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
     bne @RTS
     
     ; default to swooping animation
     .if BANK == 2
-        lda #EnAnim_GerutaSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+        lda #EnAnim_GerutaSwooping_{AREA} - EnAnimTable_{AREA}.b
     .elif BANK == 5
-        lda #EnAnim_HoltzSwooping_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+        lda #EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA}.b
     .endif
     ; branch if y speed is positive (swooper is swooping downwards)
     ldy EnSpeedY,x
@@ -42,9 +42,9 @@ UpdateSwooperAnim_BANK{BANK}:
         ; swooper is not swooping downwards
         ; set animation to idle
         .if BANK == 2
-            lda #EnAnim_GerutaIdle_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+            lda #EnAnim_GerutaIdle_{AREA} - EnAnimTable_{AREA}.b
         .elif BANK == 5
-            lda #EnAnim_HoltzIdle_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+            lda #EnAnim_HoltzIdle_{AREA} - EnAnimTable_{AREA}.b
         .endif
     @endIf_A:
     sta EnsExtra.0.resetAnimIndex,x
@@ -54,32 +54,32 @@ UpdateSwooperAnim_BANK{BANK}:
 ;-------------------------------------------------------------------------------
 ; Swooper Routine 2?
 ; similar code to RioAIRoutine
-SwooperAIRoutine01_BANK{BANK}:
+SwooperAIRoutine01_{AREA}:
     ; exit if previous status is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
-    beq SwooperExit_Resting_BANK{BANK}
+    beq SwooperExit_Resting_{AREA}
     
     ; exit if previous status is explode
     cmp #enemyStatus_Explode
-    beq SwooperExit_Explode_BANK{BANK}
+    beq SwooperExit_Explode_{AREA}
     
     ; branch if current status is not resting
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
-    bne L9923_BANK{BANK}
+    bne L9923_{AREA}
         ; status changed from active to resting
         ; swoop straight down
         lda #$00
-        jsr SwooperChangeEnemyType_BANK{BANK}
+        jsr SwooperChangeEnemyType_{AREA}
 
-SwooperExit_Resting_BANK{BANK}:
+SwooperExit_Resting_{AREA}:
     ; change animation frame every 8 frames for resting swooper
     lda #$08
     jmp CommonJump_01
 
 
-L9923_BANK{BANK}:
+L9923_{AREA}:
     ; set gravity to negative #$80 (gravity pulls towards ceiling)
     lda #$80
     sta EnsExtra.0.accelY,x
@@ -111,15 +111,15 @@ L9923_BANK{BANK}:
         lda #$00
         sta EnsExtra.0.accelY,x
 @endIf_A:
-    jsr UpdateSwooperAnim_BANK{BANK}
+    jsr UpdateSwooperAnim_{AREA}
     ; change animation frame every 3 frames for active swooper
     lda #$03
     jmp CommonJump_00
 
-SwooperExit_Explode_BANK{BANK}:
+SwooperExit_Explode_{AREA}:
     jmp CommonJump_02
 
-SwooperChangeEnemyType_BANK{BANK}:
+SwooperChangeEnemyType_{AREA}:
     ; set enemy type (either #$00 or #$01)
     sta EnsExtra.0.type,x
     

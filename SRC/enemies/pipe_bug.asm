@@ -1,6 +1,6 @@
 ; Pipe Bug AI Handler
 
-PipeBugAIRoutine_BANK{BANK}:
+PipeBugAIRoutine_{AREA}:
     ; branch if pipe bug is not active
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
@@ -68,11 +68,11 @@ PipeBugAIRoutine_BANK{BANK}:
     sta Temp04_SpeedY
 
     ; apply speed
-    jsr StoreEnemyPositionToTemp__BANK{BANK}
+    jsr StoreEnemyPositionToTemp__{AREA}
     jsr CommonJump_ApplySpeedToPosition
     ; remove bug if it is out of bounds
     bcc @delete
-    jsr LoadEnemyPositionFromTemp__BANK{BANK}
+    jsr LoadEnemyPositionFromTemp__{AREA}
     ; fallthrough
 
 ;Exit 1

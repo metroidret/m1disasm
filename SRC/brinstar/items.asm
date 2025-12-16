@@ -53,7 +53,7 @@
 ;#$09=Door.
 ;#$0A=Palette change room.
 
-SpecItmsTbl_BANK{BANK}:
+SpecItmsTbl_{AREA}:
 @y02:
     .byte $02
     .word @y03

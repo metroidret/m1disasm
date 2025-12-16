@@ -1,4 +1,4 @@
-RinkaAIRoutine_BANK{BANK}:
+RinkaAIRoutine_{AREA}:
     ; branch if enemy is not active
     ldy EnsExtra.0.status,x
     cpy #enemyStatus_Active
@@ -89,7 +89,7 @@ RinkaAIRoutine_BANK{BANK}:
     ; $00 and $01 now do not have bits 7, 6, 5 set
 
     ; set rinka speed based on $00 and $01
-    jsr SetRinkaSpeed_BANK{BANK}
+    jsr SetRinkaSpeed_{AREA}
     
     ; pull EnData05 from stack
     pla
@@ -174,7 +174,7 @@ RinkaAIRoutine_BANK{BANK}:
     jmp CommonJump_01
 
 
-SetRinkaSpeed_BANK{BANK}:
+SetRinkaSpeed_{AREA}:
     ; load y speed
     lda $00
     pha

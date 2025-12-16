@@ -1,5 +1,5 @@
 ; Lava Jumper Routine
-SqueeptAIRoutine_BANK{BANK}:
+SqueeptAIRoutine_{AREA}:
     ; branch if previous status is not resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
@@ -9,7 +9,7 @@ SqueeptAIRoutine_BANK{BANK}:
     ; exit if current status is explode
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq SqueeptExit_Resting_BANK{BANK}
+    beq SqueeptExit_Resting_{AREA}
     
     ; branch if current status is not active
     cmp #enemyStatus_Active
@@ -19,7 +19,7 @@ SqueeptAIRoutine_BANK{BANK}:
         
         ; set initial jump velocity
         ldy EnMovementIndex,x
-        lda SqueeptSpeedYTable_BANK{BANK},y
+        lda SqueeptSpeedYTable_{AREA},y
         sta EnSpeedY,x
         ; set jump gravity
         lda #$40
@@ -31,16 +31,16 @@ SqueeptAIRoutine_BANK{BANK}:
     ; exit if current status is explode
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq SqueeptExit_Resting_BANK{BANK}
+    beq SqueeptExit_Resting_{AREA}
     
     ; exit if previous status is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
-    beq SqueeptExit_Resting_BANK{BANK}
+    beq SqueeptExit_Resting_{AREA}
     
     ; exit if previous status is explode (this is redundant, right?)
     cmp #enemyStatus_Explode
-    beq SqueeptExit_Explode_BANK{BANK}
+    beq SqueeptExit_Explode_{AREA}
     
     ; make squeept move in their jump trajectory
     ; apply gravity to y speed and get delta y
@@ -52,7 +52,7 @@ SqueeptAIRoutine_BANK{BANK}:
     sta Temp05_SpeedX
     
     ; default to jumping animation
-    lda #EnAnim_SqueeptJumping_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+    lda #EnAnim_SqueeptJumping_{AREA} - EnAnimTable_{AREA}.b
     ; set y speed to delta y
     ldy $00
     sty Temp04_SpeedY
@@ -60,12 +60,12 @@ SqueeptAIRoutine_BANK{BANK}:
     bmi @endIf_B
         ; delta y is not negative (squeept is falling)
         ; use falling animation
-        lda #EnAnim_SqueeptFalling_BANK{BANK} - EnAnimTable_BANK{BANK}.b
+        lda #EnAnim_SqueeptFalling_{AREA} - EnAnimTable_{AREA}.b
     @endIf_B:
     sta EnsExtra.0.resetAnimIndex,x
     
     ; apply speed
-    jsr StoreEnemyPositionToTemp__BANK{BANK}
+    jsr StoreEnemyPositionToTemp__{AREA}
     jsr CommonJump_ApplySpeedToPosition
     
     ; load lava y position
@@ -86,18 +86,18 @@ SqueeptAIRoutine_BANK{BANK}:
         ora #$20
         sta EnData05,x
     @endIf_C:
-    jsr LoadEnemyPositionFromTemp__BANK{BANK}
+    jsr LoadEnemyPositionFromTemp__{AREA}
 
-SqueeptExit_Resting_BANK{BANK}:
+SqueeptExit_Resting_{AREA}:
     ; squeept is resting (jumping and falling)
     ; change animation frame every 2 frames
     lda #$02
     jmp CommonJump_01
 
-SqueeptExit_Explode_BANK{BANK}:
+SqueeptExit_Explode_{AREA}:
     ; squeept is exploding
     jmp CommonJump_02
 
-SqueeptSpeedYTable_BANK{BANK}:
+SqueeptSpeedYTable_{AREA}:
     .byte $F6, $F8, $F6, $FA
 
