@@ -142,6 +142,19 @@
     .word ptr
 .endm
 
+.macro PtrTableEntryArea args ptrTable, ptr
+    .ifndef _id_\2
+        .ifdef _entryNumber_\1
+            .redef _entryNumber_\1 = _entryNumber_\1 + 1
+        .else
+            .def _entryNumber_\1 = 0
+        .endif
+        
+        .def _id_\2 = _entryNumber_\1 export
+    .endif
+    .word \2_{AREA}
+.endm
+
 .macro EnemyMovementChoiceEntry ; args enemyMovementIndexList
     assertMsg NARGS >= 1 && NARGS <= 256, "number of choices must be from 1 to 256 inclusive"
     
@@ -161,7 +174,7 @@
     .endr
 .endm
 
-.macro EnemyMovementInstr_StopMovementSeahorse
+.macro EnemyMovementInstr_StopMovementDragon
     .byte $FA
 .endm
 
@@ -173,7 +186,7 @@
     .byte $FC
 .endm
 
-.macro EnemyMovementInstr_ClearEnData1D
+.macro EnemyMovementInstr_ClearEnJumpDsplcmnt
     .byte $FD
 .endm
 

@@ -1,28 +1,64 @@
-.MEMORYMAP
-    DEFAULTSLOT 0
-    SLOT 0 $0000 $FFDC "DummySlot"
-    SLOT 1 $0000 $0800 "RAMConsoleSlot"
-    SLOT 2 $6000 $8000 "RAMDiskSysSlot"
-    SLOT 3 $E000 $2000 "ROMFDSBIOSSlot"
-.ENDME
+.memorymap
+    defaultslot 0
+    slot 0 $0000 $FFDC "DummySlot"
+    slot 1 $0000 $0800 "RAMConsoleSlot"
+    slot 2 $6000 $8000 "RAMDiskSysSlot"
+    slot 3 $E000 $2000 "ROMFDSBIOSSlot"
+.endme
 
-.ROMBANKMAP
-    BANKSTOTAL $60
-    BANKSIZE $8000
-    BANKS $60
-.ENDRO
+.rombankmap
+    bankstotal $60
+    banksize $8000
+    banks $60
+.endro
 
 
-.ASCIITABLE
-.ENDA
+.asciitable
+.enda
 
-.STRINGMAPTABLE charmap_kyodaku "SRC/kyodaku.tbl"
-.STRINGMAPTABLE charmap_title "SRC/title.tbl"
-.STRINGMAPTABLE charmap_savemenu "SRC/savemenu.tbl"
-.STRINGMAPTABLE charmap_gameover "SRC/gameover.tbl"
-.STRINGMAPTABLE charmap_ending "SRC/ending.tbl"
+.stringmaptable charmap_kyodaku "SRC/kyodaku.tbl"
+.stringmaptable charmap_title "SRC/title.tbl"
+.stringmaptable charmap_savemenu "SRC/savemenu.tbl"
+.stringmaptable charmap_gameover "SRC/gameover.tbl"
+.stringmaptable charmap_ending "SRC/ending.tbl"
 
 
 .include "SRC/constants_ram.asm"
 
+
+;------------------------------------------[ Misc. defines ]-----------------------------------------
+
+;Special item types.
+it_Squeept             = $1
+it_PowerUp             = $2
+it_Mellow              = $3
+it_Elevator            = $4
+it_Cannon              = $5   ;High nibble is Cannons.0.instrListID
+it_MotherBrain         = $6
+it_Zebetite            = $7   ;High nibble is Zebetite slot ID
+it_RinkaSpawner        = $8
+it_Door                = $9
+it_PaletteChange       = $A
+
+;Power up id for items
+pu_BOMBS               = $00
+pu_HIGHJUMP            = $01
+pu_LONGBEAM            = $02
+pu_SCREWATTACK         = $03
+pu_MARUMARI            = $04
+pu_VARIA               = $05
+pu_WAVEBEAM            = $06
+pu_ICEBEAM             = $07
+pu_ENERGYTANK          = $08
+pu_MISSILES            = $09
+
+;Enemy Status
+enemyStatus_NoEnemy    = 0
+enemyStatus_Resting    = 1
+enemyStatus_Active     = 2
+enemyStatus_Explode    = 3
+enemyStatus_Frozen     = 4
+enemyStatus_Pickup     = 5
+enemyStatus_Hurt       = 6
+; greater than 6 is the same as no enemy
 

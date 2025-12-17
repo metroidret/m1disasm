@@ -38,8 +38,8 @@ CommonJump_01: ;($6C03)
     jmp LA325
 CommonJump_02: ;($6C06)
     jmp LA303
-CommonJump_6C09: ;($6C09)
-    jmp LA73F
+CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;($6C09)
+    jmp CrawlerAIRoutine_ShouldCrawlerMove
 CommonJump_6C0C: ;($6C0C)
     jmp L840B
 CommonJump_6C0F: ;($6C0F)
@@ -52,8 +52,8 @@ CommonJump_6C18: ;($6C18)
     jmp LAAA6
 CommonJump_6C1B: ;($6C1B)
     jmp LAA75
-CommonJump_6C1E: ;($6C1E)
-    jmp LAAB7
+CommonJump_InitEnActiveAnimIndex_NoL967BOffset: ;($6C1E)
+    jmp InitEnActiveAnimIndex_NoL967BOffset
 CommonJump_6C21: ;($6C21)
     jmp LA75D
 CommonJump_ChooseRoutine: ;($6C24)
@@ -8260,7 +8260,10 @@ LA738:
     rol a
     tay
     rts
-LA73F:
+
+
+
+CrawlerAIRoutine_ShouldCrawlerMove: ;($A73F)
     txa
     lsr a
     lsr a
@@ -8268,6 +8271,9 @@ LA73F:
     adc FrameCount
     lsr a
     rts
+
+
+
 LA747:
     ldy $B46E,x
     lda $B693,y
@@ -8744,7 +8750,9 @@ LAAAC:
     cmp $B465,x
     beq RTS_AA74
     jmp LA57A
-LAAB7:
+
+
+InitEnActiveAnimIndex_NoL967BOffset:
     ldx PageIndex
     jsr LA731
     lda $B653,y
@@ -8752,6 +8760,8 @@ LAAB7:
     beq RTS_AA74
     sta $B465,x
     jmp LA57D
+
+
 LAACA:
     lda #$40
     sta PageIndex

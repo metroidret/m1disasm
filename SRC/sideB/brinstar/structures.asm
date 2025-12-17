@@ -1,131 +1,281 @@
 
-    .byte $08, $01, $01, $01
-    .byte $01, $01, $01, $01, $01, $08, $00, $00, $00, $00, $00, $00, $00, $00, $FF
-
-    .byte $08
-    .byte $02, $02, $02, $02, $02, $02, $02, $02, $01, $28, $01, $28, $01, $28, $08, $02
-    .byte $02, $02, $02, $02, $02, $02, $02, $FF
-
-    .byte $02, $04, $05, $02, $04, $05, $02, $04
-    .byte $05, $02, $04, $05, $02, $04, $05, $02, $04, $05, $02, $04, $05, $02, $04, $05
+Structure00_{AREA}:
+    .byte $08,  $01, $01, $01, $01, $01, $01, $01, $01
+    .byte $08,  $00, $00, $00, $00, $00, $00, $00, $00
     .byte $FF
 
-    .byte $01, $06, $01, $06, $01, $06, $FF
-
-    .byte $01, $07, $01, $07, $01, $07, $FF
-
-    .byte $02
-    .byte $31, $32, $FF
-
-    .byte $01, $08, $01, $33, $01, $33, $01, $33, $01, $33, $FF
-
-    .byte $01, $28
-    .byte $01, $08, $01, $1F, $01, $17, $01, $17, $01, $1F, $FF
-
-    .byte $02, $0E, $11, $03, $0F
-    .byte $12, $22, $03, $10, $13, $14, $FF
-
-    .byte $04, $08, $35, $35, $08, $FF
-
-    .byte $03, $08, $35
-    .byte $08, $FF
-
-    .byte $02, $36, $36, $02, $1C, $08, $02, $08, $34, $02, $34, $34, $02, $08
-    .byte $08, $FF
-
-    .byte $02, $20, $20, $FF
-
-    .byte $08, $08, $1C, $08, $35, $08, $35, $1C, $08, $FF
-    .byte $08, $1E, $1E, $1C, $1C, $1E, $1E, $1E, $1E, $08, $1E, $1E, $1E, $1E, $1C, $1E
-    .byte $1E, $1E, $08, $1C, $1E, $1E, $1E, $1E, $1E, $1C, $1E, $08, $1E, $1E, $1E, $1C
-    .byte $1E, $1C, $1C, $1E, $FF
-
-    .byte $08, $2E, $2E, $2E, $2E, $2E, $2E, $2E, $2E, $FF
-
-    .byte $08
-    .byte $08, $0B, $0B, $0B, $0B, $08, $0B, $0B, $08, $08, $08, $1C, $1C, $08, $08, $1C
-    .byte $08, $FF
-
-    .byte $08, $1C, $08, $08, $08, $08, $0A, $08, $1C, $08, $08, $0A, $09, $0A
-    .byte $28, $28, $08, $08, $01, $08, $FF
-
-    .byte $06, $2C, $2C, $2C, $2C, $15, $2C, $06, $2D
-    .byte $2D, $2D, $2D, $16, $2D, $FF
-
-    .byte $08, $2B, $2B, $2B, $2B, $2B, $2B, $2B, $2B, $FF
-    .byte $08, $1A, $1A, $1A, $1A, $1A, $1A, $1A, $1A, $FF
-
-    .byte $01, $20, $01, $20, $01, $17
-    .byte $01, $17, $01, $20, $FF
-
-    .byte $07, $20, $20, $20, $20, $20, $20, $20, $07, $20, $1A
-    .byte $20, $1F, $20, $1A, $20, $FF
-
-    .byte $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $08
-    .byte $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D
-    .byte $0D, $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $FF
-
-    .byte $01, $0D, $FF
-
-    .byte $04, $0D
-    .byte $0D, $0D, $0D, $FF
-
-    .byte $02, $0D, $0D, $02, $0D, $0D, $02, $0D, $0D, $02, $0D, $0D
+Structure01_{AREA}:
+    .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
+    .byte $01,  $28
+    .byte $01,  $28
+    .byte $01,  $28
+    .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $FF
 
-    .byte $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $05, $27, $30, $0D, $0D, $30
+Structure02_{AREA}:
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
+    .byte $02,  $04, $05
     .byte $FF
 
-    .byte $08, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D, $FF
+Structure03_{AREA}:
+    .byte $01,  $06
+    .byte $01,  $06
+    .byte $01,  $06
+    .byte $FF
 
-    .byte $01, $0C, $01, $1F, $FF
-    .byte $04, $08, $35, $08, $08, $04, $08, $1C, $08, $34, $04, $34, $08, $08, $08, $04
-    .byte $08, $08, $1C, $08, $FF
+Structure04_{AREA}:
+    .byte $01,  $07
+    .byte $01,  $07
+    .byte $01,  $07
+    .byte $FF
 
-    .byte $04, $1D, $1D, $1D, $1D, $04, $1D, $1C, $1C, $1D, $04
-    .byte $1C, $1D, $1C, $1C, $04, $1D, $1C, $1D, $1D, $FF
+Structure05_{AREA}:
+    .byte $02,  $31, $32
+    .byte $FF
 
-    .byte $04, $33, $33, $33, $33, $FF
-    
-    .byte $01, $22, $FF
+Structure06_{AREA}:
+    .byte $01,  $08
+    .byte $01,  $33
+    .byte $01,  $33
+    .byte $01,  $33
+    .byte $01,  $33
+    .byte $FF
 
-    .byte $03, $28, $0E, $08, $03, $37, $08, $39, $03, $38, $39, $39, $03
-    .byte $28, $3A, $0A, $02, $3B, $3C, $FF
+Structure07_{AREA}:
+    .byte $01,  $28
+    .byte $01,  $08
+    .byte $01,  $1F
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $1F
+    .byte $FF
 
-    .byte $03, $1E, $1E, $1C, $03, $39, $08, $1E, $03
-    .byte $0A, $09, $1E, $03, $3D, $0B, $0A, $FF
+Structure08_{AREA}:
+    .byte $02,  $0E, $11
+    .byte $03,  $0F, $12, $22
+    .byte $03,  $10, $13, $14
+    .byte $FF
 
-    .byte $04, $1E, $1E, $1C, $1E, $04, $1E, $1E
-    .byte $1E, $1E, $04, $1C, $1E, $1E, $1E, $04, $1E, $1E, $1C, $1E, $FF
+Structure09_{AREA}:
+    .byte $04,  $08, $35, $35, $08
+    .byte $FF
 
-    .byte $01, $23, $01
-    .byte $23, $01, $23, $01, $23, $FF
+Structure0A_{AREA}:
+    .byte $03,  $08, $35, $08
+    .byte $FF
 
-    .byte $02, $3E, $3F, $FF
+Structure0B_{AREA}:
+    .byte $02,  $36, $36
+    .byte $02,  $1C, $08
+    .byte $02,  $08, $34
+    .byte $02,  $34, $34
+    .byte $02,  $08, $08
+    .byte $FF
 
-    .byte $08, $1E, $1E, $1E, $1E, $1E
-    .byte $1E, $1E, $1E, $08, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E, $FF
+Structure0C_{AREA}:
+    .byte $02, $20, $20
+    .byte $FF
 
-    .byte $01, $1F, $01
-    .byte $1F, $01, $1F, $01, $1F, $01, $1F, $FF
+Structure0D_{AREA}:
+    .byte $08,  $08, $1C, $08, $35, $08, $35, $1C, $08
+    .byte $FF
 
-    .byte $01, $3E, $FF
+Structure0E_{AREA}:
+    .byte $08,  $1E, $1E, $1C, $1C, $1E, $1E, $1E, $1E
+    .byte $08,  $1E, $1E, $1E, $1E, $1C, $1E, $1E, $1E
+    .byte $08,  $1C, $1E, $1E, $1E, $1E, $1E, $1C, $1E
+    .byte $08,  $1E, $1E, $1E, $1C, $1E, $1C, $1C, $1E
+    .byte $FF
 
-    .byte $04, $2E, $2A, $2E, $2E
-    .byte $04, $2E, $2E, $2E, $2A, $FF
+Structure0F_{AREA}:
+    .byte $08,  $2E, $2E, $2E, $2E, $2E, $2E, $2E, $2E
+    .byte $FF
 
-    .byte $08, $2B, $03, $03, $2B, $03, $03, $03, $2B, $FF
-    .byte $01, $1B, $FF
+Structure10_{AREA}:
+    .byte $08,  $08, $0B, $0B, $0B, $0B, $08, $0B, $0B
+    .byte $08,  $08, $08, $1C, $1C, $08, $08, $1C, $08
+    .byte $FF
 
-    .byte $08, $1F, $1F, $1F, $1F, $1F, $1F, $1F, $1F, $08, $1F, $1F, $1F
-    .byte $1F, $1F, $1F, $1F, $1F, $FF
+Structure11_{AREA}:
+    .byte $08,  $1C, $08, $08, $08, $08, $0A, $08, $1C
+    .byte $08,  $08, $0A, $09, $0A, $28, $28, $08, $08
+    .byte $01,  $08
+    .byte $FF
 
-    .byte $01, $2F, $FF
+Structure12_{AREA}:
+    .byte $06,  $2C, $2C, $2C, $2C, $15, $2C
+    .byte $06,  $2D, $2D, $2D, $2D, $16, $2D
+    .byte $FF
 
-    .byte $01, $1F, $FF
+Structure13_{AREA}:
+    .byte $08,  $2B, $2B, $2B, $2B, $2B, $2B, $2B, $2B
+    .byte $FF
 
-    .byte $01, $17, $01, $17
-    .byte $01, $17, $01, $17, $FF
+Structure14_{AREA}:
+    .byte $08,  $1A, $1A, $1A, $1A, $1A, $1A, $1A, $1A
+    .byte $FF
 
-    .byte $01, $24, $FF
+Structure15_{AREA}:
+    .byte $01,  $20
+    .byte $01,  $20
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $20
+    .byte $FF
+
+Structure16_{AREA}:
+    .byte $07,  $20, $20, $20, $20, $20, $20, $20
+    .byte $07,  $20, $1A, $20, $1F, $20, $1A, $20
+    .byte $FF
+
+Structure17_{AREA}:
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $FF
+
+Structure18_{AREA}:
+    .byte $01,  $0D
+    .byte $FF
+
+Structure19_{AREA}:
+    .byte $04,  $0D, $0D, $0D, $0D
+    .byte $FF
+
+Structure1A_{AREA}:
+    .byte $02,  $0D, $0D
+    .byte $02,  $0D, $0D
+    .byte $02,  $0D, $0D
+    .byte $02,  $0D, $0D
+    .byte $FF
+
+Structure1B_{AREA}:
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $05,  $27, $30, $0D, $0D, $30
+    .byte $FF
+
+Structure1C_{AREA}:
+    .byte $08,  $0D, $0D, $0D, $0D, $0D, $0D, $0D, $0D
+    .byte $FF
+
+Structure1D_{AREA}:
+    .byte $01,  $0C
+    .byte $01,  $1F
+    .byte $FF
+
+Structure1E_{AREA}:
+    .byte $04,  $08, $35, $08, $08
+    .byte $04,  $08, $1C, $08, $34
+    .byte $04,  $34, $08, $08, $08
+    .byte $04,  $08, $08, $1C, $08
+    .byte $FF
+
+Structure1F_{AREA}:
+    .byte $04,  $1D, $1D, $1D, $1D
+    .byte $04,  $1D, $1C, $1C, $1D
+    .byte $04,  $1C, $1D, $1C, $1C
+    .byte $04,  $1D, $1C, $1D, $1D
+    .byte $FF
+
+Structure20_{AREA}:
+    .byte $04,  $33, $33, $33, $33
+    .byte $FF
+
+Structure21_{AREA}:
+    .byte $01,  $22
+    .byte $FF
+
+Structure22_{AREA}:
+    .byte $03,  $28, $0E, $08
+    .byte $03,  $37, $08, $39
+    .byte $03,  $38, $39, $39
+    .byte $03,  $28, $3A, $0A
+    .byte $02,  $3B, $3C
+    .byte $FF
+
+Structure23_{AREA}:
+    .byte $03,  $1E, $1E, $1C
+    .byte $03,  $39, $08, $1E
+    .byte $03,  $0A, $09, $1E
+    .byte $03,  $3D, $0B, $0A
+    .byte $FF
+
+Structure24_{AREA}:
+    .byte $04,  $1E, $1E, $1C, $1E
+    .byte $04,  $1E, $1E, $1E, $1E
+    .byte $04,  $1C, $1E, $1E, $1E
+    .byte $04,  $1E, $1E, $1C, $1E
+    .byte $FF
+
+Structure25_{AREA}:
+    .byte $01,  $23
+    .byte $01,  $23
+    .byte $01,  $23
+    .byte $01,  $23
+    .byte $FF
+
+Structure26_{AREA}:
+    .byte $02,  $3E, $3F
+    .byte $FF
+
+Structure27_{AREA}:
+    .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
+    .byte $08,  $1E, $1E, $1E, $1E, $1E, $1E, $1E, $1E
+    .byte $FF
+
+Structure28_{AREA}:
+    .byte $01,  $1F
+    .byte $01,  $1F
+    .byte $01,  $1F
+    .byte $01,  $1F
+    .byte $01,  $1F
+    .byte $FF
+
+Structure29_{AREA}:
+    .byte $01,  $3E
+    .byte $FF
+
+Structure2A_{AREA}:
+    .byte $04,  $2E, $2A, $2E, $2E
+    .byte $04,  $2E, $2E, $2E, $2A
+    .byte $FF
+
+Structure2B_{AREA}:
+    .byte $08,  $2B, $03, $03, $2B, $03, $03, $03, $2B
+    .byte $FF
+
+Structure2C_{AREA}:
+    .byte $01,  $1B
+    .byte $FF
+
+Structure2D_{AREA}:
+    .byte $08,  $1F, $1F, $1F, $1F, $1F, $1F, $1F, $1F
+    .byte $08,  $1F, $1F, $1F, $1F, $1F, $1F, $1F, $1F
+    .byte $FF
+
+Structure2E_{AREA}:
+    .byte $01,  $2F
+    .byte $FF
+
+Structure2F_{AREA}:
+    .byte $01,  $1F
+    .byte $FF
+
+Structure30_{AREA}:
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $01,  $17
+    .byte $FF
+
+Structure31_{AREA}:
+    .byte $01,  $24
+    .byte $FF
 

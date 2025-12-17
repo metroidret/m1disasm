@@ -1,3 +1,5 @@
+.redef AREA = "STG4PGM"
+
     .byte $68, $C1, $8C, $C1, $98, $C1, $92, $C1, $9E, $C1, $A4, $C1, $C7, $C1, $C7, $C1
     .byte $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1
     .byte $C7, $C1, $C7, $C1, $C7, $C1, $C7, $C1, $CE, $C1, $D5, $C1, $DC, $C1, $E3, $C1

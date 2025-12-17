@@ -1,7 +1,7 @@
-RipperAIRoutine:
-    lda $B460,x
+RipperAIRoutine_{AREA}:
+    lda EnsExtra.0.status,x
     cmp #$03
-    beq LB9DA
-        jsr $6C1E
-    LB9DA:
-    jmp CommonEnemyStub2
+    beq @dontUpdateAnim
+        jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
+    @dontUpdateAnim:
+    jmp CommonEnemyStub2_{AREA}
