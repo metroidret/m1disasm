@@ -984,6 +984,13 @@ TileBlastFrame10_{AREA}:
 
 .include "brinstar/metatiles.asm"
 
+;Not used.
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
+.elif BUILDTARGET == "NES_PAL"
+    .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
+.endif
+
 ;------------------------------------------[ Area music data ]---------------------------------------
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
