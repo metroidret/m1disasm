@@ -354,8 +354,8 @@
 .macro FDSFileMacroPart3
     Side{FDSFile_Side}File{%.2X{FDSFile_Number}}_End:
     .ends
-    .redef FDSFile_Bank = FDSFile_Bank + 1
-    .redef FDSFile_Number = FDSFile_Number + 1
+    ;.redef FDSFile_Bank = FDSFile_Bank + 1
+    ;.redef FDSFile_Number = FDSFile_Number + 1
 .endm
 
 

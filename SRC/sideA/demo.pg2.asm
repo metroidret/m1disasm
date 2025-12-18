@@ -1,3 +1,16 @@
+; side A file $04 - demo.pg2 (prgram $C5A0-$CF5F)
+; Title screen code - part 2
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $00
+    .ascstr "DEMO.PG2"
+FDSFileMacroPart2 $C5A0, $00
+
+
+
 ; placeholder to be overwritten with real save data from savedata.asm
 SaveData:
 @enable: ;($C5A0)
@@ -237,4 +250,6 @@ LCF51:
     .byte $02, $42, $42, $42, $42, $42, $02, $FF, $B4, $2A, $B2, $02, $B0, $2A, $02
 
 
+
+FDSFileMacroPart3
 

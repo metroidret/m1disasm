@@ -1,3 +1,16 @@
+; side B file $13 - mmkiti   (prgram $DEA0-$DFEF)
+; Escape and Mother Brain Song
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $13
+    .ascstr "MMKITI", $00, $00
+FDSFileMacroPart2 $DEA0, $00
+
+
+
 DataDD0E_MetroidHit:
     .word LDB2C
     .word FDSWaveform_DC2E
@@ -74,4 +87,8 @@ SongMotherBrainHitSFXFDS: ;($DFE6)
 
 
     .byte $FF, $FF, $FF, $FF
+
+
+
+FDSFileMacroPart3
 

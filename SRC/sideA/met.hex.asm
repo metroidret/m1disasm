@@ -1,3 +1,15 @@
+; side A file $02 - met.hex  (prgram $D000-$DFF5)
+; Music engine
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $00
+    .ascstr "MET.HEX", $00
+FDSFileMacroPart2 $D000, $00
+
+
 
 METHEX_ReadJoyPads: ;($D000)
     ldx #$00
@@ -1917,4 +1929,7 @@ LDFEE:
 GotoLD18C: ;($DFF3)
     jmp LD18C
 
+
+
+FDSFileMacroPart3
 

@@ -1,3 +1,15 @@
+; side B file $12 - mmfire   (prgram $DEA0-$DFEF)
+; Norfair Song
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $11
+    .ascstr "MMFIRE", $00, $00
+FDSFileMacroPart2 $DEA0, $00
+
+
 
 .include "songs/norfair.asm"
 
@@ -16,4 +28,8 @@
     .byte $1C, $18, $14, $2A, $2A, $2A, $2A, $CC, $B9, $2A, $FF, $E8, $B2, $04, $04, $04
     .byte $B9, $04, $04, $04, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $CA, $B1, $04, $04, $04, $07, $04, $04, $FF, $E0, $B4, $04, $FF, $17, $18
+
+
+
+FDSFileMacroPart3
 

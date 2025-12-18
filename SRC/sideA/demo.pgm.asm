@@ -1,3 +1,15 @@
+; side A file $03 - demo.pgm (prgram $6800-$90FF)
+; Title screen code - part 1
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $00
+    .ascstr "DEMO.PGM"
+FDSFileMacroPart2 $6800, $00
+
+
 
 DEMO_RandomNumbers: ;($6800)
     txa
@@ -4640,4 +4652,8 @@ PPUString_908E:
     .byte $BD, $00, $03, $C9, $05, $90, $0A, $98, $5D, $0C, $03, $4A, $B0, $03, $9D, $00
     .byte $03, $60, $98, $DD, $4B, $07, $D0, $05, $A9, $FF, $9D, $48, $07, $60, $AD, $90
     .byte $B5, $85, $00, $AD, $91, $B5, $85, $01, $A0, $00, $B1, $00, $C5, $49, $F0, $14
+
+
+
+FDSFileMacroPart3
 

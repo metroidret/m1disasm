@@ -1,3 +1,16 @@
+; side A file $06 - bmenst   (prgram $C000-$C0BF)
+; Switching to disk side B
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $20
+    .ascstr "BMENST", $00, $00
+FDSFileMacroPart2 $C000, $00
+
+
+
 BMENST_RESET: ;($C000)
     cld
     ; wait for vblank
@@ -86,4 +99,8 @@ Data_C099:
     .byte $C1, $38, $C1, $40, $C1, $A9, $02, $8D, $F7, $07, $20, $F4, $C0, $D0, $90, $20
     .byte $CA, $C0, $F0, $05, $A9, $00, $8D, $9F, $D2, $AD, $9F, $D2, $18, $69, $01, $C9
     .byte $19, $90, $02, $A9, $18, $8D, $9F
+
+
+
+FDSFileMacroPart3
 

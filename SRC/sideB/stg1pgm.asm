@@ -1,3 +1,16 @@
+; side B file $15 - stg1pgm  (prgram $B560-$CFDF)
+; Brinstar Area Data
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $10
+    .ascstr "STG1PGM", $00
+FDSFileMacroPart2 $B560, $00
+
+
+
 .redef AREA = "STG1PGM"
 
 PalPntrTbl: ;($B560)
@@ -92,7 +105,7 @@ TwosComplement_: ;($B5BE)
 
 ; Enemy AI jump table
 ChooseEnemyAIRoutine: ;($B5DD)
-    lda $B46E,x
+    lda EnsExtra.0.type,x
     jsr CommonJump_ChooseRoutine
         .word SidehopperFloorAIRoutine_{AREA} ; 00 - Sidehopper (unused)
         .word SidehopperCeilingAIRoutine_{AREA} ; 01 - Ceiling sidehopper (unused)
@@ -753,4 +766,8 @@ TileBlastFrame10_{AREA}:
 
     .byte $FF, $FF, $FF, $FF
     .byte $95, $B7, $14, $C7, $96, $D6, $44, $2B, $92, $39, $0F, $72, $41, $A7, $00, $1B
+
+
+
+FDSFileMacroPart3
 

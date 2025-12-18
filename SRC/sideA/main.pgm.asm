@@ -1,3 +1,16 @@
+; side A file $08 - main.pgm (prgram $6800-$B40F)
+; Game engine code
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $20
+    .ascstr "MAIN.PGM"
+FDSFileMacroPart2 $6800, $00
+
+
+
 WorldMap: ;($6800)
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $08, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -10165,4 +10178,7 @@ LB3FD:
 LB40E:
     .db $A2, $A3
 
+
+
+FDSFileMacroPart3
 

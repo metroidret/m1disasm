@@ -1,3 +1,15 @@
+; side A file $0C - endpgm   (prgram $6000-$6D7F)
+; Ending code
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $EE
+    .ascstr "ENDPGM", $00, $00
+FDSFileMacroPart2 $6000, $00
+
+
 
 ENDPGM_RESET:
     cld
@@ -1611,4 +1623,8 @@ PPUString_Credits29:
 L6D63:
     .byte $60, $A6, $27, $D0, $1C, $20, $BE, $6D, $AD, $16, $B4, $C9, $C2, $D0, $12, $AD
     .byte $17, $B4, $E9, $01, $D0, $0B, $8D, $16, $B4, $8D, $17, $B4, $A2
+
+
+
+FDSFileMacroPart3
 

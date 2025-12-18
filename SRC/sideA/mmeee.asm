@@ -1,3 +1,16 @@
+; side A file $0B - mmeee    (prgram $CC00-$CFCF)
+; Ending Song
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $EE
+    .ascstr "MMEEE", $00, $00, $00
+FDSFileMacroPart2 $CC00, $00
+
+
+
 DataD785_SongEnd: ;($CC00)
     .word SongEndFDS ; written to $EE
 ; written to $0610-$061C
@@ -22,14 +35,9 @@ DataD785_SongEnd: ;($CC00)
 
 
 
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
-    .byte $FF
+    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+
+
+
+FDSFileMacroPart3
+

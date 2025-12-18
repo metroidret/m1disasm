@@ -1,3 +1,14 @@
+; side B file $1A - mensave2 (prgram $C3F0-$C59F)
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $EF
+    .ascstr "MENSAVE2"
+FDSFileMacroPart2 $C3F0, $00
+
+
 
 LC3F0:
     .word LC461
@@ -240,4 +251,8 @@ LC58F:
 
 LC598:
     .byte $3C, $0A, $04, $02, $0A, $00, $B0, $07
+
+
+
+FDSFileMacroPart3
 

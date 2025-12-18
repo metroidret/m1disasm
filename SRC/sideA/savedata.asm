@@ -1,3 +1,16 @@
+; side A file $0E - savedata (prgram $C5A0-$C614)
+; Save data file
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $0F
+    .ascstr "SAVEDATA"
+FDSFileMacroPart2 $C5A0, $00
+
+
+
 ; the game writes to this file to save game data
 ;@C5A0:
     .byte $80
@@ -27,3 +40,8 @@
     .byte $00
     .byte $00
     .byte $00
+
+
+
+FDSFileMacroPart3
+

@@ -1,3 +1,16 @@
+; side B file $14 - mmkbos   (prgram $DEA0-$DFEF)
+; Kraid and Ridley Songs
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $1F
+    .ascstr "MMKBOS", $00, $00
+FDSFileMacroPart2 $DEA0, $00
+
+
+
 DataDD0E_BossHit:
     .word LDB4D
     .word FDSWaveform_DBAE
@@ -48,4 +61,8 @@ BossHitSFXContinue:
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $00, $A2, $D7, $A0, $DF, $D0, $E5, $E6, $DF, $4D, $DB, $AE, $DB, $00, $02, $98
     .byte $41, $00, $11, $00, $94, $A0, $B0, $14, $2E, $B5, $38, $00, $FF, $FF, $FF, $FF
+
+
+
+FDSFileMacroPart3
 

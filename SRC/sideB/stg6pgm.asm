@@ -1,10 +1,52 @@
+; side B file $18 - stg6pgm  (prgram $B560-$CCDF)
+; Kraid Area Data
+
+.include "hardware.asm"
+.include "constants.asm"
+.include "macros.asm"
+
+FDSFileMacroPart1 $12
+    .ascstr "STG6PGM", $00
+FDSFileMacroPart2 $B560, $00
+
+
+
 .redef AREA = "STG6PGM"
 
-    .byte $4D, $C1, $71, $C1, $7D, $C1, $77, $C1, $83, $C1, $89, $C1, $89, $C1, $89, $C1
-    .byte $89, $C1, $89, $C1, $89, $C1, $89, $C1, $89, $C1, $89, $C1, $89, $C1, $89, $C1
-    .byte $89, $C1, $89, $C1, $89, $C1, $89, $C1, $90, $C1, $97, $C1, $9E, $C1, $A5, $C1
+    .word $C14D
+    .word $C171
+    .word $C17D
+    .word $C177
+    .word $C183
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C189
+    .word $C190
+    .word $C197
+    .word $C19E
+    .word $C1A5
     
-    .byte $45, $C2, $AD, $C1, $F7, $C1, $0A, $CC, $EF, $BC, $EF, $BD, $1D, $BE, $7E, $BC
+    .word $C245
+    
+    .word $C1AD
+    .word $C1F7
+    .word $CC0A
+    .word $BCEF
+    .word $BDEF
+    .word $BE1D
+    .word $BC7E
     
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
@@ -51,16 +93,26 @@
     
     .byte $64
     
-    .byte $BD, $6E, $B4
-    .byte $20, $24, $6C
-        .byte $14, $B9, $2F, $B9
-        .byte $C3, $B5, $34, $B9
-        .byte $41, $B9, $93, $B9
-        .byte $C3, $B5, $3C, $BA
-        .byte $AC, $BA, $DC, $BA
-        .byte $24, $BB, $C3, $B5
-        .byte $C3, $B5, $C3, $B5
-        .byte $C3, $B5, $C3, $B5
+; Enemy AI jump table
+ChooseEnemyAIRoutine: ;($B5DD)
+    lda EnsExtra.0.type,x
+    jsr CommonJump_ChooseRoutine
+        .word $B914
+        .word $B92F
+        .word $B5C3
+        .word $B934
+        .word $B941
+        .word $B993
+        .word $B5C3
+        .word $BA3C
+        .word $BAAC
+        .word $BADC
+        .word $BB24
+        .word $B5C3
+        .word $B5C3
+        .word $B5C3
+        .word $B5C3
+        .word $B5C3
     
     .byte $27, $27
     .byte $29, $29
@@ -99,25 +151,26 @@
     
     .byte $00, $03, $00, $06, $08, $0C, $00, $0A, $0E, $11, $13, $00, $00, $00, $00, $00
     
-    .byte $E1, $B7, $E4, $B7
-    .byte $E7, $B7, $E7, $B7
-    .byte $E7, $B7, $E7, $B7
-    .byte $E7, $B7, $E7, $B7
-    .byte $E7, $B7, $E7, $B7
-    .byte $E7, $B7, $E7, $B7
-    .byte $E7, $B7, $EA, $B7
-    .byte $ED, $B7, $01, $B8
-    .byte $15, $B8, $15, $B8
-    .byte $15, $B8, $15, $B8
-    .byte $15, $B8, $15, $B8
-    .byte $15, $B8, $15, $B8
-    .byte $15, $B8, $1C, $B8
-    .byte $23, $B8, $2A, $B8
-    .byte $31, $B8, $34, $B8
-    .byte $37, $B8, $4E, $B8
-    .byte $65, $B8, $7C, $B8
-    .byte $93, $B8, $AA, $B8
-    .byte $00, $00, $00, $00, $00, $00, $00, $00
+    .word $B7E1, $B7E4
+    .word $B7E7, $B7E7
+    .word $B7E7, $B7E7
+    .word $B7E7, $B7E7
+    .word $B7E7, $B7E7
+    .word $B7E7, $B7E7
+    .word $B7E7, $B7EA
+    .word $B7ED, $B801
+    .word $B815, $B815
+    .word $B815, $B815
+    .word $B815, $B815
+    .word $B815, $B815
+    .word $B815, $B81C
+    .word $B823, $B82A
+    .word $B831, $B834
+    .word $B837, $B84E
+    .word $B865, $B87C
+    .word $B893, $B8AA
+    .word $0000, $0000
+    .word $0000, $0000
     
     .byte $7F, $70, $70, $90, $90, $00, $00, $7F, $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -143,31 +196,27 @@
     .byte $00
     .byte $00
     
-    .byte $C1, $B8
-    .byte $D0, $B8
-    .byte $DF, $B8
-    .byte $EE, $B8
-    
-    .byte $42, $BC
-    .byte $47, $BC
-    .byte $4C, $BC
-    .byte $51, $BC
-    
-    .byte $56, $BC
-    .byte $5B, $BC
-    .byte $60, $BC
-    .byte $65, $BC
-    
-    .byte $6A, $BC
-    .byte $6F, $BC
-    .byte $74, $BC
-    .byte $79, $BC
-    
-    .byte $7E, $BC
-    .byte $7E, $BC
-    .byte $7E, $BC
-    .byte $7E, $BC
-    .byte $7E, $BC
+    .word $B8C1
+    .word $B8D0
+    .word $B8DF
+    .word $B8EE
+    .word $BC42
+    .word $BC47
+    .word $BC4C
+    .word $BC51
+    .word $BC56
+    .word $BC5B
+    .word $BC60
+    .word $BC65
+    .word $BC6A
+    .word $BC6F
+    .word $BC74
+    .word $BC79
+    .word $BC7E
+    .word $BC7E
+    .word $BC7E
+    .word $BC7E
+    .word $BC7E
     
     .byte $01
         .byte $01, $02
@@ -519,4 +568,8 @@
     .byte $05, $02, $04, $05, $02, $04, $05, $02, $04, $05, $02, $04, $05, $FF, $01, $08
     .byte $01, $08, $01, $08, $FF, $01, $09, $01, $09, $01, $09, $FF, $01, $13, $FF, $03
     .byte $1D, $17, $1E, $03, $21, $1C, $21, $03, $21, $1C, $21, $03, $1F, $17, $20, $FF
+
+
+
+FDSFileMacroPart3
 
