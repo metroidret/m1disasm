@@ -13,41 +13,44 @@ FDSFileMacroPart2 $B560, $00
 
 .redef AREA = "STG6PGM"
 
-    .word $C14D
-    .word $C171
-    .word $C17D
-    .word $C177
-    .word $C183
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C189
-    .word $C190
-    .word $C197
-    .word $C19E
-    .word $C1A5
+PalPntrTbl: ;($B560)
+    PtrTableEntryArea PalPntrTbl, Palette00
+    PtrTableEntryArea PalPntrTbl, Palette01
+    PtrTableEntryArea PalPntrTbl, Palette02
+    PtrTableEntryArea PalPntrTbl, Palette03
+    PtrTableEntryArea PalPntrTbl, Palette04
+    PtrTableEntryArea PalPntrTbl, Palette05
+    PtrTableEntryArea PalPntrTbl, Palette06
+    PtrTableEntryArea PalPntrTbl, Palette07
+    PtrTableEntryArea PalPntrTbl, Palette08
+    PtrTableEntryArea PalPntrTbl, Palette09
+    PtrTableEntryArea PalPntrTbl, Palette0A
+    PtrTableEntryArea PalPntrTbl, Palette0B
+    PtrTableEntryArea PalPntrTbl, Palette0C
+    PtrTableEntryArea PalPntrTbl, Palette0D
+    PtrTableEntryArea PalPntrTbl, Palette0E
+    PtrTableEntryArea PalPntrTbl, Palette0F
+    PtrTableEntryArea PalPntrTbl, Palette10
+    PtrTableEntryArea PalPntrTbl, Palette11
+    PtrTableEntryArea PalPntrTbl, Palette12
+    PtrTableEntryArea PalPntrTbl, Palette13
+    PtrTableEntryArea PalPntrTbl, Palette14
+    PtrTableEntryArea PalPntrTbl, Palette15
+    PtrTableEntryArea PalPntrTbl, Palette16
+    PtrTableEntryArea PalPntrTbl, Palette17
     
-    .word $C245
-    
-    .word $C1AD
-    .word $C1F7
-    .word $CC0A
+SpecItmsTblPtr: ;($B590)
+    .word SpecItmsTbl_{AREA}
+
+AreaPointers: ;($B592)
+    .word RoomPtrTable_{AREA}
+    .word StructPtrTable_{AREA}
+    .word MetatileDefs_{AREA}
     .word EnFramePtrTable1_{AREA}
     .word EnFramePtrTable2_{AREA}
     .word EnPlacePtrTable_{AREA}
     .word EnAnimTable_{AREA}
-    
+
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA

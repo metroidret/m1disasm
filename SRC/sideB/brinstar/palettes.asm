@@ -1,3 +1,4 @@
+;Brinstar Palettes
 
 ;Default room palette.
 Palette00_{AREA}:

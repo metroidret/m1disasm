@@ -47,4 +47,3 @@ RoomPtrTable_{AREA}: ;($C3AE)
     .word Room2C_{AREA}
     .word Room2D_{AREA}
     .word Room2E_{AREA}
-

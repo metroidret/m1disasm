@@ -13,36 +13,39 @@ FDSFileMacroPart2 $B560, $00
 
 .redef AREA = "STG4PGM"
 
-    .word $C168
-    .word $C18C
-    .word $C198
-    .word $C192
-    .word $C19E
-    .word $C1A4
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1C7
-    .word $C1CE
-    .word $C1D5
-    .word $C1DC
-    .word $C1E3
+PalPntrTbl: ;($B560)
+    PtrTableEntryArea PalPntrTbl, Palette00
+    PtrTableEntryArea PalPntrTbl, Palette01
+    PtrTableEntryArea PalPntrTbl, Palette02
+    PtrTableEntryArea PalPntrTbl, Palette03
+    PtrTableEntryArea PalPntrTbl, Palette04
+    PtrTableEntryArea PalPntrTbl, Palette05
+    PtrTableEntryArea PalPntrTbl, Palette06
+    PtrTableEntryArea PalPntrTbl, Palette07
+    PtrTableEntryArea PalPntrTbl, Palette08
+    PtrTableEntryArea PalPntrTbl, Palette09
+    PtrTableEntryArea PalPntrTbl, Palette0A
+    PtrTableEntryArea PalPntrTbl, Palette0B
+    PtrTableEntryArea PalPntrTbl, Palette0C
+    PtrTableEntryArea PalPntrTbl, Palette0D
+    PtrTableEntryArea PalPntrTbl, Palette0E
+    PtrTableEntryArea PalPntrTbl, Palette0F
+    PtrTableEntryArea PalPntrTbl, Palette10
+    PtrTableEntryArea PalPntrTbl, Palette11
+    PtrTableEntryArea PalPntrTbl, Palette12
+    PtrTableEntryArea PalPntrTbl, Palette13
+    PtrTableEntryArea PalPntrTbl, Palette14
+    PtrTableEntryArea PalPntrTbl, Palette15
+    PtrTableEntryArea PalPntrTbl, Palette16
+    PtrTableEntryArea PalPntrTbl, Palette17
     
-    .word $C2A9
+SpecItmsTblPtr: ;($B590)
+    .word SpecItmsTbl_{AREA}
 
-    .word $C1EB
-    .word $C247
-    .word $CEBC
+AreaPointers: ;($B592)
+    .word RoomPtrTable_{AREA}
+    .word StructPtrTable_{AREA}
+    .word MetatileDefs_{AREA}
     .word EnFramePtrTable1_{AREA}
     .word EnFramePtrTable2_{AREA}
     .word EnPlacePtrTable_{AREA}

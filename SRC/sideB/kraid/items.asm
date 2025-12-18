@@ -1,5 +1,79 @@
-    .byte $12, $4D, $C2, $07, $FF, $04, $81, $00, $14, $55, $C2
-    .byte $07, $FF, $04, $82, $00, $15, $64, $C2, $04, $06, $02, $09, $47, $00, $09, $FF
-    .byte $02, $09, $47, $00, $16, $6D, $C2, $0A, $FF, $02, $08, $66, $00, $19, $76, $C2
-    .byte $0A, $FF, $02, $09, $47, $00, $1B, $7F, $C2, $05, $FF, $02, $09, $47, $00, $1C
-    .byte $86, $C2, $07, $FF, $03, $00, $1D, $FF, $FF, $08, $FF, $02, $08, $BE, $00
+
+SpecItmsTbl_{AREA}:
+@y12:
+    .byte $12
+    .word @y14
+    ;Elevator from Brinstar.
+    @@x07:
+        .byte $07, $FF
+        .byte it_Elevator, $81
+        .byte $00
+
+@y14:
+    .byte $14
+    .word @y15
+    ;Elevator to Brinstar.
+    @@x07:
+        .byte $07, $FF
+        .byte it_Elevator, $82
+        .byte $00
+
+@y15:
+    .byte $15
+    .word @y16
+    ;Missiles.
+    @@x04:
+        .byte $04, @@x09 - @@x04
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+    ;Missiles.
+    @@x09:
+        .byte $09, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+@y16:
+    .byte $16
+    .word @y19
+    ;Energy tank.
+    @@x0A:
+        .byte $0A, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $66
+        .byte $00
+
+@y19:
+    .byte $19
+    .word @y1B
+    ;Missiles.
+    @@x0A:
+        .byte $0A, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+@y1B:
+    .byte $1B
+    .word @y1C
+    ;Missiles.
+    @@x05:
+        .byte $05, $FF
+        .byte it_PowerUp, pu_MISSILES, $47
+        .byte $00
+
+@y1C:
+    .byte $1C
+    .word @y1D
+    ;Memus.
+    @@x07:
+        .byte $07, $FF
+        .byte it_Mellow
+        .byte $00
+
+@y1D:
+    .byte $1D
+    .word $FFFF
+    ;Energy tank.
+    @@x08:
+        .byte $08, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $BE
+        .byte $00

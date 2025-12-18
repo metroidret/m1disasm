@@ -1,14 +1,198 @@
-    .byte $0A, $B8, $C2, $1B, $06, $02, $09
-    .byte $34, $00, $1C, $FF, $02, $09, $34, $00, $0B, $D2, $C2, $16, $05, $04, $81, $00
-    .byte $1A, $06, $02, $09, $34, $00, $1B, $06, $02, $09, $34, $00, $1C, $FF, $02, $09
-    .byte $34, $00, $0C, $DB, $C2, $1A, $FF, $02, $07, $37, $00, $0D, $E3, $C2, $16, $FF
-    .byte $04, $81, $00, $0E, $EC, $C2, $12, $FF, $02, $09, $34, $00, $0F, $0B, $C3, $11
-    .byte $07, $02, $09, $34, $03, $00, $13, $06, $02, $09, $34, $00, $14, $06, $02, $09
-    .byte $34, $00, $15, $FF, $41, $8B, $E9, $51, $02, $9B, $00, $10, $14, $C3, $0F, $FF
-    .byte $02, $03, $37, $00, $11, $3D, $C3, $16, $04, $0A, $00, $18, $09, $31, $0B, $E9
-    .byte $41, $02, $9A, $00, $19, $09, $21, $8B, $E9, $51, $02, $9A, $00, $1B, $06, $02
-    .byte $01, $37, $00, $1D, $05, $09, $A0, $00, $1E, $FF, $09, $B0, $00, $13, $46, $C3
-    .byte $1A, $FF, $02, $08, $42, $00, $14, $59, $C3, $0D, $05, $09, $A0, $00, $0E, $05
-    .byte $09, $B0, $00, $1C, $FF, $02, $09, $34, $00, $15, $67, $C3, $12, $06, $02, $06
-    .byte $37, $00, $17, $FF, $09, $A0, $00, $16, $FF, $FF, $13, $06, $02, $09, $34, $00
-    .byte $14, $06, $02, $09, $34, $00, $19, $FF, $04, $04, $00
+
+SpecItmsTbl_{AREA}:
+@y0A:
+    .byte $0A
+    .word @y0B
+    ;Missiles.
+    @@x1B:
+        .byte $1B, @@x1C - @@x1B
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Missiles.
+    @@x1C:
+        .byte $1C, $FF
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+
+@y0B:
+    .byte $0B
+    .word @y0C
+    ;Elevator from Brinstar.
+    @@x16:
+        .byte $16, @@x1A - @@x16
+        .byte it_Elevator, $81
+        .byte $00
+    ;Missiles.
+    @@x1A:
+        .byte $1A, @@x1B - @@x1A
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Missiles.
+    @@x1B:
+        .byte $1B, @@x1C - @@x1B
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Missiles.
+    @@x1C:
+        .byte $1C, $FF
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+
+@y0C:
+    .byte $0C
+    .word @y0D
+    ;Ice beam.
+    @@x1A:
+        .byte $1A, $FF
+        .byte it_PowerUp, pu_ICEBEAM, $37
+        .byte $00
+
+@y0D:
+    .byte $0D
+    .word @y0E
+    ;Elevator to Brinstar.
+    @@x16:
+        .byte $16, $FF
+        .byte it_Elevator, $81
+        .byte $00
+
+@y0E:
+    .byte $0E
+    .word @y0F
+    ;Missiles.
+    @@x12:
+        .byte $12, $FF
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+
+@y0F:
+    .byte $0F
+    .word @y10
+    ;Missiles and Melias.
+    @@x11:
+        .byte $11, @@x13 - @@x11
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte it_Mellow
+        .byte $00
+    ;Missiles.
+    @@x13:
+        .byte $13, @@x14 - @@x13
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Missiles.
+    @@x14:
+        .byte $14, @@x15 - @@x14
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Squeept.
+    @@x15:
+        .byte $15, $FF
+        .byte it_Squeept | $40, $8B, $E9
+        .byte it_Squeept | $50, $02, $9B
+        .byte $00
+
+@y10:
+    .byte $10
+    .word @y11
+    ;Screw attack.
+    @@x0F:
+        .byte $0F, $FF
+        .byte it_PowerUp, pu_SCREWATTACK, $37
+        .byte $00
+
+@y11:
+    .byte $11
+    .word @y13
+    ;Palette change room.
+    @@x16:
+        .byte $16, @@x18 - @@x16
+        .byte it_PaletteChange
+        .byte $00
+    ;Squeept.
+    @@x18:
+        .byte $18, @@x19 - @@x18
+        .byte it_Squeept | $30, $0B, $E9
+        .byte it_Squeept | $40, $02, $9A
+        .byte $00
+    ;Squeept.
+    @@x19:
+        .byte $19, @@x1B - @@x19
+        .byte it_Squeept | $20, $8B, $E9
+        .byte it_Squeept | $50, $02, $9A
+        .byte $00
+    ;High jump.
+    @@x1B:
+        .byte $1B, @@x1D - @@x1B
+        .byte it_PowerUp, pu_HIGHJUMP, $37
+        .byte $00
+    ;Right door.
+    @@x1D:
+        .byte $1D, @@x1E - @@x1D
+        .byte it_Door, $A0
+        .byte $00
+    ;Left door.
+    @@x1E:
+        .byte $1E, $FF
+        .byte it_Door, $B0
+        .byte $00
+
+@y13:
+    .byte $13
+    .word @y14
+    ;Energy tank.
+    @@x1A:
+        .byte $1A, $FF
+        .byte it_PowerUp, pu_ENERGYTANK, $42
+        .byte $00
+
+@y14:
+    .byte $14
+    .word @y15
+    ;Right door.
+    @@x0D:
+        .byte $0D, @@x0E - @@x0D
+        .byte it_Door, $A0
+        .byte $00
+    ;Left door.
+    @@x0E:
+        .byte $0E, @@x1C - @@x0E
+        .byte it_Door, $B0
+        .byte $00
+    ;Missiles.
+    @@x1C:
+        .byte $1C, $FF
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+
+@y15:
+    .byte $15
+    .word @y16
+    ;Wave beam.
+    @@x12:
+        .byte $12, @@x17 - @@x12
+        .byte it_PowerUp, pu_WAVEBEAM, $37
+        .byte $00
+    ;Right door(undefined room).
+    @@x17:
+        .byte $17, $FF
+        .byte it_Door, $A0
+        .byte $00
+
+@y16:
+    .byte $16
+    .word $FFFF
+    ;Missiles.
+    @@x13:
+        .byte $13, @@x14 - @@x13
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Missiles.
+    @@x14:
+        .byte $14, @@x19 - @@x14
+        .byte it_PowerUp, pu_MISSILES, $34
+        .byte $00
+    ;Elevator to Ridley hideout.
+    @@x19:
+        .byte $19, $FF
+        .byte it_Elevator, $04
+        .byte $00
