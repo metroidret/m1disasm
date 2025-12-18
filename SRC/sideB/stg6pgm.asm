@@ -43,10 +43,10 @@ FDSFileMacroPart2 $B560, $00
     .word $C1AD
     .word $C1F7
     .word $CC0A
-    .word $BCEF
-    .word $BDEF
-    .word $BE1D
-    .word $BC7E
+    .word EnFramePtrTable1_{AREA}
+    .word EnFramePtrTable2_{AREA}
+    .word EnPlacePtrTable_{AREA}
+    .word EnAnimTable_{AREA}
     
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA

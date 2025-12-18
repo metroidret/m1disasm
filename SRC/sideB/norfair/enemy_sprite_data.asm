@@ -1,472 +1,1259 @@
-    .byte $00, $01, $FF
+;-----------------------------------[ Enemy animation data tables ]----------------------------------
 
-    .byte $02, $FF
+EnAnimTable_{AREA}: ;($BBCA)
+EnAnim_00_{AREA}:
+    .byte _id_EnFrame00_{AREA}, _id_EnFrame01_{AREA}, $FF
 
-    .byte $03, $04, $FF
+EnAnim_EnProjectileKilled_{AREA}:
+    .byte _id_EnFrame_EnProjectileKilled_{AREA}, $FF
 
-    .byte $07, $08, $FF
+EnAnim_RidleyIdle_R_{AREA}:
+    .byte _id_EnFrame_RidleyIdle0_R_{AREA}, _id_EnFrame_RidleyIdle1_R_{AREA}, $FF
 
-    .byte $05, $06, $FF
+EnAnim_RidleyIdle_L_{AREA}:
+    .byte _id_EnFrame_RidleyIdle0_L_{AREA}, _id_EnFrame_RidleyIdle1_L_{AREA}, $FF
 
-    .byte $09, $0A, $FF
+EnAnim_RidleyHopping_R_{AREA}:
+    .byte _id_EnFrame_RidleyHopping0_R_{AREA}, _id_EnFrame_RidleyHopping1_R_{AREA}, $FF
 
-    .byte $0B, $FF
+EnAnim_RidleyHopping_L_{AREA}:
+    .byte _id_EnFrame_RidleyHopping0_L_{AREA}, _id_EnFrame_RidleyHopping1_L_{AREA}, $FF
 
-    .byte $0C, $0D, $0E, $0F, $FF
+EnAnim_RidleyExplode_{AREA}:
+    .byte _id_EnFrame_RidleyExplode_{AREA}, $FF
 
-    .byte $10, $11, $12, $13, $FF
+EnAnim_RidleyFireball_R_{AREA}:
+    .byte _id_EnFrame_RidleyFireball0_R_{AREA}, _id_EnFrame_RidleyFireball1_R_{AREA}, _id_EnFrame_RidleyFireball2_R_{AREA}, _id_EnFrame_RidleyFireball3_R_{AREA}, $FF
 
-    .byte $15, $14, $FF
+EnAnim_RidleyFireball_L_{AREA}:
+    .byte _id_EnFrame_RidleyFireball0_L_{AREA}, _id_EnFrame_RidleyFireball1_L_{AREA}, _id_EnFrame_RidleyFireball2_L_{AREA}, _id_EnFrame_RidleyFireball3_L_{AREA}, $FF
 
-    .byte $16, $FF
+EnAnim_SqueeptJumping_{AREA}:
+    .byte _id_EnFrame_SqueeptJumping0_{AREA}, _id_EnFrame_SqueeptJumping1_{AREA}, $FF
 
-    .byte $17, $18, $FF
+EnAnim_SqueeptFalling_{AREA}:
+    .byte _id_EnFrame_SqueeptFalling_{AREA}, $FF
 
-    .byte $19, $1A, $FF
+EnAnim_GerutaIdle_{AREA}:
+    .byte _id_EnFrame_GerutaIdle0_{AREA}, _id_EnFrame_GerutaIdle1_{AREA}, $FF
 
-    .byte $1B, $FF
+EnAnim_GerutaSwooping_{AREA}:
+    .byte _id_EnFrame_GerutaSwooping0_{AREA}, _id_EnFrame_GerutaSwooping1_{AREA}, $FF
 
-    .byte $1C, $1D, $FF
+EnAnim_GerutaExplode_{AREA}:
+    .byte _id_EnFrame_GerutaExplode_{AREA}, $FF
 
-    .byte $1E, $1F, $FF
+EnAnim_RipperII_R_{AREA}:
+    .byte _id_EnFrame_RipperII0_R_{AREA}, _id_EnFrame_RipperII1_R_{AREA}, $FF
 
-    .byte $20, $FF
+EnAnim_RipperII_L_{AREA}:
+    .byte _id_EnFrame_RipperII0_L_{AREA}, _id_EnFrame_RipperII1_L_{AREA}, $FF
 
-    .byte $21, $22, $FF
+EnAnim_RipperIIExplode_{AREA}:
+    .byte _id_EnFrame_RipperIIExplode_{AREA}, $FF
 
-    .byte $23, $FF
+EnAnim_Mella_{AREA}:
+    .byte _id_EnFrame_Mella0_{AREA}, _id_EnFrame_Mella1_{AREA}, $FF
 
-    .byte $27, $28, $29, $2A, $FF
+EnAnim_SqueeptExplode_{AREA}:
+    .byte _id_EnFrame_SqueeptExplode_{AREA}, $FF
 
-    .byte $2B, $2C, $2D, $2E, $FF
+EnAnim_MultiviolaSpinningCounterclockwise_{AREA}:
+    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise0_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise1_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise2_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise3_{AREA}, $FF
 
-    .byte $2F, $FF
+EnAnim_MultiviolaSpinningClockwise_{AREA}:
+    .byte _id_EnFrame_MultiviolaSpinningClockwise0_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise1_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise2_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise3_{AREA}, $FF
 
-    .byte $30, $FF
+EnAnim_MultiviolaExplode_{AREA}:
+    .byte _id_EnFrame_MultiviolaExplode_{AREA}, $FF
 
-    .byte $31, $FF
+EnAnim_DragonIdle_R_{AREA}:
+    .byte _id_EnFrame_DragonIdle_R_{AREA}, $FF
 
-    .byte $32, $FF
+EnAnim_DragonPrepareToSpit_R_{AREA}:
+    .byte _id_EnFrame_DragonPrepareToSpit_R_{AREA}, $FF
 
-    .byte $33, $FF
+EnAnim_DragonIdle_L_{AREA}:
+    .byte _id_EnFrame_DragonIdle_L_{AREA}, $FF
 
-    .byte $34, $FF
+EnAnim_DragonPrepareToSpit_L_{AREA}:
+    .byte _id_EnFrame_DragonPrepareToSpit_L_{AREA}, $FF
 
-    .byte $42, $FF
+EnAnim_DragonExplode_{AREA}:
+    .byte _id_EnFrame_DragonExplode_{AREA}, $FF
 
-    .byte $43, $44, $F7, $FF
+EnAnim_PolypRock_{AREA}:
+    .byte _id_EnFrame_PolypRock_{AREA}, $FF
 
-    .byte $3B, $FF
+EnAnim_PolypRockShatter_{AREA}:
+    .byte _id_EnFrame_PolypRockShatter0_{AREA}, _id_EnFrame_PolypRockShatter1_{AREA}, $F7, $FF
 
-    .byte $3C, $FF
+EnAnim_DragonEnProjectileUp_R_{AREA}:
+    .byte _id_EnFrame_DragonEnProjectileUp_R_{AREA}, $FF
 
-    .byte $3D, $FF
+EnAnim_DragonEnProjectileDown_R_{AREA}:
+    .byte _id_EnFrame_DragonEnProjectileDown_R_{AREA}, $FF
 
-    .byte $3E, $FF
+EnAnim_DragonEnProjectileUp_L_{AREA}:
+    .byte _id_EnFrame_DragonEnProjectileUp_L_{AREA}, $FF
 
-    .byte $3F, $3F, $3F, $3F, $3F, $41, $41, $41, $41, $40, $40, $40, $F7, $FF
+EnAnim_DragonEnProjectileDown_L_{AREA}:
+    .byte _id_EnFrame_DragonEnProjectileDown_L_{AREA}, $FF
 
-    .byte $58, $59, $FF
+EnAnim_DragonEnProjectileSplatter_{AREA}:
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, $F7, $FF
 
-    .byte $5A, $5B, $FF
+EnAnim_NovaOnFloor_{AREA}:
+    .byte _id_EnFrame_NovaOnFloor0_{AREA}, _id_EnFrame_NovaOnFloor1_{AREA}, $FF
 
-    .byte $5C, $5D, $FF
+EnAnim_NovaOnRightWall_{AREA}:
+    .byte _id_EnFrame_NovaOnRightWall0_{AREA}, _id_EnFrame_NovaOnRightWall1_{AREA}, $FF
 
-    .byte $5E, $5F, $FF
+EnAnim_NovaOnCeiling_{AREA}:
+    .byte _id_EnFrame_NovaOnCeiling0_{AREA}, _id_EnFrame_NovaOnCeiling1_{AREA}, $FF
 
-    .byte $60, $FF
+EnAnim_NovaOnLeftWall_{AREA}:
+    .byte _id_EnFrame_NovaOnLeftWall0_{AREA}, _id_EnFrame_NovaOnLeftWall1_{AREA}, $FF
 
-    .byte $61, $F7, $62, $F7, $FF
+EnAnim_NovaExplode_{AREA}:
+    .byte _id_EnFrame_NovaExplode_{AREA}, $FF
 
-    .byte $66, $67, $FF
+EnAnim_Explosion_{AREA}:
+    .byte _id_EnFrame_Explosion0_{AREA}, $F7, _id_EnFrame_Explosion1_{AREA}, $F7, $FF
 
-    .byte $69, $6A, $FF
+EnAnim_GametActive_L_{AREA}:
+    .byte _id_EnFrame_Gamet0_L_{AREA}, _id_EnFrame_Gamet1_L_{AREA}, $FF
 
-    .byte $68, $FF
+EnAnim_GametActive_R_{AREA}:
+    .byte _id_EnFrame_Gamet0_R_{AREA}, _id_EnFrame_Gamet1_R_{AREA}, $FF
 
-    .byte $6B, $FF
+EnAnim_GametExplode_L_{AREA}:
+    .byte _id_EnFrame_GametExplode_L_{AREA}, $FF
 
-    .byte $66, $FF
+EnAnim_GametExplode_R_{AREA}:
+    .byte _id_EnFrame_GametExplode_R_{AREA}, $FF
 
-    .byte $69, $FF
+EnAnim_GametResting_L_{AREA}:
+    .byte _id_EnFrame_Gamet0_L_{AREA}, $FF
 
+EnAnim_GametResting_R_{AREA}:
+    .byte _id_EnFrame_Gamet0_R_{AREA}, $FF
 
-    .word $BDFA
-    .word $BDFF
-    .word $BE04
-    .word $BE09
-    .word $BE1C
-    .word $BE30
-    .word $BE46
-    .word $BE5C
-    .word $BE6F
-    .word $BE83
-    .word $BE99
-    .word $BEAF
-    .word $BEB9
-    .word $BEBE
-    .word $BEC3
-    .word $BEC8
-    .word $BECD
-    .word $BED2
-    .word $BED7
-    .word $BEDC
-    .word $BEE1
-    .word $BEEF
-    .word $BEFD
-    .word $BF0B
-    .word $BF1A
-    .word $BF29
-    .word $BF3A
-    .word $BF4B
-    .word $BF53
-    .word $BF59
-    .word $BF5F
-    .word $BF65
-    .word $BF6B
-    .word $BF71
-    .word $BF79
-    .word $BF81
-    .word $BF89
-    .word $BF89
-    .word $BF89
-    .word $BF89
-    .word $BF95
-    .word $BFA3
-    .word $BFB1
-    .word $BFBF
-    .word $BFCB
-    .word $BFD9
-    .word $BFE7
-    .word $BFF5
-    .word $C000
-    .word $C00F
-    .word $C01E
-    .word $C02D
-    .word $C03C
-    .word $C049
-    .word $C049
-    .word $C049
-    .word $C049
-    .word $C049
-    .word $C049
-    .word $C049
-    .word $C051
-    .word $C059
-    .word $C061
-    .word $C069
-    .word $C071
-    .word $C079
-    .word $C083
-    .word $C088
-    .word $C090
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C098
-    .word $C0A4
-    .word $C0B0
-    .word $C0BC
-    .word $C0C8
-    .word $C0D4
-    .word $C0E0
-    .word $C0EC
-    .word $C0F8
-    .word $C100
-    .word $C10E
-    .word $C128
-    .word $C128
-    .word $C128
-    .word $C128
-    .word $C130
-    .word $C138
-    .word $C140
-    .word $C148
-    .word $C150
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C158
-    .word $C15E
-    .word $C163
-    .word $C163
-    .word $C163
-    .word $C163
-    .word $C163
-    .word $C163
-    .word $C163
-    .word $C163
+;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 
-    .word $BD84
-    .word $BD86
-    .word $BD9E
-    .word $BD9E
-    .word $BDB0
-    .word $BDA2
-    .word $BDAC
-    .word $BDB4
-    .word $BDC0
-    .word $BDC8
-    .word $BDC8
-    .word $BDE8
-    .word $BDF6
-    .word $BDFA
+EnFramePtrTable1_{AREA}: ;($BC54)
+    PtrTableEntry EnFramePtrTable1, EnFrame00_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame01_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_EnProjectileKilled_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdle0_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdle1_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyHopping0_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyHopping1_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdle0_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyIdle1_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyHopping0_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyHopping1_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball0_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball1_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball2_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball3_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball0_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball1_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball2_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RidleyFireball3_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_SqueeptJumping1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_SqueeptJumping0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_SqueeptFalling_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GerutaIdle0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GerutaIdle1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GerutaSwooping0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GerutaSwooping1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GerutaExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperII0_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperII1_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperII0_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperII1_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_RipperIIExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Mella0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Mella1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_SqueeptExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame24_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame25_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame26_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningCounterclockwise0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningCounterclockwise1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningCounterclockwise2_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningCounterclockwise3_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningClockwise0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningClockwise1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningClockwise2_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaSpinningClockwise3_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_MultiviolaExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonIdle_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonPrepareToSpit_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonIdle_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonPrepareToSpit_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame35_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame36_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame37_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame38_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame39_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame3A_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileUp_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileDown_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileUp_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileDown_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter2_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_DragonEnProjectileSplatter1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_PolypRock_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_PolypRockShatter0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_PolypRockShatter1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame45_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame46_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame47_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame48_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame49_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4A_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4B_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4C_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4D_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4E_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame4F_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame50_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame51_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame52_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame53_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame54_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame55_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame56_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame57_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnFloor0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnFloor1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnRightWall0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnRightWall1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnCeiling0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnCeiling1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnLeftWall0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaOnLeftWall1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_NovaExplode_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Explosion0_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Explosion1_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame63_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame64_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame65_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Gamet0_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Gamet1_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GametExplode_L_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Gamet0_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_Gamet1_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_GametExplode_R_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame6C_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame6D_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame6E_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame6F_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame70_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame71_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame72_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame73_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame74_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame75_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame76_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame77_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame78_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame79_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7A_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7B_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7C_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7D_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7E_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame7F_{AREA}
+EnFramePtrTable2_{AREA}: ;($BD54)
+    PtrTableEntry EnFramePtrTable1, EnFrame_MissilePickup_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_SmallEnergyPickup_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame82_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame83_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame84_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame85_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame86_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame87_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame88_{AREA}
+    PtrTableEntry EnFramePtrTable1, EnFrame_BigEnergyPickup_{AREA}
 
+EnPlacePtrTable_{AREA}: ;($BD68)
+    PtrTableEntryArea EnPlacePtrTable, EnPlace0
+    PtrTableEntryArea EnPlacePtrTable, EnPlace1
+    PtrTableEntry EnPlacePtrTable, EnPlace2_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace3_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace4_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace5_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace6_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace7_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace8_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlace9_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlaceA_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlaceB_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlaceC_{AREA}
+    PtrTableEntry EnPlacePtrTable, EnPlaceD_{AREA}
 
+;------------------------------[ Enemy sprite placement data tables ]--------------------------------
+
+;Health pickup
+EnPlace0_{AREA}:
     .byte $FC, $FC
 
+;Enemy explode.
+EnPlace1_{AREA}:
     .byte $80, $80, $81, $81, $82, $82, $83, $83, $84, $84, $85, $85
     .byte $F4, $F8, $F4, $00, $FC, $F8, $FC, $00, $04, $F8, $04, $00
 
+;Miniboss
+EnPlace2_{AREA}:
+    ;nothing
+
+EnPlace3_{AREA}:
     .byte $F4, $F4, $F4, $04
 
+EnPlace5_{AREA}:
     .byte $F8, $F4, $F8, $FC, $F8, $04, $00, $F8, $00, $00
 
+EnPlace6_{AREA}:
     .byte $FC, $F8, $FC, $00
 
+EnPlace4_{AREA}:
     .byte $F0, $F8, $F0, $00
 
+EnPlace7_{AREA}:
     .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $08, $F8, $08, $00
 
+EnPlace8_{AREA}:
     .byte $F8, $E8, $F8, $10, $F8, $F0, $F8, $08
 
+EnPlace9_{AREA}:
+EnPlaceA_{AREA}:
     .byte $F8, $F8, $F8, $00, $00, $F8, $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0
     .byte $F0, $F8, $F8, $F0, $00, $F0, $08, $F0, $08, $F8, $00, $08, $08, $00, $08, $08
 
+EnPlaceB_{AREA}:
     .byte $F8, $FC, $00, $F8, $F4, $F4, $FC, $F4, $00, $00, $F4, $04, $FC, $04
 
+EnPlaceC_{AREA}:
     .byte $F8, $FC, $00, $FC
 
+EnPlaceD_{AREA}:
+    ;nothing
 
-    .byte $00, $02, $02, $14, $FF
+;Enemy frame drawing data.
 
-    .byte $00
-    .byte $02, $02, $24, $FF
-
-    .byte $00, $00, $00, $04, $FF
-
-    .byte $22, $13, $08, $C8, $C9, $C6, $C7
-    .byte $D6, $D7, $D5, $E5, $E6, $E7, $F5, $F6, $F7, $F9, $F8, $FF
-
-    .byte $22, $13, $08, $C8
-    .byte $C9, $C6, $C7, $D6, $D7, $D5, $E5, $E6, $E7, $F5, $F6, $F7, $D8, $FE, $E8, $FF
-
-    .byte $22, $13, $08, $C8, $C9, $C6, $C7, $D6, $D7, $FE, $D9, $E6, $E7, $E9, $EA, $EB
-    .byte $F9, $F8, $FE, $D5, $FA, $FF
-
-    .byte $22, $13, $08, $C8, $C9, $C6, $C7, $D6, $D7, $FE
-    .byte $D9, $E6, $E7, $E9, $EA, $EB, $D8, $FE, $E8, $D5, $FA, $FF
-
-    .byte $62, $13, $08, $C8
-    .byte $C9, $C6, $C7, $D6, $D7, $D5, $E5, $E6, $E7, $F5, $F6, $F7, $F9, $F8, $FF
-
-    .byte $62
-    .byte $13, $08, $C8, $C9, $C6, $C7, $D6, $D7, $D5, $E5, $E6, $E7, $F5, $F6, $F7, $D8
-    .byte $FE, $E8, $FF
-
-    .byte $62, $13, $08, $C8, $C9, $C6, $C7, $D6, $D7, $FE, $D9, $E6, $E7
-    .byte $E9, $EA, $EB, $F9, $F8, $FE, $D5, $FA, $FF
-
-    .byte $62, $13, $08, $C8, $C9, $C6, $C7
-    .byte $D6, $D7, $FE, $D9, $E6, $E7, $E9, $EA, $EB, $D8, $FE, $E8, $D5, $FA, $FF
-
-    .byte $21
-    .byte $00, $00, $C6, $C7, $D6, $D7, $E6, $E7, $FF
-
-    .byte $20, $04, $04, $EC, $FF
-
-    .byte $20, $04
-    .byte $04, $FB, $FF
-
-    .byte $E0, $04, $04, $EC, $FF
-
-    .byte $E0, $04, $04, $FB, $FF
-
-    .byte $60, $04, $04
-    .byte $EC, $FF
-
-    .byte $60, $04, $04, $FB, $FF
-
-    .byte $A0, $04, $04, $EC, $FF
-
-    .byte $A0, $04, $04, $FB
+;Unused.
+EnFrame00_{AREA}:
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
+    .byte $14
     .byte $FF
 
-    .byte $27, $08, $08, $EA, $FD, $62, $EA, $FD, $22, $FB, $FD, $62, $FB, $FF
-
-    .byte $27
-    .byte $08, $08, $EA, $FD, $62, $EA, $FD, $22, $FA, $FD, $62, $FA, $FF
-
-    .byte $27, $08, $08
-    .byte $EA, $FD, $62, $EA, $FD, $22, $EB, $FD, $62, $EB, $FF
-
-    .byte $25, $08, $08, $CE, $CF
-    .byte $FD, $62, $CE, $FD, $22, $DF, $FD, $62, $DF, $FF
-
-    .byte $25, $08, $08, $CE, $CF, $FD
-    .byte $62, $CE, $FD, $22, $DE, $FD, $62, $DE, $FF
-
-    .byte $A5, $08, $08, $FD, $22, $CE, $CF
-    .byte $FD, $62, $CE, $FD, $A2, $DF, $FD, $E2, $DF, $FF
-
-    .byte $A5, $08, $08, $FD, $22, $CE
-    .byte $CF, $FD, $62, $CE, $FD, $A2, $DE, $FD, $E2, $DE, $FF
-
-    .byte $21, $00, $00, $CE, $CE
-    .byte $DF, $DF, $FF
-
-    .byte $39, $04, $08, $F6, $F7, $FF
-
-    .byte $39, $04, $08, $E7, $F7, $FF
-
-    .byte $79
-    .byte $04, $08, $F6, $F7, $FF
-
-    .byte $79, $04, $08, $E7, $F7, $FF
-
-    .byte $31, $00, $00, $F6, $F7
-    .byte $FF
-
-    .byte $29, $04, $08, $E6, $FD, $62, $E6, $FF
-
-    .byte $29, $04, $08, $E5, $FD, $62, $E5
-    .byte $FF
-
-    .byte $21, $00, $00, $EA, $EA, $EB, $EB, $FF
-
-    .byte $27, $08, $08, $EE, $EF, $FD, $E2
-    .byte $EF, $FD, $A2, $EF, $FF
-
-    .byte $27, $08, $08, $FD, $62, $EF, $FD, $22, $EF, $ED, $FD
-    .byte $A2, $EF, $FF
-
-    .byte $27, $08, $08, $FD, $62, $EF, $FD, $22, $EF, $FD, $E2, $EF, $EE
-    .byte $FF
-
-    .byte $27, $08, $08, $FD, $62, $EF, $FD, $E2, $ED, $EF, $FD, $A2, $EF, $FF
-
-    .byte $67
-    .byte $08, $08, $EE, $EF, $FD, $A2, $EF, $FD, $E2, $EF, $FF
-
-    .byte $67, $08, $08, $FD, $22
-    .byte $EF, $FD, $62, $EF, $ED, $FD, $E2, $EF, $FF
-
-    .byte $67, $08, $08, $FD, $22, $EF, $FD
-    .byte $62, $EF, $FD, $A2, $EF, $EE, $FF
-
-    .byte $67, $08, $08, $FD, $22, $EF, $FD, $A2, $ED
-    .byte $EF, $FD, $E2, $EF, $FF
-
-    .byte $21, $00, $00, $FC, $04, $00, $EE, $EF, $EF, $EF, $FF
-
-    .byte $24, $08, $08, $FC, $08, $00, $C8, $C9, $D8, $D9, $E8, $E9, $F8, $F9, $FF
-
+EnFrame01_{AREA}:
+    .byte ($0 << 4) + _id_EnPlace0, $02, $02
     .byte $24
-    .byte $08, $08, $FC, $08, $00, $C8, $C7, $D8, $D7, $E8, $E9, $F8, $F9, $FF
-
-    .byte $64, $08
-    .byte $08, $FC, $08, $00, $C8, $C9, $D8, $D9, $E8, $E9, $F8, $F9, $FF
-
-    .byte $64, $08, $08
-    .byte $FC, $08, $00, $C8, $C7, $D8, $D7, $E8, $E9, $F8, $F9, $FF
-
-    .byte $21, $00, $00, $FC
-    .byte $FC, $00, $C8, $C9, $D8, $D9, $E8, $E9, $FF
-
-    .byte $37, $04, $04, $E0, $E1, $F0, $F1
     .byte $FF
 
-    .byte $B7, $04, $04, $E0, $E1, $F0, $F1, $FF
-
-    .byte $77, $04, $04, $E0, $E1, $F0, $F1
+;EnProjectile killed.
+EnFrame_EnProjectileKilled_{AREA}:
+    .byte ($0 << 4) + _id_EnPlace0, $00, $00
+    .byte $04
     .byte $FF
 
-    .byte $F7, $04, $04, $E0, $E1, $F0, $F1, $FF
-
-    .byte $37, $00, $00, $E2, $FD, $63, $E2
+EnFrame_RidleyIdle0_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $D5
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $F9
+    .byte $F8
     .byte $FF
 
-    .byte $38, $00, $00, $E2, $FD, $62, $E2, $FF
+EnFrame_RidleyIdle1_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $D5
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $D8
+    .byte $FE
+    .byte $E8
+    .byte $FF
 
-    .byte $38, $00, $00, $FE, $FE, $E2, $FD
-    .byte $62, $E2, $FF
+EnFrame_RidleyHopping0_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $FE
+    .byte $D9
+    .byte $E6
+    .byte $E7
+    .byte $E9
+    .byte $EA
+    .byte $EB
+    .byte $F9
+    .byte $F8
+    .byte $FE
+    .byte $D5
+    .byte $FA
+    .byte $FF
 
-    .byte $30, $04, $04, $C0, $FF
+EnFrame_RidleyHopping1_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $FE
+    .byte $D9
+    .byte $E6
+    .byte $E7
+    .byte $E9
+    .byte $EA
+    .byte $EB
+    .byte $D8
+    .byte $FE
+    .byte $E8
+    .byte $D5
+    .byte $FA
+    .byte $FF
 
-    .byte $30, $00, $00, $FC, $F8, $00, $D0, $FF
-    .byte $33, $00, $00, $D1, $FD, $63, $D1, $FF
+EnFrame_RidleyIdle0_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $D5
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $F9
+    .byte $F8
+    .byte $FF
 
-    .byte $27, $08, $08, $CC, $FD, $62, $CC, $FD
-    .byte $22, $DC, $DD, $FF
+EnFrame_RidleyIdle1_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $D5
+    .byte $E5
+    .byte $E6
+    .byte $E7
+    .byte $F5
+    .byte $F6
+    .byte $F7
+    .byte $D8
+    .byte $FE
+    .byte $E8
+    .byte $FF
 
-    .byte $67, $08, $08, $FD, $22, $CD, $FD, $62, $CD, $DC, $DD, $FF
-    .byte $27, $08, $08, $FD, $A2, $DA, $FD, $22, $CB, $DA, $DB, $FF
+EnFrame_RidleyHopping0_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $FE
+    .byte $D9
+    .byte $E6
+    .byte $E7
+    .byte $E9
+    .byte $EA
+    .byte $EB
+    .byte $F9
+    .byte $F8
+    .byte $FE
+    .byte $D5
+    .byte $FA
+    .byte $FF
 
-    .byte $A7, $08, $08, $CA
-    .byte $CB, $FD, $22, $CA, $FD, $A2, $DB, $FF
+EnFrame_RidleyHopping1_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace2_{AREA}, $13, $08
+    .byte $C8
+    .byte $C9
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $FE
+    .byte $D9
+    .byte $E6
+    .byte $E7
+    .byte $E9
+    .byte $EA
+    .byte $EB
+    .byte $D8
+    .byte $FE
+    .byte $E8
+    .byte $D5
+    .byte $FA
+    .byte $FF
 
-    .byte $A7, $08, $08, $CC, $FD, $E2, $CC, $FD
-    .byte $A2, $DC, $DD, $FF
+EnFrame_RidleyExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $C6
+    .byte $C7
+    .byte $D6
+    .byte $D7
+    .byte $E6
+    .byte $E7
+    .byte $FF
 
-    .byte $E7, $08, $08, $FD, $A2, $CD, $FD, $E2, $CD, $DC, $DD, $FF
-    .byte $67, $08, $08, $FD, $E2, $DA, $FD, $62, $CB, $DA, $DB, $FF
+EnFrame_RidleyFireball0_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $EC
+    .byte $FF
 
-    .byte $E7, $08, $08, $CA
-    .byte $CB, $FD, $62, $CA, $FD, $E2, $DB, $FF
+EnFrame_RidleyFireball1_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $FB
+    .byte $FF
 
-    .byte $21, $00, $00, $CC, $CD, $DC, $DD, $FF
+EnFrame_RidleyFireball2_R_{AREA}:
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $EC
+    .byte $FF
 
-    .byte $0A, $00, $00, $75, $FD, $60, $75, $FD, $A0, $75, $FD, $E0, $75, $FF
+EnFrame_RidleyFireball3_R_{AREA}:
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $FB
+    .byte $FF
 
-    .byte $0A, $00
-    .byte $00, $FE, $FE, $FE, $FE, $3D, $3E, $4E, $FD, $60, $3E, $3D, $4E, $FD, $E0, $4E
-    .byte $3E, $3D, $FD, $A0, $4E, $3D, $3E, $FF
+EnFrame_RidleyFireball0_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $EC
+    .byte $FF
 
-    .byte $2A, $08, $08, $C2, $C3, $D2, $D3, $FF
-    .byte $2A, $08, $08, $C2, $C4, $D2, $D4, $FF
+EnFrame_RidleyFireball1_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $FB
+    .byte $FF
 
-    .byte $21, $08, $08, $C2, $C4, $D2, $D4, $FF
-    .byte $6A, $08, $08, $C2, $C3, $D2, $D3, $FF
+EnFrame_RidleyFireball2_L_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $EC
+    .byte $FF
 
-    .byte $6A, $08, $08, $C2, $C4, $D2, $D4, $FF
-    .byte $61, $08, $08, $C2, $C4, $D2, $D4, $FF
+EnFrame_RidleyFireball3_L_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace0, $04, $04
+    .byte $FB
+    .byte $FF
 
-    .byte $0C, $08, $04, $14, $24, $FF
+;Squeept jumping.
+EnFrame_SqueeptJumping1_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $FB
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $FB
+    .byte $FF
 
-    .byte $00, $04
-    .byte $04, $8A, $FF
+;Squeept jumping.
+EnFrame_SqueeptJumping0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $FA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $FA
+    .byte $FF
 
-    .byte $00, $04, $04, $8A, $FF
+;Squeept falling.
+EnFrame_SqueeptFalling_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EA
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EB
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EB
+    .byte $FF
+
+;Geruta idle.
+EnFrame_GerutaIdle0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace5_{AREA}, $08, $08
+    .byte $CE
+    .byte $CF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CE
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $DF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $DF
+    .byte $FF
+
+;Geruta idle.
+EnFrame_GerutaIdle1_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace5_{AREA}, $08, $08
+    .byte $CE
+    .byte $CF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CE
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $DE
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $DE
+    .byte $FF
+
+;Geruta swooping.
+EnFrame_GerutaSwooping0_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $CE
+    .byte $CF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CE
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $DF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $DF
+    .byte $FF
+
+;Geruta swooping.
+EnFrame_GerutaSwooping1_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace5_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $CE
+    .byte $CF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CE
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $DE
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $DE
+    .byte $FF
+
+;Geruta explode.
+EnFrame_GerutaExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $CE
+    .byte $CE
+    .byte $DF
+    .byte $DF
+    .byte $FF
+
+;Ripper II facing right.
+EnFrame_RipperII0_R_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $F6
+    .byte $F7
+    .byte $FF
+
+;Ripper II facing right.
+EnFrame_RipperII1_R_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $E7
+    .byte $F7
+    .byte $FF
+
+;Ripper II facing left.
+EnFrame_RipperII0_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $F6
+    .byte $F7
+    .byte $FF
+
+;Ripper II facing left.
+EnFrame_RipperII1_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $E7
+    .byte $F7
+    .byte $FF
+
+;Ripper II explode.
+EnFrame_RipperIIExplode_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace1, $00, $00
+    .byte $F6
+    .byte $F7
+    .byte $FF
+
+;Mella.
+EnFrame_Mella0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $E6
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $E6
+    .byte $FF
+
+;Mella.
+EnFrame_Mella1_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace9_{AREA}, $04, $08
+    .byte $E5
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $E5
+    .byte $FF
+
+;Squeept explode.
+EnFrame_SqueeptExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $EA
+    .byte $EA
+    .byte $EB
+    .byte $EB
+    .byte $FF
+
+;Multiviola spinning counterclockwise.
+EnFrame24_{AREA}:
+EnFrame25_{AREA}:
+EnFrame26_{AREA}:
+EnFrame_MultiviolaSpinningCounterclockwise0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $EE
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola spinning counterclockwise.
+EnFrame_MultiviolaSpinningCounterclockwise1_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EF
+    .byte $ED
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola spinning counterclockwise.
+EnFrame_MultiviolaSpinningCounterclockwise2_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $EE
+    .byte $FF
+
+;Multiviola spinning counterclockwise.
+EnFrame_MultiviolaSpinningCounterclockwise3_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $ED
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola spinning clockwise.
+EnFrame_MultiviolaSpinningClockwise0_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $EE
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola spinning clockwise.
+EnFrame_MultiviolaSpinningClockwise1_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $ED
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola spinning clockwise.
+EnFrame_MultiviolaSpinningClockwise2_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $EF
+    .byte $EE
+    .byte $FF
+
+;Multiviola spinning clockwise.
+EnFrame_MultiviolaSpinningClockwise3_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $ED
+    .byte $EF
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $EF
+    .byte $FF
+
+;Multiviola explode.
+EnFrame_MultiviolaExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $FC, $04, $00
+    .byte $EE
+    .byte $EF
+    .byte $EF
+    .byte $EF
+    .byte $FF
+
+;Dragon idle facing right.
+EnFrame_DragonIdle_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace4_{AREA}, $08, $08
+    .byte $FC, $08, $00
+    .byte $C8
+    .byte $C9
+    .byte $D8
+    .byte $D9
+    .byte $E8
+    .byte $E9
+    .byte $F8
+    .byte $F9
+    .byte $FF
+
+;Dragon prepare to spit facing right.
+EnFrame_DragonPrepareToSpit_R_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace4_{AREA}, $08, $08
+    .byte $FC, $08, $00
+    .byte $C8
+    .byte $C7
+    .byte $D8
+    .byte $D7
+    .byte $E8
+    .byte $E9
+    .byte $F8
+    .byte $F9
+    .byte $FF
+
+;Dragon idle facing left.
+EnFrame_DragonIdle_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace4_{AREA}, $08, $08
+    .byte $FC, $08, $00
+    .byte $C8
+    .byte $C9
+    .byte $D8
+    .byte $D9
+    .byte $E8
+    .byte $E9
+    .byte $F8
+    .byte $F9
+    .byte $FF
+
+;Dragon prepare to spit facing left.
+EnFrame_DragonPrepareToSpit_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace4_{AREA}, $08, $08
+    .byte $FC, $08, $00
+    .byte $C8
+    .byte $C7
+    .byte $D8
+    .byte $D7
+    .byte $E8
+    .byte $E9
+    .byte $F8
+    .byte $F9
+    .byte $FF
+
+;Dragon explode.
+EnFrame_DragonExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $FC, $FC, $00
+    .byte $C8
+    .byte $C9
+    .byte $D8
+    .byte $D9
+    .byte $E8
+    .byte $E9
+    .byte $FF
+
+;Dragon EnProjectile up-right.
+EnFrame35_{AREA}:
+EnFrame36_{AREA}:
+EnFrame37_{AREA}:
+EnFrame38_{AREA}:
+EnFrame39_{AREA}:
+EnFrame3A_{AREA}:
+EnFrame_DragonEnProjectileUp_R_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace7_{AREA}, $04, $04
+    .byte $E0
+    .byte $E1
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+;Dragon EnProjectile down-right.
+EnFrame_DragonEnProjectileDown_R_{AREA}:
+    .byte OAMDATA_VFLIP + ($3 << 4) + _id_EnPlace7_{AREA}, $04, $04
+    .byte $E0
+    .byte $E1
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+;Dragon EnProjectile up-left.
+EnFrame_DragonEnProjectileUp_L_{AREA}:
+    .byte OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7_{AREA}, $04, $04
+    .byte $E0
+    .byte $E1
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+;Dragon EnProjectile down-left.
+EnFrame_DragonEnProjectileDown_L_{AREA}:
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($3 << 4) + _id_EnPlace7_{AREA}, $04, $04
+    .byte $E0
+    .byte $E1
+    .byte $F0
+    .byte $F1
+    .byte $FF
+
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter0_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace7_{AREA}, $00, $00
+    .byte $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $3
+    .byte $E2
+    .byte $FF
+
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter2_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace8_{AREA}, $00, $00
+    .byte $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $E2
+    .byte $FF
+
+;Dragon EnProjectile splatter.
+EnFrame_DragonEnProjectileSplatter1_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace8_{AREA}, $00, $00
+    .byte $FE
+    .byte $FE
+    .byte $E2
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $E2
+    .byte $FF
+
+;Polyp rock.
+EnFrame_PolypRock_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace0, $04, $04
+    .byte $C0
+    .byte $FF
+
+;Polyp rock shatter.
+EnFrame_PolypRockShatter0_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace0, $00, $00
+    .byte $FC, $F8, $00
+    .byte $D0
+    .byte $FF
+
+;Polyp rock shatter.
+EnFrame_PolypRockShatter1_{AREA}:
+    .byte ($3 << 4) + _id_EnPlace3_{AREA}, $00, $00
+    .byte $D1
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $3
+    .byte $D1
+    .byte $FF
+
+;Nova on floor.
+EnFrame45_{AREA}:
+EnFrame46_{AREA}:
+EnFrame47_{AREA}:
+EnFrame48_{AREA}:
+EnFrame49_{AREA}:
+EnFrame4A_{AREA}:
+EnFrame4B_{AREA}:
+EnFrame4C_{AREA}:
+EnFrame4D_{AREA}:
+EnFrame4E_{AREA}:
+EnFrame4F_{AREA}:
+EnFrame50_{AREA}:
+EnFrame51_{AREA}:
+EnFrame52_{AREA}:
+EnFrame53_{AREA}:
+EnFrame54_{AREA}:
+EnFrame55_{AREA}:
+EnFrame56_{AREA}:
+EnFrame57_{AREA}:
+EnFrame_NovaOnFloor0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $CC
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CC
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+;Nova on floor.
+EnFrame_NovaOnFloor1_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $CD
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+;Nova on right wall.
+EnFrame_NovaOnRightWall0_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $DA
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+;Nova on right wall.
+EnFrame_NovaOnRightWall1_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $FD, OAMDATA_PRIORITY + $2
+    .byte $CA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $DB
+    .byte $FF
+
+;Nova on ceiling.
+EnFrame_NovaOnCeiling0_{AREA}:
+    .byte OAMDATA_VFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $CC
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $CC
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+;Nova on ceiling.
+EnFrame_NovaOnCeiling1_{AREA}:
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $2
+    .byte $CD
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+;Nova on left wall.
+EnFrame_NovaOnLeftWall0_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $DA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CB
+    .byte $DA
+    .byte $DB
+    .byte $FF
+
+;Nova on left wall.
+EnFrame_NovaOnLeftWall1_{AREA}:
+    .byte OAMDATA_VFLIP + OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace7_{AREA}, $08, $08
+    .byte $CA
+    .byte $CB
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $2
+    .byte $CA
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $2
+    .byte $DB
+    .byte $FF
+
+;Nova explode.
+EnFrame_NovaExplode_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $00, $00
+    .byte $CC
+    .byte $CD
+    .byte $DC
+    .byte $DD
+    .byte $FF
+
+;Explosion.
+EnFrame_Explosion0_{AREA}:
+    .byte ($0 << 4) + _id_EnPlaceA_{AREA}, $00, $00
+    .byte $75
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
+    .byte $75
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
+    .byte $75
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
+    .byte $75
+    .byte $FF
+
+;Explosion.
+EnFrame_Explosion1_{AREA}:
+    .byte ($0 << 4) + _id_EnPlaceA_{AREA}, $00, $00
+    .byte $FE
+    .byte $FE
+    .byte $FE
+    .byte $FE
+    .byte $3D
+    .byte $3E
+    .byte $4E
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_HFLIP + $0
+    .byte $3E
+    .byte $3D
+    .byte $4E
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + OAMDATA_HFLIP + $0
+    .byte $4E
+    .byte $3E
+    .byte $3D
+    .byte $FD, OAMDATA_PRIORITY + OAMDATA_VFLIP + $0
+    .byte $4E
+    .byte $3D
+    .byte $3E
+    .byte $FF
+
+;Gamet facing left.
+EnFrame63_{AREA}:
+EnFrame64_{AREA}:
+EnFrame65_{AREA}:
+EnFrame_Gamet0_L_{AREA}:
+    .byte ($2 << 4) + _id_EnPlaceA_{AREA}, $08, $08
+    .byte $C2
+    .byte $C3
+    .byte $D2
+    .byte $D3
+    .byte $FF
+
+;Gamet facing left.
+EnFrame_Gamet1_L_{AREA}:
+    .byte ($2 << 4) + _id_EnPlaceA_{AREA}, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+;Gamet explode facing left.
+EnFrame_GametExplode_L_{AREA}:
+    .byte ($2 << 4) + _id_EnPlace1, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+;Gamet facing right.
+EnFrame_Gamet0_R_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA_{AREA}, $08, $08
+    .byte $C2
+    .byte $C3
+    .byte $D2
+    .byte $D3
+    .byte $FF
+
+;Gamet facing right.
+EnFrame_Gamet1_R_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlaceA_{AREA}, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+;Gamet explode facing right.
+EnFrame_GametExplode_R_{AREA}:
+    .byte OAMDATA_HFLIP + ($2 << 4) + _id_EnPlace1, $08, $08
+    .byte $C2
+    .byte $C4
+    .byte $D2
+    .byte $D4
+    .byte $FF
+
+;Missile pickup.
+EnFrame6C_{AREA}:
+EnFrame6D_{AREA}:
+EnFrame6E_{AREA}:
+EnFrame6F_{AREA}:
+EnFrame70_{AREA}:
+EnFrame71_{AREA}:
+EnFrame72_{AREA}:
+EnFrame73_{AREA}:
+EnFrame74_{AREA}:
+EnFrame75_{AREA}:
+EnFrame76_{AREA}:
+EnFrame77_{AREA}:
+EnFrame78_{AREA}:
+EnFrame79_{AREA}:
+EnFrame7A_{AREA}:
+EnFrame7B_{AREA}:
+EnFrame7C_{AREA}:
+EnFrame7D_{AREA}:
+EnFrame7E_{AREA}:
+EnFrame7F_{AREA}:
+EnFrame_MissilePickup_{AREA}:
+    .byte ($0 << 4) + _id_EnPlaceC_{AREA}, $08, $04
+    .byte $14
+    .byte $24
+    .byte $FF
+
+;Small energy pickup.
+EnFrame_SmallEnergyPickup_{AREA}:
+    .byte ($0 << 4) + _id_EnPlace0, $04, $04
+    .byte $8A
+    .byte $FF
+
+;Big energy pickup.
+EnFrame82_{AREA}:
+EnFrame83_{AREA}:
+EnFrame84_{AREA}:
+EnFrame85_{AREA}:
+EnFrame86_{AREA}:
+EnFrame87_{AREA}:
+EnFrame88_{AREA}:
+EnFrame_BigEnergyPickup_{AREA}:
+    .byte ($0 << 4) + _id_EnPlace0, $04, $04
+    .byte $8A
+    .byte $FF
