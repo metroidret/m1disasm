@@ -73,33 +73,33 @@ TwosComplement_: ;($B5BE)
     rts
 
     .byte $FF
-    
+
     .byte $01
-    
+
     .word $0080
-    
+
     .byte $2B, $2C, $28, $0B, $1C, $0A, $1A
-    
+
     .byte $03
-    
+
     .byte $0E
-    
+
     .byte $B0
-    
+
     .byte $01
-    
+
     .byte $00
-    
+
     .byte $03
-    
+
     .byte $43
-    
+
     .byte $00, $00
-    
+
     .byte $00, $00
-    
+
     .byte $00, $00
-    
+
     .byte $69
 
 
@@ -142,7 +142,7 @@ EnemyDeathAnimIndex: ;($B603)
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-    
+
 EnemyHealthTbl: ;($B623)
     .byte $08, $08, $04, $FF, $02, $02, $04, $01, $20, $FF, $FF, $04, $01, $00, $00, $00
 
@@ -200,7 +200,22 @@ EnemyInitDelayTbl: ;($B6B3)
     .byte $08, $08, $01, $01, $01, $01, $10, $08, $10, $00, $00, $01, $01, $00, $00, $00
 
 EnemyMovementChoiceOffset: ;($B6C3)
-    .byte $00, $03, $06, $08, $0A, $10, $0C, $0E, $14, $17, $19, $10, $12, $00, $00, $00
+    .byte EnemyMovementChoice_SidehopperFloor_{AREA} - EnemyMovementChoices ; 00 - Sidehopper (unused)
+    .byte EnemyMovementChoice_SidehopperCeiling_{AREA} - EnemyMovementChoices ; 01 - Ceiling sidehopper (unused)
+    .byte EnemyMovementChoice_Waver_{AREA} - EnemyMovementChoices ; 02 - Waver
+    .byte EnemyMovementChoice_Ripper_{AREA} - EnemyMovementChoices ; 03 - Ripper
+    .byte EnemyMovementChoice_Skree_{AREA} - EnemyMovementChoices ; 04 - Skree
+    .byte EnemyMovementChoice_Zoomer_{AREA} - EnemyMovementChoices ; 05 - Zoomer (crawler) (enemy moves manually)
+    .byte EnemyMovementChoice_Rio_{AREA} - EnemyMovementChoices ; 06 - Rio (swoopers)
+    .byte EnemyMovementChoice_Zeb_{AREA} - EnemyMovementChoices ; 07 - Zeb
+    .byte EnemyMovementChoice_Kraid_{AREA} - EnemyMovementChoices ; 08 - Kraid (crashes due to bug)
+    .byte EnemyMovementChoice_KraidLint_{AREA} - EnemyMovementChoices ; 09 - Kraid's lint (crashes)
+    .byte EnemyMovementChoice_KraidNail_{AREA} - EnemyMovementChoices ; 0A - Kraid's nail (crashes)
+    .byte EnemyMovementChoice_Zoomer_{AREA} - EnemyMovementChoices ; 0B - Null pointers (hard crash)
+    .byte EnemyMovementChoice08_{AREA} - EnemyMovementChoices ; 0C - Null
+    .byte $00 ; 0D - Null
+    .byte $00 ; 0E - Null
+    .byte $00 ; 0F - Null
 
 EnemyMovementPtrs: ;($B6D3)
     .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}

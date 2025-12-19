@@ -38,7 +38,7 @@ PalPntrTbl: ;($B560)
     PtrTableEntryArea PalPntrTbl, Palette15
     PtrTableEntryArea PalPntrTbl, Palette16
     PtrTableEntryArea PalPntrTbl, Palette17
-    
+
 SpecItmsTblPtr: ;($B590)
     .word SpecItmsTbl_{AREA}
 
@@ -50,7 +50,7 @@ AreaPointers: ;($B592)
     .word EnFramePtrTable2_{AREA}
     .word EnPlacePtrTable_{AREA}
     .word EnAnimTable_{AREA}
-    
+
     .byte $4C, $93, $C3
     .byte $4C, $88, $C3
     .byte $4C, $67, $BC
@@ -60,42 +60,42 @@ AreaPointers: ;($B592)
     .byte $4C, $64, $BD
     .byte $4C, $41, $C1
     .byte $4C, $BD, $C1
-    
+
     .byte $4C, $1D, $BB
-    
+
     .byte $49, $FF
     .byte $18, $69, $01, $60
-    
+
     .byte $FF
-    
+
     .byte $40
-    
+
     .word $0300
-    
+
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    
+
     .byte $03
-    
+
     .byte $04
-    
+
     .byte $6E
-    
+
     .byte $06
-    
+
     .byte $00
-    
+
     .byte $03
-    
+
     .byte $21
-    
+
     .byte $00, $00
-    
+
     .byte $00, $00
-    
+
     .byte $00, $10
-    
+
     .byte $00
-    
+
 ; Enemy AI jump table
 ChooseEnemyAIRoutine: ;($B5DD)
     lda EnsExtra.0.type,x
@@ -116,7 +116,9 @@ ChooseEnemyAIRoutine: ;($B5DD)
         .word $B7D4
         .word $B7D4
         .word $B7D4
-    
+
+
+EnemyDeathAnimIndex: ;($B603)
     .byte $08, $08
     .byte $08, $08
     .byte $16, $16
@@ -133,55 +135,83 @@ ChooseEnemyAIRoutine: ;($B5DD)
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-    
+
+EnemyHealthTbl: ;($B623)
     .byte $FF, $FF, $01, $FF, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnemyRestingAnimIndex: ;($B633)
     .byte $05, $05, $05, $05, $16, $16, $18, $18, $1B, $1B, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnemyActiveAnimIndex: ;($B653)
     .byte $05, $05, $05, $05, $16, $16, $18, $18, $1D, $1D, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
     .byte $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
     .byte $FE, $FE, $00, $00, $C0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnemyForceSpeedTowardsSamusDelayTbl: ;($B693)
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnemyDistanceToSamusThreshold: ;($B6A3)
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnemyInitDelayTbl: ;($B6B3)
     .byte $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
-    .byte $00, $02, $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
-    .word $B7CD, $B7CD
+
+EnemyMovementChoiceOffset: ;($B6C3)
+    .byte EnemyMovementChoice_MetroidRed_{AREA} - EnemyMovementChoices ; 00 - red metroid
+    .byte EnemyMovementChoice_MetroidGreen_{AREA} - EnemyMovementChoices ; 01 - green metroid
+    .byte EnemyMovementChoice_MetroidRed_{AREA} - EnemyMovementChoices ; 02 - i dunno but it takes 30 damage with varia (enemy doesn't move)
+    .byte EnemyMovementChoice_MetroidRed_{AREA} - EnemyMovementChoices ; 03 - disappears
+    .byte EnemyMovementChoice_Rinka_{AREA} - EnemyMovementChoices ; 04 - rinka (enemy moves manually)
+    .byte $00 ; 05 - same as 3
+    .byte $00 ; 06 - same as 3
+    .byte $00 ; 07 - same as 3
+    .byte $00 ; 08 - same as 3
+    .byte $00 ; 09 - same as 3
+    .byte $00 ; 0A - same as 3
+    .byte $00 ; 0B - same as 3
+    .byte $00 ; 0C - same as 3
+    .byte $00 ; 0D - same as 3
+    .byte $00 ; 0E - same as 3
+    .byte $00 ; 0F - same as 3
+
+EnemyMovementPtrs: ;($B6D3)
+    .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}
+    .word EnemyMovement01_R_{AREA}, EnemyMovement01_L_{AREA}
+    .word EnemyMovement02_R_{AREA}, EnemyMovement02_L_{AREA}
+    .word EnemyMovement03_R_{AREA}, EnemyMovement03_L_{AREA}
+    .word EnemyMovement04_R_{AREA}, EnemyMovement04_L_{AREA}
+    .word EnemyMovement05_R_{AREA}, EnemyMovement05_L_{AREA}
+    .word EnemyMovement06_R_{AREA}, EnemyMovement06_L_{AREA}
+    .word EnemyMovement07_R_{AREA}, EnemyMovement07_L_{AREA}
+    .word EnemyMovement08_R_{AREA}, EnemyMovement08_L_{AREA}
+    .word EnemyMovement09_R_{AREA}, EnemyMovement09_L_{AREA}
+    .word EnemyMovement0A_R_{AREA}, EnemyMovement0A_L_{AREA}
+    .word EnemyMovement0B_R_{AREA}, EnemyMovement0B_L_{AREA}
+    .word EnemyMovement0C_R_{AREA}, EnemyMovement0C_L_{AREA}
+    .word EnemyMovement0D_R_{AREA}, EnemyMovement0D_L_{AREA}
+    .word EnemyMovement0E_R_{AREA}, EnemyMovement0E_L_{AREA}
+    .word EnemyMovement0F_R_{AREA}, EnemyMovement0F_L_{AREA}
+    .word EnemyMovement10_R_{AREA}, EnemyMovement10_L_{AREA}
+    .word EnemyMovement11_R_{AREA}, EnemyMovement11_L_{AREA}
     .word $0000, $0000
     .word $0000, $0000
-    
+
+EnAccelYTable: ;($B723)
     .byte $18, $30, $00, $C0, $D0, $00, $00, $7F, $80, $58, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
+EnAccelXTable: ;($B737)
     .byte $18, $30, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnSpeedYTable: ;($B74B)
     .byte $00, $00, $00, $04, $02, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $00
+EnSpeedXTable: ;($B75F)
     .byte $00, $00, $00, $02, $02, $00, $00, $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
     .byte $50, $50, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    
+
+EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $26, $26
     .byte $26, $26
@@ -190,70 +220,126 @@ ChooseEnemyAIRoutine: ;($B5DD)
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
+EnProjectilePosOffsetX:
     .byte $0C, $F4
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
+EnProjectilePosOffsetY:
     .byte $F4
     .byte $00
     .byte $00
     .byte $00
-    
-    .word $B7CD
-    .word $B7CD
-    .word $B7D0
-    .word $B7D3
-    .word $C39E
-    .word $C3A3
-    .word $C3AC
-    .word $C3BD
-    .word $C3CE
-    .word $C3DF
-    .word $C3F0
-    .word $C3FD
-    .word $C406
-    .word $C417
-    .word $C428
-    .word $C439
-    .word $C44A
-    .word $C453
-    .word $C45C
-    .word $C465
-    .word $C46E
-    
-    .byte $00
-        .byte $00
-    .byte $00
-        .byte $01
+
+EnemyFireballMovementPtrTable: ;($B79F)
+    .word EnProjectileMovement0_{AREA}
+    .word EnProjectileMovement1_{AREA}
+    .word EnProjectileMovement2_{AREA}
+    .word EnProjectileMovement3_{AREA}
+
+TileBlastFramePtrTable: ;($B7A7)
+    .word TileBlastFrame00_{AREA}
+    .word TileBlastFrame01_{AREA}
+    .word TileBlastFrame02_{AREA}
+    .word TileBlastFrame03_{AREA}
+    .word TileBlastFrame04_{AREA}
+    .word TileBlastFrame05_{AREA}
+    .word TileBlastFrame06_{AREA}
+    .word TileBlastFrame07_{AREA}
+    .word TileBlastFrame08_{AREA}
+    .word TileBlastFrame09_{AREA}
+    .word TileBlastFrame0A_{AREA}
+    .word TileBlastFrame0B_{AREA}
+    .word TileBlastFrame0C_{AREA}
+    .word TileBlastFrame0D_{AREA}
+    .word TileBlastFrame0E_{AREA}
+    .word TileBlastFrame0F_{AREA}
+    .word TileBlastFrame10_{AREA}
+
+EnemyMovementChoices:
+EnemyMovementChoice_MetroidRed_{AREA}:
+    EnemyMovementChoiceEntry $00
+EnemyMovementChoice_MetroidGreen_{AREA}:
+    EnemyMovementChoiceEntry $01
+EnemyMovementChoice_Rinka_{AREA}: ; enemy moves manually
+    ; nothing
+
+
+EnemyMovement00_R_{AREA}:
+EnemyMovement00_L_{AREA}:
+EnemyMovement01_R_{AREA}:
+EnemyMovement01_L_{AREA}:
+EnemyMovement02_R_{AREA}:
+EnemyMovement02_L_{AREA}:
+EnemyMovement03_R_{AREA}:
+EnemyMovement03_L_{AREA}:
+EnemyMovement04_R_{AREA}:
+EnemyMovement04_L_{AREA}:
+EnemyMovement05_R_{AREA}:
+EnemyMovement05_L_{AREA}:
+EnemyMovement06_R_{AREA}:
+EnemyMovement06_L_{AREA}:
+EnemyMovement07_R_{AREA}:
+EnemyMovement07_L_{AREA}:
+EnemyMovement08_R_{AREA}:
+EnemyMovement08_L_{AREA}:
+EnemyMovement09_R_{AREA}:
+EnemyMovement09_L_{AREA}:
+EnemyMovement0A_R_{AREA}:
+EnemyMovement0A_L_{AREA}:
+EnemyMovement0B_R_{AREA}:
+EnemyMovement0B_L_{AREA}:
+EnemyMovement0C_R_{AREA}:
+EnemyMovement0C_L_{AREA}:
+EnemyMovement0D_R_{AREA}:
+EnemyMovement0D_L_{AREA}:
+EnemyMovement0E_R_{AREA}:
+EnemyMovement0E_L_{AREA}:
+EnemyMovement0F_R_{AREA}:
+EnemyMovement0F_L_{AREA}:
+EnemyMovement10_R_{AREA}:
+EnemyMovement10_L_{AREA}:
+EnemyMovement11_R_{AREA}:
+EnemyMovement11_L_{AREA}:
+    ; nothing
 
 
 
-
-
-    .byte $50, $22
+EnProjectileMovement0_{AREA}:
+EnProjectileMovement1_{AREA}:
+    SignMagSpeed $50,  2,  2
     .byte $FF
-    
-    .byte $50, $30
+
+EnProjectileMovement2_{AREA}:
+    SignMagSpeed $50,  0,  3
     .byte $FF
-    
+
+EnProjectileMovement3_{AREA}:
     .byte $FF
 
 
 
-    .byte $A9, $00
-    .byte $9D, $60, $B4
-    .byte $60
-    
-    .byte $A5, $7C
-    .byte $C9, $01
-    .byte $F0, $09
-    .byte $C9, $03
-    .byte $F0, $0A
-    .byte $A5, $00
-    .byte $4C, $00, $6C
-    .byte $A5, $01
-    .byte $4C, $03, $6C
-    .byte $4C, $06, $6C
+RemoveEnemy__{AREA}:
+    lda #$00
+    sta EnsExtra.0.status,x
+    rts
+
+CommonEnemyJump_00_01_02_{AREA}:
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Resting
+    beq @resting
+    cmp #enemyStatus_Explode
+    beq @explode
+        ; enemy default
+        lda $00
+        jmp CommonJump_00
+    @resting:
+        ; enemy resting
+        lda $01
+        jmp CommonJump_01
+    @explode:
+        ; enemy explode
+        jmp CommonJump_02
 
 
 
@@ -449,33 +535,40 @@ ChooseEnemyAIRoutine: ;($B5DD)
 
 
     .byte $60
-    
+
+TileBlastFrame00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
-    
+
+TileBlastFrame01_{AREA}:
     .byte $42
     .byte $FF, $98
     .byte $FF, $98
     .byte $FF, $98
     .byte $FF, $98
-    
+
+TileBlastFrame02_{AREA}: ; タダチニ ダ
     .byte $28
     .byte $FF, $FF, $FF, $D1, $FF, $FF, $FF, $D1
     .byte $FF, $FF, $D6, $D6, $DA, $DB, $FF, $D6
-    
+
+TileBlastFrame03_{AREA}: ; ッシュツ セヨ
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $DC, $D0, $DD, $DE, $FF, $DF, $E0, $FF
-    
+
+TileBlastFrame04_{AREA}: ; TIME
     .byte $28
     .byte $FF, $FF, $FF, $FF, $E9, $EA, $E4, $E5
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    
+
+TileBlastFrame05_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    
+
+TileBlastFrame06_{AREA}:
     .byte $62
     .byte $FF, $FF
     .byte $FF, $FF
@@ -483,53 +576,63 @@ ChooseEnemyAIRoutine: ;($B5DD)
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
-    
+
+TileBlastFrame07_{AREA}:
     .byte $42
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
-    
+
+TileBlastFrame08_{AREA}: ; ジグンバクダ
     .byte $28
     .byte $FF, $FF, $D1, $D1, $FF, $D1, $FF, $D1
     .byte $FF, $FF, $D0, $D2, $D3, $D4, $D5, $D6
-    
+
+TileBlastFrame09_{AREA}: ; ン サドウ
     .byte $28
     .byte $FF, $FF, $FF, $D1, $FF, $FF, $FF, $FF
     .byte $D3, $FF, $D7, $D8, $D9, $FF, $FF, $FF
-    
+
+TileBlastFrame0A_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    
+
+TileBlastFrame0B_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    
+
+TileBlastFrame0C_{AREA}:
     .byte $42
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
-    
+
+TileBlastFrame0D_{AREA}:
     .byte $42
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
-    
+
+TileBlastFrame0E_{AREA}:
     .byte $42
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
-    
+
+TileBlastFrame0F_{AREA}:
     .byte $42
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
-    
+
+TileBlastFrame10_{AREA}:
     .byte $62
     .byte $A0, $A0
     .byte $A0, $A0
