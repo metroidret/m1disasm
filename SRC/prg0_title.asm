@@ -120,7 +120,7 @@ InitializeAfterReset: ; 00:8071
     sty SpareMemB8
     sty PalDataIndex                ;Reset index to palette data.
     sty ScreenFlashPalIndex         ;Reset index into screen flash palette data.
-    sty IntroStarOffset             ;Reset index into IntroStarPntr table.
+    sty IntroStarOffset             ;Reset index into IntroStarPtrTable table.
     sty FadeDataIndex               ;Reset index into fade out palette data.
 
     ;Set $0000 to point to address $6000.
@@ -967,6 +967,7 @@ WriteIntroSprite: ; 00:887B
 
     rts
 
+
 InitCrossMissiles: ; 00:8897
     ;Set delay for second 4 sprites to 32 frames.
     lda #$20
@@ -978,23 +979,29 @@ InitCrossMissiles: ; 00:8897
         ;Load data from tables below.
         lda InitCrossMissile0and4Tbl,x
         ;BUG: supposed to be #$FF. Expected behavior:-->
-        ;if #$FF, skip loading that byte and move to next item.
-        cmp PPUCTRL_ZP                  
+        ;if #$FF, skip loading that byte and continue to next byte.
+        ;PPUCTRL_ZP's value is #$90 here.
+        cmp PPUCTRL_ZP
         beq @endIf_A
             ;Store initial values for sprites 0 thru 3.
             sta IntroSprs.0.y,x
             ;Store initial values for sprites 4 thru 7.
             sta IntroSprs.4.y,x
         @endIf_A:
+        ;Loop until all data is loaded.
         dex
-        bpl @loop                       ;Loop until all data is loaded.
+        bpl @loop
 
-    lda #$B8                        ;Special case for sprite 6 and 7.
-    sta IntroSprs.6.y               ;
-    sta IntroSprs.7.y               ;Change sprite 6 and 7 initial y position.
-    lda #$16                        ;
-    sta IntroSprs.6.speedY           ;Change sprite 6 and 7 y displacement. The combination-->
-    sta IntroSprs.7.speedY           ;of these two changes the slope of the sprite movement.
+    ;Special case for sprite 6 and 7.
+    ;Change sprite 6 and 7 initial y position.
+    lda #$B8
+    sta IntroSprs.6.y
+    sta IntroSprs.7.y
+    ;Change sprite 6 and 7 y displacement.
+    ;The combination of these two changes the slope of the sprite movement.
+    lda #$16
+    sta IntroSprs.6.speedY
+    sta IntroSprs.7.speedY
     rts
 
 ;The following tables are loaded into RAM as initial sprite control values for the crosshair sprites.
@@ -1403,11 +1410,11 @@ StarPalSwitch: ; 00:8AC7
     bne @RTS
     ;Is any other PPU data waiting? If so, exit.
     lda PPUStrIndex
-    beq L8AD3
+    beq @checkSuccess
 @RTS:
     rts
 
-L8AD3:
+@checkSuccess:
     ;Prepare to write to the sprite palette starting at address $3F19.
     lda #$19
     sta $00
@@ -1416,13 +1423,13 @@ L8AD3:
     ;Use only first 3 bits of byte since the pointer table only has 8 entries.
     lda IntroStarOffset
     and #$07
-    ;*2 to find entry in IntroStarPntr table.
+    ;*2 to find entry in IntroStarPtrTable.
     asl
     tay
-    ;Stores starting address of palette data to write into $02 and $03 from IntroStarPntr table.
-    lda IntroStarPntr,y
+    ;Stores starting address of palette data to write into $02 and $03 from IntroStarPtrTable.
+    lda IntroStarPtrTable,y
     sta $02
-    lda IntroStarPntr+1,y
+    lda IntroStarPtrTable+1,y
     sta $03
     ;Increment index for next palette change.
     inc IntroStarOffset
@@ -1436,15 +1443,21 @@ L8AD3:
     jsr AddYToPtr02                 ;($C2B3)Find new data base of palette data.
     jmp PrepPPUPaletteString        ;($C37E)Prepare and write new palette data.
 
-;The following table is a list of pointers into the table below. It contains
-;the palette data for the twinkling stars in the intro scene.  The palette data
-;is changed every 16 frames by the above routine.
+;The following table is a list of pointers into the table below.
+;It contains the palette data for the twinkling stars in the intro scene.
+;The palette data is changed every 16 frames by the above routine.
 
-IntroStarPntr: ; 00:8AFF
-    .word IntroStarPal0, IntroStarPal1, IntroStarPal2, IntroStarPal3
-    .word IntroStarPal4, IntroStarPal5, IntroStarPal6, IntroStarPal7
+IntroStarPtrTable: ; 00:8AFF
+    .word IntroStarPal0
+    .word IntroStarPal1
+    .word IntroStarPal2
+    .word IntroStarPal3
+    .word IntroStarPal4
+    .word IntroStarPal5
+    .word IntroStarPal6
+    .word IntroStarPal7
 
-;The following table contains the platette data that is changed in the intro
+;The following table contains the palette data that is changed in the intro
 ;scene to give the stars a twinkling effect. All entries in the table are
 ;non-repeating.
 
