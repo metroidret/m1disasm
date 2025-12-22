@@ -1,16 +1,4 @@
-.memorymap
-    defaultslot 0
-    slot 0 $0000 $FFDC "DummySlot"
-    slot 1 $0000 $0800 "RAMConsoleSlot"
-    slot 2 $6000 $8000 "RAMDiskSysSlot"
-    slot 3 $E000 $2000 "ROMFDSBIOSSlot"
-.endme
-
-.rombankmap
-    bankstotal $60
-    banksize $8000
-    banks $60
-.endro
+.include "memory_layout.asm"
 
 
 .asciitable
@@ -23,7 +11,7 @@
 .stringmaptable charmap_ending "SRC/ending.tbl"
 
 
-.include "SRC/constants_ram.asm"
+.include "constants_ram.asm"
 
 
 ;------------------------------------------[ Misc. defines ]-----------------------------------------
