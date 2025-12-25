@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $13
+FDSFileMacroPart1 FDSFileID_Side01_13
     .ascstr "MMKITI", $00, $00
-FDSFileMacroPart2 $DEA0, $00
+FDSFileMacroPart2 $DEA0, FDSFileType_PRGRAM
 
 
 

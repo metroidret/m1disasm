@@ -13,7 +13,7 @@
     byteC              db
     byteD              db
     byteE              db
-    byteF              db
+    SaveSlot           db
 .endst
 
 .struct SkreeProjectile

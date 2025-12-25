@@ -237,6 +237,16 @@ FDSBIOS_MemFill = $EAD2
 
 ;----------------------------------------------------------------------------------------------------
 
+;FDS File Types
+
+FDSFileType_PRGRAM     = $00
+FDSFileType_CHRRAM     = $01 ; non-zero always writes to vram
+FDSFileType_VRAM       = $02 ; so these two are interchangeable
+
+FDSFileID_EndList      = $FF
+
+;----------------------------------------------------------------------------------------------------
+
 SCRN_VX                = 256
 SCRN_VY                = 240
 

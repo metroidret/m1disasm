@@ -4,16 +4,25 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $EF
+FDSFileMacroPart1 FDSFileID_Side01_EF
     .ascstr "MENSAVE", $00
-FDSFileMacroPart2 $C000, $00
+FDSFileMacroPart2 $C000, FDSFileType_PRGRAM
 
 
 
-.ds $3DF, $00
-.byte $01
-.ds $F, $00
-.byte $02
+MENSAVE_C000:
+    .ds $140, $00
+MENSAVE_C140:
+    .ds $140, $00
+MENSAVE_C280:
+    .ds $140, $00
+
+MENSAVE_C3C0:
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
+    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02
+
+MENSAVE_End:
 
 
 

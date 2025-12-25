@@ -4,9 +4,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $91
+FDSFileMacroPart1 FDSFileID_Side01_91
     .ascstr "HMBG1C", $00, $00
-FDSFileMacroPart2 $1800, $01
+FDSFileMacroPart2 $1800, FDSFileType_CHRRAM
 
 .incbin "sideB/brinstar/hmbg1c.chr"
 

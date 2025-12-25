@@ -4,9 +4,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $84
+FDSFileMacroPart1 FDSFileID_Side01_84
     .ascstr "HMOB4A", $00, $00
-FDSFileMacroPart2 $0C00, $01
+FDSFileMacroPart2 $0C00, FDSFileType_CHRRAM
 
 .incbin "sideB/norfair/hmob4a.chr"
 

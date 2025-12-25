@@ -15,7 +15,7 @@
     .byte $00
     .byte $00
     .byte $00
-    .byte $0F
+    .byte FDSFileID_Side00_Boot
     .byte $FF, $FF, $FF, $FF, $FF
     .byte $61, $09, $09
     .byte $49

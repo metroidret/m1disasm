@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $20
+FDSFileMacroPart1 FDSFileID_Side00_20
     .ascstr "MAIN.PGM"
-FDSFileMacroPart2 $6800, $00
+FDSFileMacroPart2 $6800, FDSFileType_PRGRAM
 
 
 
@@ -5743,7 +5743,7 @@ L91A5:
     cmp $B420,y
     bne L91B3
     lda $06
-    cmp CurSamusStat.byteF,y
+    cmp CurSamusStat.SaveSlot,y
     beq RTS_91B8
 L91B3:
     dey
@@ -9863,8 +9863,8 @@ LB21B:
     sta $0405,x
     rts
 LB222:
-    ldx #<LB3FD.b
-    ldy #>LB3FD.b
+    ldx #<SaveMenuFileHeader.b
+    ldy #>SaveMenuFileHeader.b
     lda #$1B
     jmp LB235
 
@@ -10131,49 +10131,75 @@ MAIN_DiskID: ;($B3BE)
 
 
 LB2AC_B3C8:
-    .byte $10, $81, $90, $91
-    .byte $FF
+    .byte FDSFileID_Side01_10
+    .byte FDSFileID_Side01_81
+    .byte FDSFileID_Side01_90
+    .byte FDSFileID_Side01_91
+    .byte FDSFileID_EndList
+
 LB2AC_B3CD:
-    .byte $11, $90, $84, $91
-    .byte $FF
+    .byte FDSFileID_Side01_11
+    .byte FDSFileID_Side01_90
+    .byte FDSFileID_Side01_84
+    .byte FDSFileID_Side01_91
+    .byte FDSFileID_EndList
+
 LB2AC_B3D2:
-    .byte $13, $92, $85
-    .byte $FF
+    .byte FDSFileID_Side01_13
+    .byte FDSFileID_Side01_92
+    .byte FDSFileID_Side01_85
+    .byte FDSFileID_EndList
+
 LB2AC_B3D6:
-    .byte $12, $1F, $90, $92, $86, $91
-    .byte $FF
+    .byte FDSFileID_Side01_12
+    .byte FDSFileID_Side01_1F
+    .byte FDSFileID_Side01_90
+    .byte FDSFileID_Side01_92
+    .byte FDSFileID_Side01_86
+    .byte FDSFileID_Side01_91
+    .byte FDSFileID_EndList
+
 LB2AC_B3DD:
-    .byte $14, $1F, $92, $90, $87, $91
-    .byte $FF
+    .byte FDSFileID_Side01_14
+    .byte FDSFileID_Side01_1F
+    .byte FDSFileID_Side01_92
+    .byte FDSFileID_Side01_90
+    .byte FDSFileID_Side01_87
+    .byte FDSFileID_Side01_91
+    .byte FDSFileID_EndList
 
 
 
 LB3E4:
-    .byte $EF
-    .byte $FF
+    .byte FDSFileID_Side01_EF
+    .byte FDSFileID_EndList
 
 
 
 LB3E6:
-    .db $0E, $FF, $FF, $FF, $EE, $FF
+    .db $0E, $FF
+LB3E8:
+    .db $FF, $FF
+LB3EA:
+    .db $EE, $FF
 
-LB3EC:
-    .db $0E
-    .db $01, $01, $01, $01, $01, $01, $01, $01
-    .dw $C5A0
-    .dw $0075
-    .db $00 
-    .dw $C5A0
-    .db $00 
+MAIN_SaveDataFileHeader: ;($B3EC)
+    .byte FDSFileID_Side00_0E
+    .ascstr $01, $01, $01, $01, $01, $01, $01, $01
+    .word SaveData
+    .word SaveData@end - SaveData
+    .byte FDSFileType_PRGRAM
+    .word SaveData
+    .byte FDSFileType_PRGRAM
 
-LB3FD:
-    .db $EF
-    .db $02, $02, $02, $02, $02, $02, $02, $02
-    .dw $C000
-    .dw $03F0
-    .db $00
-    .dw $C000
-    .db $00
+SaveMenuFileHeader: ;($B3FD)
+    .byte FDSFileID_Side01_EF
+    .ascstr $02, $02, $02, $02, $02, $02, $02, $02
+    .dw MENSAVE_C000
+    .dw MENSAVE_End - MENSAVE_C000
+    .db FDSFileType_PRGRAM
+    .dw MENSAVE_C000
+    .db FDSFileType_PRGRAM
 
 LB40E:
     .db $A2, $A3

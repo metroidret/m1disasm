@@ -4,9 +4,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $EE
+FDSFileMacroPart1 FDSFileID_Side00_EE
     .ascstr "ENDBG", $00, $00, $00
-FDSFileMacroPart2 $1000, $01
+FDSFileMacroPart2 $1000, FDSFileType_CHRRAM
 
 .incbin "sideA/endbg.chr"
 

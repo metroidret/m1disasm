@@ -4,9 +4,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $00
+FDSFileMacroPart1 FDSFileID_Side00_00
     .ascstr "DEMO.VEC"
-FDSFileMacroPart2 $DFFA, $00
+FDSFileMacroPart2 $DFFA, FDSFileType_PRGRAM
 
 .word DEMO_NMI
 .word DEMO_RESET

@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $20
+FDSFileMacroPart1 FDSFileID_Side00_20
     .ascstr "BMENST", $00, $00
-FDSFileMacroPart2 $C000, $00
+FDSFileMacroPart2 $C000, FDSFileType_PRGRAM
 
 
 

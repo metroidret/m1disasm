@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $00
+FDSFileMacroPart1 FDSFileID_Side00_00
     .ascstr "KYODAKU-"
-FDSFileMacroPart2 $2800, $02
+FDSFileMacroPart2 $2800, FDSFileType_VRAM
 
 .stringmap charmap_kyodaku, "           NINTENDO r           "
 .stringmap charmap_kyodaku, "       FAMILY COMPUTER TM       "

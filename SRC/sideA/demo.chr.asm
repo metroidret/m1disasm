@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $00
+FDSFileMacroPart1 FDSFileID_Side00_00
     .ascstr "DEMO.CHR"
-FDSFileMacroPart2 $0000, $01
+FDSFileMacroPart2 $0000, FDSFileType_CHRRAM
 
 .incbin "sideA/demo.chr.chr"
 

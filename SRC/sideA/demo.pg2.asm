@@ -5,9 +5,9 @@
 .include "constants.asm"
 .include "macros.asm"
 
-FDSFileMacroPart1 $00
+FDSFileMacroPart1 FDSFileID_Side00_00
     .ascstr "DEMO.PG2"
-FDSFileMacroPart2 $C5A0, $00
+FDSFileMacroPart2 $C5A0, FDSFileType_PRGRAM
 
 
 
@@ -74,8 +74,8 @@ LC615:
     .incbin "sideA/demo.pg2_font_savemenu.chr"
 
 LCE35:
-    ldx #<SaveDataFileHeader.b
-    ldy #>SaveDataFileHeader.b
+    ldx #<DEMO_SaveDataFileHeader.b
+    ldy #>DEMO_SaveDataFileHeader.b
     jmp LCE3C
     LCE3C:
     stx LCE58
@@ -90,7 +90,7 @@ LCE35:
         jsr FDSBIOS_WriteFile
             .word DEMO_DiskID
 LCE58:
-            .word SaveDataFileHeader
+            .word DEMO_SaveDataFileHeader
         beq LCE62
         jsr LCE90
         jmp LCE45
@@ -228,23 +228,23 @@ DEMO_DiskID: ;($CF34)
     .ascstr "MET"
     .ascstr " "
     .byte $02
-    .byte $00
+    .byte $00 ; side A
     .byte $00
     .byte $00
     .byte $00
 
 LoadList: ;($CF3E)
-    .byte $00
-    .byte $FF
+    .byte FDSFileID_Side00_00
+    .byte FDSFileID_EndList
 
-SaveDataFileHeader: ;($CF40)
-    .byte $0E
+DEMO_SaveDataFileHeader: ;($CF40)
+    .byte FDSFileID_Side00_0E
     .ascstr $01, $01, $01, $01, $01, $01, $01, $01
     .word SaveData
     .word SaveData@end - SaveData
-    .byte $00
+    .byte FDSFileType_PRGRAM
     .word SaveData
-    .byte $00
+    .byte FDSFileType_PRGRAM
 
 LCF51:
     .byte $02, $42, $42, $42, $42, $42, $02, $FF, $B4, $2A, $B2, $02, $B0, $2A, $02
