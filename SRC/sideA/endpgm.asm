@@ -292,7 +292,7 @@ L615D_61C4:
     lda $A9
     cmp #$08
     bne L61E1
-        lda CurSamusStat+$D
+        lda CurSamusStat.EndingType
         cmp #$03
         bne L61DA
             rts
@@ -306,7 +306,7 @@ L615D_61C4:
     bne L61F8
     sta $2D
     ldy #$00
-    lda CurSamusStat+$D
+    lda CurSamusStat.EndingType
     cmp #$04
     bcc L61F1
         iny
@@ -344,7 +344,7 @@ L615D_6222:
         inc $3C
         rts
     L6231:
-    lda CurSamusStat+$D
+    lda CurSamusStat.EndingType
     cmp #$04
     bcs L623B
         jmp L6322
@@ -391,7 +391,7 @@ L615D_625C:
     sta $2D
     inc $3C
 L627E:
-    lda CurSamusStat+$D
+    lda CurSamusStat.EndingType
     cmp #$04
     bcs L6288
         jmp L6322
@@ -540,7 +540,7 @@ L634D:
     lda $A9
     cmp #$08
     bcc RTS_6381
-    lda CurSamusStat+$D
+    lda CurSamusStat.EndingType
     cmp #$03
     bne RTS_6381
     ldy #$00

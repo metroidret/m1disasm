@@ -11,7 +11,7 @@
     SamusAge           ds 4      ;In-game time
     GameOverCount      dw
     byteC              db
-    byteD              db
+    EndingType         db
     byteE              db
     SaveSlot           db
 .endst

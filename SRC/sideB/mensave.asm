@@ -18,9 +18,15 @@ MENSAVE_C280:
     .ds $140, $00
 
 MENSAVE_C3C0:
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02
+    .dstruct @0 instanceof SamusStat values
+        SaveSlot: .db 0
+    .endst
+    .dstruct @1 instanceof SamusStat values
+        SaveSlot: .db 1
+    .endst
+    .dstruct @2 instanceof SamusStat values
+        SaveSlot: .db 2
+    .endst
 
 MENSAVE_End:
 

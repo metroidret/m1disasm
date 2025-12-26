@@ -18,6 +18,7 @@ LC3F2:
 
 
 LC3F4:
+    ; display message on screen
     jsr ClearScreenData
     lda #<PPUString_C40B.b
     sta $00
@@ -25,8 +26,11 @@ LC3F4:
     sta $01
     jsr MAIN_ProcessPPUString
     jsr METHEX_ScreenOn
+    
+    ; wait for disk to switch to side A
     jsr LB310
     jmp LC425
+
 
 ; "Aメンヲ セットシテクダサイ" message (switch to disk side A)
 PPUString_C40B:
@@ -41,77 +45,92 @@ PPUString_C40B:
 
 LC425:
     jsr LB32D
-    ldx #<LB3E6.b
-    ldy #>LB3E6.b
+    
+    ; load save data to prgram
+    ldx #<LoadList_SaveData.b
+    ldy #>LoadList_SaveData.b
     jsr LB2B6
-    jsr LC568
-    ldy $B41F
-    lda $B41D
-    sta $C612,y
+    ; determine which ending we got
+    jsr ChooseEnding
+    ; update money bags
+    ldy CurSamusStat.SaveSlot
+    lda CurSamusStat.EndingType
+    sta SaveData@moneyBags,y
+    ; x = y * #$10
     tya
     asl a
     asl a
     asl a
     asl a
     tax
+    ; update samus stat
     ldy #$00
     LC443:
-        lda $B410,y
-        sta $C5E2,x
+        lda CurSamusStat,y
+        sta SaveData@samusStat,x
         inx
         iny
         cpy #$10
         bne LC443
+    ; write save data to disk
     ldx #<MAIN_SaveDataFileHeader.b
     ldy #>MAIN_SaveDataFileHeader.b
     lda #$0E
     jsr LB22B
-    ldx #<LB3EA.b
-    ldy #>LB3EA.b
-    lda $B41C
+    
+    ; load ending to prgram if CurSamusStat.byteC is non-zero
+    ldx #<LoadList_Ending.b
+    ldy #>LoadList_Ending.b
+    lda CurSamusStat.byteC
     bne LC465
 LC461:
-    ldx #<LB3E8.b
-    ldy #>LB3E8.b
+    ldx #<LoadList_NoEnding.b
+    ldy #>LoadList_NoEnding.b
 LC465:
     jsr LB2B6
+    ; jump to reset vector, likely ENDPGM_RESET
     jmp ($DFFC)
+
+
+
+LC46B:
     pha
     pha
     cpy #$02
     beq LC4AB
-    lda $B41F
+    lda CurSamusStat.SaveSlot
     pha
     lda #$02
-    sta $B41F
+    sta CurSamusStat.SaveSlot
     LC47A:
         jsr LC50B
         jsr LC516
         lda #$00
-        sta $C3C0,y
-        sta $C3C1,y
-        sta $C3C2,y
-        lda $B41F
-        sta $C3C3,y
-        dec $B41F
+        sta MENSAVE_C3C0@0.TankCount,y
+        sta MENSAVE_C3C0@0.SamusGear,y
+        sta MENSAVE_C3C0@0.MissileCount,y
+        ; (BUG! this should be saved to SaveSlot, not MaxMissiles)
+        lda CurSamusStat.SaveSlot
+        sta MENSAVE_C3C0@0.MaxMissiles,y
+        dec CurSamusStat.SaveSlot
         bpl LC47A
     pla
     sta $B41F
     jsr LC50B
     jsr LC4F6
     lda #$01
-    sta $B41E
-    ldy $C50A
-    sta $C3CE,y
+    sta CurSamusStat.byteE
+    ldy LC50A
+    sta MENSAVE_C3C0@0.byteE,y
 LC4AB:
     jsr LC50B
-    lda $B41E
+    lda CurSamusStat.byteE
     bpl LC4C0
         and #$01
-        sta $B41E
+        sta CurSamusStat.byteE
         jsr LC516
         lda #$01
-        sta $C3C2,y
+        sta MENSAVE_C3C0@0.MissileCount,y
     LC4C0:
     lda $1E
     cmp #$01
@@ -127,8 +146,8 @@ LC4AB:
     ldy LC50A
     ldx #$00
     LC4DA:
-        lda $B410,x
-        sta $C3C0,y
+        lda CurSamusStat,x
+        sta MENSAVE_C3C0@0,y
         iny
         inx
         cpx #$10
@@ -149,8 +168,8 @@ LC4F7:
     ldy LC50A
     ldx #$00
     LC4FC:
-        lda $C3C0,y
-        sta $B410,x
+        lda MENSAVE_C3C0@0,y
+        sta CurSamusStat,x
         iny
         inx
         cpx #$10
@@ -160,13 +179,13 @@ LC4F7:
 
 
 
-LC50A:
+LC50A: ; variable related to SamusStat.byteE
     .byte $00
 
 
 
 LC50B:
-    lda $B41F
+    lda CurSamusStat.SaveSlot
     asl a
     asl a
     asl a
@@ -205,7 +224,7 @@ LC520:
 
 LC53B:
     pha
-    ldx $B41F
+    ldx CurSamusStat.SaveSlot
     lda LC562,x
     sta $00
     sta $02
@@ -236,20 +255,20 @@ LC565:
 
 
 
-LC568:
-    ldy $B41C
+ChooseEnding: ;($C568)
+    ldy CurSamusStat.byteC
     bne LC56E
         rts
     LC56E:
-    ldy $B41D
+    ldy CurSamusStat.EndingType
     bne LC585
     beq LC584
     LC575:
         lda #$00
-        cmp $B419
+        cmp CurSamusStat.SamusAge+3
         bcc LC589
-        lda LC598-1,y
-        cmp $B418
+        lda AgeTable-1,y
+        cmp CurSamusStat.SamusAge+2
         bcc LC589
     LC584:
         iny
@@ -257,20 +276,25 @@ LC568:
         cpy #$05
         bne LC575
 LC589:
-    sty $B41D
+    sty CurSamusStat.EndingType
     ldy #$00
     tya
     LC58F:
-        sta $B410,y
+        sta CurSamusStat,y
         iny
         cpy #$0C
         bne LC58F
     rts
 
 
+AgeTable: ;($C598)
+    .byte $3C   ; 27 h 35 min
+    .byte $0A   ; 4 h 35 min
+    .byte $04   ; 1 h 50 min
+    .byte $02   ; 55 min
 
-LC598:
-    .byte $3C, $0A, $04, $02, $0A, $00, $B0, $07
+
+.byte $0A, $00, $B0, $07
 
 
 

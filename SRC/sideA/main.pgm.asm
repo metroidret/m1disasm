@@ -9906,11 +9906,11 @@ LB254:
 LB261:
     pha
     jsr LB32D
-    ldx #<LB3E4.b
-    ldy #>LB3E4.b
+    ldx #<LoadList_SaveMenu.b
+    ldy #>LoadList_SaveMenu.b
     jsr LB28A
     pla
-    jsr $C46B
+    jsr LC46B
     pha
     jsr LB222
     pla
@@ -9923,9 +9923,9 @@ LB27C:
     and #$0F
     asl a
     tay
-    lda LB2AC,y
+    lda AreaLoadListPtrTable,y
     tax
-    lda LB2AC+1,y
+    lda AreaLoadListPtrTable+1,y
     tay
 LB28A:
     lda #$20
@@ -9946,12 +9946,12 @@ LB2A2:
     jsr LB2CC
     jmp LB29A
 
-LB2AC:
-    .word LB2AC_B3C8
-    .word LB2AC_B3CD
-    .word LB2AC_B3D6
-    .word LB2AC_B3D2
-    .word LB2AC_B3DD
+AreaLoadListPtrTable: ;($B2AC)
+    .word LoadList_Brinstar
+    .word LoadList_Norfair
+    .word LoadList_Kraid
+    .word LoadList_Tourian
+    .word LoadList_Ridley
 
 LB2B6:
     lda #$20
@@ -10004,7 +10004,7 @@ LB307:
     jmp LB32D
 
 
-
+; await disk switch sides to side A?
 LB310:
     lda DRIVESTATUS
     lsr a
@@ -10130,27 +10130,27 @@ MAIN_DiskID: ;($B3BE)
 
 
 
-LB2AC_B3C8:
+LoadList_Brinstar: ;($B3C8)
     .byte FDSFileID_Side01_10
     .byte FDSFileID_Side01_81
     .byte FDSFileID_Side01_90
     .byte FDSFileID_Side01_91
     .byte FDSFileID_EndList
 
-LB2AC_B3CD:
+LoadList_Norfair: ;($B3CD)
     .byte FDSFileID_Side01_11
     .byte FDSFileID_Side01_90
     .byte FDSFileID_Side01_84
     .byte FDSFileID_Side01_91
     .byte FDSFileID_EndList
 
-LB2AC_B3D2:
+LoadList_Tourian: ;($B3D2)
     .byte FDSFileID_Side01_13
     .byte FDSFileID_Side01_92
     .byte FDSFileID_Side01_85
     .byte FDSFileID_EndList
 
-LB2AC_B3D6:
+LoadList_Kraid: ;($B3D6)
     .byte FDSFileID_Side01_12
     .byte FDSFileID_Side01_1F
     .byte FDSFileID_Side01_90
@@ -10159,7 +10159,7 @@ LB2AC_B3D6:
     .byte FDSFileID_Side01_91
     .byte FDSFileID_EndList
 
-LB2AC_B3DD:
+LoadList_Ridley: ;($B3DD)
     .byte FDSFileID_Side01_14
     .byte FDSFileID_Side01_1F
     .byte FDSFileID_Side01_92
@@ -10170,18 +10170,26 @@ LB2AC_B3DD:
 
 
 
-LB3E4:
+LoadList_SaveMenu: ;($B3E4)
     .byte FDSFileID_Side01_EF
     .byte FDSFileID_EndList
 
 
 
-LB3E6:
-    .db $0E, $FF
-LB3E8:
-    .db $FF, $FF
-LB3EA:
-    .db $EE, $FF
+LoadList_SaveData: ;($B3E6)
+    .db FDSFileID_Side00_0E
+    .db FDSFileID_EndList
+
+
+LoadList_NoEnding: ;($B3E8)
+    .db FDSFileID_EndList
+    .db FDSFileID_EndList
+
+LoadList_Ending: ;($B3EA)
+    .db FDSFileID_Side00_EE
+    .db FDSFileID_EndList
+
+
 
 MAIN_SaveDataFileHeader: ;($B3EC)
     .byte FDSFileID_Side00_0E
