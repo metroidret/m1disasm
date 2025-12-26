@@ -29,7 +29,7 @@ BMENST_RESET: ;($C000)
     sty $00
     tya
     LC019:
-                sta ($00),Y
+                sta ($00),y
                 iny
                 bne LC019
             dec $01

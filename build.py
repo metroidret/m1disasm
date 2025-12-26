@@ -10,20 +10,6 @@ def run_or_exit(args, err):
         exit(completed_process.returncode)
 
 
-out_folders = [
-    "out/",
-    "out/sideA/",
-    "out/sideB/",
-    "out/sideB/brinstar/",
-    "out/sideB/norfair/",
-    "out/sideB/tourian/",
-    "out/sideB/kraid/",
-    "out/sideB/ridley/",
-]
-
-for out_folder in out_folders:
-    if not os.path.exists(out_folder):
-        os.mkdir(out_folder)
 
 fds_diskinfo_list = [
     "sideA/disk_info",
@@ -78,6 +64,15 @@ fds_filesys = [
         "sideB/mensave",
     ]
 ]
+
+for filepath in (fds_diskinfo_list + [fds_file for fds_side in fds_filesys for fds_file in fds_side]):
+    filepath = "out/" + filepath
+    filepath = filepath.split("/")
+    for i in range(1, len(filepath)):
+        out_folder = "/".join(filepath[0:i])
+        if not os.path.exists(out_folder):
+            os.mkdir(out_folder)
+
 fds_assembler_vars = {
     "FDSFile_Bank": 0,
     "FDSFile_Side": 0,
