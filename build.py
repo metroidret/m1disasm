@@ -78,6 +78,7 @@ fds_assembler_vars = {
     "FDSFile_Side": 0,
     "FDSFile_Number": 0,
     "FDSFile_SideFileQty": 0,
+    "FDSFile_BankQty": len(fds_diskinfo_list) + sum([len(fds_side) for fds_side in fds_filesys]) * 2,
 }
 
 class BuildTarget:

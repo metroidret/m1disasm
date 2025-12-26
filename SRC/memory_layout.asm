@@ -7,7 +7,7 @@
 .endme
 
 .rombankmap
-    bankstotal $60
+    bankstotal FDSFile_BankQty
     banksize $8000
-    banks $60
+    banks FDSFile_BankQty
 .endro
