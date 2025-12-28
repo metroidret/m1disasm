@@ -19,6 +19,7 @@
 .include "macros.asm"
 
 .def BANK = 0
+.def AREA = {"BANK{BANK}"}
 .section "ROM Bank $000" bank 0 slot "ROMSwitchSlot" orga $8000 force
 
 ;------------------------------------------[ Start of code ]-----------------------------------------
@@ -192,7 +193,7 @@ DrawIntroBackground: ; 00:80D0
     ldy #>PPUString_DrawIntroBackground.b
     jsr PreparePPUProcess
     ;Prepare to load palette data.
-    lda #$01
+    lda #_id_Palette00+1.b
     sta PalDataPending
     sta SpareMemC5 ;Not accessed by game.
     ;Switch to name table 0
@@ -235,7 +236,7 @@ FlashEffect: ; 00:8109
     ;If 80 frames (1.3 seconds) have not elapsed, branch so routine will keep running.
     lda Timer3
     bne @RTS
-    ;Ensures the palette index is back at 0.
+    ;Ensures the palette index was 3 when LoadPalData was called.
     lda PalDataIndex
     cmp #$04
     bne @RTS
@@ -1372,7 +1373,19 @@ LoadPalData: ; 00:8A8C
 
 ;The table below is used by above routine to pick the proper palette.
 @PalSelectTbl: ; 00:8A9A
-    .byte $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0C, $FF
+    .byte _id_Palette01+1
+    .byte _id_Palette02+1
+    .byte _id_Palette03+1
+    .byte _id_Palette04+1
+    .byte _id_Palette05+1
+    .byte _id_Palette06+1
+    .byte _id_Palette07+1
+    .byte _id_Palette08+1
+    .byte _id_Palette09+1
+    .byte _id_Palette0A+1
+    .byte _id_Palette0B+1
+    .byte _id_Palette0B+1
+    .byte $FF
 
 
 FlashIntroScreen: ; 00:8AA7
@@ -1395,9 +1408,27 @@ FlashIntroScreen: ; 00:8AA7
 
 @ScreenFlashPalTbl: ; 00:8ABD
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-    .byte $11, $01, $11, $01, $11, $11, $01, $11, $01, $FF
+    .byte _id_Palette10+1
+    .byte _id_Palette00+1
+    .byte _id_Palette10+1
+    .byte _id_Palette00+1
+    .byte _id_Palette10+1
+    .byte _id_Palette10+1
+    .byte _id_Palette00+1
+    .byte _id_Palette10+1
+    .byte _id_Palette00+1
+    .byte $FF
 .elif BUILDTARGET == "NES_CNSUS"
-    .byte $11, $11, $11, $01, $01, $01, $01, $01, $01, $FF
+    .byte _id_Palette10+1
+    .byte _id_Palette10+1
+    .byte _id_Palette10+1
+    .byte _id_Palette00+1
+    .byte _id_Palette00+1
+    .byte _id_Palette00+1
+    .byte _id_Palette00+1
+    .byte _id_Palette00+1
+    .byte _id_Palette00+1
+    .byte $FF
 .endif
 
 
@@ -1487,10 +1518,20 @@ DoFadeOut: ; 00:8B5F
     rts
 
 FadeOutPalData: ; 00:8B6D
-    .byte $0D, $0E, $0F, $10, $01, $FF
+    .byte _id_Palette0C+1
+    .byte _id_Palette0D+1
+    .byte _id_Palette0E+1
+    .byte _id_Palette0F+1
+    .byte _id_Palette00+1
+    .byte $FF
 
 FadeInPalData: ; 00:8B73
-    .byte $01, $10, $0F, $0E, $0D, $FF
+    .byte _id_Palette00+1
+    .byte _id_Palette0F+1
+    .byte _id_Palette0E+1
+    .byte _id_Palette0D+1
+    .byte _id_Palette0C+1
+    .byte $FF
 
 ;----------------------------------------[ Password routines ]---------------------------------------
 
@@ -2254,7 +2295,7 @@ ItemData: ; 00:9029
     .word ui_MISSILEDOOR + ($11 << 5) + $19  ;Red door at coord 11,19                     (Item 44)
     .word ui_ENERGYTANK  + ($11 << 5) + $19  ;Energy tank at coord 11,19                  (Item 45)
     .word ui_MISSILES    + ($14 << 5) + $1E  ;Missiles at coord 14,1E                     (Item 46)
-    .word ui_MISSILEDOOR + ($10 << 5) + $1D  ;purple door at coord 10,1D(Ridley's room)   (Item 47)
+    .word ui_MISSILEDOOR + ($10 << 5) + $1D  ;Purple door at coord 10,1D(Ridley's room)   (Item 47)
     .word ui_ENERGYTANK  + ($0F << 5) + $1D  ;Energy tank at coord 0F,1D                  (Item 48)
     .word ui_MISSILES    + ($18 << 5) + $1B  ;Missile at coord 18,1B                      (Item 49)
     .word ui_MISSILEDOOR + ($03 << 5) + $07  ;Orange door at coord 03,07                  (Item 50)
@@ -2294,10 +2335,10 @@ StartContinueScreen1B:
     ldy #$00                        ;
     sty StartContinue               ;Set selection sprite at START.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-        lda #$0D
+        lda #_id_Palette0C+1.b
     .elif BUILDTARGET == "NES_CNSUS"
         NES_CNSUS_IllegalOpcode42
-        .byte $0D
+        .byte _id_Palette0C+1
     .endif
     sta PalDataPending              ;Change palette and title routine.
     lda #_id_ChooseStartContinue.b  ;Next routine is ChooseStartContinue.
@@ -2359,7 +2400,7 @@ LoadPasswordScreen: ; 00:911A
     jsr PreparePPUProcess_          ;($9449)Load "PASSWORD PLEASE" on screen.
     jsr InitPasswordFontGFX                    ;($C6D6)Loads the font for the password.
     jsr DisplayInputCharacters      ;($940B)Write password character to screen.
-    lda #$13                        ;
+    lda #_id_Palette12+1.b
     sta PalDataPending              ;Change palette.
     lda #$00                        ;
     sta InputRow                    ;Sets character select cursor to-->
@@ -2753,7 +2794,7 @@ DisplayPassword: ; 00:9359
     jsr PasswordToScreen
     jsr WaitNMIPass
     ;Change palette.
-    lda #$13
+    lda #_id_Palette12+1.b
     sta PalDataPending
     ;Next routine is WaitForSTART.
     inc TitleRoutine
@@ -3131,118 +3172,135 @@ Hex16ToDec: ; 00:94DA
 ;The following table points to the palette data
 ;used in the intro and ending portions of the game.
 
-bank0_PalPntrTbl: ; 00:9560
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette00
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette01
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette02
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette03
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette04
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette05
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette06
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette07
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette08
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette09
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0A
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0B
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0C
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0D
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0E
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette0F
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette10
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette11
-    PtrTableEntry bank0_PalPntrTbl, bank0_Palette12
+PalPntrTbl: ; 00:9560
+    PtrTableEntryArea PalPntrTbl, Palette00             ; Title Screen black
+    PtrTableEntryArea PalPntrTbl, Palette01             ; Title Screen purple
+    PtrTableEntryArea PalPntrTbl, Palette02             ; Title Screen green
+    PtrTableEntryArea PalPntrTbl, Palette03             ; Title Screen magenta
+    PtrTableEntryArea PalPntrTbl, Palette04             ; Title Screen warm blue
+    PtrTableEntryArea PalPntrTbl, Palette05             ; Title Screen cool blue fade in 1
+    PtrTableEntryArea PalPntrTbl, Palette06             ; Title Screen cool blue fade in 2
+    PtrTableEntryArea PalPntrTbl, Palette07             ; Title Screen cool blue fade in 3
+    PtrTableEntryArea PalPntrTbl, Palette08             ; Title Screen cool blue fade in 4
+    PtrTableEntryArea PalPntrTbl, Palette09             ; Title Screen cool blue fade in 5
+    PtrTableEntryArea PalPntrTbl, Palette0A             ; Title Screen cool blue fade in 6
+    PtrTableEntryArea PalPntrTbl, Palette0B             ; Title Screen cool blue
+    PtrTableEntryArea PalPntrTbl, Palette0C             ; Title Screen warm blue fade out 1 / fade in 4 / Start&Continue Menu
+    PtrTableEntryArea PalPntrTbl, Palette0D             ; Title Screen warm blue fade out 2 / fade in 3
+    PtrTableEntryArea PalPntrTbl, Palette0E             ; Title Screen warm blue fade out 3 / fade in 2
+    PtrTableEntryArea PalPntrTbl, Palette0F             ; Title Screen warm blue fade out 4 / fade in 1
+    PtrTableEntryArea PalPntrTbl, Palette10             ; Title Screen flash white
+    PtrTableEntryArea PalPntrTbl, Palette11             ; ???
+    PtrTableEntryArea PalPntrTbl, Palette12             ; Password Screens
 
-bank0_Palette00: ; 00:9586
+Palette00_{AREA}: ; 00:9586
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette01: ; 00:95AA
+Palette01_{AREA}: ; 00:95AA
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette02: ; 00:95CE
+Palette02_{AREA}: ; 00:95CE
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette03: ; 00:95F2
+Palette03_{AREA}: ; 00:95F2
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette04: ; 00:9616
+Palette04_{AREA}: ; 00:9616
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, \
+        $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette05: ; 00:963A
+Palette05_{AREA}: ; 00:963A
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette06: ; 00:965E
+Palette06_{AREA}: ; 00:965E
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette07: ; 00:9682
+Palette07_{AREA}: ; 00:9682
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette08: ; 00:96A6
+Palette08_{AREA}: ; 00:96A6
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette09: ; 00:96CA
+Palette09_{AREA}: ; 00:96CA
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0A: ; 00:96EE
+Palette0A_{AREA}: ; 00:96EE
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0B: ; 00:9712
+Palette0B_{AREA}: ; 00:9712
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0C: ; 00:9736
+Palette0C_{AREA}: ; 00:9736
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
+        $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, \
+        $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
     PPUStringEnd
 
-bank0_Palette0D: ; 00:975A
+Palette0D_{AREA}: ; 00:975A
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0E: ; 00:977E
+Palette0E_{AREA}: ; 00:977E
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette0F: ; 00:97A2
+Palette0F_{AREA}: ; 00:97A2
     PPUString $3F00, \
-        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
+        $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
+        $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette10: ; 00:97C6
+Palette10_{AREA}: ; 00:97C6
     PPUString $3F00, \
-        $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
+        $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, \
+        $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
     PPUStringEnd
 
-bank0_Palette11: ; 00:97EA
+Palette11_{AREA}: ; 00:97EA
     PPUString $3F00, \
         $0F, $30, $30, $21
     PPUStringEnd
 
-bank0_Palette12: ; 00:97F2
+Palette12_{AREA}: ; 00:97F2
     PPUString $3F00, \
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
     PPUStringEnd
@@ -3250,8 +3308,6 @@ bank0_Palette12: ; 00:97F2
 EndGamePal0B:
     PPUString $3F00, \
         $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
-
-EndGamePal0C:
     PPUStringRepeat $3F10, $0F, $10
     PPUStringEnd
 
@@ -3618,19 +3674,23 @@ Restart: ; 00:9A39
     jmp InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
 
 EndGame: ; 00:9AA7
-    jsr LoadEndStarSprites          ;($9EAA)Load stars in end scene onto screen.
-    lda IsCredits                   ;Skips palette change when rolling credits.
-    bne L9AC0                       ;
-    lda FrameCount                  ;
-    and #$0F                        ;Changes star palettes every 16th frame.
-    bne L9AC0                       ;
-    inc PalDataPending              ;
-    lda PalDataPending              ;Reset palette data to #$01 after it-->
-    cmp #$09                        ;reaches #$09.
-    bne L9AC0                       ;
-    lda #$01                        ;
-    sta PalDataPending              ;
-L9AC0:
+    ;($9EAA)Load stars in end scene onto screen.
+    jsr LoadEndStarSprites
+    ;Skips palette change when rolling credits.
+    lda IsCredits
+    bne @chooseRoutine
+    ;Changes star palettes every 16th frame.
+    lda FrameCount
+    and #$0F
+    bne @chooseRoutine
+    inc PalDataPending
+    ;Reset palette data to #$01 after it reaches #$09.
+    lda PalDataPending
+    cmp #_id_EndGamePal08+1.b
+    bne @chooseRoutine
+    lda #_id_EndGamePal00+1.b
+    sta PalDataPending
+@chooseRoutine:
     lda RoomPtr                     ;RoomPtr used in end of game to determine-->
     jsr ChooseRoutine               ;($C27C)which subroutine to run below.
         .word LoadEndGFX                ;($9AD5)Load end GFX to pattern tables.
@@ -3675,7 +3735,7 @@ L9AE4:
     sta EndMsgWrite                 ;initialized to #$00.
     sta HideShowEndMsg              ;
     sta CreditPageNumber            ;
-    lda #$01                        ;
+    lda #_id_EndGamePal00+1.b
     sta PalDataPending              ;Change palette.
     lda #$08                        ;
     sta ClrChangeCounter            ;Initialize ClrChangeCounter with #$08.
@@ -3769,7 +3829,7 @@ SamusWave: ; 00:9B93
     .endif
     sta Timer3
     ;Change palette
-    lda #$08
+    lda #_id_EndGamePal07+1.b
     sta PalDataPending
     ;Increment RoomPtr
     inc RoomPtr
@@ -3806,23 +3866,30 @@ L9BA2:
     jmp LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
 
 EndFadeOut: ; 00:9BCD
-    lda Timer3                      ;If 160 frame delay from last routine has not-->
-    bne L9BEF                       ;yet expired, branch.
-    lda IsCredits                   ;
-    bne L9BDB                       ;Branch always.
-
-        lda #$08                        ;*This code does not appear to be used.
-        sta PalDataPending              ;*Change palette.
-        inc IsCredits                   ;*Increment IsCredits.
+    ;If 160 frame delay from last routine has not yet expired, branch.
+    lda Timer3
+    bne L9BEF
+    ;Branch always.
+    lda IsCredits
+    bne L9BDB
+        ;*This code does not appear to be used.
+        ;*Change palette.
+        lda #_id_EndGamePal07+1.b
+        sta PalDataPending
+        ;*Increment IsCredits.
+        inc IsCredits
 
     L9BDB:
-    lda FrameCount                  ;
-    and #$07                        ;Every seventh frame, increment the palette info-->
-    bne L9BEF                       ;If PalDataPending is not equal to #$0C, keep-->
-    inc PalDataPending              ;incrementing every seventh frame until it does.-->
-    lda PalDataPending              ;This creates the fade out effect.
-    cmp #$0C                        ;
-    bne L9BEF                       ;
+    ;Every eight frame, increment the palette info.
+    lda FrameCount
+    and #$07
+    bne L9BEF
+    ;If PalDataPending is not equal to #$0C, keep incrementing every eight frame until it does.
+    ;This creates the fade out effect.
+    inc PalDataPending
+    lda PalDataPending
+    cmp #_id_EndGamePal0B+1.b
+    bne L9BEF
         .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
             ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
             lda #$10
@@ -3832,9 +3899,10 @@ EndFadeOut: ; 00:9BCD
         sta Timer3
         inc RoomPtr
     L9BEF:
-    lda EndingType                  ;
-    cmp #$04                        ;If suitless Samus ending, load hand wave sprites,-->
-    bcs L9BF9                       ;else just load regular Samus sprites
+    ;If suitless Samus ending, load hand wave sprites, else just load regular Samus sprites
+    lda EndingType
+    cmp #$04
+    bcs L9BF9
         jmp LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
     L9BF9:
         jmp LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
@@ -3847,7 +3915,7 @@ RollCredits: ; 00:9BFC
     jsr ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
     jsr ClearNameTables@nameTable0  ;($C16D)clear name table 0 and sprites.-->
     jsr EraseAllSprites             ;($C1A3)prepares screen for credits.
-    lda #$0D                        ;
+    lda #_id_EndGamePal0B+1+1.b
     sta PalDataPending              ;Change to proper palette for credits.
     jsr ScreenOn                    ;($C447)Turn screen on.
     jmp WaitNMIPass_                ;($C43F)Wait for NMI to end.
@@ -4264,27 +4332,33 @@ EndStarDataTable: ; 00:9EB8
     .byte $0C, $26, $22, $AA
 
 EndGamePalWrite: ; 00:9F54
-    lda PalDataPending              ;If no palette data pending, branch to exit.
-    beq RTS_9F80                       ;
-    cmp #$0C                        ;If PalDataPending has loaded last palette,-->
-    beq RTS_9F80                       ;branch to exit.
-    cmp #$0D                        ;Once end palettes have been cycled through,-->
-    bne L9F64                       ;start over.
-        ldy #$00                        ;
-        sty PalDataPending              ;
+    ;If no palette data pending, branch to exit.
+    lda PalDataPending
+    beq RTS_9F80
+    ;If PalDataPending has loaded last palette, branch to exit.
+    cmp #_id_EndGamePal0B+1.b
+    beq RTS_9F80
+    ;Once end palettes have been cycled through, start over.
+    cmp #_id_EndGamePal0B+1+1.b
+    bne L9F64
+        ldy #$00
+        sty PalDataPending
     L9F64:
-    asl                             ;* 2, pointer is two bytes.
-    tay                             ;
+    ;* 2, pointer is two bytes.
+    asl
+    tay
     lda EndGamePalPntrTbl-1,y       ;High byte of PPU data pointer.
     ldx EndGamePalPntrTbl-2,y       ;Low byte of PPU data pointer.
-    tay                             ;
+    tay
     jsr PreparePPUProcess           ;($C20E)Prepare to write data string to PPU.
-    lda #$3F                        ;
-    sta PPUADDR                  ;
-    lda #$00                        ;
-    sta PPUADDR                  ;Set PPU address to $3F00.
-    sta PPUADDR                  ;
-    sta PPUADDR                  ;Set PPU address to $0000.
+    ;Set PPU address to $3F00.
+    lda #$3F
+    sta PPUADDR
+    lda #$00
+    sta PPUADDR
+    ;Set PPU address to $0000.
+    sta PPUADDR
+    sta PPUADDR
 RTS_9F80:
     rts
 
@@ -4292,23 +4366,24 @@ RTS_9F80:
 ;find the proper palette data during the EndGame routine.
 
 EndGamePalPntrTbl: ; 00:9F81
-    .word EndGamePal00              ;($9F9B)
-    .word EndGamePal01              ;($9FBF)
-    .word EndGamePal02              ;($9FCB)
-    .word EndGamePal03              ;($9FD7)
-    .word EndGamePal04              ;($9FE3)
-    .word EndGamePal05              ;($9FEF)
-    .word EndGamePal06              ;($9FFB)
-    .word EndGamePal07              ;($A007)
-    .word EndGamePal08              ;($A013)
-    .word EndGamePal09              ;($A02E)
-    .word EndGamePal0A              ;($A049)
-    .word EndGamePal0A              ;($A049)
-    .word EndGamePal0B              ;($9806)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal00              ;($9F9B)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal01              ;($9FBF)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal02              ;($9FCB)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal03              ;($9FD7)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal04              ;($9FE3)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal05              ;($9FEF)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal06              ;($9FFB)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal07              ;($A007)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal08              ;($A013)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal09              ;($A02E)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal0A              ;($A049)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal0A              ;($A049)
+    PtrTableEntry EndGamePalPntrTbl, EndGamePal0B              ;($9806)
 
 EndGamePal00:
     PPUString $3F00, \
-        $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
+        $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, \
+        $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
     PPUStringEnd
 
 EndGamePal01:
