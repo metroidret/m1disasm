@@ -617,150 +617,150 @@ TitleRoutineReturn14:
 ;The following data fills name table 0 with the intro screen background graphics.
 VRAMStruct_DrawIntroBackground: ; 00:82F4
     ;Information to be stored in attribute table 0.
-    VRAMStruct $23C0, \
+    VRAMStructData $23C0, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-    VRAMStruct $23E0, \
+    VRAMStructData $23E0, \
         $FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
     ;Writes row $22E0 (24th row from top).
-    VRAMStruct $22E0, \
+    VRAMStructData $22E0, \
         $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
     ;Writes row $2300 (25th row from top).
-    VRAMStruct $2300, \
+    VRAMStructData $2300, \
         $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
     ;Writes row $2320 (26th row from top).
-    VRAMStruct $2320, \
+    VRAMStructData $2320, \
         $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
     ;Writes row $2340 (27th row from top).
-    VRAMStruct $2340, \
+    VRAMStructData $2340, \
         $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
     ;Writes row $2360 (28th row from top).
-    VRAMStruct $2360, \
+    VRAMStructData $2360, \
         $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
     ;Writes row $2380 (29th row from top).
-    VRAMStruct $2380, \
+    VRAMStructData $2380, \
         $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
     ;Writes row $23A0 (Bottom row).
-    VRAMStruct $23A0, \
+    VRAMStructData $23A0, \
         $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
     ;Writes some blank spaces in row $20A0 (6th row from top).
-    VRAMStructRepeat $20A8, $0F, \
+    VRAMStructDataRepeat $20A8, $0F, \
         " "
 
     ;Writes METROID graphics in row $2100 (9th row from top).
-    VRAMStruct $2103, \
+    VRAMStructData $2103, \
         $40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63, $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16
 
     ;Writes METROID graphics in row $2120 (10th row from top).
-    VRAMStruct $2123, \
+    VRAMStructData $2123, \
         $44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47, $44, $57, $69, $47, $44, $47, $44, $68, $69, $47
 
     ;Writes METROID graphics in row $2140 (11th row from top).
-    VRAMStruct $2143, \
+    VRAMStructData $2143, \
         $44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70, $44, $73, $72, $47, $44, $47, $44, $73, $72, $47
 
     ;Writes METROID graphics in row $2160 (12th row from top).
-    VRAMStruct $2163, \
+    VRAMStructData $2163, \
         $44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71, $44, $45, $46, $47, $44, $47, $44, $45, $46, $47
 
     ;Writes METROID graphics in row $2180 (13th row from top).
-    VRAMStruct $2183, \
+    VRAMStructData $2183, \
         $44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47, $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47
 
     ;Writes METROID graphics in row $21A0 (14th row from top).
-    VRAMStruct $21A3, \
+    VRAMStructData $21A3, \
         $4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F, $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64
 
     ;Writes METROID graphics in row $21C0 (15th row from top).
-    VRAMStruct $21C3, \
+    VRAMStructData $21C3, \
         $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52, $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
 
     ;Writes PUSH START BUTTON in row $2220 (18th row from top).
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        VRAMStruct $2227, \
+        VRAMStructData $2227, \
             " PUSH START BUTTON   "
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        VRAMStruct $2227, \
+        VRAMStructData $2227, \
             "    PRESS START      "
     .endif
 
 
     ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
-    VRAMStruct $2269, \
+    VRAMStructData $2269, \
         "< 1986 NINTENDO   "
 
 ;The following data fills name table 1 with the intro screen background graphics.
 
     ;Information to be stored in attribute table 1.
-    VRAMStruct $27C0, \
+    VRAMStructData $27C0, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
     ;Writes row $27E0 (24th row from top).
-    VRAMStruct $27E0, \
+    VRAMStructData $27E0, \
         $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
     ;Writes row $26E0 (24th row from top).
-    VRAMStruct $26E0, \
+    VRAMStructData $26E0, \
         $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
     ;Writes row $2700 (25th row from top).
-    VRAMStruct $2700, \
+    VRAMStructData $2700, \
         $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
     ;Writes row $2720 (26th row from top).
-    VRAMStruct $2720, \
+    VRAMStructData $2720, \
         $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
     ;Writes row $2740 (27th row from top).
-    VRAMStruct $2740, \
+    VRAMStructData $2740, \
         $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
     ;Writes row $2760 (28th row from top).
-    VRAMStruct $2760, \
+    VRAMStructData $2760, \
         $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
     ;Writes row $2780 (29th row from top).
-    VRAMStruct $2780, \
+    VRAMStructData $2780, \
         $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
     ;Writes row $27A0 (bottom row).
-    VRAMStruct $27A0, \
+    VRAMStructData $27A0, \
         $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
     ;Writes row $2480 (5th row from top).
-    VRAMStruct $2488, \
+    VRAMStructData $2488, \
         "EMERGENCY ORDER"
 
     ;Writes row $2500 (9th row from top).
-    VRAMStruct $2504, \
+    VRAMStructData $2504, \
         "DEFEAT THE METROID OF       "
 
     ;Writes row $2540 (11th row from top).
-    VRAMStruct $2544, \
+    VRAMStructData $2544, \
         "THE PLANET ZEBETH AND     "
 
     ;Writes row $2580 (13th row from top).
-    VRAMStruct $2584, \
+    VRAMStructData $2584, \
         "DESTROY THE MOTHER BRAIN  "
 
     ;Writes row $25C0 (15th row from top).
-    VRAMStruct $25C4, \
+    VRAMStructData $25C4, \
         "THE MECHANICAL LIFE VEIN  "
 
     ;Writes row $2620 (18th row from top).
-    VRAMStruct $2627, \
+    VRAMStructData $2627, \
         "GALAXY FEDERAL POLICE"
 
     ;Writes row $2660 (20th row from top).
-    VRAMStruct $2669, \
+    VRAMStructData $2669, \
         "              M510"
 
     VRAMStructEnd
@@ -2809,19 +2809,19 @@ DisplayPassword: ; 00:9359
 @VRAMStruct:
     ;Information below is for above routine to display "PASS WORD" on the screen.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        VRAMStruct $214B, \
+        VRAMStructData $214B, \
             "PASS WORD"
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        VRAMStruct $214B, \
+        VRAMStructData $214B, \
             " PASSWORD"
     .endif
 
     ;Information to be stored in attribute table 0.
-    VRAMStructRepeat $23D0, $08, \
+    VRAMStructDataRepeat $23D0, $08, \
         $00
 
     ;Turn color on to display password characters.
-    VRAMStructRepeat $23D8, $20, \
+    VRAMStructDataRepeat $23D8, $20, \
         $55
 
     VRAMStructEnd
@@ -2863,7 +2863,7 @@ GameOver: ; 00:939E
 
 @VRAMStruct:
     ;Information below is for above routine to display "GAME OVER" on the screen.
-    VRAMStruct $218C, \
+    VRAMStructData $218C, \
         "GAME OVER"
 
     VRAMStructEnd
@@ -3197,121 +3197,121 @@ PalPntrTbl: ; 00:9560
     PtrTableEntryArea PalPntrTbl, Palette12             ; Password Screens
 
 Palette00_{AREA}: ; 00:9586
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette01_{AREA}: ; 00:95AA
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette02_{AREA}: ; 00:95CE
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette03_{AREA}: ; 00:95F2
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette04_{AREA}: ; 00:9616
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, \
         $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette05_{AREA}: ; 00:963A
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette06_{AREA}: ; 00:965E
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette07_{AREA}: ; 00:9682
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette08_{AREA}: ; 00:96A6
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette09_{AREA}: ; 00:96CA
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette0A_{AREA}: ; 00:96EE
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette0B_{AREA}: ; 00:9712
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette0C_{AREA}: ; 00:9736
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, \
         $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
     VRAMStructEnd
 
 Palette0D_{AREA}: ; 00:975A
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette0E_{AREA}: ; 00:977E
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette0F_{AREA}: ; 00:97A2
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
     VRAMStructEnd
 
 Palette10_{AREA}: ; 00:97C6
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, \
         $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
     VRAMStructEnd
 
 Palette11_{AREA}: ; 00:97EA
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $30, $30, $21
     VRAMStructEnd
 
 Palette12_{AREA}: ; 00:97F2
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
     VRAMStructEnd
 
 EndGamePal0B:
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
-    VRAMStructRepeat $3F10, $10, \
+    VRAMStructDataRepeat $3F10, $10, \
         $0F
     VRAMStructEnd
 
@@ -3503,16 +3503,16 @@ IntroStarsData: ; 00:98C0
     .byte $38, $CF, $23, $85
 
 ;Not used.
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
         $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
     VRAMStructEnd
 
 L9984: ; 00:9984
-    VRAMStruct $218C, \
+    VRAMStructData $218C, \
         "START"
 
-    VRAMStruct $21EC, \
+    VRAMStructData $21EC, \
         "CONTINUE"
 
     VRAMStructEnd
@@ -3536,27 +3536,27 @@ PasswordRow4: .stringmap charmap, "qrstuvwxyz?- "
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
 L99E3:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        VRAMStruct $2088, \
+        VRAMStructData $2088, \
             "PASS WORD PLEASE"
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        VRAMStruct $20A8, \
+        VRAMStructData $20A8, \
             "PASSWORD PLEASE "
     .endif
 
     ;Clears attribute table 0 starting at address $23C0.
-    VRAMStructRepeat $23C0, $10, \
+    VRAMStructDataRepeat $23C0, $10, \
         $00
 
     ;Writes to attribute table 0 starting at address $23D0.
-    VRAMStructRepeat $23D0, $08, \
+    VRAMStructDataRepeat $23D0, $08, \
         $55
 
     ;Writes to attribute table 0 starting at address $23D8.
-    VRAMStructRepeat $23D8, $20, \
+    VRAMStructDataRepeat $23D8, $20, \
         $FF
 
     ;Writes to attribute table 0 starting at address $23DA.
-    VRAMStructRepeat $23DA, $04, \
+    VRAMStructDataRepeat $23DA, $04, \
         $F0
 
     VRAMStructEnd
@@ -4389,64 +4389,64 @@ EndGamePalPntrTbl: ; 00:9F81
     PtrTableEntry EndGamePalPntrTbl, EndGamePal0B              ;($9806)
 
 EndGamePal00:
-    VRAMStruct $3F00, \
+    VRAMStructData $3F00, \
         $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, \
         $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
     VRAMStructEnd
 
 EndGamePal01:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $10, $20, $30, $0F, $0F, $0F, $0F
     VRAMStructEnd
 
 EndGamePal02:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $12, $22, $32, $0F, $0B, $1B, $2B
     VRAMStructEnd
 
 EndGamePal03:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $14, $24, $34, $0F, $09, $19, $29
     VRAMStructEnd
 
 EndGamePal04:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $16, $26, $36, $0F, $07, $17, $27
     VRAMStructEnd
 
 EndGamePal05:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $18, $28, $38, $0F, $05, $15, $25
     VRAMStructEnd
 
 EndGamePal06:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $1A, $2A, $3A, $0F, $03, $13, $13
     VRAMStructEnd
 
 EndGamePal07:
-    VRAMStruct $3F18, \
+    VRAMStructData $3F18, \
         $0F, $1C, $2C, $3C, $0F, $01, $11, $21
     VRAMStructEnd
 
 EndGamePal08:
-    VRAMStruct $3F0C, \
+    VRAMStructData $3F0C, \
         $0F, $18, $08, $07
-    VRAMStruct $3F10, \
+    VRAMStructData $3F10, \
         $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
     VRAMStructEnd
 
 EndGamePal09:
-    VRAMStruct $3F0C, \
+    VRAMStructData $3F0C, \
         $0F, $08, $07, $0F
-    VRAMStruct $3F10, \
+    VRAMStructData $3F10, \
         $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
     VRAMStructEnd
 
 EndGamePal0A:
-    VRAMStructRepeat $3F0C, $04, \
+    VRAMStructDataRepeat $3F0C, $04, \
         $0F
-    VRAMStructRepeat $3F10, $10, \
+    VRAMStructDataRepeat $3F10, $10, \
         $0F
     VRAMStructEnd
 
@@ -4454,71 +4454,71 @@ EndGamePal0A:
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
 LA052:
-    VRAMStruct $2300, \
+    VRAMStructData $2300, \
         $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
     ;Writes ground graphics on name table 0 in row $2320 (26th row from top).
-    VRAMStruct $2320, \
+    VRAMStructData $2320, \
         $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
 
     ;Writes ground graphics on name table 0 in row $2340 (27th row from top).
-    VRAMStruct $2340, \
+    VRAMStructData $2340, \
         $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
 
     ;Writes ground graphics on name table 0 in row $2360 (28th row from top).
-    VRAMStruct $2360, \
+    VRAMStructData $2360, \
         $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
 
     ;Writes ground graphics on name table 0 in row $2380 (29th row from top).
-    VRAMStruct $2380, \
+    VRAMStructData $2380, \
         $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
 
     ;Writes ground graphics on name table 0 in row $23A0 (bottom row).
-    VRAMStruct $23A0, \
+    VRAMStructData $23A0, \
         $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
 
     ;Sets all color bits in attribute table 0 starting at $23F0.
-    VRAMStructRepeat $23F0, $10, \
+    VRAMStructDataRepeat $23F0, $10, \
         $FF
 
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
-    VRAMStruct $282E, \
+    VRAMStructData $282E, \
         "STAFF"
 
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    VRAMStruct $28A8, \
+    VRAMStructData $28A8, \
         "SCENARIO WRITTEN BY"
 
     ;Writes credits on name table 2 in row $28E0 (8th row from top).
-    VRAMStruct $28EE, \
+    VRAMStructData $28EE, \
         "KANOH"
 
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    VRAMStruct $2966, \
+    VRAMStructData $2966, \
         "CHARACTER DESIGNED BY"
 
     ;Writes credits on name table 2 in row $29A0 (14th row from top).
-    VRAMStruct $29AC, \
+    VRAMStructData $29AC, \
         "KIYOTAKE"
 
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    VRAMStruct $2A2B, \
+    VRAMStructData $2A2B, \
         "NEW MATSUOKA"
 
     ;Writes credits on name table 2 in row $2A60 (20th row from top).
-    VRAMStruct $2A6C, \
+    VRAMStructData $2A6C, \
         "SHIKAMOTO"
 
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    VRAMStruct $2AEC, \
+    VRAMStructData $2AEC, \
         "MUSIC BY"
 
     ;Writes credits on name table 2 in row $2B20 (26th row from top)
-    VRAMStruct $2B2B, \
+    VRAMStructData $2B2B, \
         "HIP TANAKA"
 
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
-    VRAMStruct $2BA7, \
+    VRAMStructData $2BA7, \
         " MAIN PROGRAMMERS "
 
     VRAMStructEnd
@@ -4531,44 +4531,44 @@ EndMessageStringTbl0:
 
 LA1C2:
     ;Writes end message on name table 0 in row $2060 (4th row from top).
-    VRAMStruct $206D, \
+    VRAMStructData $206D, \
         "GREAT !!"
 
     ;Writes end message on name table 0 in row $20C0 (7th row from top).
-    VRAMStruct $20C3, \
+    VRAMStructData $20C3, \
         "YOU FULFILED YOUR MISSION."
 
     VRAMStructEnd
 
 LA1EB:
     ;Writes end message on name table 0 in row $2100 (9th row from top).
-    VRAMStruct $2103, \
+    VRAMStructData $2103, \
         "IT WILL REVIVE PEACE IN"
 
     ;Writes end message on name table 0 in row $2140 (11th row from top).
-    VRAMStruct $2142, \
+    VRAMStructData $2142, \
         "SPACE."
 
     VRAMStructEnd
 
 LA20F:
     ;Writes end message on name table 0 in row $2180 (13th row from top).
-    VRAMStruct $2183, \
+    VRAMStructData $2183, \
         "BUT,IT MAY BE INVADED BY"
 
     ;Writes end message on name table 0 in row $21C0 (15th row from top).
-    VRAMStruct $21C2, \
+    VRAMStructData $21C2, \
         "THE OTHER METROID."
 
     VRAMStructEnd
 
 LA240:
     ;Writes end message on name table 0 in row $2200 (18th row from top).
-    VRAMStruct $2203, \
+    VRAMStructData $2203, \
         "PRAY FOR A TRUE PEACE IN"
 
     ;Writes end message on name table 0 in row $2240 (19th row from top).
-    VRAMStruct $2242, \
+    VRAMStructData $2242, \
         "SPACE!"
 
     VRAMStructEnd
@@ -4581,44 +4581,44 @@ EndMessageStringTbl1: ; 00:A265
 
 LA26D:
     ;Erases end message on name table 0 in row $2060 (4th row from top).
-    VRAMStructRepeat $206D, $08, \
+    VRAMStructDataRepeat $206D, $08, \
         " "
 
     ;Erases end message on name table 0 in row $20C0 (7th row from top).
-    VRAMStructRepeat $20C3, $1A, \
+    VRAMStructDataRepeat $20C3, $1A, \
         " "
 
     VRAMStructEnd
 
 LA276:
     ;Erases end message on name table 0 in row $2100 (9th row from top).
-    VRAMStructRepeat $2103, $17, \
+    VRAMStructDataRepeat $2103, $17, \
         " "
 
     ;Erases end message on name table 0 in row $2140 (11th row from top).
-    VRAMStructRepeat $2142, $0A, \
+    VRAMStructDataRepeat $2142, $0A, \
         " "
 
     VRAMStructEnd
 
 LA27F:
     ;Erases end message on name table 0 in row $2180 (13th row from top).
-    VRAMStructRepeat $2183, $18, \
+    VRAMStructDataRepeat $2183, $18, \
         " "
 
     ;Erases end message on name table 0 in row $21C0 (15th row from top).
-    VRAMStructRepeat $21C2, $12, \
+    VRAMStructDataRepeat $21C2, $12, \
         " "
 
     VRAMStructEnd
 
 LA288:
     ;Erases end message on name table 0 in row $2200 (18th row from top).
-    VRAMStructRepeat $2203, $18, \
+    VRAMStructDataRepeat $2203, $18, \
         " "
 
     ;Erases end message on name table 0 in row $2240 (19th row from top).
-    VRAMStructRepeat $2242, $0A, \
+    VRAMStructDataRepeat $2242, $0A, \
         " "
 
     VRAMStructEnd
@@ -4673,22 +4673,22 @@ CreditsPointerTbl: ; 00:A291
 
 VRAMStruct_Credits00:
     ;Writes credits on name table 0 in row $2020 (2nd row from top).
-    VRAMStruct $202C, \
+    VRAMStructData $202C, \
         "HAI YUKAMI"
 
     ;Clears attribute table 0 starting at $23C0.
-    VRAMStructRepeat $23C0, $20, \
+    VRAMStructDataRepeat $23C0, $20, \
         $00
 
     VRAMStructEnd
 
 VRAMStruct_Credits01:
     ;Writes credits on name table 0 in row $2060 (4th row from top)
-    VRAMStruct $206A, \
+    VRAMStructData $206A, \
         "ZARU SOBAJIMA"
 
     ;Writes credits on name table 0 in row $20A0 (6th row from top).
-    VRAMStruct $20AB, \
+    VRAMStructData $20AB, \
         "GPZ SENGOKU"
 
     VRAMStructEnd
@@ -4698,267 +4698,267 @@ VRAMStruct_Credits02:
 
 VRAMStruct_Credits03:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
-    VRAMStruct $216A, \
+    VRAMStructData $216A, \
         "N.SHIOTANI"
 
     ;Clears attribute table 0 starting at $23E0
-    VRAMStructRepeat $23E0, $20, \
+    VRAMStructDataRepeat $23E0, $20, \
         $00
 
     VRAMStructEnd
 
 ;Writes credits on name table 0 in row $21E0 (16th row from top).
 VRAMStruct_Credits04:
-    VRAMStruct $21EB, \
+    VRAMStructData $21EB, \
         "M.HOUDAI"
 
     VRAMStructEnd
 
 VRAMStruct_Credits05:
     ;Writes credits on name table 0 in row $22A0 (22nd row from top).
-    VRAMStruct $22A7, \
+    VRAMStructData $22A7, \
         "SPECIAL THANKS  TO"
 
     VRAMStructEnd
 
 VRAMStruct_Credits06:
     ;Writes credits on name table 0 in row $22E0 (24nd row from top).
-    VRAMStruct $22EC, \
+    VRAMStructData $22EC, \
         "KEN ZURI"
 
     ;Writes credits on name table 0 in row $2320 (26nd row from top).
-    VRAMStruct $232E, \
+    VRAMStructData $232E, \
         "SUMI"
 
     VRAMStructEnd
 
 VRAMStruct_Credits07:
     ;Writes credits on name table 0 in row $2360 (28nd row from top).
-    VRAMStruct $236C, \
+    VRAMStructData $236C, \
         "INUSAWA"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    VRAMStruct $23AD, \
+    VRAMStructData $23AD, \
         "KACHO"
 
     VRAMStructEnd
 
 VRAMStruct_Credits08:
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
-    VRAMStructRepeat $2828, $0E, \
+    VRAMStructDataRepeat $2828, $0E, \
         " "
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
-    VRAMStruct $286C, \
+    VRAMStructData $286C, \
         "HYAKKAN"
 
     VRAMStructEnd
 
 VRAMStruct_Credits09:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    VRAMStruct $28A8, \
+    VRAMStructData $28A8, \
         "     GOYAKE        "
 
     ;Writes credits on name table 2 in row $28E0 (8th row from top).
-    VRAMStructRepeat $28E8, $0F, \
+    VRAMStructDataRepeat $28E8, $0F, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits0A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
-    VRAMStruct $292C, \
+    VRAMStructData $292C, \
         "HARADA "
 
     VRAMStructEnd
 
 VRAMStruct_Credits0B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    VRAMStruct $2966, \
+    VRAMStructData $2966, \
         "       PENPEN         "
 
     ;Writes credits on name table 2 in row $29A0 (14th row from top).
-    VRAMStructRepeat $29A8, $0F, \
+    VRAMStructDataRepeat $29A8, $0F, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits0C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
-    VRAMStruct $29EA, \
+    VRAMStructData $29EA, \
         "CONVERTED BY"
 
     VRAMStructEnd
 
 VRAMStruct_Credits0D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    VRAMStruct $2A26, \
+    VRAMStructData $2A26, \
         "     T.NARIHIRO  "
 
     ;Writes credits on name table 2 in row $2A60 (20th row from top).
-    VRAMStructRepeat $2A67, $11, \
+    VRAMStructDataRepeat $2A67, $11, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits0E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    VRAMStruct $2AEB, \
+    VRAMStructData $2AEB, \
         "ASSISTED BY"
 
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
-    VRAMStruct $2B28, \
+    VRAMStructData $2B28, \
         "   MAKOTO KANOH"
 
     VRAMStructEnd
 
 VRAMStruct_Credits0F:
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
-    VRAMStructRepeat $2BA6, $13, \
+    VRAMStructDataRepeat $2BA6, $13, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits10:
     ;Writes credits on name table 0 in row $2020 (2nd row from the top).
-    VRAMStruct $202B, \
+    VRAMStructData $202B, \
         "DIRECTED BY"
 
     VRAMStructEnd
 
 VRAMStruct_Credits11:
     ;Writes credits on name table 0 in row $2060 (4th row from the top).
-    VRAMStruct $2067, \
+    VRAMStructData $2067, \
         "     YAMAMOTO       "
 
     ;Writes credits on name table 0 in row $20A0 (6th row from the top).
-    VRAMStructRepeat $20AA, $0E, \
+    VRAMStructDataRepeat $20AA, $0E, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits12:
     ;Writes credits on name table 0 in row $2120 (10th row from the top).
-    VRAMStruct $2127, \
+    VRAMStructData $2127, \
         "  CHIEF DIRECTOR "
 
     ;Writes credits on name table 0 in row $2160 (12th row from the top).
-    VRAMStruct $2168, \
+    VRAMStructData $2168, \
         "  SATORU OKADA   "
 
     VRAMStructEnd
 
 VRAMStruct_Credits13:
     ;Writes credits on name table 0 in row $21E0 (16th row from the top).
-    VRAMStructRepeat $21E6, $18, \
+    VRAMStructDataRepeat $21E6, $18, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits14:
     ;Writes credits on name table 0 in row $2220 (18th row from the top).
-    VRAMStruct $222B, \
+    VRAMStructData $222B, \
         "PRODUCED BY     "
 
     ;Writes credits on name table 0 in row $2260 (20th row from the top).
-    VRAMStruct $226A, \
+    VRAMStructData $226A, \
         "GUNPEI YOKOI"
 
     VRAMStructEnd
 
 VRAMStruct_Credits15:
     ;Writes credits on name table 0 in row $22A0 (22nd row from the top).
-    VRAMStructRepeat $22A6, $13, \
+    VRAMStructDataRepeat $22A6, $13, \
         " "
 
     ;Writes credits on name table 0 in row $22E0 (24th row from the top).
-    VRAMStructRepeat $22E8, $0F, \
+    VRAMStructDataRepeat $22E8, $0F, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits16:
     ;Writes credits on name table 0 in row $2320 (26th row from the top).
-    VRAMStructRepeat $2329, $0D, \
+    VRAMStructDataRepeat $2329, $0D, \
         " "
 
     ;Writes credits on name table 0 in row $2340 (27th row from the top).
-    VRAMStruct $234B, \
+    VRAMStructData $234B, \
         "COPYRIGHT"
 
     VRAMStructEnd
 
 VRAMStruct_Credits17:
     ;Writes credits on name table 0 in row $2360 (28th row from the top).
-    VRAMStructRepeat $236B, $0A, \
+    VRAMStructDataRepeat $236B, $0A, \
         " "
 
     ;Writes credits on name table 0 in row $2380 (29th row from the top).
-    VRAMStruct $238E, \
+    VRAMStructData $238E, \
         "1986"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    VRAMStructRepeat $23A8, $0F, \
+    VRAMStructDataRepeat $23A8, $0F, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits18:
     ;Writes credits on name table 2 in row $2800 (top row)
-    VRAMStruct $280C, \
+    VRAMStructData $280C, \
         "NINTENDO"
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
-    VRAMStructRepeat $2866, $11, \
+    VRAMStructDataRepeat $2866, $11, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits19:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    VRAMStructRepeat $28AA, $0C, \
+    VRAMStructDataRepeat $28AA, $0C, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
-    VRAMStructRepeat $2926, $1B, \
+    VRAMStructDataRepeat $2926, $1B, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    VRAMStructRepeat $2967, $12, \
+    VRAMStructDataRepeat $2967, $12, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
-    VRAMStructRepeat $29E6, $14, \
+    VRAMStructDataRepeat $29E6, $14, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    VRAMStructRepeat $2A28, $15, \
+    VRAMStructDataRepeat $2A28, $15, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    VRAMStructRepeat $2AE6, $10, \
+    VRAMStructDataRepeat $2AE6, $10, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits1F:
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
-    VRAMStructRepeat $2B29, $0E, \
+    VRAMStructDataRepeat $2B29, $0E, \
         " "
 
 VRAMStruct_Credits20:
@@ -4966,44 +4966,44 @@ VRAMStruct_Credits20:
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
 VRAMStruct_Credits21:
-    VRAMStruct $2026, \
+    VRAMStructData $2026, \
         "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
 
     VRAMStructEnd
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
 VRAMStruct_Credits22:
-    VRAMStruct $204B, \
+    VRAMStructData $204B, \
         $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
     ;Writes credits on name table 0 in row $2060 (4th row from top).
-    VRAMStructRepeat $206A, $0C, \
+    VRAMStructDataRepeat $206A, $0C, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits23:
     ;Writes credits on name table 0 in row $2120 (10th row from top).
-    VRAMStructRepeat $2126, $13, \
+    VRAMStructDataRepeat $2126, $13, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits24:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
-    VRAMStructRepeat $216A, $0C, \
+    VRAMStructDataRepeat $216A, $0C, \
         " "
 
     VRAMStructEnd
 
 VRAMStruct_Credits25:
     ;Writes credits on name table 0 in row $2180 (13th row from top).
-    VRAMStruct $2188, \
+    VRAMStructData $2188, \
         "                 "
 
 VRAMStruct_Credits28:
     ;Writes credits on name table 0 in row $2220 (18th row from top).
-    VRAMStructRepeat $2226, $0B, \
+    VRAMStructDataRepeat $2226, $0B, \
         " "
 
     VRAMStructEnd

@@ -29,12 +29,12 @@
     .undef absXSpd, absYSpd, signXSpd, signYSpd
 .endm
 
-.macro VRAMStruct args ppuAddress ; , vramStruct
+.macro VRAMStructData args ppuAddress ; , vramStructData
     .byte >ppuAddress, <ppuAddress
     .shift
     
-    .byte @VRAMStruct\@_end - @VRAMStruct\@_start
-    @VRAMStruct\@_start:
+    .byte @VRAMStructData\@_end - @VRAMStructData\@_start
+    @VRAMStructData\@_start:
     .repeat NARGS
         .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
             .db \1
@@ -42,20 +42,20 @@
             .stringmap charmap, \1
         .else
             .print \?1, "\n"
-            .fail "VRAMStruct: bad data argument type"
+            .fail "VRAMStructData: bad data argument type"
         .endif
         .shift
     .endr
-    @VRAMStruct\@_end:
+    @VRAMStructData\@_end:
     
-    .if (@VRAMStruct\@_end - @VRAMStruct\@_start < 1) || (@VRAMStruct\@_end - @VRAMStruct\@_start > 256)
-        .print @VRAMStruct\@_end - @VRAMStruct\@_start, "\n"
-        .fail "VRAMStruct: bad string length"
+    .if (@VRAMStructData\@_end - @VRAMStructData\@_start < 1) || (@VRAMStructData\@_end - @VRAMStructData\@_start > 256)
+        .print @VRAMStructData\@_end - @VRAMStructData\@_start, "\n"
+        .fail "VRAMStructData: bad string length"
     .endif
     
 .endm
 
-.macro VRAMStructRepeat args ppuAddress, repetitions, ppuByte
+.macro VRAMStructDataRepeat args ppuAddress, repetitions, ppuByte
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
     .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
@@ -64,7 +64,7 @@
         .stringmap charmap, ppuByte
     .else
         .print \?3, "\n"
-        .fail "VRAMStruct: bad data argument type"
+        .fail "VRAMStructDataRepeat: bad data argument type"
     .endif
 .endm
 

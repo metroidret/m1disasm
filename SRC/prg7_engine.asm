@@ -698,7 +698,7 @@ ChooseRoutine:
 
 ;--------------------------------------[ Write to scroll registers ]---------------------------------
 
-WriteScroll:
+WriteScroll: ; 07:C29A
     ;Reset scroll register flip/flop
     lda PPUSTATUS
     ;X and Y scroll offsets are loaded serially.
@@ -783,55 +783,77 @@ CheckPPUWrite:
 RTS_C2E3:
     rts
 
+
 PPUWrite:
-    sta PPUADDR                     ;Set high PPU address.
-    iny                             ;
-    lda ($00),y                     ;
-    sta PPUADDR                     ;Set low PPU address.
-    iny                             ;
-    lda ($00),y                     ;Get data byte containing rep length & RLE status.
-    asl                             ;Carry Flag = PPU address increment (0 = 1, 1 = 32).
-    jsr SetPPUInc                   ;($C318)Update PPUCtrl0 according to Carry Flag.
-    asl                             ;Carry Flag = bit 6 of byte at ($00),y (1 = RLE).
-    lda ($00),y                     ;Get data byte again.
-    and #$3F                        ;Keep lower 6 bits as loop counter.
-    tax                             ;
-    bcc PPUWriteLoop                ;If Carry Flag not set, the data is not RLE.
-    iny                             ;Data is RLE, advance to data byte.
+    ;Set high PPU address.
+    sta PPUADDR
+    ;Set low PPU address.
+    iny
+    lda ($00),y
+    sta PPUADDR
+    ;Get data byte containing rep length & RLE status.
+    iny
+    lda ($00),y
+    ;Carry Flag = PPU address increment (0 = 1, 1 = 32).
+    asl
+    ;Update PPUCtrl0 according to Carry Flag.
+    jsr SetPPUInc
+    ;Carry Flag = bit 6 of byte at ($00),y (1 = RLE).
+    asl
+    ;Get data byte again. Keep lower 6 bits as loop counter.
+    lda ($00),y
+    and #$3F
+    tax
+    ;If Carry Flag not set, the data is not RLE.
+    bcc PPUWriteLoop
+        ;Data is RLE, advance to data byte.
+        iny
     PPUWriteLoop:
-        bcs LC300                           ;
-            iny                             ;Only inc Y if data is not RLE.
+        ;Only inc Y if data is not RLE.
+        bcs LC300
+            iny
         LC300:
-        lda ($00),y                     ;Get data byte.
-        sta PPUDATA                     ;Write to PPU.
-        dex                             ;Decrease loop counter.
-        bne PPUWriteLoop                ;Keep going until X=0.
-    iny                             ;
-    jsr AddYToPtr00                 ;($C2A8)Point to next data chunk.
+        ;Get data byte.
+        lda ($00),y
+        ;Write to PPU.
+        sta PPUDATA
+        ;Decrease loop counter. Keep going until X=0.
+        dex
+        bne PPUWriteLoop
+    ;Point to next data chunk.
+    iny
+    jsr AddYToPtr00
+    ; fallthough
 
 ;Write data string at ($00) to PPU.
-
 ProcessVRAMStruct:
-    ldx PPUSTATUS                   ;Reset PPU address flip/flop.
-    ldy #$00                        ;
-    lda ($00),y                     ;
-    bne PPUWrite                    ;If A is non-zero, PPU data string follows,-->
-    jmp WriteScroll                 ;($C29A)Otherwise we're done.
+    ;Reset PPU address flip/flop.
+    ldx PPUSTATUS
+    ;Read VRAMStruct PPU address high byte
+    ;If it is non-zero, PPU data string follows, otherwise we're done.
+    ldy #$00
+    lda ($00),y
+    bne PPUWrite
+    jmp WriteScroll
+
 
 ;In: CF = desired PPU address increment (0 = 1, 1 = 32).
 ;Out: PPU control #0 ($2000) updated accordingly.
+SetPPUInc: ; 07:C318
+    ;Preserve A.
+    pha
+    ;PPU increment = 32 only if Carry Flag set, else PPU increment = 1.
+    lda PPUCTRL_ZP
+    ora #PPUCTRL_INCR_DOWN
+    bcs @endIf_A
+        and #~PPUCTRL_INCR_DOWN.b
+    @endIf_A:
+    sta PPUCTRL
+    sta PPUCTRL_ZP
+    ;Restore A.
+    pla
+    rts
 
-SetPPUInc:
-    pha                             ;Preserve A.
-    lda PPUCTRL_ZP                  ;
-    ora #$04                        ;
-    bcs LC321                           ;PPU increment = 32 only if Carry Flag set,-->
-        and #$FB                        ;else PPU increment = 1.
-    LC321:
-    sta PPUCTRL                     ;
-    sta PPUCTRL_ZP                  ;
-    pla                             ;Restore A.
-    rts                             ;
 
 ;Write blasted tile to nametable.  Each screen is 16 tiles across and 15 tiles down.
 WriteTileBlast:
