@@ -281,6 +281,10 @@ Temp02_ScrambleCount   = $02
 Temp00_FillValue       = $00
 Temp01_NameTablePlus1  = $01
 
+; VRAMStruct
+Temp00_VRAMStructPtr   = $00
+; Temp00_VRAMStructPtr+1 = $01
+
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
 ; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
@@ -1033,9 +1037,9 @@ TileInfo5              db   ;$0786   ;
 
 SpareMem0787           ds $19 ;$0787
 
-PPUStrIndex            db   ;$07A0   ;# of bytes of data in PPUDataString. #$4F bytes max.
+VRAMStructBufferIndex  db   ;$07A0   ;# of bytes of data in VRAMStructBuffer. #$4F bytes max.
 
-;$07A1 thru $07F0 contain a byte string of data to be written the the PPU. 
+;$07A1-$07EF contain a byte string of data to be written the the PPU.
 ;The first two bytes in the string are the address of the starting point in the PPU to write -->
 ;the data (high byte, low byte).
 ;The third byte is a configuration byte.
@@ -1047,7 +1051,7 @@ PPUStrIndex            db   ;$07A0   ;# of bytes of data in PPUDataString. #$4F 
 ;Any following bytes are the actual data bytes to be written to the PPU.
 ;#$00 separates the data chunks.
 
-PPUDataString          db   ;$07A1   ;Thru $07F0. String of data bytes to be written to PPU.
+VRAMStructBuffer       ds $4F ;$07A1-$07EF ;String of data bytes to be written to PPU.
 
 .ende
 

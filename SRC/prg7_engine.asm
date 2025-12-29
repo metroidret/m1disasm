@@ -259,7 +259,7 @@ NMI:
         ;($C1E0)Check if palette data pending.
         jsr CheckPalWrite
         ;($C2CA)check if data needs to be written to PPU.
-        jsr CheckPPUWrite
+        jsr CheckVRAMStructBufferWrite
         ;($C44D)Update $2000 & $2001.
         jsr WritePPUCtrl
         ;($C29A)Update h/v scroll reg.
@@ -537,9 +537,12 @@ LC1FF:
     sta PalDataPending              ;Reset palette data pending byte.
 
 PreparePPUProcess:
-    stx $00                         ;Lower byte of pointer to PPU string.
-    sty $01                         ;Upper byte of pointer to PPU string.
-    jmp ProcessVRAMStruct            ;($C30C)Write data string to PPU.
+    ;Lower byte of pointer to VRAM structure
+    stx Temp00_VRAMStructPtr
+    ;Upper byte of pointer to VRAM structure
+    sty Temp00_VRAMStructPtr+1.b
+    ;Write VRAM structure to PPU.
+    jmp VRAMStructWrite
 
 ;----------------------------------------[Read joy pad status ]--------------------------------------
 
@@ -763,77 +766,80 @@ Amul8:
 ;Checks if any data is waiting to be written to the PPU.
 ;RLE data is one tile that repeats several times in a row.  RLE-Repeat Last Entry
 
-CheckPPUWrite:
-    ;If zero no PPU data to write, branch to exit.
+CheckVRAMStructBufferWrite:
+    ;Exit if no PPU data to write.
     lda PPUDataPending
-    beq RTS_C2E3
-    ;Sets up PPU writer to start at address $07A1.
-    ;$0000 = ptr to PPU data string ($07A1).
-    lda #<PPUDataString.b
-    sta $00
-    lda #>PPUDataString.b
-    sta $01
-    ;($C30C)write it to PPU.
-    jsr ProcessVRAMStruct
-    ;PPU data string has been written so the data stored for the write is now erased.
+    beq @RTS
+    
+    ;Sets up VRAM structure writer to start at address $07A1.
+    ;$0000 = ptr to VRAM structure buffer ($07A1).
+    lda #<VRAMStructBuffer.b
+    sta Temp00_VRAMStructPtr
+    lda #>VRAMStructBuffer.b
+    sta Temp00_VRAMStructPtr+1.b
+    ;write it to PPU.
+    jsr VRAMStructWrite
+    
+    ;VRAM structure has been written, so the data stored for the write is now erased.
     lda #$00
-    sta PPUStrIndex
-    sta PPUDataString
+    sta VRAMStructBufferIndex
+    sta VRAMStructBuffer
     sta PPUDataPending
-RTS_C2E3:
+@RTS:
     rts
 
 
-PPUWrite:
+VRAMStructWriteData:
     ;Set high PPU address.
     sta PPUADDR
     ;Set low PPU address.
     iny
-    lda ($00),y
+    lda (Temp00_VRAMStructPtr),y
     sta PPUADDR
     ;Get data byte containing rep length & RLE status.
     iny
-    lda ($00),y
+    lda (Temp00_VRAMStructPtr),y
     ;Carry Flag = PPU address increment (0 = 1, 1 = 32).
     asl
-    ;Update PPUCtrl0 according to Carry Flag.
+    ;Update PPUCTRL according to Carry Flag.
     jsr SetPPUInc
     ;Carry Flag = bit 6 of byte at ($00),y (1 = RLE).
     asl
     ;Get data byte again. Keep lower 6 bits as loop counter.
-    lda ($00),y
+    lda (Temp00_VRAMStructPtr),y
     and #$3F
     tax
     ;If Carry Flag not set, the data is not RLE.
-    bcc PPUWriteLoop
+    bcc @endIf_A
         ;Data is RLE, advance to data byte.
         iny
-    PPUWriteLoop:
+    @endIf_A:
+    @loop:
         ;Only inc Y if data is not RLE.
-        bcs LC300
+        bcs @endIf_B
             iny
-        LC300:
+        @endIf_B:
         ;Get data byte.
-        lda ($00),y
+        lda (Temp00_VRAMStructPtr),y
         ;Write to PPU.
         sta PPUDATA
         ;Decrease loop counter. Keep going until X=0.
         dex
-        bne PPUWriteLoop
+        bne @loop
     ;Point to next data chunk.
     iny
     jsr AddYToPtr00
     ; fallthough
 
 ;Write data string at ($00) to PPU.
-ProcessVRAMStruct:
+VRAMStructWrite: ; 07:C30C
     ;Reset PPU address flip/flop.
     ldx PPUSTATUS
     ;Read VRAMStruct PPU address high byte
     ;If it is non-zero, PPU data string follows, otherwise we're done.
     ldy #$00
-    lda ($00),y
-    bne PPUWrite
+    lda (Temp00_VRAMStructPtr),y
+    bne VRAMStructWriteData
     jmp WriteScroll
 
 
@@ -866,46 +872,50 @@ WriteTileBlast:
     lda ($02),y                     ;
     jsr Adiv16                      ;($C2BF)/ 16.
     sta $04                         ;# of tiles vertically.
-    ldx PPUStrIndex                 ;
+    ldx VRAMStructBufferIndex
     LC33D:
         lda $01                         ;
-        jsr WritePPUByte                ;($C36B)write PPU high address to $07A1,PPUStrIndex.
+        jsr WritePPUByte                ;($C36B)write PPU high address to $07A1,VRAMStructBufferIndex.
         lda $00                         ;
-        jsr WritePPUByte                ;($C36B)write PPU low address to $07A1,PPUStrIndex.
+        jsr WritePPUByte                ;($C36B)write PPU low address to $07A1,VRAMStructBufferIndex.
         lda $05                         ;data length.
         sta $06                         ;
-        jsr WritePPUByte                ;($C36B)write PPU string length to $07A1,PPUStrIndex.
+        jsr WritePPUByte                ;($C36B)write PPU string length to $07A1,VRAMStructBufferIndex.
         LC34E:
             iny                             ;
             lda ($02),y                     ;Get new tile to replace old tile.
-            jsr WritePPUByte                ;($C36B)Write it to $07A1,PPUStrIndex, inc x.
+            jsr WritePPUByte                ;($C36B)Write it to $07A1,VRAMStructBufferIndex, inc x.
             dec $06                         ;
             bne LC34E                       ;Branch if more horizontal tiles to replace.
-        stx PPUStrIndex                 ;
+        stx VRAMStructBufferIndex
         sty $06                         ;
         ldy #$20                        ;
         jsr AddYToPtr00                 ;($C2A8)Move to next name table line.
         ldy $06                         ;Store index to find next tile info.
         dec $04                         ;
         bne LC33D                       ;Branch if more lines need to be changed on name table.
-    jsr EndVRAMStruct                ;($c376)Finish writing PPU string and exit.
+    jsr EndVRAMStruct                ;Finish writing PPU string and exit.
 
 WritePPUByte:
-    sta PPUDataString,x             ;Store data byte at end of PPUDataString.
+    sta VRAMStructBuffer,x             ;Store data byte at end of VRAMStructBuffer.
 
-NextPPUByte: ;($C36E)
-    inx                             ;PPUDataString has increased in size by 1 byte.
-    cpx #$4F                        ;PPU byte writer can only write a maximum of #$4F bytes
-    bcc RTS_C37D                           ;If PPU string not full, branch to get more data.
-    ldx PPUStrIndex                 ;
+NextPPUByte: ; 07:C36E
+    ;VRAMStructBuffer has increased in size by 1 byte.
+    inx
+    ;If buffer is not full, branch to get more data.
+    cpx #_sizeof_VRAMStructBuffer
+    bcc RTS_C37D
+    ldx VRAMStructBufferIndex
 
-EndVRAMStruct:
-    lda #$00                        ;If PPU string is already full, or all PPU bytes loaded,-->
-    sta PPUDataString,x             ;add #$00 as last byte to the PPU byte string.
-    pla                             ;
-    pla                             ;Remove last return address from stack and jump out of-->
+EndVRAMStruct: ; 07:C376
+    ;If PPU string is already full, or all PPU bytes loaded, add #$00 as last byte to the PPU byte string.
+    lda #$00
+    sta VRAMStructBuffer,x
+    ;Remove last return address from stack and jump out of PPU writing routines.
+    pla
+    pla
 RTS_C37D:
-    rts                             ;PPU writing routines.
+    rts
 
 ;The following routine is only used by the intro routine to load the sprite
 ;palette data for the twinkling stars. The following memory addresses are used:
@@ -914,17 +924,19 @@ RTS_C37D:
 ;$06 Temp storage for index byte.
 
 PrepPPUPaletteString:
-    ldy #$01                        ;
-    sty PPUDataPending              ;Indicate data waiting to be written to PPU.
-    dey                             ;
-    beq LC3BC                       ;Branch always
+    ;Indicate that data is waiting to be written to PPU.
+    ldy #$01
+    sty PPUDataPending
+    ;y = 0
+    dey
+    beq LC3BC ;Branch always
 
 LC385:
     sta $04                         ;$04 now contains next data byte to be put into the PPU string.
     lda $01                         ;High byte of staring address to write PPU data
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda $00                         ;Low byte of starting address to write PPU data.
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda $04                         ;A now contains next data byte to be put into the PPU string.
     jsr SeparateControlBits         ;($C3C6)Break control byte into two bytes.
 
@@ -938,7 +950,7 @@ WritePaletteStringByte:
         iny                             ;Non-repeating data byte. Increment for next byte.
     LC3A0:
     lda ($02),y                     ;
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     sty $06                         ;Temporarily store data index.
     ldy #$01                        ;PPU address increment = 1.
     bit $04                         ;If MSB set in control bit, it looks like this routine might-->
@@ -952,11 +964,11 @@ WritePaletteStringByte:
     ldy $06                         ;Restore data index to Y.
     dec $05                         ;Decrement counter byte.
     bne WritePaletteStringByte      ;If more bytes to write, branch to write another byte.
-    stx PPUStrIndex                 ;Store total length, in bytes, of PPUDataString.
+    stx VRAMStructBufferIndex                 ;Store total length, in bytes, of VRAMStructBuffer.
     iny                             ;Move to next data byte(should be #$00).
 
 LC3BC:
-    ldx PPUStrIndex                 ;X now contains current length of PPU data string.
+    ldx VRAMStructBufferIndex                 ;X now contains current length of PPU data string.
     lda ($02),y                     ;
     bne LC385                       ;Is PPU string done loading (#$00)? If so exit,-->
     jsr EndVRAMStruct                ;($C376)else branch to process PPU byte.
@@ -964,9 +976,9 @@ LC3BC:
 SeparateControlBits:
     ;Store current byte
     sta Temp04_ControlBits
-    ;Remove RLE bit and save control bit in PPUDataString.
+    ;Remove RLE bit and save control bit in VRAMStructBuffer.
     and #$BF
-    sta PPUDataString,x
+    sta VRAMStructBuffer,x
     ;Extract counter bits and save them for use above.
     and #$3F
     sta Temp05_BytesCounter
@@ -7502,10 +7514,10 @@ UpdateNameTable: ; 07:E590
     ldy #$01
     sty PPUDataPending      ; data pending = YES
     dey
-    ldx PPUStrIndex
+    ldx VRAMStructBufferIndex
     ; PPU starting address = $03.02
     lda Temp02_PPURAMPtr+1.b
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda Temp02_PPURAMPtr
     jsr WritePPUByte
     ; Control byte = $04
@@ -7531,7 +7543,7 @@ UpdateNameTable: ; 07:E590
         dec Temp05_BytesCounter
         bne @loop_data
     ; End PPU string.
-    stx PPUStrIndex
+    stx VRAMStructBufferIndex
     jsr EndVRAMStruct
 
 @controlBitsTable:
@@ -7557,22 +7569,22 @@ WritePPUAttribTbl:
     sta $01                         ;Store results.
     lda #$01                        ;
     sta PPUDataPending              ;Data pending = YES.
-    ldx PPUStrIndex                 ;Load current index into PPU strng to append data.
+    ldx VRAMStructBufferIndex                 ;Load current index into PPU strng to append data.
     lda $03                         ;Store high byte of starting address(attrib table).
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda $02                         ;Store low byte of starting address(attrib table).
-    jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+    jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda #$20                        ;Length of data to write(1 row of attrib data).
     sta $04                         ;
     jsr WritePPUByte                ;($C36B)Write control byte. Horizontal write.
     ldy #$00                        ;Reset index into data string.
     LE616:
         lda ($00),y                     ;Get data byte.
-        jsr WritePPUByte                ;($C36B)Put data byte into PPUDataString.
+        jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
         iny                             ;Increment to next attrib data byte.
         dec $04                         ;
         bne LE616                           ;Loop until all attrib data loaded into PPU.
-    stx PPUStrIndex                 ;Store updated PPU string index.
+    stx VRAMStructBufferIndex                 ;Store updated PPU string index.
     jsr EndVRAMStruct                ;($C376)Append end marker(#$00) and exit writing routines.
 
 ;----------------------------------------------------------------------------------------------------
@@ -12478,7 +12490,7 @@ GetTileBlastFramePtr:
 ; return carry clear if successfully drawn
 ; return carry set if there is not enough space in the ppu string buffer
 DrawTileBlast: ;($FEDC)
-    lda PPUStrIndex
+    lda VRAMStructBufferIndex
     cmp #$1F
     bcs GetTileBlastFramePtr@RTS
     ldx PageIndex

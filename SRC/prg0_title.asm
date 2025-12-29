@@ -1441,7 +1441,7 @@ StarPalSwitch: ; 00:8AC7
     and #$0F
     bne @RTS
     ;Is any other PPU data waiting? If so, exit.
-    lda PPUStrIndex
+    lda VRAMStructBufferIndex
     beq @checkSuccess
 @RTS:
     rts
@@ -2430,7 +2430,7 @@ EnterPassword: ; 00:9147
     ;Prepare to write the password screen data to PPU.
     ldx #$01
     stx PPUDataPending
-    ldx PPUStrIndex
+    ldx VRAMStructBufferIndex
 
     ;Upper byte of PPU string.
     lda #$21
@@ -2953,13 +2953,18 @@ PasswordRowsTbl: ; 00:943F
 
 
 PreparePPUProcess_: ; 00:9449
-    stx $00                         ;Lower byte of pointer to PPU string
-    sty $01                         ;Upper byte of pointer to PPU string
-    jmp ProcessVRAMStruct            ;($C30C)
+    ;Lower byte of pointer to VRAM structure
+    stx Temp00_VRAMStructPtr
+    ;Upper byte of pointer to VRAM structure
+    sty Temp00_VRAMStructPtr+1.b
+    ;Write VRAM structure to PPU.
+    jmp VRAMStructWrite
 
 PrepareEraseTiles: ; 00:9450
-    stx $00                         ;PPU low address byte
-    sty $01                         ;PPU high address byte
+    ;PPU low address byte
+    stx $00
+    ;PPU high address byte
+    sty $01
 
     ;Address of byte where tile size of tile to be erased is stored.
     ldx #<TileSize.b
@@ -2979,9 +2984,9 @@ PrepareEraseTiles: ; 00:9450
 ;The following unused routine writes something to the-->
 ;PPU string and prepares for a PPU write.
 UnusedIntroRoutine4: ; 00:945F
-    stx PPUStrIndex
+    stx VRAMStructBufferIndex
     lda #$00
-    sta PPUDataString,x
+    sta VRAMStructBuffer,x
     lda #$01
     sta PPUDataPending
     rts
@@ -3005,8 +3010,8 @@ UnusedIntroRoutine5: ; 00:946C
     ; fallthrough
 
 @subroutine:
-    ; store nybble to current location in PPUDataString buffer
-    sta PPUDataString,x
+    ; store nybble to current location in VRAMStructBuffer buffer
+    sta VRAMStructBuffer,x
     ; move to next byte in buffer
     inx
     ; exit if we haven't moved outside the bounds of the buffer
@@ -3016,12 +3021,12 @@ UnusedIntroRoutine5: ; 00:946C
 
     ; oh no. we are out of bounds
     ; cancel writing the current ppu string to the buffer
-    ldx PPUStrIndex
+    ldx VRAMStructBufferIndex
     @loop_infinite:
         ; cancel repeatedly forever
         ; pretty sure this is a bug
         lda #$00
-        sta PPUDataString,x
+        sta VRAMStructBuffer,x
         beq @loop_infinite
 @RTS:
     rts

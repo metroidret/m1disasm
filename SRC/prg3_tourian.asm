@@ -1222,10 +1222,10 @@ MotherBrain_Disappear: ; 03:9E86
         jsr Xplus16
         cmp #$40
         bne @loop
-    ; branch if PPUStrIndex is not zero
-    lda PPUStrIndex
+    ; branch if VRAMStructBufferIndex is not zero
+    lda VRAMStructBufferIndex
     bne @endIf_B
-        ; PPUStrIndex is zero
+        ; VRAMStructBufferIndex is zero
         ; flash palette
         lda MotherBrain_Disappear_PaletteTable,y
         sta PalDataPending
@@ -1342,9 +1342,9 @@ MotherBrain_TimeBombMessage_ScrollBackOnScreen:
         ; prepare to draw TileBlasts.0
         lda #$00
         sta PageIndex
-        ; exit if PPUStrIndex is not zero
+        ; exit if VRAMStructBufferIndex is not zero
         ; (counter will not be incremented, so the same part will be attempted again next frame)
-        lda PPUStrIndex
+        lda VRAMStructBufferIndex
         bne @RTS
         ; try to draw TileBlast and exit without incrementing counter if failed
         jsr CommonJump_DrawTileBlast
@@ -2087,10 +2087,10 @@ LA2BA:
     sta TileBlasts.1.roomRAMPtr
     lda Zebetites.0.roomRAMPtr+1,x
     sta TileBlasts.1.roomRAMPtr+1
-    ; if a ppu string is in the buffer, dont update gfx
-    lda PPUStrIndex
+    ; if a vram struct is in the buffer, dont update gfx
+    lda VRAMStructBufferIndex
     bne LA2DA
-        ; ppu string buffer is empty
+        ; vram struct buffer is empty
         ; update zebetite gfx
         txa
         pha
