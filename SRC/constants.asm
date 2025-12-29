@@ -4,11 +4,11 @@
 .asciitable
 .enda
 
-.stringmaptable charmap_kyodaku "SRC/kyodaku.tbl"
-.stringmaptable charmap_title "SRC/title.tbl"
-.stringmaptable charmap_savemenu "SRC/savemenu.tbl"
-.stringmaptable charmap_gameover "SRC/gameover.tbl"
-.stringmaptable charmap_ending "SRC/ending.tbl"
+.stringmaptable charmap_kyodaku "kyodaku.tbl"
+.stringmaptable charmap_title "title.tbl"
+.stringmaptable charmap_savemenu "savemenu.tbl"
+.stringmaptable charmap_gameover "gameover.tbl"
+.stringmaptable charmap_ending "ending.tbl"
 
 
 .include "constants_ram.asm"
