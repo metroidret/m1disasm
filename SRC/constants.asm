@@ -20,10 +20,10 @@
 .include "memory_layout.asm"
 
 
-.stringmaptable charmap "SRC/charmap.tbl"
+.stringmaptable charmap "charmap.tbl"
 
 
-.include "SRC/constants_ram.asm"
+.include "constants_ram.asm"
 
 
 ;------------------------------------------[ Misc. defines ]-----------------------------------------
