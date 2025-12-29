@@ -539,7 +539,7 @@ LC1FF:
 PreparePPUProcess:
     stx $00                         ;Lower byte of pointer to PPU string.
     sty $01                         ;Upper byte of pointer to PPU string.
-    jmp ProcessPPUString            ;($C30C)Write data string to PPU.
+    jmp ProcessVRAMStruct            ;($C30C)Write data string to PPU.
 
 ;----------------------------------------[Read joy pad status ]--------------------------------------
 
@@ -774,7 +774,7 @@ CheckPPUWrite:
     lda #>PPUDataString.b
     sta $01
     ;($C30C)write it to PPU.
-    jsr ProcessPPUString
+    jsr ProcessVRAMStruct
     ;PPU data string has been written so the data stored for the write is now erased.
     lda #$00
     sta PPUStrIndex
@@ -811,7 +811,7 @@ PPUWrite:
 
 ;Write data string at ($00) to PPU.
 
-ProcessPPUString:
+ProcessVRAMStruct:
     ldx PPUSTATUS                   ;Reset PPU address flip/flop.
     ldy #$00                        ;
     lda ($00),y                     ;
@@ -866,7 +866,7 @@ WriteTileBlast:
         ldy $06                         ;Store index to find next tile info.
         dec $04                         ;
         bne LC33D                       ;Branch if more lines need to be changed on name table.
-    jsr EndPPUString                ;($c376)Finish writing PPU string and exit.
+    jsr EndVRAMStruct                ;($c376)Finish writing PPU string and exit.
 
 WritePPUByte:
     sta PPUDataString,x             ;Store data byte at end of PPUDataString.
@@ -877,7 +877,7 @@ NextPPUByte: ;($C36E)
     bcc RTS_C37D                           ;If PPU string not full, branch to get more data.
     ldx PPUStrIndex                 ;
 
-EndPPUString:
+EndVRAMStruct:
     lda #$00                        ;If PPU string is already full, or all PPU bytes loaded,-->
     sta PPUDataString,x             ;add #$00 as last byte to the PPU byte string.
     pla                             ;
@@ -937,7 +937,7 @@ LC3BC:
     ldx PPUStrIndex                 ;X now contains current length of PPU data string.
     lda ($02),y                     ;
     bne LC385                       ;Is PPU string done loading (#$00)? If so exit,-->
-    jsr EndPPUString                ;($C376)else branch to process PPU byte.
+    jsr EndVRAMStruct                ;($C376)else branch to process PPU byte.
 
 SeparateControlBits:
     ;Store current byte
@@ -7510,7 +7510,7 @@ UpdateNameTable: ; 07:E590
         bne @loop_data
     ; End PPU string.
     stx PPUStrIndex
-    jsr EndPPUString
+    jsr EndVRAMStruct
 
 @controlBitsTable:
     .byte $20                       ;Horizontal write. PPU inc = 1, length = 32 tiles.
@@ -7551,7 +7551,7 @@ WritePPUAttribTbl:
         dec $04                         ;
         bne LE616                           ;Loop until all attrib data loaded into PPU.
     stx PPUStrIndex                 ;Store updated PPU string index.
-    jsr EndPPUString                ;($C376)Append end marker(#$00) and exit writing routines.
+    jsr EndVRAMStruct                ;($C376)Append end marker(#$00) and exit writing routines.
 
 ;----------------------------------------------------------------------------------------------------
 

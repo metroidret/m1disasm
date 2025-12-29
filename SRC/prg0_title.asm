@@ -189,8 +189,8 @@ DrawIntroBackground: ; 00:80D0
     ;Erase name table data.
     jsr ClearNameTables
     ;Write background of intro screen to name tables.
-    ldx #<PPUString_DrawIntroBackground.b
-    ldy #>PPUString_DrawIntroBackground.b
+    ldx #<VRAMStruct_DrawIntroBackground.b
+    ldy #>VRAMStruct_DrawIntroBackground.b
     jsr PreparePPUProcess
     ;Prepare to load palette data.
     lda #_id_Palette00+1.b
@@ -615,154 +615,155 @@ TitleRoutineReturn14:
     rts
 
 ;The following data fills name table 0 with the intro screen background graphics.
-PPUString_DrawIntroBackground: ; 00:82F4
+VRAMStruct_DrawIntroBackground: ; 00:82F4
     ;Information to be stored in attribute table 0.
-    PPUString $23C0, \
+    VRAMStruct $23C0, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-    PPUString $23E0, \
+    VRAMStruct $23E0, \
         $FF, $FF, $BF, $AF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
     ;Writes row $22E0 (24th row from top).
-    PPUString $22E0, \
+    VRAMStruct $22E0, \
         $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
     ;Writes row $2300 (25th row from top).
-    PPUString $2300, \
+    VRAMStruct $2300, \
         $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
     ;Writes row $2320 (26th row from top).
-    PPUString $2320, \
+    VRAMStruct $2320, \
         $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
     ;Writes row $2340 (27th row from top).
-    PPUString $2340, \
+    VRAMStruct $2340, \
         $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
     ;Writes row $2360 (28th row from top).
-    PPUString $2360, \
+    VRAMStruct $2360, \
         $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
     ;Writes row $2380 (29th row from top).
-    PPUString $2380, \
+    VRAMStruct $2380, \
         $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
     ;Writes row $23A0 (Bottom row).
-    PPUString $23A0, \
+    VRAMStruct $23A0, \
         $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
     ;Writes some blank spaces in row $20A0 (6th row from top).
-    PPUStringRepeat $20A8, " ", $0F
+    VRAMStructRepeat $20A8, $0F, \
+        " "
 
     ;Writes METROID graphics in row $2100 (9th row from top).
-    PPUString $2103, \
+    VRAMStruct $2103, \
         $40, $5D, $56, $5D, $43, $40, $5D, $43, $40, $5D, $5D, $43, $40, $5D, $5D, $63, $62, $5D, $5D, $63, $40, $43, $40, $5D, $5D, $63, $1D, $16
 
     ;Writes METROID graphics in row $2120 (10th row from top).
-    PPUString $2123, \
+    VRAMStruct $2123, \
         $44, $50, $50, $50, $47, $44, $57, $58, $74, $75, $76, $77, $44, $57, $69, $47, $44, $57, $69, $47, $44, $47, $44, $68, $69, $47
 
     ;Writes METROID graphics in row $2140 (11th row from top).
-    PPUString $2143, \
+    VRAMStruct $2143, \
         $44, $41, $7E, $49, $47, $44, $59, $5A, $78, $79, $7A, $7B, $44, $59, $6D, $70, $44, $73, $72, $47, $44, $47, $44, $73, $72, $47
 
     ;Writes METROID graphics in row $2160 (12th row from top).
-    PPUString $2163, \
+    VRAMStruct $2163, \
         $44, $42, $7F, $4A, $47, $44, $5B, $5C, $FF, $44, $47, $FF, $44, $5B, $6F, $71, $44, $45, $46, $47, $44, $47, $44, $45, $46, $47
 
     ;Writes METROID graphics in row $2180 (13th row from top).
-    PPUString $2183, \
+    VRAMStruct $2183, \
         $44, $47, $FF, $44, $47, $44, $5F, $60, $FF, $44, $47, $FF, $44, $7D, $7C, $47, $44, $6A, $6B, $47, $44, $47, $44, $6A, $6B, $47
 
     ;Writes METROID graphics in row $21A0 (14th row from top).
-    PPUString $21A3, \
+    VRAMStruct $21A3, \
         $4C, $4F, $FF, $4C, $4F, $4C, $5E, $4F, $FF, $4C, $4F, $FF, $4C, $4D, $4E, $4F, $66, $5E, $5E, $64, $4C, $4F, $4C, $5E, $5E, $64
 
     ;Writes METROID graphics in row $21C0 (15th row from top).
-    PPUString $21C3, \
+    VRAMStruct $21C3, \
         $51, $52, $FF, $51, $52, $51, $61, $52, $FF, $51, $52, $FF, $51, $53, $54, $52, $67, $61, $61, $65, $51, $52, $51, $61, $61, $65
 
     ;Writes PUSH START BUTTON in row $2220 (18th row from top).
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        PPUString $2227, \
+        VRAMStruct $2227, \
             " PUSH START BUTTON   "
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        PPUString $2227, \
+        VRAMStruct $2227, \
             "    PRESS START      "
     .endif
 
 
     ;Writes C 1986 NINTENDO in row $2260 (20th row from top).
-    PPUString $2269, \
+    VRAMStruct $2269, \
         "< 1986 NINTENDO   "
 
 ;The following data fills name table 1 with the intro screen background graphics.
 
     ;Information to be stored in attribute table 1.
-    PPUString $27C0, \
+    VRAMStruct $27C0, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
     ;Writes row $27E0 (24th row from top).
-    PPUString $27E0, \
+    VRAMStruct $27E0, \
         $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
     ;Writes row $26E0 (24th row from top).
-    PPUString $26E0, \
+    VRAMStruct $26E0, \
         $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF, $FF, $FF, $FF, $FF, $FF, $8C, $FF, $FF, $FF, $FF, $FF, $8D, $FF, $FF, $8E, $FF
 
     ;Writes row $2700 (25th row from top).
-    PPUString $2700, \
+    VRAMStruct $2700, \
         $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81, $80, $81
 
     ;Writes row $2720 (26th row from top).
-    PPUString $2720, \
+    VRAMStruct $2720, \
         $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83, $82, $83
 
     ;Writes row $2740 (27th row from top).
-    PPUString $2740, \
+    VRAMStruct $2740, \
         $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85, $84, $85
 
     ;Writes row $2760 (28th row from top).
-    PPUString $2760, \
+    VRAMStruct $2760, \
         $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87, $86, $87
 
     ;Writes row $2780 (29th row from top).
-    PPUString $2780, \
+    VRAMStruct $2780, \
         $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89, $88, $89
 
     ;Writes row $27A0 (bottom row).
-    PPUString $27A0, \
+    VRAMStruct $27A0, \
         $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B, $8A, $8B
 
     ;Writes row $2480 (5th row from top).
-    PPUString $2488, \
+    VRAMStruct $2488, \
         "EMERGENCY ORDER"
 
     ;Writes row $2500 (9th row from top).
-    PPUString $2504, \
+    VRAMStruct $2504, \
         "DEFEAT THE METROID OF       "
 
     ;Writes row $2540 (11th row from top).
-    PPUString $2544, \
+    VRAMStruct $2544, \
         "THE PLANET ZEBETH AND     "
 
     ;Writes row $2580 (13th row from top).
-    PPUString $2584, \
+    VRAMStruct $2584, \
         "DESTROY THE MOTHER BRAIN  "
 
     ;Writes row $25C0 (15th row from top).
-    PPUString $25C4, \
+    VRAMStruct $25C4, \
         "THE MECHANICAL LIFE VEIN  "
 
     ;Writes row $2620 (18th row from top).
-    PPUString $2627, \
+    VRAMStruct $2627, \
         "GALAXY FEDERAL POLICE"
 
     ;Writes row $2660 (20th row from top).
-    PPUString $2669, \
+    VRAMStruct $2669, \
         "              M510"
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;The following data does not appear to be used.
     .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -2784,8 +2785,8 @@ DisplayPassword: ; 00:9359
     ;Turn off screen, erase sprites and nametables.
     jsr ClearAll
     ;Clears screen and writes "PASS WORD".
-    ldx #<@PPUString.b
-    ldy #>@PPUString.b
+    ldx #<@VRAMStruct.b
+    ldy #>@VRAMStruct.b
     jsr PreparePPUProcess_
     jsr InitPasswordFontGFX
     ; calculate and display password to screen
@@ -2805,23 +2806,25 @@ DisplayPassword: ; 00:9359
         .word ScreenOn
     .endif
 
-@PPUString:
+@VRAMStruct:
     ;Information below is for above routine to display "PASS WORD" on the screen.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        PPUString $214B, \
+        VRAMStruct $214B, \
             "PASS WORD"
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        PPUString $214B, \
+        VRAMStruct $214B, \
             " PASSWORD"
     .endif
 
     ;Information to be stored in attribute table 0.
-    PPUStringRepeat $23D0, $00, $08
+    VRAMStructRepeat $23D0, $08, \
+        $00
 
     ;Turn color on to display password characters.
-    PPUStringRepeat $23D8, $55, $20
+    VRAMStructRepeat $23D8, $20, \
+        $55
 
-    PPUStringEnd
+    VRAMStructEnd
 
 WaitForSTART: ; 00:9394
     ;Waits for START to be ressed proceed past the GAME OVER screen.
@@ -2844,8 +2847,8 @@ GameOver: ; 00:939E
     ;Turn off screen, erase sprites and nametables.
     jsr ClearAll
     ;Clears screen and writes "GAME OVER".
-    ldx #<@PPUString.b
-    ldy #>@PPUString.b
+    ldx #<@VRAMStruct.b
+    ldy #>@VRAMStruct.b
     jsr PreparePPUProcess_
     ; load font
     jsr InitPasswordFontGFX
@@ -2858,12 +2861,12 @@ GameOver: ; 00:939E
     sta TitleRoutine
     jmp ScreenOn
 
-@PPUString:
+@VRAMStruct:
     ;Information below is for above routine to display "GAME OVER" on the screen.
-    PPUString $218C, \
+    VRAMStruct $218C, \
         "GAME OVER"
 
-    PPUStringEnd
+    VRAMStructEnd
 
 
 PasswordToScreen: ; 00:93C6
@@ -2952,7 +2955,7 @@ PasswordRowsTbl: ; 00:943F
 PreparePPUProcess_: ; 00:9449
     stx $00                         ;Lower byte of pointer to PPU string
     sty $01                         ;Upper byte of pointer to PPU string
-    jmp ProcessPPUString            ;($C30C)
+    jmp ProcessVRAMStruct            ;($C30C)
 
 PrepareEraseTiles: ; 00:9450
     stx $00                         ;PPU low address byte
@@ -3194,122 +3197,123 @@ PalPntrTbl: ; 00:9560
     PtrTableEntryArea PalPntrTbl, Palette12             ; Password Screens
 
 Palette00_{AREA}: ; 00:9586
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette01_{AREA}: ; 00:95AA
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $35, $35, $04, $0F, $35, $14, $04, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette02_{AREA}: ; 00:95CE
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $39, $39, $09, $0F, $39, $29, $09, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette03_{AREA}: ; 00:95F2
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $36, $36, $06, $0F, $36, $15, $06, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette04_{AREA}: ; 00:9616
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $27, $27, $12, $0F, $27, $21, $12, \
         $0F, $16, $1A, $27, $0F, $31, $20, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette05_{AREA}: ; 00:963A
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette06_{AREA}: ; 00:965E
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $01, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette07_{AREA}: ; 00:9682
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $02, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette08_{AREA}: ; 00:96A6
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $01, $0F, $02, $01, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette09_{AREA}: ; 00:96CA
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $02, $0F, $12, $12, $02, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0A_{AREA}: ; 00:96EE
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $11, $11, $02, $0F, $11, $02, $02, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0B_{AREA}: ; 00:9712
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $31, $31, $01, $0F, $31, $11, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0C_{AREA}: ; 00:9736
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $12, $30, $21, $0F, $27, $28, $29, $0F, $31, $31, $01, \
         $0F, $16, $2A, $27, $0F, $12, $30, $21, $0F, $27, $24, $2C, $0F, $15, $21, $38
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0D_{AREA}: ; 00:975A
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $12, $12, $01, $0F, $12, $02, $01, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0E_{AREA}: ; 00:977E
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $02, $02, $0F, $0F, $02, $01, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette0F_{AREA}: ; 00:97A2
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $28, $18, $08, $0F, $29, $1B, $1A, $0F, $01, $01, $0F, $0F, $01, $0F, $0F, \
         $0F, $16, $1A, $27, $0F, $37, $3A, $1B, $0F, $17, $31, $37, $0F, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette10_{AREA}: ; 00:97C6
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $30, $28, $18, $08, $30, $29, $1B, $1A, $30, $30, $30, $30, $30, $30, $30, $30, \
         $30, $16, $1A, $27, $30, $37, $3A, $1B, $30, $17, $31, $37, $30, $32, $22, $12
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette11_{AREA}: ; 00:97EA
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $30, $30, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette12_{AREA}: ; 00:97F2
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal0B:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
-    PPUStringRepeat $3F10, $0F, $10
-    PPUStringEnd
+    VRAMStructRepeat $3F10, $10, \
+        $0F
+    VRAMStructEnd
 
 
 UpdateCrossMissileCoords: ; 00:981E
@@ -3499,19 +3503,19 @@ IntroStarsData: ; 00:98C0
     .byte $38, $CF, $23, $85
 
 ;Not used.
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
         $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 L9984: ; 00:9984
-    PPUString $218C, \
+    VRAMStruct $218C, \
         "START"
 
-    PPUString $21EC, \
+    VRAMStruct $21EC, \
         "CONTINUE"
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;The following pointer table is used to find the start
 ;of each row on the password screen in the data below.
@@ -3532,26 +3536,30 @@ PasswordRow4: .stringmap charmap, "qrstuvwxyz?- "
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
 L99E3:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
-        PPUString $2088, \
+        VRAMStruct $2088, \
             "PASS WORD PLEASE"
     .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-        PPUString $20A8, \
+        VRAMStruct $20A8, \
             "PASSWORD PLEASE "
     .endif
 
     ;Clears attribute table 0 starting at address $23C0.
-    PPUStringRepeat $23C0, $00, $10
+    VRAMStructRepeat $23C0, $10, \
+        $00
 
     ;Writes to attribute table 0 starting at address $23D0.
-    PPUStringRepeat $23D0, $55, $08
+    VRAMStructRepeat $23D0, $08, \
+        $55
 
     ;Writes to attribute table 0 starting at address $23D8.
-    PPUStringRepeat $23D8, $FF, $20
+    VRAMStructRepeat $23D8, $20, \
+        $FF
 
     ;Writes to attribute table 0 starting at address $23DA.
-    PPUStringRepeat $23DA, $F0, $04
+    VRAMStructRepeat $23DA, $04, \
+        $F0
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;----------------------------------------[ Ending routines ]-----------------------------------------
 
@@ -4381,136 +4389,139 @@ EndGamePalPntrTbl: ; 00:9F81
     PtrTableEntry EndGamePalPntrTbl, EndGamePal0B              ;($9806)
 
 EndGamePal00:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, \
         $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal01:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $10, $20, $30, $0F, $0F, $0F, $0F
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal02:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $12, $22, $32, $0F, $0B, $1B, $2B
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal03:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $14, $24, $34, $0F, $09, $19, $29
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal04:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $16, $26, $36, $0F, $07, $17, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal05:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $18, $28, $38, $0F, $05, $15, $25
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal06:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $1A, $2A, $3A, $0F, $03, $13, $13
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal07:
-    PPUString $3F18, \
+    VRAMStruct $3F18, \
         $0F, $1C, $2C, $3C, $0F, $01, $11, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal08:
-    PPUString $3F0C, \
+    VRAMStruct $3F0C, \
         $0F, $18, $08, $07
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal09:
-    PPUString $3F0C, \
+    VRAMStruct $3F0C, \
         $0F, $08, $07, $0F
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
-    PPUStringEnd
+    VRAMStructEnd
 
 EndGamePal0A:
-    PPUStringRepeat $3F0C, $0F, $04
-    PPUStringRepeat $3F10, $0F, $10
-    PPUStringEnd
+    VRAMStructRepeat $3F0C, $04, \
+        $0F
+    VRAMStructRepeat $3F10, $10, \
+        $0F
+    VRAMStructEnd
 
 ;The following data writes the end game background graphics.
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
 LA052:
-    PPUString $2300, \
+    VRAMStruct $2300, \
         $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
     ;Writes ground graphics on name table 0 in row $2320 (26th row from top).
-    PPUString $2320, \
+    VRAMStruct $2320, \
         $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33, $32, $33
 
     ;Writes ground graphics on name table 0 in row $2340 (27th row from top).
-    PPUString $2340, \
+    VRAMStruct $2340, \
         $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35, $34, $35
 
     ;Writes ground graphics on name table 0 in row $2360 (28th row from top).
-    PPUString $2360, \
+    VRAMStruct $2360, \
         $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37, $36, $37
 
     ;Writes ground graphics on name table 0 in row $2380 (29th row from top).
-    PPUString $2380, \
+    VRAMStruct $2380, \
         $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39, $38, $39
 
     ;Writes ground graphics on name table 0 in row $23A0 (bottom row).
-    PPUString $23A0, \
+    VRAMStruct $23A0, \
         $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B, $3A, $3B
 
     ;Sets all color bits in attribute table 0 starting at $23F0.
-    PPUStringRepeat $23F0, $FF, $10
+    VRAMStructRepeat $23F0, $10, \
+        $FF
 
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
-    PPUString $282E, \
+    VRAMStruct $282E, \
         "STAFF"
 
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    PPUString $28A8, \
+    VRAMStruct $28A8, \
         "SCENARIO WRITTEN BY"
 
     ;Writes credits on name table 2 in row $28E0 (8th row from top).
-    PPUString $28EE, \
+    VRAMStruct $28EE, \
         "KANOH"
 
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    PPUString $2966, \
+    VRAMStruct $2966, \
         "CHARACTER DESIGNED BY"
 
     ;Writes credits on name table 2 in row $29A0 (14th row from top).
-    PPUString $29AC, \
+    VRAMStruct $29AC, \
         "KIYOTAKE"
 
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    PPUString $2A2B, \
+    VRAMStruct $2A2B, \
         "NEW MATSUOKA"
 
     ;Writes credits on name table 2 in row $2A60 (20th row from top).
-    PPUString $2A6C, \
+    VRAMStruct $2A6C, \
         "SHIKAMOTO"
 
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    PPUString $2AEC, \
+    VRAMStruct $2AEC, \
         "MUSIC BY"
 
     ;Writes credits on name table 2 in row $2B20 (26th row from top)
-    PPUString $2B2B, \
+    VRAMStruct $2B2B, \
         "HIP TANAKA"
 
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
-    PPUString $2BA7, \
+    VRAMStruct $2BA7, \
         " MAIN PROGRAMMERS "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;The following pointer table is accessed by the NMIScreenWrite routine.
 ;It is used to locate the start of the PPU strings below.
@@ -4520,47 +4531,47 @@ EndMessageStringTbl0:
 
 LA1C2:
     ;Writes end message on name table 0 in row $2060 (4th row from top).
-    PPUString $206D, \
+    VRAMStruct $206D, \
         "GREAT !!"
 
     ;Writes end message on name table 0 in row $20C0 (7th row from top).
-    PPUString $20C3, \
+    VRAMStruct $20C3, \
         "YOU FULFILED YOUR MISSION."
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA1EB:
     ;Writes end message on name table 0 in row $2100 (9th row from top).
-    PPUString $2103, \
+    VRAMStruct $2103, \
         "IT WILL REVIVE PEACE IN"
 
     ;Writes end message on name table 0 in row $2140 (11th row from top).
-    PPUString $2142, \
+    VRAMStruct $2142, \
         "SPACE."
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA20F:
     ;Writes end message on name table 0 in row $2180 (13th row from top).
-    PPUString $2183, \
+    VRAMStruct $2183, \
         "BUT,IT MAY BE INVADED BY"
 
     ;Writes end message on name table 0 in row $21C0 (15th row from top).
-    PPUString $21C2, \
+    VRAMStruct $21C2, \
         "THE OTHER METROID."
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA240:
     ;Writes end message on name table 0 in row $2200 (18th row from top).
-    PPUString $2203, \
+    VRAMStruct $2203, \
         "PRAY FOR A TRUE PEACE IN"
 
     ;Writes end message on name table 0 in row $2240 (19th row from top).
-    PPUString $2242, \
+    VRAMStruct $2242, \
         "SPACE!"
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;The following pointer table is accessed by the NMIScreenWrite routine.
 ;It is used to locate the start of the PPU strings below.
@@ -4570,401 +4581,435 @@ EndMessageStringTbl1: ; 00:A265
 
 LA26D:
     ;Erases end message on name table 0 in row $2060 (4th row from top).
-    PPUStringRepeat $206D, " ", $08
+    VRAMStructRepeat $206D, $08, \
+        " "
 
     ;Erases end message on name table 0 in row $20C0 (7th row from top).
-    PPUStringRepeat $20C3, " ", $1A
+    VRAMStructRepeat $20C3, $1A, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA276:
     ;Erases end message on name table 0 in row $2100 (9th row from top).
-    PPUStringRepeat $2103, " ", $17
+    VRAMStructRepeat $2103, $17, \
+        " "
 
     ;Erases end message on name table 0 in row $2140 (11th row from top).
-    PPUStringRepeat $2142, " ", $0A
+    VRAMStructRepeat $2142, $0A, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA27F:
     ;Erases end message on name table 0 in row $2180 (13th row from top).
-    PPUStringRepeat $2183, " ", $18
+    VRAMStructRepeat $2183, $18, \
+        " "
 
     ;Erases end message on name table 0 in row $21C0 (15th row from top).
-    PPUStringRepeat $21C2, " ", $12
+    VRAMStructRepeat $21C2, $12, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 LA288:
     ;Erases end message on name table 0 in row $2200 (18th row from top).
-    PPUStringRepeat $2203, " ", $18
+    VRAMStructRepeat $2203, $18, \
+        " "
 
     ;Erases end message on name table 0 in row $2240 (19th row from top).
-    PPUStringRepeat $2242, " ", $0A
+    VRAMStructRepeat $2242, $0A, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;The following table is used by the LoadCredits routine to load the end credits on the screen.
 
 CreditsPointerTbl: ; 00:A291
-    .word PPUString_Credits00
-    .word PPUString_Credits01
-    .word PPUString_Credits02
-    .word PPUString_Credits03
-    .word PPUString_Credits04
-    .word PPUString_Credits05
-    .word PPUString_Credits06
-    .word PPUString_Credits07
-    .word PPUString_Credits08
-    .word PPUString_Credits09
-    .word PPUString_Credits0A
-    .word PPUString_Credits0B
-    .word PPUString_Credits0C
-    .word PPUString_Credits0D
-    .word PPUString_Credits0E
-    .word PPUString_Credits0F
-    .word PPUString_Credits10
-    .word PPUString_Credits11
-    .word PPUString_Credits12
-    .word PPUString_Credits13
-    .word PPUString_Credits14
-    .word PPUString_Credits15
-    .word PPUString_Credits16
-    .word PPUString_Credits17
-    .word PPUString_Credits18
-    .word PPUString_Credits19
-    .word PPUString_Credits1A
-    .word PPUString_Credits1B
-    .word PPUString_Credits1C
-    .word PPUString_Credits1D
-    .word PPUString_Credits1E
-    .word PPUString_Credits1F
-    .word PPUString_Credits20
-    .word PPUString_Credits21
-    .word PPUString_Credits22
-    .word PPUString_Credits23
-    .word PPUString_Credits24
-    .word PPUString_Credits25
-    .word PPUString_Credits24
-    .word PPUString_Credits25
-    .word PPUString_Credits28
-    .word PPUString_Credits29
-    .word PPUString_Credits28
-    .word PPUString_Credits29
+    .word VRAMStruct_Credits00
+    .word VRAMStruct_Credits01
+    .word VRAMStruct_Credits02
+    .word VRAMStruct_Credits03
+    .word VRAMStruct_Credits04
+    .word VRAMStruct_Credits05
+    .word VRAMStruct_Credits06
+    .word VRAMStruct_Credits07
+    .word VRAMStruct_Credits08
+    .word VRAMStruct_Credits09
+    .word VRAMStruct_Credits0A
+    .word VRAMStruct_Credits0B
+    .word VRAMStruct_Credits0C
+    .word VRAMStruct_Credits0D
+    .word VRAMStruct_Credits0E
+    .word VRAMStruct_Credits0F
+    .word VRAMStruct_Credits10
+    .word VRAMStruct_Credits11
+    .word VRAMStruct_Credits12
+    .word VRAMStruct_Credits13
+    .word VRAMStruct_Credits14
+    .word VRAMStruct_Credits15
+    .word VRAMStruct_Credits16
+    .word VRAMStruct_Credits17
+    .word VRAMStruct_Credits18
+    .word VRAMStruct_Credits19
+    .word VRAMStruct_Credits1A
+    .word VRAMStruct_Credits1B
+    .word VRAMStruct_Credits1C
+    .word VRAMStruct_Credits1D
+    .word VRAMStruct_Credits1E
+    .word VRAMStruct_Credits1F
+    .word VRAMStruct_Credits20
+    .word VRAMStruct_Credits21
+    .word VRAMStruct_Credits22
+    .word VRAMStruct_Credits23
+    .word VRAMStruct_Credits24
+    .word VRAMStruct_Credits25
+    .word VRAMStruct_Credits24
+    .word VRAMStruct_Credits25
+    .word VRAMStruct_Credits28
+    .word VRAMStruct_Credits29
+    .word VRAMStruct_Credits28
+    .word VRAMStruct_Credits29
 
-PPUString_Credits00:
+VRAMStruct_Credits00:
     ;Writes credits on name table 0 in row $2020 (2nd row from top).
-    PPUString $202C, \
+    VRAMStruct $202C, \
         "HAI YUKAMI"
 
     ;Clears attribute table 0 starting at $23C0.
-    PPUStringRepeat $23C0, $00, $20
+    VRAMStructRepeat $23C0, $20, \
+        $00
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits01:
+VRAMStruct_Credits01:
     ;Writes credits on name table 0 in row $2060 (4th row from top)
-    PPUString $206A, \
+    VRAMStruct $206A, \
         "ZARU SOBAJIMA"
 
     ;Writes credits on name table 0 in row $20A0 (6th row from top).
-    PPUString $20AB, \
+    VRAMStruct $20AB, \
         "GPZ SENGOKU"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits02:
-    PPUStringEnd
+VRAMStruct_Credits02:
+    VRAMStructEnd
 
-PPUString_Credits03:
+VRAMStruct_Credits03:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
-    PPUString $216A, \
+    VRAMStruct $216A, \
         "N.SHIOTANI"
 
     ;Clears attribute table 0 starting at $23E0
-    PPUStringRepeat $23E0, $00, $20
+    VRAMStructRepeat $23E0, $20, \
+        $00
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Writes credits on name table 0 in row $21E0 (16th row from top).
-PPUString_Credits04:
-    PPUString $21EB, \
+VRAMStruct_Credits04:
+    VRAMStruct $21EB, \
         "M.HOUDAI"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits05:
+VRAMStruct_Credits05:
     ;Writes credits on name table 0 in row $22A0 (22nd row from top).
-    PPUString $22A7, \
+    VRAMStruct $22A7, \
         "SPECIAL THANKS  TO"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits06:
+VRAMStruct_Credits06:
     ;Writes credits on name table 0 in row $22E0 (24nd row from top).
-    PPUString $22EC, \
+    VRAMStruct $22EC, \
         "KEN ZURI"
 
     ;Writes credits on name table 0 in row $2320 (26nd row from top).
-    PPUString $232E, \
+    VRAMStruct $232E, \
         "SUMI"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits07:
+VRAMStruct_Credits07:
     ;Writes credits on name table 0 in row $2360 (28nd row from top).
-    PPUString $236C, \
+    VRAMStruct $236C, \
         "INUSAWA"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    PPUString $23AD, \
+    VRAMStruct $23AD, \
         "KACHO"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits08:
+VRAMStruct_Credits08:
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
-    PPUStringRepeat $2828, " ", $0E
+    VRAMStructRepeat $2828, $0E, \
+        " "
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
-    PPUString $286C, \
+    VRAMStruct $286C, \
         "HYAKKAN"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits09:
+VRAMStruct_Credits09:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    PPUString $28A8, \
+    VRAMStruct $28A8, \
         "     GOYAKE        "
 
     ;Writes credits on name table 2 in row $28E0 (8th row from top).
-    PPUStringRepeat $28E8, " ", $0F
+    VRAMStructRepeat $28E8, $0F, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0A:
+VRAMStruct_Credits0A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
-    PPUString $292C, \
+    VRAMStruct $292C, \
         "HARADA "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0B:
+VRAMStruct_Credits0B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    PPUString $2966, \
+    VRAMStruct $2966, \
         "       PENPEN         "
 
     ;Writes credits on name table 2 in row $29A0 (14th row from top).
-    PPUStringRepeat $29A8, " ", $0F
+    VRAMStructRepeat $29A8, $0F, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0C:
+VRAMStruct_Credits0C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
-    PPUString $29EA, \
+    VRAMStruct $29EA, \
         "CONVERTED BY"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0D:
+VRAMStruct_Credits0D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    PPUString $2A26, \
+    VRAMStruct $2A26, \
         "     T.NARIHIRO  "
 
     ;Writes credits on name table 2 in row $2A60 (20th row from top).
-    PPUStringRepeat $2A67, " ", $11
+    VRAMStructRepeat $2A67, $11, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0E:
+VRAMStruct_Credits0E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    PPUString $2AEB, \
+    VRAMStruct $2AEB, \
         "ASSISTED BY"
 
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
-    PPUString $2B28, \
+    VRAMStruct $2B28, \
         "   MAKOTO KANOH"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits0F:
+VRAMStruct_Credits0F:
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
-    PPUStringRepeat $2BA6, " ", $13
+    VRAMStructRepeat $2BA6, $13, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits10:
+VRAMStruct_Credits10:
     ;Writes credits on name table 0 in row $2020 (2nd row from the top).
-    PPUString $202B, \
+    VRAMStruct $202B, \
         "DIRECTED BY"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits11:
+VRAMStruct_Credits11:
     ;Writes credits on name table 0 in row $2060 (4th row from the top).
-    PPUString $2067, \
+    VRAMStruct $2067, \
         "     YAMAMOTO       "
 
     ;Writes credits on name table 0 in row $20A0 (6th row from the top).
-    PPUStringRepeat $20AA, " ", $0E
+    VRAMStructRepeat $20AA, $0E, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits12:
+VRAMStruct_Credits12:
     ;Writes credits on name table 0 in row $2120 (10th row from the top).
-    PPUString $2127, \
+    VRAMStruct $2127, \
         "  CHIEF DIRECTOR "
 
     ;Writes credits on name table 0 in row $2160 (12th row from the top).
-    PPUString $2168, \
+    VRAMStruct $2168, \
         "  SATORU OKADA   "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits13:
+VRAMStruct_Credits13:
     ;Writes credits on name table 0 in row $21E0 (16th row from the top).
-    PPUStringRepeat $21E6, " ", $18
+    VRAMStructRepeat $21E6, $18, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits14:
+VRAMStruct_Credits14:
     ;Writes credits on name table 0 in row $2220 (18th row from the top).
-    PPUString $222B, \
+    VRAMStruct $222B, \
         "PRODUCED BY     "
 
     ;Writes credits on name table 0 in row $2260 (20th row from the top).
-    PPUString $226A, \
+    VRAMStruct $226A, \
         "GUNPEI YOKOI"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits15:
+VRAMStruct_Credits15:
     ;Writes credits on name table 0 in row $22A0 (22nd row from the top).
-    PPUStringRepeat $22A6, " ", $13
+    VRAMStructRepeat $22A6, $13, \
+        " "
 
     ;Writes credits on name table 0 in row $22E0 (24th row from the top).
-    PPUStringRepeat $22E8, " ", $0F
+    VRAMStructRepeat $22E8, $0F, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits16:
+VRAMStruct_Credits16:
     ;Writes credits on name table 0 in row $2320 (26th row from the top).
-    PPUStringRepeat $2329, " ", $0D
+    VRAMStructRepeat $2329, $0D, \
+        " "
 
     ;Writes credits on name table 0 in row $2340 (27th row from the top).
-    PPUString $234B, \
+    VRAMStruct $234B, \
         "COPYRIGHT"
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits17:
+VRAMStruct_Credits17:
     ;Writes credits on name table 0 in row $2360 (28th row from the top).
-    PPUStringRepeat $236B, " ", $0A
+    VRAMStructRepeat $236B, $0A, \
+        " "
 
     ;Writes credits on name table 0 in row $2380 (29th row from the top).
-    PPUString $238E, \
+    VRAMStruct $238E, \
         "1986"
 
     ;Writes credits on name table 0 in row $23A0 (bottom row).
-    PPUStringRepeat $23A8, " ", $0F
+    VRAMStructRepeat $23A8, $0F, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits18:
+VRAMStruct_Credits18:
     ;Writes credits on name table 2 in row $2800 (top row)
-    PPUString $280C, \
+    VRAMStruct $280C, \
         "NINTENDO"
 
     ;Writes credits on name table 2 in row $2860 (4th row from top).
-    PPUStringRepeat $2866, " ", $11
+    VRAMStructRepeat $2866, $11, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits19:
+VRAMStruct_Credits19:
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
-    PPUStringRepeat $28AA, " ", $0C
+    VRAMStructRepeat $28AA, $0C, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1A:
+VRAMStruct_Credits1A:
     ;Writes credits on name table 2 in row $2920 (10th row from top).
-    PPUStringRepeat $2926, " ", $1B
+    VRAMStructRepeat $2926, $1B, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1B:
+VRAMStruct_Credits1B:
     ;Writes credits on name table 2 in row $2960 (12th row from top).
-    PPUStringRepeat $2967, " ", $12
+    VRAMStructRepeat $2967, $12, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1C:
+VRAMStruct_Credits1C:
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
-    PPUStringRepeat $29E6, " ", $14
+    VRAMStructRepeat $29E6, $14, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1D:
+VRAMStruct_Credits1D:
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
-    PPUStringRepeat $2A28, " ", $15
+    VRAMStructRepeat $2A28, $15, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1E:
+VRAMStruct_Credits1E:
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
-    PPUStringRepeat $2AE6, " ", $10
+    VRAMStructRepeat $2AE6, $10, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits1F:
+VRAMStruct_Credits1F:
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
-    PPUStringRepeat $2B29, " ", $0E
+    VRAMStructRepeat $2B29, $0E, \
+        " "
 
-PPUString_Credits20:
-    PPUStringEnd
+VRAMStruct_Credits20:
+    VRAMStructEnd
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
-PPUString_Credits21:
-    PPUString $2026, \
+VRAMStruct_Credits21:
+    VRAMStruct $2026, \
         "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
 
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
-PPUString_Credits22:
-    PPUString $204B, \
+VRAMStruct_Credits22:
+    VRAMStruct $204B, \
         $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
     ;Writes credits on name table 0 in row $2060 (4th row from top).
-    PPUStringRepeat $206A, " ", $0C
+    VRAMStructRepeat $206A, $0C, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits23:
+VRAMStruct_Credits23:
     ;Writes credits on name table 0 in row $2120 (10th row from top).
-    PPUStringRepeat $2126, " ", $13
+    VRAMStructRepeat $2126, $13, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits24:
+VRAMStruct_Credits24:
     ;Writes credits on name table 0 in row $2160 (12th row from top).
-    PPUStringRepeat $216A, " ", $0C
+    VRAMStructRepeat $216A, $0C, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits25:
+VRAMStruct_Credits25:
     ;Writes credits on name table 0 in row $2180 (13th row from top).
-    PPUString $2188, \
+    VRAMStruct $2188, \
         "                 "
 
-PPUString_Credits28:
+VRAMStruct_Credits28:
     ;Writes credits on name table 0 in row $2220 (18th row from top).
-    PPUStringRepeat $2226, " ", $0B
+    VRAMStructRepeat $2226, $0B, \
+        " "
 
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_Credits29:
-    PPUStringEnd
+VRAMStruct_Credits29:
+    VRAMStructEnd
 
 ;-------------------------------------------[ World map ]--------------------------------------------
 

@@ -29,12 +29,12 @@
     .undef absXSpd, absYSpd, signXSpd, signYSpd
 .endm
 
-.macro PPUString args ppuAddress ; , ppuString
+.macro VRAMStruct args ppuAddress ; , vramStruct
     .byte >ppuAddress, <ppuAddress
     .shift
     
-    .byte @PPUString\@_end - @PPUString\@_start
-    @PPUString\@_start:
+    .byte @VRAMStruct\@_end - @VRAMStruct\@_start
+    @VRAMStruct\@_start:
     .repeat NARGS
         .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
             .db \1
@@ -42,33 +42,33 @@
             .stringmap charmap, \1
         .else
             .print \?1, "\n"
-            .fail "PPUString: bad data argument type"
+            .fail "VRAMStruct: bad data argument type"
         .endif
         .shift
     .endr
-    @PPUString\@_end:
+    @VRAMStruct\@_end:
     
-    .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
-        .print @PPUString\@_end - @PPUString\@_start, "\n"
-        .fail "PPUString: bad string length"
+    .if (@VRAMStruct\@_end - @VRAMStruct\@_start < 1) || (@VRAMStruct\@_end - @VRAMStruct\@_start > 256)
+        .print @VRAMStruct\@_end - @VRAMStruct\@_start, "\n"
+        .fail "VRAMStruct: bad string length"
     .endif
     
 .endm
 
-.macro PPUStringRepeat args ppuAddress, ppuByte, repetitions
+.macro VRAMStructRepeat args ppuAddress, repetitions, ppuByte
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
-    .if (\?2 == ARG_IMMEDIATE) || (\?2 == ARG_NUMBER)
+    .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
         .db ppuByte
-    .elif \?2 == ARG_STRING
+    .elif \?3 == ARG_STRING
         .stringmap charmap, ppuByte
     .else
-        .print \?2, "\n"
-        .fail "PPUString: bad data argument type"
+        .print \?3, "\n"
+        .fail "VRAMStruct: bad data argument type"
     .endif
 .endm
 
-.macro PPUStringEnd
+.macro VRAMStructEnd
     .byte $00
 .endm
 

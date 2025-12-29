@@ -20,42 +20,42 @@
 
 ;Default room palette.
 Palette00_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $22, $12, $1C, $0F, $22, $12, $1C, $0F, $27, $11, $07, $0F, $22, $12, $1C, \
         $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $27, $2A, $3C, $0F, $15, $21, $38
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus power suit palette.
 Palette01_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $19, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus power suit with missiles selected palette.
 Palette03_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $2C, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus varia suit palette.
 Palette02_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $19, $35
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus varia suit with missiles selected palette.
 Palette04_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $2C, $24
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Alternate room palette.
 Palette05_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $20, $10, $00, $0F, $28, $19, $17, $0F, $27, $11, $07, $0F, $28, $16, $17
-    PPUString $3F14, \
+    VRAMStruct $3F14, \
         $0F, $12, $30, $21, $0F, $26, $1A, $31, $0F, $15, $21, $38
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus fade in palettes. Same regardless of varia suit and suitless.
 Palette06_{AREA}:
@@ -72,52 +72,52 @@ Palette10_{AREA}:
 Palette11_{AREA}:
 Palette12_{AREA}:
 Palette13_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $04, $09, $07
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette14_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $05, $09, $17
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette15_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $06, $0A, $26
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette16_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $16, $19, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Unused?
 Palette17_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $30, $30, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus power suit palette.
 Palette18_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $17
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus varia suit palette.
 Palette19_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $19
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus power suit with missiles selected palette.
 Palette1A_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $28
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus varia suit with missiles selected palette.
 Palette1B_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $29
-    PPUStringEnd
+    VRAMStructEnd
 

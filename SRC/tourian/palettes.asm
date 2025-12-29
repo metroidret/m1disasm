@@ -20,68 +20,68 @@
 
 ;Room palette.
 Palette00_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $20, $16, $00, $0F, $20, $11, $00, $0F, $16, $20, $00, $0F, $20, $10, $00, \
         $0F, $16, $19, $27, $0F, $12, $30, $21, $0F, $27, $16, $30, $0F, $16, $2A, $37
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus power suit palette.
 Palette01_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $19, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus power suit with missiles selected palette.
 Palette03_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $2C, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus varia suit palette.
 Palette02_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $19, $35
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus varia suit with missiles selected palette.
 Palette04_{AREA}:
-    PPUString $3F12, \
+    VRAMStruct $3F12, \
         $2C, $24
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Mother Brain hurt palettes.
 Palette05_{AREA}:
 Palette06_{AREA}:
-    PPUString $3F0A, \
+    VRAMStruct $3F0A, \
         $27
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette07_{AREA}:
-    PPUString $3F0A, \
+    VRAMStruct $3F0A, \
         $20
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Mother Brain dying palettes.
 Palette08_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $20, $16, $00, $0F, $20, $11, $00, $0F, $20, $16, $00, $0F, $20, $10, $00, $0F
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette09_{AREA}:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
-        PPUString $3F00, \
+        VRAMStruct $3F00, \
             $20, $02, $16, $00, $20, $02, $11, $00, $20, $02, $16, $00, $20, $02, $10, $00, $20
     .elif BUILDTARGET == "NES_CNSUS"
-        PPUString $3F00, \
+        VRAMStruct $3F00, \
             $00, $02, $16, $00, $00, $02, $11, $00, $00, $02, $16, $00, $00, $02, $10, $00, $00
     .endif
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Time bomb explosion palette.
 Palette0A_{AREA}:
-    PPUStringRepeat $3F00, \
+    VRAMStructRepeat $3F00, \
         $20, $20
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Samus fade in palettes. Same regardless of varia suit and suitless.
 Palette0B_{AREA}:
@@ -93,52 +93,52 @@ Palette10_{AREA}:
 Palette11_{AREA}:
 Palette12_{AREA}:
 Palette13_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $04, $09, $07
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette14_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $05, $09, $17
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette15_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $06, $0A, $26
-    PPUStringEnd
+    VRAMStructEnd
 
 Palette16_{AREA}:
-    PPUString $3F11, \
+    VRAMStruct $3F11, \
         $16, $19, $27
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Unused?
 Palette17_{AREA}:
-    PPUString $3F00, \
+    VRAMStruct $3F00, \
         $0F, $30, $30, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus power suit palette.
 Palette18_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $17
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus varia suit palette.
 Palette19_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $19
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus power suit with missiles selected palette.
 Palette1A_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $28
-    PPUStringEnd
+    VRAMStructEnd
 
 ;Suitless Samus varia suit with missiles selected palette.
 Palette1B_{AREA}:
-    PPUString $3F10, \
+    VRAMStruct $3F10, \
         $0F, $15, $34, $29
-    PPUStringEnd
+    VRAMStructEnd
 
