@@ -772,12 +772,12 @@ VRAMStruct_DrawIntroBackground: ; 00:82F4
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ;The following error message is diplayed if the player enters an incorrect password.
-L8759: ; 00:8759
+PasswordErrorMessage: ; 00:8759
     .stringmap charmap, "ERROR TRY AGAIN"
 
 ;If the error message above is not being displayed on the password
 ;screen, the following fifteen blanks spaces are used to cover it up.
-L8768: ; 00:8768
+PasswordNoErrorMessage: ; 00:8768
     .stringmap charmap, "               "
 
 ;Not used.
@@ -2432,32 +2432,32 @@ EnterPassword: ; 00:9147
     stx PPUDataPending
     ldx VRAMStructBufferIndex
 
-    ;Upper byte of PPU string.
-    lda #$21
+    ;Upper byte of PPU address.
+    lda #>$21A8
     jsr WritePPUByte
-    ;Lower byte of PPU string.
-    lda #$A8
+    ;Lower byte of PPU address.
+    lda #<$21A8
     jsr WritePPUByte
-    ;PPU string length.
+    ;VRAM structure data length.
     lda #$0F
     jsr WritePPUByte
 
     lda Timer3
     beq @else_B
         ;Writes 'ERROR TRY AGAIN' on the screen if Timer3 is anything but #$00.
-        lda #<L8759.b
+        lda #<PasswordErrorMessage.b
         sta $02
-        lda #>L8759.b
+        lda #>PasswordErrorMessage.b
         sta $03
         jmp @endIf_B
     @else_B:
         ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
-        lda #<L8768.b
+        lda #<PasswordNoErrorMessage.b
         sta $02
-        lda #>L8768.b
+        lda #>PasswordNoErrorMessage.b
         sta $03
     @endIf_B:
-    ; loop to write all the bytes from those strings to ppu string buffer
+    ; loop to write all the bytes from those strings to vram structure buffer
     ldy #$00
     @loop:
         lda ($02),y
@@ -2982,7 +2982,7 @@ PrepareEraseTiles: ; 00:9450
 ;never read.
 
 ;The following unused routine writes something to the-->
-;PPU string and prepares for a PPU write.
+;VRAM structure buffer and prepares for a PPU write.
 UnusedIntroRoutine4: ; 00:945F
     stx VRAMStructBufferIndex
     lda #$00
@@ -3020,7 +3020,7 @@ UnusedIntroRoutine5: ; 00:946C
     bcc @RTS
 
     ; oh no. we are out of bounds
-    ; cancel writing the current ppu string to the buffer
+    ; cancel writing the current vram structure data to the buffer
     ldx VRAMStructBufferIndex
     @loop_infinite:
         ; cancel repeatedly forever
@@ -3585,8 +3585,8 @@ NMIScreenWrite: ; 00:9A07
         ;Writes the end message on name table 0
         asl
         tay
-        ldx EndMessageStringTbl0-2,y
-        lda EndMessageStringTbl0-1,y
+        ldx EndMessageWritePtrTable-2,y
+        lda EndMessageWritePtrTable-1,y
         tay
         jsr PreparePPUProcess           ;($C20E)Prepare to write to PPU.
     L9A24:
@@ -3599,8 +3599,8 @@ NMIScreenWrite: ; 00:9A07
         ;Erases the end message on name table 0
         asl
         tay
-        ldx EndMessageStringTbl1-2,y
-        lda EndMessageStringTbl1-1,y
+        ldx EndMessageErasePtrTable-2,y
+        lda EndMessageErasePtrTable-1,y
         tay
         jmp PreparePPUProcess           ;($C20E)Prepare to write to PPU.
 Exit100:
@@ -3721,17 +3721,19 @@ LoadEndGFX: ; 00:9AD5
     lda #$04                        ;
     ldy JustInBailey                ;Checks if game was played as suitless-->
     bne L9AE4                       ;Samus.  If so, branch.
-    lda #$00                        ;Loads SpritePointerIndex with #$00(suit on).
-L9AE4:
+        lda #$00                        ;Loads SpritePointerIndex with #$00(suit on).
+    L9AE4:
     sta EndingType                  ;
     asl                             ;Loads SpritePointerIndex with #$08(suitless).
     sta SpritePointerIndex          ;
-    ldx #<LA052.b                     ;Loads the screen where Samus stands on-->
-    ldy #>LA052.b                     ;the surface of the planet in end of game.
+    ;Loads the screen where Samus stands on the surface of the planet in end of game.
+    ldx #<VRAMStruct_EndBackground.b
+    ldy #>VRAMStruct_EndBackground.b
     jsr PreparePPUProcess           ;($C20E)Prepare to write to PPU.
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
-    lda #sfxMulti_EndMusic          ;Initiate end game music.
-    sta MultiSFXFlag                ;
+    ;Initiate end game music.
+    lda #sfxMulti_EndMusic
+    sta MultiSFXFlag
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Loads Timer3 with a delay of 960 frames (16 seconds).
         lda #$60
@@ -3739,21 +3741,26 @@ L9AE4:
         lda #$38
     .endif
     sta Timer3
-    lda #$36                        ;#$36/#$03 = #$12.  Number of sprites-->
-    sta SpriteByteCounter           ;used to draw end graphic of Samus.
-    lda #$00                        ;
-    sta SpriteAttribByte            ;
-    sta ColorCntIndex               ;
-    sta IsCredits                   ;The following values are-->
-    sta EndMsgWrite                 ;initialized to #$00.
-    sta HideShowEndMsg              ;
-    sta CreditPageNumber            ;
+    ;#$36/#$03 = #$12.  Number of sprites used to draw end graphic of Samus.
+    lda #$36
+    sta SpriteByteCounter
+    ;The following values are initialized to #$00.
+    lda #$00
+    sta SpriteAttribByte
+    sta ColorCntIndex
+    sta IsCredits
+    sta EndMsgWrite
+    sta HideShowEndMsg
+    sta CreditPageNumber
+    ;Change palette.
     lda #_id_EndGamePal00+1.b
-    sta PalDataPending              ;Change palette.
-    lda #$08                        ;
-    sta ClrChangeCounter            ;Initialize ClrChangeCounter with #$08.
-    inc RoomPtr                     ;
-    jmp ScreenOn                    ;($C447)Turn screen on.
+    sta PalDataPending
+    ;Initialize ClrChangeCounter with #$08.
+    lda #$08
+    sta ClrChangeCounter
+    inc RoomPtr
+    ;Turn screen on.
+    jmp ScreenOn
 
 ShowEndSamus: ; 00:9B1C
     jsr LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
@@ -4024,10 +4031,12 @@ LoadCredits: ; 00:9C45
     adc $01
     asl
     tay
-    ldx CreditsPointerTbl,y         ;Base is $A291. Lower byte of pointer to PPU string.
-    lda CreditsPointerTbl+1,y       ;Upper byte of pointer to PPU string.
+    ;Load pointer to VRAM structure into x and y.
+    ldx CreditsPtrTable,y
+    lda CreditsPtrTable+1,y
     tay
-    jmp PreparePPUProcess           ;($C20E)Prepare to write to PPU.
+    ;Prepare to write to PPU.
+    jmp PreparePPUProcess
 @RTS:
     rts
 
@@ -4458,7 +4467,7 @@ EndGamePal0A:
 ;The following data writes the end game background graphics.
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
-LA052:
+VRAMStruct_EndBackground: ;($A052)
     VRAMStructData $2300, \
         $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
@@ -4528,13 +4537,16 @@ LA052:
 
     VRAMStructEnd
 
+
 ;The following pointer table is accessed by the NMIScreenWrite routine.
-;It is used to locate the start of the PPU strings below.
+;It is used to locate the start of the VRAM structures below.
+EndMessageWritePtrTable:
+    .word VRAMStruct_EndMessageWrite0
+    .word VRAMStruct_EndMessageWrite1
+    .word VRAMStruct_EndMessageWrite2
+    .word VRAMStruct_EndMessageWrite3
 
-EndMessageStringTbl0:
-    .word LA1C2, LA1EB, LA20F, LA240
-
-LA1C2:
+VRAMStruct_EndMessageWrite0:
     ;Writes end message on name table 0 in row $2060 (4th row from top).
     VRAMStructData $206D, \
         "GREAT !!"
@@ -4545,7 +4557,7 @@ LA1C2:
 
     VRAMStructEnd
 
-LA1EB:
+VRAMStruct_EndMessageWrite1:
     ;Writes end message on name table 0 in row $2100 (9th row from top).
     VRAMStructData $2103, \
         "IT WILL REVIVE PEACE IN"
@@ -4556,7 +4568,7 @@ LA1EB:
 
     VRAMStructEnd
 
-LA20F:
+VRAMStruct_EndMessageWrite2:
     ;Writes end message on name table 0 in row $2180 (13th row from top).
     VRAMStructData $2183, \
         "BUT,IT MAY BE INVADED BY"
@@ -4567,7 +4579,7 @@ LA20F:
 
     VRAMStructEnd
 
-LA240:
+VRAMStruct_EndMessageWrite3:
     ;Writes end message on name table 0 in row $2200 (18th row from top).
     VRAMStructData $2203, \
         "PRAY FOR A TRUE PEACE IN"
@@ -4578,13 +4590,16 @@ LA240:
 
     VRAMStructEnd
 
+
 ;The following pointer table is accessed by the NMIScreenWrite routine.
-;It is used to locate the start of the PPU strings below.
+;It is used to locate the start of the VRAM structures below.
+EndMessageErasePtrTable: ; 00:A265
+    .word VRAMStruct_EndMessageErase0
+    .word VRAMStruct_EndMessageErase1
+    .word VRAMStruct_EndMessageErase2
+    .word VRAMStruct_EndMessageErase3
 
-EndMessageStringTbl1: ; 00:A265
-    .word LA26D, LA276, LA27F, LA288
-
-LA26D:
+VRAMStruct_EndMessageErase0:
     ;Erases end message on name table 0 in row $2060 (4th row from top).
     VRAMStructDataRepeat $206D, $08, \
         " "
@@ -4595,7 +4610,7 @@ LA26D:
 
     VRAMStructEnd
 
-LA276:
+VRAMStruct_EndMessageErase1:
     ;Erases end message on name table 0 in row $2100 (9th row from top).
     VRAMStructDataRepeat $2103, $17, \
         " "
@@ -4606,7 +4621,7 @@ LA276:
 
     VRAMStructEnd
 
-LA27F:
+VRAMStruct_EndMessageErase2:
     ;Erases end message on name table 0 in row $2180 (13th row from top).
     VRAMStructDataRepeat $2183, $18, \
         " "
@@ -4617,7 +4632,7 @@ LA27F:
 
     VRAMStructEnd
 
-LA288:
+VRAMStruct_EndMessageErase3:
     ;Erases end message on name table 0 in row $2200 (18th row from top).
     VRAMStructDataRepeat $2203, $18, \
         " "
@@ -4628,9 +4643,9 @@ LA288:
 
     VRAMStructEnd
 
-;The following table is used by the LoadCredits routine to load the end credits on the screen.
 
-CreditsPointerTbl: ; 00:A291
+;The following table is used by the LoadCredits routine to load the end credits on the screen.
+CreditsPtrTable: ; 00:A291
     .word VRAMStruct_Credits00
     .word VRAMStruct_Credits01
     .word VRAMStruct_Credits02
