@@ -1070,9 +1070,9 @@ MotherBrainStatusHandler:
         .word MotherBrain_Disappear     ;#$04=Mother brain dissapearing
         .word MotherBrain_TimeBombMessage     ;#$05=Mother brain gone
         .word MotherBrain_SetTimeBomb     ;#$06=Time bomb set,
-        .word MotherBrain_9FC0     ;#$07=Time bomb exploded
+        .word MotherBrain_TimeBombExploded     ;#$07=Time bomb exploded
         .word MotherBrain_TimeBombMessage_ScrollBackOnScreen     ;#$08=Initialize mother brain already dead (part 1)
-        .word MotherBrain_9FDA     ;#$09=Initialize mother brain already dead (part 2)
+        .word MotherBrain_SetTimeBomb_ScrollBackOnScreen     ;#$09=Initialize mother brain already dead (part 2)
         .word Exit__    ;#$0A=Mother brain already dead.
 RTS_9DF1:
     rts
@@ -1453,7 +1453,7 @@ MotherBrain_SpawnDoor: ; 03:9F69
     jmp CommonJump_DrawTileBlast
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9FC0: ; 03:9FC0
+MotherBrain_TimeBombExploded: ; 03:9FC0
     ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
     ora NoiseSFXFlag
@@ -1475,7 +1475,7 @@ MotherBrain_9FC0: ; 03:9FC0
     rts
 
 ;-------------------------------------------------------------------------------
-MotherBrain_9FDA: ; 03:9FDA
+MotherBrain_SetTimeBomb_ScrollBackOnScreen: ; 03:9FDA
     ; try to spawn door until it succeeds
     jsr MotherBrain_SpawnDoor
     bcs @RTS
@@ -1806,7 +1806,7 @@ UpdateBullet_CollisionWithMotherBrain:
     lda UpdatingProjectile
     beq @exit
     ldx PageIndex
-    ; exit if projectile status is not #$0B (missile?)
+    ; exit if projectile is not a missile
     lda ProjectileStatus,x
     cmp #wa_Missile
     bne @exit
