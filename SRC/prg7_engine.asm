@@ -188,8 +188,8 @@ Startup:
     sta RandomNumber2
 
     iny ;Y = 1
-    sty SwitchPending               ;Prepare to switch page 0 into lower PRGROM.
-    jsr CheckSwitch                 ;($C4DE)
+    sty BankSwitchPending               ;Prepare to switch page 0 into lower PRGROM.
+    jsr CheckBankSwitch                 ;($C4DE)
     bne WaitNMIEnd                  ;Branch always
 
 ;-----------------------------------------[ Main loop ]----------------------------------------------
@@ -198,7 +198,7 @@ Startup:
 
 MainLoop:
     ;($C4DE)Check to see if memory page needs to be switched.
-    jsr CheckSwitch
+    jsr CheckBankSwitch
     ;($C266)Update Timers 1, 2 and 3.
     jsr UpdateTimer
     ;($C114)Go to main routine for updating game.
@@ -1205,39 +1205,41 @@ PrepPPUMirror:
 ;-----------------------------[ Switch bank and init bank routines ]---------------------------------
 
 ;This is how the bank switching works... Every frame, the routine below
-;is executed. First, it checks the value of SwitchPending. If it is zero,
+;is executed. First, it checks the value of BankSwitchPending. If it is zero,
 ;the routine will simply exit. If it is non-zero, it means that a bank
-;switch has been issued, and must be performed. SwitchPending then contains
+;switch has been issued, and must be performed. BankSwitchPending then contains
 ;the bank to switch to, plus one.
 
-CheckSwitch:
+CheckBankSwitch:
     ;Exit if zero(no bank switch issued). else Y contains bank#+1.
-    ldy SwitchPending
+    ldy BankSwitchPending
     beq RTS_C50F
     ;($C4E8)Perform bank switch.
-    jsr SwitchOK
+    jsr CheckBankSwitch_OK
     ;($C510)Initialize bank switch data.
     jmp GoBankInit
 
-SwitchOK:
-    ; clear SwitchPending (so that the bank switch won't be performed every succeeding frame too).
+CheckBankSwitch_OK:
+    ; clear BankSwitchPending (so that the bank switch won't be performed every succeeding frame too).
     lda #$00
-    sta SwitchPending
+    sta BankSwitchPending
     ;Y now contains the bank to switch to.
     dey
     sty CurrentBank
+    ; fallthrough
 
-ROMSwitch:
+BankSwitch:
     ;Bank to switch to is stored at location $00.
     tya
-    sta $00
+    sta Temp00_Bank
     ;Load upper two bits for Reg 3 (they should always be 0).
     lda SwitchUpperBits
     ;Extract bits 3 and 4 and add them to the current bank to switch to.
     and #$18
-    ora $00
+    ora Temp00_Bank
     ;Store any new bits set in 3 or 4(there should be none).
     sta SwitchUpperBits
+    ; fallthrough
 
 ;Loads the lower memory page with the bank specified in A.
 
@@ -1264,13 +1266,16 @@ RTS_C50F:
 ;Calls the proper routine according to the bank number in A.
 
 GoBankInit:
-    asl                             ;*2 For proper table offset below.
-    tay                             ;
-    lda BankInitTable,y             ;
-    sta $0A                         ;Load appropriate subroutine address into $0A and $0B.
-    lda BankInitTable+1,y           ;
-    sta $0B                         ;
-    jmp ($000A)                     ;Jump to appropriate initialization routine.
+    ;*2 For proper table offset below.
+    asl
+    tay
+    ;Load appropriate subroutine address into $0A and $0B.
+    lda BankInitTable,y
+    sta Temp0A_BankInitPtr
+    lda BankInitTable+1,y
+    sta Temp0A_BankInitPtr+1.b
+    ;Jump to appropriate initialization routine.
+    jmp (Temp0A_BankInitPtr)
 
     BankInitTable:
         .word InitBank0                 ;($C531)Initialize bank 0.
@@ -1331,7 +1336,7 @@ InitBank1:
     LC56D:
     ;($C4EF)Load Brinstar memory page into lower 16Kb memory.
     ldy #$00
-    jsr ROMSwitch
+    jsr BankSwitch
     ;($C604)Load Brinstar GFX.
     jsr InitBrinstarGFX
     ;($C487)Turn on VBlank interrupts.
@@ -1672,14 +1677,14 @@ LoadGFX:
     ldx #$06
     LC7B6:
         lda GFXInfo,y
-        sta $00,x
+        sta Temp00_Bank,x
         dey
         dex
         bpl LC7B6
 
     ;Switch to ROM bank containing the GFX data.
-    ldy $00
-    jsr ROMSwitch
+    ldy Temp00_Bank
+    jsr BankSwitch
 
     ;Set the PPU to increment by 1.
     lda PPUCTRL_ZP
@@ -1691,46 +1696,46 @@ LoadGFX:
 
     ;Switch back to the previous bank.
     ldy CurrentBank
-    jmp ROMSwitch
+    jmp BankSwitch
 
 
 ;Writes tile data from ROM to VRAM, according to the gfx header data contained in $00-$06.
 CopyGFXBlock:
     ;If data length low byte is #$00, decrement data length high byte before beginning.
-    lda $05
+    lda Temp05_GFXSize
     bne @loop
-    dec $06
+    dec Temp05_GFXSize+1.b
 @loop:
     ;Set PPU to destination address for GFX block write.
-    lda $04
+    lda Temp03_GFXDestination+1.b
     sta PPUADDR
-    lda $03
+    lda Temp03_GFXDestination
     sta PPUADDR
     ;Set offset for GFX data to 0.
     ldy #$00
     @lowLoop:
         ;Copy GFX data byte from ROM to Pattern table.
-        lda ($01),y
+        lda (Temp01_GFXSource),y
         sta PPUDATA
         ;Decrement low byte of data length.
-        dec $05
+        dec Temp05_GFXSize
         ;Branch if high byte does not need decrementing.
         bne @endIf
             ;Low byte has reached 0. High byte needs decrementing.
-            lda $06
-            ;If copying complete, branch to exit.
-            beq RTS_C800
+            ;If copying complete (high byte is 0), branch to exit.
+            lda Temp05_GFXSize+1.b
+            beq @RTS
             ;Decrement high byte
-            dec $06
+            dec Temp05_GFXSize+1.b
         @endIf:
         ;Increment to next byte to copy.
         iny
         bne @lowLoop
-    ;After 256 bytes loaded, increment upper bits of source and destination addresses.
-    inc $02
-    inc $04
+    ;After 256 bytes loaded, increment high bytes of source and destination addresses.
+    inc Temp01_GFXSource+1.b
+    inc Temp03_GFXDestination+1.b
     jmp @loop
-RTS_C800:
+@RTS:
     rts
 
 ;-------------------------------------------[ AreaInit ]---------------------------------------------
@@ -2027,7 +2032,7 @@ PrepareGameOver:
     sta TitleRoutine
     ;Prepare to switch to title memory page.
     lda #$00+1
-    sta SwitchPending
+    sta BankSwitchPending
     ;($C439)Turn screen off.
     jmp ScreenOff
 
@@ -2070,7 +2075,7 @@ GoPassword:
     lda #_id_DisplayPassword.b                        ;DisplayPassword is next routine to run.
     sta TitleRoutine                ;
     lda #$00+1                        ;
-    sta SwitchPending               ;Prepare to switch to intro memory page.
+    sta BankSwitchPending               ;Prepare to switch to intro memory page.
     lda NoiseSFXFlag                ;
     ora #sfxNoise_SilenceMusic      ;Silence music.
     sta NoiseSFXFlag                ;
@@ -2160,8 +2165,8 @@ SwitchBank:
     and #$0F                        ;
     tay                             ;Use 4 LSB to load switch pending offset from BankTable table.
     lda BankTable,y                 ;Base is $CA30.
-    sta SwitchPending               ;Store switch data.
-    jmp CheckSwitch                 ;($C4DE)Switch lower 16KB to appropriate memory page.
+    sta BankSwitchPending               ;Store switch data.
+    jmp CheckBankSwitch                 ;($C4DE)Switch lower 16KB to appropriate memory page.
 
 ;Table used by above subroutine.
 ;Each value is the area bank number plus one.
@@ -4838,7 +4843,7 @@ ElevatorD8BF:
         sty RoomPtr
         ; switch to bank 0
         iny
-        sty SwitchPending
+        sty BankSwitchPending
         ; ending
         lda #_id_EndGame.b
         sta TitleRoutine

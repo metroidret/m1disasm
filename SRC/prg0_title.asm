@@ -2202,11 +2202,11 @@ SixLowerAndTwoUpper: ; 00:8FF1
 
 FourLowerAndFiveThruTwo: ; 00:9001
     ;Take four lower bits and transfer them to upper four bits. Discard the rest.
-    lda PasswordChar,y              
+    lda PasswordChar,y
     jsr Amul16
     sta $00
     ;Remove two lower bits and transfer bits 5 thru 2 to lower four bits.
-    lda PasswordChar+1,y            
+    lda PasswordChar+1,y
     lsr
     lsr
     ;Combine the two bytes together.
@@ -2222,7 +2222,7 @@ TwoLowerAndSixLower: ; 00:9011
     and #$C0
     sta $00
     ;Add six lower bits to previous results.
-    lda PasswordChar+1,y            
+    lda PasswordChar+1,y
     ora $00
     rts
 
@@ -2737,8 +2737,9 @@ InitializeGame: ; 00:92D4
     lda InArea                      ;Load area Samus is to start in.
     and #$0F                        ;
     tay                             ;
-    lda BankTable,y                 ;Change to proper memory page.
-    sta SwitchPending               ;
+    ;Change to proper memory page.
+    lda BankTable,y
+    sta BankSwitchPending
 RTS_9324:
     rts
 
@@ -2773,7 +2774,7 @@ InitializeStats: ; 00:932B
     sta JustInBailey
     ;Prepare to switch to Brinstar memory page.
     lda #$01+1
-    sta SwitchPending
+    sta BankSwitchPending
     rts
 
 DisplayPassword: ; 00:9359
@@ -3609,67 +3610,72 @@ Restart: ; 00:9A39
 
     ;Erase Unique item history.
     iny ;Y = #$00.
-    L9A4A:
+    @loop_eraseUniqueItemHistory:
         sta UniqueItemHistory,y
         iny
-        bne L9A4A
+        bne @loop_eraseUniqueItemHistory
 
-    ;If Samus does not have Maru Mari, branch.-->
+    ;If Samus does not have Maru Mari, branch.
     lda SamusGear
     and #gr_MARUMARI
-    beq L9A5C
+    beq @endIf_MaruMari
         ;Else load Maru Mari data into PasswordByte00.
         lda #1<<(((ItemData@MaruMari-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@MaruMari-ItemData)/2)/8)
-    L9A5C:
+    @endIf_MaruMari:
 
-    ;If Samus does not have bombs, branch.-->
+    ;If Samus does not have bombs, branch.
     lda SamusGear
     and #gr_BOMBS
-    beq L9A6B
+    beq @endIf_Bombs
         ;Else load bomb data into PasswordByte00.
         lda PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
         ora #1<<(((ItemData@Bombs-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
-    L9A6B:
+    @endIf_Bombs:
 
-    ;If Samus does not have varia suit, branch.-->
+    ;If Samus does not have varia suit, branch.
     lda SamusGear
     and #gr_VARIA
-    beq L9A77
+    beq @endIf_Varia
         ;Else load varia suit data into PasswordByte01.
         lda #1<<(((ItemData@Varia-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Varia-ItemData)/2)/8)
-    L9A77:
+    @endIf_Varia:
 
-    ;If Samus does not have high jump, branch.-->
+    ;If Samus does not have high jump, branch.
     lda SamusGear
     and #gr_HIGHJUMP
-    beq L9A83
+    beq @endIf_HighJump
         ;Else load high jump data into PasswordByte03.
         lda #1<<(((ItemData@HighJump-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@HighJump-ItemData)/2)/8)
-    L9A83:
+    @endIf_HighJump:
 
     ;If Samus does not have Maru Mari, branch.
     lda SamusGear
-    ;A programmer error?  Should check for screw attack data.
+    ;(BUG! Should check for whether Samus has Screw Attack.
+    ; This bug, combined with the fact that Maru Mari is required, makes Screw Attack
+    ; unobtainable in "New Game Plus" playthroughs, even if you don't already have it.)
     and #gr_MARUMARI
-    beq L9A92
+    beq @endIf_ScrewAttack
         ;Else load screw attack data into PasswordByte03.
         lda PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
         ora #1<<(((ItemData@ScrewAttack-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
-    L9A92:
+    @endIf_ScrewAttack:
 
-    lda SamusGear                   ;
-    sta PasswordByte+$09              ;Store Samus gear data in PasswordByte09.
-    lda #$00                        ;
-    ldy JustInBailey                ;
-    beq L9AA1                       ;If Samus is wearing suit, branch.  Else-->
-        lda #$80                        ;load suitless Samus data into PasswordByte08.
-    L9AA1:
-    sta PasswordByte+$08              ;
+    ;Store Samus gear data in PasswordByte09.
+    lda SamusGear
+    sta PasswordByte+$09
+    ;If Samus is wearing suit, branch.
+    ;Else load suitless Samus data into PasswordByte08.
+    lda #$00
+    ldy JustInBailey
+    beq @endIf_JustInBailey
+        lda #$80
+    @endIf_JustInBailey:
+    sta PasswordByte+$08
 
     jmp InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
 
@@ -3691,8 +3697,9 @@ EndGame: ; 00:9AA7
     lda #_id_EndGamePal00+1.b
     sta PalDataPending
 @chooseRoutine:
-    lda RoomPtr                     ;RoomPtr used in end of game to determine-->
-    jsr ChooseRoutine               ;($C27C)which subroutine to run below.
+    ;RoomPtr used in end of game to determine which subroutine to run below.
+    lda RoomPtr
+    jsr ChooseRoutine
         .word LoadEndGFX                ;($9AD5)Load end GFX to pattern tables.
         .word ShowEndSamus              ;($9B1C)Show Samus and end message.
         .word EndSamusFlash             ;($9B34)Samus flashes and changes.
