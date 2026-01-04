@@ -119,9 +119,9 @@ InitializeAfterReset: ; 00:8071
     sta IntroMusicRestart           ;Title rountines cycle twice before restart of music.
     sty SpareMemB7
     sty SpareMemB8
-    sty PalDataIndex                ;Reset index to palette data.
-    sty ScreenFlashPalIndex         ;Reset index into screen flash palette data.
-    sty IntroStarOffset             ;Reset index into IntroStarPtrTable table.
+    sty PaletteDataIndex                ;Reset index to palette data.
+    sty ScreenFlashPaletteIndex         ;Reset index into screen flash palette data.
+    sty IntroStarOffset             ;Reset index into IntroStarPalettePtrTable table.
     sty FadeDataIndex               ;Reset index into fade out palette data.
 
     ;Set $0000 to point to address $6000.
@@ -194,7 +194,7 @@ DrawIntroBackground: ; 00:80D0
     jsr PreparePPUProcess
     ;Prepare to load palette data.
     lda #_id_Palette00+1.b
-    sta PalDataPending
+    sta PaletteDataPending
     sta SpareMemC5 ;Not accessed by game.
     ;Switch to name table 0
     lda PPUCTRL_ZP
@@ -216,9 +216,9 @@ FadeInDelay: ; 00:80F9
     ;Loads Timer3 with #$08. Delays Fade in routine by 80 frames (1.3 seconds).
     lda #$08
     sta Timer3
-    ;Loads PalDataIndex with #$04
+    ;Loads PaletteDataIndex with #$04
     lsr
-    sta PalDataIndex
+    sta PaletteDataIndex
     ;Increment to next routine. METROIDFadeIn
     inc TitleRoutine
     rts
@@ -229,15 +229,15 @@ FlashEffect: ; 00:8109
     and #$03
     bne @RTS
     ;Uses only the first four palette data sets in the flash routine.
-    lda PalDataIndex
+    lda PaletteDataIndex
     and #$03
-    sta PalDataIndex
+    sta PaletteDataIndex
     jsr LoadPalData
     ;If 80 frames (1.3 seconds) have not elapsed, branch so routine will keep running.
     lda Timer3
     bne @RTS
     ;Ensures the palette index was 3 when LoadPalData was called.
-    lda PalDataIndex
+    lda PaletteDataIndex
     cmp #$04
     bne @RTS
     ;Increment to next routine. METROIDSparkle
@@ -461,7 +461,7 @@ ChangeIntroNameTable: ; 00:822E
     ;Set Timer3 for 80 frames(1.33 seconds).
     lda #$08
     sta Timer3
-    ;Index to FadeInPalData.
+    ;Index to FadeInPaletteData.
     lda #$06
     sta FadeDataIndex
     lda #$00
@@ -568,8 +568,8 @@ PrepIntroRestart: ; 00:82A3
     iny ;Y=0.
     sty SpareMemB7 ;Accessed by unused routine.
     sty SpareMemB8 ;Accessed by unused routine.
-    sty PalDataIndex
-    sty ScreenFlashPalIndex
+    sty PaletteDataIndex
+    sty ScreenFlashPaletteIndex
     sty IntroStarOffset
     sty FadeDataIndex
     sty SpareMemCD ;Not accessed by game.
@@ -1362,13 +1362,13 @@ CrossExplodeDataTbl: ; 00:8A4B
 
 LoadPalData: ; 00:8A8C
     ;Chooses which set of palette data to load from the table below.
-    ldy PalDataIndex
+    ldy PaletteDataIndex
     lda @PalSelectTbl,y
     cmp #$FF
     beq @RTS
     ;Prepare to write palette data.
-    sta PalDataPending
-    inc PalDataIndex
+    sta PaletteDataPending
+    inc PaletteDataIndex
 @RTS:
     rts
 
@@ -1390,20 +1390,20 @@ LoadPalData: ; 00:8A8C
 
 
 FlashIntroScreen: ; 00:8AA7
-    ldy ScreenFlashPalIndex         ;Load index into table below.
+    ldy ScreenFlashPaletteIndex         ;Load index into table below.
     lda @ScreenFlashPalTbl,y         ;Load palette data byte.
     cmp #$FF                        ;Has the end of the table been reached?-->
     bne @else_A                     ;If not, branch.
         ;Clear screen flash palette index and reset screen flash control address.
         lda #$00
-        sta ScreenFlashPalIndex
+        sta ScreenFlashPaletteIndex
         sta FlashScreen
         beq @RTS ;Branch always.
     @else_A:
         ;Store palette change data.
-        sta PalDataPending
+        sta PaletteDataPending
         ;Increment index into table below.
-        inc ScreenFlashPalIndex
+        inc ScreenFlashPaletteIndex
 @RTS:
     rts
 
@@ -1435,7 +1435,7 @@ FlashIntroScreen: ; 00:8AA7
 
 ;----------------------------------[ Intro star palette routines ]-----------------------------------
 
-StarPalSwitch: ; 00:8AC7
+StarPaletteSwitch: ; 00:8AC7
     ;Change star palette every 16th frame.
     lda FrameCount
     and #$0F
@@ -1455,13 +1455,13 @@ StarPalSwitch: ; 00:8AC7
     ;Use only first 3 bits of byte since the pointer table only has 8 entries.
     lda IntroStarOffset
     and #$07
-    ;*2 to find entry in IntroStarPtrTable.
+    ;*2 to find entry in IntroStarPalettePtrTable.
     asl
     tay
-    ;Stores starting address of palette data to write into $02 and $03 from IntroStarPtrTable.
-    lda IntroStarPtrTable,y
+    ;Stores starting address of palette data to write into $02 and $03 from IntroStarPalettePtrTable.
+    lda IntroStarPalettePtrTable,y
     sta $02
-    lda IntroStarPtrTable+1,y
+    lda IntroStarPalettePtrTable+1,y
     sta $03
     ;Increment index for next palette change.
     inc IntroStarOffset
@@ -1479,46 +1479,46 @@ StarPalSwitch: ; 00:8AC7
 ;It contains the palette data for the twinkling stars in the intro scene.
 ;The palette data is changed every 16 frames by the above routine.
 
-IntroStarPtrTable: ; 00:8AFF
-    .word IntroStarPal0
-    .word IntroStarPal1
-    .word IntroStarPal2
-    .word IntroStarPal3
-    .word IntroStarPal4
-    .word IntroStarPal5
-    .word IntroStarPal6
-    .word IntroStarPal7
+IntroStarPalettePtrTable: ; 00:8AFF
+    .word IntroStarPalette0
+    .word IntroStarPalette1
+    .word IntroStarPalette2
+    .word IntroStarPalette3
+    .word IntroStarPalette4
+    .word IntroStarPalette5
+    .word IntroStarPalette6
+    .word IntroStarPalette7
 
 ;The following table contains the palette data that is changed in the intro
 ;scene to give the stars a twinkling effect. All entries in the table are
 ;non-repeating.
 
 ; 00:8B0F
-IntroStarPal0:  .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
-IntroStarPal1:  .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
-IntroStarPal2:  .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
-IntroStarPal3:  .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
-IntroStarPal4:  .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
-IntroStarPal5:  .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
-IntroStarPal6:  .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
-IntroStarPal7:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
+IntroStarPalette0:  .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
+IntroStarPalette1:  .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
+IntroStarPalette2:  .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
+IntroStarPalette3:  .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
+IntroStarPalette4:  .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
+IntroStarPalette5:  .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
+IntroStarPalette6:  .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
+IntroStarPalette7:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
 
 ;----------------------------------------------------------------------------------------------------
 
 DoFadeOut: ; 00:8B5F
     ;Load palette data from table below.
     ldy FadeDataIndex
-    lda FadeOutPalData,y
+    lda FadeOutPaletteData,y
     ;If palette data = #$FF, exit.
     cmp #$FF
     beq @RTS
         ;Store new palette data.
-        sta PalDataPending
+        sta PaletteDataPending
         inc FadeDataIndex
     @RTS:
     rts
 
-FadeOutPalData: ; 00:8B6D
+FadeOutPaletteData: ; 00:8B6D
     .byte _id_Palette0C+1
     .byte _id_Palette0D+1
     .byte _id_Palette0E+1
@@ -1526,7 +1526,7 @@ FadeOutPalData: ; 00:8B6D
     .byte _id_Palette00+1
     .byte $FF
 
-FadeInPalData: ; 00:8B73
+FadeInPaletteData: ; 00:8B73
     .byte _id_Palette00+1
     .byte _id_Palette0F+1
     .byte _id_Palette0E+1
@@ -2341,7 +2341,7 @@ StartContinueScreen1B:
         NES_CNSUS_IllegalOpcode42
         .byte _id_Palette0C+1
     .endif
-    sta PalDataPending              ;Change palette and title routine.
+    sta PaletteDataPending              ;Change palette and title routine.
     lda #_id_ChooseStartContinue.b  ;Next routine is ChooseStartContinue.
     sta TitleRoutine                ;
 
@@ -2402,7 +2402,7 @@ LoadPasswordScreen: ; 00:911A
     jsr InitPasswordFontGFX                    ;($C6D6)Loads the font for the password.
     jsr DisplayInputCharacters      ;($940B)Write password character to screen.
     lda #_id_Palette12+1.b
-    sta PalDataPending              ;Change palette.
+    sta PaletteDataPending              ;Change palette.
     lda #$00                        ;
     sta InputRow                    ;Sets character select cursor to-->
     sta InputColumn                 ;upper left character (0).
@@ -2796,7 +2796,7 @@ DisplayPassword: ; 00:9359
     jsr WaitNMIPass
     ;Change palette.
     lda #_id_Palette12+1.b
-    sta PalDataPending
+    sta PaletteDataPending
     ;Next routine is WaitForSTART.
     inc TitleRoutine
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
@@ -3180,26 +3180,26 @@ Hex16ToDec: ; 00:94DA
 ;The following table points to the palette data
 ;used in the intro and ending portions of the game.
 
-PalPntrTbl: ; 00:9560
-    PtrTableEntryArea PalPntrTbl, Palette00             ; Title Screen black
-    PtrTableEntryArea PalPntrTbl, Palette01             ; Title Screen purple
-    PtrTableEntryArea PalPntrTbl, Palette02             ; Title Screen green
-    PtrTableEntryArea PalPntrTbl, Palette03             ; Title Screen magenta
-    PtrTableEntryArea PalPntrTbl, Palette04             ; Title Screen warm blue
-    PtrTableEntryArea PalPntrTbl, Palette05             ; Title Screen cool blue fade in 1
-    PtrTableEntryArea PalPntrTbl, Palette06             ; Title Screen cool blue fade in 2
-    PtrTableEntryArea PalPntrTbl, Palette07             ; Title Screen cool blue fade in 3
-    PtrTableEntryArea PalPntrTbl, Palette08             ; Title Screen cool blue fade in 4
-    PtrTableEntryArea PalPntrTbl, Palette09             ; Title Screen cool blue fade in 5
-    PtrTableEntryArea PalPntrTbl, Palette0A             ; Title Screen cool blue fade in 6
-    PtrTableEntryArea PalPntrTbl, Palette0B             ; Title Screen cool blue
-    PtrTableEntryArea PalPntrTbl, Palette0C             ; Title Screen warm blue fade out 1 / fade in 4 / Start&Continue Menu
-    PtrTableEntryArea PalPntrTbl, Palette0D             ; Title Screen warm blue fade out 2 / fade in 3
-    PtrTableEntryArea PalPntrTbl, Palette0E             ; Title Screen warm blue fade out 3 / fade in 2
-    PtrTableEntryArea PalPntrTbl, Palette0F             ; Title Screen warm blue fade out 4 / fade in 1
-    PtrTableEntryArea PalPntrTbl, Palette10             ; Title Screen flash white
-    PtrTableEntryArea PalPntrTbl, Palette11             ; ???
-    PtrTableEntryArea PalPntrTbl, Palette12             ; Password Screens
+PalettePtrTable: ; 00:9560
+    PtrTableEntryArea PalettePtrTable, Palette00             ; Title Screen black
+    PtrTableEntryArea PalettePtrTable, Palette01             ; Title Screen purple
+    PtrTableEntryArea PalettePtrTable, Palette02             ; Title Screen green
+    PtrTableEntryArea PalettePtrTable, Palette03             ; Title Screen magenta
+    PtrTableEntryArea PalettePtrTable, Palette04             ; Title Screen warm blue
+    PtrTableEntryArea PalettePtrTable, Palette05             ; Title Screen cool blue fade in 1
+    PtrTableEntryArea PalettePtrTable, Palette06             ; Title Screen cool blue fade in 2
+    PtrTableEntryArea PalettePtrTable, Palette07             ; Title Screen cool blue fade in 3
+    PtrTableEntryArea PalettePtrTable, Palette08             ; Title Screen cool blue fade in 4
+    PtrTableEntryArea PalettePtrTable, Palette09             ; Title Screen cool blue fade in 5
+    PtrTableEntryArea PalettePtrTable, Palette0A             ; Title Screen cool blue fade in 6
+    PtrTableEntryArea PalettePtrTable, Palette0B             ; Title Screen cool blue
+    PtrTableEntryArea PalettePtrTable, Palette0C             ; Title Screen warm blue fade out 1 / fade in 4 / Start&Continue Menu
+    PtrTableEntryArea PalettePtrTable, Palette0D             ; Title Screen warm blue fade out 2 / fade in 3
+    PtrTableEntryArea PalettePtrTable, Palette0E             ; Title Screen warm blue fade out 3 / fade in 2
+    PtrTableEntryArea PalettePtrTable, Palette0F             ; Title Screen warm blue fade out 4 / fade in 1
+    PtrTableEntryArea PalettePtrTable, Palette10             ; Title Screen flash white
+    PtrTableEntryArea PalettePtrTable, Palette11             ; ???
+    PtrTableEntryArea PalettePtrTable, Palette12             ; Password Screens
 
 Palette00_{AREA}: ; 00:9586
     VRAMStructData $3F00, \
@@ -3313,7 +3313,7 @@ Palette12_{AREA}: ; 00:97F2
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
     VRAMStructEnd
 
-EndGamePal0B:
+EndGamePalette0B:
     VRAMStructData $3F00, \
         $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
     VRAMStructDataRepeat $3F10, $10, \
@@ -3696,13 +3696,13 @@ EndGame: ; 00:9AA7
     lda FrameCount
     and #$0F
     bne @chooseRoutine
-    inc PalDataPending
+    inc PaletteDataPending
     ;Reset palette data to #$01 after it reaches #$09.
-    lda PalDataPending
-    cmp #_id_EndGamePal08+1.b
+    lda PaletteDataPending
+    cmp #_id_EndGamePalette08+1.b
     bne @chooseRoutine
-    lda #_id_EndGamePal00+1.b
-    sta PalDataPending
+    lda #_id_EndGamePalette00+1.b
+    sta PaletteDataPending
 @chooseRoutine:
     lda RoomPtr                     ;RoomPtr used in end of game to determine-->
     jsr ChooseRoutine               ;($C27C)which subroutine to run below.
@@ -3753,8 +3753,8 @@ LoadEndGFX: ; 00:9AD5
     sta HideShowEndMsg
     sta CreditPageNumber
     ;Change palette.
-    lda #_id_EndGamePal00+1.b
-    sta PalDataPending
+    lda #_id_EndGamePalette00+1.b
+    sta PaletteDataPending
     ;Initialize ClrChangeCounter with #$08.
     lda #$08
     sta ClrChangeCounter
@@ -3819,7 +3819,7 @@ EndSamusFlash: ; 00:9B34
     dec ClrChangeCounter            ;Decrement ClrChangeCounter.
     bne L9B80                       ;
     ldy ColorCntIndex               ;
-    lda PalChangeTable,y            ;When ClrChangeCounter=#$00, fetch new-->
+    lda PaletteChangeTable,y            ;When ClrChangeCounter=#$00, fetch new-->
     sta ClrChangeCounter            ;ClrChangeCounter value. and increment-->
     inc SpriteAttribByte            ;sprite color.
     lda SpriteAttribByte            ;
@@ -3834,7 +3834,7 @@ L9B80:
 ;decrements every frame, When ClrChangeCounter reaches zero, the sprite colors for Samus
 ;changes.  This has the effect of making Samus flash.  The flashing starts slow, speeds up,
 ;then slows down again.
-PalChangeTable: ; 00:9B83
+PaletteChangeTable: ; 00:9B83
     .byte $08, $07, $06, $05, $04, $03, $02, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
 SamusWave: ; 00:9B93
@@ -3849,8 +3849,8 @@ SamusWave: ; 00:9B93
     .endif
     sta Timer3
     ;Change palette
-    lda #_id_EndGamePal07+1.b
-    sta PalDataPending
+    lda #_id_EndGamePalette07+1.b
+    sta PaletteDataPending
     ;Increment RoomPtr
     inc RoomPtr
     rts
@@ -3894,8 +3894,8 @@ EndFadeOut: ; 00:9BCD
     bne L9BDB
         ;*This code does not appear to be used.
         ;*Change palette.
-        lda #_id_EndGamePal07+1.b
-        sta PalDataPending
+        lda #_id_EndGamePalette07+1.b
+        sta PaletteDataPending
         ;*Increment IsCredits.
         inc IsCredits
 
@@ -3904,11 +3904,11 @@ EndFadeOut: ; 00:9BCD
     lda FrameCount
     and #$07
     bne L9BEF
-    ;If PalDataPending is not equal to #$0C, keep incrementing every eight frame until it does.
+    ;If PaletteDataPending is not equal to #$0C, keep incrementing every eight frame until it does.
     ;This creates the fade out effect.
-    inc PalDataPending
-    lda PalDataPending
-    cmp #_id_EndGamePal0B+1.b
+    inc PaletteDataPending
+    lda PaletteDataPending
+    cmp #_id_EndGamePalette0B+1.b
     bne L9BEF
         .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
             ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
@@ -3935,8 +3935,8 @@ RollCredits: ; 00:9BFC
     jsr ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
     jsr ClearNameTables@nameTable0  ;($C16D)clear name table 0 and sprites.-->
     jsr EraseAllSprites             ;($C1A3)prepares screen for credits.
-    lda #_id_EndGamePal0B+1+1.b
-    sta PalDataPending              ;Change to proper palette for credits.
+    lda #_id_EndGamePalette0B+1+1.b
+    sta PaletteDataPending              ;Change to proper palette for credits.
     jsr ScreenOn                    ;($C447)Turn screen on.
     jmp WaitNMIPass_                ;($C43F)Wait for NMI to end.
 L9C17:
@@ -4301,13 +4301,14 @@ BikiniSamus: ; 00:9E74
     .byte $AB, $4C, $80
 
 LoadEndStarSprites: ; 00:9EAA
+    ;Load the table below into sprite RAM starting at address $0270.
     ldy #$00
-    L9EAC:
+    @loop:
         lda EndStarDataTable,y
-        sta SpriteRAM.28,y               ;Load the table below into sprite RAM-->
-        iny                             ;starting at address $0270.
+        sta SpriteRAM.28,y
+        iny
         cpy #$9C
-        bne L9EAC
+        bne @loop
     rts
 
 ;Loaded into sprite RAM by routine above. Displays stars at the end of the game.
@@ -4353,24 +4354,24 @@ EndStarDataTable: ; 00:9EB8
     .byte $73, $26, $23, $E7
     .byte $0C, $26, $22, $AA
 
-EndGamePalWrite: ; 00:9F54
+EndGamePaletteWrite: ; 00:9F54
     ;If no palette data pending, branch to exit.
-    lda PalDataPending
-    beq RTS_9F80
-    ;If PalDataPending has loaded last palette, branch to exit.
-    cmp #_id_EndGamePal0B+1.b
-    beq RTS_9F80
+    lda PaletteDataPending
+    beq @RTS
+    ;If PaletteDataPending has loaded last palette, branch to exit.
+    cmp #_id_EndGamePalette0B+1.b
+    beq @RTS
     ;Once end palettes have been cycled through, start over.
-    cmp #_id_EndGamePal0B+1+1.b
-    bne L9F64
+    cmp #_id_EndGamePalette0B+1+1.b
+    bne @endIf_A
         ldy #$00
-        sty PalDataPending
-    L9F64:
+        sty PaletteDataPending
+    @endIf_A:
     ;* 2, pointer is two bytes.
     asl
     tay
-    lda EndGamePalPntrTbl-1,y       ;High byte of PPU data pointer.
-    ldx EndGamePalPntrTbl-2,y       ;Low byte of PPU data pointer.
+    lda EndGamePalettePtrTable-1,y       ;High byte of PPU data pointer.
+    ldx EndGamePalettePtrTable-2,y       ;Low byte of PPU data pointer.
     tay
     jsr PreparePPUProcess           ;($C20E)Prepare to write data string to PPU.
     ;Set PPU address to $3F00.
@@ -4381,83 +4382,83 @@ EndGamePalWrite: ; 00:9F54
     ;Set PPU address to $0000.
     sta PPUADDR
     sta PPUADDR
-RTS_9F80:
+@RTS:
     rts
 
 ;The following pointer table is used by the routine above to
 ;find the proper palette data during the EndGame routine.
 
-EndGamePalPntrTbl: ; 00:9F81
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal00              ;($9F9B)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal01              ;($9FBF)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal02              ;($9FCB)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal03              ;($9FD7)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal04              ;($9FE3)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal05              ;($9FEF)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal06              ;($9FFB)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal07              ;($A007)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal08              ;($A013)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal09              ;($A02E)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal0A              ;($A049)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal0A              ;($A049)
-    PtrTableEntry EndGamePalPntrTbl, EndGamePal0B              ;($9806)
+EndGamePalettePtrTable: ; 00:9F81
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette00              ;($9F9B)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette01              ;($9FBF)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette02              ;($9FCB)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette03              ;($9FD7)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette04              ;($9FE3)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette05              ;($9FEF)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette06              ;($9FFB)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette07              ;($A007)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette08              ;($A013)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette09              ;($A02E)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette0A              ;($A049)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette0A              ;($A049)
+    PtrTableEntry EndGamePalettePtrTable, EndGamePalette0B              ;($9806)
 
-EndGamePal00:
+EndGamePalette00:
     VRAMStructData $3F00, \
         $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, \
         $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
     VRAMStructEnd
 
-EndGamePal01:
+EndGamePalette01:
     VRAMStructData $3F18, \
         $0F, $10, $20, $30, $0F, $0F, $0F, $0F
     VRAMStructEnd
 
-EndGamePal02:
+EndGamePalette02:
     VRAMStructData $3F18, \
         $0F, $12, $22, $32, $0F, $0B, $1B, $2B
     VRAMStructEnd
 
-EndGamePal03:
+EndGamePalette03:
     VRAMStructData $3F18, \
         $0F, $14, $24, $34, $0F, $09, $19, $29
     VRAMStructEnd
 
-EndGamePal04:
+EndGamePalette04:
     VRAMStructData $3F18, \
         $0F, $16, $26, $36, $0F, $07, $17, $27
     VRAMStructEnd
 
-EndGamePal05:
+EndGamePalette05:
     VRAMStructData $3F18, \
         $0F, $18, $28, $38, $0F, $05, $15, $25
     VRAMStructEnd
 
-EndGamePal06:
+EndGamePalette06:
     VRAMStructData $3F18, \
         $0F, $1A, $2A, $3A, $0F, $03, $13, $13
     VRAMStructEnd
 
-EndGamePal07:
+EndGamePalette07:
     VRAMStructData $3F18, \
         $0F, $1C, $2C, $3C, $0F, $01, $11, $21
     VRAMStructEnd
 
-EndGamePal08:
+EndGamePalette08:
     VRAMStructData $3F0C, \
         $0F, $18, $08, $07
     VRAMStructData $3F10, \
         $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
     VRAMStructEnd
 
-EndGamePal09:
+EndGamePalette09:
     VRAMStructData $3F0C, \
         $0F, $08, $07, $0F
     VRAMStructData $3F10, \
         $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
     VRAMStructEnd
 
-EndGamePal0A:
+EndGamePalette0A:
     VRAMStructDataRepeat $3F0C, $04, \
         $0F
     VRAMStructDataRepeat $3F10, $10, \

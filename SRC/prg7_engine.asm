@@ -257,7 +257,7 @@ NMI:
             jsr NMIScreenWrite
         LC0F4:
         ;($C1E0)Check if palette data pending.
-        jsr CheckPalWrite
+        jsr CheckPaletteWrite
         ;($C2CA)check if data needs to be written to PPU.
         jsr CheckVRAMStructBufferWrite
         ;($C44D)Update $2000 & $2001.
@@ -504,37 +504,37 @@ ClearRAM_33_DF:
 
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
 
-CheckPalWrite:
+CheckPaletteWrite:
     lda GameMode                    ;
     beq LC1ED                       ;Is game being played? If so, branch to exit.
     lda TitleRoutine                ;
     cmp #_id_EndGame.b                        ;Is Game at ending sequence? If not, branch
     bcc LC1ED                       ;
-    jmp EndGamePalWrite             ;($9F54)Write palette data for ending.
+    jmp EndGamePaletteWrite             ;($9F54)Write palette data for ending.
 LC1ED:
-    ldy PalDataPending              ;
+    ldy PaletteDataPending              ;
     bne LC1FF                       ;Is palette data pending? If so, branch.
         lda GameMode                    ;
         beq RTS_C1FE                       ;Is game being played? If so, branch to exit.
         lda TitleRoutine                ;
         cmp #_id_StartContinueScreen15.b                        ;Is intro playing? If not, branch.
         bcs RTS_C1FE                       ;
-        jmp StarPalSwitch               ;($8AC7)Cycles palettes for intro stars twinkle.
+        jmp StarPaletteSwitch               ;($8AC7)Cycles palettes for intro stars twinkle.
         RTS_C1FE:
         rts                             ;Exit when no palette data pending.
 
 ;Prepare to write palette data to PPU.
 
 LC1FF:
-    dey                             ;Palette # = PalDataPending - 1.
+    dey                             ;Palette # = PaletteDataPending - 1.
     tya                             ;
     asl                             ;* 2, each pal data ptr is 2 bytes (16-bit).
     tay                             ;
-    ldx PalPntrTbl,y                ;X = low byte of PPU data pointer.
-    lda PalPntrTbl+1,y              ;
+    ldx PalettePtrTable,y                ;X = low byte of PPU data pointer.
+    lda PalettePtrTable+1,y              ;
     tay                             ;Y = high byte of PPU data pointer.
     lda #$00                        ;Clear A.
-    sta PalDataPending              ;Reset palette data pending byte.
+    sta PaletteDataPending              ;Reset palette data pending byte.
 
 PreparePPUProcess:
     ;Lower byte of pointer to VRAM structure
@@ -1806,7 +1806,7 @@ AreaInit:
 
 MoreInit:
     ldy #_id_Palette00+1.b          ;
-    sty PalDataPending              ;Palette data pending = yes.
+    sty PaletteDataPending              ;Palette data pending = yes.
     ldx #$FF                        ;
     stx SpareMem75                  ;$75 Not referenced ever again in the game.
     inx                             ;X=0.
@@ -1844,8 +1844,8 @@ MoreInit:
     lda AreaMapPosY            ;Get Samus start y pos on map.
     sta MapPosY                ;
 
-    lda AreaPalToggle               ; Get ??? Something to do with palette switch
-    sta PalToggle
+    lda AreaPaletteToggle               ; Get ??? Something to do with palette switch
+    sta PaletteToggle
     lda #$FF
     sta RoomNumber                  ;Room number = $FF(undefined room).
     jsr CopyAreaPointers    ; copy pointers from ROM to RAM
@@ -1882,9 +1882,9 @@ MoreInit:
         dex
         bne Lx001
 
-    stx DoorPalChangeDir
+    stx DoorPaletteChangeDir
     inx          ; X = 1
-    stx PalDataPending
+    stx PaletteDataPending
     stx SpareMem30                  ;Not accessed by game.
     inc MainRoutine                 ;SamusInit is next routine to run.
     jmp ScreenOn
@@ -2147,7 +2147,7 @@ SamusIntro:
         ;($D92C)Start main music.
         jsr StartMusic
         ;($CB73)Select proper Samus palette.
-        jsr SelectSamusPal
+        jsr SelectSamusPalette
         ;Game engine will be called next frame.
         lda #_id_GameEngine.b
         sta MainRoutine
@@ -2163,7 +2163,7 @@ SamusIntro:
     bne LCA00
         ;below, change the palette used to color Samus.
         inc ObjAction
-        sty PalDataPending
+        sty PaletteDataPending
     LCA00:
     ;Is game currently on an odd frame?-->
     ;If not, branch to exit.
@@ -2479,7 +2479,7 @@ UpdateWorld:
 ; - Is Samus firing missiles or regular bullets?
 ; - Is Samus with or without suit?
 
-SelectSamusPal: ;$CB73
+SelectSamusPalette: ;$CB73
     ;Temp storage of Y on the stack.
     tya
     pha
@@ -2503,7 +2503,7 @@ SelectSamusPal: ;$CB73
         adc #_id_Palette18-_id_Palette01.b
     @endIf:
     ;Palette will be written next NMI.
-    sta PalDataPending
+    sta PaletteDataPending
 
     ;Restore the contents of y.
     pla
@@ -3944,7 +3944,7 @@ Lx047:
     bne Exit4       ; exit if not the last missile
 ; Samus has no more missiles left
     dec MissileToggle       ; put Samus in "regular fire" mode
-    jmp SelectSamusPal      ; update Samus' palette to reflect this
+    jmp SelectSamusPalette      ; update Samus' palette to reflect this
 
 HorizontalMissileAnims:
     .byte ObjAnim_MissileRight - ObjectAnimIndexTbl
@@ -4916,19 +4916,19 @@ ElevatorD8BF:
     ora #$10
     jsr IsEngineRunning
     ; toggle palette
-    lda PalToggle
+    lda PaletteToggle
     eor #(_id_Palette00+1)~(_id_Palette05+1).b
-    sta PalToggle
-    ; if in tourian, load palette 0, else load palette PalToggle
+    sta PaletteToggle
+    ; if in tourian, load palette 0, else load palette PaletteToggle
     ldy InArea
     cpy #$12
     bcc @endIf_D
         lda #_id_Palette00+1.b
     @endIf_D:
-    sta PalDataPending
+    sta PaletteDataPending
     jsr WaitNMIPass_
     ; update samus palette
-    jsr SelectSamusPal
+    jsr SelectSamusPalette
     ;($D92C)Start music.
     jsr StartMusic
     ; turn the screen on (when had it turned off?)
@@ -5381,7 +5381,7 @@ CheckMissileToggle:
     eor #$01
     sta MissileToggle
     ; update samus's palette
-    jmp SelectSamusPal
+    jmp SelectSamusPalette
 
 ;-------------------------------------------------------------------------------
 ; MakeBitMask
@@ -5557,7 +5557,7 @@ LDBE3:
     LDBF1:
     sty ItemRoomMusicStatus
     ;Set Samus new palette.
-    jmp SelectSamusPal
+    jmp SelectSamusPalette
 
 Exit9:
     ;Exit for multiple routines above.
@@ -8436,7 +8436,7 @@ SetupRoom:
     sta RoomPtr+1.b                   ;Base copied from $959B to $3C.
     ldy #$00                        ;
     lda (RoomPtr),y                 ;First byte of room data.
-    sta RoomPal                     ;store initial palette # to fill attrib table with.
+    sta RoomPalette                     ;store initial palette # to fill attrib table with.
     lda #$01                        ;
     jsr AddToRoomPtr                ;($EAC0)Increment room data pointer.
     jsr SelectRoomRAM               ;($EA05)Determine where to draw room in RAM, $6000 or $6400.
@@ -8486,7 +8486,7 @@ LEA8D:
     tax                             ;Transfer structure pointer index into X.
     iny                             ;Move to the next byte of room data which is-->
     lda (RoomPtr),y                 ;the attrib table info for the structure.
-    sta ObjectPal                   ;Save attribute table info.
+    sta ObjectPalette                   ;Save attribute table info.
     txa                             ;Restore structure pointer to A.
     asl                             ;*2. Structure pointers are two bytes in size.
     tay                             ;
@@ -9399,7 +9399,7 @@ SpawnDoor:
 
 SpawnPalette:
     lda ScrollDir
-    sta DoorPalChangeDir
+    sta DoorPaletteChangeDir
     bne SpawnMotherBrain_exit ; branch always, because it's in horizontal rooms
 
 ScanForItems_AnotherItem: ;($EF00)
@@ -9579,10 +9579,10 @@ TilePosTable:
 
 UpdateAttrib: ; 07:EF9E
     ;Load attribute data of structure.
-    lda ObjectPal
+    lda ObjectPalette
     ;Is it the same as the room's default attribute data?-->
     ;If so, no need to modify the attribute table, exit.
-    cmp RoomPal
+    cmp RoomPalette
     beq @RTS
 
 ;Figure out cart RAM address of the byte containing the relevant bits.
@@ -9645,7 +9645,7 @@ UpdateAttrib: ; 07:EF9E
     and (Temp02_AttribPtr),y
     sta (Temp02_AttribPtr),y
     ;Load new attribute table data(#$00 thru #$03).
-    lda ObjectPal
+    lda ObjectPalette
     @loop:
         dex
         bmi @exitLoop
@@ -9682,7 +9682,7 @@ InitTables:
     ldx $01                         ;#$5F or #$63 depening on which room RAM was initialized.
     jsr Xplus4                      ;($E193)X = X + 4.
     stx $01                         ;Set high byte for attribute table write(#$63 or #$67).
-    ldx RoomPal                     ;Index into table below (Lowest 2 bits).
+    ldx RoomPalette                     ;Index into table below (Lowest 2 bits).
     lda ATDataTable,x               ;Load attribute table data from table below.
     ldy #$C0                        ;Low byte of start of all attribute tables.
     @loop:

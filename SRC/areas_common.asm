@@ -1477,25 +1477,25 @@ UpdateDoor_LetSamusIn:
     jsr DoorSubRoutine8C76
     ; branch if we are not in a palette change room
     ldx PageIndex
-    lda DoorPalChangeDir
+    lda DoorPaletteChangeDir
     beq L8CA7
     ; branch if door is on the same wall as the one you entered the room with
     txa
     jsr Adiv16
-    eor DoorPalChangeDir
+    eor DoorPaletteChangeDir
     lsr
     bcc L8CA7
     ; change the palette
-    lda PalToggle
+    lda PaletteToggle
     eor #(_id_Palette00+1)~(_id_Palette05+1).b
-    sta PalToggle
-    sta PalDataPending
+    sta PaletteToggle
+    sta PaletteDataPending
 L8CA7:
     ; increment door status to "scroll"
     inc DoorStatus,x
-    ; clear DoorPalChangeDir
+    ; clear DoorPaletteChangeDir
     lda #$00
-    sta DoorPalChangeDir
+    sta DoorPaletteChangeDir
     ; branch if door isnt a blue door that changes the music
     lda DoorType,x
     cmp #$03
@@ -1538,7 +1538,7 @@ UpdateDoor_Scroll:
     ; play door sfx
     jsr SFX_Door
     ; update samus's palette (probably so that she doesn't remain blue when going in a door with a metroid on her head)
-    jsr SelectSamusPal
+    jsr SelectSamusPalette
     ; set the current door's status to "closed"
     ldx PageIndex
     lda #$02

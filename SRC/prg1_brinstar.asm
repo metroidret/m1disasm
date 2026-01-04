@@ -52,35 +52,35 @@ GFX_BrinstarSprites:
 
 ;----------------------------------------------------------------------------------------------------
 
-PalPntrTbl:
-    PtrTableEntryArea PalPntrTbl, Palette00                 ;($A271)Default room palette.
-    PtrTableEntryArea PalPntrTbl, Palette01                 ;($A295)Samus power suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette02                 ;($A2A1)Samus varia suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette03                 ;($A29B)Samus power suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette04                 ;($A2A7)Samus varia suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette05                 ;($A2AD)Alternate room palette.
-    PtrTableEntryArea PalPntrTbl, Palette06                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette07                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette08                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette09                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0A                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0B                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0C                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0D                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0E                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette0F                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette10                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette11                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette12                 ;($A2D0)
-    PtrTableEntryArea PalPntrTbl, Palette13                 ;($A2D0)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntryArea PalPntrTbl, Palette14                 ;($A2D7)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette15                 ;($A2DE)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette16                 ;($A2E5)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette17                 ;($A2EC)Unused?
-    PtrTableEntryArea PalPntrTbl, Palette18                 ;($A2F4)Suitless Samus power suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette19                 ;($A2FC)Suitless Samus varia suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
+PalettePtrTable:
+    PtrTableEntryArea PalettePtrTable, Palette00                 ;($A271)Default room palette.
+    PtrTableEntryArea PalettePtrTable, Palette01                 ;($A295)Samus power suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette02                 ;($A2A1)Samus varia suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette03                 ;($A29B)Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette04                 ;($A2A7)Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette05                 ;($A2AD)Alternate room palette.
+    PtrTableEntryArea PalettePtrTable, Palette06                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette07                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette08                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette09                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0A                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0B                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0C                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0D                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0E                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette0F                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette10                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette11                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette12                 ;($A2D0)
+    PtrTableEntryArea PalettePtrTable, Palette13                 ;($A2D0)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryArea PalettePtrTable, Palette14                 ;($A2D7)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette15                 ;($A2DE)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette16                 ;($A2E5)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette17                 ;($A2EC)Unused?
+    PtrTableEntryArea PalettePtrTable, Palette18                 ;($A2F4)Suitless Samus power suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette19                 ;($A2FC)Suitless Samus varia suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette1A                 ;($A304)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette1B                 ;($A30C)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
     .word SpecItmsTbl_{AREA}               ;($A3D6)Beginning of special items table.
@@ -135,7 +135,7 @@ AreaMapPosY:
 AreaSamusY:
     .byte $B0   ;Samus start vertical screen position.
 
-AreaPalToggle:
+AreaPaletteToggle:
     .byte _id_Palette00+1
 
     .byte $00

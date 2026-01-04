@@ -50,35 +50,35 @@ GFX_RidleySprites:
 
 ;----------------------------------------------------------------------------------------------------
 
-PalPntrTbl:
-    PtrTableEntryArea PalPntrTbl, Palette00                 ;($A718)Room palette.
-    PtrTableEntryArea PalPntrTbl, Palette01                 ;($A73C)Samus power suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette02                 ;($A748)Samus varia suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette03                 ;($A742)Samus power suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette04                 ;($A74E)Samus varia suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette05                 ;($A754)
-    PtrTableEntryArea PalPntrTbl, Palette06                 ;($A754)Mother Brain hurt palette.
-    PtrTableEntryArea PalPntrTbl, Palette07                 ;($A759)Mother Brain hurt palette.
-    PtrTableEntryArea PalPntrTbl, Palette08                 ;($A75E)Mother Brain dying palette.
-    PtrTableEntryArea PalPntrTbl, Palette09                 ;($A773)Mother Brain dying palette.
-    PtrTableEntryArea PalPntrTbl, Palette0A                 ;($A788)Time bomb explosion palette.
-    PtrTableEntryArea PalPntrTbl, Palette0B                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette0C                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette0D                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette0E                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette0F                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette10                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette11                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette12                 ;($A78D)
-    PtrTableEntryArea PalPntrTbl, Palette13                 ;($A78D)Samus fade in palette. Same regardless of varia suit and suitless.
-    PtrTableEntryArea PalPntrTbl, Palette14                 ;($A794)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette15                 ;($A79B)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette16                 ;($A7A2)Samus fade in palette.
-    PtrTableEntryArea PalPntrTbl, Palette17                 ;($A7A9)Unused?
-    PtrTableEntryArea PalPntrTbl, Palette18                 ;($A7B1)Suitless Samus power suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette19                 ;($A7B9)Suitless Samus varia suit palette.
-    PtrTableEntryArea PalPntrTbl, Palette1A                 ;($A7C1)Suitless Samus power suit with missiles selected palette.
-    PtrTableEntryArea PalPntrTbl, Palette1B                 ;($A7C9)Suitless Samus varia suit with missiles selected palette.
+PalettePtrTable:
+    PtrTableEntryArea PalettePtrTable, Palette00                 ;($A718)Room palette.
+    PtrTableEntryArea PalettePtrTable, Palette01                 ;($A73C)Samus power suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette02                 ;($A748)Samus varia suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette03                 ;($A742)Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette04                 ;($A74E)Samus varia suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette05                 ;($A754)
+    PtrTableEntryArea PalettePtrTable, Palette06                 ;($A754)Mother Brain hurt palette.
+    PtrTableEntryArea PalettePtrTable, Palette07                 ;($A759)Mother Brain hurt palette.
+    PtrTableEntryArea PalettePtrTable, Palette08                 ;($A75E)Mother Brain dying palette.
+    PtrTableEntryArea PalettePtrTable, Palette09                 ;($A773)Mother Brain dying palette.
+    PtrTableEntryArea PalettePtrTable, Palette0A                 ;($A788)Time bomb explosion palette.
+    PtrTableEntryArea PalettePtrTable, Palette0B                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette0C                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette0D                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette0E                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette0F                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette10                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette11                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette12                 ;($A78D)
+    PtrTableEntryArea PalettePtrTable, Palette13                 ;($A78D)Samus fade in palette. Same regardless of varia suit and suitless.
+    PtrTableEntryArea PalettePtrTable, Palette14                 ;($A794)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette15                 ;($A79B)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette16                 ;($A7A2)Samus fade in palette.
+    PtrTableEntryArea PalettePtrTable, Palette17                 ;($A7A9)Unused?
+    PtrTableEntryArea PalettePtrTable, Palette18                 ;($A7B1)Suitless Samus power suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette19                 ;($A7B9)Suitless Samus varia suit palette.
+    PtrTableEntryArea PalettePtrTable, Palette1A                 ;($A7C1)Suitless Samus power suit with missiles selected palette.
+    PtrTableEntryArea PalettePtrTable, Palette1B                 ;($A7C9)Suitless Samus varia suit with missiles selected palette.
 
 SpecItmsTblPtr:
     .word SpecItmsTbl_{AREA}               ;($A83B)Beginning of special items table.
@@ -142,7 +142,7 @@ AreaMapPosY:
 AreaSamusY:
     .byte $6E   ;Samus start vertical screen position.
 
-AreaPalToggle:
+AreaPaletteToggle:
     .byte _id_Palette05+1
 
     .byte $00
@@ -1126,12 +1126,12 @@ ClearMotherBrainIsHit:
 MotherBrain_Hurt: ; 03:9E36
     ; update flashing palette
     jsr UpdateMotherBrainFlashDelay
-    lda MotherBrainFlashPalettesTable,y
-    sta PalDataPending
+    lda MotherBrainFlashPaletteTable,y
+    sta PaletteDataPending
     ; clear is hit flag
     jmp ClearMotherBrainIsHit
 
-MotherBrainFlashPalettesTable: ; 03:9E41
+MotherBrainFlashPaletteTable: ; 03:9E41
     .byte _id_Palette07+1, _id_Palette06+1
 
 UpdateMotherBrainFlashDelay: ; 03:9E43
@@ -1161,8 +1161,8 @@ UpdateMotherBrainFlashDelay: ; 03:9E43
 MotherBrain_Killed: ; 03:9E52
     ; update flashing palette
     jsr UpdateMotherBrainFlashDelay
-    lda MotherBrainFlashPalettesTable,y
-    sta PalDataPending
+    lda MotherBrainFlashPaletteTable,y
+    sta PaletteDataPending
     ; shake the screen vertically
     tya
     asl
@@ -1228,7 +1228,7 @@ MotherBrain_Disappear: ; 03:9E86
         ; VRAMStructBufferIndex is zero
         ; flash palette
         lda MotherBrain_Disappear_PaletteTable,y
-        sta PalDataPending
+        sta PaletteDataPending
     @endIf_B:
     ; exit if status is not idle (delay is not yet zero)
     ldy MotherBrainStatus
@@ -1470,7 +1470,7 @@ MotherBrain_9FC0: ; 03:9FC0
     sta MotherBrainStatus
     ; reload palette #$00
     lda #_id_Palette00+1.b
-    sta PalDataPending
+    sta PaletteDataPending
 @RTS:
     rts
 
@@ -1980,7 +1980,7 @@ UpdateEndTimer:
     sta Timer3
     ; set palette to all white
     lda #_id_Palette0A+1.b
-    sta PalDataPending
+    sta PaletteDataPending
 @RTS:
     rts
 

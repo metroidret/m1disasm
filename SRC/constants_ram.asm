@@ -305,7 +305,7 @@ RetrigDelay2           db   ;$19     ;The retriggering of held down buttons.
 
 NMIStatus              db   ;$1A     ;0=NMI in progress. anything else, NMI not in progress.
 PPUDataPending         db   ;$1B     ;1=not PPU data pending, 1=data pending.
-PalDataPending         db   ;$1C     ;Pending palette data. Palette # = PalDataPending - 1.
+PaletteDataPending     db   ;$1C     ;Pending palette data. Palette # = PaletteDataPending - 1.
 GameMode               db   ;$1D     ;0 = Game is playing, 1 = At title/password screen
 MainRoutine            db   ;$1E     ;5 = Game paused, 3 = Game engine running
 TitleRoutine           db   ;$1F     ;Stores title routine number currently running.
@@ -406,8 +406,8 @@ DoorRoomRAMPtr         dsw 4;$5C
 SamusInLava            db   ;$64     ;#$01=Samus in lava, #$00=She is not.
 ObjectCounter          db   ;$65     ;Counts such things as object explosion time.
 EnemyMovePixelQty      db   ;$66     ;Quantity of times to call the current EnemyMoveOnePixel routine
-ObjectPal              db   ;$67     ;Attrib. table info for room object(#$00 thru #$03).
-RoomPal                db   ;$68
+ObjectPalette          db   ;$67     ;Attrib. table info for room object(#$00 thru #$03).
+RoomPalette            db   ;$68
 TempX                  db   ;$69
 TempY                  db   ;$6A
 ObjectCntrl            db   ;$6B     ;Controls object properties such as mirroring and color-->
@@ -439,7 +439,7 @@ InArea                 db   ;$74     ;#$10(or #$00)=Brinstar, #$11=Norfair, #$12
                                        ;#$13=Tourian, #$14=Ridley hideout.
 
 SpareMem75             db   ;$75     ;Initialized to #$FF in AreaInit. Not used.
-PalToggle              db   ;$76
+PaletteToggle          db   ;$76
 SamusKnockbackIsBomb77 db   ;$77     ;set to SamusKnockbackIsBomb
 
 SpareMem78             db   ;$78
@@ -499,7 +499,7 @@ ItemRoomMusicStatus    db   ;$79     ;#$00=Item room music not playing.
 
 ;----------------------------------------------------------------------------------------------------
 
-DoorPalChangeDir       db   ;$91     ;When Samus enters a palette change room, this stores the ScrollDir
+DoorPaletteChangeDir   db   ;$91     ;When Samus enters a palette change room, this stores the ScrollDir
                                        ;she entered with, so that if the next door she enters is also
                                        ;in that direction, we can change the palette.
 
@@ -565,8 +565,8 @@ SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0
     SecondCrosshairSprites db   ;$BF     ;#$01=Second crosshair sprites active in intro.
 
     FlashScreen            db   ;$C0     ;#$01=Flash screen during crosshairs routine.
-    PalDataIndex           db   ;$C1
-    ScreenFlashPalIndex    db   ;$C2     ;Index to palette data to flash screen during intro.
+    PaletteDataIndex       db   ;$C1
+    ScreenFlashPaletteIndex db  ;$C2     ;Index to palette data to flash screen during intro.
     IntroStarOffset        db   ;$C3     ;Contains offset into IntroStarPntr table for twinkle effect.
     FadeDataIndex          db   ;$C4     ;Index to palette data to fade items in and out during intro.
 
