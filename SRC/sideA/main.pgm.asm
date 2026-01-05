@@ -69,8 +69,8 @@ CommonJump_InitEnActiveAnimIndex_NoL967BOffset: ;($6C1E)
     jmp InitEnActiveAnimIndex_NoL967BOffset
 CommonJump_6C21: ;($6C21)
     jmp LA75D
-CommonJump_ChooseRoutine: ;($6C24)
-    jmp MAIN_ChooseRoutine
+CommonJump_JumpEngine: ;($6C24)
+    jmp MAIN_JumpEngine
 CommonJump_6C27: ;($6C27)
     jmp LAC7C
 CommonJump_6C2A: ;($6C2A)
@@ -503,7 +503,7 @@ UpdateWorld: ;($6EF1)
     jsr LA232
     jsr L7840
     jsr L6FC1
-    jsr $B5BB
+    jsr AreaRoutine
     jsr L7B30
     jsr L7D52
     jsr LA98A
@@ -651,7 +651,7 @@ L6FC1:
     L6FCE:
     lda ObjAction
     bmi L6FEA
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word L6FEA
         .word L7076
         .word L73B8
@@ -701,7 +701,7 @@ L700F:
     lda ObjAction
     cmp #$05
     bcs RTS_704B
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L704C
         .word L7377
@@ -1498,7 +1498,7 @@ SamusPntUp: ;($754E)
     lda #$04
     jsr L7121
     lda ObjAction
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word SetSamusStand
         .word L704C
         .word RTS_D07F
@@ -1913,7 +1913,7 @@ L7840:
 L784C:
     stx PageIndex
     lda ObjAction,x
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L786C
         .word L78AD
@@ -2351,7 +2351,7 @@ L7B30:
     ldx #$20
     stx PageIndex
     lda ObjAction,x
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L7B4E
         .word L7B8B
@@ -5060,7 +5060,7 @@ L8D68:
     lda $54
     and #$0F
     inc $54
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
     .byte $7F
     bne L8DC1
     .byte $89
@@ -5181,7 +5181,7 @@ EnemyLoop: ;($8E29)
     cmp #$FF
     beq EndOfRoom
     and #$0F
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word LoadEnemy
         .word LoadDoor
@@ -5667,7 +5667,7 @@ ChooseSpawningRoutine: ;($912C)
     ldy #$00
     lda ($00),y
     and #$0F
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word SpawnMapEnemy
         .word SpawnPowerUp
@@ -6146,7 +6146,7 @@ L93C8:
     jsr PauseMusic
 L93E9:
     lda MainRoutine
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word LC082
         .word MoreInit
         .word SamusInit
@@ -6224,7 +6224,7 @@ MAIN_UpdateTimer: ;($9433)
 
 
 
-MAIN_ChooseRoutine: ;($9449)
+MAIN_JumpEngine: ;($9449)
     asl a
     sty $64
     stx $63
@@ -6590,7 +6590,7 @@ L9BD3:
 L9BD9:
     stx PageIndex
     lda ObjAction,x
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L9BEF
         .word L9C27
@@ -6851,7 +6851,7 @@ L9D9A:
     stx PageIndex
     lda $0500,x
     beq RTS_9D8B
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L9DB0
         .word L9DC7
@@ -7595,7 +7595,7 @@ LA24C:
     sta $7C
     cmp #$07
     bcs LA269
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word LA2AB
         .word LA2D3
@@ -8423,7 +8423,7 @@ LA836:
 LA842:
     lda $B460,x
     beq RTS_A856
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
     .word RTS_D07F
     .word LA857
     .word LA87E
@@ -8892,7 +8892,7 @@ LAB82:
 
 LAB85:
     lda $B0,x
-    jsr MAIN_ChooseRoutine
+    jsr MAIN_JumpEngine
         .word RTS_D07F
         .word LAB92
         .word LAB9E
@@ -9997,7 +9997,7 @@ LB2ED:
     ldy #>PPUString_B34F.b
     jsr MAIN_PreparePPUProcess
     jsr LB346
-    jsr $D068
+    jsr LD068
 LB307:
     jsr LB310
     jsr MAIN_EraseAllSprites
@@ -10006,27 +10006,38 @@ LB307:
 
 ; await disk switch sides to side A?
 LB310:
-    lda DRIVESTATUS
-    lsr a
-    bcc LB310
-    LB316:
+    ; wait for disk to be ejected
+    @loop_waitForEjection:
+        lda DRIVESTATUS
+        lsr a
+        bcc @loop_waitForEjection
+    ; disk is now ejected
+    @loop_reinsertionFalsePositive:
+        ; set ejection timer to 32 frames
         lda #$20
         pha
-        LB319:
+        @loop_waitForReinsertion:
+            ; wait for v-blank
             jsr METHEX_WaitNMIPass_
+            ; pull timer from stack
             pla
-            beq LB322
+            ; skip decrement if timer is zero
+            beq @endIf_decTimer
+                ; decrement timer
                 tay
                 dey
                 tya
-            LB322:
+            @endIf_decTimer:
             pha
+            ; loop while disk is not re-inserted
             lda DRIVESTATUS
             lsr a
-            bcs LB319
+            bcs @loop_waitForReinsertion
+        ; if disk was re-inserted before timer is elapsed, it's probably a false positive
+        ; the disk must remain ejected for at least 32 frames before being re-inserted
         pla
-        bne LB316
-RTS_B32C:
+        bne @loop_reinsertionFalsePositive
+@RTS:
     rts
 
 
@@ -10034,14 +10045,14 @@ RTS_B32C:
 LB32D:
     lda $1E
     cmp #$03
-    beq RTS_B32C
+    beq LB310@RTS
     jsr ClearScreenData
     ldx #<PPUString_B359.b
     ldy #>PPUString_B359.b
     jsr MAIN_PreparePPUProcess
     jsr METHEX_WaitNMIPass_
     jsr LB346
-    jmp $D068
+    jmp LD068
 LB346:
     lda $FF
     and #$EF

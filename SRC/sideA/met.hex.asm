@@ -114,6 +114,7 @@ METHEX_ScreenOn: ;($D060)
     and #~PPUCTRL_OBJ_1000.b
     ora #PPUCTRL_BG_1000
     sta PPUCTRL_ZP
+LD068:
     lda PPUMASK_ZP
     ora #(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
     bne METHEX_WriteAndWait ; branch always

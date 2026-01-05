@@ -99,7 +99,7 @@ AreaPointers: ;($B592)
 ; Enemy AI jump table
 ChooseEnemyAIRoutine: ;($B5DD)
     lda EnsExtra.0.type,x
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word $B8CF
         .word $B904
         .word $B83F

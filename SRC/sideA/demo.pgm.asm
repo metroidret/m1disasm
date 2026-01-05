@@ -227,7 +227,7 @@ L695F:
         jmp MainTitleRoutine
     L6966:
     lda MainRoutine
-    jsr DEMO_ChooseRoutine
+    jsr DEMO_JumpEngine
         .word RTS_6D00
 
 
@@ -256,7 +256,7 @@ MainTitleRoutine: ;($696D)
         jsr RemoveIntroSprites
         lda TitleRoutine
 L6999:
-    jsr DEMO_ChooseRoutine
+    jsr DEMO_JumpEngine
         .word L6999_InitializeAfterReset00
         .word L6999_DrawIntroBackground
         .word L6999_6D8C
@@ -535,7 +535,7 @@ DEMO_UpdateTimer:
 
 
 
-DEMO_ChooseRoutine: ;($6AFA)
+DEMO_JumpEngine: ;($6AFA)
     ;* 2, each ptr is 2 bytes (16-bit).
     asl
     ;Temp storage. (not pushed to stack, because stack needs to be accessed)

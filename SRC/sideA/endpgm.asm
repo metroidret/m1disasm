@@ -221,7 +221,7 @@ L6144:
     sta $34
 L615D:
     lda $3C
-    jsr ENDPGM_ChooseRoutine
+    jsr ENDPGM_JumpEngine
         .word L615D_6172
         .word L615D_61AC
         .word L615D_61C4
@@ -962,7 +962,7 @@ L66EA:
 
 
 
-ENDPGM_ChooseRoutine:
+ENDPGM_JumpEngine:
     stx $E0
     sty $E1
     asl a
