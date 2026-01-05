@@ -463,24 +463,24 @@ EnProjectileMovementPtrTable:
     .word EnProjectileMovement3_{AREA}
 
 ; Referenced by LFE83
-TileBlastFramePtrTable:
-    .word TileBlastFrame00_{AREA}
-    .word TileBlastFrame01_{AREA}
-    .word TileBlastFrame02_{AREA}
-    .word TileBlastFrame03_{AREA}
-    .word TileBlastFrame04_{AREA}
-    .word TileBlastFrame05_{AREA}
-    .word TileBlastFrame06_{AREA}
-    .word TileBlastFrame07_{AREA}
-    .word TileBlastFrame08_{AREA}
-    .word TileBlastFrame09_{AREA}
-    .word TileBlastFrame0A_{AREA}
-    .word TileBlastFrame0B_{AREA}
-    .word TileBlastFrame0C_{AREA}
-    .word TileBlastFrame0D_{AREA}
-    .word TileBlastFrame0E_{AREA}
-    .word TileBlastFrame0F_{AREA}
-    .word TileBlastFrame10_{AREA}
+VRAMStringPtrTable:
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString00
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString01
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString02
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString03
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString04
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString05
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString06
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString07
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString08
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString09
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0A
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0B
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0C
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0D
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0E
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0F
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString10
 
 ; If I'm reading the code correctly, this table is accessed with this formula:
 ;  EnData08 = EnemyMovementChoices[(EnemyMovementChoices[EnemyMovementChoiceOffset[EnemyDataIndex]] and (FrameCount xor RandomNumber1))+1]
@@ -895,65 +895,65 @@ CommonEnemyJump_00_01_02_{AREA}:
 AreaRoutineStub_{AREA}: ;L9D35
     rts
 
-; Strings pointed to by TileBlastFramePtrTable
-TileBlastFrame00_{AREA}:
+; Strings pointed to by VRAMStringPtrTable
+VRAMString00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01_{AREA}:
+VRAMString01_{AREA}:
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-TileBlastFrame02_{AREA}:
+VRAMString02_{AREA}:
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-TileBlastFrame03_{AREA}:
+VRAMString03_{AREA}:
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-TileBlastFrame04_{AREA}:
+VRAMString04_{AREA}:
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-TileBlastFrame05_{AREA}:
+VRAMString05_{AREA}:
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-TileBlastFrame06_{AREA}:
+VRAMString06_{AREA}:
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-TileBlastFrame07_{AREA}:
+VRAMString07_{AREA}:
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-TileBlastFrame08_{AREA}:
+VRAMString08_{AREA}:
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-TileBlastFrame09_{AREA}:
+VRAMString09_{AREA}:
     .byte $32
     .byte $4E, $4E
     .byte $4E, $4E
     .byte $4E, $4E
 
-TileBlastFrame0A_{AREA}:
-TileBlastFrame0B_{AREA}:
-TileBlastFrame0C_{AREA}:
-TileBlastFrame0D_{AREA}:
-TileBlastFrame0E_{AREA}:
-TileBlastFrame0F_{AREA}:
-TileBlastFrame10_{AREA}:
+VRAMString0A_{AREA}:
+VRAMString0B_{AREA}:
+VRAMString0C_{AREA}:
+VRAMString0D_{AREA}:
+VRAMString0E_{AREA}:
+VRAMString0F_{AREA}:
+VRAMString10_{AREA}:
     ; nothing
 
 .include "brinstar/enemy_sprite_data.asm"

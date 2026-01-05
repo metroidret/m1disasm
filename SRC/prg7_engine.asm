@@ -862,44 +862,50 @@ SetPPUInc: ; 07:C318
 
 
 ;Write blasted tile to nametable.  Each screen is 16 tiles across and 15 tiles down.
-WriteTileBlast:
-    ldy #$01                        ;
-    sty PPUDataPending              ;data pending = YES.
-    dey                             ;
-    lda ($02),y                     ;
-    and #$0F                        ;
-    sta $05                         ;# of tiles horizontally.
-    lda ($02),y                     ;
-    jsr Adiv16                      ;($C2BF)/ 16.
-    sta $04                         ;# of tiles vertically.
+WriteVRAMString:
+    ;data pending = YES.
+    ldy #$01
+    sty PPUDataPending
+    
+    dey
+    ;# of tiles horizontally.
+    lda (Temp02_VRAMStringPtr),y
+    and #$0F
+    sta Temp05_VRAMStringWidth
+    ;# of tiles vertically.
+    lda (Temp02_VRAMStringPtr),y
+    jsr Adiv16
+    sta Temp04_VRAMStringHeight
     ldx VRAMStructBufferIndex
-    LC33D:
+    @loop_row:
         ;write PPU high address to VRAMStructBuffer.
-        lda $01
+        lda Temp00_PPURAMPtr+1.b
         jsr WritePPUByte
         ;write PPU low address to VRAMStructBuffer.
-        lda $00
+        lda Temp00_PPURAMPtr
         jsr WritePPUByte
         ;write VRAM structure length to VRAMStructBuffer.
-        lda $05
-        sta $06
+        lda Temp05_VRAMStringWidth
+        sta Temp06_XCounter
         jsr WritePPUByte
-        LC34E:
+        @loop_tile:
             ;Get new tile to replace old tile.
             iny
-            lda ($02),y
+            lda (Temp02_VRAMStringPtr),y
             ;($C36B)Write it to VRAMStructBuffer, inc x.
             jsr WritePPUByte
             ;Branch if more horizontal tiles to replace.
-            dec $06
-            bne LC34E
+            dec Temp06_XCounter
+            bne @loop_tile
         stx VRAMStructBufferIndex
-        sty $06
+        sty Temp06_XCounter
+        ;Move to next name table line.
         ldy #$20
-        jsr AddYToPtr00                 ;($C2A8)Move to next name table line.
-        ldy $06                         ;Store index to find next tile info.
-        dec $04                         ;
-        bne LC33D                       ;Branch if more lines need to be changed on name table.
+        jsr AddYToPtr00
+        ;Store index to find next tile info.
+        ldy Temp06_XCounter
+        dec Temp04_VRAMStringHeight
+        bne @loop_row                       ;Branch if more lines need to be changed on name table.
     ;Finish writing VRAM structure and exit.
     jsr EndVRAMStruct ; equivalent to jump, bc stack is popped by routine
 
@@ -12385,17 +12391,21 @@ UpdateAllTileBlasts:
         ldx PageIndex
         jsr Xminus16
         bne @loop
+    ; fallthrough
+
 UpdateTileBlast:
+    ; exit if tile not active
     stx PageIndex
     lda TileBlasts.0.routine,x
-    beq SetTileAnim@RTS          ; exit if tile not active
+    beq SetTileAnim@RTS
     jsr ChooseRoutine
-        .word ExitSub       ;($C45C) rts
+        .word ExitSub       ;($C45C) rts, never chosen because of the beq RTS above
         .word UpdateTileBlast_Init
         .word UpdateTileBlast_Animating ; spawning
         .word UpdateTileBlast_WaitToRespawn
         .word UpdateTileBlast_Animating ; respawning
         .word UpdateTileBlast_Respawned
+
 
 UpdateTileBlast_Init:
     inc TileBlasts.0.routine,x
@@ -12405,15 +12415,18 @@ UpdateTileBlast_Init:
     ; tile respawns after 320 frames
     lda #$50
     sta TileBlasts.0.delay,x
-    lda TileBlasts.0.roomRAMPtr,x     ; low WRAM addr of blasted tile
-    sta $00
-    lda TileBlasts.0.roomRAMPtr+1,x     ; high WRAM addr
-    sta $01
+    ; load WRAM addr of blasted tile (why? this isn't used later)
+    lda TileBlasts.0.roomRAMPtr,x
+    sta Temp00_RoomRAMPtr
+    lda TileBlasts.0.roomRAMPtr+1,x
+    sta Temp00_RoomRAMPtr+1.b
+    ; fallthrough
 
 UpdateTileBlast_Animating:
     ; anim every 2 frames
     lda #$02
     jmp UpdateTileBlastAnim
+
 
 UpdateTileBlast_WaitToRespawn:
     ; only update tile timer every 4th frame
@@ -12455,20 +12468,20 @@ UpdateTileBlast_Respawned:
     ; delete tile blast
     lda #$00
     sta TileBlasts.0.routine,x
-    ; ($03, $02) = position of center of tile
+    ; ($03, $02) = position of center of metatile
     lda TileBlasts.0.roomRAMPtr,x
     clc
     adc #$21
-    sta $00
+    sta Temp00_RoomRAMPtr
     lda TileBlasts.0.roomRAMPtr+1,x
-    sta $01
+    sta Temp00_RoomRAMPtr+1.b
     jsr GetPosAtNameTableAddr
     ; check if colliding with Samus
-    lda $02
+    lda Temp02_MetatileCenterY
     sta Temp07_XSlotPositionY
-    lda $03
+    lda Temp03_MetatileCenterX
     sta Temp09_XSlotPositionX
-    lda $01
+    lda Temp00_RoomRAMPtr+1.b
     lsr
     lsr
     and #$01
@@ -12485,151 +12498,176 @@ UpdateTileBlast_Respawned:
     clc
     adc ObjRadX
     sta Temp05_YSlotRadX
+    ; exit if metatile did not respawn over Samus
     jsr CheckCollisionOfXSlotAndYSlot
-    bcs GetTileBlastFramePtr@RTS
+    bcs GetVRAMStringPtr@RTS
 
-    ; tile hit Samus
+    ; metatile respawned over Samus
     jsr SamusHurt_F311
     ; deal 5 damage to samus
     lda #$50
     sta HealthChange
     jmp SubtractHealth
 
-GetTileBlastFramePtr:
+
+GetVRAMStringPtr:
     lda TileBlasts.0.animFrame,x
     asl
     tay
-    lda TileBlastFramePtrTable,y
-    sta $02
-    lda TileBlastFramePtrTable+1,y
-    sta $03
+    lda VRAMStringPtrTable,y
+    sta Temp02_VRAMStringPtr
+    lda VRAMStringPtrTable+1,y
+    sta Temp02_VRAMStringPtr+1.b
 @RTS:
     rts
+
 
 ; return carry clear if successfully drawn
 ; return carry set if there is not enough space in the vram structure buffer
 DrawTileBlast: ; 07:FEDC
+    ; return carry set if there is not enough space in the vram structure buffer
     lda VRAMStructBufferIndex
     cmp #$1F
-    bcs GetTileBlastFramePtr@RTS
+    bcs GetVRAMStringPtr@RTS
+    
+    ; there is enough space in the vram structure buffer
+    ; let's write the vram string to room RAM
+    ; get index of tile blast
     ldx PageIndex
-    ; $01.$00 = TileBlastRoomRAMPtr
+    ; load room RAM pointer to write vram string at
     lda TileBlasts.0.roomRAMPtr,x
-    sta $00
+    sta Temp00_RoomRAMPtr
     lda TileBlasts.0.roomRAMPtr+1,x
-    sta $01
-    jsr GetTileBlastFramePtr
+    sta Temp00_RoomRAMPtr+1.b
+    ; load vram string pointer of vram string to write
+    jsr GetVRAMStringPtr
     ; $11 = room RAM index = 0
     ldy #$00
-    sty $11
-    ; header: hhhhwwww
-    lda ($02),y
+    sty Temp11_RoomRAMIndex
+    ; header: %hhhhwwww
+    lda (Temp02_VRAMStringPtr),y
     tax
     ; $04 = height (high nybble)
     jsr Adiv16       ; / 16
-    sta $04
+    sta Temp04_VRAMStringHeight
     txa
     ; $05 = width (low nybble)
     and #$0F
-    sta $05
-    ; $10 = frame index = 1
+    sta Temp05_VRAMStringWidth
+    ; $10 = vram string index = 1
     iny
-    sty $10
+    sty Temp10_VRAMStringIndex
     @loop_rows:
-        ldx $05
+        ldx Temp05_VRAMStringWidth
         @loop_columns:
             ; write tile
             ; read src and increment frame index
-            ldy $10
-            lda ($02),y
-            inc $10
+            ldy Temp10_VRAMStringIndex
+            lda (Temp02_VRAMStringPtr),y
+            inc Temp10_VRAMStringIndex
             ; write to room RAM and increment room RAM index
-            ldy $11
-            sta ($00),y
-            inc $11
+            ldy Temp11_RoomRAMIndex
+            sta (Temp00_RoomRAMPtr),y
+            inc Temp11_RoomRAMIndex
             ; loop if there are columns remaining
             dex
             bne @loop_columns
         ; next row
-        lda $11
+        lda Temp11_RoomRAMIndex
         clc
         adc #$20
-        ; to compenate for incrementing room RAM index by writing the previous row
+        ; move back to left edge of vram string on row
         sec
-        sbc $05
-        sta $11
+        sbc Temp05_VRAMStringWidth
+        sta Temp11_RoomRAMIndex
         ; loop if there are rows remaining
-        dec $04
+        dec Temp04_VRAMStringHeight
         bne @loop_rows
+    ; vram string is now successfully in room RAM
+    
+    ; now we must also write the vram string to VRAM
     ; $01.$00 = PPU address to write tile blast
     ; branch if in RoomRAMA
-    lda $01
+    lda Temp00_RoomRAMPtr+1.b
     and #$04
     beq @inNameTable0
         ; write to nametable 3
-        lda $01
+        lda Temp00_RoomRAMPtr+1.b
         ora #$0C
-        sta $01
+        sta Temp00_RoomRAMPtr+1.b
     @inNameTable0:
-    lda $01
+    lda Temp00_RoomRAMPtr+1.b
     and #$2F
-    sta $01
-    jsr WriteTileBlast
+    sta Temp00_RoomRAMPtr+1.b
+    jsr WriteVRAMString
+    ; return carry clear
     clc
     rts
+
 
 GetPosAtNameTableAddr:
     ; $01.$00 = ------yy yyyxxxxx (nametable address)
     ; $02 = yyyyy000 (Y position)
     ; $03 = xxxxx000 (X position)
-    lda $00
+    lda Temp00_RoomRAMPtr
     tay
     and #%11100000
-    sta $02
-    lda $01
+    sta Temp02_MetatileCenterY
+    lda Temp00_RoomRAMPtr+1.b
     lsr
-    ror $02
+    ror Temp02_MetatileCenterY
     lsr
-    ror $02
+    ror Temp02_MetatileCenterY
     tya
     and #%00011111
     jsr Amul8       ; * 8
-    sta $03
+    sta Temp03_MetatileCenterX
     rts
 
+
 UpdateTileBlastAnim:
+    ; get tile blast index
     ldx PageIndex
+    ; decrement anim delay if non-zero
     ldy TileBlasts.0.animDelay,x
     beq @update
         dec TileBlasts.0.animDelay,x
+        ; exit if still non-zero after decrement
         bne @RTS
     @update:
-    ; TileBlastAnimDelay = A
+    
+    ; anim delay is zero
+    ; reset anim delay back to max (always 2)
     sta TileBlasts.0.animDelay,x
     ; get frame index
     ldy TileBlasts.0.animIndex,x
     lda TileBlastAnim,y
-    cmp #$FE            ; end of "tile-blast" animation?
+    ; exit if end of "tile-blast" animation
+    cmp #$FE
     beq @end
+    
     ; set frame
     sta TileBlasts.0.animFrame,x
-    ; inc anim index
+    ; increment anim index
     iny
     tya
     sta TileBlasts.0.animIndex,x
-    ; try to draw it
+    ; try to draw it, exit on success
     jsr DrawTileBlast
     bcc @RTS
-    ; Failed to draw, retry drawing it next frame.
-    ; BUG: TileBlastAnimDelay should be set to 0 or 1 here.
+    
+    ; Failed to draw, retry drawing it in the next frames.
+    ; (anim delay should probably be set to 0 or 1 here, so that it retries the next frame.)
+    ; undo increment anim index
     ldx PageIndex
     dec TileBlasts.0.animIndex,x
 @RTS:
     rts
 @end:
-    ; TileBlastRoutine = wait to respawn
+    ; TileBlastRoutine = wait to respawn / respawned
     inc TileBlasts.0.routine,x
-    ; Quit updating remaining tile blasts and return (bug)
+    ; Quit updating remaining tile blasts and return
+    ; (this optimization is over-eager imo)
     pla
     pla
     rts
@@ -12637,16 +12675,27 @@ UpdateTileBlastAnim:
 ; Frame data for tile blasts (why aren't these in area banks?)
 
 TileBlastAnim:
-TileBlastAnim0:  .byte $06,$07,$00,$FE ; blasting tile or respawning tile #$7C
-TileBlastAnim1:  .byte $07,$06,$01,$FE ; respawning tile #$80
-TileBlastAnim2:  .byte $07,$06,$02,$FE ; respawning tile #$84
-TileBlastAnim3:  .byte $07,$06,$03,$FE ; respawning tile #$88
-TileBlastAnim4:  .byte $07,$06,$04,$FE ; respawning tile #$8C
-TileBlastAnim5:  .byte $07,$06,$05,$FE ; respawning tile #$94
-TileBlastAnim6:  .byte $07,$06,$09,$FE ; respawning tile #$70
-TileBlastAnim7:  .byte $07,$06,$0A,$FE ; respawning tile #$74
-TileBlastAnim8:  .byte $07,$06,$0B,$FE ; respawning tile #$78
-TileBlastAnim9:  .byte $07,$06,$08,$FE ; respawning tile #$90
+TileBlastAnim0:
+    .byte _id_VRAMString06, _id_VRAMString07, _id_VRAMString00, $FE ; blasting tile or respawning tile #$7C
+TileBlastAnim1:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString01, $FE ; respawning tile #$80
+TileBlastAnim2:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString02, $FE ; respawning tile #$84
+TileBlastAnim3:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString03, $FE ; respawning tile #$88
+TileBlastAnim4:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString04, $FE ; respawning tile #$8C
+TileBlastAnim5:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString05, $FE ; respawning tile #$94
+TileBlastAnim6:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString09, $FE ; respawning tile #$70
+TileBlastAnim7:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString0A, $FE ; respawning tile #$74
+TileBlastAnim8:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString0B, $FE ; respawning tile #$78
+TileBlastAnim9:
+    .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString08, $FE ; respawning tile #$90
+
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $00, $00

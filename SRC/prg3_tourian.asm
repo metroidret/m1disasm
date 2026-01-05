@@ -436,24 +436,24 @@ EnProjectileMovementPtrTable:
     .word EnProjectileMovement2_{AREA}
     .word EnProjectileMovement3_{AREA}
 
-TileBlastFramePtrTable:
-    .word TileBlastFrame00_{AREA}
-    .word TileBlastFrame01_{AREA}
-    .word TileBlastFrame02_{AREA}
-    .word TileBlastFrame03_{AREA}
-    .word TileBlastFrame04_{AREA}
-    .word TileBlastFrame05_{AREA}
-    .word TileBlastFrame06_{AREA}
-    .word TileBlastFrame07_{AREA}
-    .word TileBlastFrame08_{AREA}
-    .word TileBlastFrame09_{AREA}
-    .word TileBlastFrame0A_{AREA}
-    .word TileBlastFrame0B_{AREA}
-    .word TileBlastFrame0C_{AREA}
-    .word TileBlastFrame0D_{AREA}
-    .word TileBlastFrame0E_{AREA}
-    .word TileBlastFrame0F_{AREA}
-    .word TileBlastFrame10_{AREA}
+VRAMStringPtrTable:
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString00
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString01
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString02
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString03
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString04
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString05
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString06
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString07
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString08
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString09
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0A
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0B
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0C
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0D
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0E
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString0F
+    PtrTableEntryArea VRAMStringPtrTable, VRAMString10
 
 EnemyMovementChoices:
 EnemyMovementChoice_MetroidRed_{AREA}:
@@ -2161,38 +2161,38 @@ ClearCurrentMetroidLatchAndMetroidOnSamus:
 
 ;-------------------------------------------------------------------------------
 
-TileBlastFrame00_{AREA}:
+VRAMString00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01_{AREA}:
+VRAMString01_{AREA}:
     .byte $32
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame02_{AREA}: ; GET OU
+VRAMString02_{AREA}: ; GET OU
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $E0, $DE, $ED, $FF, $E8, $EE
 
-TileBlastFrame03_{AREA}: ; T FAST!
+VRAMString03_{AREA}: ; T FAST!
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $ED, $FF, $DF, $DA, $EC, $ED, $F4, $FF
 
-TileBlastFrame04_{AREA}: ; TIME
+VRAMString04_{AREA}: ; TIME
     .byte $28
     .byte $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame05_{AREA}:
+VRAMString05_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame06_{AREA}:
+VRAMString06_{AREA}:
     .byte $62
     .byte $FF, $FF
     .byte $FF, $FF
@@ -2201,62 +2201,62 @@ TileBlastFrame06_{AREA}:
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame07_{AREA}:
+VRAMString07_{AREA}:
     .byte $42
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame08_{AREA}: ; TIME B
+VRAMString08_{AREA}: ; TIME B
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $ED, $E2, $E6, $DE, $FF, $DB
 
-TileBlastFrame09_{AREA}: ; OMB SET
+VRAMString09_{AREA}: ; OMB SET
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $E8, $E6, $DB, $FF, $EC, $DE, $ED, $FF
 
-TileBlastFrame0A_{AREA}:
+VRAMString0A_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0B_{AREA}:
+VRAMString0B_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0C_{AREA}:
+VRAMString0C_{AREA}:
     .byte $42
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
 
-TileBlastFrame0D_{AREA}:
+VRAMString0D_{AREA}:
     .byte $42
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
 
-TileBlastFrame0E_{AREA}:
+VRAMString0E_{AREA}:
     .byte $42
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
 
-TileBlastFrame0F_{AREA}:
+VRAMString0F_{AREA}:
     .byte $42
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
 
-TileBlastFrame10_{AREA}:
+VRAMString10_{AREA}:
     .byte $62
     .byte $A0, $A0
     .byte $A0, $A0

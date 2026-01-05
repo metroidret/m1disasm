@@ -2962,16 +2962,16 @@ PreparePPUProcess_: ; 00:9449
 
 PrepareEraseTiles: ; 00:9450
     ;PPU low address byte
-    stx $00
+    stx Temp00_PPURAMPtr
     ;PPU high address byte
-    sty $01
+    sty Temp00_PPURAMPtr+1.b
 
     ;Address of byte where tile size of tile to be erased is stored.
     ldx #<TileSize.b
     ldy #>TileSize.b
-    stx $02
-    sty $03
-    jmp WriteTileBlast              ;($C328)Erase the selected tiles.
+    stx Temp02_VRAMStringPtr
+    sty Temp02_VRAMStringPtr+1.b
+    jmp WriteVRAMString              ;($C328)Erase the selected tiles.
 
 ;---------------------------------------[ Unused intro routines ]------------------------------------
 

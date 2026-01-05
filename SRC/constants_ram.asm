@@ -36,7 +36,7 @@
 .struct TileBlast
     routine                db
     spare01                dw
-    animFrame              db
+    animFrame              db   ;VRAMString index
     animDelay              db
     spare05                db
     animIndex              db
@@ -284,6 +284,26 @@ Temp01_NameTablePlus1  = $01
 ; VRAMStruct
 Temp00_VRAMStructPtr   = $00
 ; Temp00_VRAMStructPtr+1 = $01
+
+; DrawTileBlast/VRAMString
+;Temp00_RoomRAMPtr      = $00
+; Temp00_RoomRAMPtr+1    = $01
+Temp00_PPURAMPtr       = $00
+; Temp00_PPURAMPtr+1     = $01
+Temp02_VRAMStringPtr   = $02
+; Temp02_VRAMStringPtr+1 = $03
+Temp04_VRAMStringHeight = $04
+Temp05_VRAMStringWidth = $05
+Temp06_XCounter        = $06
+Temp10_VRAMStringIndex = $10
+Temp11_RoomRAMIndex    = $11
+
+; UpdateTileBlast
+;Temp00_RoomRAMPtr      = $00
+; Temp00_RoomRAMPtr+1    = $01
+Temp02_MetatileCenterY = $02
+Temp03_MetatileCenterX = $03
+
 
 
 CodePtr                = $0C     ;Points to address to jump to when choosing-->
