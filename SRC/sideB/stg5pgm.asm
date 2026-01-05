@@ -237,24 +237,24 @@ EnemyFireballMovementPtrTable: ;($B79F)
     .word EnProjectileMovement2_{AREA}
     .word EnProjectileMovement3_{AREA}
 
-TileBlastFramePtrTable: ;($B7A7)
-    .word TileBlastFrame00_{AREA}
-    .word TileBlastFrame01_{AREA}
-    .word TileBlastFrame02_{AREA}
-    .word TileBlastFrame03_{AREA}
-    .word TileBlastFrame04_{AREA}
-    .word TileBlastFrame05_{AREA}
-    .word TileBlastFrame06_{AREA}
-    .word TileBlastFrame07_{AREA}
-    .word TileBlastFrame08_{AREA}
-    .word TileBlastFrame09_{AREA}
-    .word TileBlastFrame0A_{AREA}
-    .word TileBlastFrame0B_{AREA}
-    .word TileBlastFrame0C_{AREA}
-    .word TileBlastFrame0D_{AREA}
-    .word TileBlastFrame0E_{AREA}
-    .word TileBlastFrame0F_{AREA}
-    .word TileBlastFrame10_{AREA}
+VRAMStringPtrTable: ;($B7A7)
+    .word VRAMString00_{AREA}
+    .word VRAMString01_{AREA}
+    .word VRAMString02_{AREA}
+    .word VRAMString03_{AREA}
+    .word VRAMString04_{AREA}
+    .word VRAMString05_{AREA}
+    .word VRAMString06_{AREA}
+    .word VRAMString07_{AREA}
+    .word VRAMString08_{AREA}
+    .word VRAMString09_{AREA}
+    .word VRAMString0A_{AREA}
+    .word VRAMString0B_{AREA}
+    .word VRAMString0C_{AREA}
+    .word VRAMString0D_{AREA}
+    .word VRAMString0E_{AREA}
+    .word VRAMString0F_{AREA}
+    .word VRAMString10_{AREA}
 
 EnemyMovementChoices:
 EnemyMovementChoice_MetroidRed_{AREA}:
@@ -536,39 +536,39 @@ CommonEnemyJump_00_01_02_{AREA}:
 
     .byte $60
 
-TileBlastFrame00_{AREA}:
+VRAMString00_{AREA}:
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame01_{AREA}:
+VRAMString01_{AREA}:
     .byte $42
     .byte $FF, $98
     .byte $FF, $98
     .byte $FF, $98
     .byte $FF, $98
 
-TileBlastFrame02_{AREA}: ; タダチニ ダ
+VRAMString02_{AREA}: ; タダチニ ダ
     .byte $28
     .byte $FF, $FF, $FF, $D1, $FF, $FF, $FF, $D1
     .byte $FF, $FF, $D6, $D6, $DA, $DB, $FF, $D6
 
-TileBlastFrame03_{AREA}: ; ッシュツ セヨ
+VRAMString03_{AREA}: ; ッシュツ セヨ
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $DC, $D0, $DD, $DE, $FF, $DF, $E0, $FF
 
-TileBlastFrame04_{AREA}: ; TIME
+VRAMString04_{AREA}: ; TIME
     .byte $28
     .byte $FF, $FF, $FF, $FF, $E9, $EA, $E4, $E5
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame05_{AREA}:
+VRAMString05_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame06_{AREA}:
+VRAMString06_{AREA}:
     .byte $62
     .byte $FF, $FF
     .byte $FF, $FF
@@ -577,62 +577,62 @@ TileBlastFrame06_{AREA}:
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame07_{AREA}:
+VRAMString07_{AREA}:
     .byte $42
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
-TileBlastFrame08_{AREA}: ; ジグンバクダ
+VRAMString08_{AREA}: ; ジグンバクダ
     .byte $28
     .byte $FF, $FF, $D1, $D1, $FF, $D1, $FF, $D1
     .byte $FF, $FF, $D0, $D2, $D3, $D4, $D5, $D6
 
-TileBlastFrame09_{AREA}: ; ン サドウ
+VRAMString09_{AREA}: ; ン サドウ
     .byte $28
     .byte $FF, $FF, $FF, $D1, $FF, $FF, $FF, $FF
     .byte $D3, $FF, $D7, $D8, $D9, $FF, $FF, $FF
 
-TileBlastFrame0A_{AREA}:
+VRAMString0A_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0B_{AREA}:
+VRAMString0B_{AREA}:
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-TileBlastFrame0C_{AREA}:
+VRAMString0C_{AREA}:
     .byte $42
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
     .byte $90, $91
 
-TileBlastFrame0D_{AREA}:
+VRAMString0D_{AREA}:
     .byte $42
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
     .byte $92, $93
 
-TileBlastFrame0E_{AREA}:
+VRAMString0E_{AREA}:
     .byte $42
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
     .byte $94, $95
 
-TileBlastFrame0F_{AREA}:
+VRAMString0F_{AREA}:
     .byte $42
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
     .byte $96, $97
 
-TileBlastFrame10_{AREA}:
+VRAMString10_{AREA}:
     .byte $62
     .byte $A0, $A0
     .byte $A0, $A0
