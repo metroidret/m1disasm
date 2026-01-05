@@ -398,7 +398,7 @@ L6A5B:
 DEMO_PreparePPUProcess_:
     stx $00
     sty $01
-    jmp DEMO_ProcessPPUString
+    jmp DEMO_VRAMStructWrite
 
 
 ;ReadJoyPads
@@ -654,7 +654,7 @@ DEMO_CheckPPUWrite: ;($6B5D)
     lda #>PPUDataString.b
     sta $01
     ;($C30C)write it to PPU.
-    jsr DEMO_ProcessPPUString
+    jsr DEMO_VRAMStructWrite
     ;PPU data string has been written so the data stored for the write is now erased.
     lda #$00
     sta PPUStrIndex
@@ -665,7 +665,7 @@ RTS_6B76:
 
 
 
-DEMO_PPUWrite: ;($6B77)
+DEMO_VRAMStructWriteData: ;($6B77)
     sta PPUADDR
     iny
     lda ($00),y
@@ -691,13 +691,11 @@ DEMO_PPUWrite: ;($6B77)
     iny
     jsr DEMO_AddYToPtr00
 
-
-
-DEMO_ProcessPPUString: ;($6B9F)
+DEMO_VRAMStructWrite: ;($6B9F)
     ldx PPUSTATUS
     ldy #$00
     lda ($00),y
-    bne DEMO_PPUWrite
+    bne DEMO_VRAMStructWriteData
     jmp DEMO_WriteScroll
 
 
@@ -748,7 +746,7 @@ WriteTileBlast:
         ldy $06
         dec $04
         bne L6BD0
-    jsr EndPPUString
+    jsr EndVRAMStruct
 
 WritePPUByte:
     sta PPUDataString,x
@@ -759,7 +757,7 @@ NextPPUByte:
     bcc RTS_6C10
     ldx PPUStrIndex
 
-EndPPUString:
+EndVRAMStruct:
     lda #$00
     sta PPUDataString,x
     pla
@@ -820,7 +818,7 @@ L6C5B:
     ldx PPUStrIndex
     lda ($02),y
     bne L6C24
-    jsr EndPPUString
+    jsr EndVRAMStruct
     
 SeparateControlBits:
     sta $04
@@ -1020,8 +1018,8 @@ L6999_DrawIntroBackground: ;($6D69)
     sta MusicFDSInitFlag
     jsr DEMO_ScreenOff
     jsr DEMO_ClearNameTables
-    ldx #<PPUString_DrawIntroGround.b
-    ldy #>PPUString_DrawIntroGround.b
+    ldx #<VRAMStruct_DrawIntroGround.b
+    ldy #>VRAMStruct_DrawIntroGround.b
     jsr DEMO_PreparePPUProcess_
     lda #$01
     sta PalDataPending
@@ -1039,9 +1037,9 @@ L6999_6D8C:
     bcs L6DB2
         asl a
         tay
-        lda PPUStringTable_DrawIntroLogo,y
+        lda VRAMStruct_DrawIntroLogoPtrTable,y
         sta $02
-        lda PPUStringTable_DrawIntroLogo+1,y
+        lda VRAMStruct_DrawIntroLogoPtrTable+1,y
         sta $03
         ldy #$00
         lda ($02),y
@@ -1258,9 +1256,9 @@ L6999_6EE3:
         inc $51
         asl a
         tay
-        lda TileBlastTable_DrawIntroMessage,y
+        lda TileBlast_DrawIntroMessagePtrTable,y
         sta $02
-        lda TileBlastTable_DrawIntroMessage+1,y
+        lda TileBlast_DrawIntroMessagePtrTable+1,y
         sta $03
         ldy #$00
         lda ($02),y
@@ -1343,9 +1341,9 @@ L6999_6F66:
         inc $51
         asl a
         tay
-        lda TileBlastTable_DrawIntroMessage,y
+        lda TileBlast_DrawIntroMessagePtrTable,y
         sta $04
-        lda TileBlastTable_DrawIntroMessage+1,y
+        lda TileBlast_DrawIntroMessagePtrTable+1,y
         sta $05
         ldy #$00
         lda ($04),y
@@ -2372,228 +2370,229 @@ RTS_7B33:
 
 
 
-PPUString_DrawIntroGround: ;($7B34)
-    PPUStringRepeat $1FF0, undefined, $00, $10
+VRAMStruct_DrawIntroGround: ;($7B34)
+    VRAMStructDataRepeat $1FF0, undefined, $10, \
+        $00
     
-    PPUString $23C0, undefined, \
+    VRAMStructData $23C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    PPUString $23E0, undefined, \
+    VRAMStructData $23E0, undefined, \
         $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     
-    PPUString $27C0, undefined, \
+    VRAMStructData $27C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    PPUString $27E0, undefined, \
+    VRAMStructData $27E0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     
-    PPUString $22E0, undefined, \
+    VRAMStructData $22E0, undefined, \
         $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $CE, $FF
-    PPUString $2300, undefined, \
+    VRAMStructData $2300, undefined, \
         $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
-    PPUString $2320, undefined, \
+    VRAMStructData $2320, undefined, \
         $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
-    PPUString $2340, undefined, \
+    VRAMStructData $2340, undefined, \
         $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
-    PPUString $2360, undefined, \
+    VRAMStructData $2360, undefined, \
         $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
-    PPUString $2380, undefined, \
+    VRAMStructData $2380, undefined, \
         $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
-    PPUString $23A0, undefined, \
+    VRAMStructData $23A0, undefined, \
         $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
     
-    PPUString $26E0, undefined, \
+    VRAMStructData $26E0, undefined, \
         $FF, $FF, $CC, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $CD, $FF, $FF, $FF, $FF, $FF, $FF, $CE, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $CC, $FF, $FF, $FF, $FF
-    PPUString $2700, undefined, \
+    VRAMStructData $2700, undefined, \
         $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1, $C0, $C1
-    PPUString $2720, undefined, \
+    VRAMStructData $2720, undefined, \
         $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3, $C2, $C3
-    PPUString $2740, undefined, \
+    VRAMStructData $2740, undefined, \
         $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5, $C4, $C5
-    PPUString $2760, undefined, \
+    VRAMStructData $2760, undefined, \
         $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7, $C6, $C7
-    PPUString $2780, undefined, \
+    VRAMStructData $2780, undefined, \
         $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9, $C8, $C9
-    PPUString $27A0, undefined, \
+    VRAMStructData $27A0, undefined, \
         $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB, $CA, $CB
     
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUStringTable_DrawIntroLogo: ;($7DAF)
-    .word PPUStringTable_DrawIntroLogo_7DC9
-    .word PPUStringTable_DrawIntroLogo_7DED
-    .word PPUStringTable_DrawIntroLogo_7E11
-    .word PPUStringTable_DrawIntroLogo_7E35
-    .word PPUStringTable_DrawIntroLogo_7E59
-    .word PPUStringTable_DrawIntroLogo_7E75
-    .word PPUStringTable_DrawIntroLogo_7E91
-    .word PPUStringTable_DrawIntroLogo_7EAD
-    .word PPUStringTable_DrawIntroLogo_7EC9
-    .word PPUStringTable_DrawIntroLogo_7EE5
-    .word PPUStringTable_DrawIntroLogo_7F01
-    .word PPUStringTable_DrawIntroLogo_7F1D
-    .word PPUStringTable_DrawIntroLogo_7F32
+VRAMStruct_DrawIntroLogoPtrTable: ;($7DAF)
+    .word VRAMStruct_DrawIntroLogoPtrTable_7DC9
+    .word VRAMStruct_DrawIntroLogoPtrTable_7DED
+    .word VRAMStruct_DrawIntroLogoPtrTable_7E11
+    .word VRAMStruct_DrawIntroLogoPtrTable_7E35
+    .word VRAMStruct_DrawIntroLogoPtrTable_7E59
+    .word VRAMStruct_DrawIntroLogoPtrTable_7E75
+    .word VRAMStruct_DrawIntroLogoPtrTable_7E91
+    .word VRAMStruct_DrawIntroLogoPtrTable_7EAD
+    .word VRAMStruct_DrawIntroLogoPtrTable_7EC9
+    .word VRAMStruct_DrawIntroLogoPtrTable_7EE5
+    .word VRAMStruct_DrawIntroLogoPtrTable_7F01
+    .word VRAMStruct_DrawIntroLogoPtrTable_7F1D
+    .word VRAMStruct_DrawIntroLogoPtrTable_7F32
 
-PPUStringTable_DrawIntroLogo_7DC9:
-    PPUString $23C0, undefined, \
+VRAMStruct_DrawIntroLogoPtrTable_7DC9:
+    VRAMStructData $23C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7DED:
-    PPUString $23E0, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7DED:
+    VRAMStructData $23E0, undefined, \
         $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7E11:
-    PPUString $27C0, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7E11:
+    VRAMStructData $27C0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7E35:
-    PPUString $27E0, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7E35:
+    VRAMStructData $27E0, undefined, \
         $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7E59:
-    PPUString $2124, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7E59:
+    VRAMStructData $2124, undefined, \
         $FF, $FF, $FF, $03, $04, $05, $06, $07, $08, $FF, $0A, $0B, $0C, $FF, $FF, $0F, $70, $71, $72, $73, $74, $FF, $FF, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7E75:
-    PPUString $2144, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7E75:
+    VRAMStructData $2144, undefined, \
         $FF, $FF, $12, $13, $14, $15, $16, $17, $18, $FF, $1A, $1B, $1C, $1D, $1E, $1F, $80, $81, $82, $83, $84, $85, $FF, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7E91:
-    PPUString $2164, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7E91:
+    VRAMStructData $2164, undefined, \
         $FF, $FF, $FF, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $90, $91, $92, $93, $94, $95, $96, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7EAD:
-    PPUString $2184, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7EAD:
+    VRAMStructData $2184, undefined, \
         $FF, $FF, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $78, $79, $7A, $7B, $7C, $7D, $7E, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7EC9:
-    PPUString $21A4, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7EC9:
+    VRAMStructData $21A4, undefined, \
         $FF, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7EE5:
-    PPUString $21C4, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7EE5:
+    VRAMStructData $21C4, undefined, \
         $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7F01:
-    PPUString $21E4, undefined, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7F01:
+    VRAMStructData $21E4, undefined, \
         $60, $61, $62, $63, $FF, $65, $66, $67, $FF, $69, $6A, $6B, $6C, $6D, $6E, $6F, $A8, $A9, $AA, $AB, $AC, $AD, $FF, $FF
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7F1D:
-    PPUString $2228, charmap_title, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7F1D:
+    VRAMStructData $2228, charmap_title, \
         "PUSH START BUTTON"
-    PPUStringEnd
-PPUStringTable_DrawIntroLogo_7F32:
-    PPUString $2269, charmap_title, \
+    VRAMStructEnd
+VRAMStruct_DrawIntroLogoPtrTable_7F32:
+    VRAMStructData $2269, charmap_title, \
         "©1986 NINTENDO"
-    PPUStringEnd
+    VRAMStructEnd
 
-TileBlastTable_DrawIntroMessage: ;($7F44)
-    .word TileBlastTable_DrawIntroMessage_7F64
-    .word TileBlastTable_DrawIntroMessage_7F7F
-    .word TileBlastTable_DrawIntroMessage_7F9A
-    .word TileBlastTable_DrawIntroMessage_7FB5
-    .word TileBlastTable_DrawIntroMessage_7FD0
-    .word TileBlastTable_DrawIntroMessage_7FEB
-    .word TileBlastTable_DrawIntroMessage_8006
-    .word TileBlastTable_DrawIntroMessage_8021
-    .word TileBlastTable_DrawIntroMessage_803C
-    .word TileBlastTable_DrawIntroMessage_8057
-    .word TileBlastTable_DrawIntroMessage_8072
-    .word TileBlastTable_DrawIntroMessage_808D
-    .word TileBlastTable_DrawIntroMessage_80A8
-    .word TileBlastTable_DrawIntroMessage_80C3
-    .word TileBlastTable_DrawIntroMessage_80DE
-    .word TileBlastTable_DrawIntroMessage_80F9
+TileBlast_DrawIntroMessagePtrTable: ;($7F44)
+    .word TileBlast_DrawIntroMessagePtrTable_7F64
+    .word TileBlast_DrawIntroMessagePtrTable_7F7F
+    .word TileBlast_DrawIntroMessagePtrTable_7F9A
+    .word TileBlast_DrawIntroMessagePtrTable_7FB5
+    .word TileBlast_DrawIntroMessagePtrTable_7FD0
+    .word TileBlast_DrawIntroMessagePtrTable_7FEB
+    .word TileBlast_DrawIntroMessagePtrTable_8006
+    .word TileBlast_DrawIntroMessagePtrTable_8021
+    .word TileBlast_DrawIntroMessagePtrTable_803C
+    .word TileBlast_DrawIntroMessagePtrTable_8057
+    .word TileBlast_DrawIntroMessagePtrTable_8072
+    .word TileBlast_DrawIntroMessagePtrTable_808D
+    .word TileBlast_DrawIntroMessagePtrTable_80A8
+    .word TileBlast_DrawIntroMessagePtrTable_80C3
+    .word TileBlast_DrawIntroMessagePtrTable_80DE
+    .word TileBlast_DrawIntroMessagePtrTable_80F9
 
-TileBlastTable_DrawIntroMessage_7F64:
+TileBlast_DrawIntroMessagePtrTable_7F64:
     .byte $20, $A4, $46
     .stringmap charmap_title, "キンキュウ "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "     ゛"
     .stringmap charmap_title, "ワクセイ セ"
-TileBlastTable_DrawIntroMessage_7F7F:
+TileBlast_DrawIntroMessagePtrTable_7F7F:
     .byte $20, $AA, $46
     .stringmap charmap_title, "シレイ   "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, " ゛    "
     .stringmap charmap_title, "-へス ノ "
-TileBlastTable_DrawIntroMessage_7F9A:
+TileBlast_DrawIntroMessagePtrTable_7F9A:
     .byte $20, $B0, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "    ゛ "
     .stringmap charmap_title, "メトロイト "
-TileBlastTable_DrawIntroMessage_7FB5:
+TileBlast_DrawIntroMessagePtrTable_7FB5:
     .byte $20, $B6, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ヲ タオシ "
-TileBlastTable_DrawIntroMessage_7FD0:
+TileBlast_DrawIntroMessagePtrTable_7FD0:
     .byte $21, $24, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "キカイセイメ"
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_7FEB:
+TileBlast_DrawIntroMessagePtrTable_7FEB:
     .byte $21, $2A, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "     ゛"
     .stringmap charmap_title, "イタイ マサ"
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_8006:
+TileBlast_DrawIntroMessagePtrTable_8006:
     .byte $21, $30, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, " ゛    "
     .stringmap charmap_title, "-フレイン "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_8021:
+TileBlast_DrawIntroMessagePtrTable_8021:
     .byte $21, $36, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ヲ ハカイ "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_803C:
+TileBlast_DrawIntroMessagePtrTable_803C:
     .byte $21, $A4, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "セヨ!   "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_8057:
+TileBlast_DrawIntroMessagePtrTable_8057:
     .byte $21, $AA, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "゛ ゛   "
     .stringmap charmap_title, "キンカ レン"
-TileBlastTable_DrawIntroMessage_8072:
+TileBlast_DrawIntroMessagePtrTable_8072:
     .byte $21, $B0, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "゜     "
     .stringmap charmap_title, "ホウ ケイサ"
-TileBlastTable_DrawIntroMessage_808D:
+TileBlast_DrawIntroMessagePtrTable_808D:
     .byte $21, $B6, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "ツ M510"
-TileBlastTable_DrawIntroMessage_80A8:
+TileBlast_DrawIntroMessagePtrTable_80A8:
     .byte $22, $24, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_80C3:
+TileBlast_DrawIntroMessagePtrTable_80C3:
     .byte $22, $2A, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_80DE:
+TileBlast_DrawIntroMessagePtrTable_80DE:
     .byte $22, $30, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
-TileBlastTable_DrawIntroMessage_80F9:
+TileBlast_DrawIntroMessagePtrTable_80F9:
     .byte $22, $36, $46
     .stringmap charmap_title, "      "
     .stringmap charmap_title, "      "
@@ -3549,8 +3548,8 @@ L8894:
 L6999_8899:
     lda #$00
     sta $39
-    ldx #<PPUString_8F31.b
-    ldy #>PPUString_8F31.b
+    ldx #<VRAMStruct_8F31.b
+    ldy #>VRAMStruct_8F31.b
     jsr DEMO_PreparePPUProcess
     inc $36
     jsr L8CF2
@@ -3719,8 +3718,8 @@ L89A6:
 
 L6999_89CE:
     jsr L883B
-    ldx #<PPUString_9042.b
-    ldy #>PPUString_9042.b
+    ldx #<VRAMStruct_9042.b
+    ldy #>VRAMStruct_9042.b
     jsr DEMO_PreparePPUProcess
     jsr L8D5E
     jsr L8CF2
@@ -3985,12 +3984,12 @@ CharSelectXTbl: ;($8B90)
 
 L6999_8BA5:
     jsr L883B
-    ldx #<PPUString_9042.b
-    ldy #>PPUString_9042.b
+    ldx #<VRAMStruct_9042.b
+    ldy #>VRAMStruct_9042.b
     jsr DEMO_PreparePPUProcess
     jsr L8D5E
-    ldx #<PPUString_908E.b
-    ldy #>PPUString_908E.b
+    ldx #<VRAMStruct_908E.b
+    ldy #>VRAMStruct_908E.b
     jsr DEMO_PreparePPUProcess
     jsr L8CF2
     lda #$00
@@ -4366,7 +4365,7 @@ L8E36:
 DEMO_PreparePPUProcess: ;($8E39)
     stx $00
     sty $01
-    jmp DEMO_ProcessPPUString
+    jmp DEMO_VRAMStructWrite
 
 UnusedIntroRoutine4: ;($8E40)
     stx PPUStrIndex
@@ -4526,22 +4525,24 @@ Hex16ToDec: ;($8EB8)
 
 
 
-PPUString_8F0D:
-    PPUString $3F00, undefined, \
+VRAMStruct_8F0D:
+    VRAMStructData $3F00, undefined, \
         $02, $20, $1B, $3A, $02, $20, $21, $01, $02, $2C, $30, $27, $02, $26, $31, $17, \
         $02, $16, $19, $27, $02, $16, $20, $27, $02, $16, $20, $11, $02, $01, $20, $21
-    PPUStringEnd
+    VRAMStructEnd
     
-PPUString_8F31:
-    PPUString $2075, charmap_savemenu, \
+VRAMStruct_8F31:
+    VRAMStructData $2075, charmap_savemenu, \
         "゛"
-    PPUString $2085, charmap_savemenu, \
+    VRAMStructData $2085, charmap_savemenu, \
         $6B, " セ レ ク ト シ テ ク タ サ イ ", $6B
-    PPUString $20C2, charmap_savemenu, \
+    VRAMStructData $20C2, charmap_savemenu, \
         "┌─────────NAME──ENERGY─DAY─┐"
-    PPUStringRepeatVertical $20E2, charmap_savemenu, "│", $12
-    PPUStringRepeatVertical $20FD, charmap_savemenu, "│", $12
-    PPUStringVertical $2112, charmap_savemenu, \
+    VRAMStructDataRepeatVertical $20E2, charmap_savemenu, $12, \
+        "│"
+    VRAMStructDataRepeatVertical $20FD, charmap_savemenu, $12, \
+        "│"
+    VRAMStructDataVertical $2112, charmap_savemenu, \
         $6B, \
         " ", \
         " ", \
@@ -4551,7 +4552,7 @@ PPUString_8F31:
         " ", \
         " ", \
         $6B
-    PPUStringVertical $2118, charmap_savemenu, \
+    VRAMStructDataVertical $2118, charmap_savemenu, \
         $6B, \
         " ", \
         " ", \
@@ -4561,23 +4562,26 @@ PPUString_8F31:
         " ", \
         " ", \
         $6B
-    PPUString $2285, charmap_savemenu, \
+    VRAMStructData $2285, charmap_savemenu, \
         "ナマエ トウロク"
-    PPUString $22E5, charmap_savemenu, \
+    VRAMStructData $22E5, charmap_savemenu, \
         "KILL MODE"
-    PPUString $2322, charmap_savemenu, \
+    VRAMStructData $2322, charmap_savemenu, \
         "└"
-    PPUStringRepeat $2323, charmap_savemenu, "─", $1A
-    PPUString $233D, charmap_savemenu, \
+    VRAMStructDataRepeat $2323, charmap_savemenu, $1A, \
+        "─"
+    VRAMStructData $233D, charmap_savemenu, \
         "┘"
     
-    PPUStringRepeat $23C0, undefined, $00, $14
-    PPUString $23D4, undefined, \
+    VRAMStructDataRepeat $23C0, undefined, $14, \
+        $00
+    VRAMStructData $23D4, undefined, \
         $04, $05, $00, $00, $00, $00, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, \
         $04, $05
-    PPUStringRepeat $23E6, undefined, $00, $1A
+    VRAMStructDataRepeat $23E6, undefined, $1A, \
+        $00
     
-    PPUStringEnd
+    VRAMStructEnd
 
 L8FCF:
     .word L8FCF_8FD9
@@ -4612,37 +4616,45 @@ L8FCF_902D:
     .stringmap charmap_savemenu, "56789"
     .stringmap charmap_savemenu, "YZ.?/!"
 
-PPUString_9042:
-    PPUStringRepeat $23C0, undefined, $00, $20
-    PPUStringRepeat $23E0, undefined, $00, $20
+VRAMStruct_9042:
+    VRAMStructDataRepeat $23C0, undefined, $20, \
+        $00
+    VRAMStructDataRepeat $23E0, undefined, $20, \
+        $00
     
-    PPUStringRepeat $2080, charmap_savemenu, "─", $07
-    PPUString $2089, charmap_savemenu, \
+    VRAMStructDataRepeat $2080, charmap_savemenu, $07, \
+        "─"
+    VRAMStructData $2089, charmap_savemenu, \
         "ナ マ エ ト ウ ロ ク"
-    PPUStringRepeat $2099, charmap_savemenu, "─", $07
-    PPUString $224B, charmap_savemenu, \
+    VRAMStructDataRepeat $2099, charmap_savemenu, $07, \
+        "─"
+    VRAMStructData $224B, charmap_savemenu, \
         "トウロク オワル"
-    PPUString $2282, charmap_savemenu, \
+    VRAMStructData $2282, charmap_savemenu, \
         "┌"
-    PPUStringRepeat $2283, charmap_savemenu, "─", $1A
-    PPUString $229D, charmap_savemenu, \
+    VRAMStructDataRepeat $2283, charmap_savemenu, $1A, \
+        "─"
+    VRAMStructData $229D, charmap_savemenu, \
         "┐"
-    PPUStringRepeatVertical $22A2, charmap_savemenu, "│", $05
-    PPUStringRepeatVertical $22BD, charmap_savemenu, "│", $05
-    PPUString $2342, charmap_savemenu, \
+    VRAMStructDataRepeatVertical $22A2, charmap_savemenu, $05, \
+        "│"
+    VRAMStructDataRepeatVertical $22BD, charmap_savemenu, $05, \
+        "│"
+    VRAMStructData $2342, charmap_savemenu, \
         "└"
-    PPUStringRepeat $2343, charmap_savemenu, "─", $1A
-    PPUString $235D, charmap_savemenu, \
+    VRAMStructDataRepeat $2343, charmap_savemenu, $1A, \
+        "─"
+    VRAMStructData $235D, charmap_savemenu, \
         "┘"
     
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_908E:
-    PPUString $2087, charmap_savemenu, \
+VRAMStruct_908E:
+    VRAMStructData $2087, charmap_savemenu, \
         "K I L L    M O D E"
-    PPUString $224B, charmap_savemenu, \
+    VRAMStructData $224B, charmap_savemenu, \
         "KILL"
-    PPUStringEnd
+    VRAMStructEnd
 
 ; unreferenced(?) partial duplicate of routines in main.pgm file in side A
 ;($90AB-$90FF)

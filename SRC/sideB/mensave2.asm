@@ -20,11 +20,11 @@ LC3F2:
 LC3F4:
     ; display message on screen
     jsr ClearScreenData
-    lda #<PPUString_C40B.b
+    lda #<VRAMStruct_C40B.b
     sta $00
-    lda #>PPUString_C40B.b
+    lda #>VRAMStruct_C40B.b
     sta $01
-    jsr MAIN_ProcessPPUString
+    jsr MAIN_VRAMStructWrite
     jsr METHEX_ScreenOn
     
     ; wait for disk to switch to side A
@@ -33,13 +33,14 @@ LC3F4:
 
 
 ; "Aメンヲ セットシテクダサイ" message (switch to disk side A)
-PPUString_C40B:
-    PPUString $21D4, charmap_gameover, \
+VRAMStruct_C40B:
+    VRAMStructData $21D4, charmap_gameover, \
         "゛"
-    PPUString $21E9, charmap_gameover, \
+    VRAMStructData $21E9, charmap_gameover, \
         "aメンヲ セットシテクタサイ"
-    PPUStringRepeat $23D0, undefined, $00, $20
-    PPUStringEnd
+    VRAMStructDataRepeat $23D0, undefined, $20, \
+        $00
+    VRAMStructEnd
 
 
 

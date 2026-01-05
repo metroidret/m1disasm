@@ -29,7 +29,8 @@
     .undef absXSpd, absYSpd, signXSpd, signYSpd
 .endm
 
-.macro PPUString args ppuAddress ; , charmap , ppuString
+
+.macro VRAMStructData args ppuAddress ; , charmap , vramStructData
     assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
@@ -37,8 +38,8 @@
     .shift
     .shift
     
-    .byte @PPUString\@_end - @PPUString\@_start
-    @PPUString\@_start:
+    .byte @VRAMStructData\@_end - @VRAMStructData\@_start
+    @VRAMStructData\@_start:
     .repeat NARGS
         .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
             .db \1
@@ -46,38 +47,38 @@
             .stringmap charmap, \1
         .else
             .print \?1, "\n"
-            .fail "PPUString: bad data argument type"
+            .fail "VRAMStructData: bad data argument type"
         .endif
         .shift
     .endr
-    @PPUString\@_end:
+    @VRAMStructData\@_end:
     
     .undef charmap
     
-    .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
-        .print @PPUString\@_end - @PPUString\@_start, "\n"
-        .fail "PPUString: bad string length"
+    .if (@VRAMStructData\@_end - @VRAMStructData\@_start < 1) || (@VRAMStructData\@_end - @VRAMStructData\@_start > 256)
+        .print @VRAMStructData\@_end - @VRAMStructData\@_start, "\n"
+        .fail "VRAMStructData: bad string length"
     .endif
     
 .endm
 
-.macro PPUStringRepeat args ppuAddress, charmap, ppuByte, repetitions
+.macro VRAMStructDataRepeat args ppuAddress, charmap, repetitions, ppuByte
     assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
     assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40
-    .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
+    .if (\?4 == ARG_IMMEDIATE) || (\?4 == ARG_NUMBER)
         .db ppuByte
-    .elif \?3 == ARG_STRING
+    .elif \?4 == ARG_STRING
         .stringmap charmap, ppuByte
     .else
-        .print \?3, "\n"
-        .fail "PPUString: bad data argument type"
+        .print \?4, "\n"
+        .fail "VRAMStructData: bad data argument type"
     .endif
 .endm
 
-.macro PPUStringVertical args ppuAddress ; , charmap , ppuString
+.macro VRAMStructDataVertical args ppuAddress ; , charmap , vramStructData
     assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
@@ -85,8 +86,8 @@
     .shift
     .shift
     
-    .byte (@PPUString\@_end - @PPUString\@_start) | $80
-    @PPUString\@_start:
+    .byte (@VRAMStructData\@_end - @VRAMStructData\@_start) | $80
+    @VRAMStructData\@_start:
     .repeat NARGS
         .if (\?1 == ARG_IMMEDIATE) || (\?1 == ARG_NUMBER)
             .db \1
@@ -94,40 +95,41 @@
             .stringmap charmap, \1
         .else
             .print \?1, "\n"
-            .fail "PPUString: bad data argument type"
+            .fail "VRAMStructData: bad data argument type"
         .endif
         .shift
     .endr
-    @PPUString\@_end:
+    @VRAMStructData\@_end:
     
     .undef charmap
     
-    .if (@PPUString\@_end - @PPUString\@_start < 1) || (@PPUString\@_end - @PPUString\@_start > 256)
-        .print @PPUString\@_end - @PPUString\@_start, "\n"
-        .fail "PPUString: bad string length"
+    .if (@VRAMStructData\@_end - @VRAMStructData\@_start < 1) || (@VRAMStructData\@_end - @VRAMStructData\@_start > 256)
+        .print @VRAMStructData\@_end - @VRAMStructData\@_start, "\n"
+        .fail "VRAMStructData: bad string length"
     .endif
     
 .endm
 
-.macro PPUStringRepeatVertical args ppuAddress, charmap, ppuByte, repetitions
+.macro VRAMStructDataRepeatVertical args ppuAddress, charmap, repetitions, ppuByte
     assertMsg repetitions >= $00 && repetitions < $40, "repetitions must be from $00 to $3F times inclusive"
     assertMsg (\?2 != ARG_NUMBER), "charmap was a number"
     
     .byte >ppuAddress, <ppuAddress
     .byte repetitions | $40 | $80
-    .if (\?3 == ARG_IMMEDIATE) || (\?3 == ARG_NUMBER)
+    .if (\?4 == ARG_IMMEDIATE) || (\?4 == ARG_NUMBER)
         .db ppuByte
-    .elif \?3 == ARG_STRING
+    .elif \?4 == ARG_STRING
         .stringmap charmap, ppuByte
     .else
-        .print \?3, "\n"
-        .fail "PPUString: bad data argument type"
+        .print \?4, "\n"
+        .fail "VRAMStructData: bad data argument type"
     .endif
 .endm
 
-.macro PPUStringEnd
+.macro VRAMStructEnd
     .byte $00
 .endm
+
 
 .macro PtrTableEntry args ptrTable, ptr
     .ifndef _id_\2

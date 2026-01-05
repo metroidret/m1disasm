@@ -6177,7 +6177,7 @@ CheckPalWrite: ;($9402)
 MAIN_PreparePPUProcess:
     stx $00
     sty $01
-    jmp MAIN_ProcessPPUString
+    jmp MAIN_VRAMStructWrite
 
 
 
@@ -6323,9 +6323,7 @@ L94B0:
     iny
     jsr MAIN_AddYToPtr00
 
-
-
-MAIN_ProcessPPUString: ;($94BC)
+MAIN_VRAMStructWrite: ;($94BC)
     ldx PPUSTATUS
     ldy #$00
     lda ($00),y
@@ -9975,12 +9973,12 @@ LB2CC:
     lsr a
     sec
     ror a
-    sta PPUString_B34F+7
+    sta VRAMStruct_B34F+7
     pla
     pha
     and #$0F
     ora #$80
-    sta PPUString_B34F+8
+    sta VRAMStruct_B34F+8
     pla
     ldy $1E
     cpy #$03
@@ -9993,8 +9991,8 @@ LB2ED:
     and #$FC
     sta $FF
     jsr ClearScreenData
-    ldx #<PPUString_B34F.b
-    ldy #>PPUString_B34F.b
+    ldx #<VRAMStruct_B34F.b
+    ldy #>VRAMStruct_B34F.b
     jsr MAIN_PreparePPUProcess
     jsr LB346
     jsr LD068
@@ -10047,8 +10045,8 @@ LB32D:
     cmp #$03
     beq LB310@RTS
     jsr ClearScreenData
-    ldx #<PPUString_B359.b
-    ldy #>PPUString_B359.b
+    ldx #<VRAMStruct_B359.b
+    ldy #>VRAMStruct_B359.b
     jsr MAIN_PreparePPUProcess
     jsr METHEX_WaitNMIPass_
     jsr LB346
@@ -10060,19 +10058,20 @@ LB346:
     sta $FF
     rts
 
-PPUString_B34F:
-    PPUString $21F3, charmap_gameover, \
+VRAMStruct_B34F:
+    VRAMStructData $21F3, charmap_gameover, \
         "ERR ", $21, $21
     
-    PPUStringEnd
+    VRAMStructEnd
 
-PPUString_B359:
-    PPUString $21CC, charmap_gameover, \
+VRAMStruct_B359:
+    VRAMStructData $21CC, charmap_gameover, \
         "おまちください"
     
-    PPUStringRepeat $23D0, undefined, $00, $20
+    VRAMStructDataRepeat $23D0, undefined, $20, \
+        $00
     
-    PPUStringEnd
+    VRAMStructEnd
 
 LB368:
     jsr METHEX_WaitNMIPass_

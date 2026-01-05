@@ -65,21 +65,21 @@ LC02E:
 
 LC058:
     jsr ClearScreenData
-    lda #<PPUString_C06C.b
+    lda #<VRAMStruct_C06C.b
     sta $00
-    lda #>PPUString_C06C.b
+    lda #>VRAMStruct_C06C.b
     sta $01
-    jsr MAIN_ProcessPPUString
+    jsr MAIN_VRAMStructWrite
     jsr METHEX_ScreenOn
     jmp LB310
 
 ; "Bメンヲ セットシテクダサイ" message (switch to disk side B)
-PPUString_C06C:
-    PPUString $21D4, charmap_savemenu, \
+VRAMStruct_C06C:
+    VRAMStructData $21D4, charmap_savemenu, \
         "゛"
-    PPUString $21E9, charmap_savemenu, \
+    VRAMStructData $21E9, charmap_savemenu, \
         "Bメンヲ セットシテクタサイ"
-    PPUStringEnd
+    VRAMStructEnd
 
 
 LC082:

@@ -105,16 +105,16 @@ LCE90:
     lsr
     lsr
     ora #$80
-    sta PPUString_CF03+7
+    sta VRAMStruct_CF03+7
     pla
     and #$0F
     ora #$80
-    sta PPUString_CF03+7+1
+    sta VRAMStruct_CF03+7+1
     jsr L883B
     lda #$12
     sta PalDataPending
-    ldx #<PPUString_CF03.b
-    ldy #>PPUString_CF03.b
+    ldx #<VRAMStruct_CF03.b
+    ldy #>VRAMStruct_CF03.b
     jsr DEMO_PreparePPUProcess
     jsr NMIOn
     jsr DEMO_WaitNMIPass_
@@ -146,8 +146,8 @@ LCEDC:
     sta SpriteRAM
     lda #$12
     sta PalDataPending
-    ldx #<PPUString_CF0D.b
-    ldy #>PPUString_CF0D.b
+    ldx #<VRAMStruct_CF0D.b
+    ldy #>VRAMStruct_CF0D.b
     jsr DEMO_PreparePPUProcess
     lda PPUCTRL_ZP
     and #~PPUCTRL_BG_1000.b
@@ -159,18 +159,18 @@ LCEDC:
     jmp FDSBIOS_EnPFObj
 
 ; "ERR --" message (disk error)
-PPUString_CF03:
-    PPUString $21F3, charmap_gameover, \
+VRAMStruct_CF03:
+    VRAMStructData $21F3, charmap_gameover, \
         "ERR ", $21, $21
-    PPUStringEnd
+    VRAMStructEnd
 
 ; "おまちください" message (waiting during disk access)
-PPUString_CF0D:
-    PPUString $21CC, charmap_gameover, \
+VRAMStruct_CF0D:
+    VRAMStructData $21CC, charmap_gameover, \
         "おまちください"
-    PPUString $23DB, undefined, \
+    VRAMStructData $23DB, undefined, \
         $00, $00
-    PPUStringEnd
+    VRAMStructEnd
 
 
 
