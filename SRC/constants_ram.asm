@@ -306,8 +306,8 @@ Temp03_MetatileCenterX = $03
 
 
 
-CodePtr                = $0C     ;Points to address to jump to when choosing-->
-; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
+JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->
+; JumpEngineRoutinePtr+1 = $0D     ;a routine from a list of routine addresses.
 
 
 .enum $12 export

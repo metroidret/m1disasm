@@ -343,7 +343,7 @@ GoMainRoutine:
 @endIf_B:
     ;Use MainRoutine as index into routine table below.
     lda MainRoutine
-    jsr ChooseRoutine
+    jsr JumpEngine
     MainRoutinePtrTable:
         PtrTableEntry MainRoutinePtrTable, AreaInit                  ;($C801)Area init.
         PtrTableEntry MainRoutinePtrTable, MoreInit                  ;($C81D)More area init.
@@ -638,6 +638,7 @@ RTS_C265:
 ;to "move on". This is used for the various sequences of the intro screen,
 ;when the game is started, when Samus takes a special item, and when GAME
 ;OVER is displayed, to mention a few examples.
+;Derived from FDS BIOS's CounterLogic routine.
 
 UpdateTimer:
     ; Default to only decrementing Timer2 and Timer1.
@@ -668,10 +669,11 @@ UpdateTimer:
 
 ;This is an indirect jump routine. A is used as an index into a code
 ;pointer table, and the routine at that position is executed. The programmers
-;always put the pointer table itself directly after the JSR to ChooseRoutine,
+;always put the pointer table itself directly after the JSR to JumpEngine,
 ;meaning that its address can be popped from the stack.
+;Derived from FDS BIOS's JumpEngine routine.
 
-ChooseRoutine:
+JumpEngine:
     ;* 2, each ptr is 2 bytes (16-bit).
     asl
     ;Temp storage. (not pushed to stack, because stack needs to be accessed)
@@ -682,22 +684,22 @@ ChooseRoutine:
     iny
     ;load ptr table address from stack
     pla
-    sta CodePtr
+    sta JumpEngineRoutinePtr
     pla
-    sta CodePtr+1.b
+    sta JumpEngineRoutinePtr+1.b
     ;Low byte of routine ptr
-    lda (CodePtr),y
+    lda (JumpEngineRoutinePtr),y
     tax
     ;High byte of routine ptr.
     iny
-    lda (CodePtr),y
-    ; save routine ptr to CodePtr
-    sta CodePtr+1.b
-    stx CodePtr
+    lda (JumpEngineRoutinePtr),y
+    ; save routine ptr to JumpEngineRoutinePtr
+    sta JumpEngineRoutinePtr+1.b
+    stx JumpEngineRoutinePtr
     ;Restore X and Y.
     ldx TempX
     ldy TempY
-    jmp (CodePtr)
+    jmp (JumpEngineRoutinePtr)
 
 ;--------------------------------------[ Write to scroll registers ]---------------------------------
 
@@ -2671,7 +2673,7 @@ UpdateSamus:
 GoSamusHandler: ;($CC1A)
     lda ObjAction                   ;
     bmi SamusStand                  ;Branch if Samus is standing.
-    jsr ChooseRoutine               ;($C27C)Goto proper Samus handler routine.
+    jsr JumpEngine               ;($C27C)Goto proper Samus handler routine.
         .word SamusStand                ;($CC36)Standing.
         .word SamusRun                  ;($CCC2)Running.
         .word SamusJump                 ;($D002)Jumping.
@@ -2746,7 +2748,7 @@ LCC5B:
     cmp #sa_Door
     bcs RTS_CC9X
     ;Select routine below.
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub                   ;($C45C)Rts.
         .word SetSamusRun               ;($CC98)Samus is running.
         .word SetSamusJump              ;($CFC3)Samus is jumping.
@@ -3717,7 +3719,7 @@ SamusPntUp:
     lda #$04
     jsr SetSamusData                ;($CD6D)Set Samus control data and animation.
     lda ObjAction
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word SetSamusStand
         .word SetSamusRun
         .word ExitSub       ;($C45C)rts
@@ -4203,7 +4205,7 @@ UpdateProjectiles:
 DoOneProjectile:
     stx PageIndex
     lda ObjAction,x
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub     ;($C45C) rts
         .word UpdateBullet          ; regular beam
         .word UpdateWaveBullet      ; wave beam
@@ -4712,7 +4714,7 @@ UpdateElevator:
     ldx #$20
     stx PageIndex
     lda ElevatorStatus-$20,x
-    jsr ChooseRoutine ; Pointer table to elevator handlers
+    jsr JumpEngine ; Pointer table to elevator handlers
         .word ExitSub       ;($C45C) rts
         .word ElevatorIdle
         .word ElevatorScrollXToCenter
@@ -8404,7 +8406,7 @@ AttribTableWrite:
     lda RoomNumber                  ;
     and #$0F                        ;Determine what row of PPU attribute table data, if any,-->
     inc RoomNumber                  ;to load from RoomRAM into PPU.
-    jsr ChooseRoutine               ;Determine when to write to the PPU attribute table.
+    jsr JumpEngine               ;Determine when to write to the PPU attribute table.
         .word ExitSub                   ;($C45C)Rts.
         .word WritePPUAttribTbl         ;($E5E2)Write first row of PPU attrib data.
         .word ExitSub                   ;($C45C)Rts.
@@ -8560,7 +8562,7 @@ EnemyLoop:
 
     ;Discard upper four bits of data.
     and #$0F
-    jsr ChooseRoutine               ;Jump to proper enemy/door handling routine.
+    jsr JumpEngine               ;Jump to proper enemy/door handling routine.
         .word ExitSub                   ;($C45C)Rts.
         .word LoadEnemy                 ;($EB06)Room enemies.
         .word LoadDoor                  ;($EB8C)Room doors.
@@ -9170,7 +9172,7 @@ ChooseSpawningRoutine:
     ldy #$00                        ;
     lda ($00),y                     ;Object type
     and #$0F                        ;Object handling routine index stored in 4 LSBs.
-    jsr ChooseRoutine               ;($C27C)Load proper handling routine from table below.
+    jsr JumpEngine               ;($C27C)Load proper handling routine from table below.
         .word ExitSub               ;($C45C)rts.
         .word SpawnMapEnemy         ;($EDF8)Enemies, used by some squeepts.
         .word SpawnPowerUp          ;($EDFE)Power-ups.
@@ -10354,7 +10356,7 @@ UpdateEnemy: ; 07:F351
     sta EnemyStatusPreAI
     cmp #enemyStatus_Hurt+1.b
     bcs @invalidStatus
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub ; 00 ($C45C) rts
         .word UpdateEnemy_Resting ; 01 Resting (Offscreen or Inactive)
         .word UpdateEnemy_Active ; 02 Active
@@ -11517,7 +11519,7 @@ UpdateEnProjectile:
     Lx360:
     lda EnsExtra.0.status,x
     beq Exit19
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub     ;($C45C) rts
         .word UpdateEnProjectile_Resting
         .word UpdateEnProjectile_Active       ; spit dragon's projectile
@@ -12081,7 +12083,7 @@ RemoveMellowHandlerEnemy:
 
 UpdateMellow:
     lda Mellows.0.status,x
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub       ;($C45C) rts
         .word UpdateMellow_Resting
         .word UpdateMellow_Active
@@ -12398,7 +12400,7 @@ UpdateTileBlast:
     stx PageIndex
     lda TileBlasts.0.routine,x
     beq SetTileAnim@RTS
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub       ;($C45C) rts, never chosen because of the beq RTS above
         .word UpdateTileBlast_Init
         .word UpdateTileBlast_Animating ; spawning

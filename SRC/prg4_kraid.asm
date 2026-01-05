@@ -159,7 +159,7 @@ AreaMellowAnimIndex:
 
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word SidehopperFloorAIRoutine_{AREA} ; 00 - sidehopper
         .word SidehopperCeilingAIRoutine_{AREA} ; 01 - ceiling sidehopper
         .word RTS_95CB ; 02 - unused enemy type that doesn't properly clear itself

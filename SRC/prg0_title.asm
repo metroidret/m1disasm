@@ -52,7 +52,7 @@ MainTitleRoutine: ; 00:8000
         jsr RemoveIntroSprites
         lda TitleRoutine
 L8027:
-    jsr ChooseRoutine
+    jsr JumpEngine
     TitleRoutinePtrTable:
         PtrTableEntry TitleRoutinePtrTable, InitializeAfterReset      ;($8071)First routine after reset.
         PtrTableEntry TitleRoutinePtrTable, DrawIntroBackground       ;($80D0)Draws ground on intro screen.
@@ -3691,21 +3691,21 @@ EndGame: ; 00:9AA7
     jsr LoadEndStarSprites
     ;Skips palette change when rolling credits.
     lda IsCredits
-    bne @chooseRoutine
+    bne @jumpEngine
     ;Changes star palettes every 16th frame.
     lda FrameCount
     and #$0F
-    bne @chooseRoutine
+    bne @jumpEngine
     inc PaletteDataPending
     ;Reset palette data to #$01 after it reaches #$09.
     lda PaletteDataPending
     cmp #_id_EndGamePalette08+1.b
-    bne @chooseRoutine
+    bne @jumpEngine
     lda #_id_EndGamePalette00+1.b
     sta PaletteDataPending
-@chooseRoutine:
+@jumpEngine:
     lda RoomPtr                     ;RoomPtr used in end of game to determine-->
-    jsr ChooseRoutine               ;($C27C)which subroutine to run below.
+    jsr JumpEngine               ;($C27C)which subroutine to run below.
         .word LoadEndGFX                ;($9AD5)Load end GFX to pattern tables.
         .word ShowEndSamus              ;($9B1C)Show Samus and end message.
         .word EndSamusFlash             ;($9B34)Samus flashes and changes.

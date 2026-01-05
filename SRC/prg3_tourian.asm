@@ -162,7 +162,7 @@ AreaMellowAnimIndex:
 ; Enemy AI Jump Table
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word MetroidAIRoutine_{AREA} ; 00 - red metroid
         .word MetroidAIRoutine_{AREA} ; 01 - green metroid
         .word L9A27 ; 02 - i dunno but it takes 30 damage with varia
@@ -1062,7 +1062,7 @@ CannonEnProjectileYOffsetTable:
 MotherBrainStatusHandler:
     lda MotherBrainStatus
     beq RTS_9DF1
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word Exit__    ;#$00=Mother brain not in room,
         .word MotherBrain_Idle     ;#$01=Mother brain in room
         .word MotherBrain_Hurt     ;#$02=Mother brain hit

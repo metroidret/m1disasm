@@ -153,7 +153,7 @@ AreaMellowAnimIndex:
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word SwooperAIRoutine00_{AREA} ; 00 - swooper has not seen samus
         .word SwooperAIRoutine01_{AREA} ; 01 - swooper targetting samus
         .word RipperAIRoutine_{AREA} ; 02 - ripper II

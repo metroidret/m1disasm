@@ -155,7 +155,7 @@ AreaMellowAnimIndex:
 ; Enemy AI jump table
 ChooseEnemyAIRoutine:
     lda EnsExtra.0.type,x
-    jsr CommonJump_ChooseRoutine
+    jsr CommonJump_JumpEngine
         .word SidehopperFloorAIRoutine_{AREA} ; 00 - Sidehopper (unused)
         .word SidehopperCeilingAIRoutine_{AREA} ; 01 - Ceiling sidehopper (unused)
         .word WaverAIRoutine_{AREA} ; 02 - Waver

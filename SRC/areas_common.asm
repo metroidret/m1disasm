@@ -42,8 +42,8 @@ CommonJump_InitEnActiveAnimIndex_NoL967BOffset: ;$801E
     jmp InitEnActiveAnimIndex_NoL967BOffset
 CommonJump_SpawnEnProjectile: ;$8021
     jmp SpawnEnProjectile
-CommonJump_ChooseRoutine: ;$8024
-    jmp ChooseRoutine               ;($C27C)
+CommonJump_JumpEngine: ;$8024
+    jmp JumpEngine               ;($C27C)
 CommonJump_ApplySpeedToPosition: ;$8027
     jmp ApplySpeedToPosition
 CommonJump_0E: ;$802A
@@ -1289,7 +1289,7 @@ UpdateAllDoors:
 UpdateDoor:
     stx PageIndex
     lda DoorStatus,x
-    jsr ChooseRoutine
+    jsr JumpEngine
         .word ExitSub                   ; no door
         .word UpdateDoor_Init           ; init
         .word UpdateDoor_Closed         ; closed
