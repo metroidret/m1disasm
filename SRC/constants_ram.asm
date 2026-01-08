@@ -284,6 +284,19 @@ Temp01_NameTablePlus1  = $01
 ; VRAMStruct
 Temp00_VRAMStructPtr   = $00
 ; Temp00_VRAMStructPtr+1 = $01
+; bank switching
+Temp00_Bank            = $00
+Temp0A_BankInitPtr     = $0A
+; Temp0A_BankInitPtr+1   = $0B
+
+; GFXInfo
+;Temp00_Bank            = $00
+Temp01_GFXSource       = $01
+; Temp01_GFXSourcePtr+1  = $02
+Temp03_GFXDestination  = $03
+; Temp03_GFXDestination+1 = $04
+Temp05_GFXSize         = $05
+; Temp05_GFXSize+1       = $06
 
 ; DrawTileBlast/VRAMString
 ;Temp00_RoomRAMPtr      = $00
@@ -334,7 +347,7 @@ NextRoutine            db   ;$20     ;Stores next routine to jump to after WaitT
 SpareMem21             dw   ;$21
 
 CurrentBank            db   ;$23     ;0 thru 7. current memory page in lower memory block.
-SwitchPending          db   ;$24     ;Switch memory page. Page # = SwitchPending - 1.
+BankSwitchPending      db   ;$24     ;Switch memory page. Page # = BankSwitchPending - 1.
 MMC1CTRL_ZP            db   ;$25     ;Stores bits to be loaded into MMC1 Register 0.
 
 SpareMem26             dw   ;$26
