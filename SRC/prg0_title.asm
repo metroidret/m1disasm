@@ -3788,54 +3788,72 @@ ShowEndSamus: ; 00:9B1C
         rts
 
     L9B2D:
-    cmp #$01                        ;After 950 frames have passed-->
-    bne L9B33                       ;(15.8 seconds), erase end message.
+    ;After 950 frames have passed (15.8 seconds), erase end message.
+    cmp #$01
+    bne L9B33
         inc HideShowEndMsg
     L9B33:
     rts
 
 EndSamusFlash: ; 00:9B34
-    lda FrameCount                  ;If FrameCount not divisible by 32, branch.
-    and #$1F                        ;
-    bne L9B69                       ;
-        inc ColorCntIndex               ;Every 32 frames, increment the ColorCntIndex-->
-        lda ColorCntIndex               ;value.  Flashing Samus lasts for 512-->
-        cmp #$08                        ;frames (8.5 seconds).
-        bne L9B52                       ;
-            jsr ChooseEnding                ;($CAF5)Choose which Samus ending to show.
-            jsr CalculatePassword           ;($8C7A)Calculate game password.
-            lda EndingType                  ;
-            asl                             ;When EndSamusFlash routine is half way-->
-            sta SpritePointerIndex          ;done, this code will calculate the-->
-            lda #$36                        ;password and choose the proper ending.
-            sta SpriteByteCounter           ;
+    ;If FrameCount not divisible by 32, branch.
+    lda FrameCount
+    and #$1F
+    bne L9B69
+        ;Every 32 frames, increment the ColorCntIndex value.
+        ;Flashing Samus lasts for 512 frames (8.5 seconds).
+        inc ColorCntIndex
+        lda ColorCntIndex
+        cmp #$08
+        bne L9B52
+            ;When EndSamusFlash routine is half way done, ->
+            ;this code will calculate the password and choose the proper ending.
+            
+            ;($CAF5)Choose which Samus ending to show.
+            jsr ChooseEnding
+            ;($8C7A)Calculate game password.
+            jsr CalculatePassword
+            ; choose samus's sprite depending on which ending it is
+            lda EndingType
+            asl
+            sta SpritePointerIndex
+            lda #$36
+            sta SpriteByteCounter
         L9B52:
-        cmp #$10                        ;
-        bne L9B69                       ;Once flashing Samus is compete, set Timer3-->
-        sta Timer3                      ;for a 160 frame(2.6 seconds) delay.
-        ldy #$00                        ;
-        lda EndingType                  ;
-        cmp #$04                        ;If one of the suitless Samus endings,-->
-        bcc L9B62                       ;increment sprite color for proper-->
-            iny                             ;color to be displayed and increment-->
-        L9B62:
-        sty SpriteAttribByte            ;RoomPtr and erase the sprites.
-        inc RoomPtr                     ;
-        jmp EraseAllSprites             ;($C1A3)Clear all sprites off the screen.
+        cmp #$10
+        bne L9B69
+            ;Once flashing Samus is complete, set Timer3 for a 160 frame(2.6 seconds) delay.
+            sta Timer3
+            ldy #$00
+            ;If one of the suitless Samus endings, increment sprite color for proper color to be displayed.
+            lda EndingType
+            cmp #$04
+            bcc L9B62
+                iny 
+            L9B62:
+            sty SpriteAttribByte
+            ; increment RoomPtr
+            inc RoomPtr
+            ;($C1A3)Clear all sprites off the screen.
+            jmp EraseAllSprites
     L9B69:
-    dec ClrChangeCounter            ;Decrement ClrChangeCounter.
-    bne L9B80                       ;
-    ldy ColorCntIndex               ;
-    lda PaletteChangeTable,y            ;When ClrChangeCounter=#$00, fetch new-->
-    sta ClrChangeCounter            ;ClrChangeCounter value. and increment-->
-    inc SpriteAttribByte            ;sprite color.
-    lda SpriteAttribByte            ;
-    cmp #$03                        ;
-    bne L9B80                       ;
-    lda #$00                        ;If sprite color=#$03, set sprite-->
-    sta SpriteAttribByte            ;color to #$00.
-L9B80:
-    jmp LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
+    ;Decrement ClrChangeCounter.
+    dec ClrChangeCounter
+    bne L9B80
+        ;When ClrChangeCounter=#$00, fetch new ClrChangeCounter value. and increment sprite color.
+        ldy ColorCntIndex
+        lda PaletteChangeTable,y
+        sta ClrChangeCounter
+        inc SpriteAttribByte
+        lda SpriteAttribByte
+        cmp #$03
+        bne L9B80
+            ;If sprite color=#$03, set sprite color to #$00.
+            lda #$00
+            sta SpriteAttribByte
+    L9B80:
+    ;($9C9A)Load end image of Samus.
+    jmp LoadEndSamusSprites
 
 ;The following table is used by the above routine to load ClrChangeCounter.  ClrChangeCounter
 ;decrements every frame, When ClrChangeCounter reaches zero, the sprite colors for Samus
