@@ -905,7 +905,7 @@ EnemyMoveOnePixelUp:
     ; check for collision if top boundary is at a block boundary
     lda EnY,x
     sec
-    sbc EnsExtra.0.radY,x
+    sbc EnsExtra.0.radiusY,x
     and #$07
     sec
     bne L8406
@@ -942,7 +942,7 @@ L8429:
     tya
     sta EnY,x
     ; movement successful if top boundary != 0
-    cmp EnsExtra.0.radY,x
+    cmp EnsExtra.0.radiusY,x
     bne L8441
 
     ; return movement failed if ScrollY == 0
@@ -974,7 +974,7 @@ EnemyMoveOnePixelDown:
     ; check for collision if bottom boundary is at a block boundary
     lda EnY,x
     clc
-    adc EnsExtra.0.radY,x
+    adc EnsExtra.0.radiusY,x
     and #$07
     sec
     bne L845C
@@ -1013,7 +1013,7 @@ L8481:
     sta EnY,x
     ; movement successful if bottom boundary != #$EF
     clc
-    adc EnsExtra.0.radY,x
+    adc EnsExtra.0.radiusY,x
     cmp #SCRN_VY-1.b
     bne L849D
     ; return movement failed if ScrollY == 0
@@ -1045,7 +1045,7 @@ EnemyMoveOnePixelLeft:
     ; check for collision if left boundary is at a block boundary
     lda EnX,x
     sec
-    sbc EnsExtra.0.radX,x
+    sbc EnsExtra.0.radiusX,x
     and #$07
     sec
     bne L84B8
@@ -1081,7 +1081,7 @@ L84DA:
     dec EnX,x
     ; movement successful if left boundary != 0
     lda EnX,x
-    cmp EnsExtra.0.radX,x
+    cmp EnsExtra.0.radiusX,x
     bne L84F4
     ; return movement failed if ScrollX == 0
     lda ScrollX
@@ -1112,7 +1112,7 @@ EnemyMoveOnePixelRight:
     ; check for collision if right boundary is at a block boundary
     lda EnX,x
     clc
-    adc EnsExtra.0.radX,x
+    adc EnsExtra.0.radiusX,x
     and #$07
     sec
     bne L850F
@@ -1152,7 +1152,7 @@ L8536:
     ; branch if left boundary != #$FF
     lda EnX,x
     clc
-    adc EnsExtra.0.radX,x
+    adc EnsExtra.0.radiusX,x
     cmp #$FF
     bne L8550
     ; return movement failed if ScrollX == 0

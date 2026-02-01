@@ -87,8 +87,8 @@
 .struct EnExtra
     status                 db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
                                   ;#$04=Enemy frozen.
-    radY                   db   ;Distance in pixels from middle of enemy to top or botom.
-    radX                   db   ;Distance in pixels from middle of enemy to left or right.
+    radiusY                db   ;Distance in pixels from middle of enemy to top or botom.
+    radiusX                db   ;Distance in pixels from middle of enemy to left or right.
     animFrame              db   ;Index into enemy animation frame data.
     animDelay              db   ;Number of frames to delay between animation frames.
     resetAnimIndex         db   ;Index to beginning of animation sequence.
@@ -745,14 +745,15 @@ Projectile           instanceof Object 3 startfrom 0
 .ende
 
 
+;Samus RAM.
 SamusOnElevator = Samus.data07 ;$0307   ;0=Samus not on elevator, 1=Samus on elevator.
-;Samus.isHit             db   ;$030A   ;Samus hit by enemy.
-                                   ;$20: hit by bomb
-                                   ;$30: hit by enemy
-                                   ; +$08: hit towards the right
-                                   ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
-                                   ; +$01: touch solid entity from the right
-                                   ; +$02: touch solid entity from the bottom
+;Samus.isHit            db   ;$030A   ;Samus hit by enemy.
+                                       ;$20: hit by bomb
+                                       ;$30: hit by enemy
+                                       ; +$08: hit towards the right
+                                       ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
+                                       ; +$01: touch solid entity from the right
+                                       ; +$02: touch solid entity from the bottom
 SamusJumpDsplcmnt = Samus.data0F ;$030F   ;Number of pixels vertically displaced from jump point.
 
 .enum $0310 export
@@ -769,25 +770,23 @@ SamusHorzSpeedMax      db   ;$0316   ;Used to calc maximum horizontal speed Samu
 
 
 ;Elevator RAM.
-ElevatorStatus         = $0320   ;#$01=Elevator present, #$00=Elevator not present.
-ElevatorAnimFrame      = $0323   ;*2 = Index into FramePtrTable for current animation.
-ElevatorAnimResetIndex = $0325   ;Restart index-1 when AnimIndex finished with last frame.
-ElevatorAnimIndex      = $0326   ;Current index into ObjectAnimIndexTbl.
-ElevatorUnused0328     = $0328   ;when starting to move, #$00 is written, but this is never read
-ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
-                                   ;low nybble is which elevator it is
-                                   ;#$0=Brinstar/Brinstar
-                                   ;#$1=Brinstar/Norfair
-                                   ;#$2=Brinstar/Kraid
-                                   ;#$3=Brinstar/Tourian
-                                   ;#$4=Norfair/Ridley
-                                   ;elevator type #$8F is for the ending elevator
+;Elevator.speedY        db   ;$0328   ;when starting to move, #$00 is written, but this is never read
+ElevatorType = Elevator.data0F       ;bit 7 is up(1) or down(0)
+                                       ;low nybble is which elevator it is
+                                       ;#$0=Brinstar/Brinstar
+                                       ;#$1=Brinstar/Norfair
+                                       ;#$2=Brinstar/Kraid
+                                       ;#$3=Brinstar/Tourian
+                                       ;#$4=Norfair/Ridley
+                                       ;elevator type #$8F is for the ending elevator
+
 
 ;Power-up item temp RAM for drawing.
 PowerUpDrawAnimFrame   = $0343   ;*2 = Index into FramePtrTable for current animation.
 PowerUpDrawHi          = $034C   ;Name table power up item is located on.
 PowerUpDrawY           = $034D   ;Room Y coord of power up item.
 PowerUpDrawX           = $034E   ;Room x coord of power up item.
+
 
 ;Statues and bridge RAM
 StatueStatus           = $0360
@@ -801,6 +800,7 @@ StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when dra
 StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
 KraidStatueY           = $036F
 RidleyStatueY          = $0370
+
 
 ;Door RAM
 DoorStatus             = $0300

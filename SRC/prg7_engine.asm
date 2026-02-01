@@ -4109,14 +4109,16 @@ SamusDead2:
 ; =============
 
 SamusElevator:
-    lda ElevatorStatus
+    lda Elevator.status
     cmp #$03
     beq Lx056
         cmp #$08
         bne Lx062
     Lx056:
+    ; chack elevator direction
     lda ElevatorType
     bmi Lx059
+        ; elevator is going down
         lda Samus.y
         sec
         sbc ScrollY     ; A = Samus' Y position on the visual screen
@@ -4134,6 +4136,7 @@ SamusElevator:
         sty Samus.y
         jmp LD47E
     Lx059:
+        ; elevator is going up
         lda Samus.y
         sec
         sbc ScrollY     ; A = Samus' Y position on the visual screen
@@ -4726,9 +4729,9 @@ GetObjRoomRAMPtr:
 ;---------------------------------------------------------------------------------------------------
 
 UpdateElevator:
-    ldx #$20
+    ldx #Elevator - Objects.b
     stx PageIndex
-    lda ElevatorStatus-$20,x
+    lda Elevator.status - (Elevator - Objects),x
     jsr JumpEngine ; Pointer table to elevator handlers
         .word ExitSub       ;($C45C) rts
         .word ElevatorIdle
@@ -4756,13 +4759,13 @@ ElevatorIdle:
     ; clear samus variables
     jsr StopVertMovement
     ; y is #$00 here
-    sty Objects.0.animDelay
+    sty Elevator.animDelay - (Elevator - Objects)
     sty SamusAccelY
     ; clear elevator unused variable
     tya ; a = #$00
-    sta ElevatorUnused0328-$20,x
+    sta Elevator.speedY - (Elevator - Objects),x
     ; increment elevator routine to ElevatorScrollXToCenter
-    inc ElevatorStatus-$20,x
+    inc Elevator.status - (Elevator - Objects),x
     ; set samus animation
     lda #sa_Elevator
     sta Samus.status
@@ -4794,7 +4797,7 @@ ElevatorScrollXToCenter:
     and #$01
     sta ScrollDir
     ; increment elevator routine to ElevatorMove
-    inc ElevatorStatus-$20,x
+    inc Elevator.status - (Elevator - Objects),x
     jmp DrawElevator
 
 @notCentered:
@@ -4812,11 +4815,11 @@ ElevatorScrollXToCenter:
 
 ElevatorMove:
     ; branch if elevator going down
-    lda ElevatorType-$20,x
+    lda ElevatorType - (Elevator - Objects),x
     bpl @else_A
         ; move elevator up one pixel
         ; if current pos is 0, set to 240 and toggle hi byte
-        ldy Objects.0.y,x
+        ldy Elevator.y - (Elevator - Objects),x
         bne @endIf_B
             jsr ToggleObjHi
             ldy #SCRN_VY
@@ -4824,26 +4827,26 @@ ElevatorMove:
         ; decrement and save
         dey
         tya
-        sta Objects.0.y,x
+        sta Elevator.y - (Elevator - Objects),x
         jmp @endIf_A
     @else_A:
         ; move elevator down one pixel
         ; increment
-        inc Objects.0.y,x
+        inc Elevator.y - (Elevator - Objects),x
         ; if new pos is 240, save as 0 and toggle hi byte
-        lda Objects.0.y,x
+        lda Elevator.y - (Elevator - Objects),x
         cmp #SCRN_VY
         bne @endIf_C
             jsr ToggleObjHi
             lda #$00
-            sta Objects.0.y,x
+            sta Elevator.y - (Elevator - Objects),x
         @endIf_C:
     @endIf_A:
     cmp #$83
     ; move until Y coord = $83
     bne @endIf_D
         ; increment elevator routine to ElevatorScrollY
-        inc Objects.0.status,x
+        inc Elevator.status - (Elevator - Objects),x
     @endIf_D:
     jmp DrawElevator
 
@@ -4859,11 +4862,11 @@ ElevatorScrollY:
     sta Samus.animIndex
     ; set elevator animation to fade out
     lda #ObjAnim_ElevatorFadeOutArea_Reset - ObjectAnimIndexTbl.b
-    sta ElevatorAnimResetIndex-$20,x
+    sta Elevator.animResetIndex - (Elevator - Objects),x
     lda #ObjAnim_ElevatorFadeOutArea - ObjectAnimIndexTbl.b
-    sta ElevatorAnimIndex-$20,x
+    sta Elevator.animIndex - (Elevator - Objects),x
     ; increment elevator routine to ElevatorFade
-    inc Objects.0.status,x
+    inc Elevator.status - (Elevator - Objects),x
     ; set timer for 64 frames (useless)
     ; the timer may have once been checked in ElevatorFade to handle the fade out / fade in, -->
     ; but right now, ElevatorFade runs for a single frame instead of 64 frames. -->
@@ -4874,7 +4877,7 @@ ElevatorScrollY:
 
 ElevScrollRoom:
     ; branch if elevator going down
-    lda ElevatorType-$20,x
+    lda ElevatorType - (Elevator - Objects),x
     bpl @scrollDown
         jsr ScrollUp
         jmp DrawElevator
@@ -4884,13 +4887,13 @@ ElevScrollRoom:
 
 ElevatorFade:
     ; increment elevator routine
-    inc Objects.0.status,x
+    inc Elevator.status - (Elevator - Objects),x
     ; branch if new elevator routine is not ElevatorMove
-    lda Objects.0.status,x
+    lda Elevator.status - (Elevator - Objects),x
     cmp #$08
     bne @endIf_A
         lda #_id_ObjFrame_Elevator.b
-        sta ElevatorAnimFrame-$20,x
+        sta Elevator.animFrame - (Elevator - Objects),x
         lda #ObjAnim_SamusFront - ObjectAnimIndexTbl.b
         jsr SetSamusAnim
         jmp DrawElevator
@@ -4900,7 +4903,7 @@ ElevatorFade:
         jmp AnimDrawObject
 
 ElevatorD8BF:
-    lda ElevatorType-$20,x
+    lda ElevatorType - (Elevator - Objects),x
     tay
     ; Leads-To-Ending elevator?
     cmp #$8F
@@ -4970,11 +4973,11 @@ ElevatorD8BF:
     sta Samus.animIndex
     ; set elevator animation to fade in
     lda #ObjAnim_ElevatorFadeInArea_Reset - ObjectAnimIndexTbl.b
-    sta Objects.0.animResetIndex,x
+    sta Elevator.animResetIndex - (Elevator - Objects),x
     lda #ObjAnim_ElevatorFadeInArea - ObjectAnimIndexTbl.b
-    sta Objects.0.animIndex,x
+    sta Elevator.animIndex - (Elevator - Objects),x
     ; increment elevator routine to ElevatorFade
-    inc Objects.0.status,x
+    inc Elevator.status - (Elevator - Objects),x
     ; set timer for 64 frames (useless)
     lda #$40
     sta Timer1
@@ -4982,7 +4985,7 @@ ElevatorD8BF:
 
 StartMusic:
     ; branch if we are not in an elevator transition
-    lda ElevatorStatus
+    lda Elevator.status
     cmp #$06
     bne Lx112
         ; we are in an elevator transition
@@ -5023,9 +5026,9 @@ ElevatorStop:
     lda #$01
     sta Objects.0.status,x
     ; switch elevator direction
-    lda ElevatorType-$20,x
+    lda ElevatorType - (Elevator - Objects),x
     eor #$80
-    sta ElevatorType-$20,x
+    sta ElevatorType - (Elevator - Objects),x
     ; branch if elevator is now on the lower floor
     bmi Lx115
         ; elevator is now on the upper floor
@@ -5071,11 +5074,11 @@ SamusCollisionWithSolidEntities: ;($D976)
     @loopExit:
 
     ; exit if there is no elevator
-    lda ElevatorStatus
+    lda Elevator.status
     beq @RTS
     ; exit if samus is not touching the elevator
-    ldy #$00
-    ldx #$20
+    ldy #Samus - Objects.b
+    ldx #Elevator - Objects.b
     jsr LDC82
     bcs @RTS
     ; exit if samus is not on top of the elevator
@@ -6061,16 +6064,16 @@ DrawEnemy_NotBlank:
     Lx146:
 
     ldx PageIndex
-    ; write y radius to EnsExtra.0.radY
+    ; write y radius to EnsExtra.0.radiusY
     iny ; y = #$01
     lda (Temp00_FramePtr),y
-    sta EnsExtra.0.radY,x
+    sta EnsExtra.0.radiusY,x
     ; write y radius - #$10 to temp $08
     jsr ReduceYRadius
     ; write x radius
     iny
     lda (Temp00_FramePtr),y
-    sta EnsExtra.0.radX,x
+    sta EnsExtra.0.radiusX,x
     ; write x radius to temp $09
     sta Temp09_RadiusX
 
@@ -7877,7 +7880,7 @@ RTS_E76F:
 EnemyCheckMoveUp:
     ldx PageIndex
     ; Y radius + 8 to check block directly above
-    lda EnsExtra.0.radY,x
+    lda EnsExtra.0.radiusY,x
     clc
     adc #$08
     jmp LE783
@@ -7887,7 +7890,7 @@ EnemyCheckMoveDown:
     ; check block directly below
     lda #$00
     sec
-    sbc EnsExtra.0.radY,x
+    sbc EnsExtra.0.radiusY,x
     ; fallthrough
 
 LE783:
@@ -7897,7 +7900,7 @@ LE783:
     sta Temp04_NumBlocksToCheck
 
     jsr StoreEnemyPositionToTemp
-    lda EnsExtra.0.radX,x
+    lda EnsExtra.0.radiusX,x
     jmp CheckMoveVertical
 
 StoreEnemyPositionToTemp:
@@ -8173,7 +8176,7 @@ GetNumBlocksToCheck:
 EnemyCheckMoveLeft:
     ldx PageIndex
     ; X radius + 8 to check block directly to the left
-    lda EnsExtra.0.radX,x
+    lda EnsExtra.0.radiusX,x
     clc
     adc #$08
     jmp EnemyCheckMoveHorizontalBranch
@@ -8183,12 +8186,12 @@ EnemyCheckMoveRight:
     ; check block directly to the right
     lda #$00
     sec
-    sbc EnsExtra.0.radX,x
+    sbc EnsExtra.0.radiusX,x
 
 EnemyCheckMoveHorizontalBranch:
     sta Temp03_DistToCenterX
     jsr StoreEnemyPositionToTemp
-    ldy EnsExtra.0.radY,x
+    ldy EnsExtra.0.radiusY,x
     jmp CheckMoveHorizontal
 
 ;----------------------------------------------
@@ -8819,7 +8822,7 @@ LoadElevator:
     bne Lx230           ; branch always
 
 SpawnElevatorRoutine:
-    lda ElevatorStatus
+    lda Elevator.status
     bne @exit      ; exit if elevator already present
     iny
     lda ($00),y
@@ -8832,7 +8835,7 @@ SpawnElevatorRoutine:
     sta Elevator.hi       ; high Y coord
     lda #_id_ObjFrame_Elevator.b
     sta Elevator.animFrame
-    inc ElevatorStatus              ;1
+    inc Elevator.status              ;1
 @exit:
     lda #$02
     rts
@@ -8986,18 +8989,18 @@ DeleteOffscreenRoomSprites:
     lsr
     tay
     ; non-beam projectiles
-    ldx #$D0
+    ldx #Projectile.0 - Objects.b
     jsr Projectile_RemoveIfOffScreen
-    ldx #$E0
+    ldx #Projectile.1 - Objects.b
     jsr Projectile_RemoveIfOffScreen
-    ldx #$F0
+    ldx #Projectile.2 - Objects.b
     jsr Projectile_RemoveIfOffScreen
     tya
     ; elevator
     sec
     sbc Elevator.hi
     bne @endIf_elevator
-        sta ElevatorStatus
+        sta Elevator.status
     @endIf_elevator:
     ; unused RAM $0700-$0723
     ldx #_sizeof_Mem0700 - _sizeof_Mem0700.0.b
@@ -10005,14 +10008,14 @@ GetRadiusSumsOfObjXSlotAndEnYSlot:
     jmp AddEnemyYSlotRadiusX
 
 GetRadiusSumsOfEnXSlotAndObjYSlot:
-    lda EnsExtra.0.radY,x
+    lda EnsExtra.0.radiusY,x
     jsr AddObjectYSlotRadiusY
-    lda EnsExtra.0.radX,x
+    lda EnsExtra.0.radiusX,x
     jmp AddObjectYSlotRadiusX
 
 AddEnemyYSlotRadiusX:
     clc
-    adc EnsExtra.0.radX,y
+    adc EnsExtra.0.radiusX,y
     sta Temp05_YSlotRadX
     rts
 
@@ -10035,7 +10038,7 @@ AddObjectYSlotRadiusY:
 
 AddEnemyYSlotRadiusY:
     clc
-    adc EnsExtra.0.radY,y
+    adc EnsExtra.0.radiusY,y
     sta Temp04_YSlotRadY
     rts
 
@@ -10395,9 +10398,9 @@ UpdateEnemy_CheckIfVisible:
         sta Temp0B_PositionX
         lda EnsExtra.0.hi,x     ; hi coord
         sta Temp06_PositionHi
-        lda EnsExtra.0.radY,x
+        lda EnsExtra.0.radiusY,x
         sta Temp08_RadiusY
-        lda EnsExtra.0.radX,x
+        lda EnsExtra.0.radiusX,x
         sta Temp09_RadiusX
         ;Determine if object is within the screen boundaries.
         jsr IsObjectVisible
@@ -11509,8 +11512,8 @@ EnSpeedX_Table15:
 
 SpawnEnProjectile_F92C:
     lda #$02
-    sta EnsExtra.0.radY,y
-    sta EnsExtra.0.radX,y
+    sta EnsExtra.0.radiusY,y
+    sta EnsExtra.0.radiusX,y
     ora EnData05,y
     sta EnData05,y
     rts
@@ -11841,9 +11844,9 @@ UpdatePipeBugHole:
     sta EnsExtra.0.hi,x
     ; set pipe bug radius
     lda #$18
-    sta EnsExtra.0.radX,x
+    sta EnsExtra.0.radiusX,x
     lda #$0C
-    sta EnsExtra.0.radY,x
+    sta EnsExtra.0.radiusY,x
     ; abort spawning pipe bug if samus is too close
     ldy #$00
     jsr GetObjectYSlotPosition
