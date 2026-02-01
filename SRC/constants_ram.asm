@@ -745,7 +745,7 @@ Projectile           instanceof Object 3 startfrom 0
 .ende
 
 
-;Samus RAM.
+;Samus RAM. ($0300-$0316)
 SamusOnElevator = Samus.data07 ;$0307   ;0=Samus not on elevator, 1=Samus on elevator.
 ;Samus.isHit            db   ;$030A   ;Samus hit by enemy.
                                        ;$20: hit by bomb
@@ -769,7 +769,7 @@ SamusHorzSpeedMax      db   ;$0316   ;Used to calc maximum horizontal speed Samu
 .ende
 
 
-;Elevator RAM.
+;Elevator RAM. ($0320-$032F)
 ;Elevator.speedY        db   ;$0328   ;when starting to move, #$00 is written, but this is never read
 ElevatorType = Elevator.data0F       ;bit 7 is up(1) or down(0)
                                        ;low nybble is which elevator it is
@@ -781,25 +781,24 @@ ElevatorType = Elevator.data0F       ;bit 7 is up(1) or down(0)
                                        ;elevator type #$8F is for the ending elevator
 
 
-;Power-up item temp RAM for drawing.
-PowerUpDrawAnimFrame   = $0343   ;*2 = Index into FramePtrTable for current animation.
-PowerUpDrawHi          = $034C   ;Name table power up item is located on.
-PowerUpDrawY           = $034D   ;Room Y coord of power up item.
-PowerUpDrawX           = $034E   ;Room x coord of power up item.
+;Temp RAM for drawing power-up item and skree projectile. ($0340-$034F)
+; just a regular object
 
 
-;Statues and bridge RAM
-StatueStatus           = $0360
-StatueAnimFrame        = $0363
-KraidStatueRaiseState  = $0364   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
-RidleyStatueRaiseState = $0365
-KraidStatueIsHit       = $0366   ;#$00=not hit, #$01=hit
-RidleyStatueIsHit      = $0367   ;#$00=not hit, #$01=hit
-StatueHi               = $036C
-StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
-StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
-KraidStatueY           = $036F
-RidleyStatueY          = $0370
+;Statues and bridge RAM ($0360-$0370)
+KraidStatueRaiseState = Statue.animDelay   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
+RidleyStatueRaiseState = Statue.animResetIndex
+KraidStatueIsHit = Statue.animIndex   ;#$00=not hit, #$01=hit
+RidleyStatueIsHit = Statue.data07   ;#$00=not hit, #$01=hit
+;Statue.y                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
+;Statue.x                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
+KraidStatueY = Statue.data0F
+
+.enum $0370 export
+
+RidleyStatueY          db   ;$0370
+
+.ende
 
 
 ;Door RAM

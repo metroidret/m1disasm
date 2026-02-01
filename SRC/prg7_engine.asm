@@ -5117,7 +5117,7 @@ Exit8:
 
 UpdateAllStatues:
     ; set page index to statues object slot
-    lda #$60
+    lda #Statue - Objects.b
     sta PageIndex
     ; exit if no statue present
     ldy Statue.status
@@ -5174,10 +5174,10 @@ UpdateAllStatues:
     @endIf_C:
 
     ; update kraid statue
-    ldx #(KraidStatueStatus-(KraidStatueStatus-$60)).b
+    ldx #KraidStatueStatus - KraidStatueStatus + (Statue - Objects).b
     jsr UpdateStatue
     ; update ridley statue
-    ldx #(RidleyStatueStatus-(KraidStatueStatus-$60)).b
+    ldx #RidleyStatueStatus - KraidStatueStatus + (Statue - Objects).b
     jsr UpdateStatue
     ; update bridge to tourian
     jmp UpdateAllStatues_Bridge
@@ -5192,7 +5192,7 @@ UpdateStatue:
     lda StatueAnimFrameTable,y
     sta Statue.animFrame
     ; always display statue if statue status is up or not blinking
-    lda KraidStatueStatus-$60,x
+    lda KraidStatueStatus - (Statue - Objects),x
     beq Lx126
     bmi Lx126
     ; statue is blinking
@@ -5213,35 +5213,35 @@ StatueAnimFrameTable:
 
 UpdateStatue_Raise:
     ; exit if statue is raised
-    lda KraidStatueRaiseState-$60,x
+    lda KraidStatueRaiseState - (Statue - Objects),x
     bmi RTS_X127
 
     ; set raise state to not raised
     lda #$01
-    sta KraidStatueRaiseState-$60,x
+    sta KraidStatueRaiseState - (Statue - Objects),x
     ; exit if statue isn't moving
-    lda KraidStatueY-$60,x
+    lda KraidStatueY - (Statue - Objects),x
     and #$0F
     beq RTS_X127
 
     ; set raise state to raising
-    inc KraidStatueRaiseState-$60,x
+    inc KraidStatueRaiseState - (Statue - Objects),x
     ; move statue upwards by one pixel
-    dec KraidStatueY-$60,x
+    dec KraidStatueY - (Statue - Objects),x
     ; exit if statue isn't done moving
-    lda KraidStatueY-$60,x
+    lda KraidStatueY - (Statue - Objects),x
     and #$0F
     bne RTS_X127
 
     ; statue is done moving
     ; set raise state to raised
-    lda KraidStatueRaiseState-$60,x
+    lda KraidStatueRaiseState - (Statue - Objects),x
     ora #$80
-    sta KraidStatueRaiseState-$60,x
+    sta KraidStatueRaiseState - (Statue - Objects),x
     ; set status to statue up
-    sta KraidStatueStatus-$60,x
+    sta KraidStatueStatus - (Statue - Objects),x
     ; set raise state to raised (useless)
-    inc KraidStatueRaiseState-$60,x
+    inc KraidStatueRaiseState - (Statue - Objects),x
     ; push object slot to stack
     txa
     pha
@@ -5265,7 +5265,7 @@ RTS_X127:
 
 UpdateStatue_StartRaising:
     ; set position of statue object to current statue's position
-    lda KraidStatueY-$60,x
+    lda KraidStatueY - (Statue - Objects),x
     sta Statue.y
     txa
     and #$01
@@ -5273,24 +5273,24 @@ UpdateStatue_StartRaising:
     lda StatueXTable,y
     sta Statue.x
     ; branch if statue status is up or not blinking
-    lda KraidStatueStatus-$60,x
+    lda KraidStatueStatus - (Statue - Objects),x
     beq @exit
     bmi @exit
 
     ; statue is blinking
     ; branch if statue is raising or raised
-    lda KraidStatueRaiseState-$60,x
+    lda KraidStatueRaiseState - (Statue - Objects),x
     cmp #$01
     bne @exit
 
     ; statue is not raised
     ; branch if statue is not hit
-    lda KraidStatueIsHit-$60,x
+    lda KraidStatueIsHit - (Statue - Objects),x
     beq @exit
         ; statue is hit by samus's weapons
         ; move statue up by one pixel for the first time
         ; thanks to this, UpdateStatue_Raise will know that the statue is moving and will take over for the next 15 pixels
-        dec KraidStatueY-$60,x
+        dec KraidStatueY - (Statue - Objects),x
         ; play raise sfx
         lda TriSFXFlag
         ora #sfxTri_StatueRaise
@@ -5298,7 +5298,7 @@ UpdateStatue_StartRaising:
     @exit:
     ; clear statue is hit flag
     lda #$00
-    sta KraidStatueIsHit-$60,x
+    sta KraidStatueIsHit - (Statue - Objects),x
     rts
 
 ; return carry clear if updated successfully
@@ -5308,7 +5308,7 @@ UpdateStatueBGTiles:
     lda StatueTileBlastRoomRAMPtrLoTable,y
     sta TileBlasts.12.roomRAMPtr
     ; set destination pointer high byte
-    lda StatueHi
+    lda Statue.hi
     asl
     asl
     ora StatueTileBlastRoomRAMPtrHiTable,y
@@ -5322,7 +5322,7 @@ UpdateStatueBGTiles:
     ; update bg tiles
     jsr DrawTileBlast
     ; restore page index to statues object slot
-    lda #$60
+    lda #Statue - Objects.b
     sta PageIndex
     rts
 
@@ -5370,7 +5370,7 @@ UpdateAllStatues_Bridge:
         lda #$04
         sta TileBlasts.0.type,x
         ; set tile blast nametable pointer
-        lda StatueHi
+        lda Statue.hi
         asl
         asl
         ora #$62
@@ -5446,11 +5446,11 @@ UpdateOnePowerUp: ; 07:DB42
 
     ;Store y, x and name table coordinates of power up item.
     lda PowerUps.0.y,x
-    sta PowerUpDrawY
+    sta PowerUpDraw.y
     lda PowerUps.0.x,x
-    sta PowerUpDrawX
+    sta PowerUpDraw.x
     lda PowerUps.0.hi,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
     ;Find object position in room RAM.
     jsr GetObjRoomRAMPtr
     ;Index to proper power up item.
@@ -5468,7 +5468,7 @@ UpdateOnePowerUp: ; 07:DB42
     ;Set bits 4 and 6.
     ora #_id_ObjFrame_BombItem.b
     ;Save index to find object animation.
-    sta PowerUpDrawAnimFrame
+    sta PowerUpDraw.animFrame
     ;Change color of item every other frame.
     ;FrameCount/2
     lda FrameCount
@@ -8846,7 +8846,7 @@ SpawnElevatorRoutine:
 LoadStatues:
     ; set statues object hi position
     jsr GetNameTableAtScrollDir
-    sta StatueHi
+    sta Statue.hi
 
     ; set kraid statue y position
     lda #$40
@@ -8869,7 +8869,7 @@ LoadStatues:
     sty StatuesBridgeIsSpawned
     ; set status to #$01 (first bg tile update batch)
     lda #$01
-    sta StatueStatus
+    sta Statue.status
 Lx237:
     jmp EnemyLoop   ; do next room object
 
@@ -9016,10 +9016,10 @@ DeleteOffscreenRoomSprites:
         tax
         bpl @loop_Mem0700
     ; statues
-    cpy StatueHi
+    cpy Statue.hi
     bne @dontDeleteStatues
         lda #$00
-        sta StatueStatus
+        sta Statue.status
     @dontDeleteStatues:
     ; pipe bug holes
     ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
@@ -12004,23 +12004,23 @@ UpdateSkreeProjectile:
     ; y pos
     lda Temp08_PositionY
     sta SkreeProjectiles.0.y,x
-    sta PowerUpDrawY
+    sta PowerUpDraw.y
     ; x pos
     lda Temp09_PositionX
     sta SkreeProjectiles.0.x,x
-    sta PowerUpDrawX
+    sta PowerUpDraw.x
     ; nametable
     lda Temp0B_PositionHi
     and #$01
     sta SkreeProjectiles.0.hi,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
     ; oops this write is redundant
     lda SkreeProjectiles.0.hi,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
 
     ;Save index to find object animation.
     lda #_id_ObjFrame_SkreeProjectile.b
-    sta PowerUpDrawAnimFrame
+    sta PowerUpDraw.animFrame
     txa
     pha
     jsr ObjDrawFrame
