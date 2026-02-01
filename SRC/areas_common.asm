@@ -1236,14 +1236,14 @@ SamusEnterDoor:
         lda ScrollY                     ;Is room centered on screen?-->
         beq L8B6D                       ;If so, branch.
         lda PPUCTRL_ZP                  ;
-        eor ObjHi                       ;Get inverse of Samus' current nametable.
+        eor Samus.hi                       ;Get inverse of Samus' current nametable.
         lsr                             ;
         bcc SetDoorEntryInfo            ;If Samus is on nametable 3, branch.
         bcs L8B52                       ;If Samus is on nametable 0, branch to decrement x.
 
     L8B4B:
         ldx #$02                        ;Samus is currently scrolling horizontally.
-        lda ObjX                        ;Is Samus entering a left hand door?-->
+        lda Samus.x                        ;Is Samus entering a left hand door?-->
         bpl SetDoorEntryInfo            ;If so, branch.
     L8B52:
     dex                             ;
@@ -1256,10 +1256,10 @@ SetDoorEntryInfo:
     sta DoorDelay                   ;Set DoorDelay to 18 frames(going into door).
     lda SamusDoorData               ;
     jsr Amul16                      ;($C2C5)*16. Move scroll toggle data to upper 4 bits.
-    ora ObjAction                   ;Keep Samus action so she will appear the same comming-->
+    ora Samus.status                   ;Keep Samus action so she will appear the same comming-->
     sta SamusDoorData               ;out of the door as she did going in.
     lda #sa_Door                    ;
-    sta ObjAction                   ;Indicate Samus is in a door.
+    sta Samus.status                   ;Indicate Samus is in a door.
 RTS_8B6C:
     rts
 
@@ -1364,7 +1364,7 @@ UpdateDoor_Closed:
     L8BEE:
     ; increment door status to "open"
     ; a is #$03 here
-    sta DoorStatus,x
+    sta Objects.0.status,x
     ; set re-close delay to 80 * 2 frames
     lda #$50
     sta DoorHitPoints,x
@@ -1372,7 +1372,7 @@ UpdateDoor_Closed:
     ; and play sound effect
     ; (BUG! there is no call to DrawDoor, so the door isn't drawn on this frame)
     lda #ObjAnim_DoorOpen_Reset - ObjectAnimIndexTbl.b
-    sta DoorAnimResetIndex,x
+    sta Objects.0.animResetIndex,x
     sec
     sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
     jmp DoorSubRoutine8C7E
@@ -1382,22 +1382,22 @@ UpdateDoor_Open:
     lda DoorEntryStatus
     beq L8C1D
     ; branch if samus is not in the same nametable as the door
-    lda ObjHi
-    eor DoorHi,x
+    lda Samus.hi
+    eor Objects.0.hi,x
     lsr
     bcs L8C1D
     ; branch if samus is not in the same left/right half of the nametable as the door
-    lda ObjX
-    eor DoorX,x
+    lda Samus.x
+    eor Objects.0.x,x
     bmi L8C1D
     ; increment door status to "letting samus in"
     lda #$04
-    sta DoorStatus,x
+    sta Objects.0.status,x
     bne GotoDrawDoor
 L8C1D:
     ; branch if animation of opening the door has not completed
-    lda DoorAnimIndex,x
-    cmp DoorAnimResetIndex,x
+    lda Objects.0.animIndex,x
+    cmp Objects.0.animResetIndex,x
     bcc GotoDrawDoor
     ; branch if this is not the first frame the door is fully open
     lda DoorHitPoints,x
@@ -1416,7 +1416,7 @@ L8C1D:
     ; save that the missile door was opened in the UniqueItemHistory
     lda #$0A
     sta Temp09_ItemType
-    lda DoorHi,x
+    lda Objects.0.hi,x
     sta Temp08_ItemHi
     ldy MapPosX
     txa
@@ -1428,7 +1428,7 @@ L8C1D:
     jsr MapScrollRoutine
     ; remove door completely (cannot close again)
     lda #$00
-    sta DoorStatus,x
+    sta Objects.0.status,x
     beq GotoDrawDoor
 L8C57:
     ; door is a blue door
@@ -1448,7 +1448,7 @@ DoorSubRoutine8C61:
     jsr WriteDoorBGTiles_Solid
     ; set door status back to "closed"
     lda #$02
-    sta DoorStatus,x
+    sta Objects.0.status,x
     ; set door animation to closing the door
     jsr DoorSubRoutine8C76
 DoorSubRoutine8C71:
@@ -1458,7 +1458,7 @@ GotoDrawDoor:
 
 DoorSubRoutine8C76:
     lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
-    sta DoorAnimResetIndex,x
+    sta Objects.0.animResetIndex,x
     sec
     sbc #ObjAnim_DoorClose_Reset - ObjAnim_DoorClose.b
 DoorSubRoutine8C7E:
@@ -1492,7 +1492,7 @@ UpdateDoor_LetSamusIn:
     sta PaletteDataPending
 L8CA7:
     ; increment door status to "scroll"
-    inc DoorStatus,x
+    inc Objects.0.status,x
     ; clear DoorPaletteChangeDir
     lda #$00
     sta DoorPaletteChangeDir
@@ -1528,10 +1528,10 @@ UpdateDoor_Scroll:
     tax
     ; set that door's status to "letting samus out"
     lda #$06
-    sta DoorStatus,x
+    sta Objects.0.status,x
     ; set that door's animation to opening the door
     lda #ObjAnim_DoorOpen_Reset - ObjectAnimIndexTbl.b
-    sta DoorAnimResetIndex,x
+    sta Objects.0.animResetIndex,x
     sec
     sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
     jsr SetObjAnimIndex
@@ -1542,7 +1542,7 @@ UpdateDoor_Scroll:
     ; set the current door's status to "closed"
     ldx PageIndex
     lda #$02
-    sta DoorStatus,x
+    sta Objects.0.status,x
 Goto2DrawDoor:
     jmp DrawDoor
 
@@ -1573,7 +1573,7 @@ WriteDoorBGTiles_Common:
     lda DoorXTable,y
     sta Temp03_PositionX
     ; door nametable
-    lda ObjHi,x
+    lda Objects.0.hi,x
     sta Temp0B_PositionHi
     ; call
     jsr MakeRoomRAMPtr

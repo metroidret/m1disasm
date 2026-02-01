@@ -95,7 +95,7 @@ L9923_{AREA}:
     ; get position relative to samus
     lda EnY,x
     sec
-    sbc ObjY
+    sbc Samus.y
     ; branch if swooper is under samus
     bpl @endIf_B
         ; swooper is above samus

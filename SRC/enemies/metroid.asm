@@ -333,11 +333,11 @@ MetroidLatchOffsetY:
 
 StoreSamusPositionToTemp:
     ; put Samus position as parameters to CommonJump_ApplySpeedToPosition
-    lda ObjX
+    lda Samus.x
     sta Temp09_PositionX
-    lda ObjY
+    lda Samus.y
     sta Temp08_PositionY
-    lda ObjHi
+    lda Samus.hi
     sta Temp0B_PositionHi
     rts
 

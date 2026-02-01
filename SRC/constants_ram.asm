@@ -156,6 +156,32 @@
     EnAnimTable            dw   ;$47     ;Start of EnemyAnimIndexTbl.
 .endst
 
+.struct Object
+    status                 db   ;$0300   ;Status of object. 0=object slot not in use.
+    radiusY                db   ;$0301   ;Distance in pixels from object center to top or bottom.
+    radiusX                db   ;$0302   ;Distance in pixels from object center to left or right side.
+    animFrame              db   ;$0303   ;*2 = Index into FramePtrTable for current animation.
+    animDelay              db   ;$0304   ;Number of frames to delay between animation frames.
+    animResetIndex         db   ;$0305   ;Restart index-1 when AnimIndex finished with last frame.
+    animIndex              db   ;$0306   ;Current index into ObjectAnimIndexTbl.
+    data07                 db   ;
+    speedY                 db   ;$0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
+    speedX                 db   ;$0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
+    isHit                  db   ;$030A   ;Samus hit by enemy.
+                                       ;$20: hit by bomb
+                                       ;$30: hit by enemy
+                                       ; +$08: hit towards the right
+                                       ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
+                                       ; +$01: touch solid entity from the right
+                                       ; +$02: touch solid entity from the bottom
+    onScreen               db   ;$030B   ;1=Object on screen, 0=Object beyond screen boundaries.
+    hi                     db   ;$030C   ;0=Object on nametable 0, 1=Object on nametable 3.
+    y                      db   ;$030D   ;Object y position in room(not actual screen position).
+    x                      db   ;$030E   ;Object x position in room(not actual screen position).
+    data0F                 db   ;
+.endst
+
+
 ;-------------------------------------------[ Defines ]----------------------------------------------
 ;--------------------------------------------[ Zeropage ]--------------------------------------------
 
@@ -701,36 +727,46 @@ SpriteRAM              instanceof OAMSprite $40 startfrom 0
 ; slot 8 to B is for doors
 ; slot D to F is for samus projectiles
 
-;Samus RAM.
-ObjAction              = $0300   ;Status of object. 0=object slot not in use.
-ObjRadY                = $0301   ;Distance in pixels from object center to top or bottom.
-ObjRadX                = $0302   ;Distance in pixels from object center to left or right side.
-ObjAnimFrame           = $0303   ;*2 = Index into FramePtrTable for current animation.
-ObjAnimDelay           = $0304   ;Number of frames to delay between animation frames.
-ObjAnimResetIndex      = $0305   ;Restart index-1 when AnimIndex finished with last frame.
-ObjAnimIndex           = $0306   ;Current index into ObjectAnimIndexTbl.
-SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
-ObjSpeedY              = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
-ObjSpeedX              = $0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
-SamusIsHit             = $030A   ;Samus hit by enemy.
+.enum $0300 export
+
+Objects              .instanceof Object $10 startfrom 0
+Samus                instanceof Object
+Object0310           instanceof Object
+Elevator             instanceof Object
+Object0330           instanceof Object
+PowerUpDraw          instanceof Object
+Object0350           instanceof Object
+Statue               instanceof Object
+Object0370           instanceof Object
+Doors                instanceof Object 4 startfrom 0
+Object03C0           instanceof Object
+Projectile           instanceof Object 3 startfrom 0
+
+.ende
+
+
+SamusOnElevator = Samus.data07 ;$0307   ;0=Samus not on elevator, 1=Samus on elevator.
+;Samus.isHit             db   ;$030A   ;Samus hit by enemy.
                                    ;$20: hit by bomb
                                    ;$30: hit by enemy
                                    ; +$08: hit towards the right
                                    ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
                                    ; +$01: touch solid entity from the right
                                    ; +$02: touch solid entity from the bottom
-ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
-ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ObjY                   = $030D   ;Object y position in room(not actual screen position).
-ObjX                   = $030E   ;Object x position in room(not actual screen position).
-SamusJumpDsplcmnt      = $030F   ;Number of pixels vertically displaced from jump point.
-SamusSubPixelY         = $0310   ;Vertical movement counter. Exponential change in speed.
-SamusSubPixelX         = $0311   ;Horizontal movement counter. Exponential change in speed.
-SamusSpeedSubPixelY    = $0312   ;Vertical movement counter. Linear change in speed.
-SamusSpeedSubPixelX    = $0313   ;Horizontal movement counter. Linear change in speed.
-SamusAccelY            = $0314   ;Value used in calculating vertical acceleration on Samus.
-SamusAccelX            = $0315   ;Value used in calculating horizontal acceleration on Samus.
-SamusHorzSpeedMax      = $0316   ;Used to calc maximum horizontal speed Samus can reach.
+SamusJumpDsplcmnt = Samus.data0F ;$030F   ;Number of pixels vertically displaced from jump point.
+
+.enum $0310 export
+
+SamusSubPixelY         db   ;$0310   ;Vertical movement counter. Exponential change in speed.
+SamusSubPixelX         db   ;$0311   ;Horizontal movement counter. Exponential change in speed.
+SamusSpeedSubPixelY    db   ;$0312   ;Vertical movement counter. Linear change in speed.
+SamusSpeedSubPixelX    db   ;$0313   ;Horizontal movement counter. Linear change in speed.
+SamusAccelY            db   ;$0314   ;Value used in calculating vertical acceleration on Samus.
+SamusAccelX            db   ;$0315   ;Value used in calculating horizontal acceleration on Samus.
+SamusHorzSpeedMax      db   ;$0316   ;Used to calc maximum horizontal speed Samus can reach.
+
+.ende
+
 
 ;Elevator RAM.
 ElevatorStatus         = $0320   ;#$01=Elevator present, #$00=Elevator not present.

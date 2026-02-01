@@ -24,7 +24,7 @@ RioAIRoutine_{AREA}:
     ; get Samus position relative to enemy
     lda EnY,x
     sec
-    sbc ObjY
+    sbc Samus.y
     ; branch if Samus is under enemy
     bpl @endIf_A
         ; negate a

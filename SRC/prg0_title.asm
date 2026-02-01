@@ -406,11 +406,11 @@ MoreCrosshairs: ; 00:81D1
     ;These values are written into memory, but they are not used later in the title routine.
     ;This is the remnants of some abandoned code.
     lda #$60
-    sta ObjY
+    sta Samus.y
     lda #$7C
-    sta ObjX
-    lda ObjAnimResetIndex
-    sta ObjAnimIndex
+    sta Samus.x
+    lda Samus.animResetIndex
+    sta Samus.animIndex
     rts
 
 ;Unused intro routine.
@@ -423,7 +423,7 @@ UnusedIntroRoutine1: ; 00:81EE
     sta Joy1Status
     sta Joy1Retrig
     lda #$03
-    sta ObjAction
+    sta Samus.status
     sta ScrollDir
     inc TitleRoutine
     rts
@@ -431,17 +431,17 @@ UnusedIntroRoutine1: ; 00:81EE
 ;Unused intro routine. It looks like this routine-->
 ;was going to be used to manipulate sprite objects.
 UnusedIntroRoutine2: ; 00:8206
-    lda ObjAction
+    lda Samus.status
     cmp #$04
     bne RTS_822D
     lda #$00
-    sta ObjAction
+    sta Samus.status
     lda #ObjAnim_SamusJumpTransition - ObjectAnimIndexTbl.b
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     lda #ObjAnim_SamusJump - ObjectAnimIndexTbl.b
-    sta ObjAnimIndex
+    sta Samus.animIndex
     lda #_id_ObjFrame_SamusFront.b
-    sta ObjAnimFrame
+    sta Samus.animFrame
     lda #$08
     sta Timer3
     lda #$00
@@ -557,7 +557,7 @@ PrepIntroRestart: ; 00:82A3
     ;Clear RAM $0300 thru $031F.
     ldy #$1F
     @loop:
-        sta ObjAction,y
+        sta Objects.0.status,y
         dey
         bpl @loop
     ;Change to name table 0.
@@ -2701,11 +2701,11 @@ InitializeGame: ; 00:92D4
     sty SpritePagePos
     sty PageIndex
     sty ObjectCntrl
-    sty ObjHi
+    sty Samus.hi
     jsr SilenceMusic                ;($CB8E)Turn off music.
     ;Set animframe index. changed by initializing routines.
     lda #_id_ObjFrame_SkreeProjectile.b
-    sta ObjAnimFrame
+    sta Samus.animFrame
     ;x is the index into the position tables below.
     ;If in area other than Brinstar, get second item in tables.
     ldx #$01
@@ -2718,9 +2718,9 @@ InitializeGame: ; 00:92D4
 
     ;Set Samus restart position on screen.
     lda RestartYPosTbl,x
-    sta ObjY
+    sta Samus.y
     lda RestartXPosTbl,x
-    sta ObjX
+    sta Samus.x
 
     ;SamusStat0B's low and high bytes keep track of how many times Samus has-->
     ;died or beaten the game as they are incremented every time this routine-->
@@ -2730,14 +2730,19 @@ InitializeGame: ; 00:92D4
         inc SamusStat0B+1
     L930D:
 
+    ;Initialize starting area.
     lda #_id_MoreInit.b
-    sta MainRoutine                 ;Initialize starting area.
-    jsr ScreenNmiOff                ;($C45D)Turn off screen.
-    jsr LoadSamusGFX                ;($C5DC)Load Samus GFX into pattern table.
-    jsr NMIOn                       ;($C487)Turn on the non-maskable interrupt.
-    lda InArea                      ;Load area Samus is to start in.
-    and #$0F                        ;
-    tay                             ;
+    sta MainRoutine
+    ;($C45D)Turn off screen.
+    jsr ScreenNmiOff
+    ;($C5DC)Load Samus GFX into pattern table.
+    jsr LoadSamusGFX
+    ;($C487)Turn on the non-maskable interrupt.
+    jsr NMIOn
+    ;Load area Samus is to start in.
+    lda InArea
+    and #$0F
+    tay
     ;Change to proper memory page.
     lda BankTable,y
     sta BankSwitchPending

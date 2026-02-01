@@ -1080,17 +1080,17 @@ RTS_9DF1:
 ;-------------------------------------------------------------------------------
 MotherBrain_Idle_CollideWithSamus:
     ; exit if samus is not in the same nametable as mother brain
-    lda ObjHi
+    lda Samus.hi
     eor MotherBrainHi
     bne RTS_9DF1
     ; exit if samus x pos is not in range #$48 to #$76 inclusive
-    lda ObjX
+    lda Samus.x
     sec
     sbc #$48
     cmp #$2F
     bcs RTS_9DF1
     ; exit if samus y pos is not in range #$61 to #$9F inclusive
-    lda ObjY
+    lda Samus.y
     sec
     sbc #$80
     bpl L9E0E
@@ -1106,7 +1106,7 @@ MotherBrain_Idle_CollideWithSamus:
     lda #$02
     sta HealthChange+1.b
     lda #$38
-    sta SamusIsHit
+    sta Samus.isHit
     jmp CommonJump_SubtractHealth
 
 ;-------------------------------------------------------------------------------
@@ -1421,23 +1421,23 @@ MotherBrain_SpawnDoor: ; 03:9F69
     sta DoorType,x
     ; door action = open
     lda #$03
-    sta ObjAction,x
+    sta Objects.0.status,x
     ; set door coords
     lda MotherBrainHi
-    sta ObjHi,x
+    sta Objects.0.hi,x
     lda #$10
-    sta ObjX,x
+    sta Objects.0.x,x
     lda #$68
-    sta ObjY,x
+    sta Objects.0.y,x
     ; init door animation (because of the 1/2 chance that it plays only for 1 frame,
     ; the first frame has to be $F7)
     lda #ObjAnim_55 - ObjectAnimIndexTbl.b
-    sta ObjAnimResetIndex,x
-    sta ObjAnimIndex,x
+    sta Objects.0.animResetIndex,x
+    sta Objects.0.animIndex,x
     lda #$00
-    sta ObjAnimDelay,x
+    sta Objects.0.animDelay,x
     lda #$F7
-    sta ObjAnimFrame,x
+    sta Objects.0.animFrame,x
     ; create door tiles
     lda #$10
     sta TileBlasts.0.animFrame
@@ -1464,7 +1464,7 @@ MotherBrain_TimeBombExploded: ; 03:9FC0
     ; Time bomb finishes exploding
     ; Bug? Doesn't set ObjAnimDelay to 0
     lda #sa_Dead2
-    sta ObjAction
+    sta Samus.status
     ; mother brain status = already dead (RTS)
     lda #$0A
     sta MotherBrainStatus
@@ -1703,7 +1703,7 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
     beq @exit
     ; exit if not a missile
     ldx PageIndex
-    lda ObjAction,x
+    lda Objects.0.status,x
     cmp #wa_Missile
     bne @exit
     ; branch if tile id is not #$98 (mother brain glass)

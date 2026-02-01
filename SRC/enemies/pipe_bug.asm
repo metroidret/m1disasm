@@ -16,7 +16,7 @@ PipeBugAIRoutine_{AREA}:
 
     ; branch if pipe bug is more than #$40 pixels (4 blocks) below Samus
     ; while this is true, pipe bug will continue to rise at a fixed y speed
-    lda ObjY
+    lda Samus.y
     sec
     sbc EnY,x
     cmp #$40

@@ -21,7 +21,7 @@ RinkaAIRoutine_{AREA}:
     sta EnsExtra.0.subPixelX,x
 
     ; save Samus x pos relative to enemy in $01
-    lda ObjX
+    lda Samus.x
     sec
     sbc EnX,x
     sta $01
@@ -43,7 +43,7 @@ RinkaAIRoutine_{AREA}:
     ; $01 now contains the x distance between Samus and the enemy
 
     ; save Samus y pos relative to enemy in $00
-    lda ObjY
+    lda Samus.y
     sec
     sbc EnY,x
     sta $00

@@ -57,7 +57,7 @@ RidleyFireballAIRoutine_{AREA}:
     ; exit if projectile is to the left of Samus
     lda EnX,x
     sec
-    sbc ObjX
+    sbc Samus.x
     bcc @RTS
     ; exit if projectile is not #$20 or more pixels (2 blocks) to the right of Samus
     cmp #$20
