@@ -802,29 +802,14 @@ RidleyStatueY          db   ;$0370
 
 
 ;Door RAM
-DoorStatus             = $0300
-DoorAnimResetIndex     = $0305
-DoorAnimIndex          = $0306
-DoorType               = $0307   ;#$00=red door, #$01=blue door, #$02=10-missile door
-                                   ;#$03=blue door that changes the music
-DoorIsHit              = $030A   ; bit 2 indicates if the door was hit or not
-DoorOnScreen           = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
-DoorHi                 = $030C
-DoorX                  = $030E
-DoorHitPoints          = $030F   ;used as re-close delay for blue doors
+DoorType = Objects.0.data07          ;#$00=red door, #$01=blue door, #$02=10-missile door
+                                       ;#$03=blue door that changes the music
+;Door.isHit             db   ;$030A   ; bit 2 indicates if the door was hit or not
+DoorHitPoints = Objects.0.data0F     ;used as re-close delay for blue doors
 
 
 ;Samus projectile RAM
-ProjectileStatus       = $0300
-ProjectileRadY         = $0301   ;Distance in pixels from object center to top or bottom.
-ProjectileRadX         = $0302   ;Distance in pixels from object center to left or right side.
-ProjectileAnimFrame    = $0303   ;*2 = Index into FramePtrTable for current animation.
-ProjectileAnimDelay    = $0304   ;Number of frames to delay between animation frames.
-ProjectileAnimResetIndex = $0305   ;Restart index-1 when AnimIndex finished with last frame.
-ProjectileAnimIndex    = $0306   ;Current index into ObjectAnimIndexTbl.
-ProjectileIsHit        = $030A
-ProjectileHi           = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ProjectileDieDelay     = $030F   ;delay until short beam projectile dies
+ProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 

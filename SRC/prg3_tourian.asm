@@ -1807,7 +1807,7 @@ UpdateBullet_CollisionWithMotherBrain:
     beq @exit
     ldx PageIndex
     ; exit if projectile is not a missile
-    lda ProjectileStatus,x
+    lda Objects.0.status,x
     cmp #wa_Missile
     bne @exit
     ; exit if tile id < $5E

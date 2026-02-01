@@ -3602,7 +3602,7 @@ SamusRoll:
         jsr ObjectCheckMoveUp
         bcc Lx032     ; branch if not possible to stand up
         ; move Samus 11 pixels up
-        ldx #$00
+        ldx #Samus - Objects.b
         jsr StoreObjectPositionToTemp
         stx Temp05_SpeedX
         lda #-$0B
@@ -3765,9 +3765,9 @@ FireWeapon:
 ; returns slot low byte in y
 SearchOpenProjectileSlot:
     ; loop through all samus projectile slots
-    ldy #$D0
+    ldy #Projectile.0 - Objects.b
     @loop:
-        lda ProjectileStatus,y
+        lda Objects.0.status,y
         beq @slotFound
         jsr Yplus16
         bne @loop
@@ -3779,13 +3779,13 @@ SearchOpenProjectileSlot:
 @slotFound:
     ; found open samus projectile slot
     ; clear ProjectileIsHit
-    sta ProjectileIsHit,y
+    sta Objects.0.isHit,y
     ; return set zero flag if Samus is not shooting a missile
     lda MissileToggle
     beq @endIf_A
         ; Samus is shooting a missile
         ; return set zero flag if the slot found is $03D0 (missiles can only be in that slot)
-        cpy #$D0
+        cpy #Projectile.0 - Objects.b
     @endIf_A:
     rts
 
@@ -3924,10 +3924,10 @@ BulletUpwardsOffsetYTable:
 InitBullet:
     tya
     tax
-    inc ProjectileStatus,x
+    inc Objects.0.status,x
     lda #$02
-    sta ProjectileRadY,y
-    sta ProjectileRadX,y
+    sta Objects.0.radiusY,y
+    sta Objects.0.radiusX,y
     lda #ObjAnim_RegularBullet - ObjectAnimIndexTbl.b
 
 InitObjAnimIndex:
@@ -3940,7 +3940,7 @@ RTS_X046:
     rts
 
 PlaceBulletAtArmCannon:
-    ldx #$00
+    ldx #Samus - Objects.b
     jsr StoreObjectPositionToTemp
     tya
     tax
@@ -3950,10 +3950,13 @@ PlaceBulletAtArmCannon:
     jmp LoadObjectPositionFromTemp
 
 CheckHorizontalMissileLaunch:
+    ; exit if Samus not in "missile fire" mode
     lda MissileToggle
-    beq Exit4       ; exit if Samus not in "missile fire" mode
-    cpy #$D0
+    beq Exit4
+    ; exit if not projectile slot $03D0 (missile)
+    cpy #Projectile.0 - Objects.b
     bne Exit4
+    
     ldx SamusDir
     lda HorizontalMissileAnims,x
 Lx047:
@@ -3974,10 +3977,13 @@ HorizontalMissileAnims:
     .byte ObjAnim_MissileLeft - ObjectAnimIndexTbl
 
 CheckVerticalMissileLaunch:
+    ; exit if Samus not in "missile fire" mode
     lda MissileToggle
     beq Exit4
-    cpy #$D0
+    ; exit if not projectile slot $03D0 (missile)
+    cpy #Projectile.0 - Objects.b
     bne Exit4
+    
     lda #ObjAnim_MissileUp - ObjectAnimIndexTbl.b
     bne Lx047 ; branch always
 
@@ -3999,7 +4005,7 @@ LD35B:
     bne Exit4
     lda #$00
     sta ProjectileWaveInstrTimer,y
-    sta ProjectileAnimDelay,y
+    sta Objects.0.animDelay,y
     tya
     jsr Adiv32      ; / 32
     lda #$00
@@ -4252,10 +4258,10 @@ CheckBulletStat:
         dec ProjectileDieDelay,x     ; decrement bullet timer
         bne DrawBullet
         lda #$00        ; timer hit 0, kill bullet
-        sta ProjectileStatus,x
+        sta Objects.0.status,x
         beq DrawBullet  ; branch always
     @collided:
-    lda ProjectileStatus,x
+    lda Objects.0.status,x
     beq Lx069
         jsr BulletExplode
 DrawBullet:
@@ -4404,11 +4410,11 @@ Lx075:
 
 UpdateBullet_ExplodeIfHitSprite:
     ; exit if projectile didn't hit anything
-    lda ProjectileIsHit,x
+    lda Objects.0.isHit,x
     beq Exit5
     ; clear projectile is hit flag
     lda #$00
-    sta ProjectileIsHit,x
+    sta Objects.0.isHit,x
 BulletExplode:
     ; explode the projectile
     lda #ObjAnim_BulletHit - ObjectAnimIndexTbl.b
@@ -8026,7 +8032,7 @@ ProjectileHitDoorOrStatue:
         ora #$80
         tay
         ; check next door if it doesn't exist
-        lda DoorStatus,y
+        lda Objects.0.status,y
         beq @next
         lda DoorType,y
         lsr
@@ -8050,7 +8056,7 @@ ProjectileHitDoorOrStatue:
         @blueDoor:
         ; set door is hit
         lda #$04
-        sta DoorIsHit,y
+        sta Objects.0.isHit,y
         bne ClcExit
     @next:
         dex
@@ -9063,17 +9069,17 @@ EraseScrollBlockOnNameTableAtScrollDir:
 
 Doors_RemoveIfOffScreen:
     ; loop through all doors
-    ldx #$B0
+    ldx #Doors.3 - Objects.b
     @loop:
         ; branch if door doesn't exist
-        lda DoorStatus,x
+        lda Objects.0.status,x
         beq @endIf_A
         ; branch if door is on screen
-        lda DoorOnScreen,x
+        lda Objects.0.onScreen,x
         bne @endIf_A
             ; door exists but is not on screen
             ; remove door
-            sta DoorStatus,x
+            sta Objects.0.status,x
         @endIf_A:
         ; check next door
         jsr Xminus16
@@ -9083,20 +9089,20 @@ Doors_RemoveIfOffScreen:
 ; y = current nametable
 Projectile_RemoveIfOffScreen:
     ; exit if projectile doesn't exist or is a beam
-    lda ProjectileStatus,x
+    lda Objects.0.status,x
     cmp #wa_BulletExplode+1.b
     bcc @RTS
 
     ; exit if projectile is in current nametable
     tya
-    eor ProjectileHi,x
+    eor Objects.0.hi,x
     ; shift bit 0 into carry
     lsr
     bcs @RTS
 
     ; projectile exists but is not on screen
     ; remove projectile
-    sta ProjectileStatus,x
+    sta Objects.0.status,x
 @RTS:
     rts
 

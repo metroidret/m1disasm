@@ -1275,20 +1275,20 @@ SamusInDoor:
     rts
 
 ;----------------------------------------------------------------------------------------------------
-UpdateAllDoors:
-    ldx #$B0
-    L8B7B:
+UpdateAllDoors: ;($8B79)
+    ldx #Doors.3 - Objects.b
+    @loop:
         jsr UpdateDoor
         lda PageIndex
         sec
-        sbc #$10
+        sbc #_sizeof_Objects.0
         tax
-        bmi L8B7B
+        bmi @loop
     rts
 
 UpdateDoor:
     stx PageIndex
-    lda DoorStatus,x
+    lda Objects.0.status,x
     jsr JumpEngine
         .word ExitSub                   ; no door
         .word UpdateDoor_Init           ; init
@@ -1300,7 +1300,7 @@ UpdateDoor:
 
 UpdateDoor_Init:
     ; increment door status to "closed"
-    inc DoorStatus,x
+    inc Objects.0.status,x
     ; set door animation to closed
     lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
     jsr InitObjAnimIndex           ;($D2FA)
@@ -1323,7 +1323,7 @@ DrawDoor:
     sta ObjectCntrl
 
     lda #$00
-    sta DoorIsHit,x
+    sta Objects.0.isHit,x
     ; use door slot number to determine whether to h-flip the door
     txa
     and #$10
@@ -1342,7 +1342,7 @@ DoorHitPointTable:
 
 UpdateDoor_Closed:
     ; branch if door was not hit
-    lda DoorIsHit,x
+    lda Objects.0.isHit,x
     and #$04
     beq DrawDoor
     ; door was hit, decrease hp
