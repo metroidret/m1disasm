@@ -410,7 +410,7 @@ L977B:
     .byte %00000000 ; 0E - same as 3
     .byte %00000000 ; 0F - same as 3
 
-EnemyEnProjectileRisingAnimIndexTable:
+EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte EnAnim_26_{AREA} - EnAnimTable_{AREA}, EnAnim_26_{AREA} - EnAnimTable_{AREA}
     .byte EnAnim_26_{AREA} - EnAnimTable_{AREA}, EnAnim_26_{AREA} - EnAnimTable_{AREA}
@@ -419,12 +419,12 @@ EnemyEnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyEnProjectilePosOffsetX:
+EnProjectilePosOffsetX:
     .byte $0C, $F4
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnemyEnProjectilePosOffsetY:
+EnProjectilePosOffsetY:
     .byte $F4
     .byte $00
     .byte $00
@@ -1699,7 +1699,7 @@ MotherBrainDeathStringOffsets:
 ;$04-$05 is pointer to projectile's location in the room vram buffers
 UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
     ; exit if not updating a projectile
-    lda UpdatingProjectile
+    lda UpdatingWeapon
     beq @exit
     ; exit if not a missile
     ldx PageIndex
@@ -1802,11 +1802,11 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
 UpdateBullet_CollisionWithMotherBrain:
     ; y = tile id
     tay
-    ; exit if we are not updating samus projectile
-    lda UpdatingProjectile
+    ; exit if we are not updating samus weapon
+    lda UpdatingWeapon
     beq @exit
     ldx PageIndex
-    ; exit if projectile is not a missile
+    ; exit if weapon is not a missile
     lda Objects.0.status,x
     cmp #wa_Missile
     bne @exit

@@ -423,7 +423,7 @@ ScrollDir              db   ;$49     ;0=Up, 1=Down, 2=Left, 3=Right.
 TempScrollDir          db   ;$4A     ;Stores ScrollDir when room is initially loaded.
 
 PageIndex              db   ;$4B     ;Index to object data.
-                                       ;#$D0, #$E0, #$F0 = projectile indices(including bombs).
+                                       ;#$D0, #$E0, #$F0 = weapon indices(including bombs).
 
 ItemIndex              db   ;$4C     ;#$00 or #$08. Added to PowerUpType addresses to determine if-->
                                        ;the first or second item slot is being checked.
@@ -489,7 +489,7 @@ HealthChange           dw   ;$6E     ;Amount to add/subtract from Health.
 ; HealthChange+1               $6F
 
 SamusInvincibleDelay   db   ;$70     ;Samus's invincibility frames delay counter.
-UpdatingProjectile     db   ;$71     ;#$01=Projectile update in process. #$00=not in process.
+UpdatingWeapon         db   ;$71     ;#$01=Weapon update in process. #$00=not in process.
 SamusKnockbackDir      db   ;$72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
                                        ; i think there may something more to this variable, but im not sure what
 SamusKnockbackIsBomb   db   ;$73     ;bit 7: 0=samus was hurt, 1=samus was bombed
@@ -725,7 +725,7 @@ SpriteRAM              instanceof OAMSprite $40 startfrom 0
 ; slot 4 is for drawing power-ups and skree projectiles
 ; slot 6 to 7 is for tourian bridge
 ; slot 8 to B is for doors
-; slot D to F is for samus projectiles
+; slot D to F is for samus weapons
 
 .enum $0300 export
 
@@ -740,7 +740,7 @@ Statue               instanceof Object
 Object0370           instanceof Object
 Doors                instanceof Object 4 startfrom 0
 Object03C0           instanceof Object
-Projectile           instanceof Object 3 startfrom 0
+Weapons              instanceof Object 3 startfrom 0
 
 .ende
 
@@ -808,8 +808,8 @@ DoorType = Objects.0.data07          ;#$00=red door, #$01=blue door, #$02=10-mis
 DoorHitPoints = Objects.0.data0F     ;used as re-close delay for blue doors
 
 
-;Samus projectile RAM
-ProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
+;Samus weapons RAM
+WeaponDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 
@@ -834,9 +834,9 @@ EnSpeedX               = $0403   ; unknown - x speed?
 EnIsHit                = $0404   ;bit2: touching Samus
                                    ;bit1 set: touch Samus from the top
                                    ;bit0 set: touch Samus from the left
-                                   ;bit5: hit by weapon (projectile or screw attack) (except enemy projectiles)
-                                   ;bit4 set: hit by weapon from the top
-                                   ;bit3 set: hit by weapon from the left
+                                   ;bit5: hit by samus weapon (projectile or screw attack)
+                                   ;bit4 set: hit by samus weapon from the top
+                                   ;bit3 set: hit by samus weapon from the left
 EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit1: IsObjectVisible
                                    ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
@@ -886,11 +886,11 @@ TileBlasts             instanceof TileBlast $D startfrom 0
 
 TileBlastType          = $050A
 
-;Samus projectiles extra RAM for wave beam
+;Samus weapons extra RAM for wave beam
 ; 3 slots of 16 bytes each ($05D0-$05FF)
-ProjectileWaveInstrID  = $0500   ; instruction id for movement string of wave bullet trajectory
-ProjectileWaveInstrTimer = $0501   ; count frames up to current instruction duration, then increment instr id
-ProjectileWaveDir      = $0502   ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
+WeaponWaveInstrID  = $0500   ; instruction id for movement string of wave bullet trajectory
+WeaponWaveInstrTimer = $0501   ; count frames up to current instruction duration, then increment instr id
+WeaponWaveDir      = $0502   ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
 

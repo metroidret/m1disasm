@@ -1818,16 +1818,20 @@ AreaInit:
 ;------------------------------------------[ MoreInit ]---------------------------------------------
 
 MoreInit:
-    ldy #_id_Palette00+1.b          ;
-    sty PaletteDataPending              ;Palette data pending = yes.
-    ldx #$FF                        ;
-    stx SpareMem75                  ;$75 Not referenced ever again in the game.
-    inx                             ;X=0.
+    ;Palette data pending = yes.
+    ldy #_id_Palette00+1.b
+    sty PaletteDataPending
+    ;$75 Not referenced ever again in the game.
+    ldx #$FF
+    stx SpareMem75
+    ;X=0.
+    inx
     stx AtEnding                    ;Not playing ending scenes.
-    stx DoorEntryStatus                  ;Samus not in door.
+    stx DoorEntryStatus             ;Samus not in door.
     stx SamusDoorData               ;Samus is not inside a door.
-    stx UpdatingProjectile          ;No projectiles need to be updated.
-    txa                             ;A=0.
+    stx UpdatingWeapon              ;No weapons need to be updated.
+    ;A=0.
+    txa
 
     LC830:
         cpx #(SoundE0-1)-SpareMem7A.b   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
@@ -2467,7 +2471,7 @@ UpdateWorld:
     stx SpritePagePos
 
     jsr UpdateAllEnemies            ;($F345)Display of enemies.
-    jsr UpdateProjectiles           ;($D4BF)Display of bullets/missiles/bombs.
+    jsr UpdateWeapons               ;($D4BF)Display of bullets/missiles/bombs.
     jsr UpdateSamus                 ;($CC0D)Display/movement of Samus.
     jsr AreaRoutine                 ;($95C3)Area specific routine.
     jsr UpdateElevator              ;($D7B3)Display of elevators.
@@ -3760,32 +3764,32 @@ FireWeapon:
     jmp FireWeaponUpwards
 
 
-; search for open samus projectile slot
+; search for open samus weapon slot
 ; returns zero flag set if slot was found
 ; returns slot low byte in y
-SearchOpenProjectileSlot:
-    ; loop through all samus projectile slots
-    ldy #Projectile.0 - Objects.b
+SearchOpenWeaponSlot:
+    ; loop through all samus weapon slots
+    ldy #Weapons.0 - Objects.b
     @loop:
         lda Objects.0.status,y
         beq @slotFound
         jsr Yplus16
         bne @loop
-    ; all samus projectile slots are occupied
+    ; all samus weapon slots are occupied
     ; return clear zero flag
     iny
     rts
 
 @slotFound:
-    ; found open samus projectile slot
-    ; clear ProjectileIsHit
+    ; found open samus weapon slot
+    ; clear is hit
     sta Objects.0.isHit,y
     ; return set zero flag if Samus is not shooting a missile
     lda MissileToggle
     beq @endIf_A
         ; Samus is shooting a missile
         ; return set zero flag if the slot found is $03D0 (missiles can only be in that slot)
-        cpy #Projectile.0 - Objects.b
+        cpy #Weapons.0 - Objects.b
     @endIf_A:
     rts
 
@@ -3795,8 +3799,8 @@ FireWeaponForwards:
     lda MetroidOnSamus
     bne @exit
 
-    ; search for open samus projectile slot
-    jsr SearchOpenProjectileSlot
+    ; search for open samus weapon slot
+    jsr SearchOpenWeaponSlot
     ; exit if no slots are available
     bne @exit
 
@@ -3805,7 +3809,7 @@ FireWeaponForwards:
     jsr CheckHorizontalWaveBulletFire
     jsr CheckIceBulletFire
     lda #$0C
-    sta ProjectileDieDelay,y
+    sta WeaponDieDelay,y
     ldx SamusDir
     lda BulletSpeedXTable,x   ; get bullet speed
     sta Objects.0.speedX,y     ; -4 or 4, depending on Samus' direction
@@ -3856,8 +3860,8 @@ FireWeaponUpwards:
     lda MetroidOnSamus
     bne @exit
 
-    ; search for open samus projectile slot
-    jsr SearchOpenProjectileSlot
+    ; search for open samus weapon slot
+    jsr SearchOpenWeaponSlot
     ; exit if no slots are available
     bne @exit
 
@@ -3865,7 +3869,7 @@ FireWeaponUpwards:
     jsr CheckVerticalWaveBulletFire
     jsr CheckIceBulletFire
     lda #$0C
-    sta ProjectileDieDelay,y
+    sta WeaponDieDelay,y
     lda #$FC
     sta Objects.0.speedY,y
     lda #$00
@@ -3953,8 +3957,8 @@ CheckHorizontalMissileLaunch:
     ; exit if Samus not in "missile fire" mode
     lda MissileToggle
     beq Exit4
-    ; exit if not projectile slot $03D0 (missile)
-    cpy #Projectile.0 - Objects.b
+    ; exit if not weapon slot $03D0 (missile)
+    cpy #Weapons.0 - Objects.b
     bne Exit4
     
     ldx SamusDir
@@ -3965,7 +3969,7 @@ Lx047:
     lda #wa_Missile ; missile handler
     sta Objects.0.status,y
     lda #$FF
-    sta ProjectileDieDelay,y     ; # of frames projectile should last
+    sta WeaponDieDelay,y     ; # of frames weapon should last
     dec MissileCount
     bne Exit4       ; exit if not the last missile
 ; Samus has no more missiles left
@@ -3980,8 +3984,8 @@ CheckVerticalMissileLaunch:
     ; exit if Samus not in "missile fire" mode
     lda MissileToggle
     beq Exit4
-    ; exit if not projectile slot $03D0 (missile)
-    cpy #Projectile.0 - Objects.b
+    ; exit if not weapon slot $03D0 (missile)
+    cpy #Weapons.0 - Objects.b
     bne Exit4
     
     lda #ObjAnim_MissileUp - ObjectAnimIndexTbl.b
@@ -3998,13 +4002,13 @@ Exit4:
 CheckHorizontalWaveBulletFire:
     lda SamusDir
 LD35B:
-    sta ProjectileWaveDir,y
+    sta WeaponWaveDir,y
     bit SamusGear
     bvc Exit4       ; branch if Samus doesn't have Wave Beam
     lda MissileToggle
     bne Exit4
     lda #$00
-    sta ProjectileWaveInstrTimer,y
+    sta WeaponWaveInstrTimer,y
     sta Objects.0.animDelay,y
     tya
     jsr Adiv32      ; / 32
@@ -4012,7 +4016,7 @@ LD35B:
     bcs Lx048
     lda #$0C
 Lx048:
-    sta ProjectileWaveInstrID,y
+    sta WeaponWaveInstrID,y
     lda #wa_WaveBeam
     sta Objects.0.status,y
     lda #ObjAnim_WaveBeam - ObjectAnimIndexTbl.b
@@ -4215,18 +4219,18 @@ Door_DeleteOffscreenEnemies:
     @@RTS:
     rts
 
-; UpdateProjectiles
+; UpdateWeapons
 ; =================
 
-UpdateProjectiles:
+UpdateWeapons:
     ldx #$D0
-    jsr DoOneProjectile
+    jsr DoOneWeapon
     ldx #$E0
-    jsr DoOneProjectile
+    jsr DoOneWeapon
     ldx #$F0
     ; fallthrough
 
-DoOneProjectile:
+DoOneWeapon:
     stx PageIndex
     lda Objects.0.status,x
     jsr JumpEngine
@@ -4245,7 +4249,7 @@ DoOneProjectile:
 
 UpdateBullet:
     lda #$01
-    sta UpdatingProjectile
+    sta UpdatingWeapon
     jsr UpdateBullet_DeleteIfOffScreen
     jsr UpdateBullet_ExplodeIfHitSprite
     jsr UpdateBullet_CollisionWithBG
@@ -4255,7 +4259,7 @@ CheckBulletStat:
         lda SamusGear
         and #gr_LONGBEAM
         bne DrawBullet  ; branch if Samus has Long Beam
-        dec ProjectileDieDelay,x     ; decrement bullet timer
+        dec WeaponDieDelay,x     ; decrement bullet timer
         bne DrawBullet
         lda #$00        ; timer hit 0, kill bullet
         sta Objects.0.status,x
@@ -4268,24 +4272,24 @@ DrawBullet:
         lda #$01
         jsr AnimDrawObject
     Lx069:
-    dec UpdatingProjectile
+    dec UpdatingWeapon
     rts
 
-MoveToNextProjectileWaveInstr:
-    inc ProjectileWaveInstrID,x
+MoveToNextWeaponWaveInstr:
+    inc WeaponWaveInstrID,x
 LD522:
-    inc ProjectileWaveInstrID,x
+    inc WeaponWaveInstrID,x
     lda #$00
-    sta ProjectileWaveInstrTimer,x
+    sta WeaponWaveInstrTimer,x
     beq Lx071      ; branch always
 
 UpdateWaveBullet:
     lda #$01
-    sta UpdatingProjectile
+    sta UpdatingWeapon
     jsr UpdateBullet_DeleteIfOffScreen
     jsr UpdateBullet_ExplodeIfHitSprite
     ; get movement string depending on wave bullet direction
-    lda ProjectileWaveDir,x
+    lda WeaponWaveDir,x
     and #$FE
     tay
     lda WaveBulletTrajectoryPointers,y
@@ -4294,24 +4298,24 @@ UpdateWaveBullet:
     sta $0B
 Lx071:
     ; get byte from movement string
-    ldy ProjectileWaveInstrID,x
+    ldy WeaponWaveInstrID,x
     lda ($0A),y
     ; branch if we are not at the end of the movement string
     cmp #$FF
     bne Lx072
         ; we are at the end of the movement string
         ; go back to the beginning and get byte again
-        sta ProjectileWaveInstrID,x
+        sta WeaponWaveInstrID,x
         jmp LD522
     Lx072:
     ; a contains the current instruction's duration (always #$01)
     ; move to next instruction if timer == duration
-    cmp ProjectileWaveInstrTimer,x
-    beq MoveToNextProjectileWaveInstr
+    cmp WeaponWaveInstrTimer,x
+    beq MoveToNextWeaponWaveInstr
 
     ; timer is not yet == duration
     ; increment timer
-    inc ProjectileWaveInstrTimer,x
+    inc WeaponWaveInstrTimer,x
     ; move to speed byte of instruction
     iny
 
@@ -4331,7 +4335,7 @@ Lx071:
     ; y = x speed
     tay
     ; flip x speed if wave bullet is facing left
-    lda ProjectileWaveDir,x
+    lda WeaponWaveDir,x
     lsr
     bcc Lx073
         tya
@@ -4399,7 +4403,7 @@ UpdateIceBullet:
 
 UpdateBulletExplode:
     lda #$01
-    sta UpdatingProjectile
+    sta UpdatingWeapon
     lda Objects.0.animFrame,x
     sec
     sbc #$F7
@@ -4409,14 +4413,14 @@ Lx075:
     jmp DrawBullet
 
 UpdateBullet_ExplodeIfHitSprite:
-    ; exit if projectile didn't hit anything
+    ; exit if weapon didn't hit anything
     lda Objects.0.isHit,x
     beq Exit5
-    ; clear projectile is hit flag
+    ; clear weapon is hit flag
     lda #$00
     sta Objects.0.isHit,x
 BulletExplode:
-    ; explode the projectile
+    ; explode the weapon
     lda #ObjAnim_BulletHit - ObjectAnimIndexTbl.b
     ldy Objects.0.status,x
     cpy #wa_BulletExplode
@@ -4440,8 +4444,8 @@ Lx078:
     lda #$00
     beq Lx077   ; branch always
 
-GotoProjectileHitDoorOrStatue:
-    jmp ProjectileHitDoorOrStatue
+GotoWeaponHitDoorOrStatue:
+    jmp WeaponHitDoorOrStatue
 
 ; bullet <--> background crash detection
 ; return carry clear if collided, set otherwise
@@ -4457,7 +4461,7 @@ UpdateBullet_CollisionWithBG:
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     ; branch if bullet hit solid blank tile
     cmp #$4E
-    beq GotoProjectileHitDoorOrStatue
+    beq GotoWeaponHitDoorOrStatue
     jsr CheckBlastTile
     bcc RTS_X081
     clc
@@ -4505,33 +4509,35 @@ BombInit:
     lda #ObjAnim_BombTick - ObjectAnimIndexTbl.b
     jsr InitObjAnimIndex
     lda #$18        ; fuse length :-)
-    sta ProjectileDieDelay,x
+    sta WeaponDieDelay,x
     inc Objects.0.status,x       ; bomb update handler
     DrawBomb:
     lda #$03 ; move to next bomb animation frame every 3 frames
     jmp AnimDrawObject
 
 BombCountdown:
+    ; only update counter on odd frames
     lda FrameCount
     lsr
-    bcc Lx085    ; only update counter on odd frames
-    dec ProjectileDieDelay,x
+    bcc Lx085
+    dec WeaponDieDelay,x
+    ; branch if there is still time left before exploding
     bne Lx085
-    ; countdown is over, time to explode
-    lda #ObjAnim_SamusRunPntUp - ObjectAnimIndexTbl.b ; ?
-    ldy Objects.0.status,x
-    cpy #wa_BombCount
-    bne Lx084
-        lda #ObjAnim_BombExplode - ObjectAnimIndexTbl.b
-    Lx084:
-    jsr InitObjAnimIndex
-    inc Objects.0.status,x
-    jsr SFX_BombExplode
-Lx085:
+        ; countdown is over, time to explode
+        lda #ObjAnim_SamusRunPntUp - ObjectAnimIndexTbl.b ; ?
+        ldy Objects.0.status,x
+        cpy #wa_BombCount
+        bne Lx084
+            lda #ObjAnim_BombExplode - ObjectAnimIndexTbl.b
+        Lx084:
+        jsr InitObjAnimIndex
+        inc Objects.0.status,x
+        jsr SFX_BombExplode
+    Lx085:
     jmp DrawBomb
 
 BombExplode:
-    inc ProjectileDieDelay,x
+    inc WeaponDieDelay,x
     jsr BombExplosion_CollisionWithBG
     ldx PageIndex
     lda Objects.0.animFrame,x
@@ -4549,14 +4555,14 @@ BombExplosion_CollisionWithBG:
     sta $0A
     lda Temp04_RoomRAMPtr+1.b
     sta $0B
-    ; bomb center if ProjectileDieDelay == 1
+    ; bomb center if WeaponDieDelay == 1
     ldx PageIndex
-    ldy ProjectileDieDelay,x
+    ldy WeaponDieDelay,x
     dey
     beq Lx088
     dey
     bne Lx089
-        ; ProjectileDieDelay == 2, bomb 2 tiles up
+        ; WeaponDieDelay == 2, bomb 2 tiles up
         lda #$40
         jsr LD78B
         ; branch always
@@ -4590,7 +4596,7 @@ Exit6:
 Lx089:
     dey
     bne Lx092
-        ; ProjectileDieDelay == 3, bomb 2 tiles down
+        ; WeaponDieDelay == 3, bomb 2 tiles down
         lda #$40
         jsr LD77F
         ; branch always
@@ -4621,7 +4627,7 @@ Lx089:
     Lx092:
     dey
     bne Lx095
-        ; ProjectileDieDelay == 4, bomb 2 tiles left
+        ; WeaponDieDelay == 4, bomb 2 tiles left
         lda #$02
         jsr LD78B
         ; branch always
@@ -4651,7 +4657,7 @@ Lx089:
     Lx095:
     dey
     bne Exit7
-        ; ProjectileDieDelay == 5, bomb 2 tiles right
+        ; WeaponDieDelay == 5, bomb 2 tiles right
         lda #$02
         jsr LD77F
         ; branch always
@@ -4685,7 +4691,7 @@ Lx089:
     bcc Lx097
         cmp #$A0
         bcs Lx097
-        jsr IsBlastTile_SkipCheckUpdatingProjectile
+        jsr IsBlastTile_SkipCheckUpdatingWeapon
     Lx097:
     pla
     tax
@@ -7977,7 +7983,7 @@ LE7E6:
     lda (Temp04_RoomRAMPtr),y     ; get tile value
     ; branch if bullet hit solid blank tile
     cmp #$4E
-    beq ProjectileHitDoorOrStatue
+    beq WeaponHitDoorOrStatue
     jsr GotoUpdateBullet_CollisionWithMotherBrain
     jsr CheckBlastTile
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
@@ -8010,14 +8016,15 @@ Exit16:
 
 ; bullet/missile hits a door
 
-ProjectileHitDoorOrStatue:
-    ; exit if we aren't updating a samus projectile
-    ldx UpdatingProjectile
+WeaponHitDoorOrStatue:
+    ; exit if we aren't updating a samus weapon
+    ldx UpdatingWeapon
     beq ClcExit
     ldx #$06
     ; go through all doors
     @loop:
-        ; check if projectile tile column is the same as door tile column otherwise check next door
+        ; check if weapon tile column is the same as door tile column
+        ; otherwise check next door
         lda Temp04_RoomRAMPtr+1.b
         eor DoorRoomRAMPtr+1.b,x
         and #$04
@@ -8039,7 +8046,7 @@ ProjectileHitDoorOrStatue:
         bcs @blueDoor
             ; missile door
             ldx PageIndex
-            ; check if projectile is a missile or missile explosion
+            ; check if weapon is a missile or missile explosion
             lda Objects.0.status,x
             eor #wa_Missile         ; eor to preserve carry clear?
             beq @hitByMissile
@@ -8365,9 +8372,9 @@ ToggleNameTable:
     rts
 
 IsBlastTile:
-    ldy UpdatingProjectile
+    ldy UpdatingWeapon
     beq Exit18
-IsBlastTile_SkipCheckUpdatingProjectile:
+IsBlastTile_SkipCheckUpdatingWeapon:
     tay
     jsr GotoUpdateBullet_CollisionWithZebetiteAndMotherBrainGlass
     cpy #$98
@@ -8994,13 +9001,13 @@ DeleteOffscreenRoomSprites:
     lsr
     lsr
     tay
-    ; non-beam projectiles
-    ldx #Projectile.0 - Objects.b
-    jsr Projectile_RemoveIfOffScreen
-    ldx #Projectile.1 - Objects.b
-    jsr Projectile_RemoveIfOffScreen
-    ldx #Projectile.2 - Objects.b
-    jsr Projectile_RemoveIfOffScreen
+    ; non-beam weapons
+    ldx #Weapons.0 - Objects.b
+    jsr Weapon_RemoveIfOffScreen
+    ldx #Weapons.1 - Objects.b
+    jsr Weapon_RemoveIfOffScreen
+    ldx #Weapons.2 - Objects.b
+    jsr Weapon_RemoveIfOffScreen
     tya
     ; elevator
     sec
@@ -9087,21 +9094,21 @@ Doors_RemoveIfOffScreen:
     rts
 
 ; y = current nametable
-Projectile_RemoveIfOffScreen:
-    ; exit if projectile doesn't exist or is a beam
+Weapon_RemoveIfOffScreen:
+    ; exit if weapon doesn't exist or is a beam
     lda Objects.0.status,x
     cmp #wa_BulletExplode+1.b
     bcc @RTS
 
-    ; exit if projectile is in current nametable
+    ; exit if weapon is in current nametable
     tya
     eor Objects.0.hi,x
     ; shift bit 0 into carry
     lsr
     bcs @RTS
 
-    ; projectile exists but is not on screen
-    ; remove projectile
+    ; weapon exists but is not on screen
+    ; remove weapon
     sta Objects.0.status,x
 @RTS:
     rts
@@ -9787,13 +9794,13 @@ CollisionDetection:
                 jsr CollisionDetectionMellow_CheckWithObjectYSlot
                 jsr CollisionDetectionMellow_ReactToCollisionWithSamus
             Lx262:
-            ; check for collision with samus's projectiles
+            ; check for collision with samus's weapons
             ldy #$D0
             Lx263:
-                ; try next projectile if this one is not active
+                ; try next weapon if this one is not active
                 lda Objects.0.status,y
                 beq Lx265
-                ; try next projectile if it is not a bullet, unknown7, bomb or missile
+                ; try next weapon if it is not a bullet, unknown7, bomb or missile
                 cmp #wa_BulletExplode
                 bcc Lx264
                 cmp #wa_Unknown7
@@ -9803,10 +9810,10 @@ CollisionDetection:
                 cmp #wa_Missile
                 bne Lx265
                 Lx264:
-                    ; projectile is of the right type
+                    ; weapon is of the right type
                     ; hit mellow if they collided
                     jsr CollisionDetectionMellow_CheckWithObjectYSlot
-                    jsr CollisionDetectionMellow_ReactToCollisionWithProjectile
+                    jsr CollisionDetectionMellow_ReactToCollisionWithWeapon
                 Lx265:
                 jsr Yplus16
                 bne Lx263
@@ -9849,14 +9856,14 @@ Lx269:
         Lx270:
         beq NextEnemy      ; next slot
 
-        ; skip projectile collision if enemy is a pickup
+        ; skip weapon collision if enemy is a pickup
         jsr GetEnemyXSlotPosition
         lda EnsExtra.0.status,x
         cmp #enemyStatus_Pickup
         beq Lx274
 
-        ; first projectile slot
-        ldy #$D0
+        ; first weapon slot
+        ldy #Weapons.0 - Objects.b
         Lx271:
             lda Objects.0.status,y  ; is it active?
             beq Lx273            ; branch if not
@@ -9871,9 +9878,10 @@ Lx269:
             ; check if enemy is actually hit
             Lx272:
                 jsr CollisionDetectionEnemy_CheckWithObjectYSlot
-                jsr CollisionDetectionEnemy_ReactToCollisionWithProjectile
+                jsr CollisionDetectionEnemy_ReactToCollisionWithWeapon
             Lx273:
-            jsr Yplus16          ; next projectile slot
+            ; next weapon slot
+            jsr Yplus16
             bne Lx271
     Lx274:
         ; check next enemy if samus has i-frames
@@ -10189,7 +10197,7 @@ CollisionDetectionDoor_F277:
     ; exit if collision didn't happen
     bcs Exit17
 
-SetProjectileIsHit:
+SetWeaponIsHit:
     lda Temp10_DistHi
 SetSamusIsHitFlags:
     ora Samus.isHit,y
@@ -10256,15 +10264,15 @@ CollisionDetectionMellow_Hit:
 RTS_X290:
     rts
 
-CollisionDetectionEnemy_ReactToCollisionWithProjectile:
+CollisionDetectionEnemy_ReactToCollisionWithWeapon:
     ; exit if collision didn't happen
     bcs Lx293
 
     ; save weapon action to enemy
     lda Objects.0.status,y
     sta EnWeaponAction,x
-    ; set projectile is hit flag
-    jsr SetProjectileIsHit
+    ; set weapon is hit flag
+    jsr SetWeaponIsHit
 Lx291:
     ; set enemy is hit flag
     jsr GetEnemyIsHitFlags
@@ -10332,9 +10340,9 @@ ClearHealthChange:
 Exit22:
     rts                             ;Return for routine above and below.
 
-CollisionDetectionMellow_ReactToCollisionWithProjectile:
+CollisionDetectionMellow_ReactToCollisionWithWeapon:
     bcs Exit22
-    jsr SetProjectileIsHit
+    jsr SetWeaponIsHit
     jmp CollisionDetectionMellow_Hit
 
 GetEnemyIsHitFlags:
@@ -11398,7 +11406,7 @@ SpawnEnProjectile:
     ; attempt to find open enemy projectile slot
     jsr SpawnEnProjectile_FindSlot
     ; exit if all slots are occupied
-    bcs RTS_SpawnEnProjectile_FindSlot
+    bcs SpawnEnProjectile_FindSlot@RTS
 
     ; a is #$00 here
     sta EnIsHit,y
@@ -11455,7 +11463,7 @@ SpawnEnProjectile:
     ; exit if bit 6 of SpawnEnProjectile_ExpectedStatus is unset (always)
     ldx PageIndex
     bit SpawnEnProjectile_ExpectedStatus
-    bvc RTS_SpawnEnProjectile_FindSlot
+    bvc SpawnEnProjectile_FindSlot@RTS
     ; set animation for enemy that shot the projectile depending on the direction its facing
     lda EnData05,x
     and #$01
@@ -11468,11 +11476,11 @@ SpawnEnProjectile_FindSlot:
     clc
     @loop:
         lda EnsExtra.0.status,y
-        beq RTS_SpawnEnProjectile_FindSlot
+        beq @RTS
         jsr Yplus16
         cmp #$C0
         bne @loop
-RTS_SpawnEnProjectile_FindSlot:
+@RTS:
     rts
 
 SpawnEnProjectile_F8F8:
