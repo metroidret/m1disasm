@@ -2264,7 +2264,7 @@ AccessSavedGame:
         sta EraseGame                   ;Clear MSB so saved game data is not erased again.
         jsr EraseAllGameData            ;($CAA1)Erase selected saved game data.
         lda #$01                        ;Indicate this saved game has been erased.-->
-        sta SamusData02,y                     ;Saved game 0=$780C, saved game 1=$781C, saved game 2=$782C.
+        sta SamusData+$2,y                     ;Saved game 0=$780C, saved game 1=$781C, saved game 2=$782C.
     LCA4C:
     ;If initializing the area at the start of the game, branch to load Samus' saved game info.
     lda MainRoutine
@@ -2290,7 +2290,7 @@ SaveGameData:
     LCA66:
         ;Save Samus' data in appropriate saved game slot.
         lda SamusStat00,x
-        sta SamusData00,y
+        sta SamusData,y
         iny
         inx
         cpx #$10
@@ -2319,7 +2319,7 @@ LoadGameData:
     ldx #$00
     LCA88:
         ;Load Samus' data from appropriate saved game slot.
-        lda SamusData00,y
+        lda SamusData,y
         sta SamusStat00,x
         iny
         inx
@@ -2360,7 +2360,7 @@ EraseAllGameData:
     ldx #$00                        ;
     txa                             ;
     LCABC:
-        sta SamusData00,y               ;Erase Samus' data.
+        sta SamusData+$0,y               ;Erase Samus' data.
         iny                             ;
         inx                             ;
         cpx #$0C                        ;

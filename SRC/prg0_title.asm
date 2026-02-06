@@ -3046,18 +3046,18 @@ UpdateSaveDataDay: ; 00:948F
     ; y = y*16
     jsr Amul16
     tay
-    ; load hex number into $0A-$0B
-    lda UnusedIntro684A+1,y
+    ; load hex day count into $0A-$0B
+    lda UnusedSaveData_samusStat+$8+1,y
     sta $0B
-    lda UnusedIntro684A,y
+    lda UnusedSaveData_samusStat+$8,y
     sta $0A
     ; transform into BCD
     jsr Hex16ToDec
-    ; save BCD to UnusedIntro683C
+    ; save BCD to save menu mirror of day count
     lda $06
-    sta UnusedIntro683C+1,x
+    sta UnusedSaveData_day+1,x
     lda $07
-    sta UnusedIntro683C,x
+    sta UnusedSaveData_day,x
 
     ; pop y
     pla
@@ -3073,29 +3073,29 @@ UpdateSaveDataGameOverCountAndEnergyTank: ; 00:94AF
     ; y = y*16
     jsr Amul16
     tay
-    ; load hex number into $0A-$0B
-    lda UnusedIntro684C+1,y
+    ; load hex game over count into $0A-$0B
+    lda UnusedSaveData_samusStat+$A+1,y
     sta $0B
-    lda UnusedIntro684C,y
+    lda UnusedSaveData_samusStat+$A,y
     sta $0A
     ; transform into BCD
     jsr Hex16ToDec
-    ; save BCD to UnusedIntro6833
+    ; save BCD to save menu mirror of game over count
     lda $06
-    sta UnusedIntro6833+1,x
+    sta UnusedSaveData_gameOverCount+1,x
     lda $07
-    sta UnusedIntro6833,x
+    sta UnusedSaveData_gameOverCount,x
 
-    ; push UnusedIntro6842,y to stack
-    lda UnusedIntro6842,y
+    ; push energy tank count to stack
+    lda UnusedSaveData_samusStat+$0,y
     pha
     ; y = x*2
     txa
     lsr
     tay
-    ; save pushed value
+    ; save to save menu mirror of energy tank count
     pla
-    sta UnusedIntro6839,y
+    sta UnusedSaveData_energyTank,y
 
     ; pop y
     pla

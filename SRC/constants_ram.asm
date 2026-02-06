@@ -813,11 +813,16 @@ WeaponDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 
-PasswordCursor         = $0320   ;Password write position (#$00 - #$17).
-InputRow               = $0321   ;Password character select row (#$00 - #$04).
-InputColumn            = $0322   ;Password character select column (#$00 - #$0C).
-PasswordStat00         = $0324   ;Does not appear to have a function.
-StartContinue          = $0325   ;0=START selected, 1=CONTINUE selected.
+.enum $0320 export
+
+PasswordCursor         db   ;$0320   ;Password write position (#$00 - #$17).
+InputRow               db   ;$0321   ;Password character select row (#$00 - #$04).
+InputColumn            db   ;$0322   ;Password character select column (#$00 - #$0C).
+SpareMem0323           db   ;$0323
+PasswordStat00         db   ;$0324   ;Does not appear to have a function.
+StartContinue          db   ;$0325   ;0=START selected, 1=CONTINUE selected.
+
+.ende
 
 ;------------------------------------------[ Enemy RAM ]---------------------------------------------
 
@@ -884,13 +889,12 @@ TileBlasts             instanceof TileBlast $D startfrom 0
 
 .ende
 
-TileBlastType          = $050A
 
 ;Samus weapons extra RAM for wave beam
 ; 3 slots of 16 bytes each ($05D0-$05FF)
-WeaponWaveInstrID  = $0500   ; instruction id for movement string of wave bullet trajectory
-WeaponWaveInstrTimer = $0501   ; count frames up to current instruction duration, then increment instr id
-WeaponWaveDir      = $0502   ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
+WeaponWaveInstrID  = $0500 export  ; instruction id for movement string of wave bullet trajectory
+WeaponWaveInstrTimer = $0501 export  ; count frames up to current instruction duration, then increment instr id
+WeaponWaveDir      = $0502 export  ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
 
@@ -1110,29 +1114,18 @@ VRAMStructBuffer       ds $4F ;$07A1-$07EF ;String of data bytes to be written t
 
 ;----------------------------------------------------------------------------------------------------
 
-RoomRAMA               = $6000   ;Thru $63FF. Used to load room before it is put into the PPU.
-RoomRAMB               = $6400   ;Thru $67FF. Used to load room before it is put into the PPU.
+.enum $6000 export
 
+RoomRAMA               ds $400 ;$6000-$63FF. Used to load room before it is put into the PPU.
+RoomRAMB               ds $400 ;$6400-$67FF. Used to load room before it is put into the PPU.
 
-; ??? slots of ??? bytes each
-UnusedIntro6833        = $6833   ;Unused. Would have contained a BCD version of the number in -->
-; UnusedIntro6833+1      = $6834   ;UnusedIntro684C. (high, low)
-
-; ??? slots of ???(at least 2) bytes each
-UnusedIntro6839        = $6839   ;Unused.
-
-; ??? slots of ??? bytes each
-UnusedIntro683C        = $683C   ;Unused. Would have contained a BCD version of the number in -->
-; UnusedIntro683C+1      = $683D   ;UnusedIntro684A. (high, low)
-
-; ??? slots of 16 bytes each
-UnusedIntro6842        = $6842   ;Unused.
-UnusedIntro684A        = $684A   ;Unused. Would have contained a 16bit hex number to be converted -->
-; UnusedIntro684A+1      = $684B   ;to decimal by UnusedIntroRoutine8.
-UnusedIntro684C        = $684C   ;Unused. Would have contained a 16bit hex number to be converted -->
-; UnusedIntro684C+1      = $684C   ;to decimal by UnusedIntroRoutine8.
-
-.enum $6872 export
+; save data from FDS version, not used
+UnusedSaveData_enable:        ds 1 * 3   ;$6800
+UnusedSaveData_name:          ds $10 * 3 ;$6803
+UnusedSaveData_gameOverCount: ds 2 * 3   ;$6833
+UnusedSaveData_energyTank:    ds 1 * 3   ;$6839
+UnusedSaveData_day:           ds 2 * 3   ;$683C
+UnusedSaveData_samusStat:     ds $10 * 3 ;$6842
 
 EndingType             db   ;$6872   ;1=worst ending, 5=best ending
 
@@ -1225,13 +1218,18 @@ IntroSprs              instanceof IntroSpr 8 startfrom 0
 
 ;----------------------------------------------------------------------------------------------------
 
-WorldMapRAM            = $7000   ;Thru $73FF. The map is 1Kb in size (1024 bytes).
+.enum $7000 export
+
+WorldMapRAM            ds $400 ;$7000-$73FF. The map is 1Kb in size (1024 bytes).
+
+.ende
+
 
 .enum $77F0 export
 
-MetroidRepelSpeed      dw        ;$77F0 for negative, $77F1 for positive
-MetroidAccel           ds 4      ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
-MetroidMaxSpeed        dw        ;$77F6 for red metroid, $77F7 for green metroid
+MetroidRepelSpeed      dw   ;$77F0 for negative, $77F1 for positive
+MetroidAccel           ds 4 ;$77F2-$77F3 for red metroid, $77F4-$77F5 for green metroid
+MetroidMaxSpeed        dw   ;$77F6 for red metroid, $77F7 for green metroid
 MetroidLatch0400       db   ;$77F8   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
 MetroidLatch0410       db   ;$77F9   ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
 MetroidLatch0420       db   ;$77FA   ;bit 7 is sign of x speed
@@ -1239,24 +1237,25 @@ MetroidLatch0430       db   ;$77FB
 MetroidLatch0440       db   ;$77FC
 MetroidLatch0450       db   ;$77FD
 
-.ende
-
 ; 3 slots of 16 bytes each ($77FE-$782D)
 ;Samus saved game data (not used).
-SamusData00            = $77FE
-SamusData01            = $77FF
-SamusData02            = $7800
-SamusData03            = $7801
-SamusData04            = $7802
-SamusData05            = $7803
-SamusData06            = $7804
-SamusData07            = $7805
-SamusData08            = $7806
-SamusData09            = $7807
-SamusData0A            = $7808
-SamusData0B            = $7809
-SamusData0C            = $780A
-SamusData0D            = $780B
-SamusData0E            = $780C
-SamusData0F            = $780D
+SamusData              ds $10 * 3
+; SamusData+$0           = $77FE
+; SamusData+$1           = $77FF
+; SamusData+$2           = $7800
+; SamusData+$3           = $7801
+; SamusData+$4           = $7802
+; SamusData+$5           = $7803
+; SamusData+$6           = $7804
+; SamusData+$7           = $7805
+; SamusData+$8           = $7806
+; SamusData+$9           = $7807
+; SamusData+$A           = $7808
+; SamusData+$B           = $7809
+; SamusData+$C           = $780A
+; SamusData+$D           = $780B
+; SamusData+$E           = $780C
+; SamusData+$F           = $780D
+
+.ende
 
