@@ -79,7 +79,7 @@ PipeBugAIRoutine_{AREA}:
 @exit:
     ; change animation frame every 3 frames
     lda #$03
-    jmp CommonJump_01 ; Common Enemy Handler
+    jmp CommonJump_UpdateEnemyCommon_noMove ; Common Enemy Handler
 
 ;Exit 2
 @delete:

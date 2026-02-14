@@ -567,7 +567,7 @@ RemoveEnemy__{AREA}:
     sta EnsExtra.0.status,x
     rts
 
-CommonEnemyJump_00_01_02_{AREA}:
+UpdateEnemyCommon_Decide_{AREA}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -575,15 +575,15 @@ CommonEnemyJump_00_01_02_{AREA}:
     beq @explode
         ; enemy default
         lda $00
-        jmp CommonJump_00
+        jmp CommonJump_UpdateEnemyCommon
     @resting:
         ; enemy resting
         lda $01
-        jmp CommonJump_01
+        jmp CommonJump_UpdateEnemyCommon_noMove
     @explode:
     L984D:
         ; enemy explode
-        jmp CommonJump_02
+        jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 ;-------------------------------------------------------------------------------
 
@@ -603,12 +603,12 @@ L9963:
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
     sta $00
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
     jsr CommonJump_EnemyFlipAfterDisplacement
     lda #$06
@@ -623,7 +623,7 @@ L9963:
     bne L9993
         jmp L984D
     L9993:
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 ;-------------------------------------------------------------------------------
 ; Crawler Routine

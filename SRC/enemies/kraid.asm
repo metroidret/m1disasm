@@ -84,7 +84,7 @@ KraidLintDraw_{AREA}:
     ; draw lint
     lda #$01
     jsr CommonJump_UpdateEnemyAnim
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile 2

@@ -18,12 +18,12 @@
 ;-----------------------------------------[ Start of code ]------------------------------------------
 
 ; These first three all jump to different points within the same procedure
-CommonJump_00: ;$8000 (yes anim, yes common AI)
-    jmp LF410
-CommonJump_01: ;$8003 (yes anim, no common AI)
-    jmp LF438
-CommonJump_02: ;$8006 (no anim, no common AI)
-    jmp LF416
+CommonJump_UpdateEnemyCommon: ;$8000
+    jmp UpdateEnemyCommon
+CommonJump_UpdateEnemyCommon_noMove: ;$8003
+    jmp UpdateEnemyCommon@noMove
+CommonJump_UpdateEnemyCommon_noMoveNoAnim: ;$8006
+    jmp UpdateEnemyCommon@noMoveNoAnim
 CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;$8009
     jmp CrawlerAIRoutine_ShouldCrawlerMove
 CommonJump_UpdateEnemyAnim: ;$800C
@@ -80,8 +80,8 @@ CrawlerMovementRoutinesTable:
 
 ;-------------------------------------------------------------------------------
 ; A common enemy AI/movement routine
-; called by F410 in the engine, via CommonJump_00
-CommonEnemyAI:
+; called by F410 in the engine, via CommonJump_UpdateEnemyCommon
+EnemyMove:
     ; Set x to point to enemy
     ldx PageIndex
     

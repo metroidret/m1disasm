@@ -171,7 +171,7 @@ RinkaAIRoutine_{AREA}:
     @endIf_E:
     ; change animation frame every 8 frames
     lda #$08
-    jmp CommonJump_01
+    jmp CommonJump_UpdateEnemyCommon_noMove
 
 
 SetRinkaSpeed_{AREA}:

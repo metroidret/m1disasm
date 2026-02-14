@@ -343,6 +343,10 @@ Temp11_RoomRAMIndex    = $11
 Temp02_MetatileCenterY = $02
 Temp03_MetatileCenterX = $03
 
+; EnemyReactToSamusWeapon/ExplodeEnemy/LDCF5/LDCFC
+Temp00_L968BEntry      = $00
+Temp0A_EnSpecialAttribs = $0A
+
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->
@@ -852,7 +856,8 @@ EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
                                    ;bit5: when active, this bit being set will trigger a resting period
                                    ;bit6: toggles every frame for some enemy routines to run at 30FPS
                                    ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
-EnMovementInstrIndex   = $0406   ;Counts such things as explosion time.
+EnChunkyExplosionTimer = $0406   ;Counts such things as explosion time.
+EnMovementInstrIndex   = $0406
 EnSpeedSubPixelY       = $0406   ;- y counter?
 EnSpeedSubPixelX       = $0407   ; unknown - x counter
 EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.

@@ -841,7 +841,7 @@ EnProjectileMovement3_{AREA}:
 
 ;-------------------------------------------------------------------------------
 
-CommonEnemyJump_00_01_02_{AREA}:
+UpdateEnemyCommon_Decide_{AREA}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -849,14 +849,14 @@ CommonEnemyJump_00_01_02_{AREA}:
     beq @explode
         ; enemy default
         lda $00
-        jmp CommonJump_00
+        jmp CommonJump_UpdateEnemyCommon
     @resting:
         ; enemy resting
         lda $01
-        jmp CommonJump_01
+        jmp CommonJump_UpdateEnemyCommon_noMove
     @explode:
         ; enemy explode
-        jmp CommonJump_02
+        jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 .include "enemies/sidehopper.asm"
 

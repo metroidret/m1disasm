@@ -42,13 +42,13 @@ RioAIRoutine_{AREA}:
 RioExit_Active_{AREA}:
     ; change animation frame every 3 frames
     lda #$03
-    jmp CommonJump_00
+    jmp CommonJump_UpdateEnemyCommon
 
 RioExit_Explode_{AREA}:
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 RioExit_Resting_{AREA}:
     ; change animation frame every 8 frames
     lda #$08
-    jmp CommonJump_01
+    jmp CommonJump_UpdateEnemyCommon_noMove
 

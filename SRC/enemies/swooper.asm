@@ -76,7 +76,7 @@ SwooperAIRoutine01_{AREA}:
 SwooperExit_Resting_{AREA}:
     ; change animation frame every 8 frames for resting swooper
     lda #$08
-    jmp CommonJump_01
+    jmp CommonJump_UpdateEnemyCommon_noMove
 
 
 L9923_{AREA}:
@@ -114,10 +114,10 @@ L9923_{AREA}:
     jsr UpdateSwooperAnim_{AREA}
     ; change animation frame every 3 frames for active swooper
     lda #$03
-    jmp CommonJump_00
+    jmp CommonJump_UpdateEnemyCommon
 
 SwooperExit_Explode_{AREA}:
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 SwooperChangeEnemyType_{AREA}:
     ; set enemy type (either #$00 or #$01)

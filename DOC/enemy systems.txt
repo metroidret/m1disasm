@@ -1,0 +1,189 @@
+== ENEMY SPAWN ==
+
+SetupRoom (load next screen into nametable)
+    ScanForItems
+        for all items, if enemy
+            GetEnemyData
+                load enemy if slot is empty
+                cancel load if boss is dead
+
+
+
+== ENEMY UPDATE ==
+
+UpdateWorld
+    UpdateAllEnemies
+        for all enemies (slot $00 to $50) UpdateEnemy
+            if (resting or active) and invisible
+                return if not on screen (UpdateEnemy_CheckIfVisible)
+            update 30fps toggle
+            jump table enemyStatus
+
+enemyStatus inactive
+    nothing
+
+enemyStatus resting
+    30fps
+        clear jump displacement & stuff
+        opt-in: force speed vector to point towards samus (per-axis)
+        opt-in: become active when samus is close enough horizontally
+        set animation to resting
+        set other opt-in stuff to resting
+        become active if delay is zero and flag allows
+    react to samus weapon
+    run ai routine
+
+enemyStatus active
+    30fps
+        trigger resting period if request flag set
+        opt-in: force speed vector to point towards samus (per-axis)
+        opt-in: become active when samus is close enough horizontally
+        remove self if in lava
+    react to samus weapon
+    run ai routine
+
+enemyStatus explode
+    run ai routine
+
+enemyStatus frozen
+    react to samus weapon
+    if explode
+        CommonJump_00
+        return
+    freeze color
+    count down freeze timer
+    restore status if timer reaches 0
+    if timer is near 0
+        flash colors
+    CommonJump_02
+
+enemyStatus pickup
+    if samus touches pickup
+        remove self
+        award samus pickup bonuses
+    else
+        count down pickup despawn timer
+        remove self if timer reaches 0
+        flash colors
+
+enemyStatus hurt
+    count down hitstun timer
+    if timer is 0
+        restore special attribs
+        restore status
+        freeze if metroid
+    hurt color
+    CommonJump_02@LF423
+        draw enemy if it exists
+        clear is hit flags
+
+ai routine
+    whatever enemy code
+    CommonJump_00 or CommonJump_01 or CommonJump_02
+
+CommonJump_00 or CommonJump_01 or CommonJump_02
+    update enemy anim if CommonJump_00 or CommonJump_01
+    move enemy if CommonJump_01 and 30fps and active
+    set tough palette if enemy is tough (and not frozen or hurt or pickup)
+    draw enemy if it exists
+    clear is hit flags
+
+
+
+CollisionDetection
+    for all enemies, if not (inactive or exploding)
+        if enemy is not pickup
+            for all samus weapons, if not inactive and if weapon overlaps enemy
+                save weapon to enemy
+                set weapon is hit flag
+                set enemy is hit flag (samus weapon)
+        if samus is not (dead or invincible) and if samus overlaps enemy
+            set enemy is hit flag (touching samus)
+            if samus is using screw attack
+                set enemy is hit flag (screw attack)
+            elif enemy is not (frozen, pickup or hurt)
+                set samus is hit flag
+                apply damage to samus
+
+CheckHealthStatus
+    if samus is hit
+        set i-frames
+        if hit left or right or if hit by enemy
+            if hit by enemy
+                samus hurt sound
+            set knockback direction
+        set knockback y speed & gravity
+    if i-frames are not 0
+        count down i-frames
+        set x speed using i-frames and knockback direction
+        blink samus
+    beep if at low health
+    clear samus is hit flag
+
+
+
+EnemyReactToSamusWeapon
+    exit if not attacked by samus weapon
+    if ice beam and not miniboss and not already frozen
+        freeze enemy
+        return
+    if invincible or (metroid and not missile)
+        dink attack
+        return
+    enemy hurt sound
+    unfreeze if frozen
+    if (missile or screw attack) and (not metroid and not miniboss)
+        ExplodeEnemy
+    else
+        decrease hp
+        if hp <= 0, ExplodeEnemy
+
+ExplodeEnemy
+    explode
+    if not miniboss and regular beam
+        enemy doesn't explode into chunks (EnemyCompleteDeath)
+    else
+        enemy does explode into chunks
+    spawn explosion if there is an explosion slot open
+
+DrawEnemy_NotBlank
+    handles drawing chunky explosion
+        if chunky explosion timer is over
+            EnemyCompleteDeath
+
+EnemyCompleteDeath
+    if is miniboss
+        item get theme
+        kill delay
+        activate miniboss statue
+        give 75 missile
+        fail to spawn pickup
+    elif is not a rinka or a ???
+        save "is metroid" flag to type (pickups from metroid give you 30)
+        pickup
+        set despawn timer to 384 frames
+        fail to spawn pickup if 1/16 random chance
+        get pickup type at random from table
+        if pickup type is missile
+            fail to spawn pickup if samus has no missile tanks
+            fail to spawn pickup if missile pickup limit is reached
+            spawn pickup
+            inc missile pickup limit
+        elif pickup type is small energy or big energy
+            fail to spawn pickup if energy pickup limit is reached
+            fail to spawn pickup if big pickup and enemy cant spawn big pickups
+            spawn pickup
+            inc energy pickup limit
+    if fail to spawn pickup and in tourian
+        remove pickup limits
+        try spawning again
+
+
+
+== ENEMY DESPAWN ==
+
+SetupRoom (load next screen into nametable)
+    DeleteOffscreenRoomSprites
+        for all enemies
+            remove self if offscreen
+

@@ -5860,12 +5860,12 @@ GetSpriteCntrlData:
 ;-----------------------------------------------------------------------------------------------------
 
 ; Post-explosion enemy death handler
-LDCF5:
+EnemyCompleteDeath: ;($DCF5)
     jsr ClearObjectCntrl            ;($DF2D)Clear object control byte.
     pla
     pla
     ldx PageIndex
-LDCFC:
+@SkipChunkyExplosion:
     ; Branch ahead if not in Tourian
     lda InArea
     cmp #$13
@@ -5883,9 +5883,11 @@ LDCFC:
     asl
     bmi LDD75
 
+    ; save L968B entry to Temp00
     jsr ReadTableAt968B
-    sta $00
-    jsr LoadTableAt977B ; TableAtL977B[EnemyType[x]]*2
+    sta Temp00_L968BEntry
+    ; save "is metroid" flag to type
+    jsr LoadTableAt977B
     and #$20
     sta EnsExtra.0.type,x
 
@@ -5893,15 +5895,18 @@ LDCFC:
     lda #enemyStatus_Pickup
     sta EnsExtra.0.status,x
 
+    ; set timer to $60 * 4 = 384 frames
     lda #$60
     sta EnData0D,x
+    ; 1/16 chance of no pickup
     lda RandomNumber1
     cmp #$10
     bcc LDD5B
 LDD30:
+    ; determine pickup type from PickupTypeTable
     and #$07
     tay
-    lda ItemDropTbl,y
+    lda PickupTypeTable,y
     sta EnsExtra.0.animFrame,x
     cmp #_id_EnFrame_MissilePickup.b
     bne Lx138
@@ -5931,7 +5936,7 @@ LDD30:
         bne RTS_X137
 
         ; fail if enemy can't drop big energy
-        lsr $00
+        lsr Temp00_L968BEntry
         bcs RTS_X137
 
 LDD5B:
@@ -6057,8 +6062,8 @@ DrawEnemy_NotBlank:
 
         ; increment explosion timer
         ldx PageIndex
-        inc EnSpeedSubPixelY,x
-        lda EnSpeedSubPixelY,x
+        inc EnChunkyExplosionTimer,x
+        lda EnChunkyExplosionTimer,x
         pha
         ; update h-flip and v-flip of the blown up chunks of the enemy
         and #$03
@@ -6072,7 +6077,7 @@ DrawEnemy_NotBlank:
         cmp #$19
         bne Lx146
             ; complete enemy's death
-            jmp LDCF5
+            jmp EnemyCompleteDeath
     Lx146:
 
     ldx PageIndex
@@ -6114,7 +6119,7 @@ DrawEnemy_NotBlank:
 ;The following table determines what, if any, items an enemy will drop when it is killed.
 ;This is the EnFrame of the drop.
 
-ItemDropTbl:
+PickupTypeTable:
     .byte _id_EnFrame_MissilePickup                       ;Missile.
     .byte _id_EnFrame_SmallEnergyPickup                       ;Energy.
     .byte _id_EnFrame_BigEnergyPickup                       ;No item / big energy.
@@ -10240,6 +10245,7 @@ Lx287:
     ldy #$00
     jsr SetSamusIsHitByEnemy
     jmp LF306
+
 Lx289:
     lda #wa_ScrewAttack
     sta EnWeaponAction,x
@@ -10496,33 +10502,34 @@ UpdateEnemy_Active_BranchB: ; LF40A
     jsr EnemyReactToSamusWeapon
 UpdateEnemy_Explode:
     jmp ChooseEnemyAIRoutine
+
 ;-------------------------------------------
-; This procedure is called by a lot of enemy AI routines, with three different
-;  entry points
-; Entry Point 1 ; CommonJump_00
-LF410:
+
+; This procedure is called by a lot of enemy AI routines, with three different entry points
+; Entry Point 1
+UpdateEnemyCommon:
     jsr UpdateEnemyAnim
-    jsr CommonEnemyAI
-; Entry Point 2 ; CommonJump_02
-LF416:
+    jsr EnemyMove
+; Entry Point 2
+@noMoveNoAnim:
     ; check if enemy is tough
     ldx PageIndex
     lda EnSpecialAttribs,x
-    bpl Lx301
-    ; enemy is tough
-    ; branch if bit 7 is not set
-    lda ObjectCntrl
-    bmi Lx301
-        ; use palette 3 for tough enemy
-        lda #$80 | $3 | OAMDATA_PRIORITY.b
-LF423:
-        sta ObjectCntrl
-    Lx301:
+    bpl @endIf_A
+        ; enemy is tough
+        ; branch if bit 7 is not set
+        lda ObjectCntrl
+        bmi @endIf_A
+            ; use palette 3 for tough enemy
+            lda #$80 | $3 | OAMDATA_PRIORITY.b
+@setHurtPalette:
+            sta ObjectCntrl
+    @endIf_A:
     ; if enemy exists, draw enemy
     lda EnsExtra.0.status,x
-    beq LF42D
+    beq @endIf_B
         jsr DrawEnemy
-    LF42D:
+    @endIf_B:
     ; clear is hit flags
     ldx PageIndex
     lda #$00
@@ -10530,16 +10537,18 @@ LF423:
     sta EnWeaponAction,x
     rts
 
-; Entry Point 3 ; CommonJump_01
-LF438:
+; Entry Point 3
+UpdateEnemyCommon@noMove:
     jsr UpdateEnemyAnim
-    jmp LF416
+    jmp UpdateEnemyCommon@noMoveNoAnim
+
 ;-------------------------------------------
+
 UpdateEnemy_Frozen: ; ($F43E)
     jsr EnemyReactToSamusWeapon
     lda EnsExtra.0.status,x
     cmp #$03
-    beq LF410
+    beq UpdateEnemyCommon
     bit ObjectCntrl
     bmi Lx302
         lda #$81 | OAMDATA_PRIORITY.b
@@ -10567,7 +10576,7 @@ UpdateEnemy_Frozen: ; ($F43E)
         beq Lx304
             asl ObjectCntrl
     Lx304:
-    jmp LF416
+    jmp UpdateEnemyCommon@NoMoveNoAnim
 ;--------------------------------------
 UpdateEnemy_Pickup: ;($F483)
     ; branch if samus is not touching the pickup
@@ -10651,7 +10660,7 @@ UpdateEnemy_Pickup: ;($F483)
     lsr
     ora #$80 | OAMDATA_PRIORITY.b
     sta ObjectCntrl
-    jmp LF416
+    jmp UpdateEnemyCommon@NoMoveNoAnim
 ;--------------------------------------------
 UpdateEnemy_Hurt:
     ; decrement hitstun delay
@@ -10683,7 +10692,7 @@ UpdateEnemy_Hurt:
     @exit:
     ; use palette 0 for hurt enemy
     lda #$80 | $0 | OAMDATA_PRIORITY.b
-    jmp LF423
+    jmp UpdateEnemyCommon@setHurtPalette
 
 LF515:
     sta EnPrevStatus,x
@@ -10712,12 +10721,13 @@ Lx314:
     ; Samus attacked a non-frozen metroid with something else than the ice beam
     ; just play a sfx and ignore the attack
     jsr SFX_MetroidHit
-    jmp GetPageIndex
+    jmp @exit
 
 ; handles enemy getting attacked by Samus
 EnemyReactToSamusWeapon:
+    ; save special attribs to temp
     lda EnSpecialAttribs,x
-    sta $0A
+    sta Temp0A_EnSpecialAttribs
     ; exit if enemy was not attacked?
     lda EnIsHit,x
     and #$20
@@ -10728,7 +10738,7 @@ EnemyReactToSamusWeapon:
     cmp #wa_IceBeam
     bne Lx317
     ; branch if enemy is a miniboss (miniboss cannot be frozen)
-    bit $0A
+    bit Temp0A_EnSpecialAttribs
     bvs Lx317
     ; branch if enemy is already in the frozen state
     lda EnsExtra.0.status,x
@@ -10760,7 +10770,7 @@ Lx316:
     bne Lx314
     ; play sfx and clear variables defining Samus's attack on this enemy
     jsr SFX_Metal
-    jmp LF42D
+    jmp @endIf_B
 Lx317:
     ; branch if enemy is completely invulnerable to Samus's attacks
     lda EnHealth,x
@@ -10769,7 +10779,7 @@ Lx317:
 
     ; play enemy hurt sound effect
     ; check if enemy is a miniboss
-    bit $0A
+    bit Temp0A_EnSpecialAttribs
     bvc Lx318
         ; enemy is a miniboss, so play miniboss hurt sound effect
         jsr SFX_BossHit
@@ -10815,7 +10825,7 @@ Lx319:
     bne Lx321
         lda EnPrevStatus,x
     Lx321:
-    ora $0A
+    ora Temp0A_EnSpecialAttribs
     sta EnPrevStatus,x
 
     ; branch if enemy is a miniboss
@@ -10844,7 +10854,7 @@ Lx319:
     ; #$0A if enemy is not a miniboss
     ; #$03 if enemy is a miniboss
     lda #$0A
-    bit $0A
+    bit Temp0A_EnSpecialAttribs
     bvc Lx323
         lda #$03
     Lx323:
@@ -10855,7 +10865,7 @@ Lx319:
     cpy #wa_WaveBeam
     beq Lx324
         ; if enemy is not a miniboss, decrement health by 1
-        bit $0A
+        bit Temp0A_EnSpecialAttribs
         bvc Lx325
         ; enemy is a miniboss
         ; if miniboss was not attacked by a missile, decrement health by 1
@@ -10872,7 +10882,9 @@ Lx319:
     beq ExplodeEnemy
 Lx325:
     dec EnHealth,x
-    bne GetPageIndex
+    bne ExplodeEnemy@exit
+    ; fallthrough
+
 ExplodeEnemy:
     ; the enemy has been killed by Samus's attacks
     ; set status to explode
@@ -10880,48 +10892,59 @@ ExplodeEnemy:
     sta EnsExtra.0.status,x
 
     ; branch if enemy is a miniboss
-    bit $0A
-    bvs Lx327
-    ; branch if enemy was not hit by the regular beam
-    lda EnWeaponAction,x
-    cmp #wa_RegularBeam+1.b
-    bcs Lx327
-    ; call LDCFC routine
-    lda #$00 ; useless instruction
-    jsr LDCFC
-    ldx PageIndex
-Lx327:
+    bit Temp0A_EnSpecialAttribs
+    bvs @endIf_A
+        ; branch if enemy was not hit by the regular beam
+        lda EnWeaponAction,x
+        cmp #wa_RegularBeam+1.b
+        bcs @endIf_A
+            ; enemy is hit by regular beam
+            ; immediately try becoming pickup without first playing the chunky explosion animation
+            lda #$00 ; useless instruction
+            jsr EnemyCompleteDeath@SkipChunkyExplosion
+            ldx PageIndex
+    @endIf_A:
+    
+    ; set animation to death
     jsr GetEnemyTypeTimes2PlusFacingDirection
     lda EnemyDeathAnimIndex,y
     jsr InitEnAnimIndex
-    sta EnSpeedSubPixelY,x
+    ; init chunky explosion timer
+    sta EnChunkyExplosionTimer,x
+    
     ; find first open enemy explosion slot
     ldx #$C0
-    Lx328:
+    @loop:
         lda EnsExtra.0.status,x
-        beq Lx329
+        beq @exitLoop
         txa
         clc
         adc #$08
         tax
         cmp #$E0
-        bne Lx328
+        bne @loop
     ; could not spawn enemy explosion, because all enemy explosion slots are occupied
-    beq GetPageIndex
-Lx329:
+    beq @exit
+
+@exitLoop:
     ; open enemy explosion slot found
-    ; initialize explosion based on current enemy's coordinates
+    ; initialize explosion animation
     lda AreaExplosionAnimIndex
     jsr InitEnAnimIndex
     lda #$0A
     sta EnExplosionAnimDelay,x
+    ; set explosion status to active
     inc EnsExtra.0.status,x
+    ; set explosion anim frame to
+    ; #$00 if enemy is not a miniboss
+    ; #$03 if enemy is a miniboss
     lda #$00
-    bit $0A
-    bvc Lx330
+    bit Temp0A_EnSpecialAttribs
+    bvc @endIf_B
         lda #$03
-    Lx330:
+    @endIf_B:
     sta EnExplosionAnimFrame,x
+    ; set explosion position to enemy position
     ldy PageIndex
     lda EnY,y
     sta EnExplosionY,x
@@ -10929,7 +10952,7 @@ Lx329:
     sta EnExplosionX,x
     lda EnsExtra.0.hi,y
     sta EnsExtra.0.hi,x
-GetPageIndex:
+@exit:
     ldx PageIndex
     rts
 
@@ -10965,21 +10988,21 @@ InitEnActiveAnimIndex:
     jsr GetEnemyTypeTimes2PlusFacingDirection
     lda EnemyActiveAnimIndex,y
     cmp EnsExtra.0.resetAnimIndex,x
-    beq Exit12
+    beq @RTS
     ; set anim to the one from the table
     jsr InitEnAnimIndex
     ; exit if L967B entry and #$7F is zero
     ldy EnsExtra.0.type,x
     lda L967B,y
     and #$7F
-    beq Exit12
+    beq @RTS
     ; decrease EnsExtra.0.animIndex by that non-zero amount
     tay
-    Lx332:
+    @loop:
         dec EnsExtra.0.animIndex,x
         dey
-        bne Lx332
-Exit12:
+        bne @loop
+InitEnActiveAnimIndex@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -10999,12 +11022,12 @@ UpdateEnemy_ForceSpeedTowardsSamus:
         ; if bit 1 of L968B[EnsExtra.0.type] is not set, exit
         tya
         and #$02
-        beq Exit12
+        beq InitEnActiveAnimIndex@RTS
     Lx333:
     ; enemy is not active or bit 1 of L968B[EnsExtra.0.type] is set
     tya
     dec EnData0D,x
-    bne Exit12
+    bne InitEnActiveAnimIndex@RTS
 
     ; write EnData0D from table
     pha

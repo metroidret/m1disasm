@@ -92,11 +92,11 @@ SqueeptExit_Resting_{AREA}:
     ; squeept is resting (jumping and falling)
     ; change animation frame every 2 frames
     lda #$02
-    jmp CommonJump_01
+    jmp CommonJump_UpdateEnemyCommon_noMove
 
 SqueeptExit_Explode_{AREA}:
     ; squeept is exploding
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 SqueeptSpeedYTable_{AREA}:
     .byte $F6, $F8, $F6, $FA

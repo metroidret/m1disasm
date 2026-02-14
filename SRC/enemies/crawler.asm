@@ -73,11 +73,11 @@ CrawlerAIRoutine_{AREA}:
     lda #$03
     jsr CommonJump_UpdateEnemyAnim
 CrawlerExit_Explode_{AREA}:
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 .if BANK == 2 || BANK == 5
     CrawlerExit_Resting_{AREA}:
-        jmp CommonJump_01
+        jmp CommonJump_UpdateEnemyCommon_noMove
 .endif
 
 CrawlerReorientSprite_{AREA}:
