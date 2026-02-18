@@ -30,7 +30,7 @@ RidleyBranch_Exit_{AREA}:
     lda #$03
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
@@ -42,7 +42,7 @@ RidleyFireballAIRoutine_{AREA}:
     lda #$02
     sta $00
     sta $01
-    jsr CommonEnemyJump_00_01_02_{AREA}
+    jsr UpdateEnemyCommon_Decide_{AREA}
     ; compare past EnData05 to current EnData05
     pla
     ldx PageIndex

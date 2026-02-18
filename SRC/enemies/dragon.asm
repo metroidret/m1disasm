@@ -80,7 +80,7 @@ DragonAIRoutine_{AREA}:
     lda #$01
     sta $00
     sta $01
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 @prepareToSpitEnAnimTable:
     .byte EnAnim_DragonPrepareToSpit_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonPrepareToSpit_L_{AREA} - EnAnimTable_{AREA}

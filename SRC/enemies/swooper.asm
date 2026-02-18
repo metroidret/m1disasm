@@ -23,7 +23,7 @@ SwooperAIRoutine00_{AREA}:
         jsr SwooperChangeEnemyType_{AREA}
 @draw:
     jsr UpdateSwooperAnim_{AREA}
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 UpdateSwooperAnim_{AREA}:
     lda EnsExtra.0.status,x

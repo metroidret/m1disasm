@@ -10530,6 +10530,7 @@ UpdateEnemyCommon:
     beq @endIf_B
         jsr DrawEnemy
     @endIf_B:
+@clearIsHitFlags:
     ; clear is hit flags
     ldx PageIndex
     lda #$00
@@ -10576,7 +10577,7 @@ UpdateEnemy_Frozen: ; ($F43E)
         beq Lx304
             asl ObjectCntrl
     Lx304:
-    jmp UpdateEnemyCommon@NoMoveNoAnim
+    jmp UpdateEnemyCommon@noMoveNoAnim
 ;--------------------------------------
 UpdateEnemy_Pickup: ;($F483)
     ; branch if samus is not touching the pickup
@@ -10660,7 +10661,7 @@ UpdateEnemy_Pickup: ;($F483)
     lsr
     ora #$80 | OAMDATA_PRIORITY.b
     sta ObjectCntrl
-    jmp UpdateEnemyCommon@NoMoveNoAnim
+    jmp UpdateEnemyCommon@noMoveNoAnim
 ;--------------------------------------------
 UpdateEnemy_Hurt:
     ; decrement hitstun delay
@@ -10721,7 +10722,7 @@ Lx314:
     ; Samus attacked a non-frozen metroid with something else than the ice beam
     ; just play a sfx and ignore the attack
     jsr SFX_MetroidHit
-    jmp @exit
+    jmp ExplodeEnemy@exit
 
 ; handles enemy getting attacked by Samus
 EnemyReactToSamusWeapon:
@@ -10770,7 +10771,7 @@ Lx316:
     bne Lx314
     ; play sfx and clear variables defining Samus's attack on this enemy
     jsr SFX_Metal
-    jmp @endIf_B
+    jmp UpdateEnemyCommon@clearIsHitFlags
 Lx317:
     ; branch if enemy is completely invulnerable to Samus's attacks
     lda EnHealth,x

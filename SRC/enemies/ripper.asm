@@ -13,6 +13,6 @@ RipperAIRoutine_{AREA}:
         lda #$03
         sta $00
         sta $01
-        jmp CommonEnemyJump_00_01_02_{AREA}
+        jmp UpdateEnemyCommon_Decide_{AREA}
     .endif
 

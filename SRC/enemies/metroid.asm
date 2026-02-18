@@ -7,7 +7,7 @@ MetroidAIRoutine_{AREA}:
         sta EnsExtra.0.status,x
     @endIf_A:
     
-    ; prepare CommonEnemyJump_00_01_02 parameters
+    ; prepare UpdateEnemyCommon_Decide parameters
     ; change animation frame every 15 frames
     lda #$0F
     sta $00
@@ -15,11 +15,11 @@ MetroidAIRoutine_{AREA}:
     ; branch if bit 7 of EnData05 is set
     lda EnData05,x
     asl
-    bmi CommonEnemyJump_00_01_02_{AREA}
+    bmi UpdateEnemyCommon_Decide_{AREA}
     ; branch if metroid is exploding
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq CommonEnemyJump_00_01_02_{AREA}
+    beq UpdateEnemyCommon_Decide_{AREA}
     
     ; branch if metroid latch for this metroid is inactive
     jsr LoadEnemySlotIDIntoY
@@ -296,7 +296,7 @@ MetroidAIRoutine_{AREA}:
         ora #$82 | OAMDATA_PRIORITY.b
         sta ObjectCntrl
     @endIf_Q:
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 ClearCurrentMetroidLatch:
     jsr LoadEnemySlotIDIntoY

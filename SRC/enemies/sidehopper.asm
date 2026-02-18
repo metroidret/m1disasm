@@ -19,7 +19,7 @@ CommonEnemyStub2_{AREA}:
 CommonEnemyStub_{AREA}:
     lda #$08
     sta $01
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 ; Ceiling Sidehopper Routine
 SidehopperCeilingAIRoutine_{AREA}:
