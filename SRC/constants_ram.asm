@@ -347,6 +347,12 @@ Temp03_MetatileCenterX = $03
 Temp00_L968BEntry      = $00
 Temp0A_EnSpecialAttribs = $0A
 
+; CopyMap
+Temp00_WorldMapPtr     = $00
+; Temp00_WorldMapPtr+1   = $01
+Temp02_WorldMapRAMPtr  = $02
+; Temp02_WorldMapRAMPtr+1 = $03
+
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->

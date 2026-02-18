@@ -3673,17 +3673,19 @@ CheckBombLaunch:
     bne @RTS
 
     ; try object slot D
-    ldx #$D0
+    ldx #Weapons.0 - Objects
     lda Objects.0.status,x
     ; launch bomb if slot available
     beq @bombSlotFound
+    
     ; slot D is occupied, try object slot E
-    ldx #$E0
+    ldx #Weapons.1 - Objects
     lda Objects.0.status,x
     ; launch bomb if slot available
     beq @bombSlotFound
+    
     ; slot E is occupied, try object slot F
-    ldx #$F0
+    ldx #Weapons.2 - Objects
     lda Objects.0.status,x
     ; if slot F is occupied, no bomb slots available, exit
     bne @RTS
@@ -3706,37 +3708,56 @@ CheckBombLaunch:
     rts
 
 SamusPntUp:
+    ; branch if UP still pressed
     lda Joy1Status
-    and #BUTTON_UP     ; UP still pressed?
-    bne Lx037      ; branch if yes
-        lda #sa_Stand   ; stand handler
+    and #BUTTON_UP
+    bne @endIf_A
+        ; up is not pressed
+        ; stand handler
+        lda #sa_Stand
         sta Samus.status
-    Lx037:
+    @endIf_A:
+    
+    ; branch if DOWN, LEFT, RIGHT are not pressed
     lda Joy1Status
-    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT        ; DOWN, LEFT, RIGHT pressed?
-    beq Lx039    ; branch if no
-        jsr BitScan                     ;($E1E1)
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT
+    beq @endIf_B
+        ; at least one of DOWN, LEFT or RIGHT is pressed
+        ; branch if only DOWN is pressed
+        jsr BitScan
         cmp #BUTTONBIT_DOWN
-        bcs Lx038
+        bcs @endIf_C
+            ; either left or right is pressed
+            ; store whichever one it is in samus direction
             sta SamusDir
-        Lx038:
+        @endIf_C:
+        ; use the dpad direction to set samus status
         tax
-        lda Table07,x
+        lda @statusTable,x
         sta Samus.status
-    Lx039:
+    @endIf_B:
+    
+    ; branch if FIRE not pressed
     lda Joy1Change
     ora Joy1Retrig
     asl
-    bpl Lx040      ; branch if FIRE not pressed
-        jsr FireWeapon                  ;($D1EE)Shoot up.
-    Lx040:
+    bpl @endIf_D
+        ;Shoot up.
+        jsr FireWeapon
+    @endIf_D:
+    
+    ; branch if JUMP not pressed
     bit Joy1Change
-    bpl Lx041      ; branch if JUMP not pressed
+    bpl @endIf_E
+        ; set status to jump & point
         lda #sa_PntJump
         sta Samus.status
-    Lx041:
+    @endIf_E:
+    
+    ;($CD6D)Set Samus control data and animation.
     lda #$04
-    jsr SetSamusData                ;($CD6D)Set Samus control data and animation.
+    jsr SetSamusData
+    ; handle status changes
     lda Samus.status
     jsr JumpEngine
         .word SetSamusStand
@@ -3751,10 +3772,10 @@ SamusPntUp:
         .word ExitSub       ;($C45C)rts
 
 ; Table used by above subroutine
-Table07:
-    .byte sa_Run
-    .byte sa_Run
-    .byte sa_Roll
+@statusTable:
+    .byte sa_Run  ;BUTTON_RIGHT
+    .byte sa_Run  ;BUTTON_LEFT
+    .byte sa_Roll ;BUTTON_DOWN
 
 
 FireWeapon:
@@ -3910,7 +3931,7 @@ FireWeaponUpwards:
     Lx045:
     lda Samus.status
     cmp #$01
-    beq RTS_X046
+    beq SetObjAnimIndex@RTS
     jmp LD26B
 
 ; Table used by above subroutine
@@ -3940,7 +3961,7 @@ SetObjAnimIndex:
     sta Objects.0.animIndex,x
     lda #$00
     sta Objects.0.animDelay,x
-RTS_X046:
+@RTS:
     rts
 
 PlaceBulletAtArmCannon:
@@ -3956,14 +3977,14 @@ PlaceBulletAtArmCannon:
 CheckHorizontalMissileLaunch:
     ; exit if Samus not in "missile fire" mode
     lda MissileToggle
-    beq Exit4
+    beq SetBulletAnim@RTS
     ; exit if not weapon slot $03D0 (missile)
     cpy #Weapons.0 - Objects
-    bne Exit4
+    bne SetBulletAnim@RTS
     
     ldx SamusDir
     lda HorizontalMissileAnims,x
-Lx047:
+CheckMissileLaunchCommon:
     jsr SetBulletAnim
     jsr SFX_MissileLaunch
     lda #wa_Missile ; missile handler
@@ -3971,7 +3992,7 @@ Lx047:
     lda #$FF
     sta WeaponDieDelay,y     ; # of frames weapon should last
     dec MissileCount
-    bne Exit4       ; exit if not the last missile
+    bne SetBulletAnim@RTS       ; exit if not the last missile
 ; Samus has no more missiles left
     dec MissileToggle       ; put Samus in "regular fire" mode
     jmp SelectSamusPalette      ; update Samus' palette to reflect this
@@ -3983,20 +4004,20 @@ HorizontalMissileAnims:
 CheckVerticalMissileLaunch:
     ; exit if Samus not in "missile fire" mode
     lda MissileToggle
-    beq Exit4
+    beq SetBulletAnim@RTS
     ; exit if not weapon slot $03D0 (missile)
     cpy #Weapons.0 - Objects
-    bne Exit4
+    bne SetBulletAnim@RTS
     
     lda #ObjAnim_MissileUp - ObjectAnimIndexTbl.b
-    bne Lx047 ; branch always
+    bne CheckMissileLaunchCommon ; branch always
 
 SetBulletAnim:
     sta Objects.0.animIndex,y
     sta Objects.0.animResetIndex,y
     lda #$00
     sta Objects.0.animDelay,y
-Exit4:
+@RTS:
     rts
 
 CheckHorizontalWaveBulletFire:
@@ -4004,9 +4025,9 @@ CheckHorizontalWaveBulletFire:
 LD35B:
     sta WeaponWaveDir,y
     bit SamusGear
-    bvc Exit4       ; branch if Samus doesn't have Wave Beam
+    bvc SetBulletAnim@RTS       ; branch if Samus doesn't have Wave Beam
     lda MissileToggle
-    bne Exit4
+    bne SetBulletAnim@RTS
     lda #$00
     sta WeaponWaveInstrTimer,y
     sta Objects.0.animDelay,y
@@ -4029,9 +4050,9 @@ CheckVerticalWaveBulletFire:
 
 CheckIceBulletFire:
     lda MissileToggle
-    bne Exit4
+    bne SetBulletAnim@RTS
     lda SamusGear
-    bpl Exit4       ; branch if Samus doesn't have Ice Beam
+    bpl SetBulletAnim@RTS       ; branch if Samus doesn't have Ice Beam
     lda #wa_IceBeam
     sta Objects.0.status,y
     lda HasBeamSFX
@@ -5329,7 +5350,7 @@ UpdateStatueBGTiles:
     lda #$09
     sta TileBlasts.12.animFrame
     ; set tile blast index to #$C0
-    lda #TileBlasts.12 - TileBlasts.0
+    lda #TileBlasts.12 - TileBlasts
     sta PageIndex
     ; update bg tiles
     jsr DrawTileBlast

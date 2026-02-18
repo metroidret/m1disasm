@@ -3958,45 +3958,63 @@ EndFadeOut: ; 00:9BCD
         jmp LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
 
 RollCredits: ; 00:9BFC
-    lda Timer3                      ;If 160 frame timer delay from previous-->
-    beq L9C17                       ;routine has expired, branch.
-    cmp #$02                        ;If not 20 frames left in Timer3, branch to exit.
-    bne RTS_9C44                       ;
-    jsr ScreenOff                   ;($C439)When 20 frames left in Timer3,-->
-    jsr ClearNameTables@nameTable0  ;($C16D)clear name table 0 and sprites.-->
-    jsr EraseAllSprites             ;($C1A3)prepares screen for credits.
-    lda #_id_EndGamePalette0B+1+1.b
-    sta PaletteDataPending              ;Change to proper palette for credits.
-    jsr ScreenOn                    ;($C447)Turn screen on.
-    jmp WaitNMIPass_                ;($C43F)Wait for NMI to end.
-L9C17:
-    lda CreditPageNumber            ;If first page of credits has not started to-->
-    bne L9C1D                       ;roll, start it now, else branch.
-    inc CreditPageNumber            ;
-L9C1D:
-    cmp #$06                        ;If not at last page of credits, branch.
-    bne L9C2A                       ;
-    lda ScrollY                     ;
-    cmp #$88                        ;If last page of credits is not finished-->
-    bcc L9C2A                       ;scrolling, branch.  Else increment to next-->
-    inc RoomPtr                     ;routine.
-    rts
+    ;If 160 frame timer delay from previous routine has expired, branch.
+    lda Timer3
+    beq @endIf_A
+        ;If not 20 frames left in Timer3, branch to exit.
+        cmp #$02
+        bne @RTS
+        ;When 20 frames left in Timer3, clear name table 0 and sprites. prepares screen for credits.
+        jsr ScreenOff
+        jsr ClearNameTables@nameTable0
+        jsr EraseAllSprites
+        ;Change to proper palette for credits.
+        lda #_id_EndGamePalette0B+1+1.b
+        sta PaletteDataPending
+        ;Turn screen on. Wait for NMI to end.
+        jsr ScreenOn
+        jmp WaitNMIPass_
+    @endIf_A:
+    
+    ;If first page of credits has not started to roll, start it now, else branch.
+    lda CreditPageNumber
+    bne @endIf_B
+        inc CreditPageNumber
+    @endIf_B:
+    
+    ;If not at last page of credits, branch.
+    cmp #$06
+    bne @endIf_C
+        ;If last page of credits is not finished scrolling, branch.
+        lda ScrollY
+        cmp #$88
+        bcc @endIf_C
+            ; Else increment to next routine.
+            inc RoomPtr
+            rts
+    @endIf_C:
+    
+    ;credits scroll up one position every 4 frames
+    ;exit if not ready to scroll
+    lda FrameCount
+    and #$03
+    bne @RTS
 
-L9C2A:
-    lda FrameCount                  ;credits scroll up one position every 3 frames.
-    and #$03                        ;
-    bne RTS_9C44                       ;Ready to scroll? If not, branch.
-    inc ScrollY                     ;
-    lda ScrollY                     ;Load ScrollY and check it to see if its-->
-    cmp #$F0                        ;position is at the very bottom on name table.-->
-    bne RTS_9C44                       ;if not, branch.
-    inc CreditPageNumber            ;
-    lda #$00                        ;
-    sta ScrollY                     ;When Scrolly is at bottom of the name table,-->
-    lda PPUCTRL_ZP                   ;Swap to next name table(0 or 2) and increment-->
-    eor #$02                        ;CreditPageNumber.
-    sta PPUCTRL_ZP                   ;
-RTS_9C44:
+    inc ScrollY
+    ;Load ScrollY and check it to see if its position is at the very bottom on name table.
+    lda ScrollY
+    cmp #$F0
+    ;if not, branch.
+    bne @RTS
+    
+    ;When ScrollY is at bottom of the name table, Swap to next name table(0 or 2) and increment CreditPageNumber.
+    inc CreditPageNumber
+    lda #$00
+    sta ScrollY
+    lda PPUCTRL_ZP
+    eor #$02
+    sta PPUCTRL_ZP
+@RTS:
     rts
 
 ;The following routine is checked every frame and is accessed via the NMIScreenWrite routine.
@@ -4091,51 +4109,72 @@ LoadWaveSprites: ; 00:9C7F
         bne @loop
 
 LoadEndSamusSprites: ; 00:9C9A
-    ldx #$30                        ;Index for loading Samus sprite data into sprite RAM.
-    ldy SpritePointerIndex          ;
-    lda EndSamusAddrTbl,y           ;Base is $9D5A.
-    sta $00                         ;Load $00 and $01 with pointer to the sprite-->
-    lda EndSamusAddrTbl+1,y         ;data that shows Samus at the end of the game.
-    sta $01                         ;
-    ldy #$00                        ;
-    L9CAA:
-        lda ($00),y                     ;Load sprite data starting at Sprite0CRAM.
-        sta SpriteRAM,x               ;Load sprite Y-coord.
-        inx                             ;
-        iny                             ;Increment X and Y.
-        lda ($00),y                     ;
-        bpl L9CC0                       ;If sprite pattern byte MSB cleared, branch.
-            and #$7F                        ;
-            sta SpriteRAM,x               ;Remove MSB and write sprite pattern data-->
-            lda SpriteAttribByte            ;to sprite RAM.
-            eor #$40                        ;
-            bne L9CC5                       ;
-        L9CC0:
-            sta SpriteRAM,x               ;Writes sprite pattern byte to-->
-            lda SpriteAttribByte            ;sprite RAM if its MSB is not set.
-        L9CC5:
-        inx                             ;
-        sta SpriteRAM,x               ;Writes sprite attribute byte to sprite RAM.
-        iny                             ;
-        inx                             ;Increment X and Y.
-        lda ($00),y                     ;
-        sta SpriteRAM,x               ;Load sprite X-coord.
-        iny                             ;
-        inx                             ;Increment X and Y.
-        cpy SpriteByteCounter           ;
-        bne L9CAA                       ;Repeat until sprite load is complete.
+    ;Index for loading Samus sprite data into sprite RAM.
+    ldx #SpriteRAM.12 - SpriteRAM
+    ldy SpritePointerIndex
+    ;Load $00 and $01 with pointer to the sprite data that shows Samus at the end of the game.
+    lda EndSamusAddrTbl,y
+    sta $00
+    lda EndSamusAddrTbl+1,y
+    sta $01
+    ;Load sprite data starting at Sprite0CRAM.
+    ldy #$00
+    @loop_A:
+        ;Load sprite Y-coord.
+        lda ($00),y
+        sta SpriteRAM,x
+        ;Increment X and Y.
+        inx
+        iny
+        ;If sprite pattern byte MSB cleared, branch.
+        lda ($00),y
+        bpl @else_A
+            ;Remove MSB and write sprite pattern data to sprite RAM.
+            and #$7F
+            sta SpriteRAM,x
+            ; msb is set, so h-flip sprite
+            lda SpriteAttribByte
+            eor #OAMDATA_HFLIP
+            bne @endIf_A ; branch always
+        @else_A:
+            ;Writes sprite pattern byte to sprite RAM.
+            sta SpriteRAM,x
+            ; msb is cleared, so don't h-flip sprite
+            lda SpriteAttribByte
+        @endIf_A:
+        ;Writes sprite attribute byte to sprite RAM.
+        inx
+        sta SpriteRAM,x
+        ;Increment X and Y.
+        iny
+        inx
+        ;Load sprite X-coord.
+        lda ($00),y
+        sta SpriteRAM,x
+        ;Increment X and Y.
+        iny
+        inx
+        ;Repeat until sprite load is complete.
+        cpy SpriteByteCounter
+        bne @loop_A
+    
+    ; exit if not running the EndSamusFlash routine
     lda RoomPtr
-    cmp #$02                        ;If not running the EndSamusFlash routine, branch.
-    bcc RTS_9CF9
+    cmp #$02
+    bcc @RTS
+    ; exit if EndSamusFlash routine is not more than half way done
     lda ColorCntIndex
-    cmp #$08                        ;If EndSamusFlash routine is more than half-->
-    bcc RTS_9CF9                       ;way done, Check ending type for the Samus helmet-->
-    lda EndingType                  ;off ending.  If not helmet off ending, branch.
+    cmp #$08
+    bcc @RTS
+    ; EndSamusFlash routine is more than half way done
+    ; Exit if ending type is not the Samus helmet off ending.
+    lda EndingType
     cmp #$03
-    bne RTS_9CF9
+    bne @RTS
+    
     ldy #$00
     ldx #$00
-    L9CED:
+    @loop_B:
         ;The following code loads the sprite graphics when the helmet off ending is playing.
         ;The sprites below keep Samus head from flashing while the rest of her body does.
         lda SamusHeadSpriteTable,y
@@ -4143,8 +4182,8 @@ LoadEndSamusSprites: ; 00:9C9A
         iny
         inx
         cpy #$18
-        bne L9CED
-RTS_9CF9:
+        bne @loop_B
+@RTS:
     rts
 
 ;The following table is used by the routine above to keep Samus'
@@ -5101,25 +5140,25 @@ WorldMap: ; 00:A53E
 ;Loads contents of world map into RAM at addresses $7000 thru $73FF.
 CopyMap: ; 00:A93E
     lda #<WorldMap.b
-    sta $00
+    sta Temp00_WorldMapPtr
     lda #>WorldMap.b
-    sta $01
+    sta Temp00_WorldMapPtr+1
     lda #<WorldMapRAM
-    sta $02
+    sta Temp02_WorldMapRAMPtr
     lda #>WorldMapRAM
-    sta $03
+    sta Temp02_WorldMapRAMPtr+1
     ldx #$04
-    LA950:
+    @loop:
         ldy #$00
-        LA952:
-            lda ($00),y
-            sta ($02),y
+        @endIf_A:
+            lda (Temp00_WorldMapPtr),y
+            sta (Temp02_WorldMapRAMPtr),y
             iny
-            bne LA952
-        inc $01
-        inc $03
+            bne @endIf_A
+        inc Temp00_WorldMapPtr+1
+        inc Temp02_WorldMapRAMPtr+1
         dex
-        bne LA950
+        bne @loop
     rts
 
 ;Unused tile patterns.
