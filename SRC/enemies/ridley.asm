@@ -21,7 +21,7 @@ RidleyBranch_Normal_{AREA}:
     lda #EnAnim_RidleyHopping_R_{AREA} - EnAnimTable_{AREA}.b
     sta EnemyFlipAfterDisplacementAnimIndex
     lda #EnAnim_RidleyHopping_L_{AREA} - EnAnimTable_{AREA}.b
-    sta EnemyFlipAfterDisplacementAnimIndex+1.b
+    sta EnemyFlipAfterDisplacementAnimIndex+1
     jsr CommonJump_EnemyFlipAfterDisplacement
     jsr RidleyTryToLaunchProjectile_{AREA}
 

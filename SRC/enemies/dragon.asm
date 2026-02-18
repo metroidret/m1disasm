@@ -40,7 +40,7 @@ DragonAIRoutine_{AREA}:
         lda #EnAnim_DragonIdle_R_{AREA} - EnAnimTable_{AREA}.b
         sta SpawnEnProjectile_AnimIndex
         lda #EnAnim_DragonIdle_L_{AREA} - EnAnimTable_{AREA}.b
-        sta SpawnEnProjectile_AnimIndex+1.b
+        sta SpawnEnProjectile_AnimIndex+1
         ; set projectile animation
         lda #$03
         sta SpawnEnProjectile_AnimTableIndex

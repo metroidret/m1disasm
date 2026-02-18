@@ -1208,7 +1208,7 @@ EnsExtra               instanceof EnExtra $10 startfrom 0
 ; 16 slots of 8 bytes each ($6BF4-$6C73)
 Cannons                instanceof Cannon $10 startfrom 0
 
-SpareRAM6C74           ds $18C   ;$6C74
+SpareMem6C74           ds $18C   ;$6C74
 
 ;-------------------------------------[ Intro sprite defines ]---------------------------------------
 

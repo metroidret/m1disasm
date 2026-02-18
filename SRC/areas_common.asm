@@ -509,7 +509,7 @@ LoadEnemyMovementPtr:
     lda EnemyMovementPtrs,y
     sta EnemyMovementPtr
     lda EnemyMovementPtrs+1,y
-    sta EnemyMovementPtr+1.b
+    sta EnemyMovementPtr+1
     rts
 
 ;-------------------------------------------------------------------------------
@@ -988,7 +988,7 @@ EnemyMoveOnePixelDown:
     inc $00
     ; branch if EnY != #$EF
     ldy EnY,x
-    cpy #SCRN_VY-1.b
+    cpy #SCRN_VY-1
     bne L8481
     ; enemy tries to switch nametable
     ; to compensate for screen being #$F0 pixels tall
@@ -1014,7 +1014,7 @@ L8481:
     ; movement successful if bottom boundary != #$EF
     clc
     adc EnsExtra.0.radiusY,x
-    cmp #SCRN_VY-1.b
+    cmp #SCRN_VY-1
     bne L849D
     ; return movement failed if ScrollY == 0
     lda ScrollY
@@ -1276,7 +1276,7 @@ SamusInDoor:
 
 ;----------------------------------------------------------------------------------------------------
 UpdateAllDoors: ;($8B79)
-    ldx #Doors.3 - Objects.b
+    ldx #Doors.3 - Objects
     @loop:
         jsr UpdateDoor
         lda PageIndex
@@ -1319,7 +1319,7 @@ DrawDoor:
         lda #$01
     L8BBA:
     ; use door type to write to ObjectCntrl
-    ora #$80 | OAMDATA_PRIORITY.b
+    ora #$80 | OAMDATA_PRIORITY
     sta ObjectCntrl
 
     lda #$00
@@ -1598,7 +1598,7 @@ WriteDoorBGTiles_Common:
     tay
     lda Temp04_RoomRAMPtr
     sta DoorRoomRAMPtr,y
-    lda Temp04_RoomRAMPtr+1.b
+    lda Temp04_RoomRAMPtr+1
     sta DoorRoomRAMPtr+1,y
     rts
 

@@ -41,7 +41,7 @@ PolypAIRoutine_{AREA}:
     ; rotate horizontal facing flag into carry
     lsr EnData05,x
     ; set expected status to #$02|$01
-    lda #enemyStatus_Resting | enemyStatus_Active.b
+    lda #enemyStatus_Resting | enemyStatus_Active
     sta SpawnEnProjectile_ExpectedStatus
     ; set horizontal facing flag to a random bit
     lda RandomNumber1

@@ -126,7 +126,7 @@ InitializeAfterReset: ; 00:8071
 
     ;Set $0000 to point to address $6000.
     sty $00
-    ldx #>RoomRAMA.b
+    ldx #>RoomRAMA
     ;The following loop Loads the RAM with the following values:
     ;$6000 thru $62FF = #$00.
     ;$6300 thru $633F = #$C0.
@@ -1552,7 +1552,7 @@ ProcessUniqueItems: ; 00:8B79
         sta Temp00_ItemData
         iny
         lda UniqueItemHistory-1,y
-        sta Temp00_ItemData+1.b
+        sta Temp00_ItemData+1
         ;Increment $04 by two (load unique item complete).
         sty Temp04_UniqueItemIndex
         ;Find unique item.
@@ -1576,7 +1576,7 @@ UniqueItemSearch: ; 00:8B9C
         bne L8BAF
             ;Get next byte of unique item.
             lda ItemData+1,y
-            cmp Temp00_ItemData+1.b
+            cmp Temp00_ItemData+1
             ;If unique item found, branch to UniqueItemFound.
             beq UniqueItemFound
         L8BAF:
@@ -1701,7 +1701,7 @@ SamusHasItem: ; 00:8C39
     tay
     ;$00 and $01 store the two bytes of the unique item to process.
     lda ItemData+1,y
-    sta Temp00_ItemData+1.b
+    sta Temp00_ItemData+1
     lda ItemData,y
     sta Temp00_ItemData
     ;Store the two bytes of the unique item in RAM in the unique item history.
@@ -1934,14 +1934,14 @@ LoadTanksAndMissiles: ; 00:8D3D
         lda UniqueItemHistory+1,y
         ;Compare the 6 MSBs to #$20. If it matches, an energy tank has been found.
         and #$FC
-        cmp #>ui_ENERGYTANK.b
+        cmp #>ui_ENERGYTANK
         bne @endIf_etank
             ;Increment number of energy tanks found.
             inc Temp00_EnergyTankCount
             jmp @IncrementToNextItem
         @endIf_etank:
         ;Compare the 6 MSBs to #$24. If it matches, missiles have been found.
-        cmp #>ui_MISSILES.b
+        cmp #>ui_MISSILES
         bne @IncrementToNextItem
             ;Increment number of missiles found.
             inc Temp02_MissileTankCount
@@ -2105,19 +2105,19 @@ UnscramblePassword: ; 00:8E4E
 LoadPasswordChar: ; 00:8E6C
     .repeat 6 index I
         ;%XXXXXX-- %-------- %--------
-        ldy #(I*3+0).b
+        ldy #I*3+0
         jsr SixUpperBits
         sta PasswordChar+I*4+0
         ;%------XX %XXXX---- %--------
-        ldy #(I*3+0).b
+        ldy #I*3+0
         jsr TwoLowerAndFourUpper
         sta PasswordChar+I*4+1
         ;%-------- %----XXXX %XX------
-        ldy #(I*3+1).b
+        ldy #I*3+1
         jsr FourLowerAndTwoUpper
         sta PasswordChar+I*4+2
         ;%-------- %-------- %--XXXXXX
-        ldy #(I*3+2).b
+        ldy #I*3+2
         jsr SixLowerBits
         sta PasswordChar+I*4+3
     .endr
@@ -2174,15 +2174,15 @@ SixLowerBits: ; 00:8F5A
 ConsolidatePassword: ; 00:8F60
     .repeat 6 index I
         ;%00XXXXXX %00XX---- %00------ %00------
-        ldy #(I*4+0).b
+        ldy #I*4+0
         jsr SixLowerAndTwoUpper
         sta PasswordByte+I*3+0
         ;%00------ %00--XXXX %00XXXX-- %00------
-        ldy #(I*4+1).b
+        ldy #I*4+1
         jsr FourLowerAndFiveThruTwo
         sta PasswordByte+I*3+1
         ;%00------ %00------ %00----XX %00XXXXXX
-        ldy #(I*4+2).b
+        ldy #I*4+2
         jsr TwoLowerAndSixLower
         sta PasswordByte+I*3+2
     .endr
@@ -2352,7 +2352,7 @@ TurnOnDisplay: ; 00:90D1
 ChooseStartContinue: ; 00:90D7
     ;Checks both select and start buttons.
     lda Joy1Change
-    and #BUTTON_START | BUTTON_SELECT.b
+    and #BUTTON_START | BUTTON_SELECT
     ;Branch if START not pressed.
     cmp #BUTTON_START
     bne @endIf_A
@@ -2962,7 +2962,7 @@ PreparePPUProcess_: ; 00:9449
     ;Lower byte of pointer to VRAM structure
     stx Temp00_VRAMStructPtr
     ;Upper byte of pointer to VRAM structure
-    sty Temp00_VRAMStructPtr+1.b
+    sty Temp00_VRAMStructPtr+1
     ;Write VRAM structure to PPU.
     jmp VRAMStructWrite
 
@@ -2970,13 +2970,13 @@ PrepareEraseTiles: ; 00:9450
     ;PPU low address byte
     stx Temp00_PPURAMPtr
     ;PPU high address byte
-    sty Temp00_PPURAMPtr+1.b
+    sty Temp00_PPURAMPtr+1
 
     ;Address of byte where tile size of tile to be erased is stored.
-    ldx #<TileSize.b
-    ldy #>TileSize.b
+    ldx #<TileSize
+    ldy #>TileSize
     stx Temp02_VRAMStringPtr
-    sty Temp02_VRAMStringPtr+1.b
+    sty Temp02_VRAMStringPtr+1
     jmp WriteVRAMString              ;($C328)Erase the selected tiles.
 
 ;---------------------------------------[ Unused intro routines ]------------------------------------
@@ -4078,7 +4078,7 @@ LoadWaveSprites: ; 00:9C7F
     lda WavePointerTable+1,x
     sta $01
     ;Offset for sprite RAM load.
-    ldx #<SpriteRAM.8.b
+    ldx #<SpriteRAM.8
     ldy #$00
     @loop:
         ;Load wave sprites into sprite RAM starting at location $0220 (SpriteRAM.8).
@@ -5104,9 +5104,9 @@ CopyMap: ; 00:A93E
     sta $00
     lda #>WorldMap.b
     sta $01
-    lda #<WorldMapRAM.b
+    lda #<WorldMapRAM
     sta $02
-    lda #>WorldMapRAM.b
+    lda #>WorldMapRAM
     sta $03
     ldx #$04
     LA950:

@@ -125,7 +125,7 @@ Startup:
     ;Switch low PRGROM area during a page switch.
     ;16KB PRGROM switching enabled.
     ;8KB CHRROM switching enabled.
-    lda #MMC1CTRL_MIRROR_VERTI | MMC1CTRL_PRGFIXED_C000 | MMC1CTRL_PRGBANK_16K | MMC1CTRL_CHRBANK_8K.b
+    lda #MMC1CTRL_MIRROR_VERTI | MMC1CTRL_PRGFIXED_C000 | MMC1CTRL_PRGBANK_16K | MMC1CTRL_CHRBANK_8K
     sta MMC1CTRL_ZP
 
     ;Clear bits 3 and 4 of MMC1 register 3.
@@ -152,7 +152,7 @@ Startup:
     ;SPR pattern table address = $0000
     ;PPU address increment = 1
     ;Name table address = $2000
-    lda #PPUCTRL_VBLKNMI_ON | PPUCTRL_OBJH_8 | PPUCTRL_BG_1000 | PPUCTRL_OBJ_0000 | PPUCTRL_INCR_FWD | PPUCTRL_NMTBL_2000.b
+    lda #PPUCTRL_VBLKNMI_ON | PPUCTRL_OBJH_8 | PPUCTRL_BG_1000 | PPUCTRL_OBJ_0000 | PPUCTRL_INCR_FWD | PPUCTRL_NMTBL_2000
     sta PPUCTRL
     sta PPUCTRL_ZP
 
@@ -161,7 +161,7 @@ Startup:
     ;Sprite clipping = yes
     ;Background clipping = no
     ;Display type = color
-    lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR.b
+    lda #PPUMASK_OBJ_OFF | PPUMASK_BG_OFF | PPUMASK_HIDE8OBJ | PPUMASK_SHOW8BG | PPUMASK_COLOR
     sta PPUMASK_ZP
 
     ;Prepare to set PPU to vertical mirroring.
@@ -173,7 +173,7 @@ Startup:
     lda #$00
     sta DMC_RAW
     ;Enable sound channel 0,1,2,3
-    lda #SND_CHN_SQ1 | SND_CHN_SQ2 | SND_CHN_TRI | SND_CHN_NOISE.b
+    lda #SND_CHN_SQ1 | SND_CHN_SQ2 | SND_CHN_TRI | SND_CHN_NOISE
     sta SND_CHN
 
     ;Set title routine and and main routine function pointers equal to 0.
@@ -245,7 +245,7 @@ NMI:
     lda #$00
     sta OAMADDR
     ;Transfer page 2 ($200-$2FF) to Sprite RAM.
-    lda #>SpriteRAM.b
+    lda #>SpriteRAM
     sta OAMDMA
     ;Skip if the frame couldn't finish in time.
     lda NMIStatus
@@ -400,7 +400,7 @@ ClearNameTable:
     ldx PPUSTATUS
     ;PPU increment = 1.
     lda PPUCTRL_ZP
-    and #~PPUCTRL_INCR_DOWN.b
+    and #~PPUCTRL_INCR_DOWN
     sta PPUCTRL_ZP
     ;Store control bits in PPU.
     sta PPUCTRL
@@ -442,9 +442,9 @@ HiPPUTable:
 
 EraseAllSprites: ;($C1A3)
     ; load SpriteRAM address into $00-01
-    ldy #>SpriteRAM.b
+    ldy #>SpriteRAM
     sty $01
-    ldy #<SpriteRAM.b
+    ldy #<SpriteRAM
     sty $00
     ;Stores #$F0 in memory addresses $0200 thru $02FF.
     ldy #$00
@@ -469,9 +469,9 @@ Exit101:
 
 RemoveIntroSprites:
     ;Start at address $200. ($00) = $0200 (sprite page)
-    ldy #>SpriteRAM.b
+    ldy #>SpriteRAM
     sty $01
-    ldy #<SpriteRAM.b
+    ldy #<SpriteRAM
     sty $00
     ;Prepare to clear RAM $0200-$025F
     ldy #$5F
@@ -491,14 +491,14 @@ RemoveIntroSprites:
 ;The routine below clears RAM associated with rooms and enemies.
 
 ClearRAM_33_DF:
-    ldx #RoomPtr.b
+    ldx #RoomPtr
     lda #$00
     @loop:
         ;Clear RAM addresses $33 through $DF.
         sta $00,x
         inx
         ;Loop until all desired addresses are cleared.
-        cpx #SoundE0.b
+        cpx #SoundE0
         bcc @loop
     rts
 
@@ -540,7 +540,7 @@ PreparePPUProcess:
     ;Lower byte of pointer to VRAM structure
     stx Temp00_VRAMStructPtr
     ;Upper byte of pointer to VRAM structure
-    sty Temp00_VRAMStructPtr+1.b
+    sty Temp00_VRAMStructPtr+1
     ;Write VRAM structure to PPU.
     jmp VRAMStructWrite
 
@@ -601,7 +601,7 @@ ReadOnePad:
     beq @endIf_A
         ;Remove the previous status of the B button.
         lda $00
-        and #~BUTTON_B.b
+        and #~BUTTON_B
         sta $00
         eor Joy1Status,x
     @endIf_A:
@@ -625,7 +625,7 @@ ReadOnePad:
         ldy #$08
     @endIf_B:
     ;Reset retrigger delay to #$20(32 frames) or #$08(8 frames) if already retriggering.
-    sty RetrigDelay1.b,x
+    sty RetrigDelay1,x
 RTS_C265:
     rts
 
@@ -686,7 +686,7 @@ JumpEngine:
     pla
     sta JumpEngineRoutinePtr
     pla
-    sta JumpEngineRoutinePtr+1.b
+    sta JumpEngineRoutinePtr+1
     ;Low byte of routine ptr
     lda (JumpEngineRoutinePtr),y
     tax
@@ -694,7 +694,7 @@ JumpEngine:
     iny
     lda (JumpEngineRoutinePtr),y
     ; save routine ptr to JumpEngineRoutinePtr
-    sta JumpEngineRoutinePtr+1.b
+    sta JumpEngineRoutinePtr+1
     stx JumpEngineRoutinePtr
     ;Restore X and Y.
     ldx TempX
@@ -775,10 +775,10 @@ CheckVRAMStructBufferWrite:
     
     ;Sets up VRAM structure writer to start at address $07A1.
     ;$0000 = ptr to VRAM structure buffer ($07A1).
-    lda #<VRAMStructBuffer.b
+    lda #<VRAMStructBuffer
     sta Temp00_VRAMStructPtr
-    lda #>VRAMStructBuffer.b
-    sta Temp00_VRAMStructPtr+1.b
+    lda #>VRAMStructBuffer
+    sta Temp00_VRAMStructPtr+1
     ;write it to PPU.
     jsr VRAMStructWrite
     
@@ -854,7 +854,7 @@ SetPPUInc: ; 07:C318
     lda PPUCTRL_ZP
     ora #PPUCTRL_INCR_DOWN
     bcs @endIf_A
-        and #~PPUCTRL_INCR_DOWN.b
+        and #~PPUCTRL_INCR_DOWN
     @endIf_A:
     sta PPUCTRL
     sta PPUCTRL_ZP
@@ -881,7 +881,7 @@ WriteVRAMString:
     ldx VRAMStructBufferIndex
     @loop_row:
         ;write PPU high address to VRAMStructBuffer.
-        lda Temp00_PPURAMPtr+1.b
+        lda Temp00_PPURAMPtr+1
         jsr WritePPUByte
         ;write PPU low address to VRAMStructBuffer.
         lda Temp00_PPURAMPtr
@@ -1100,7 +1100,7 @@ ClearNMIStat: ;($C434)
 ScreenOff:
     ; BG & SPR visibility = off
     lda PPUMASK_ZP
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
     ; fallthrough
 
 WriteAndWait: ;($C43D)
@@ -1119,7 +1119,7 @@ WaitNMIPass_:
 ScreenOn:
     ;BG & SPR visibility = on
     lda PPUMASK_ZP
-    ora #(PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
+    ora #PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON
     bne WriteAndWait ;Branch always
 
 ;Update the actual PPU control registers.
@@ -1142,12 +1142,12 @@ ExitSub:
 ScreenNmiOff:
     ;BG & SPR visibility = off
     lda PPUMASK_ZP
-    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON).b
+    and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
     jsr WriteAndWait                ;($C43D)Wait for end of NMI.
 
     ;Prepare to turn off NMI in PPU.
     lda PPUCTRL_ZP
-    and #~PPUCTRL_VBLKNMI_ON.b
+    and #~PPUCTRL_VBLKNMI_ON
     sta PPUCTRL_ZP
     ;Actually load PPU register with NMI off value.
     sta PPUCTRL
@@ -1163,12 +1163,12 @@ ScreenNmiOff:
     sta PPUCTRL
     ;Turn sprites and screen on.
     lda PPUMASK_ZP
-    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG.b
+    ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG
     bne WriteAndWait ;Branch always.
 
 VBOffAndHorzWrite:
     lda PPUCTRL_ZP
-    and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON).b
+    and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON)
     ;Horizontal write, disable VBlank.
 LC481:
     ;Save new values in the PPU control register and PPU status byte.
@@ -1333,7 +1333,7 @@ GoBankInit:
     lda BankInitTable,y
     sta Temp0A_BankInitPtr
     lda BankInitTable+1,y
-    sta Temp0A_BankInitPtr+1.b
+    sta Temp0A_BankInitPtr+1
     ;Jump to appropriate initialization routine.
     jmp (Temp0A_BankInitPtr)
 
@@ -1748,7 +1748,7 @@ LoadGFX:
 
     ;Set the PPU to increment by 1.
     lda PPUCTRL_ZP
-    and #~PPUCTRL_INCR_DOWN.b
+    and #~PPUCTRL_INCR_DOWN
     sta PPUCTRL_ZP
     sta PPUCTRL
 
@@ -1764,10 +1764,10 @@ CopyGFXBlock:
     ;If data length low byte is #$00, decrement data length high byte before beginning.
     lda Temp05_GFXSize
     bne @loop
-    dec Temp05_GFXSize+1.b
+    dec Temp05_GFXSize+1
 @loop:
     ;Set PPU to destination address for GFX block write.
-    lda Temp03_GFXDestination+1.b
+    lda Temp03_GFXDestination+1
     sta PPUADDR
     lda Temp03_GFXDestination
     sta PPUADDR
@@ -1783,17 +1783,17 @@ CopyGFXBlock:
         bne @endIf
             ;Low byte has reached 0. High byte needs decrementing.
             ;If copying complete (high byte is 0), branch to exit.
-            lda Temp05_GFXSize+1.b
+            lda Temp05_GFXSize+1
             beq @RTS
             ;Decrement high byte
-            dec Temp05_GFXSize+1.b
+            dec Temp05_GFXSize+1
         @endIf:
         ;Increment to next byte to copy.
         iny
         bne @lowLoop
     ;After 256 bytes loaded, increment high bytes of source and destination addresses.
-    inc Temp01_GFXSource+1.b
-    inc Temp03_GFXDestination+1.b
+    inc Temp01_GFXSource+1
+    inc Temp03_GFXDestination+1
     jmp @loop
 @RTS:
     rts
@@ -1809,7 +1809,7 @@ AreaInit:
     sta PPUCTRL_ZP                  ;
     inc MainRoutine                 ;Increment MainRoutine to MoreInit.
     lda Joy1Status                  ;
-    and #BUTTON_A | BUTTON_B.b        ;Stores status of both the A and B buttons.
+    and #BUTTON_A | BUTTON_B        ;Stores status of both the A and B buttons.
     sta ABStatus                    ;Appears to never be accessed.
     jsr EraseAllSprites             ;($C1A3)Clear all sprite info.
     lda #$10                        ;Prepare to load Brinstar memory page.
@@ -1834,9 +1834,9 @@ MoreInit:
     txa
 
     LC830:
-        cpx #(SoundE0-1)-SpareMem7A.b   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
+        cpx #(SoundE0-1)-SpareMem7A   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
         bcs LC836                           ;
-            sta SpareMem7A.b,x              ;Clear RAM $7A thru $DE.
+            sta SpareMem7A,x              ;Clear RAM $7A thru $DE.
         LC836:
         cpx #$FF                        ;Check to see if more RAM to clear in $300 thru $3FE. (off-by-one bug)
         bcs LC83D                           ;
@@ -1873,7 +1873,7 @@ MoreInit:
         iny
         bne LC86F
 
-    ldy RoomRAMPtr+1.b
+    ldy RoomRAMPtr+1
     sty $01
     ldy RoomRAMPtr
     sty $00
@@ -1926,7 +1926,7 @@ DestroyEnemies: ;($C8BB)
     lda #$00
     tax
     @loop:
-        cpx #(SoundE0-1)-CannonIndex.b
+        cpx #(SoundE0-1)-CannonIndex
         bcs @endIf_A
             ; clear $97-$DE (should clear $DF, off-by-one bug?)
             sta CannonIndex,x
@@ -2117,14 +2117,14 @@ PauseMode:
         ;Load buttons currently being pressed on joypad 2.
         lda Joy2Status
         ; Exit if not both A & UP pressed.
-        and #BUTTON_A | BUTTON_UP.b
-        eor #BUTTON_A | BUTTON_UP.b
+        and #BUTTON_A | BUTTON_UP
+        eor #BUTTON_A | BUTTON_UP
     .elif BUILDTARGET == "NES_CNSUS"
         ;Load buttons currently being pressed on joypad 1.
         lda Joy1Status
         ; Exit if not pressing only SELECT & UP.
         sec
-        sbc #BUTTON_SELECT | BUTTON_UP.b
+        sbc #BUTTON_SELECT | BUTTON_UP
         nop
     .endif
     bne Exit14
@@ -2561,7 +2561,7 @@ SFX_MissileLaunch:
     lda #sfxNoise_MissileLaunch
 
 SFX_SetNoiseSFXFlag:
-    ldx #NoiseSFXFlag - NoiseSFXFlag.b
+    ldx #NoiseSFXFlag - NoiseSFXFlag
     beq SFX_SetSoundFlag
 
 SFX_OutOfHole:
@@ -2596,7 +2596,7 @@ SFX_MissilePickup:
     lda #sfxSQ1_MissilePickup
 
 SFX_SetSQ1SFXFlag:
-    ldx #SQ1SFXFlag - NoiseSFXFlag.b
+    ldx #SQ1SFXFlag - NoiseSFXFlag
     bne SFX_SetSoundFlag
 
 SFX_WaveFire:
@@ -2632,7 +2632,7 @@ SFX_SamusDie:
     bne SFX_SetTriSFXFlag
 
 SFX_SetSQ2SFXFlag:
-    ldx #SQ2SFXFlag - NoiseSFXFlag.b
+    ldx #SQ2SFXFlag - NoiseSFXFlag
 
 SFX_SetSoundFlag:
     ora NoiseSFXFlag,x
@@ -2647,7 +2647,7 @@ SFX_Beep:
     lda #sfxTri_Beep
 
 SFX_SetTriSFXFlag:
-    ldx #TriSFXFlag - NoiseSFXFlag.b
+    ldx #TriSFXFlag - NoiseSFXFlag
     bne SFX_SetSoundFlag
 
 ;Initiate music
@@ -2660,7 +2660,7 @@ IntroMusic:
     lda #sfxMulti_Intro
 
 SFX_SetMultiSFXFlag:
-    ldx #MultiSFXFlag - NoiseSFXFlag.b
+    ldx #MultiSFXFlag - NoiseSFXFlag
     bne SFX_SetSoundFlag
 
 MotherBrainMusic:
@@ -2671,7 +2671,7 @@ TourianMusic:
     lda #music_Tourian
 
 SFX_SetMusicInitFlag:
-    ldx #MusicInitFlag - NoiseSFXFlag.b
+    ldx #MusicInitFlag - NoiseSFXFlag
     bne SFX_SetSoundFlag
 
 ;--------------------------------------[ Update Samus ]----------------------------------------------
@@ -2710,7 +2710,7 @@ SamusStand:
     ;Status of joypad 1.
     lda Joy1Status
     ;Remove SELECT & START status bits.
-    and #~(BUTTON_SELECT | BUTTON_START).b
+    and #~(BUTTON_SELECT | BUTTON_START)
     ;Branch if no buttons pressed.
     beq LCC41
         ;($CF5D)Set no horiontal movement and single frame animation.
@@ -2720,7 +2720,7 @@ SamusStand:
         lda Joy1Status
     LCC41:
     ;Keep status of DOWN/LEFT/RIGHT.
-    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT
     ;Branch if any are pressed.
     bne LCC4B
         ;Check if UP was pressed last frame. If not, branch.
@@ -2921,7 +2921,7 @@ SamusRun:
             jsr SamusRun_Fire
         samL11:
         lda Joy1Status
-        and #BUTTON_RIGHT | BUTTON_LEFT.b
+        and #BUTTON_RIGHT | BUTTON_LEFT
         bne samL12
             ; stop running
             jsr SetSamusStand
@@ -2949,14 +2949,14 @@ SetSamusData:
         lda FrameCount                  ;
         lsr                             ;
         and #$03                        ;Every other frame, change Samus palette while screw-->
-        ora #$80 | OAMDATA_PRIORITY.b   ;Attack is active.
+        ora #$80 | OAMDATA_PRIORITY   ;Attack is active.
         sta ObjectCntrl                 ;
     LCD7E:
     jsr CheckHealthStatus           ;($CDFA)Check if Samus hit, blinking or Health low.
     jsr LavaAndMoveCheck            ;($E269)Check if Samus is in lava or moving.
     lda MetroidOnSamus              ;Is a Metroid stuck to Samus?-->
     beq LCD8C                           ;If not, branch.
-        lda #$81 | OAMDATA_PRIORITY.b   ;Metroid on Samus. Turn Samus blue.
+        lda #$81 | OAMDATA_PRIORITY   ;Metroid on Samus. Turn Samus blue.
         sta ObjectCntrl                 ;
     LCD8C:
     jsr SetMirrorCntrlBit           ;($CD92)Mirror Samus, if necessary.
@@ -3048,10 +3048,10 @@ SamusRun_Fire:
 
 ; Table used by above subroutine
 @table:
-    .byte ObjAnim_SamusRunPntUpFire3 - ObjectAnimIndexTbl.b
-    .byte ObjAnim_SamusRunPntUpFire1 - ObjectAnimIndexTbl.b
-    .byte ObjAnim_SamusRunPntUpFire2 - ObjectAnimIndexTbl.b
-    .byte ObjAnim_SamusRunPntUpFire3 - ObjectAnimIndexTbl.b
+    .byte ObjAnim_SamusRunPntUpFire3 - ObjectAnimIndexTbl
+    .byte ObjAnim_SamusRunPntUpFire1 - ObjectAnimIndexTbl
+    .byte ObjAnim_SamusRunPntUpFire2 - ObjectAnimIndexTbl
+    .byte ObjAnim_SamusRunPntUpFire3 - ObjectAnimIndexTbl
 
 CheckHealthStatus: ;($CDFA)
     ;Has Samus been hit?
@@ -3177,7 +3177,7 @@ Exit3:
 SubtractHealth: ; 07:CE92
     ;Check to see if health needs to be changed. If not, branch to exit.
     lda HealthChange
-    ora HealthChange+1.b
+    ora HealthChange+1
     beq Exit3
     ;Samus cannot be hurt while she is dead
     jsr IsSamusDead
@@ -3200,7 +3200,7 @@ SubtractHealth: ; 07:CE92
     beq LCEBF
     ;Samus has Varia, divide damage by 2.
     lsr HealthChange
-    lsr HealthChange+1.b
+    lsr HealthChange+1
     ;If Health+1 moved a bit into the carry flag while-->
     ;dividing, add #$4F to Health for proper division results.
     bcc LCEBF
@@ -3224,7 +3224,7 @@ LCEBF:
     lda Health+1
     sta $03
     ;Amount to subtract from Health+1.
-    lda HealthChange+1.b
+    lda HealthChange+1
     ;Perform base 10 subtraction.
     jsr Base10Subtract
     ;Save Results.
@@ -3269,7 +3269,7 @@ AddHealth: ; 07:CEF9
     lda Health+1
     sta $03
     ;Amount to add to Health+1.
-    lda HealthChange+1.b
+    lda HealthChange+1
     ;Perform base 10 addition.
     jsr Base10Add
     ;Save results.
@@ -3364,7 +3364,7 @@ NoHorzMoveNoDelay:
 
 SamusRun_CheckHorzMovementMidair:
     lda Joy1Status
-    and #BUTTON_RIGHT | BUTTON_LEFT.b
+    and #BUTTON_RIGHT | BUTTON_LEFT
     beq Lx015
         ; pressing right or left
         ; set X accel
@@ -3459,7 +3459,7 @@ Lx019:
     beq Lx020      ; branch if not
         lda #ObjAnim_SamusJumpPntUp - ObjectAnimIndexTbl.b
         sta Samus.animResetIndex
-        lda #sa_PntJump.b      ; "jumping & pointing up" handler
+        lda #sa_PntJump      ; "jumping & pointing up" handler
         sta Samus.status
     Lx020:
     jsr SamusJump_CheckFire
@@ -3606,7 +3606,7 @@ SamusRoll:
         jsr ObjectCheckMoveUp
         bcc Lx032     ; branch if not possible to stand up
         ; move Samus 11 pixels up
-        ldx #Samus - Objects.b
+        ldx #Samus - Objects
         jsr StoreObjectPositionToTemp
         stx Temp05_SpeedX
         lda #-$0B
@@ -3635,7 +3635,7 @@ SamusRoll:
         jsr LCF2E
         jsr CheckBombLaunch
         lda Joy1Status
-        and #BUTTON_RIGHT | BUTTON_LEFT.b
+        and #BUTTON_RIGHT | BUTTON_LEFT
         bne Lx034
             ; not pressing right or left, stop
             jsr StopHorzMovement
@@ -3713,7 +3713,7 @@ SamusPntUp:
         sta Samus.status
     Lx037:
     lda Joy1Status
-    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b        ; DOWN, LEFT, RIGHT pressed?
+    and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT        ; DOWN, LEFT, RIGHT pressed?
     beq Lx039    ; branch if no
         jsr BitScan                     ;($E1E1)
         cmp #BUTTONBIT_DOWN
@@ -3769,7 +3769,7 @@ FireWeapon:
 ; returns slot low byte in y
 SearchOpenWeaponSlot:
     ; loop through all samus weapon slots
-    ldy #Weapons.0 - Objects.b
+    ldy #Weapons.0 - Objects
     @loop:
         lda Objects.0.status,y
         beq @slotFound
@@ -3789,7 +3789,7 @@ SearchOpenWeaponSlot:
     beq @endIf_A
         ; Samus is shooting a missile
         ; return set zero flag if the slot found is $03D0 (missiles can only be in that slot)
-        cpy #Weapons.0 - Objects.b
+        cpy #Weapons.0 - Objects
     @endIf_A:
     rts
 
@@ -3944,7 +3944,7 @@ RTS_X046:
     rts
 
 PlaceBulletAtArmCannon:
-    ldx #Samus - Objects.b
+    ldx #Samus - Objects
     jsr StoreObjectPositionToTemp
     tya
     tax
@@ -3958,7 +3958,7 @@ CheckHorizontalMissileLaunch:
     lda MissileToggle
     beq Exit4
     ; exit if not weapon slot $03D0 (missile)
-    cpy #Weapons.0 - Objects.b
+    cpy #Weapons.0 - Objects
     bne Exit4
     
     ldx SamusDir
@@ -3985,7 +3985,7 @@ CheckVerticalMissileLaunch:
     lda MissileToggle
     beq Exit4
     ; exit if not weapon slot $03D0 (missile)
-    cpy #Weapons.0 - Objects.b
+    cpy #Weapons.0 - Objects
     bne Exit4
     
     lda #ObjAnim_MissileUp - ObjectAnimIndexTbl.b
@@ -4137,7 +4137,7 @@ SamusElevator:
             jsr ScrollDown  ; otherwise, attempt to scroll
         Lx057:
         ldy Samus.y
-        cpy #SCRN_VY-1.b        ; wrap-around required?
+        cpy #SCRN_VY-1        ; wrap-around required?
         bne Lx058
             jsr ToggleSamusHi       ; toggle 9th bit of Samus' Y coord
             ldy #$FF        ; Samus.y will now be 0
@@ -4192,7 +4192,7 @@ Door_DeleteOffscreenEnemies:
         bpl @loop_enemies
     jsr GetNameTableAtScrollDir
     tay
-    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
+    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0
     @loop_pipeBugHoles:
         jsr @deletePipeBugHole
         txa
@@ -4553,7 +4553,7 @@ BombExplosion_CollisionWithBG:
     ; store bomb's cart ram pointer at $0B.$0A
     lda Temp04_RoomRAMPtr
     sta $0A
-    lda Temp04_RoomRAMPtr+1.b
+    lda Temp04_RoomRAMPtr+1
     sta $0B
     ; bomb center if WeaponDieDelay == 1
     ldx PageIndex
@@ -4573,7 +4573,7 @@ BombExplosion_CollisionWithBG:
             beq Exit6
         Lx087:
         ; check if underflowed to attributes
-        lda Temp04_RoomRAMPtr+1.b
+        lda Temp04_RoomRAMPtr+1
         and #$03
         cmp #$03
         bne Lx088
@@ -4607,7 +4607,7 @@ Lx089:
             bne Exit6
         Lx090:
         ; check if overflowed to attributes
-        lda Temp04_RoomRAMPtr+1.b
+        lda Temp04_RoomRAMPtr+1
         and #$03
         cmp #$03
         bne Lx091
@@ -4649,9 +4649,9 @@ Lx089:
             ; check opposite nametable
             lda #$20-$02
             jsr LD77F
-            lda Temp04_RoomRAMPtr+1.b
+            lda Temp04_RoomRAMPtr+1
             eor #$04
-            sta Temp04_RoomRAMPtr+1.b
+            sta Temp04_RoomRAMPtr+1
         Lx094:
         jmp BombCurrentTile
     Lx095:
@@ -4679,9 +4679,9 @@ Lx089:
             ; check opposite nametable
             lda #$20-$02
             jsr LD78B
-            lda Temp04_RoomRAMPtr+1.b
+            lda Temp04_RoomRAMPtr+1
             eor #$04
-            sta Temp04_RoomRAMPtr+1.b
+            sta Temp04_RoomRAMPtr+1
     BombCurrentTile:
     txa
     pha
@@ -4716,8 +4716,8 @@ LD78B:
     sbc #$00
 LD798:
     and #$07
-    ora #>RoomRAMA.b
-    sta Temp04_RoomRAMPtr+1.b
+    ora #>RoomRAMA
+    sta Temp04_RoomRAMPtr+1
 RTS_X098:
     rts
 
@@ -4741,7 +4741,7 @@ GetObjRoomRAMPtr:
 ;---------------------------------------------------------------------------------------------------
 
 UpdateElevator:
-    ldx #Elevator - Objects.b
+    ldx #Elevator - Objects
     stx PageIndex
     lda Elevator.status - (Elevator - Objects),x
     jsr JumpEngine ; Pointer table to elevator handlers
@@ -4784,9 +4784,9 @@ ElevatorIdle:
     lda #ObjAnim_SamusFront - ObjectAnimIndexTbl.b
     jsr SetSamusAnim
     ; set samus position to the center of the screen, on top of the elevator
-    lda #(SCRN_VX/2).b
+    lda #(SCRN_VX/2)
     sta Samus.x
-    lda #(SCRN_VY/2 - 8).b
+    lda #(SCRN_VY/2 - 8)
     sta Samus.y
 DrawElevator:
     ; only display elevator at odd frames
@@ -5089,8 +5089,8 @@ SamusCollisionWithSolidEntities: ;($D976)
     lda Elevator.status
     beq @RTS
     ; exit if samus is not touching the elevator
-    ldy #Samus - Objects.b
-    ldx #Elevator - Objects.b
+    ldy #Samus - Objects
+    ldx #Elevator - Objects
     jsr LDC82
     bcs @RTS
     ; exit if samus is not on top of the elevator
@@ -5129,7 +5129,7 @@ Exit8:
 
 UpdateAllStatues:
     ; set page index to statues object slot
-    lda #Statue - Objects.b
+    lda #Statue - Objects
     sta PageIndex
     ; exit if no statue present
     ldy Statue.status
@@ -5186,10 +5186,10 @@ UpdateAllStatues:
     @endIf_C:
 
     ; update kraid statue
-    ldx #KraidStatueStatus - KraidStatueStatus + (Statue - Objects).b
+    ldx #KraidStatueStatus - KraidStatueStatus + (Statue - Objects)
     jsr UpdateStatue
     ; update ridley statue
-    ldx #RidleyStatueStatus - KraidStatueStatus + (Statue - Objects).b
+    ldx #RidleyStatueStatus - KraidStatueStatus + (Statue - Objects)
     jsr UpdateStatue
     ; update bridge to tourian
     jmp UpdateAllStatues_Bridge
@@ -5329,12 +5329,12 @@ UpdateStatueBGTiles:
     lda #$09
     sta TileBlasts.12.animFrame
     ; set tile blast index to #$C0
-    lda #_sizeof_TileBlasts.0*$C.b
+    lda #TileBlasts.12 - TileBlasts.0
     sta PageIndex
     ; update bg tiles
     jsr DrawTileBlast
     ; restore page index to statues object slot
-    lda #Statue - Objects.b
+    lda #Statue - Objects
     sta PageIndex
     rts
 
@@ -5368,7 +5368,7 @@ UpdateAllStatues_Bridge:
     sta StatuesBridgeIsSpawned
 
     ; loop through all 8 blasts to create for the bridge
-    ldx #(8-1)*_sizeof_TileBlasts.0.b
+    ldx #(8-1)*_sizeof_TileBlasts.0
     ldy #$08
     @loop:
         ; set tile blast routine to await respawning
@@ -5573,7 +5573,7 @@ UpdateOnePowerUp: ; 07:DB42
         ;Remove beam weapon data from Samus gear byte.
         ;Since the current item is a beam, it will replace the beam Samus previously had.
         lda SamusGear
-        and #~(gr_WAVEBEAM | gr_ICEBEAM).b
+        and #~(gr_WAVEBEAM | gr_ICEBEAM)
         sta SamusGear
     LDBDA:
     ;Create a bit mask for power-up just obtained.
@@ -5704,7 +5704,7 @@ AddItemToHistory:
     ;Store item ID in unique item history.
     lda Temp06_ItemID
     sta UniqueItemHistory,y
-    lda Temp06_ItemID+1.b
+    lda Temp06_ItemID+1
     sta UniqueItemHistory+1,y
     ;Add 2 to Y. 2 bytes per unique item.
     iny
@@ -5745,7 +5745,7 @@ CreateItemID:
     ;Add upper two bits of X coordinate to byte.
     ora Temp07_ItemX
     ;Upper data byte complete. Save in $07.
-    sta Temp06_ItemID+1.b
+    sta Temp06_ItemID+1
     rts
 
 ;-----------------------------------------------------------------------------------------------------
@@ -5830,14 +5830,14 @@ GetSpriteCntrlData:
     ;Bits 6 and 7 are transferred into $05 bits 6 and 7(sprite flip bits).
     ;bit 5 is then set(sprite always drawn behind background).
     txa
-    and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP
     ora #OAMDATA_PRIORITY
     ora Temp05_Cntrl
     sta Temp05_Cntrl
 
     ;Extract bit from control byte that controls the object mirroring.
     lda ObjectCntrl
-    and #OAMDATA_HFLIP>>2.b
+    and #OAMDATA_HFLIP>>2
     ;Move it to the bit 6 position and use it to flip the horizontal mirroring of the sprite if set.
     asl
     asl
@@ -6043,7 +6043,7 @@ DrawEnemy_NotBlank:
     bcc Lx145
         lda (AreaPointers_RAM.EnFramePtrTable2),y
     Lx145:
-    sta Temp00_FramePtr+1.b
+    sta Temp00_FramePtr+1
 
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     ; load pointer to enemy place data into $02-$03
@@ -6052,7 +6052,7 @@ DrawEnemy_NotBlank:
     sta Temp02_PlacePtr
     iny
     lda (AreaPointers_RAM.EnPlacePtrTable),y
-    sta Temp02_PlacePtr+1.b
+    sta Temp02_PlacePtr+1
     ; branch if place is not EnPlace1
     ldy #$00
     cpx #_id_EnPlace1*2.b
@@ -6069,7 +6069,7 @@ DrawEnemy_NotBlank:
         and #$03
         tax
         lda Temp05_Cntrl
-        and #~(OAMDATA_VFLIP | OAMDATA_HFLIP).b
+        and #~(OAMDATA_VFLIP | OAMDATA_HFLIP)
         ora ExplodeRotationTbl,x
         sta Temp05_Cntrl
         pla
@@ -6162,7 +6162,7 @@ ObjDrawFrame:
     bne LDE60                           ;If not, branch.
 
     lda ObjectCntrl                 ;Ensure object mirroring bit is clear so Samus'-->
-    and #~(OAMDATA_HFLIP>>2).b      ;sprite appears properly when going up and down-->
+    and #~(OAMDATA_HFLIP>>2)      ;sprite appears properly when going up and down-->
     sta ObjectCntrl                 ;elevators.
 
 LDE60:
@@ -6178,12 +6178,12 @@ LDE60:
     lda ObjFramePtrTable,x             ;
     sta Temp00_FramePtr             ;
     lda ObjFramePtrTable+1,x           ;Entry from ObjFramePtrTable is stored in $0000.
-    sta Temp00_FramePtr+1.b         ;
+    sta Temp00_FramePtr+1         ;
     jsr GetSpriteCntrlData          ;($DCC3)Get place pointer index and sprite control data.
     lda ObjPlacePtrTable,x             ;
     sta Temp02_PlacePtr             ;
     lda ObjPlacePtrTable+1,x           ;Store pointer from PlacePtrTbl in $0002.
-    sta Temp02_PlacePtr+1.b         ;
+    sta Temp02_PlacePtr+1         ;
     lda IsSamus                     ;Is Samus the object being drawn?-->
     beq LDEBC                           ;If not, branch.
 
@@ -6490,7 +6490,7 @@ SpriteAttrsOverride: ;($E038)
     ;Reload frame data control byte into A.
     lda (Temp00_FramePtr),y
     ;Extract the two sprite flip bytes from the original control byte and set any additional bits from ObjectCntrl.
-    and #OAMDATA_HFLIP | OAMDATA_VFLIP.b
+    and #OAMDATA_HFLIP | OAMDATA_VFLIP
     ora ObjectCntrl
     ;Store modified byte to load in sprite control byte later.
     sta Temp05_Cntrl
@@ -6577,7 +6577,7 @@ DisplayBar:
         inx
         iny
         ;At end of DataDisplayTbl? If not, loop to load next byte from table.
-        cpy #10*4.b
+        cpy #10*4
         bne @loop
 
 ;Display 2-digit health count.
@@ -7405,7 +7405,7 @@ MoveSamusDown:
         inc SamusScrY
     Lx160:
     lda Samus.y
-    cmp #SCRN_VY-1.b
+    cmp #SCRN_VY-1
     bne Lx162
         lda ScrollDir
         and #$02
@@ -7472,7 +7472,7 @@ ScrollDown:
     @noNewRoom:
     ; ScrollY = (ScrollY + 1) % 0xF0
     ldx ScrollY
-    cpx #SCRN_VY-1.b
+    cpx #SCRN_VY-1
     bne @noNameTableSwitch
         jsr ToggleNameTable ; switch to the opposite Name Table
         ldx #$FF
@@ -7556,15 +7556,15 @@ EndOfRoomVertical:
     rol
 
 UpdateNameTable: ; 07:E590
-    sta Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1
     ; $03.02 = $01.00 + PPU nametable addr = pointer to PPU nametable tile
     jsr GetNameAddrs
-    ora Temp00_RoomRAMPtr+1.b
-    sta Temp02_PPURAMPtr+1.b
+    ora Temp00_RoomRAMPtr+1
+    sta Temp02_PPURAMPtr+1
     ; $01.00 += cart RAM nametable addr = pointer to cart RAM nametable tile
     txa
-    ora Temp00_RoomRAMPtr+1.b
-    sta Temp00_RoomRAMPtr+1.b
+    ora Temp00_RoomRAMPtr+1
+    sta Temp00_RoomRAMPtr+1
     lda Temp00_RoomRAMPtr
     sta Temp02_PPURAMPtr
     lda ScrollDir
@@ -7577,7 +7577,7 @@ UpdateNameTable: ; 07:E590
     dey
     ldx VRAMStructBufferIndex
     ; PPU starting address = $03.02
-    lda Temp02_PPURAMPtr+1.b
+    lda Temp02_PPURAMPtr+1
     jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
     lda Temp02_PPURAMPtr
     jsr WritePPUByte
@@ -7863,7 +7863,7 @@ LE733:
     adc MapPosX                ;Add map pos X to A.
     sta $00                         ;Store result.
     lda $01                         ;
-    adc #>WorldMapRAM.b             ;Add #$7000 to result.
+    adc #>WorldMapRAM             ;Add #$7000 to result.
     sta $01                         ;$0000 = (MapY*32)+MapX+#$7000.
     ldy #$00                        ;
     lda ($00),y                     ;Load room number.
@@ -8030,8 +8030,8 @@ WeaponHitDoorOrStatue:
     @loop:
         ; check if weapon tile column is the same as door tile column
         ; otherwise check next door
-        lda Temp04_RoomRAMPtr+1.b
-        eor DoorRoomRAMPtr+1.b,x
+        lda Temp04_RoomRAMPtr+1
+        eor DoorRoomRAMPtr+1,x
         and #$04
         bne @next
         lda Temp04_RoomRAMPtr
@@ -8299,17 +8299,17 @@ LE95F:
 
 MakeRoomRAMPtr:
     ;Set pointer to $6xxx(cart RAM).
-    lda #RoomRAMA >> 10.b
-    sta Temp04_RoomRAMPtr+1.b
+    lda #RoomRAMA >> 10
+    sta Temp04_RoomRAMPtr+1
     ;Object Y room position.
     lda Temp02_PositionY
     ;Drop 3 LSBs. Only use multiples of 8.
     and #$F8
     ;Move upper 2 bits to lower 2 bits of $05
     asl
-    rol Temp04_RoomRAMPtr+1.b
+    rol Temp04_RoomRAMPtr+1
     asl
-    rol Temp04_RoomRAMPtr+1.b
+    rol Temp04_RoomRAMPtr+1
     ;move bits 3, 4, 5 to upper 3 bits of $04.
     sta Temp04_RoomRAMPtr
     ;Object X room position.
@@ -8329,8 +8329,8 @@ MakeRoomRAMPtr:
     ;Set bit 2 if object is on nametable 3.
     and #$04
     ;Include nametable bit in $05.
-    ora Temp04_RoomRAMPtr+1.b
-    sta Temp04_RoomRAMPtr+1.b
+    ora Temp04_RoomRAMPtr+1
+    sta Temp04_RoomRAMPtr+1
     ;Return pointer in $04 = 01100HYY YYYXXXXX.
     rts
 
@@ -8385,7 +8385,7 @@ IsBlastTile_SkipCheckUpdatingWeapon:
     cpy #$98
     bcs Lx223
 ; attempt to find a vacant tile slot
-    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0.b
+    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0
     Lx219:
         lda TileBlasts.0.routine,x
         beq Lx220                           ; 0 = free slot
@@ -8429,9 +8429,9 @@ SelectRoomRAM:
     ;A=#$64 for name table 3, A=#$60 for name table 0.
     asl
     asl
-    ora #>RoomRAMA.b
+    ora #>RoomRAMA
     ;Save two byte pointer to start of proper room RAM.
-    sta RoomRAMPtr+1.b
+    sta RoomRAMPtr+1
     lda #$00
     sta RoomRAMPtr
     rts
@@ -8477,7 +8477,7 @@ SetupRoom:
     sta RoomPtr                     ;Base copied from $959A to $3B.
     iny                             ;
     lda (AreaPointers_RAM.RoomPtrTable),y            ;High byte of 16-bit room pointer.-->
-    sta RoomPtr+1.b                   ;Base copied from $959B to $3C.
+    sta RoomPtr+1                   ;Base copied from $959B to $3C.
     ldy #$00                        ;
     lda (RoomPtr),y                 ;First byte of room data.
     sta RoomPalette                     ;store initial palette # to fill attrib table with.
@@ -8494,8 +8494,8 @@ DrawObject:
     sta $0E                         ;Store object position byte(%yyyyxxxx).
     lda RoomRAMPtr                  ;
     sta RoomRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
-    lda RoomRAMPtr+1.b                ;(start at beginning of the room).
-    sta RoomRAMWorkPtr+1.b            ;
+    lda RoomRAMPtr+1                ;(start at beginning of the room).
+    sta RoomRAMWorkPtr+1            ;
     lda $0E                         ;Reload object position byte.
     jsr Adiv16                      ;($C2BF)/16. Lower nibble contains object y position.-->
     tax                             ;Transfer it to X, prepare for loop.
@@ -8507,7 +8507,7 @@ DrawObject:
         adc #$40                        ;Advance two rows in room RAM(one y unit).
         sta RoomRAMWorkPtr              ;
         bcc LEA7D                           ;If carry occurred, increment high byte of pointer-->
-            inc RoomRAMWorkPtr+1.b            ;in room RAM.
+            inc RoomRAMWorkPtr+1            ;in room RAM.
         LEA7D:
         dex                             ;
         bne LEA72                          ;Repeat until at desired y position(X=0).
@@ -8519,7 +8519,7 @@ LEA80:
     adc RoomRAMWorkPtr              ;
     sta RoomRAMWorkPtr              ;Add x position to room RAM work pointer.
     bcc LEA8D                           ;If carry occurred, increment high byte of room RAM work-->
-    inc RoomRAMWorkPtr+1.b            ;pointer, else branch to draw object.
+    inc RoomRAMWorkPtr+1            ;pointer, else branch to draw object.
 
 ;RoomRAMWorkPtr now points to the object's starting location (upper left corner)
 ;on the room RAM which will eventually be loaded into a name table.
@@ -8538,7 +8538,7 @@ LEA8D:
     sta StructPtr                   ;
     iny                             ;
     lda (AreaPointers_RAM.StructPtrTable),y          ;High byte of 16-bit structure ptr.
-    sta StructPtr+1.b                 ;
+    sta StructPtr+1                 ;
     jsr DrawStruct                  ;($EF8C)Draw one structure.
     lda #$03                        ;Move to next set of structure data.
     jsr AddToRoomPtr                ;($EAC0)Add A to room data pointer.
@@ -8571,7 +8571,7 @@ AddToRoomPtr:
     ;Did carry occur? If not branch to exit.
     bcc RTS_EAC9
         ;Increment high byte of room pointer if carry occured.
-        inc RoomPtr+1.b
+        inc RoomPtr+1
     RTS_EAC9:
     rts
 
@@ -8581,7 +8581,7 @@ EndOfObjs:
     ;Store room pointer in $0000.
     lda RoomPtr
     sta $00
-    lda RoomPtr+1.b
+    lda RoomPtr+1
     sta $01
     ;Prepare to increment to enemy/door data.
     lda #$01
@@ -8969,7 +8969,7 @@ DeleteOffscreenRoomSprites:
         jsr Xminus16
         bpl @loop_enemies
     ; same thing with mellows
-    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0
     @loop_mellows:
         tya
         eor Mellows.0.hi,x
@@ -8991,7 +8991,7 @@ DeleteOffscreenRoomSprites:
     asl
     tay
     ; tile blasts
-    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0.b
+    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0
     @loop_tileBlasts:
         tya
         eor TileBlasts.0.roomRAMPtr+1,x
@@ -9000,18 +9000,18 @@ DeleteOffscreenRoomSprites:
             sta TileBlasts.0.routine,x
         @dontDeleteTileBlast:
         jsr Xminus16
-        cmp #-_sizeof_TileBlasts.0.b
+        cmp #-_sizeof_TileBlasts.0
         bne @loop_tileBlasts
     tya
     lsr
     lsr
     tay
     ; non-beam weapons
-    ldx #Weapons.0 - Objects.b
+    ldx #Weapons.0 - Objects
     jsr Weapon_RemoveIfOffScreen
-    ldx #Weapons.1 - Objects.b
+    ldx #Weapons.1 - Objects
     jsr Weapon_RemoveIfOffScreen
-    ldx #Weapons.2 - Objects.b
+    ldx #Weapons.2 - Objects
     jsr Weapon_RemoveIfOffScreen
     tya
     ; elevator
@@ -9021,7 +9021,7 @@ DeleteOffscreenRoomSprites:
         sta Elevator.status
     @endIf_elevator:
     ; unused RAM $0700-$0723
-    ldx #_sizeof_Mem0700 - _sizeof_Mem0700.0.b
+    ldx #_sizeof_Mem0700 - _sizeof_Mem0700.0
     @loop_Mem0700:
         lda Mem0700.0.data04,x
         bne @dontDeleteMem0700
@@ -9040,7 +9040,7 @@ DeleteOffscreenRoomSprites:
         sta Statue.status
     @dontDeleteStatues:
     ; pipe bug holes
-    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
+    ldx #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0
     @loop_pipeBugHoles:
         tya
         cmp PipeBugHoles.0.hi,x
@@ -9081,7 +9081,7 @@ EraseScrollBlockOnNameTableAtScrollDir:
 
 Doors_RemoveIfOffScreen:
     ; loop through all doors
-    ldx #Doors.3 - Objects.b
+    ldx #Doors.3 - Objects
     @loop:
         ; branch if door doesn't exist
         lda Objects.0.status,x
@@ -9102,7 +9102,7 @@ Doors_RemoveIfOffScreen:
 Weapon_RemoveIfOffScreen:
     ; exit if weapon doesn't exist or is a beam
     lda Objects.0.status,x
-    cmp #wa_BulletExplode+1.b
+    cmp #wa_BulletExplode+1
     bcc @RTS
 
     ; exit if weapon is in current nametable
@@ -9310,7 +9310,7 @@ CheckForItem:
     beq @samusDoesNotHaveThisItem
     @loop:
         ;Look for upper byte of unique item. branch if it doesn't match
-        lda Temp06_ItemID+1.b
+        lda Temp06_ItemID+1
         cmp UniqueItemHistory-1,y
         bne @noMatch
         ; upper byte matches
@@ -9335,7 +9335,7 @@ CheckForItem:
 
 SpawnMellows:
     ; try to spawn a mellow in all available mellow slots
-    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0
     ; store random number in MellowRandomNumber
     lda RandomNumber1
     adc FrameCount
@@ -9396,9 +9396,9 @@ SpawnCannon_exit:
 SpawnMotherBrain:
     jsr GotoSpawnMotherBrainRoutine
     ; branch if mother brain is not dead
-    lda #>ui_MOTHERBRAIN.b
-    sta Temp06_ItemID+1.b
-    lda #<ui_MOTHERBRAIN.b
+    lda #>ui_MOTHERBRAIN
+    sta Temp06_ItemID+1
+    lda #<ui_MOTHERBRAIN
     sta Temp06_ItemID
     jsr CheckForItem
     bcc SpawnMotherBrain_exit
@@ -9417,9 +9417,9 @@ SpawnZebetite:
     jsr GotoSpawnZebetiteRoutine
     txa
     lsr
-    adc #>ui_ZEBETITE1.b
-    sta Temp06_ItemID+1.b
-    lda #<ui_ZEBETITE1.b
+    adc #>ui_ZEBETITE1
+    sta Temp06_ItemID+1
+    lda #<ui_ZEBETITE1
     sta Temp06_ItemID
     jsr CheckForItem
     bcc @endIf_A
@@ -9490,13 +9490,13 @@ DrawStructRow:
     sta Temp00_RoomRAMPtr
     ;Save high byte of work pointer in $01.
     lda #$00
-    adc RoomRAMWorkPtr+1.b
-    sta Temp00_RoomRAMPtr+1.b
+    adc RoomRAMWorkPtr+1
+    sta Temp00_RoomRAMPtr+1
     ;$0000 = work pointer.
 
 DrawMetatile:
     ;High byte of current location in room RAM.
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     ;Check high byte of room RAM address for both room RAMs to see if the attribute table data-->
     ;for the room RAM has been reached.
     ;If so, branch to check lower byte as well.
@@ -9581,7 +9581,7 @@ AdvanceRow:
     sta StructPtr
     ;Update high byte of struct pointer if carry occured.
     bcc @endIf_A
-        inc StructPtr+1.b
+        inc StructPtr+1
     @endIf_A:
     ;Advance to next metatile row in room RAM(two tile rows).
     lda #$40
@@ -9590,7 +9590,7 @@ AdvanceRow:
     sta RoomRAMWorkPtr
     ;Increment high byte of pointer if necessary.
     bcc @endIf_B
-        inc RoomRAMWorkPtr+1.b
+        inc RoomRAMWorkPtr+1
     @endIf_B:
     ;Begin drawing next structure row.
 
@@ -9635,23 +9635,23 @@ UpdateAttrib: ; 07:EF9E
     ;corresponds to the metatile that has just been placed in the room RAM.
     lda Temp00_RoomRAMPtr
     sta Temp02_AttribPtr
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     lsr
     ror Temp02_AttribPtr
     lsr
     ror Temp02_AttribPtr
     lda Temp02_AttribPtr
     and #$07
-    sta Temp02_AttribPtr+1.b
+    sta Temp02_AttribPtr+1
     lda Temp02_AttribPtr
     lsr
     lsr
     and #$38
-    ora Temp02_AttribPtr+1.b
+    ora Temp02_AttribPtr+1
     ora #$C0
     sta Temp02_AttribPtr
     lda #$63
-    sta Temp02_AttribPtr+1.b
+    sta Temp02_AttribPtr+1
     ;$0002 contains pointer to attribute byte.
 
     ;The following section of code figures out which pair of bits to modify in-->
@@ -9677,11 +9677,11 @@ UpdateAttrib: ; 07:EF9E
 
 ;The following code clears the old attribute table bits and sets the new ones.
     ;Load high byte of work pointer in room RAM.
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     and #$04
     ;Choose proper attribute table associated with the current room RAM.
-    ora Temp02_AttribPtr+1.b
-    sta Temp02_AttribPtr+1.b
+    ora Temp02_AttribPtr+1
+    sta Temp02_AttribPtr+1
     ;Choose appropriate attribute table bit mask from table below.
     lda AttribMaskTable,x
     ;clear the old attribute table bits.
@@ -9714,7 +9714,7 @@ AttribMaskTable:
 ;------------------------[ Initialize room RAM and associated attribute table ]-----------------------
 
 InitTables:
-    lda RoomRAMPtr+1.b                ;#$60 or #$64.
+    lda RoomRAMPtr+1                ;#$60 or #$64.
     tay                             ;
     tax                             ;Save value to create counter later.
     iny                             ;
@@ -9780,7 +9780,7 @@ CollisionDetection:
     sta SamusHurt010F
 
 ; mellow <--> bullet/missile/bomb detection
-    ldx #_sizeof_Mellows - _sizeof_Mellows.0.b
+    ldx #_sizeof_Mellows - _sizeof_Mellows.0
     Lx261:
         ; branch if no Mellow in slot
         lda Mellows.0.status,x
@@ -9868,7 +9868,7 @@ Lx269:
         beq Lx274
 
         ; first weapon slot
-        ldy #Weapons.0 - Objects.b
+        ldy #Weapons.0 - Objects
         Lx271:
             lda Objects.0.status,y  ; is it active?
             beq Lx273            ; branch if not
@@ -10109,7 +10109,7 @@ CheckCollisionOfXSlotAndYSlot:
         ; compensate for the screen height being 240 instead of 256
         lda Temp00_Diff
         sec
-        sbc #$100-SCRN_VY.b
+        sbc #$100-SCRN_VY
         sta Temp00_Diff
         bcs @endIf_A
             dec Temp01_DiffHi
@@ -10317,7 +10317,7 @@ LF306:
     lda AreaEnemyDamage
     sta HealthChange
     lda AreaEnemyDamage+1
-    sta HealthChange+1.b
+    sta HealthChange+1
 RTS_X294:
     rts
 
@@ -10341,7 +10341,7 @@ SamusHurt_F311:
 ClearHealthChange:
     lda #$00
     sta HealthChange
-    sta HealthChange+1.b
+    sta HealthChange+1
 
 Exit22:
     rts                             ;Return for routine above and below.
@@ -10384,7 +10384,7 @@ UpdateEnemy: ; 07:F351
                                     ;iteration. There is a max of 6 enemies at a time.
     ldy EnsExtra.0.status,x
     beq @endIf
-        cpy #enemyStatus_Active+1.b
+        cpy #enemyStatus_Active+1
         bcs @endIf
             ; enemy status is enemyStatus_Resting or enemyStatus_Active here
             jsr UpdateEnemy_CheckIfVisible
@@ -10392,7 +10392,7 @@ UpdateEnemy: ; 07:F351
     jsr UpdateEnemy_UpdateEnData05Bit6
     lda EnsExtra.0.status,x
     sta EnemyStatusPreAI
-    cmp #enemyStatus_Hurt+1.b
+    cmp #enemyStatus_Hurt+1
     bcs @invalidStatus
     jsr JumpEngine
         .word ExitSub ; 00 ($C45C) rts
@@ -10521,7 +10521,7 @@ UpdateEnemyCommon:
         lda ObjectCntrl
         bmi @endIf_A
             ; use palette 3 for tough enemy
-            lda #$80 | $3 | OAMDATA_PRIORITY.b
+            lda #$80 | $3 | OAMDATA_PRIORITY
 @setHurtPalette:
             sta ObjectCntrl
     @endIf_A:
@@ -10552,7 +10552,7 @@ UpdateEnemy_Frozen: ; ($F43E)
     beq UpdateEnemyCommon
     bit ObjectCntrl
     bmi Lx302
-        lda #$81 | OAMDATA_PRIORITY.b
+        lda #$81 | OAMDATA_PRIORITY
         sta ObjectCntrl
     Lx302:
     lda FrameCount
@@ -10620,7 +10620,7 @@ UpdateEnemy_Pickup: ;($F483)
     @endIf_A:
     pla
     sty HealthChange
-    stx HealthChange+1.b
+    stx HealthChange+1
     jsr AddHealth                   ;($CEF9)Add health to Samus.
     jmp SFX_EnergyPickup
 
@@ -10659,7 +10659,7 @@ UpdateEnemy_Pickup: ;($F483)
     lda FrameCount
     and #$02
     lsr
-    ora #$80 | OAMDATA_PRIORITY.b
+    ora #$80 | OAMDATA_PRIORITY
     sta ObjectCntrl
     jmp UpdateEnemyCommon@noMoveNoAnim
 ;--------------------------------------------
@@ -10692,7 +10692,7 @@ UpdateEnemy_Hurt:
         pla
     @exit:
     ; use palette 0 for hurt enemy
-    lda #$80 | $0 | OAMDATA_PRIORITY.b
+    lda #$80 | $0 | OAMDATA_PRIORITY
     jmp UpdateEnemyCommon@setHurtPalette
 
 LF515:
@@ -10897,7 +10897,7 @@ ExplodeEnemy:
     bvs @endIf_A
         ; branch if enemy was not hit by the regular beam
         lda EnWeaponAction,x
-        cmp #wa_RegularBeam+1.b
+        cmp #wa_RegularBeam+1
         bcs @endIf_A
             ; enemy is hit by regular beam
             ; immediately try becoming pickup without first playing the chunky explosion animation
@@ -11835,7 +11835,7 @@ Table16:
 
 ;-------------------------------------------------------------------------------
 UpdateAllPipeBugHoles:
-    ldy #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0.b
+    ldy #_sizeof_PipeBugHoles - _sizeof_PipeBugHoles.0
     @loop:
         jsr UpdatePipeBugHole
         lda PageIndex
@@ -11997,7 +11997,7 @@ InitEnActiveAnimIndex_NoL967BOffset: ; 07:FBCA
 UpdateAllSkreeProjectiles:
     lda #$40
     sta PageIndex
-    ldx #_sizeof_SkreeProjectiles - _sizeof_SkreeProjectiles.0.b
+    ldx #_sizeof_SkreeProjectiles - _sizeof_SkreeProjectiles.0
     @loop:
         jsr UpdateSkreeProjectile
         dex
@@ -12117,7 +12117,7 @@ UpdateAllMellows:
     jsr UpdateEnemyAnim
     lda RandomNumber1
     sta MellowRandomNumber
-    lda #_sizeof_Mellows - _sizeof_Mellows.0.b
+    lda #_sizeof_Mellows - _sizeof_Mellows.0
     @loop:
         pha
         tax
@@ -12406,13 +12406,13 @@ UpdateTourianItems: ; $FDE3
         ; Add [mother brain defeated] to item history
         ; a is #$00, low byte of ui_MOTHERBRAIN
         sta Temp06_ItemID
-        lda #>ui_MOTHERBRAIN.b
-        sta Temp06_ItemID+1.b
+        lda #>ui_MOTHERBRAIN
+        sta Temp06_ItemID+1
         jsr AddItemToHistory
     @endIf_A:
 
     ; Loop through zebetites (@ x = #$20, #$18, #$10, #$08, #$00)
-    ldx #_sizeof_Zebetites - _sizeof_Zebetites.0.b
+    ldx #_sizeof_Zebetites - _sizeof_Zebetites.0
     @loop:
         ; ($FE05) Update one zebetite
         jsr CheckZebetite
@@ -12436,14 +12436,14 @@ CheckZebetite: ; $FE05
     inc Zebetites.0.status,x
     txa
     lsr                     ; A =  zebetite index * 4 (10, C, 8, 4, or 0)
-    adc #>ui_ZEBETITE1.b      ;      + $3C
-    sta Temp06_ItemID+1.b
+    adc #>ui_ZEBETITE1      ;      + $3C
+    sta Temp06_ItemID+1
     jmp AddItemToHistory               ; Add zebetite to item history
 
 ;-------------------------------------------------------------------------------
 ; Tile degenerate/regenerate
 UpdateAllTileBlasts:
-    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0.b
+    ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0
     @loop:
         jsr UpdateTileBlast
         ldx PageIndex
@@ -12477,7 +12477,7 @@ UpdateTileBlast_Init:
     lda TileBlasts.0.roomRAMPtr,x
     sta Temp00_RoomRAMPtr
     lda TileBlasts.0.roomRAMPtr+1,x
-    sta Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1
     ; fallthrough
 
 UpdateTileBlast_Animating:
@@ -12532,14 +12532,14 @@ UpdateTileBlast_Respawned:
     adc #$21
     sta Temp00_RoomRAMPtr
     lda TileBlasts.0.roomRAMPtr+1,x
-    sta Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1
     jsr GetPosAtNameTableAddr
     ; check if colliding with Samus
     lda Temp02_MetatileCenterY
     sta Temp07_XSlotPositionY
     lda Temp03_MetatileCenterX
     sta Temp09_XSlotPositionX
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     lsr
     lsr
     and #$01
@@ -12575,7 +12575,7 @@ GetVRAMStringPtr:
     lda VRAMStringPtrTable,y
     sta Temp02_VRAMStringPtr
     lda VRAMStringPtrTable+1,y
-    sta Temp02_VRAMStringPtr+1.b
+    sta Temp02_VRAMStringPtr+1
 @RTS:
     rts
 
@@ -12596,7 +12596,7 @@ DrawTileBlast: ; 07:FEDC
     lda TileBlasts.0.roomRAMPtr,x
     sta Temp00_RoomRAMPtr
     lda TileBlasts.0.roomRAMPtr+1,x
-    sta Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1
     ; load vram string pointer of vram string to write
     jsr GetVRAMStringPtr
     ; $11 = room RAM index = 0
@@ -12646,17 +12646,17 @@ DrawTileBlast: ; 07:FEDC
     ; now we must also write the vram string to VRAM
     ; $01.$00 = PPU address to write tile blast
     ; branch if in RoomRAMA
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     and #$04
     beq @inNameTable0
         ; write to nametable 3
-        lda Temp00_RoomRAMPtr+1.b
+        lda Temp00_RoomRAMPtr+1
         ora #$0C
-        sta Temp00_RoomRAMPtr+1.b
+        sta Temp00_RoomRAMPtr+1
     @inNameTable0:
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     and #$2F
-    sta Temp00_RoomRAMPtr+1.b
+    sta Temp00_RoomRAMPtr+1
     jsr WriteVRAMString
     ; return carry clear
     clc
@@ -12671,7 +12671,7 @@ GetPosAtNameTableAddr:
     tay
     and #%11100000
     sta Temp02_MetatileCenterY
-    lda Temp00_RoomRAMPtr+1.b
+    lda Temp00_RoomRAMPtr+1
     lsr
     ror Temp02_MetatileCenterY
     lsr

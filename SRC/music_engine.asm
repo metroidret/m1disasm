@@ -264,22 +264,22 @@ GotoLoadSQ1SFXInitFlags:
 
 LoadSQ1ChannelSFX: ;($B368)
     ;Used to determine which sound registers to change ($4000 - $4003) - SQ1.
-    lda #<SQ1_VOL.b
+    lda #<SQ1_VOL
     beq LoadSFXData ;Branch always.
 
 LoadTriChannelSFX:
     ;Used to determine which sound registers to change ($4008 - $400B) - Triangle.
-    lda #<TRI_LINEAR.b
+    lda #<TRI_LINEAR
     bne LoadSFXData ;Branch always.
 
 LoadNoiseChannelSFX:
     ;Used to determine which sound registers to change ($400C - $400F) - Noise.
-    lda #<NOISE_VOL.b
+    lda #<NOISE_VOL
     bne LoadSFXData ;Branch always.
 
 LoadSQ2ChannelSFX:
     ;Used to determine which sound registers to change ($4004 - $4007) - SQ2.
-    lda #<SQ2_VOL.b
+    lda #<SQ2_VOL
     ; fallthrough
 
 LoadSFXData:
@@ -287,13 +287,13 @@ LoadSFXData:
     sta SoundE0
     ;Upper address byte of desired APU control register.
     lda #$40
-    sta SoundE0+1.b
+    sta SoundE0+1
     
     ;Lower address byte of data to load into sound channel.
     sty SoundE2
     ;Upper address byte of data to load into sound channel.
     lda #>SFXData.b
-    sta SoundE2+1.b
+    sta SoundE2+1
     
     ;Starting index for loading four byte sound data.
     ldy #$00
@@ -356,7 +356,7 @@ SoundEngine_GameIsPaused:
 SoundEngine:
     ;Set APU to 5 frame cycle, disable frame interrupt.
     ;This syncs the APU's frame counter with the PPU.
-    lda #APU_5STEP | APU_IRQDISABLE.b
+    lda #APU_5STEP | APU_IRQDISABLE
     sta JOY2
     ;is bit zero is set in NoiseSFXFlag(Silence music)?  If yes, branch.
     lda NoiseSFXFlag
@@ -525,7 +525,7 @@ CheckSFXFlag:
     ;Prepare pointer to SFX data
     stx SoundE4
     ldy #>NoiseSFXInitPointers.b
-    sty SoundE4+1.b
+    sty SoundE4+1
     ;Y=0 for counting loop ahead.
     ldy #$00
     @loop_A:
@@ -569,7 +569,7 @@ CheckSFXFlag:
     sta SoundE2                     ;specific SFX handling routine for the SFX flag-->
     iny                             ;found.  The address is stored in registers-->
     lda (SoundE0),y                 ;$E2 and $E3.
-    sta SoundE2+1.b                   ;
+    sta SoundE2+1                   ;
     jmp @RestoreSFXFlags             ;($B4EA)Restore original data in CurrentSFXFlags.
 
 ;-----------------------------------[ SFX Handling Routines ]---------------------------------------
@@ -670,7 +670,7 @@ RTS_MusicBranch02:
 SamusWalkSFXStart:
     lda NoiseContSFX                ;If MissileLaunch, BombExplode or SpitFire SFX are-->
                                     ;already being played, branch to exit.s
-    and #sfxNoise_MissileLaunch | sfxNoise_BombExplode | sfxNoise_SpitFlame.b
+    and #sfxNoise_MissileLaunch | sfxNoise_BombExplode | sfxNoise_SpitFlame
     bne RTS_MusicBranch02           ;
     lda #$03                        ;Number of frames to play sound before a change.
     ldy #<SamusWalkSFXData.b          ;Lower byte of sound data start address(base=$B200).
@@ -881,7 +881,7 @@ BulletFireSFXStart:
     bcs HasIceBeamSFXStart          ;
     lda SQ1ContSFX                  ;If MissilePickup, EnergyPickup, BirdOutOfHole-->
                                     ;or EnemyHit SFX already playing, branch to exit.
-    and #sfxSQ1_MissilePickup | sfxSQ1_EnergyPickup | sfxSQ1_OutOfHole | sfxSQ1_EnemyHit.b
+    and #sfxSQ1_MissilePickup | sfxSQ1_EnergyPickup | sfxSQ1_OutOfHole | sfxSQ1_EnemyHit
     bne RTS_MusicBranch03           ;
     lda HasBeamSFX                  ;
     asl                             ;If Samus has long beam, branch.
@@ -1362,7 +1362,7 @@ WriteSQCntrl0:
     lda VolumeEnvelopePtrTable,y
     sta VolumeEnvelopePtr
     lda VolumeEnvelopePtrTable+1,y
-    sta VolumeEnvelopePtr+1.b
+    sta VolumeEnvelopePtr+1
     ;Index to desired volume data.
     ldy SQ1VolumeIndex,x
     ;Load desired volume for current channel into Cntrl0Data.
@@ -1453,7 +1453,7 @@ LBAC2:
     lda SQ1Base,x                 ;
     sta SoundChannelBase                         ;Load sound channel info base address into $E6-->
     lda SQ1Base+1,x                 ;and $E7. ($E6=low byte, $E7=high byte).
-    sta SoundChannelBase+1.b                         ;
+    sta SoundChannelBase+1                         ;
     lda SQ1Base+1,x                 ;If no data for this sound channel, branch-->
     beq LBAB0                       ;to find data for next sound channel.
     txa                             ;
@@ -1612,7 +1612,7 @@ LBBD8:
 
 LoadNoiseChannelMusic:
     lda NoiseContSFX                ;If playing any Noise SFX, branch to exit.
-    and #$FF~(sfxNoise_PauseMusic | sfxNoise_SilenceMusic).b
+    and #~(sfxNoise_PauseMusic | sfxNoise_SilenceMusic)
     bne LBBF7                       ;
         lda SFXData,y                     ;
         sta NOISE_VOL                 ;Load noise channel with drum beat SFX starting-->

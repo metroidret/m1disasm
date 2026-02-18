@@ -282,7 +282,7 @@ MetroidAIRoutine_{AREA}:
         ora Health+1
         beq @endIf_P
             ; Subtract 1/4 health point from Samus
-            sty HealthChange+1.b
+            sty HealthChange+1
             ldy #$04
             sty HealthChange
             jsr CommonJump_SubtractHealth
@@ -293,7 +293,7 @@ MetroidAIRoutine_{AREA}:
     lda ObjectCntrl
     bmi @endIf_Q
         lda EnsExtra.0.type,x
-        ora #$82 | OAMDATA_PRIORITY.b
+        ora #$82 | OAMDATA_PRIORITY
         sta ObjectCntrl
     @endIf_Q:
     jmp UpdateEnemyCommon_Decide_{AREA}

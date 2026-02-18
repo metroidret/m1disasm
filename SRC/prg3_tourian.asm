@@ -561,7 +561,7 @@ AreaRoutine_Tourian:
 
 ;-------------------------------------------------------------------------------
 UpdateAllCannons:
-    ldx #_sizeof_Cannons - _sizeof_Cannons.0.b
+    ldx #_sizeof_Cannons - _sizeof_Cannons.0
     @loop:
         jsr @updateIfPossible
         lda CannonIndex
@@ -987,7 +987,7 @@ GetRoomRAMPtrHi:
     jsr GetNameTableAtScrollDir_
     asl
     asl
-    ora #(>RoomRAMA)+1.b
+    ora #(>RoomRAMA)+1
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1104,7 +1104,7 @@ MotherBrain_Idle_CollideWithSamus:
     lda #$00
     sta HealthChange
     lda #$02
-    sta HealthChange+1.b
+    sta HealthChange+1
     lda #$38
     sta Samus.isHit
     jmp CommonJump_SubtractHealth
@@ -1469,7 +1469,7 @@ MotherBrain_TimeBombExploded: ; 03:9FC0
     lda #$0A
     sta MotherBrainStatus
     ; reload palette #$00
-    lda #_id_Palette00+1.b
+    lda #_id_Palette00+1
     sta PaletteDataPending
 @RTS:
     rts
@@ -1726,7 +1726,7 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
         ; set pointer
         lda #$8C
         sta TileBlasts.0.roomRAMPtr,x
-        lda Temp04_RoomRAMPtr+1.b
+        lda Temp04_RoomRAMPtr+1
         sta TileBlasts.0.roomRAMPtr+1,x
         ; set to clear 2x3 tile region
         lda #$01
@@ -1773,7 +1773,7 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
             and #$9E
             cmp Zebetites.0.roomRAMPtr,y
             bne @notTheRightZebetite
-            lda Temp04_RoomRAMPtr+1.b
+            lda Temp04_RoomRAMPtr+1
             cmp Zebetites.0.roomRAMPtr+1,y
             beq @theRightZebetite
             @notTheRightZebetite:
@@ -1979,7 +1979,7 @@ UpdateEndTimer:
     lda #$0C
     sta Timer3
     ; set palette to all white
-    lda #_id_Palette0A+1.b
+    lda #_id_Palette0A+1
     sta PaletteDataPending
 @RTS:
     rts
@@ -2043,7 +2043,7 @@ RTS_A28A:
 ;-------------------------------------------------------------------------------
 UpdateAllZebetites:
     ; set tile blast index to 1
-    lda #1*_sizeof_TileBlasts.0.b
+    lda #TileBlasts.1 - TileBlasts.0
     sta PageIndex
     ; run UpdateZebetite for all zebetite slots
     ldx #$20

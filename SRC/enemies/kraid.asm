@@ -127,10 +127,10 @@ KraidUpdateProjectile_{AREA}:
     dey
     beq @resting
     ; remove projectile if its exploding
-    cpy #enemyStatus_Explode-1.b
+    cpy #enemyStatus_Explode-1
     beq @remove
     ; exit if projectile is not frozen
-    cpy #enemyStatus_Frozen-1.b
+    cpy #enemyStatus_Frozen-1
     bne KraidUpdateProjectile_Exit_{AREA}
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting
