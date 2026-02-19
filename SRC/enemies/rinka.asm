@@ -23,14 +23,14 @@ RinkaAIRoutine_{AREA}:
     ; save Samus x pos relative to enemy in $01
     lda Samus.x
     sec
-    sbc EnX,x
+    sbc Ens.0.x,x
     sta $01
-    ; push EnData05 to stack
-    lda EnData05,x
+    ; push Ens.0.data05 to stack
+    lda Ens.0.data05,x
     pha
     ; shift horizontal facing direction into carry
     lsr
-    ; push EnData05/2 to stack
+    ; push Ens.0.data05/2 to stack
     pha
     ; branch if facing right
     bcc @endIf_A
@@ -45,9 +45,9 @@ RinkaAIRoutine_{AREA}:
     ; save Samus y pos relative to enemy in $00
     lda Samus.y
     sec
-    sbc EnY,x
+    sbc Ens.0.y,x
     sta $00
-    ; pull EnData05/2 from stack
+    ; pull Ens.0.data05/2 from stack
     pla
     ; shift vertical facing direction into carry
     lsr
@@ -91,24 +91,24 @@ RinkaAIRoutine_{AREA}:
     ; set rinka speed based on $00 and $01
     jsr SetRinkaSpeed_{AREA}
     
-    ; pull EnData05 from stack
+    ; pull Ens.0.data05 from stack
     pla
     ; shift horizontal facing direction into carry
     lsr
-    ; push EnData05/2 to stack
+    ; push Ens.0.data05/2 to stack
     pha
     ; branch if facing right
     bcc @endIf_C
         ; enemy is facing left
         ; negate rinka x speed
         lda #$00
-        sbc EnSpeedSubPixelX,x
-        sta EnSpeedSubPixelX,x
+        sbc Ens.0.speedSubPixelX,x
+        sta Ens.0.speedSubPixelX,x
         lda #$00
-        sbc EnSpeedX,x
-        sta EnSpeedX,x
+        sbc Ens.0.speedX,x
+        sta Ens.0.speedX,x
     @endIf_C:
-    ; pull EnData05/2 from stack
+    ; pull Ens.0.data05/2 from stack
     pla
     ; shift vertical facing direction into carry
     lsr
@@ -118,44 +118,44 @@ RinkaAIRoutine_{AREA}:
         ; enemy is facing up
         ; negate rinka y speed
         lda #$00
-        sbc EnSpeedSubPixelY,x
-        sta EnSpeedSubPixelY,x
+        sbc Ens.0.speedSubPixelY,x
+        sta Ens.0.speedSubPixelY,x
         lda #$00
-        sbc EnSpeedY,x
-        sta EnSpeedY,x
+        sbc Ens.0.speedY,x
+        sta Ens.0.speedY,x
     @endIf_D:
 
 @moveRinka:
-    ; branch if bit 6 of EnData05 is set (30FPS)
-    lda EnData05,x
+    ; branch if bit 6 of Ens.0.data05 is set (30FPS)
+    lda Ens.0.data05,x
     asl
     bmi @endIf_E
         ; move rinka
         
         ; apply y sub-pixel speed to sub-pixel position
-        lda EnSpeedSubPixelY,x
+        lda Ens.0.speedSubPixelY,x
         clc
         adc EnsExtra.0.subPixelY,x
         sta EnsExtra.0.subPixelY,x
         ; if sub-pixel position overflowed, add 1 to temp speed
-        lda EnSpeedY,x
+        lda Ens.0.speedY,x
         adc #$00
         sta Temp04_SpeedY
 
         ; apply x sub-pixel speed to sub-pixel position
-        lda EnSpeedSubPixelX,x
+        lda Ens.0.speedSubPixelX,x
         clc
         adc EnsExtra.0.subPixelX,x
         sta EnsExtra.0.subPixelX,x
         ; if sub-pixel position overflowed, add 1 to temp speed
-        lda EnSpeedX,x
+        lda Ens.0.speedX,x
         adc #$00
         sta Temp05_SpeedX
 
         ; store position to temp
-        lda EnY,x
+        lda Ens.0.y,x
         sta Temp08_PositionY
-        lda EnX,x
+        lda Ens.0.x,x
         sta Temp09_PositionX
         lda EnsExtra.0.hi,x
         sta Temp0B_PositionHi
@@ -180,22 +180,22 @@ SetRinkaSpeed_{AREA}:
     pha
     ; write upper nibble to enemy y speed
     jsr Adiv16_
-    sta EnSpeedY,x
+    sta Ens.0.speedY,x
     pla
     ; write lower nibble to enemy y speed subpixels
     jsr Amul16_
-    sta EnSpeedSubPixelY,x
+    sta Ens.0.speedSubPixelY,x
 
     ; load x speed
     lda $01
     pha
     jsr Adiv16_
     ; write upper nibble to enemy x speed
-    sta EnSpeedX,x
+    sta Ens.0.speedX,x
     pla
     ; write lower nibble to enemy x speed subpixels
     jsr Amul16_
-    sta EnSpeedSubPixelX,x
+    sta Ens.0.speedSubPixelX,x
     rts
 
 

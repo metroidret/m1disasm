@@ -607,9 +607,9 @@ UpdateEnemyCommon_Decide_{AREA}:
 .include "enemies/ridley.asm"
 
 StoreEnemyPositionToTemp__{AREA}:
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp08_PositionY
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp09_PositionX
     lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
@@ -620,9 +620,9 @@ LoadEnemyPositionFromTemp__{AREA}:
     and #$01
     sta EnsExtra.0.hi,x
     lda Temp08_PositionY
-    sta EnY,x
+    sta Ens.0.y,x
     lda Temp09_PositionX
-    sta EnX,x
+    sta Ens.0.x,x
     rts
 
 ;-------------------------------------------------------------------------------

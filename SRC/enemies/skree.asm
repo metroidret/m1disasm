@@ -12,7 +12,7 @@ SkreeAIRoutine_{AREA}:
     beq SkreeExit_Explode_{AREA}
     
     ; branch if skree has not reached the ground
-    lda EnMovementInstrIndex,x
+    lda Ens.0.movementInstrIndex,x
     cmp #$0F
     bcc SkreeExit_Active_{AREA}
     ; branch if skree was on the ground for more than 1 frame
@@ -40,9 +40,9 @@ SkreeBlowUpIntoProjectiles_{AREA}:
         lda #$0A
         sta SkreeProjectiles.0.dieDelay,y
         ; set projectile position to skree position
-        lda EnY,x
+        lda Ens.0.y,x
         sta SkreeProjectiles.0.y,y
-        lda EnX,x
+        lda Ens.0.x,x
         sta SkreeProjectiles.0.x,y
         lda EnsExtra.0.hi,x
         sta SkreeProjectiles.0.hi,y

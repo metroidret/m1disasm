@@ -18,15 +18,15 @@ SqueeptAIRoutine_{AREA}:
         ; squeept must jump
         
         ; set initial jump velocity
-        ldy EnMovementIndex,x
+        ldy Ens.0.movementIndex,x
         lda SqueeptSpeedYTable_{AREA},y
-        sta EnSpeedY,x
+        sta Ens.0.speedY,x
         ; set jump gravity
         lda #$40
         sta EnsExtra.0.accelY,x
         ; clear sub-pixel speed
         lda #$00
-        sta EnSpeedSubPixelY,x
+        sta Ens.0.speedSubPixelY,x
 @endIf_A:
     ; exit if current status is explode
     lda EnsExtra.0.status,x
@@ -82,9 +82,9 @@ SqueeptAIRoutine_{AREA}:
         ; set squeept y position to lava y position
         sta Temp08_PositionY
         ; trigger status change of squeept to resting
-        lda EnData05,x
+        lda Ens.0.data05,x
         ora #$20
-        sta EnData05,x
+        sta Ens.0.data05,x
     @endIf_C:
     jsr LoadEnemyPositionFromTemp__{AREA}
 

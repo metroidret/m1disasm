@@ -84,6 +84,46 @@
     unused                 dw
 .endst
 
+.struct En
+    y                      db   ;Enemy y position in room.(not actual screen position).
+    x                      db   ;Enemy x position in room.(not actual screen position).
+    speedY                 db   ; unknown - y speed?
+    speedX                 db   ; unknown - x speed?
+    isHit                  db   ;bit2: touching Samus
+                                  ;bit1 set: touch Samus from the top
+                                  ;bit0 set: touch Samus from the left
+                                  ;bit5: hit by samus weapon (projectile or screw attack)
+                                  ;bit4 set: hit by samus weapon from the top
+                                  ;bit3 set: hit by samus weapon from the left
+    data05                 db   ;bit0: 0=facing right, 1=facing left
+                                  ;bit1: IsObjectVisible
+                                  ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
+                                  ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
+                                  ;bit4: is samus close enough to the enemy (EnemyDistanceToSamusThreshold). 0=no, 1=yes
+                                  ;  depending on the threshold, bit 3 may be used instead, which will allow -->
+                                  ;  the enemy to become active when samus gets close.
+                                  ;bit5: when active, this bit being set will trigger a resting period
+                                  ;bit6: toggles every frame for some enemy routines to run at 30FPS
+                                  ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
+    chunkyExplosionTimer   .db  ;Counts such things as explosion time.
+    movementInstrIndex     .db
+    speedSubPixelY         db   ;- y counter?
+    speedSubPixelX         db   ; unknown - x counter
+    movementIndex          db   ;Index into the EnemyMovement table of that enemy.
+    delay                  db   ;Delay counter between enemy actions.
+    data0A                 db   ; unknown -- For crawlers, orientation
+                                  ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
+                                  ; For enProjectiles, it's the EnProjectileMovement id
+    health                 db   ;Current health of enemy.
+    prevStatus             db   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
+    data0D                 db   ;Resting: force speed towards samus delay
+                                  ;Frozen: frozen timer (* 8)
+                                  ;Pickup: die delay (* 4)
+    weaponAction           db   ; unknown - What weapon action is currently hitting the enemy?
+    specialAttribs         db   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
+                                  ;When enemy is hurt, this is used as hitstun delay
+.endst
+
 .struct EnExtra
     status                 db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
                                   ;#$04=Enemy frozen.
@@ -109,6 +149,28 @@
                                   ;#$00:         bounce
                                   ;#$40:         land on floor/right wall
                                   ;#$80 or #$C0: land on ceiling/left wall
+.endst
+
+.struct EnExplosion
+    y                      db   ;Enemy y position in room.(not actual screen position).
+    x                      db   ;Enemy x position in room.(not actual screen position).
+    data02                 db
+    data03                 db
+    data04                 db
+    data05                 db
+    animDelay              db   ;Number of frames to delay between animation frames.
+    animFrame              db   ;Index into enemy animation frame data.
+.endst
+
+.struct EnExplosionExtra
+    status                 db
+    data01                 db
+    data02                 db
+    data03                 db
+    data04                 db
+    data05                 db
+    data06                 db
+    data07                 db
 .endst
 
 .struct Cannon
@@ -836,59 +898,22 @@ StartContinue          db   ;$0325   ;0=START selected, 1=CONTINUE selected.
 
 ;------------------------------------------[ Enemy RAM ]---------------------------------------------
 
+.enum $0400 export
+
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
 ; slot 6 to B is for enemy projectiles
-; slot C to D is for enemy explosions
+; slot C to D is for enemy explosions (4 slots of 8 bytes each ($04C0-$04DF))
 ; slot E is for mother brain
 ; slot F is for mellow handler enemy
-EnY                    = $0400   ;Enemy y position in room.(not actual screen position).
-EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
-EnSpeedY               = $0402   ; unknown - y speed?
-EnSpeedX               = $0403   ; unknown - x speed?
-EnIsHit                = $0404   ;bit2: touching Samus
-                                   ;bit1 set: touch Samus from the top
-                                   ;bit0 set: touch Samus from the left
-                                   ;bit5: hit by samus weapon (projectile or screw attack)
-                                   ;bit4 set: hit by samus weapon from the top
-                                   ;bit3 set: hit by samus weapon from the left
-EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
-                                   ;bit1: IsObjectVisible
-                                   ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
-                                   ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
-                                   ;bit4: is samus close enough to the enemy (EnemyDistanceToSamusThreshold). 0=no, 1=yes
-                                   ;  depending on the threshold, bit 3 may be used instead, which will allow -->
-                                   ;  the enemy to become active when samus gets close.
-                                   ;bit5: when active, this bit being set will trigger a resting period
-                                   ;bit6: toggles every frame for some enemy routines to run at 30FPS
-                                   ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
-EnChunkyExplosionTimer = $0406   ;Counts such things as explosion time.
-EnMovementInstrIndex   = $0406
-EnSpeedSubPixelY       = $0406   ;- y counter?
-EnSpeedSubPixelX       = $0407   ; unknown - x counter
-EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.
-EnDelay                = $0409   ;Delay counter between enemy actions.
-EnData0A               = $040A   ; unknown -- For crawlers, orientation
-                                   ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
-                                   ; For enProjectiles, it's the EnProjectileMovement id
-EnHealth               = $040B   ;Current health of enemy.
-EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
-EnData0D               = $040D   ;Resting: force speed towards samus delay
-                                   ;Frozen: frozen timer (* 8)
-                                   ;Pickup: die delay (* 4)
-EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
-EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
-                                   ;When enemy is hurt, this is used as hitstun delay
 
-; 4 slots of 8 bytes each ($04C0-$04DF)
-EnExplosionY           = $0400
-EnExplosionX           = $0401
-EnExplosion04C2        = $0402
-EnExplosion04C3        = $0403
-EnExplosion04C4        = $0404
-EnExplosion04C5        = $0405
-EnExplosionAnimDelay   = $0406
-EnExplosionAnimFrame   = $0407
+Ens                    instanceof En $6 startfrom 0
+EnProjectiles          instanceof En $6 startfrom 0
+EnExplosions           instanceof EnExplosion $4 startfrom 0
+EnMotherBrain          instanceof En
+EnMellowHandler        instanceof En
+
+.ende
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -1209,7 +1234,11 @@ SpareMem6AB4           ds $40   ;$6AB4
 ;---------------------------------------[ More enemy RAM ]-------------------------------------------
 
 ; 16 slots of 16 bytes each ($6AF4-$6BF3)
-EnsExtra               instanceof EnExtra $10 startfrom 0
+EnsExtra               instanceof EnExtra 6 startfrom 0
+EnProjectilesExtra     instanceof EnExtra 6 startfrom 0
+EnExplosionsExtra      instanceof EnExplosionExtra 4 startfrom 0
+EnMotherBrainExtra     instanceof EnExtra
+EnMellowHandlerExtra   instanceof EnExtra
 
 ; 16 slots of 8 bytes each ($6BF4-$6C73)
 Cannons                instanceof Cannon $10 startfrom 0

@@ -37,7 +37,7 @@ KraidBranch_Exit_{AREA}:
 ; Kraid Projectile
 KraidLintAIRoutine_{AREA}:
     ; branch if lint is invisible
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$02
     beq KraidLintRemove_{AREA}
     ; branch if lint is not exploding
@@ -52,8 +52,8 @@ KraidLintRemove_{AREA}:
     beq KraidLintDraw_{AREA} ; branch always
 
 KraidLintMain_{AREA}:
-    ; exit if bit7 of EnData05 is set
-    lda EnData05,x
+    ; exit if bit7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
     asl
     bmi KraidLintDraw_{AREA}
     ; exit if lint is not active
@@ -61,16 +61,16 @@ KraidLintMain_{AREA}:
     cmp #enemyStatus_Active
     bne KraidLintDraw_{AREA}
 
-    ; save deltaY into EnSpeedY
+    ; save deltaY into Ens.0.speedY
     jsr CommonJump_EnemyGetDeltaY
     ldx PageIndex
     lda $00
-    sta EnSpeedY,x
-    ; save deltaX into EnSpeedX
+    sta Ens.0.speedY,x
+    ; save deltaX into Ens.0.speedX
     jsr CommonJump_EnemyGetDeltaX
     ldx PageIndex
     lda $00
-    sta EnSpeedX,x
+    sta Ens.0.speedX,x
     ; check for bg collision and try movement
     jsr CommonJump_EnemyBGCollideOrApplySpeed
     ; exit if movement succeeded
@@ -120,7 +120,7 @@ KraidUpdateProjectile_{AREA}:
 
 @branchA:
     ; remove projectile if it is invisible
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$02
     beq @remove
     ; branch if projectile is resting
@@ -134,7 +134,7 @@ KraidUpdateProjectile_{AREA}:
     bne KraidUpdateProjectile_Exit_{AREA}
     ; projectile is frozen
     ; exit if projectile state before being frozen was not resting
-    lda EnPrevStatus,x
+    lda Ens.0.prevStatus,x
     cmp #$01
     bne KraidUpdateProjectile_Exit_{AREA}
     ; projectile state before being frozen was resting
@@ -143,14 +143,14 @@ KraidUpdateProjectile_{AREA}:
 @remove:
     lda #enemyStatus_NoEnemy ; #$00
     sta EnsExtra.0.status,x
-    sta EnSpecialAttribs,x
+    sta Ens.0.specialAttribs,x
     jsr CommonJump_0E
 
 @resting:
     ; initialize projectile
-    ; copy Kraid's EnData05 to projectile's EnData05
-    lda EnData05
-    sta EnData05,x
+    ; copy Kraid's Ens.0.data05 to projectile's Ens.0.data05
+    lda Ens.0.data05
+    sta Ens.0.data05,x
     ; prepare projectile offset relative to kraid's position
     ; push kraid's facing direction carry flag to stack 
     lsr
@@ -168,7 +168,7 @@ KraidUpdateProjectile_{AREA}:
     ; get projectile type from table
     lda KraidProjectileType_{AREA}-1,y
     sta EnsExtra.0.type,x
-    ; Y = (X/16)*2 + the LSB of EnData05[0] (direction Kraid is facing)
+    ; Y = (X/16)*2 + the LSB of Ens.0.data05[0] (direction Kraid is facing)
     tya
     plp
     rol
@@ -211,9 +211,9 @@ KraidUpdateProjectile_{AREA}:
 
 LoadEnemyPositionFromTemp__{AREA}:
     lda Temp08_PositionY
-    sta EnY,x
+    sta Ens.0.y,x
     lda Temp09_PositionX
-    sta EnX,x
+    sta Ens.0.x,x
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
@@ -222,9 +222,9 @@ KraidUpdateProjectile_Exit_{AREA}:
     rts
 
 StoreEnemyPositionToTemp__{AREA}:
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp08_PositionY
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp09_PositionX
     lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
@@ -292,7 +292,7 @@ KraidTryToLaunchLint_{AREA}:
 @primeForLaunch:
     ; lint will launch after resting for 8 frames
     lda #$08
-    sta EnDelay,x
+    sta Ens.0.delay,x
 
 @RTS:
     rts
@@ -341,7 +341,7 @@ KraidTryToLaunchNail_{AREA}:
 @primeForLaunch:
     ; nail will launch after resting for 8 frames
     lda #$08
-    sta EnDelay,x
+    sta Ens.0.delay,x
 
 @RTS:
     rts

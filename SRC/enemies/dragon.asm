@@ -7,14 +7,14 @@ DragonAIRoutine_{AREA}:
         ; enemy is resting
         ; set position to under lava
         lda #$E8
-        sta EnY,x
+        sta Ens.0.y,x
     @L9AF5:
     ; exit if not active
     cmp #enemyStatus_Active
     bne @L9B4F
 
     ; exit if on the first movement instruction (rising from the lava)
-    lda EnMovementInstrIndex,x
+    lda Ens.0.movementInstrIndex,x
     beq @L9B4F
     ; exit if moving up or down
     lda EnsExtra.0.jumpDsplcmnt,x
@@ -51,7 +51,7 @@ DragonAIRoutine_{AREA}:
         ora #sfxNoise_SpitFlame
         sta NoiseSFXFlag
         ; set shooting animation
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$01
         tay
         lda SpawnEnProjectile_AnimIndex,y
@@ -62,7 +62,7 @@ DragonAIRoutine_{AREA}:
     cmp #$0F
     bcc @L9B59
     ; set animation
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$01
     tay
     lda @prepareToSpitEnAnimTable,y

@@ -35,27 +35,27 @@ RidleyBranch_Exit_{AREA}:
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
 RidleyFireballAIRoutine_{AREA}:
-    ; push EnData05 to stack
-    lda EnData05,x
+    ; push Ens.0.data05 to stack
+    lda Ens.0.data05,x
     pha
     ; change animation frame every 2 frames
     lda #$02
     sta $00
     sta $01
     jsr UpdateEnemyCommon_Decide_{AREA}
-    ; compare past EnData05 to current EnData05
+    ; compare past Ens.0.data05 to current Ens.0.data05
     pla
     ldx PageIndex
-    eor EnData05,x
+    eor Ens.0.data05,x
     ; branch if they differ in the horizontal facing direction
     lsr
     bcs @RemoveProjectile
     ; exit if projectile faces left
-    lda EnData05,x
+    lda Ens.0.data05,x
     lsr
     bcs @RTS
     ; exit if projectile is to the left of Samus
-    lda EnX,x
+    lda Ens.0.x,x
     sec
     sbc Samus.x
     bcc @RTS
@@ -102,7 +102,7 @@ RidleyTryToLaunchProjectile_{AREA}:
         lda EnsExtra.0.status,x
         beq RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}
         ; branch if projectile is invisible
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$02
         beq RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}
         ; enemy slot is occupied, check the next slot
@@ -130,9 +130,9 @@ RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}:
     ; set x to y
     tya
     tax
-    ; set projectile's EnData05 to Ridley's EnData05
-    lda EnData05
-    sta EnData05,x
+    ; set projectile's Ens.0.data05 to Ridley's Ens.0.data05
+    lda Ens.0.data05
+    sta Ens.0.data05,x
     ; set x offset based on horizontal facing direction
     and #$01
     tay
@@ -145,9 +145,9 @@ RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}:
     jsr CommonJump_ApplySpeedToPosition
     ; exit if projectile's initial position is out of bounds
     bcc RidleyTryToLaunchProjectile_{AREA}@RTS
-    ; set EnSpecialAttribs to #$00
+    ; set Ens.0.specialAttribs to #$00
     lda #$00
-    sta EnSpecialAttribs,x
+    sta Ens.0.specialAttribs,x
     ; set enemy type to ridley projectile
     lda #$0A
     sta EnsExtra.0.type,x

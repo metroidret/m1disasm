@@ -679,9 +679,9 @@ Cannon_ShootEnProjectile:
     sty PageIndex
     ; set projectile position to cannon position
     lda Cannons.0.y,x
-    sta EnY,y
+    sta Ens.0.y,y
     lda Cannons.0.x,x
-    sta EnX,y
+    sta Ens.0.x,y
     lda Cannons.0.hi,x
     sta EnsExtra.0.hi,y
     ; set projectile status to active
@@ -689,19 +689,19 @@ Cannon_ShootEnProjectile:
     sta EnsExtra.0.status,y
     ; init projectile animation timers
     lda #$00
-    sta EnDelay,y
+    sta Ens.0.delay,y
     sta EnsExtra.0.animDelay,y
-    sta EnMovementIndex,y
+    sta Ens.0.movementIndex,y
     ; pop instruction byte #$FC, #$FD or #$FE
     pla
     ; #$FC, #$FD or #$FE becomes #$04, #$03 or #$02
     jsr TwosComplement_
-    ; save to x and EnData0A
+    ; save to x and Ens.0.data0A
     tax
-    sta EnData0A,y
+    sta Ens.0.data0A,y
     ; set projectile facing direction
     ora #$02
-    sta EnData05,y
+    sta Ens.0.data05,y
     ; set projectile animation
     lda CannonEnProjectileAnimTable-2,x
     sta EnsExtra.0.resetAnimIndex,y
@@ -737,14 +737,14 @@ DrawCannon_Normal:
     ldy Cannons.0.angle,x
     lda CannonAnimFrameTable,y
 DrawCannon_Escape:
-    sta EnsExtra.14.animFrame
+    sta EnMotherBrainExtra.animFrame
     lda Cannons.0.y,x
-    sta EnY+$E0
+    sta EnMotherBrain.y
     lda Cannons.0.x,x
-    sta EnX+$E0
+    sta EnMotherBrain.x
     lda Cannons.0.hi,x
-    sta EnsExtra.14.hi
-    lda #$E0
+    sta EnMotherBrainExtra.hi
+    lda #EnMotherBrain - Ens
     sta PageIndex
     jmp CommonJump_DrawEnemy
 
@@ -1287,12 +1287,12 @@ SpawnRinka_InitPositionXY:
     ; y position = (high nybble * #$10) + #$07
     and #$F0
     ora #$07
-    sta EnY,x
+    sta Ens.0.y,x
     pla
     ; x position = (low nybble * #$10) + #$07
     jsr Amul16_
     ora #$07
-    sta EnX,x
+    sta Ens.0.x,x
     rts
 
 Xplus16:
@@ -1575,19 +1575,19 @@ MotherBrain_Idle_UpdateAnimEye:
 ;-------------------------------------------------------------------------------
 MotherBrain_DrawSprites:
     ; set PageIndex to mother brain enemy slot
-    lda #$E0
+    lda #EnMotherBrain - Ens
     sta PageIndex
     ; set mother brain enemy pos to hardcoded constants
     lda MotherBrainHi
-    sta EnsExtra.14.hi
+    sta EnMotherBrainExtra.hi
     lda #$70
-    sta EnY+$E0
+    sta EnMotherBrain.y
     lda #$48
-    sta EnX+$E0
+    sta EnMotherBrain.x
     ; update mother brain anim frame
     ldy MotherBrainAnimFrameTableID
     lda MotherBrainAnimFrameTable,y
-    sta EnsExtra.14.animFrame
+    sta EnMotherBrainExtra.animFrame
     ; draw mother brain enemy
     jsr CommonJump_DrawEnemy
     
@@ -1597,7 +1597,7 @@ MotherBrain_DrawSprites:
         ; bit 7 is not set, eyes are open
         ; draw the eyes of mother brain
         lda MotherBrainAnimFrameTable+4
-        sta EnsExtra.14.animFrame
+        sta EnMotherBrainExtra.animFrame
         jsr CommonJump_DrawEnemy
     @endIf_A:
     rts
@@ -1870,7 +1870,7 @@ UpdateAllRinkaSpawners:
         ; use slot if no enemy in slot or enemy is invisible
         lda EnsExtra.0.status,x
         beq @slotFound
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$02
         beq @slotFound
         ; slot occupied, try next slot
@@ -1891,8 +1891,8 @@ UpdateAllRinkaSpawners:
     sta EnsExtra.0.type,x
     ; init more rinka stuff idk
     lda #$00
-    sta EnSpecialAttribs,x
-    sta EnIsHit,x
+    sta Ens.0.specialAttribs,x
+    sta Ens.0.isHit,x
     jsr CommonJump_0E
     ; set rinka frame to nothing (it will fade into view)
     lda #$F7
@@ -1993,14 +1993,14 @@ DrawEndTimerEnemy:
 
     ; attempt to draw end timer enemy sprite
     lda EndTimerEnemyHi
-    sta EnsExtra.14.hi
+    sta EnMotherBrainExtra.hi
     lda #$84
-    sta EnY+$E0
+    sta EnMotherBrain.y
     lda #$64
-    sta EnX+$E0
+    sta EnMotherBrain.x
     lda #_id_EnFrame1A_{AREA}.b
-    sta EnsExtra.14.animFrame
-    lda #$E0
+    sta EnMotherBrainExtra.animFrame
+    lda #EnMotherBrain - Ens
     sta PageIndex
     ; remember page pos for later
     lda SpritePagePos

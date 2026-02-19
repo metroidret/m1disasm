@@ -12,8 +12,8 @@ MetroidAIRoutine_{AREA}:
     lda #$0F
     sta $00
     sta $01
-    ; branch if bit 7 of EnData05 is set
-    lda EnData05,x
+    ; branch if bit 7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
     asl
     bmi UpdateEnemyCommon_Decide_{AREA}
     ; branch if metroid is exploding
@@ -30,14 +30,14 @@ MetroidAIRoutine_{AREA}:
     @endIf_B:
 
     ; load whether the metroid is red (#$00) or green (#$01) into y
-    ldy EnMovementIndex,x
+    ldy Ens.0.movementIndex,x
     
     ; push y max speed to stack
     lda MetroidMaxSpeed,y
     pha
     
     ; check if y speed is positive
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     bpl @endIf_C
         ; negate y max speed
         pla
@@ -45,17 +45,17 @@ MetroidAIRoutine_{AREA}:
         pha
         ; get absolute value of y speed
         lda #$00
-        cmp EnSpeedSubPixelY,x
-        sbc EnSpeedY,x
+        cmp Ens.0.speedSubPixelY,x
+        sbc Ens.0.speedY,x
     @endIf_C:
     ; compare absolute y speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
     bcc @endIf_D
         ; limit speed to max
-        sta EnSpeedY,x
+        sta Ens.0.speedY,x
         lda #$00
-        sta EnSpeedSubPixelY,x
+        sta Ens.0.speedSubPixelY,x
     @endIf_D:
     
     ; push x max speed to stack
@@ -63,7 +63,7 @@ MetroidAIRoutine_{AREA}:
     pha
     
     ; check if x speed is positive
-    lda EnSpeedX,x
+    lda Ens.0.speedX,x
     bpl @endIf_E
         ; negate x speed
         pla
@@ -71,21 +71,21 @@ MetroidAIRoutine_{AREA}:
         pha
         ; get absolute value of x speed
         lda #$00
-        cmp EnSpeedSubPixelX,x
-        sbc EnSpeedX,x
+        cmp Ens.0.speedSubPixelX,x
+        sbc Ens.0.speedX,x
     @endIf_E:
     ; compare absolute x speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
     bcc @endIf_F
         ; limit speed to max
-        sta EnSpeedX,x
+        sta Ens.0.speedX,x
         lda #$00
-        sta EnSpeedSubPixelX,x
+        sta Ens.0.speedSubPixelX,x
     @endIf_F:
     
     ; load acceleration sign bits into a (bit0: horizontal sign, bit2: vertical sign)
-    lda EnData05,x
+    lda Ens.0.data05,x
     pha
     ; get horizontal acceleration
     jsr GetMetroidAccel
@@ -103,17 +103,17 @@ MetroidAIRoutine_{AREA}:
     bne @else_G
         ; metroid is frozen
         ; check if metroid was invincible
-        ldy EnHealth,x
+        ldy Ens.0.health,x
         iny
         bne @endIf_G
             ; if it was invincible, make it vincible with 5 health
             lda #$05
-            sta EnHealth,x
+            sta Ens.0.health,x
             bne @endIf_G ; branch always
     @else_G:
         ; metroid is not frozen, metroid is invincible
         lda #$FF
-        sta EnHealth,x
+        sta Ens.0.health,x
     @endIf_G:
     ; fallthrough
 @latchActive:
@@ -131,7 +131,7 @@ MetroidAIRoutine_{AREA}:
     @endIf_H:
 
     ; branch if metroid is not hit by one of Samus's weapons
-    lda EnIsHit,x
+    lda Ens.0.isHit,x
     and #$20
     beq @endIf_I
         ; check if metroid is latched onto Samus
@@ -140,7 +140,7 @@ MetroidAIRoutine_{AREA}:
         beq @endIf_J
             ; metroid is latched onto Samus
             ; don't count bomb hit if not hit by a bomb explosion
-            lda EnWeaponAction,x
+            lda Ens.0.weaponAction,x
             cmp #wa_Unknown7
             beq @endIf_K
                 cmp #wa_BombExplode
@@ -165,28 +165,28 @@ MetroidAIRoutine_{AREA}:
             
             ; the bomb hits have released the latch of the metroid onto Samus
             lda #enemyStatus_Active
-            ora EnSpecialAttribs,x
-            sta EnPrevStatus,x
+            ora Ens.0.specialAttribs,x
+            sta Ens.0.prevStatus,x
             lda #enemyStatus_Hurt
             sta EnsExtra.0.status,x
             lda #$20
-            sta EnSpecialAttribs,x
+            sta Ens.0.specialAttribs,x
             lda #$01
-            sta EnData0D,x
+            sta Ens.0.data0D,x
         @endIf_J:
         ; let go of Samus
         lda #$00
-        sta EnIsHit,x
+        sta Ens.0.isHit,x
         sta MetroidLatch0400,y
-        sta EnSpeedSubPixelY,x
-        sta EnSpeedSubPixelX,x
+        sta Ens.0.speedSubPixelY,x
+        sta Ens.0.speedSubPixelX,x
         ; set repel speed
         lda EnsExtra.0.accelY,x
         jsr GetMetroidRepelSpeed
-        sta EnSpeedY,x
+        sta Ens.0.speedY,x
         lda EnsExtra.0.accelX,x
         jsr GetMetroidRepelSpeed
-        sta EnSpeedX,x
+        sta Ens.0.speedX,x
     @endIf_I:
     ; check if metroid is latched onto Samus (again)
     jsr LoadEnemySlotIDIntoY
@@ -194,14 +194,14 @@ MetroidAIRoutine_{AREA}:
     bne @endIf_L
         ; metroid is not latched
         ; check if metroid is touching Samus
-        lda EnIsHit,x
+        lda Ens.0.isHit,x
         and #$04
         ; branch if metroid doesnt touch Samus
         beq @metroidOnSamus_clearLatch
         
         ; begin attempt to latch onto Samus
         ; put sign of x speed + $01 into latch
-        lda EnSpeedX,x
+        lda Ens.0.speedX,x
         and #$80
         ora #$01
         tay
@@ -319,10 +319,10 @@ LoadEnemySlotIDIntoX:
 
 ClearMetroidSpeed:
     lda #$00
-    sta EnSpeedY,x
-    sta EnSpeedX,x
-    sta EnSpeedSubPixelX,x
-    sta EnSpeedSubPixelY,x
+    sta Ens.0.speedY,x
+    sta Ens.0.speedX,x
+    sta Ens.0.speedSubPixelX,x
+    sta Ens.0.speedSubPixelY,x
 ClearRinkaAcceleration: ; referenced in rinka.asm
     sta EnsExtra.0.accelX,x
     sta EnsExtra.0.accelY,x
@@ -344,9 +344,9 @@ StoreSamusPositionToTemp:
 LoadEnemyPositionFromTemp_:
     ; save function result as enemy position
     lda Temp09_PositionX
-    sta EnX,x
+    sta Ens.0.x,x
     lda Temp08_PositionY
-    sta EnY,x
+    sta Ens.0.y,x
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
@@ -356,7 +356,7 @@ GetMetroidAccel:
     ; put acceleration sign bit in carry
     lsr
     ; load whether the metroid is red (#$00) or green (#$01) into a
-    lda EnMovementIndex,x
+    lda Ens.0.movementIndex,x
     ; rotate direction bit back into a
     rol
     ; get MetroidAccel at that index

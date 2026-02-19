@@ -12,17 +12,17 @@ RioAIRoutine_{AREA}:
     lda #$80
     sta EnsExtra.0.accelY,x
     ; branch if y speed is negative
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     bmi RioExit_Active_{AREA}
 
     ; y speed is positive
-    ; exit if bit 4 of EnData05 is unset
-    lda EnData05,x
+    ; exit if bit 4 of Ens.0.data05 is unset
+    lda Ens.0.data05,x
     and #$10
     beq RioExit_Active_{AREA}
 
     ; get Samus position relative to enemy
-    lda EnY,x
+    lda Ens.0.y,x
     sec
     sbc Samus.y
     ; branch if Samus is under enemy

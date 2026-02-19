@@ -4,10 +4,10 @@ PolypAIRoutine_{AREA}:
     lda #$00
     sta EnsExtra.0.radiusY,x
     sta EnsExtra.0.radiusX,x
-    ; set EnData05 to #$10
+    ; set Ens.0.data05 to #$10
     ; the enemy is invisible and will remain resting
     lda #$10
-    sta EnData05,x
+    sta Ens.0.data05,x
 
     .if BANK == 2
         ; put bit 4 of enemy slot offset in bit 6
@@ -39,14 +39,14 @@ PolypAIRoutine_{AREA}:
 
     ; polyp is trying to shoot
     ; rotate horizontal facing flag into carry
-    lsr EnData05,x
+    lsr Ens.0.data05,x
     ; set expected status to #$02|$01
     lda #enemyStatus_Resting | enemyStatus_Active
     sta SpawnEnProjectile_ExpectedStatus
     ; set horizontal facing flag to a random bit
     lda RandomNumber1
     lsr
-    rol EnData05,x
+    rol Ens.0.data05,x
     ; exit if misfired (25% random chance)
     and #$03
     beq RTS_Polyp_{AREA}

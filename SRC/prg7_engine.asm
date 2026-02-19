@@ -4233,7 +4233,7 @@ Door_DeleteOffscreenEnemies:
 
 @deleteEnemy:
     ; delete if offscreen
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$02
     bne @@RTS
         sta EnsExtra.0.status,x
@@ -5900,7 +5900,7 @@ EnemyCompleteDeath: ;($DCF5)
         beq Lx139
     Lx135:
     ; Branch if boss just killed
-    lda EnPrevStatus,x
+    lda Ens.0.prevStatus,x
     asl
     bmi LDD75
 
@@ -5918,7 +5918,7 @@ EnemyCompleteDeath: ;($DCF5)
 
     ; set timer to $60 * 4 = 384 frames
     lda #$60
-    sta EnData0D,x
+    sta Ens.0.data0D,x
     ; 1/16 chance of no pickup
     lda RandomNumber1
     cmp #$10
@@ -6041,10 +6041,10 @@ AddToMaxMissiles:
 
 DrawEnemy_NotBlank:
     ; Y coord
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp0A_PositionY
     ; X coord
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp0B_PositionX
     ; hi coord
     lda EnsExtra.0.hi,x
@@ -6083,8 +6083,8 @@ DrawEnemy_NotBlank:
 
         ; increment explosion timer
         ldx PageIndex
-        inc EnChunkyExplosionTimer,x
-        lda EnChunkyExplosionTimer,x
+        inc Ens.0.chunkyExplosionTimer,x
+        lda Ens.0.chunkyExplosionTimer,x
         pha
         ; update h-flip and v-flip of the blown up chunks of the enemy
         and #$03
@@ -6121,15 +6121,15 @@ DrawEnemy_NotBlank:
     ;Determine if object is within screen boundaries.
     ;x=1 object on screen, x=0 object not on screen
     jsr IsObjectVisible
-    ; write this flag in bit 1 of EnData05
+    ; write this flag in bit 1 of Ens.0.data05
     txa
     asl
     sta Temp08_RadiusY
     ldx PageIndex
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$FD
     ora Temp08_RadiusY
-    sta EnData05,x
+    sta Ens.0.data05,x
     ; draw enemy if it is on screen
     lda Temp08_RadiusY
     beq GotoClearObjectCntrl
@@ -6364,7 +6364,7 @@ ExplodeYDisplace:
     ldy IsSamus                     ;
     bne LDF8F            ;Is Samus the object exploding? if so, branch.
         ldy PageIndex                   ;Load index to proper enemy data.
-        adc EnSpeedSubPixelY,y                 ;Increment every frame enemy is exploding. Initial=#$01.
+        adc Ens.0.speedSubPixelY,y                 ;Increment every frame enemy is exploding. Initial=#$01.
         jmp LDF91                          ;Jump to load explode placement data.
 
 
@@ -6405,7 +6405,7 @@ LDFB6:
 
 ExplodeXDisplace:
     ldy PageIndex                   ;Load index to proper enemy slot.
-    lda EnSpeedSubPixelY,y                 ;Load counter value.
+    lda Ens.0.speedSubPixelY,y                 ;Load counter value.
     ldy IsSamus                     ;Is Samus the one exploding?-->
     beq LDFC3                       ;If not, branch.
         lda ObjectCounter               ;Load object counter if it is Samus who is exploding.
@@ -7942,9 +7942,9 @@ LE783:
     jmp CheckMoveVertical
 
 StoreEnemyPositionToTemp:
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp09_PositionX     ; X coord
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp08_PositionY     ; Y coord
     lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi     ; hi coord
@@ -8670,7 +8670,7 @@ Lx226:
 GetEnemyType: ; ($EB28)
     pha                             ;Store enemy type.
     and #$C0                        ;If MSB is set, the "tough" version of the enemy
-    sta EnSpecialAttribs,x          ;is to be loaded(double health, except rippers).
+    sta Ens.0.specialAttribs,x          ;is to be loaded(double health, except rippers).
     asl                             ;
     bpl Lx228                          ;If bit 6 is set, the enemy is either Kraid or Ridley.
         lda InArea                      ;Load current area Samus is in(to check if Kraid or-->
@@ -8695,27 +8695,27 @@ LEB4D:
     tay                             ;Save enemy position data in Y.
     and #$F0                        ;Extract Enemy y position.
     ora #$08                        ;Add 8 pixels to y position so enemy is always on screen.
-    sta EnY,x                ;Store enemy y position.
+    sta Ens.0.y,x                ;Store enemy y position.
     tya                             ;Restore enemy position data.
     jsr Amul16                      ;*16 to extract enemy x position.
     ora #$0C                        ;Add 12 pixels to x position so enemy is always on screen.
-    sta EnX,x                ;Store enemy x position.
+    sta Ens.0.x,x                ;Store enemy x position.
     lda #enemyStatus_Resting        ;
     sta EnsExtra.0.status,x                  ;Indicate object slot is taken.
     lda #$00
-    sta EnIsHit,x
+    sta Ens.0.isHit,x
     jsr GetNameTableAtScrollDir       ;Get name table to place enemy on.
     sta EnsExtra.0.hi,x               ;Store name table.
 LEB6E:
     ldy EnsExtra.0.type,x               ;Load A with index to enemy data.
-    asl EnData05,x                     ;*2
+    asl Ens.0.data05,x                     ;*2
     jsr InitEnemyFacingDirectionAxisAndDelay
     jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
 
 IsSlotTaken:
     lda EnsExtra.0.status,x
     beq @RTS
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$02
     @RTS:
     rts
@@ -8982,7 +8982,7 @@ DeleteOffscreenRoomSprites:
         eor EnsExtra.0.hi,x
         lsr
         bcs @dontDeleteEnemy
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$02
         bne @dontDeleteEnemy
             sta EnsExtra.0.status,x
@@ -9372,10 +9372,10 @@ SpawnMellows:
         bpl @loop
     ;
     lda AreaMellowAnimIndex
-    sta EnsExtra.15.resetAnimIndex
-    sta EnsExtra.15.animIndex
+    sta EnMellowHandlerExtra.resetAnimIndex
+    sta EnMellowHandlerExtra.animIndex
     lda #$01
-    sta EnsExtra.15.status
+    sta EnMellowHandlerExtra.status
 SpawnMellows_exit:
     jmp ChooseSpawningRoutine        ;($EDD6)Exit handler routines.
 
@@ -9988,17 +9988,17 @@ CollisionDetectionMellow_CheckWithObjectYSlot:
     jmp CheckCollisionOfXSlotAndYSlot
 
 GetEnemyXSlotPosition:
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp07_XSlotPositionY  ; Y coord
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp09_XSlotPositionX  ; X coord
     lda EnsExtra.0.hi,x     ; hi coord
     jmp GetXSlotPosition_Common
 
 GetEnemyYSlotPosition:
-    lda EnY,y     ; Y coord
+    lda Ens.0.y,y     ; Y coord
     sta Temp06_YSlotPositionY
-    lda EnX,y     ; X coord
+    lda Ens.0.x,y     ; X coord
     sta Temp08_YSlotPositionX
     lda EnsExtra.0.hi,y     ; hi coord
     jmp GetYSlotPosition_Common
@@ -10269,7 +10269,7 @@ Lx287:
 
 Lx289:
     lda #wa_ScrewAttack
-    sta EnWeaponAction,x
+    sta Ens.0.weaponAction,x
     bne Lx291 ; branch always
 
 CollisionDetectionMellow_ReactToCollisionWithSamus:
@@ -10297,22 +10297,22 @@ CollisionDetectionEnemy_ReactToCollisionWithWeapon:
 
     ; save weapon action to enemy
     lda Objects.0.status,y
-    sta EnWeaponAction,x
+    sta Ens.0.weaponAction,x
     ; set weapon is hit flag
     jsr SetWeaponIsHit
 Lx291:
     ; set enemy is hit flag
     jsr GetEnemyIsHitFlags
 Lx292:
-    ora EnIsHit,x
-    sta EnIsHit,x
+    ora Ens.0.isHit,x
+    sta Ens.0.isHit,x
 Lx293:
     rts
 
 CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF:
     lda Temp10_DistHi
-    ora EnIsHit,y
-    sta EnIsHit,y
+    ora Ens.0.isHit,y
+    sta Ens.0.isHit,y
     rts
 
 SetEnemyTouchingSamusFlags:
@@ -10429,13 +10429,13 @@ UpdateEnemy: ; 07:F351
 
 ;-------------------------------------------------------------------------------
 UpdateEnemy_CheckIfVisible:
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$02
     bne @exit
         ; Store Enemy Position/Hitbox to Temp
-        lda EnY,x     ; Y coord
+        lda Ens.0.y,x     ; Y coord
         sta Temp0A_PositionY
-        lda EnX,x     ; X coord
+        lda Ens.0.x,x     ; X coord
         sta Temp0B_PositionX
         lda EnsExtra.0.hi,x     ; hi coord
         sta Temp06_PositionHi
@@ -10455,10 +10455,10 @@ UpdateEnemy_CheckIfVisible:
     ldx PageIndex
     rts
 
-; toggle bit 6 of EnData05
+; toggle bit 6 of Ens.0.data05
 UpdateEnemy_UpdateEnData05Bit6:
-    ; shift bit 6 of EnData05 into carry
-    lda EnData05,x ;76543210
+    ; shift bit 6 of Ens.0.data05 into carry
+    lda Ens.0.data05,x ;76543210
     asl ;6543210-
     rol ;543210-7
     tay
@@ -10467,30 +10467,30 @@ UpdateEnemy_UpdateEnData05Bit6:
     jsr Adiv16                      ;($C2BF)/16.
     eor FrameCount
     lsr
-    ; shift carry into bit 6 of EnData05
+    ; shift carry into bit 6 of Ens.0.data05
     tya ;543210-7
     ror ;X543210-
     ror ;7X543210
-    sta EnData05,x
+    sta Ens.0.data05,x
     rts
 
 ;---------------------------------------------
 UpdateEnemy_Resting: ;($F3BE)
     ; Branch if bit 6 is set (30FPS)
-    lda EnData05,x
+    lda Ens.0.data05,x
     asl
     bmi Lx299
         lda #$00
         sta EnsExtra.0.jumpDsplcmnt,x
-        sta EnMovementInstrIndex,x
-        sta EnData0A,x
+        sta Ens.0.movementInstrIndex,x
+        sta Ens.0.data0A,x
         jsr UpdateEnemy_ForceSpeedTowardsSamus
         jsr UpdateEnemy_EnData05DistanceToSamusThreshold
         jsr InitEnRestingAnimIndex
         jsr UpdateEnemy_Resting_UpdateEnData1F
 
         ; branch if delay is zero
-        lda EnDelay,x
+        lda Ens.0.delay,x
         beq Lx299
             jsr UpdateEnemy_Resting_TryBecomingActive
     Lx299:
@@ -10498,19 +10498,19 @@ UpdateEnemy_Resting: ;($F3BE)
 ;------------------------------------------
 UpdateEnemy_Active: ; LF3E6
     ; Branch if bit 6 is set (30FPS)
-    lda EnData05,x
+    lda Ens.0.data05,x
     asl
     bmi UpdateEnemy_Active_BranchB
 
     ; Branch if bit 5 is clear
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$20
     beq UpdateEnemy_Active_BranchA
 
     ; Set enemy delay
     ldy EnsExtra.0.type,x
     lda EnemyInitDelayTbl,y ;($96BB)
-    sta EnDelay,x
+    sta Ens.0.delay,x
     ; Decrement status from active to resting
     dec EnsExtra.0.status,x
     bne UpdateEnemy_Active_BranchB ; Branch always
@@ -10535,7 +10535,7 @@ UpdateEnemyCommon:
 @noMoveNoAnim:
     ; check if enemy is tough
     ldx PageIndex
-    lda EnSpecialAttribs,x
+    lda Ens.0.specialAttribs,x
     bpl @endIf_A
         ; enemy is tough
         ; branch if bit 7 is not set
@@ -10555,8 +10555,8 @@ UpdateEnemyCommon:
     ; clear is hit flags
     ldx PageIndex
     lda #$00
-    sta EnIsHit,x
-    sta EnWeaponAction,x
+    sta Ens.0.isHit,x
+    sta Ens.0.weaponAction,x
     rts
 
 ; Entry Point 3
@@ -10579,18 +10579,18 @@ UpdateEnemy_Frozen: ; ($F43E)
     lda FrameCount
     and #$07
     bne Lx303
-        dec EnData0D,x
+        dec Ens.0.data0D,x
         bne Lx303
             lda EnsExtra.0.status,x
             cmp #enemyStatus_Explode
             beq Lx303
-                lda EnPrevStatus,x
+                lda Ens.0.prevStatus,x
                 sta EnsExtra.0.status,x
                 ldy EnsExtra.0.type,x
                 lda EnemyForceSpeedTowardsSamusDelayTbl,y
-                sta EnData0D,x
+                sta Ens.0.data0D,x
     Lx303:
-    lda EnData0D,x
+    lda Ens.0.data0D,x
     cmp #$0B
     bcs Lx304
         lda FrameCount
@@ -10602,7 +10602,7 @@ UpdateEnemy_Frozen: ; ($F43E)
 ;--------------------------------------
 UpdateEnemy_Pickup: ;($F483)
     ; branch if samus is not touching the pickup
-    lda EnIsHit,x
+    lda Ens.0.isHit,x
     and #$24
     beq @pickupWasNotTouched
 
@@ -10671,7 +10671,7 @@ UpdateEnemy_Pickup: ;($F483)
     lda FrameCount
     and #$03
     bne @endIf_D
-        dec EnData0D,x
+        dec Ens.0.data0D,x
         ; if die delay is 0, remove pickup
         bne @endIf_D
             jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
@@ -10686,14 +10686,14 @@ UpdateEnemy_Pickup: ;($F483)
 ;--------------------------------------------
 UpdateEnemy_Hurt:
     ; decrement hitstun delay
-    dec EnSpecialAttribs,x
+    dec Ens.0.specialAttribs,x
     bne @exit
         ; hitstun delay is over
-        ; Restore upper two bits of EnSpecialAttribs
-        lda EnPrevStatus,x
+        ; Restore upper two bits of Ens.0.specialAttribs
+        lda Ens.0.prevStatus,x
         tay
         and #$C0
-        sta EnSpecialAttribs,x
+        sta Ens.0.specialAttribs,x
         ; Restore previous enemy status
         tya
         and #$3F
@@ -10717,7 +10717,7 @@ UpdateEnemy_Hurt:
     jmp UpdateEnemyCommon@setHurtPalette
 
 LF515:
-    sta EnPrevStatus,x
+    sta Ens.0.prevStatus,x
 LF518:
     lda #enemyStatus_Frozen
     sta EnsExtra.0.status,x
@@ -10732,7 +10732,7 @@ RemoveEnemyIfItIsInLava:
     bcc RTS_X315
     ; room scrolls horizontally
     ; exit if enemy is above lava
-    lda EnY,x     ; Y coord
+    lda Ens.0.y,x     ; Y coord
     cmp #$EC
     bcc RTS_X315
     ; enemy is in lava
@@ -10748,15 +10748,15 @@ Lx314:
 ; handles enemy getting attacked by Samus
 EnemyReactToSamusWeapon:
     ; save special attribs to temp
-    lda EnSpecialAttribs,x
+    lda Ens.0.specialAttribs,x
     sta Temp0A_EnSpecialAttribs
     ; exit if enemy was not attacked?
-    lda EnIsHit,x
+    lda Ens.0.isHit,x
     and #$20
     beq RTS_X315
 
     ; branch if enemy was not attacked by ice beam
-    lda EnWeaponAction,x
+    lda Ens.0.weaponAction,x
     cmp #wa_IceBeam
     bne Lx317
     ; branch if enemy is a miniboss (miniboss cannot be frozen)
@@ -10772,14 +10772,14 @@ EnemyReactToSamusWeapon:
     jsr LF515
     ; set freeze timer to 512 frames
     lda #$40
-    sta EnData0D,x
+    sta Ens.0.data0D,x
     ; exit if enemy is not a metroid
     jsr LoadTableAt977B
     and #$20
     beq RTS_X315
     ; set hp to 5, and clear metroid latch
     lda #$05
-    sta EnHealth,x
+    sta Ens.0.health,x
     jmp GotoClearCurrentMetroidLatchAndMetroidOnSamus
 RTS_X315:
     rts
@@ -10795,7 +10795,7 @@ Lx316:
     jmp UpdateEnemyCommon@clearIsHitFlags
 Lx317:
     ; branch if enemy is completely invulnerable to Samus's attacks
-    lda EnHealth,x
+    lda Ens.0.health,x
     cmp #$FF
     beq Lx316
 
@@ -10836,19 +10836,19 @@ Lx319:
         ; enemy is a metroid
         ; since it is not completely invulnerable to Samus's attacks, we assume that the metroid is currently frozen
         ; ignore all of Samus's attacks except for missiles
-        lda EnWeaponAction,x
+        lda Ens.0.weaponAction,x
         cmp #wa_Missile
         bne Lx316
     Lx320:
 
-    ; update EnPrevStatus
+    ; update Ens.0.prevStatus
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
     bne Lx321
-        lda EnPrevStatus,x
+        lda Ens.0.prevStatus,x
     Lx321:
     ora Temp0A_EnSpecialAttribs
-    sta EnPrevStatus,x
+    sta Ens.0.prevStatus,x
 
     ; branch if enemy is a miniboss
     asl
@@ -10859,7 +10859,7 @@ Lx319:
     bne Lx322
         ; enemy is not a miniboss and is not a metroid
         ; check attack type
-        ldy EnWeaponAction,x
+        ldy Ens.0.weaponAction,x
         ; instantly kill enemy if it was attacked by Samus's missile
         cpy #wa_Missile
         beq ExplodeEnemy
@@ -10872,7 +10872,7 @@ Lx319:
     lda #enemyStatus_Hurt
     sta EnsExtra.0.status,x
 
-    ; set EnSpecialAttribs to
+    ; set Ens.0.specialAttribs to
     ; #$0A if enemy is not a miniboss
     ; #$03 if enemy is a miniboss
     lda #$0A
@@ -10880,7 +10880,7 @@ Lx319:
     bvc Lx323
         lda #$03
     Lx323:
-    sta EnSpecialAttribs,x
+    sta Ens.0.specialAttribs,x
 
     ; check attack type
     ; if enemy is attacked by wave beam, decrement health by 2
@@ -10891,19 +10891,19 @@ Lx319:
         bvc Lx325
         ; enemy is a miniboss
         ; if miniboss was not attacked by a missile, decrement health by 1
-        ldy EnWeaponAction,x
+        ldy Ens.0.weaponAction,x
         cpy #wa_Missile
         bne Lx325
         ; miniboss was attacked by a missile, decrement health by 4
-        dec EnHealth,x
+        dec Ens.0.health,x
         beq ExplodeEnemy
-        dec EnHealth,x
+        dec Ens.0.health,x
         beq ExplodeEnemy
     Lx324:
-    dec EnHealth,x
+    dec Ens.0.health,x
     beq ExplodeEnemy
 Lx325:
-    dec EnHealth,x
+    dec Ens.0.health,x
     bne ExplodeEnemy@exit
     ; fallthrough
 
@@ -10917,7 +10917,7 @@ ExplodeEnemy:
     bit Temp0A_EnSpecialAttribs
     bvs @endIf_A
         ; branch if enemy was not hit by the regular beam
-        lda EnWeaponAction,x
+        lda Ens.0.weaponAction,x
         cmp #wa_RegularBeam+1
         bcs @endIf_A
             ; enemy is hit by regular beam
@@ -10932,18 +10932,18 @@ ExplodeEnemy:
     lda EnemyDeathAnimIndex,y
     jsr InitEnAnimIndex
     ; init chunky explosion timer
-    sta EnChunkyExplosionTimer,x
+    sta Ens.0.chunkyExplosionTimer,x
     
     ; find first open enemy explosion slot
-    ldx #$C0
+    ldx #EnExplosions.0 - Ens
     @loop:
         lda EnsExtra.0.status,x
         beq @exitLoop
         txa
         clc
-        adc #$08
+        adc #_sizeof_EnExplosions.0
         tax
-        cmp #$E0
+        cmp #EnExplosions - Ens + _sizeof_EnExplosions
         bne @loop
     ; could not spawn enemy explosion, because all enemy explosion slots are occupied
     beq @exit
@@ -10954,7 +10954,7 @@ ExplodeEnemy:
     lda AreaExplosionAnimIndex
     jsr InitEnAnimIndex
     lda #$0A
-    sta EnExplosionAnimDelay,x
+    sta EnExplosions.0.animDelay - EnExplosions + Ens,x
     ; set explosion status to active
     inc EnsExtra.0.status,x
     ; set explosion anim frame to
@@ -10965,20 +10965,20 @@ ExplodeEnemy:
     bvc @endIf_B
         lda #$03
     @endIf_B:
-    sta EnExplosionAnimFrame,x
+    sta EnExplosions.0.animFrame - EnExplosions + Ens,x
     ; set explosion position to enemy position
     ldy PageIndex
-    lda EnY,y
-    sta EnExplosionY,x
-    lda EnX,y
-    sta EnExplosionX,x
+    lda Ens.0.y,y
+    sta EnExplosions.0.y - EnExplosions + Ens,x
+    lda Ens.0.x,y
+    sta EnExplosions.0.x - EnExplosions + Ens,x
     lda EnsExtra.0.hi,y
     sta EnsExtra.0.hi,x
 @exit:
     ldx PageIndex
     rts
 
-UpdateEnemy_Resting_UpdateEnData1F:
+UpdateEnemy_Resting_UpdateEnData1F: ; 07:F676
     ; load L977B entry * 2
     jsr LoadTableAt977B
     ; move bits 2-3 of L977B entry to bits 6-7
@@ -11048,21 +11048,21 @@ UpdateEnemy_ForceSpeedTowardsSamus:
     Lx333:
     ; enemy is not active or bit 1 of L968B[EnsExtra.0.type] is set
     tya
-    dec EnData0D,x
+    dec Ens.0.data0D,x
     bne InitEnActiveAnimIndex@RTS
 
-    ; write EnData0D from table
+    ; write Ens.0.data0D from table
     pha
     ldy EnsExtra.0.type,x
     lda EnemyForceSpeedTowardsSamusDelayTbl,y
-    sta EnData0D,x
+    sta Ens.0.data0D,x
     pla
     ; branch if bit 7 of L968B[EnsExtra.0.type] is not set
     bpl Lx337
 
     ; x axis
 
-    ; clear bit 0 of EnData05 (x axis flip)
+    ; clear bit 0 of Ens.0.data05 (x axis flip)
     lda #~$01
     jsr AndEnData05
 
@@ -11085,7 +11085,7 @@ UpdateEnemy_ForceSpeedTowardsSamus:
     Lx334:
         ; samus is in the same nametable as the enemy on the x axis
         ; compare enemy pos to samus pos
-        lda EnX,x
+        lda Ens.0.x,x
         cmp Samus.x
         bne Lx335
             ; samus x position is the same as enemy x position
@@ -11096,14 +11096,14 @@ UpdateEnemy_ForceSpeedTowardsSamus:
         ; rotate carry into bit 0
         rol
     Lx336:
-    ; set bit 0 as bit 0 of EnData05
+    ; set bit 0 as bit 0 of Ens.0.data05
     and #$01
     jsr OrEnData05
     ; move bit 0 to bit 7
     lsr
     ror
     ; branch if it matches sign bit of x speed (enemy moves towards samus)
-    eor EnSpeedX,x
+    eor Ens.0.speedX,x
     bpl Lx337
     ; it doesnt match
     ; force x speed to point the right direction
@@ -11112,7 +11112,7 @@ Lx337:
 
     ; y axis
 
-    ; clear bit 2 of EnData05 (y axis flip)
+    ; clear bit 2 of Ens.0.data05 (y axis flip)
     lda #~$04
     jsr AndEnData05
 
@@ -11135,7 +11135,7 @@ Lx337:
     Lx338:
         ; samus is in the same nametable as the enemy on the y axis
         ; compare enemy pos to samus pos
-        lda EnY,x
+        lda Ens.0.y,x
         cmp Samus.y
         bne Lx339
             ; samus y position is the same as enemy y position
@@ -11147,7 +11147,7 @@ Lx337:
         ; rotate carry into bit 0
         rol
     Lx340:
-    ; set bit 0 as bit 2 of EnData05
+    ; set bit 0 as bit 2 of Ens.0.data05
     and #$01
     asl
     asl
@@ -11158,15 +11158,15 @@ Lx337:
     lsr
     ror
     ; branch if it matches sign bit of y speed (enemy moves towards samus)
-    eor EnSpeedY,x
+    eor Ens.0.speedY,x
     bpl RTS_X341
     ; force y speed to point the right direction
     jmp L820F
 
 ;-------------------------------------------------------------------------------
 OrEnData05:
-    ora EnData05,x
-    sta EnData05,x
+    ora Ens.0.data05,x
+    sta Ens.0.data05,x
 RTS_X341:
     rts
 
@@ -11187,10 +11187,10 @@ LoadEnHiToYAndLoadEorHiToCarry:
 
 ;-------------------------------------------------------------------------------
 UpdateEnemy_EnData05DistanceToSamusThreshold:
-    ; default to masking out bit 4 and bit 3 of EnData05
+    ; default to masking out bit 4 and bit 3 of Ens.0.data05
     lda #~$18
     sta $06
-    ; set bit 4 and bit 3 of EnData05
+    ; set bit 4 and bit 3 of Ens.0.data05
     lda #$18
     jsr OrEnData05
     ; exit if EnemyDistanceToSamusThreshold is zero
@@ -11200,20 +11200,20 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
 
     ; push to y
     tay
-    ; unset bit 4 and bit 3 of EnData05 and exit if enemy is invisible
-    lda EnData05,x
+    ; unset bit 4 and bit 3 of Ens.0.data05 and exit if enemy is invisible
+    lda Ens.0.data05,x
     and #$02
     beq Lx345
 
     ; pop from y
     tya
-    ; mask out bit 3 from EnData05
+    ; mask out bit 3 from Ens.0.data05
     ldy #~$08
     ; branch if bit 7 of EnemyDistanceToSamusThreshold is set
     asl
     bcs Lx342
         ; bit 7 of EnemyDistanceToSamusThreshold is not set
-        ; mask out bit 4 from EnData05
+        ; mask out bit 4 from Ens.0.data05
         ldy #~$10
     Lx342:
     ; save EnemyDistanceToSamusThreshold & #$7F to $02
@@ -11225,15 +11225,15 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     ; check y axis
     lda Samus.y
     sta $00
-    ldy EnY,x
-    ; branch if bit 7 of EnData05 is set
-    lda EnData05,x
+    ldy Ens.0.y,x
+    ; branch if bit 7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
     bmi Lx343
-        ; bit 7 of EnData05 is not set
+        ; bit 7 of Ens.0.data05 is not set
         ; check x axis
         ldy Samus.x
         sty $00
-        ldy EnX,x
+        ldy Ens.0.x,x
     Lx343:
 
     ; rotate samus hi bit into bit 7 of her position
@@ -11266,33 +11266,33 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     ; exit if the distance is smaller than the threshold
     bcc RTS_X346
     ; the distance is greater than the threshold
-    ; we must unset the proper bit of EnData05
+    ; we must unset the proper bit of Ens.0.data05
 Lx345:
-    ; apply mask to EnData05
+    ; apply mask to Ens.0.data05
     lda $06
 AndEnData05:
-    and EnData05,x
-    sta EnData05,x
+    and Ens.0.data05,x
+    sta Ens.0.data05,x
 RTS_X346:
     rts
 
 UpdateEnemy_Resting_TryBecomingActive:
     ; decrement delay until next action
-    dec EnDelay,x
+    dec Ens.0.delay,x
     ; exit if delay is not zero
     bne @RTS
     ; delay is zero
-    ; branch if bit 3 of EnData05 is set
-    lda EnData05,x
+    ; branch if bit 3 of Ens.0.data05 is set
+    lda Ens.0.data05,x
     and #$08
     bne @becomeActive
-    ; bit 3 of EnData05 is not set
+    ; bit 3 of Ens.0.data05 is not set
     ; undo decrement delay and exit
-    inc EnDelay,x
+    inc Ens.0.delay,x
 @RTS:
     rts
 @becomeActive:
-    ; bit 3 of EnData05 is set
+    ; bit 3 of Ens.0.data05 is set
     ; branch if enemy is not a pipe bug
     lda EnsExtra.0.type,x
     cmp #$07
@@ -11329,7 +11329,7 @@ UpdateEnemy_Resting_TryBecomingActive:
     ; get movement index at that randomly generated offset
     lda ($00),y
     ; save movement index
-    sta EnMovementIndex,x
+    sta Ens.0.movementIndex,x
 
     ; branch if the enemy doesn't use acceleration and speed and subpixels
     jsr LoadTableAt977B
@@ -11337,9 +11337,9 @@ UpdateEnemy_Resting_TryBecomingActive:
         ; the enemy uses acceleration and speed and subpixels
         ; initialize those to what they should be
         lda #$00
-        sta EnSpeedSubPixelY,x
-        sta EnSpeedSubPixelX,x
-        ldy EnMovementIndex,x
+        sta Ens.0.speedSubPixelY,x
+        sta Ens.0.speedSubPixelX,x
+        ldy Ens.0.movementIndex,x
 
         lda EnAccelYTable,y
         sta EnsExtra.0.accelY,x
@@ -11347,14 +11347,14 @@ UpdateEnemy_Resting_TryBecomingActive:
         sta EnsExtra.0.accelX,x
 
         lda EnSpeedYTable,y
-        sta EnSpeedY,x
+        sta Ens.0.speedY,x
         lda EnSpeedXTable,y
-        sta EnSpeedX,x
+        sta Ens.0.speedX,x
 
-        lda EnData05,x
+        lda Ens.0.data05,x
         bmi Lx350
-            ; bit 7 of EnData05 is not set
-            ; use bit 0 of EnData05 as facing direction
+            ; bit 7 of Ens.0.data05 is not set
+            ; use bit 0 of Ens.0.data05 as facing direction
             lsr
             ; branch if facing right
             bcc Lx351
@@ -11362,24 +11362,24 @@ UpdateEnemy_Resting_TryBecomingActive:
             jsr L81D1
             jmp Lx351
         Lx350:
-            ; bit 7 of EnData05 is set
-            ; use bit 2 of EnData05 as facing direction instead of bit 0
+            ; bit 7 of Ens.0.data05 is set
+            ; use bit 2 of Ens.0.data05 as facing direction instead of bit 0
             and #$04
             ; branch if facing up
             beq Lx351
             ; enemy is facing down, call L8206
             jsr L8206
     Lx351:
-    ; clear bit 5 of EnData05
+    ; clear bit 5 of Ens.0.data05
     lda #~$20
     jmp AndEnData05
 
 GetEnemyTypeTimes2PlusFacingDirectionBit0:
-    lda EnData05,x
+    lda Ens.0.data05,x
     jmp Lx352
 
 GetEnemyTypeTimes2PlusFacingDirection:
-    lda EnData05,x
+    lda Ens.0.data05,x
     bpl Lx352
         lsr
         lsr
@@ -11411,27 +11411,27 @@ CrawlerAIRoutine_ShouldCrawlerMove:
 InitEnemyForceSpeedTowardsSamusDelayAndHealth:
     ldy EnsExtra.0.type,x
 
-    ; initialoze EnData0D
+    ; initialoze Ens.0.data0D
     lda EnemyForceSpeedTowardsSamusDelayTbl,y
-    sta EnData0D,x
+    sta Ens.0.data0D,x
 
     ; initialize enemy's health
     lda EnemyHealthTbl,y          ;($962B)
-    ldy EnSpecialAttribs,x
+    ldy Ens.0.specialAttribs,x
     ; Check MSB of enemyAttr, double health if set
     ; (this is the reason powerful variants of rippers have 254 health,
     ;  instead of being invincible (255 health) like their weaker variant)
     bpl Lx353
         asl
     Lx353:
-    sta EnHealth,x
+    sta Ens.0.health,x
 RTS_X354:
     rts
 
 
 SpawnEnProjectile:
-    ; exit if bit 4 of EnData05 is set (what does this bit represent?)
-    lda EnData05,x
+    ; exit if bit 4 of Ens.0.data05 is set (what does this bit represent?)
+    lda Ens.0.data05,x
     and #$10
     beq RTS_X354
     ; exit if status doesn't match expected status (never exit)
@@ -11454,10 +11454,10 @@ SpawnEnProjectile:
     bcs SpawnEnProjectile_FindSlot@RTS
 
     ; a is #$00 here
-    sta EnIsHit,y
+    sta Ens.0.isHit,y
     jsr SpawnEnProjectile_F92C
     ; rotate horizontal facing dir flag into carry
-    lda EnData05,x
+    lda Ens.0.data05,x
     lsr
     ; push SpawnEnProjectile_AnimTableIndex to stack for later
     lda SpawnEnProjectile_AnimTableIndex
@@ -11479,20 +11479,20 @@ SpawnEnProjectile:
     lda #enemyStatus_Resting ;#$01
     sta EnsExtra.0.status,y
     ; use horizontal facing dir flag to set projectile x speed
-    and EnData05,x
+    and Ens.0.data05,x
     tax
     lda EnSpeedX_Table15,x
-    sta EnSpeedX,y
+    sta Ens.0.speedX,y
     ; y speed
     lda #$00
-    sta EnSpeedY,y
+    sta Ens.0.speedY,y
 
     ldx PageIndex
     jsr SpawnEnProjectile_F8F8
 
     ; get and apply x and y offsets to enemy position to make projectile position
     ; put horizontal facing dir flag into carry
-    lda EnData05,x
+    lda Ens.0.data05,x
     lsr
     pla ; SpawnEnProjectile_AnimTableIndex
     tax
@@ -11510,7 +11510,7 @@ SpawnEnProjectile:
     bit SpawnEnProjectile_ExpectedStatus
     bvc SpawnEnProjectile_FindSlot@RTS
     ; set animation for enemy that shot the projectile depending on the direction its facing
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$01
     tay
     lda SpawnEnProjectile_AnimIndex,y
@@ -11535,21 +11535,21 @@ SpawnEnProjectile_F8F8:
     bcc @RTS
     ; shift horizontal facing dir flag into carry
     ldx PageIndex ; redundant instruction
-    lda EnData05,x
+    lda Ens.0.data05,x
     lsr
     ; SpawnEnProjectile_EnData0A*2 + horizontal facing dir
     lda SpawnEnProjectile_EnData0A
     rol
     and #$07
-    sta EnData0A,y
+    sta Ens.0.data0A,y
     ; set projectile status to active
     lda #enemyStatus_Active
     sta EnsExtra.0.status,y
     ; clear projectile anim delay and movement
     lda #$00
-    sta EnDelay,y
+    sta Ens.0.delay,y
     sta EnsExtra.0.animDelay,y
-    sta EnMovementIndex,y
+    sta Ens.0.movementIndex,y
 @RTS:
     rts
 
@@ -11573,8 +11573,8 @@ SpawnEnProjectile_F92C:
     lda #$02
     sta EnsExtra.0.radiusY,y
     sta EnsExtra.0.radiusX,y
-    ora EnData05,y
-    sta EnData05,y
+    ora Ens.0.data05,y
+    sta Ens.0.data05,y
     rts
 
 
@@ -11589,7 +11589,7 @@ UpdateAllEnProjectiles:
         ; fallthrough
 UpdateEnProjectile:
     stx PageIndex
-    lda EnData05,x
+    lda Ens.0.data05,x
     and #$02
     bne Lx360
         jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
@@ -11621,16 +11621,16 @@ AnimDrawEnemy:
     jsr UpdateEnemyAnim
     jmp DrawEnemy
 Lx361:
-    inc EnMovementIndex,x
+    inc Ens.0.movementIndex,x
 LF987:
-    inc EnMovementIndex,x
+    inc Ens.0.movementIndex,x
     lda #$00
-    sta EnDelay,x
+    sta Ens.0.delay,x
     beq Lx362
 
 UpdateEnProjectile_Active:
     jsr EnemyBecomePickupIfHit
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     and #$FE
     tay
     lda EnProjectileMovementPtrTable,y
@@ -11638,50 +11638,50 @@ UpdateEnProjectile_Active:
     lda EnProjectileMovementPtrTable+1,y
     sta $0B
 Lx362:
-    ldy EnMovementIndex,x
+    ldy Ens.0.movementIndex,x
     lda ($0A),y
     ; If #$FF, restart movement string
     cmp #$FF
     bne Lx363
-        sta EnMovementIndex,x
+        sta Ens.0.movementIndex,x
         jmp LF987
     Lx363:
-    cmp EnDelay,x ; Move onto the next instruction if EnDelay == array value
+    cmp Ens.0.delay,x ; Move onto the next instruction if Ens.0.delay == array value
     beq Lx361
 
-    inc EnDelay,x
+    inc Ens.0.delay,x
     iny
 
     lda ($0A),y
     jsr EnemyGetDeltaY_8296 ; Get the y velocity from this byte
     ldx PageIndex
-    sta EnSpeedY,x
+    sta Ens.0.speedY,x
 
     lda ($0A),y
     jsr EnemyGetDeltaX_832F ; Get the x velocity from this byte
     ldx PageIndex
-    sta EnSpeedX,x
+    sta Ens.0.speedX,x
 
-    ; if bit 0 of EnData0A is set, invert x speed
+    ; if bit 0 of Ens.0.data0A is set, invert x speed
     tay
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     lsr
     php
     bcc Lx364
         tya
         jsr TwosComplement              ;($C3D4)
-        sta EnSpeedX,x
+        sta Ens.0.speedX,x
     Lx364:
 
     ; branch if this is not the first movement instruction
     plp
     bne Lx365
     ; branch if y speed is not strictly positive
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     beq Lx365
     bmi Lx365
 
-    ldy EnData0A,x
+    ldy Ens.0.data0A,x
     lda AreaEnProjectileFallingAnimIndex,y
     sta EnsExtra.0.resetAnimIndex,x
 Lx365:
@@ -11691,7 +11691,7 @@ Lx365:
     lda EnsExtra.0.status,x
     beq Exit20
     ldy #$00
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     lsr
     beq Lx366
         iny
@@ -11700,7 +11700,7 @@ Lx365:
     jsr InitEnAnimIndex
     jsr LF518
     lda #$0A
-    sta EnDelay,x
+    sta Ens.0.delay,x
 Lx367:
     jmp LF97C
 
@@ -11734,9 +11734,9 @@ EnemyBGCollideOrApplySpeed:
         ldx PageIndex
     Lx369:
     ; apply enemy speed
-    lda EnSpeedX,x
+    lda Ens.0.speedX,x
     sta Temp05_SpeedX
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     sta Temp04_SpeedY
 LFA41:
     jsr StoreEnemyPositionToTemp
@@ -11747,9 +11747,9 @@ LFA41:
 
 LoadEnemyPositionFromTemp:
     lda Temp08_PositionY
-    sta EnY,x
+    sta Ens.0.y,x
     lda Temp09_PositionX
-    sta EnX,x
+    sta Ens.0.x,x
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
@@ -11758,11 +11758,11 @@ RTS_X370:
 
 EnemyBecomePickupIfHit:
     ; exit if not hit
-    lda EnIsHit,x
+    lda Ens.0.isHit,x
     beq Exit20
 EnemyBecomePickup:
     lda #$00
-    sta EnIsHit,x
+    sta Ens.0.isHit,x
     lda #enemyStatus_Pickup
     sta EnsExtra.0.status,x
 Exit20:
@@ -11772,7 +11772,7 @@ UpdateEnProjectile_Frozen:
     lda EnsExtra.0.animFrame,x
     cmp #$F7
     beq Lx371
-        dec EnDelay,x
+        dec Ens.0.delay,x
         bne Lx372
     Lx371:
         jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
@@ -11781,9 +11781,9 @@ UpdateEnProjectile_Frozen:
 
 GetEnemyRoomRAMPtr:
     ldx PageIndex
-    lda EnY,x
+    lda Ens.0.y,x
     sta Temp02_PositionY
-    lda EnX,x
+    lda Ens.0.x,x
     sta Temp03_PositionX
     lda EnsExtra.0.hi,x
     sta Temp0B_PositionHi
@@ -11796,8 +11796,8 @@ UpdateEnProjectile_Pickup:
     jmp LF97C
 
 ;-------------------------------------------------------------------------------
-UpdateAllEnemyExplosions:
-    ldx #$C0
+UpdateAllEnemyExplosions: ; 07:FA9D
+    ldx #EnExplosions.0 - Ens
     @loop:
         stx PageIndex
         lda EnsExtra.0.status,x
@@ -11807,21 +11807,21 @@ UpdateAllEnemyExplosions:
         ; move on to next explosion
         lda PageIndex
         clc
-        adc #$08
+        adc #_sizeof_EnExplosions.0
         tax
-        cmp #$E0
+        cmp #EnExplosions - Ens + _sizeof_EnExplosions
         bne @loop
-RTS_X375:
+@RTS:
     rts
 
-UpdateEnemyExplosion:
+UpdateEnemyExplosion: ; 07:FAB4
     ; decrement frame delay
-    dec EnExplosionAnimDelay,x
+    dec EnExplosions.0.animDelay - EnExplosions + Ens,x
     bne Lx377
     ; if frame delay is zero, move to next frame
     lda #$0C
-    sta EnExplosionAnimDelay,x
-    dec EnExplosionAnimFrame,x
+    sta EnExplosions.0.animDelay - EnExplosions + Ens,x
+    dec EnExplosions.0.animFrame - EnExplosions + Ens,x
     ; if frame number <= 0, remove explosion
     bmi Lx376
     bne Lx377
@@ -11830,10 +11830,10 @@ Lx376:
 
 Lx377:
 
-    lda EnExplosionAnimDelay,x
+    lda EnExplosions.0.animDelay - EnExplosions + Ens,x
     cmp #$09
     bne Lx378
-        lda EnExplosionAnimFrame,x
+        lda EnExplosions.0.animFrame - EnExplosions + Ens,x
         asl
         tay
         lda Table16,y
@@ -11870,25 +11870,25 @@ UpdatePipeBugHole:
     ; exit if hole doesn't exist
     ldx PipeBugHoles.0.status,y
     inx
-    beq RTS_X375
+    beq UpdateAllEnemyExplosions@RTS
     ; exit if enemy slot is occupied by a visible enemy
     ldx PipeBugHoles.0.enemySlot,y
     lda EnsExtra.0.status,x
     beq @endIf_A
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$02
         bne Exit13
     @endIf_A:
     ; enemy slot is available, spawn pipe bug
     ; a is #$00 here
-    sta EnIsHit,x
+    sta Ens.0.isHit,x
     ; check if the slot status needs to be cleared first
     ; (why must clearing be done on a different frame than spawning the pipe bug?)
     lda #$FF
     cmp EnsExtra.0.type,x
     bne @clearEnemySlot
     ; exit if delay is not zero
-    dec EnDelay,x
+    dec Ens.0.delay,x
     bne Exit13
     ; set pipe bug type
     lda PipeBugHoles.0.status,y
@@ -11896,9 +11896,9 @@ UpdatePipeBugHole:
     ; set pipe bug position
     ldy PageIndex
     lda PipeBugHoles.0.y,y
-    sta EnY,x
+    sta Ens.0.y,x
     lda PipeBugHoles.0.x,y
-    sta EnX,x
+    sta Ens.0.x,x
     lda PipeBugHoles.0.hi,y
     sta EnsExtra.0.hi,x
     ; set pipe bug radius
@@ -11915,12 +11915,12 @@ UpdatePipeBugHole:
     bcc Exit13
     ; set status to resting
     lda #enemyStatus_Resting ; #$01
-    sta EnDelay,x
+    sta Ens.0.delay,x
     sta EnsExtra.0.status,x
     ; set enemy facing direction depending on scroll direction
     and ScrollDir
     asl ; to compensate for the ror instruction in InitEnemyFacingDirectionAxisAndDelay
-    sta EnData05,x
+    sta Ens.0.data05,x
     ; set enemy delay
     ldy EnsExtra.0.type,x
     jsr InitEnemyFacingDirectionAxisAndDelay
@@ -11930,17 +11930,17 @@ UpdatePipeBugHole:
 @clearEnemySlot:
     sta EnsExtra.0.type,x
     lda #$01
-    sta EnDelay,x
+    sta Ens.0.delay,x
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 InitEnemyFacingDirectionAxisAndDelay: ; 07:FB7B
-    ; rotate bit 7 of L977B into bit 7 of EnData05
+    ; rotate bit 7 of L977B into bit 7 of Ens.0.data05
     ; updates facing direction axis to enemy's default
     jsr LoadTableAt977B
-    ror EnData05,x
+    ror Ens.0.data05,x
     ; load initial delay for enemy movement.
     lda EnemyInitDelayTbl,y
-    sta EnDelay,x
+    sta Ens.0.delay,x
 
 Exit13:
     rts                             ;Exit from multiple routines.
@@ -12124,13 +12124,13 @@ SkreeProjectileSpeedTable:
 
 UpdateAllMellows:
     ; exit if mellow handler enemy isn't there
-    lda EnsExtra.15.status
+    lda EnMellowHandlerExtra.status
     beq @RTS
 
     ldx #$F0
     stx PageIndex
     ; delete mellow handler enemy if ???
-    lda EnsExtra.15.resetAnimIndex
+    lda EnMellowHandlerExtra.resetAnimIndex
     cmp AreaMellowAnimIndex
     bne RemoveMellowHandlerEnemy
 
@@ -12296,14 +12296,14 @@ UpdateMellow_StorePositionToTemp:
 UpdateMellow_LoadPositionFromTemp:
     lda Temp08_PositionY
     sta Mellows.0.y,x
-    sta EnY+$F0
+    sta EnMellowHandler.y
     lda Temp09_PositionX
     sta Mellows.0.x,x
-    sta EnX+$F0
+    sta EnMellowHandler.x
     lda Temp0B_PositionHi
     and #$01
     sta Mellows.0.hi,x
-    sta EnsExtra.15.hi
+    sta EnMellowHandlerExtra.hi
     rts
 
 UpdateMellow_FD84:

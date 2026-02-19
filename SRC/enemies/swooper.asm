@@ -13,11 +13,11 @@ SwooperAIRoutine00_{AREA}:
     bne @draw
     
     ; swooper is resting
-    ; branch if bit 4 of EnData05 is clear
-    lda EnData05,x
+    ; branch if bit 4 of Ens.0.data05 is clear
+    lda Ens.0.data05,x
     and #$10
     beq @draw
-        ; bit 4 of EnData05 is set
+        ; bit 4 of Ens.0.data05 is set
         ; swoop towards samus
         lda #$01
         jsr SwooperChangeEnemyType_{AREA}
@@ -37,7 +37,7 @@ UpdateSwooperAnim_{AREA}:
         lda #EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA}.b
     .endif
     ; branch if y speed is positive (swooper is swooping downwards)
-    ldy EnSpeedY,x
+    ldy Ens.0.speedY,x
     bpl @endIf_A
         ; swooper is not swooping downwards
         ; set animation to idle
@@ -84,16 +84,16 @@ L9923_{AREA}:
     lda #$80
     sta EnsExtra.0.accelY,x
     ; branch if y speed is negative (swooper is moving upwards)
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     bmi @endIf_A
     
-    ; branch if bit 4 of EnData05 is clear
-    lda EnData05,x
+    ; branch if bit 4 of Ens.0.data05 is clear
+    lda Ens.0.data05,x
     and #$10
     beq @endIf_A
     
     ; get position relative to samus
-    lda EnY,x
+    lda Ens.0.y,x
     sec
     sbc Samus.y
     ; branch if swooper is under samus
@@ -124,13 +124,13 @@ SwooperChangeEnemyType_{AREA}:
     sta EnsExtra.0.type,x
     
     ; push current health
-    lda EnHealth,x
+    lda Ens.0.health,x
     pha
     ; initialize new enemy type's properties
     ; this triggers a swoop downwards, either straight down or towards samus
     jsr CommonJump_0E
     ; restore current health
     pla
-    sta EnHealth,x
+    sta Ens.0.health,x
     rts
 

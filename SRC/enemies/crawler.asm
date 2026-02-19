@@ -23,7 +23,7 @@ CrawlerAIRoutine_{AREA}:
 
     ; check crawler orientation
     ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     and #$03
     cmp #$01
     bne @move
@@ -32,7 +32,7 @@ CrawlerAIRoutine_{AREA}:
     ; (BUG! this doesn't check that its a horizontal room, so it will turn around in vertical rooms too.
     ; for example, at the bottom of the top screen in the shaft to brinstar->kraid elevator,
     ; the zoomer will never walk on the underside of the platform it's on)
-    ldy EnY,x
+    ldy Ens.0.y,x
     .if BANK == 1 || BANK == 4
         cpy #$E4
     .elif BANK == 2 || BANK == 5
@@ -60,7 +60,7 @@ CrawlerAIRoutine_{AREA}:
     jsr CrawlerFlipDirection_{AREA}
     ; set orientation to moving up the wall
     lda #$03
-    sta EnData0A,x
+    sta Ens.0.data0A,x
     bne @afterLavaTurnAround ; branch always
 @move:
     ; move crawler in its direction
@@ -82,9 +82,9 @@ CrawlerExit_Explode_{AREA}:
 
 CrawlerReorientSprite_{AREA}:
     ; Y = orientation * 2 + direction
-    lda EnData05,x
+    lda Ens.0.data05,x
     lsr
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     and #$03
     rol
     tay
@@ -139,17 +139,17 @@ CrawlerInsideCornerCheck_{AREA}:
     lda $00
     bne CrawlerFlipDirection_{AREA}
         ; at inside corner, stick to wall
-        ldy EnData0A,x
+        ldy Ens.0.data0A,x
         dey
         tya
         and #$03
-        sta EnData0A,x
+        sta Ens.0.data0A,x
         jmp CrawlerReorientSprite_{AREA}
 
     CrawlerFlipDirection_{AREA}:
-        lda EnData05,x
+        lda Ens.0.data05,x
         eor #$01
-        sta EnData05,x
+        sta Ens.0.data05,x
     RTS_Crawler06_{AREA}:
         rts
 
@@ -161,14 +161,14 @@ CrawlerOutsideCornerCheck_{AREA}:
     bcc @RTS
         ; at outside corner, stick to wall
         jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
-        sta EnData0A,x
+        sta Ens.0.data0A,x
         jsr CrawlerReorientSprite_{AREA}
     @RTS:
     rts
 
 CrawlerOutsideCornerGetNextOrientation_{AREA}:
     ; returns the orientation needed to turn an outside corner, relative to current orientation
-    ldy EnData0A,x
+    ldy Ens.0.data0A,x
     iny
     tya
     and #$03
@@ -178,7 +178,7 @@ CrawlerOutsideCornerGetNextOrientation_{AREA}:
 JumpByRTSToMovementRoutine_{AREA}:
     ; Y = (orientation * 2 + direction)*2
     ; shift direction bit into carry
-    ldy EnData05,x
+    ldy Ens.0.data05,x
     sty $00
     lsr $00
     ; rotate it left into orientation in a

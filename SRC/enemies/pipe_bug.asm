@@ -7,7 +7,7 @@ PipeBugAIRoutine_{AREA}:
     bne @applySpeed
 
     ; if pipe bug is going forward, apply speed
-    lda EnSpeedX,x
+    lda Ens.0.speedX,x
     bne @applySpeed
 
     ; if EnsExtra.0.accelY is in effect, we need to check if y speed became positive
@@ -18,7 +18,7 @@ PipeBugAIRoutine_{AREA}:
     ; while this is true, pipe bug will continue to rise at a fixed y speed
     lda Samus.y
     sec
-    sbc EnY,x
+    sbc Ens.0.y,x
     cmp #$40
     bcs @applySpeed
 
@@ -30,23 +30,23 @@ PipeBugAIRoutine_{AREA}:
 
 @checkIfGoForwards:
     ; branch if y speed is negative (pipe bug is still rising)
-    lda EnSpeedY,x
+    lda Ens.0.speedY,x
     bmi @applySpeed
         ; y speed is not negative, we must stop moving vertically and go forwards
         ; set y speed and acceleration to 0
         lda #$00
-        sta EnSpeedY,x
-        sta EnSpeedSubPixelY,x
+        sta Ens.0.speedY,x
+        sta Ens.0.speedSubPixelY,x
         sta EnsExtra.0.accelY,x
         ; set pipe bug x speed depending on its facing direction
-        lda EnData05,x
+        lda Ens.0.data05,x
         and #$01
         tay
         lda @speedXTable,y
-        sta EnSpeedX,x
+        sta Ens.0.speedX,x
 @applySpeed:
-    ; exit if bit 7 of EnData05 is set
-    lda EnData05,x
+    ; exit if bit 7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
     asl
     bmi @exit
     
