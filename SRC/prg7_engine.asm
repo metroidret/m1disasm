@@ -11108,7 +11108,7 @@ UpdateEnemy_ForceSpeedTowardsSamus:
     bpl @endIf_D
         ; it doesnt match
         ; force x speed to point the right direction
-        jsr L81DA
+        jsr EnemyIfMoveFailedHorizontal_Bounce@flipSpeed
     @endIf_D:
 
 @skipXAxis:
@@ -11163,7 +11163,7 @@ UpdateEnemy_ForceSpeedTowardsSamus:
     eor Ens.0.speedY,x
     bpl OrEnData05@RTS
     ; force y speed to point the right direction
-    jmp L820F
+    jmp EnemyIfMoveFailedVertical_Bounce@flipSpeed
 
 ;-------------------------------------------------------------------------------
 OrEnData05:
@@ -11361,8 +11361,8 @@ UpdateEnemy_Resting_TryBecomingActive:
             lsr
             ; branch if facing right
             bcc @endIf_C
-            ; enemy is facing left, call L81D1
-            jsr L81D1
+            ; enemy is facing left, flip x speed and acceleration
+            jsr EnemyIfMoveFailedHorizontal_Bounce@flipSpeedAndAccel
             jmp @endIf_C
         @else_C:
             ; bit 7 of Ens.0.data05 is set
@@ -11370,8 +11370,8 @@ UpdateEnemy_Resting_TryBecomingActive:
             and #$04
             ; branch if facing up
             beq @endIf_C
-            ; enemy is facing down, call L8206
-            jsr L8206
+            ; enemy is facing down, flip y speed and acceleration
+            jsr EnemyIfMoveFailedVertical_Bounce@flipSpeedAndAccel
         @endIf_C:
     @endIf_B:
     ; clear bit 5 of Ens.0.data05
