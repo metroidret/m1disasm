@@ -415,6 +415,18 @@ Temp00_WorldMapPtr     = $00
 Temp02_WorldMapRAMPtr  = $02
 ; Temp02_WorldMapRAMPtr+1 = $03
 
+; SamusMoveHorizontally/MoveEnemy/EnemyGetDelta
+Temp00_Delta           = $00
+
+; EnemyGetDeltaY_UsingAcceleration
+Temp00_AccelAbs         = $00
+
+; HorzAccelerate/EnemyGetDeltaX_UsingAcceleration
+Temp00_SpeedMaxSubPixel = $00
+Temp01_SpeedMax        = $01
+Temp02_SpeedMaxAbsSubPixel = $02
+Temp03_SpeedMaxAbs     = $03
+Temp04_SpeedAbsSubPixel = $04
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->

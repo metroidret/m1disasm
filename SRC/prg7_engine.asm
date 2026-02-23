@@ -7097,7 +7097,7 @@ SamusMoveHorizontally:
     sbc ScrollX
     sta SamusScrX
     ;Load Samus' current delta x.
-    lda $00
+    lda Temp00_Delta
     ;Branch if moving right.
     bpl LE347
 
@@ -7268,31 +7268,33 @@ HorzAccelerate: ;($E3E5)
     ; store max speed sub-pixels to temp
     lda SamusHorzSpeedMax
     jsr Amul16       ; * 16
-    sta $00
-    sta $02
+    sta Temp00_SpeedMaxSubPixel
+    sta Temp02_SpeedMaxAbsSubPixel
     ; store max speed pixels to temp
     lda SamusHorzSpeedMax
     jsr Adiv16       ; / 16
-    sta $01
-    sta $03
+    sta Temp01_SpeedMax
+    sta Temp03_SpeedMaxAbs
 
     ; apply x acceleration to x speed
-    ; and save x speed in x and y
+    ; and save new x speed in x and y
     lda SamusSpeedSubPixelX
     clc
     adc SamusAccelX
     sta SamusSpeedSubPixelX
     tax
+    ; continue apply for high byte
     lda #$00
     bit SamusAccelX
-    bpl Lx147 ;Branch if Samus accelerating to the right.
+    bpl @endIf_A
         lda #$FF
-    Lx147:
+    @endIf_A:
     adc Samus.speedX
     sta Samus.speedX
     tay
+    
     ;Branch if Samus is moving to the right.
-    bpl Lx148
+    bpl @endIf_B
         ; samus is moving left
         ; store negative x speed in x and y
         lda #$00
@@ -7304,21 +7306,21 @@ HorzAccelerate: ;($E3E5)
         tay
         ; negate max speed in temp $00-$01
         jsr NegateTemp00Temp01
-    Lx148:
+    @endIf_B:
     ;x and y now contain absolute x speed
     ;temp $00-$01 now contain signed max x speed
     ;temp $02-$03 now contain absolute max x speed
 
     ; branch if absolute x speed is less than than absolute max x speed
-    cpx $02
+    cpx Temp02_SpeedMaxAbsSubPixel
     tya
-    sbc $03
+    sbc Temp03_SpeedMaxAbs
     bcc Lx149
         ; absolute x speed is greater than than absolute max x speed
         ; cap signed x speed to signed max x speed
-        lda $00
+        lda Temp00_SpeedMaxSubPixel
         sta SamusSpeedSubPixelX
-        lda $01
+        lda Temp01_SpeedMax
         sta Samus.speedX
     Lx149:
 
@@ -7330,7 +7332,7 @@ HorzAccelerate: ;($E3E5)
     ;$00 stores temp copy of current delta x.
     lda #$00
     adc Samus.speedX
-    sta $00
+    sta Temp00_Delta
     rts
 
 NegateTemp00Temp01:
@@ -10344,7 +10346,7 @@ RTS_X294:
 
 SamusHurt_F311:
     ; exit if collision didn't happen
-    bcs Exit22
+    bcs ClearHealthChange@RTS
     ; set SamusHurt010F to #$E0
     lda #$E0
     sta SamusHurt010F
@@ -10363,12 +10365,11 @@ ClearHealthChange:
     lda #$00
     sta HealthChange
     sta HealthChange+1
-
-Exit22:
+@RTS:
     rts                             ;Return for routine above and below.
 
 CollisionDetectionMellow_ReactToCollisionWithWeapon:
-    bcs Exit22
+    bcs ClearHealthChange@RTS
     jsr SetWeaponIsHit
     jmp CollisionDetectionMellow_Hit
 
@@ -10475,11 +10476,11 @@ UpdateEnemy_UpdateEnData05Bit6:
     rts
 
 ;---------------------------------------------
-UpdateEnemy_Resting: ;($F3BE)
+UpdateEnemy_Resting: ; 07:F3BE
     ; Branch if bit 6 is set (30FPS)
     lda Ens.0.data05,x
     asl
-    bmi Lx299
+    bmi @endIf_A
         lda #$00
         sta EnsExtra.0.jumpDsplcmnt,x
         sta Ens.0.movementInstrIndex,x
@@ -10491,12 +10492,13 @@ UpdateEnemy_Resting: ;($F3BE)
 
         ; branch if delay is zero
         lda Ens.0.delay,x
-        beq Lx299
+        beq @endIf_B
             jsr UpdateEnemy_Resting_TryBecomingActive
-    Lx299:
+        @endIf_B:
+    @endIf_A:
     jmp UpdateEnemy_Active_BranchB
 ;------------------------------------------
-UpdateEnemy_Active: ; LF3E6
+UpdateEnemy_Active: ; 07:F3E6
     ; Branch if bit 6 is set (30FPS)
     lda Ens.0.data05,x
     asl
@@ -10515,11 +10517,11 @@ UpdateEnemy_Active: ; LF3E6
     dec EnsExtra.0.status,x
     bne UpdateEnemy_Active_BranchB ; Branch always
 
-UpdateEnemy_Active_BranchA: ; LF401
+UpdateEnemy_Active_BranchA: ; 07:F401
     jsr UpdateEnemy_ForceSpeedTowardsSamus
     jsr UpdateEnemy_EnData05DistanceToSamusThreshold
     jsr RemoveEnemyIfItIsInLava
-UpdateEnemy_Active_BranchB: ; LF40A
+UpdateEnemy_Active_BranchB: ; 07:F40A
     jsr EnemyReactToSamusWeapon
 UpdateEnemy_Explode:
     jmp ChooseEnemyAIRoutine
@@ -10528,7 +10530,7 @@ UpdateEnemy_Explode:
 
 ; This procedure is called by a lot of enemy AI routines, with three different entry points
 ; Entry Point 1
-UpdateEnemyCommon:
+UpdateEnemyCommon: ; 07:F410
     jsr UpdateEnemyAnim
     jsr EnemyMove
 ; Entry Point 2
@@ -10560,13 +10562,13 @@ UpdateEnemyCommon:
     rts
 
 ; Entry Point 3
-UpdateEnemyCommon@noMove:
+@noMove:
     jsr UpdateEnemyAnim
     jmp UpdateEnemyCommon@noMoveNoAnim
 
 ;-------------------------------------------
 
-UpdateEnemy_Frozen: ; ($F43E)
+UpdateEnemy_Frozen: ; 07:F43E
     jsr EnemyReactToSamusWeapon
     lda EnsExtra.0.status,x
     cmp #$03

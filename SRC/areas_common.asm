@@ -97,7 +97,7 @@ EnemyMove:
 
     ; load delta y into a
     jsr EnemyGetDeltaY
-    lda $00
+    lda Temp00_Delta
     bpl @endIf_Up
         ; save absolute delta y into EnemyMovePixelQty
         jsr TwosComplement ; flip negative to positive
@@ -124,7 +124,7 @@ EnemyMove:
 
     ; load delta x into a
     jsr EnemyGetDeltaX
-    lda $00
+    lda Temp00_Delta
     bpl @endIf_Left
         ; save absolute delta x into EnemyMovePixelQty
         jsr TwosComplement ; flip negative to positive
@@ -643,7 +643,7 @@ EnemyGetDeltaY_8296: ;referenced in bank 7
     @endIf_A:
     ; Store this frame's delta y in temp
 L82A2:
-    sta $00
+    sta Temp00_Delta
     rts
 
 ;---------------------------------------
@@ -786,7 +786,7 @@ EnemyGetDeltaX_832F:
         jsr TwosComplement
     @endIf_A:
 L833C:
-    sta $00
+    sta Temp00_Delta
     rts
 
 ;-------------------------------------------------------------------------------
@@ -822,9 +822,9 @@ EnemyGetDeltaY_UsingAcceleration:
         ; subtract absolute acceleration from speed
         jsr TwosComplement
         sec
-        sta $00
+        sta Temp00_AccelAbs
         lda Ens.0.speedSubPixelY,x
-        sbc $00
+        sbc Temp00_AccelAbs
         sta Ens.0.speedSubPixelY,x
         lda Ens.0.speedY,x
         sbc #$00
@@ -850,73 +850,76 @@ EnemyGetDeltaY_UsingAcceleration:
     clc
     adc Ens.0.speedSubPixelY,x
     sta EnsExtra.0.subPixelY,x
-    ; $00 stores temp copy of current delta y.
+    ; Temp00_Delta stores temp copy of current delta y.
     lda #$00
     adc Ens.0.speedY,x
-    sta $00
+    sta Temp00_Delta
     rts
 
 ;-------------------------------------------------------------------------------
 ; apply acceleration to speed and return delta x for enemy
 ; copy-pasted from HorzAccelerate for samus
 EnemyGetDeltaX_UsingAcceleration:
+    ; max speed for enemies is 14.0 px/frame
     ; store max speed sub-pixels to temp
     lda #$00
-    sta $00
-    sta $02
+    sta Temp00_SpeedMaxSubPixel
+    sta Temp02_SpeedMaxAbsSubPixel
     ; store max speed pixels to temp
     lda #$0E
-    sta $01
-    sta $03
+    sta Temp01_SpeedMax
+    sta Temp03_SpeedMaxAbs
 
     ; apply x acceleration to x speed
-    ; and save x speed in $04 and y
+    ; and save new x speed in $04 and y
     lda Ens.0.speedSubPixelX,x
     clc
     adc EnsExtra.0.accelX,x
     sta Ens.0.speedSubPixelX,x
-    sta $04
+    sta Temp04_SpeedAbsSubPixel
+    ; continue apply for high byte
     lda #$00
     ldy EnsExtra.0.accelX,x
-    bpl L83B6 ;Branch if enemy accelerating to the right.
+    bpl @endIf_A
         lda #$FF
-    L83B6:
+    @endIf_A:
     adc Ens.0.speedX,x
     sta Ens.0.speedX,x
     tay
+    
     ;Branch if enemy is moving to the right.
-    bpl L83D0
+    bpl @endIf_B
         ; enemy is moving left
         ; store negative x speed in $04 and y
         lda #$00
         sec
         sbc Ens.0.speedSubPixelX,x
-        sta $04
+        sta Temp04_SpeedAbsSubPixel
         lda #$00
         sbc Ens.0.speedX,x
         tay
         ; negate max speed in temp $00-$01
         jsr NegateTemp00Temp01
-    L83D0:
-    ;$04 and y now contain absolute x speed
+    @endIf_B:
+    ;temp $04 and y now contain absolute x speed
     ;temp $00-$01 now contain signed max x speed
     ;temp $02-$03 now contain absolute max x speed
 
     ; branch if absolute x speed is less than than absolute max x speed
-    lda $04
-    cmp $02
+    lda Temp04_SpeedAbsSubPixel
+    cmp Temp02_SpeedMaxAbsSubPixel
     tya
-    sbc $03
-    bcc L83E3
+    sbc Temp03_SpeedMaxAbs
+    bcc @endIf_C
         ; absolute x speed is greater than than absolute max x speed
         ; cap signed x speed to signed max x speed
-        lda $00
+        lda Temp00_SpeedMaxSubPixel
         sta Ens.0.speedSubPixelX,x
-        lda $01
+        lda Temp01_SpeedMax
         sta Ens.0.speedX,x
-    L83E3:
+    @endIf_C:
 
-    ; apply sub-pixel speed to sub-pixel position
+    ; apply capped sub-pixel speed to sub-pixel position
     lda EnsExtra.0.subPixelX,x
     clc
     adc Ens.0.speedSubPixelX,x
@@ -924,7 +927,7 @@ EnemyGetDeltaX_UsingAcceleration:
     ;$00 stores temp copy of current delta x.
     lda #$00
     adc Ens.0.speedX,x
-    sta $00
+    sta Temp00_Delta
     rts
 
 ;-------------------------------------------------------------------------------
@@ -940,65 +943,70 @@ EnemyMoveOnePixelUp:
     sec
     sbc EnsExtra.0.radiusY,x
     and #$07
+    ; set carry by default for no collision
     sec
-    bne L8406
+    bne @endIf_A
+        ; this is a block boundary
         jsr EnemyCheckMoveUp
-    L8406:
+    @endIf_A:
+    ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
     ldx PageIndex
     ; return movement failed if collided
-    bcc RTS_844A
+    bcc @RTS
+    
+    ; Temp00 is set to 1 (why?)
     inc $00
     ; branch if Ens.0.y != 0
     ldy Ens.0.y,x
-    bne L8429
-    ; enemy tries to switch nametable
-    ; to compensate for screen being #$F0 pixels tall
-    ldy #SCRN_VY
-    ; branch if scrolling horizontally
-    lda ScrollDir
-    cmp #$02
-    bcs L8429
-    ; return movement failed if ScrollY == 0
-    lda ScrollY
-    beq RTS_844A
-    ; return movement failed if enemy nametable == nametable at top of screen
-    ; (tried to switch nametable while offscreen)
-    jsr GetOtherNameTableIndex
-    beq RTS_844A
-    ; switch nametable
-    jsr SwitchEnemyNameTable
-L8429:
+    bne @endIf_B
+        ; enemy tries to switch nametable
+        ; to compensate for screen being #$F0 pixels tall
+        ldy #SCRN_VY
+        ; branch if scrolling horizontally
+        lda ScrollDir
+        cmp #$02
+        bcs @endIf_B
+            ; return movement failed if ScrollY == 0
+            lda ScrollY
+            beq @RTS
+            ; return movement failed if enemy nametable == nametable at top of screen
+            ; (tried to switch nametable while offscreen)
+            jsr GetOtherNameTableIndex
+            beq @RTS
+            ; switch nametable
+            jsr SwitchEnemyNameTable
+    @endIf_B:
     ; decrement Ens.0.y
     dey
     tya
     sta Ens.0.y,x
     ; movement successful if top boundary != 0
     cmp EnsExtra.0.radiusY,x
-    bne L8441
+    bne @success
 
     ; return movement failed if ScrollY == 0
     lda ScrollY
-    beq L843C
+    beq @endIf_C
         ; return movement failed if enemy nametable == nametable at top of screen,
         ; otherwise success
         jsr GetOtherNameTableIndex
-        bne L8441
-    L843C:
+        bne @success
+    @endIf_C:
     inc Ens.0.y,x
     clc
     rts
 
-L8441:
+@success:
     ; movement successful
     ; increment jumpDsplcmnt if facing in a horizontal direction
     lda Ens.0.data05,x
-    bmi L8449
+    bmi @endIf_D
         inc EnsExtra.0.jumpDsplcmnt,x
-    L8449:
+    @endIf_D:
     sec
-RTS_844A:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1013,36 +1021,39 @@ EnemyMoveOnePixelDown:
     adc EnsExtra.0.radiusY,x
     and #$07
     sec
-    bne L845C
+    bne @endIf_A
         jsr EnemyCheckMoveDown
-    L845C:
+    @endIf_A:
+    ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
     ldx PageIndex
     ; return movement failed if collided
-    bcc RTS_84A6
+    bcc @RTS
+    
+    ; Temp00 is set to 1 (why?)
     inc $00
     ; branch if Ens.0.y != #$EF
     ldy Ens.0.y,x
     cpy #SCRN_VY-1
-    bne L8481
-    ; enemy tries to switch nametable
-    ; to compensate for screen being #$F0 pixels tall
-    ldy #$FF
-    ; branch if scrolling horizontally
-    lda ScrollDir
-    cmp #$02
-    bcs L8481
-    ; return movement failed if ScrollY == 0
-    lda ScrollY
-    beq RTS_84A6
-    ; return movement failed if enemy nametable != nametable at top of screen
-    ; (tried to switch nametable while offscreen)
-    jsr GetOtherNameTableIndex
-    bne RTS_84A6
-    ; switch nametable
-    jsr SwitchEnemyNameTable
-L8481:
+    bne @endIf_B
+        ; enemy tries to switch nametable
+        ; to compensate for screen being #$F0 pixels tall
+        ldy #$FF
+        ; branch if scrolling horizontally
+        lda ScrollDir
+        cmp #$02
+        bcs @endIf_B
+            ; return movement failed if ScrollY == 0
+            lda ScrollY
+            beq @RTS
+            ; return movement failed if enemy nametable != nametable at top of screen
+            ; (tried to switch nametable while offscreen)
+            jsr GetOtherNameTableIndex
+            bne @RTS
+            ; switch nametable
+            jsr SwitchEnemyNameTable
+    @endIf_B:
     ; increment Ens.0.y
     iny
     tya
@@ -1051,28 +1062,29 @@ L8481:
     clc
     adc EnsExtra.0.radiusY,x
     cmp #SCRN_VY-1
-    bne L849D
+    bne @success
+    
     ; return movement failed if ScrollY == 0
     lda ScrollY
-    beq L8497
+    beq @endIf_C
         ; return movement failed if enemy nametable != nametable at top of screen,
         ; otherwise success
         jsr GetOtherNameTableIndex
-        beq L849D
-    L8497:
+        beq @success
+    @endIf_C:
     dec Ens.0.y,x
     clc
-    bcc RTS_84A6 ; branch always
+    bcc @RTS ; branch always
 
-L849D:
+@success:
     ; movement successful
     ; decrement jumpDsplcmnt if facing in a horizontal direction
     lda Ens.0.data05,x
-    bmi L84A5
+    bmi @endIf_D
         dec EnsExtra.0.jumpDsplcmnt,x
-    L84A5:
+    @endIf_D:
     sec
-RTS_84A6:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1085,61 +1097,66 @@ EnemyMoveOnePixelLeft:
     sbc EnsExtra.0.radiusX,x
     and #$07
     sec
-    bne L84B8
+    bne @endIf_A
         jsr EnemyCheckMoveLeft
-    L84B8:
+    @endIf_A:
+    ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
     ldx PageIndex
     ; return movement failed if collided
-    bcc RTS_84FD
+    bcc @RTS
+    
+    ; Temp00 is set to 1 (why?)
     inc $00
     ; branch if Ens.0.x != 0
     ldy Ens.0.x,x
-    bne L84DA
-    ; enemy tries to switch nametable
-    ; branch if scrolling vertically
-    lda ScrollDir
-    cmp #$02
-    bcc L84DA
-    ; return movement failed if ScrollX == 0
-    lda ScrollX
-    beq L84D4
-        ; return movement failed if enemy nametable == nametable at left edge of screen
-        ; (tried to switch nametable while offscreen)
-        jsr GetOtherNameTableIndex
-    L84D4:
-    clc
-    beq RTS_84FD
-    ; switch nametable
-    jsr SwitchEnemyNameTable
-L84DA:
+    bne @endIf_B
+        ; enemy tries to switch nametable
+        ; branch if scrolling vertically
+        lda ScrollDir
+        cmp #$02
+        bcc @endIf_B
+            ; return movement failed if ScrollX == 0
+            lda ScrollX
+            beq @endIf_C
+                ; return movement failed if enemy nametable == nametable at left edge of screen
+                ; (tried to switch nametable while offscreen)
+                jsr GetOtherNameTableIndex
+            @endIf_C:
+            clc
+            beq @RTS
+            ; switch nametable
+            jsr SwitchEnemyNameTable
+    @endIf_B:
     ; decrement Ens.0.x
     dec Ens.0.x,x
     ; movement successful if left boundary != 0
     lda Ens.0.x,x
     cmp EnsExtra.0.radiusX,x
-    bne L84F4
+    bne @success
+    
     ; return movement failed if ScrollX == 0
     lda ScrollX
-    beq L84EE
+    beq @endIf_D
         ; return movement failed if enemy nametable == nametable at left edge of screen,
         ; otherwise success
         jsr GetOtherNameTableIndex
-        bne L84F4
-    L84EE:
+        bne @success
+    @endIf_D:
     inc Ens.0.x,x
     clc
-    bcc RTS_84FD
-L84F4:
+    bcc @RTS
+
+@success:
     ; movement successful
     ; increment jumpDsplcmnt if facing in a vertical direction
     lda Ens.0.data05,x
-    bpl L84FC
+    bpl @endIf_E
         inc EnsExtra.0.jumpDsplcmnt,x
-    L84FC:
+    @endIf_E:
     sec
-RTS_84FD:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1152,67 +1169,67 @@ EnemyMoveOnePixelRight:
     adc EnsExtra.0.radiusX,x
     and #$07
     sec
-    bne L850F
+    bne @endIf_A
         jsr EnemyCheckMoveRight
-    L850F:
+    @endIf_A:
     ldy #$00
     sty $00
     ldx PageIndex
     ; return movement failed if collided
-    bcc RTS_8559
+    bcc @RTS
+    
     inc $00
     ; increment Ens.0.x
     inc Ens.0.x,x
     ; branch if Ens.0.x != 0
-    bne L8536
-    ; enemy tries to switch nametable
-    ; branch if scrolling vertically
-    lda ScrollDir
-    cmp #$02
-    bcc L8536
-    ; return movement failed if ScrollX == 0
-    lda ScrollX
-    beq L852D
-        ; return movement failed if enemy nametable != nametable at right edge of screen
-        ; (tried to switch nametable while offscreen), otherwise branch
-        jsr GetOtherNameTableIndex
-        beq L8533
-    L852D:
-        dec Ens.0.x,x
-        clc
-        bcc RTS_8559
-    L8533:
-    ; switch nametable
-    jsr SwitchEnemyNameTable
-
-L8536:
+    bne @endIf_B
+        ; enemy tries to switch nametable
+        ; branch if scrolling vertically
+        lda ScrollDir
+        cmp #$02
+        bcc @endIf_B
+            ; return movement failed if ScrollX == 0
+            lda ScrollX
+            beq @then_C
+                ; return movement failed if enemy nametable != nametable at right edge of screen
+                ; (tried to switch nametable while offscreen), otherwise branch
+                jsr GetOtherNameTableIndex
+                beq @endIf_C
+            @then_C:
+                dec Ens.0.x,x
+                clc
+                bcc @RTS
+            @endIf_C:
+            ; switch nametable
+            jsr SwitchEnemyNameTable
+    @endIf_B:
     ; branch if left boundary != #$FF
     lda Ens.0.x,x
     clc
     adc EnsExtra.0.radiusX,x
     cmp #$FF
-    bne L8550
+    bne @success
     ; return movement failed if ScrollX == 0
     lda ScrollX
-    beq L854A
+    beq @endIf_D
         ; return movement failed if enemy nametable != nametable at right edge of screen,
         ; otherwise success
         jsr GetOtherNameTableIndex
-        beq L8550
-    L854A:
+        beq @success
+    @endIf_D:
     dec Ens.0.x,x
     clc
-    bcc RTS_8559
+    bcc @RTS
 
-L8550:
+@success:
     ; movement successful
     ; decrement jumpDsplcmnt if facing in a vertical direction
     lda Ens.0.data05,x
-    bpl L8558
+    bpl @endIf_E
         dec EnsExtra.0.jumpDsplcmnt,x
-    L8558:
+    @endIf_E:
     sec
-RTS_8559:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1256,6 +1273,7 @@ SamusEnterDoor:
     bne SetDoorEntryInfo@RTS
     ldy SamusDoorData
     beq SetDoorEntryInfo@RTS
+    
     ;Reset current missile and energy power-up counters.
     sta MissilePickupQtyCur
     sta EnergyPickupQtyCur
