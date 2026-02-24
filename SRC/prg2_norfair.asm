@@ -519,7 +519,7 @@ EnemyMovement11_L_{AREA}:
     EnemyMovementInstr_ClearEnJumpDsplcmnt
     SignMagSpeed $30,  0,  0
     SignMagSpeed $14,  0,  1
-    EnemyMovementInstr_StopMovementDragon
+    EnemyMovementInstr_TriggerResting
 
 EnProjectileMovement0_{AREA}:
     SignMagSpeed $0A,  3, -5

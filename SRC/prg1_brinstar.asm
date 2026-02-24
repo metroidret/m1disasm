@@ -269,7 +269,7 @@ L967B:
 
 ; Bit 7: for when bit 1 is set, 0=force y axis only, 1=force y and x axis
 ; Bit 5: 0=enemy bounces, 1=enemy doesn't bounce
-; Bit 5: EnemyMovementInstr_FE failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
+; Bit 5: EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
 ; Bits 0-4 are used when bit 5 is set
 ; Bit 4: don't do normal enemy touch Samus reaction, let the AI do a custom touch reaction
 ; Bits 2-3: #%00,#%01=normal enemy hit sound, #%10=big enemy hit sound, #%11=metroid hit sound
@@ -529,11 +529,11 @@ EnemyMovementChoice_KraidNail_{AREA}: ; unused
 ; unused (???)
 EnemyMovement00_R_{AREA}:
     SignMagSpeed $20,  2,  2
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement00_L_{AREA}:
     SignMagSpeed $20, -2,  2
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement01_R_{AREA}:
 EnemyMovement01_L_{AREA}:
@@ -682,25 +682,25 @@ EnemyMovement0C_R_{AREA}:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0C_L_{AREA}:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0D_R_{AREA}:
     SignMagSpeed $1E,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E, -1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0D_L_{AREA}:
     SignMagSpeed $1E, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $1E,  1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 ; unused (kraid lint)
 EnemyMovement0E_R_{AREA}:

@@ -192,7 +192,7 @@ EnemyIfMoveFailedUp:
 
     ; data1F >= #$80
     ; trigger resting period and clear Y accel and speed
-    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
+    jsr EnemyTriggerResting_AndClearEnAccelY
     beq @landOnCeilingPt2 ; branch always
 
 @brushOnCeiling:
@@ -266,7 +266,7 @@ EnemyIfMoveFailedDown: ;($80FA)
 @landOnFloor:
     ; data1F == #$40
     ; trigger resting period
-    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
+    jsr EnemyTriggerResting_AndClearEnAccelY
     ; fallthrough
     ; (what? shouldn't it be symmetrical to the EnemyIfMoveFailedUp code?)
 
@@ -328,7 +328,7 @@ EnemyIfMoveFailedRight: ;($8134)
 @landOnRightWall:
     ; data1F == #$40
     ; trigger resting period
-    jsr EnemyTriggerRestingPeriod_AndClearEnAccelX
+    jsr EnemyTriggerResting_AndClearEnAccelX
     beq @abortLoop ; branch always
 
 @movementStrings:
@@ -380,7 +380,7 @@ EnemyIfMoveFailedLeft:
 
     ; data1F >= #$80
     ; trigger resting period and clear X speed
-    jsr EnemyTriggerRestingPeriod_AndClearEnAccelX
+    jsr EnemyTriggerResting_AndClearEnAccelX
     beq @landOnLeftWallPt2 ; branch always
 
 @brushOnLeftWall:
@@ -417,21 +417,21 @@ EnemyIfMoveFailedLeft:
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerRestingPeriod_AndClearEnAccelY:
-    jsr EnemyTriggerRestingPeriod
+EnemyTriggerResting_AndClearEnAccelY:
+    jsr EnemyTriggerResting
     sta EnsExtra.0.accelY,x
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerRestingPeriod:
+EnemyTriggerResting:
     lda #$20
     jsr OrEnData05
     lda #$00
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerRestingPeriod_AndClearEnAccelX:
-    jsr EnemyTriggerRestingPeriod
+EnemyTriggerResting_AndClearEnAccelX:
+    jsr EnemyTriggerResting
     sta EnsExtra.0.accelX,x
     rts
 
@@ -557,15 +557,15 @@ EnemyGetDeltaY:
     lda Ens.0.data05,x
     and #$20
     eor #$20
-    beq L82A2
+    beq EnemyGetDeltaY_Store
 
     ; enemy is not triggering a resting period
     ; load movement string pointer into EnemyMovementPtr
     jsr LoadEnemyMovementPtr
-L8258:
+@ReadByteAtIndex:
     ; read instruction at current index into string
     ldy Ens.0.movementInstrIndex,x
-EnemyGetDeltaY_ReadByte:
+@ReadByte:
     lda (EnemyMovementPtr),y
 
 ;CommonCase
@@ -575,7 +575,7 @@ EnemyGetDeltaY_ReadByte:
 
 ;CaseFA
     cmp #$FA
-    beq GotoEnemyGetDeltaY_StopMovementSeahorse
+    beq GotoEnemyGetDeltaY_TriggerResting
 
 ;CaseFB
     cmp #$FB
@@ -591,17 +591,17 @@ EnemyGetDeltaY_ReadByte:
 
 ;CaseFE
     cmp #$FE
-    beq EnemyGetDeltaY_CaseFE
+    beq EnemyGetDeltaY_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 ;Default case (see this as CaseFF)
 ; Restart movement string from the beginning
     lda #$00
     sta Ens.0.movementInstrIndex,x
-    beq L8258 ; branch always
+    beq EnemyGetDeltaY@ReadByteAtIndex ; branch always
 
 ;---------------------------------------
-GotoEnemyGetDeltaY_StopMovementSeahorse: ; L827C
-    jmp EnemyGetDeltaY_StopMovementSeahorse
+GotoEnemyGetDeltaY_TriggerResting: ; L827C
+    jmp EnemyGetDeltaY_TriggerResting
 
 ;---------------------------------------
 EnemyGetDeltaY_SignMagSpeed:
@@ -619,30 +619,29 @@ EnemyGetDeltaY_SignMagSpeed:
         tya
         sta Ens.0.movementInstrIndex,x
         ; Handle another byte
-        bne EnemyGetDeltaY_ReadByte ; branch always
+        bne EnemyGetDeltaY@ReadByte ; branch always
 
     @endIf_A:
     ; Increment Ens.0.delay
     inc Ens.0.delay,x
-
-    ; Read the sign/magnitude of the speed from the next byte
+    ; Read the sign-magnitude speed vector from the next byte
     iny
     lda (EnemyMovementPtr),y
 
-EnemyGetDeltaY_8296: ;referenced in bank 7
-    ; Save the sign bit to the carry flag
+@fromByte: ;referenced in bank 7
+    ; Save the sign bit of y speed to the carry flag
     asl
     php
     ; Get the magnitude
-    jsr Adiv32                      ;($C2BE)Divide by 32.
+    jsr Adiv32
     ; Negate the magnitude if necessary
     plp
-    bcc @endIf_A
+    bcc @endIf_B
         eor #$FF
         adc #$00 ; Since carry is set in this branch, this increments A
-    @endIf_A:
+    @endIf_B:
+EnemyGetDeltaY_Store:
     ; Store this frame's delta y in temp
-L82A2:
     sta Temp00_Delta
     rts
 
@@ -653,7 +652,7 @@ EnemyGetDeltaY_ClearEnJumpDsplcmnt:
     iny
     lda #$00
     sta EnsExtra.0.jumpDsplcmnt,x
-    beq EnemyGetDeltaY_ReadByte ; Branch always
+    beq EnemyGetDeltaY@ReadByte ; Branch always
 
 ;---------------------------------------
 ; Don't move, and don't advance the movement counter
@@ -666,29 +665,35 @@ EnemyGetDeltaY_StopMovement:
 ; Retruns back to F416 in the engine bank
 
 ;---------------------------------------
-; Repeat Previous Movement Until Vertical Movement Fails
+; Repeat Previous Movement Until Vertical Movement Fails, then move to next instruction
 EnemyGetDeltaY_RepeatPreviousUntilFailure:
-    ; If bit 7 of EnsExtra.0.data1F is set, then check if you can move up and then jump ahead
+    ; bits 6 and 7 of data1F are used as flags to determine which vertical surface to check
+    ; branch if bit 7 of data1F is unset
     lda EnsExtra.0.data1F,x
-    bpl L82BE
+    bpl @else_A
+        ; bit 7 of data1F is set
+        ; check land on ceiling
         jsr EnemyCheckMoveUp
-        jmp L82C3
-    L82BE:
-        ; If EnsExtra.0.data1F is non-zero, check if you can move down and then jump ahead
-        beq L82D2
+        jmp @endIf_A
+    @else_A:
+        ; succeed instantly if data1F is zero
+        beq @success
+        ; bit 6 of data1F is set
+        ; check land on floor
         jsr EnemyCheckMoveDown
-    L82C3:
+    @endIf_A:
     ; branch if movement check succeeded
     ldx PageIndex
-    bcs L82D2
+    bcs @success
+    
     ; movement check failed, move on to the next byte
     ldy Ens.0.movementInstrIndex,x
     iny
     lda #$00
     sta EnsExtra.0.data1F,x
-    beq L82D7 ; Branch always
+    beq @common ; Branch always
 
-L82D2:
+@success:
     ; movement check succeeded
     ; repeat the previous two bytes
     ldy Ens.0.movementInstrIndex,x
@@ -696,43 +701,50 @@ L82D2:
     dey
 
 ; Save Ens.0.movementInstrIndex
-L82D7:
+@common:
     tya
     sta Ens.0.movementInstrIndex,x
 ; Read the next bytes
-    jmp EnemyGetDeltaY_ReadByte
+    jmp EnemyGetDeltaY@ReadByte
 
 ;---------------------------------------
-; Repeat previous until ???
-EnemyGetDeltaY_CaseFE:
+; Repeat previous movement Until Vertical Movement Fails, then trigger resting period
+EnemyGetDeltaY_RepeatPreviousUntilNoDeltaYThenTriggerResting: ; $82DE
     ; Move Ens.0.movementInstrIndex back to the previous movement instruction
     dey
     dey
     tya
     sta Ens.0.movementInstrIndex,x
-    ; Then do some other stuff
+    ; bits 6 and 7 of data1F are used as flags to determine which vertical surface to check
+    ; branch if bit 7 of data1F is unset
     lda EnsExtra.0.data1F,x
     bpl @else_A
+        ; bit 7 of data1F is set
+        ; check land on ceiling
         jsr EnemyCheckMoveUp
         jmp @endIf_A
     @else_A:
-        beq L82FB
+        ; fail instantly if data1F is zero (this is different than EnemyGetDeltaY_RepeatPreviousUntilFailure)
+        beq @fail
+        ; bit 6 of data1F is set
+        ; check land on floor
         jsr EnemyCheckMoveDown
     @endIf_A:
     ; branch if movement check failed
     ldx PageIndex
-    bcc L82FB
+    bcc @fail
     ; movement check succeeded
+    ; we are still moving vertically
     ; run previous movement instruction
-    jmp L8258
+    jmp EnemyGetDeltaY@ReadByteAtIndex
 
-L82FB:
+@fail:
     ; movement check failed
     ; branch if bit 5 of L968B entry is unset
     ldy EnsExtra.0.type,x
     lda L968B,y
     and #$20
-    beq EnemyGetDeltaY_StopMovementSeahorse
+    beq @endIf_B
         ; toggle facing direction bits
         lda Ens.0.data05,x
         eor #$05
@@ -743,14 +755,16 @@ L82FB:
         ; (this clears bits 6 and 7, -->
         ;  bit 5 is set by the routine call that follows)
         sta Ens.0.data05,x
-        ; fallthrough
+    @endIf_B:
+    ; fallthrough
 ;---------------------------------------
-;EnemyTriggerRestingPeriod_AndClearEnAccelY
-; Move horizontally indefinitely (???)
-; Used only at the end of seahorse's movement string
-EnemyGetDeltaY_StopMovementSeahorse:
-    jsr EnemyTriggerRestingPeriod_AndClearEnAccelY
-    jmp L82A2 ; Set delta-y to zero and exit
+; Used only at the end of dragon's movement string
+EnemyGetDeltaY_TriggerResting:
+    ; the resting status will stop execution of a movement string and reset it back to the beginning
+    ; when the enemy will become active again, movement string execution will start over
+    jsr EnemyTriggerResting_AndClearEnAccelY
+    ; Set delta-y to zero and exit
+    jmp EnemyGetDeltaY_Store
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related?
@@ -760,19 +774,22 @@ EnemyGetDeltaX:
     bpl @endIf_A
         jmp EnemyGetDeltaX_UsingAcceleration
     @endIf_A:
-
     ; enemy uses movement strings to move itself
+    ; fallthrough
+
+EnemyGetDeltaX_SignMagSpeed:
     ; If bit 5 of Ens.0.data05 is clear, don't move horizontally
     lda Ens.0.data05,x
     and #$20
     eor #$20
-    beq L833C
+    beq EnemyGetDeltaX_Store
 
-    ; Read the same velocity byte as in EnemyGetDeltaY
+    ; Read the same sign-magnitude speed vector byte as in EnemyGetDeltaY
+    ; EnemyMovementPtr was set during EnemyGetDeltaY earlier
     ldy Ens.0.movementInstrIndex,x
     iny
-    lda (EnemyMovementPtr),y ; $81/$82 were loaded during EnemyGetDeltaY earlier
-EnemyGetDeltaX_832F:
+    lda (EnemyMovementPtr),y
+@fromByte:
     tax
     ; Save the sign bit to the processor flags
     and #$08
@@ -785,7 +802,8 @@ EnemyGetDeltaX_832F:
     beq @endIf_A
         jsr TwosComplement
     @endIf_A:
-L833C:
+EnemyGetDeltaX_Store:
+    ; Store this frame's delta x in temp
     sta Temp00_Delta
     rts
 
@@ -1326,7 +1344,7 @@ SamusEnterDoor:
     ; x = 3 : vertical room door below the center (scroll down)
     ; x = 4 : vertical room door above or at the center (scroll up)
 
-SetDoorEntryInfo: ; ($8B53)
+SetDoorEntryInfo: ; $8B53
     ;Save door scroll status from X.
     txa
     sta DoorScrollStatus
@@ -1362,7 +1380,7 @@ SamusInDoor:
     rts
 
 ;----------------------------------------------------------------------------------------------------
-UpdateAllDoors: ;($8B79)
+UpdateAllDoors: ; $8B79
     ldx #Doors.3 - Objects
     @loop:
         jsr UpdateDoor
@@ -1402,9 +1420,9 @@ DrawDoor:
     lda DoorType,x
     ; blue door that changes the music should be drawn the same as a regular blue door
     cmp #$03
-    bne L8BBA
+    bne @endIf_A
         lda #$01
-    L8BBA:
+    @endIf_A:
     ; use door type to write to ObjectCntrl
     ora #$80 | OAMDATA_PRIORITY
     sta ObjectCntrl

@@ -4342,13 +4342,13 @@ Lx071:
 
     ; get y speed from instruction
     lda ($0A),y
-    jsr EnemyGetDeltaY_8296
+    jsr EnemyGetDeltaY_SignMagSpeed@fromByte
     ; set y speed
     ldx PageIndex
     sta Objects.0.speedY,x
     ; get x speed from instruction
     lda ($0A),y
-    jsr EnemyGetDeltaX_832F
+    jsr EnemyGetDeltaX_SignMagSpeed@fromByte
     ; set x speed
     ldx PageIndex
     sta Objects.0.speedX,x
@@ -7923,7 +7923,7 @@ EnemyCheckMoveUp:
     lda EnsExtra.0.radiusY,x
     clc
     adc #$08
-    jmp LE783
+    jmp EnemyCheckMoveVertical
 
 EnemyCheckMoveDown:
     ldx PageIndex
@@ -7933,7 +7933,7 @@ EnemyCheckMoveDown:
     sbc EnsExtra.0.radiusY,x
     ; fallthrough
 
-LE783:
+EnemyCheckMoveVertical:
     sta Temp02_DistToCenterY
     ; redundant
     lda #$08
@@ -7952,13 +7952,13 @@ StoreEnemyPositionToTemp:
     sta Temp0B_PositionHi     ; hi coord
     rts
 
-ObjectCheckMoveUp:; For Samus, et al
+ObjectCheckMoveUp: ; For Samus, et al
     ldx PageIndex
     ; Y radius + 8 to check block directly above
     lda Objects.0.radiusY,x
     clc
     adc #$08
-    jmp Lx197
+    jmp ObjectCheckMoveVertical
 
 ObjectCheckMoveDown: ; For Samus
     ldx PageIndex
@@ -7966,11 +7966,16 @@ ObjectCheckMoveDown: ; For Samus
     lda #$00
     sec
     sbc Objects.0.radiusY,x
-Lx197:
+    ; fallthrough
+
+ObjectCheckMoveVertical:
     sta Temp02_DistToCenterY
     jsr StoreObjectPositionToTemp
     lda Objects.0.radiusX,x
+    ; fallthrough
 
+; return carry set if no collision
+; return carry clear if collision
 CheckMoveVertical:
     bne Lx198
         ; Skip collision if X radius = 0
@@ -11659,12 +11664,12 @@ Lx362:
     iny
 
     lda ($0A),y
-    jsr EnemyGetDeltaY_8296 ; Get the y velocity from this byte
+    jsr EnemyGetDeltaY_SignMagSpeed@fromByte ; Get the y velocity from this byte
     ldx PageIndex
     sta Ens.0.speedY,x
 
     lda ($0A),y
-    jsr EnemyGetDeltaX_832F ; Get the x velocity from this byte
+    jsr EnemyGetDeltaX_SignMagSpeed@fromByte ; Get the x velocity from this byte
     ldx PageIndex
     sta Ens.0.speedX,x
 

@@ -474,11 +474,11 @@ EnemyMovementChoice_KraidNail_{AREA}:
 ; unused (???)
 EnemyMovement00_R_{AREA}:
     SignMagSpeed $20,  2,  2
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement00_L_{AREA}:
     SignMagSpeed $20, -2,  2
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement01_R_{AREA}:
 EnemyMovement01_L_{AREA}:
@@ -543,25 +543,25 @@ EnemyMovement0C_R_{AREA}:
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0C_L_{AREA}:
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0D_R_{AREA}:
     SignMagSpeed $32,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32, -1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 EnemyMovement0D_L_{AREA}:
     SignMagSpeed $32, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32,  1,  1
-    EnemyMovementInstr_FE
+    EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 ; kraid lint
 EnemyMovement0E_R_{AREA}:

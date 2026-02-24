@@ -124,7 +124,7 @@
     .endr
 .endm
 
-.macro EnemyMovementInstr_StopMovementDragon
+.macro EnemyMovementInstr_TriggerResting
     .byte $FA
 .endm
 
@@ -140,7 +140,7 @@
     .byte $FD
 .endm
 
-.macro EnemyMovementInstr_FE ; some form of end
+.macro EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
     .byte $FE
 .endm
 
