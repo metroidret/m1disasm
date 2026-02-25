@@ -11867,10 +11867,10 @@ UpdateEnemyExplosion: ; 07:FAB4
 ; Table used by above subroutine
 @explosionMovementTable:
     ;      y    x
-    .byte $00, $00  ; last explosion
-    .byte $0C, $1C  ; 2nd to last
-    .byte $10, $F0  ; 3rd to last
-    .byte $F0, $08  ; 4th to last
+    .byte $00, $00  ; single explosion
+    .byte $0C, $1C  ; last of triple explosion
+    .byte $10, $F0  ; second of triple explosion
+    .byte $F0, $08  ; first of triple explosion
 
 ;-------------------------------------------------------------------------------
 UpdateAllPipeBugHoles:
