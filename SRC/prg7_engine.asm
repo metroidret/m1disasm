@@ -9054,7 +9054,7 @@ DeleteOffscreenRoomSprites:
         lda Mem0700.0.data04,x
         bne @dontDeleteMem0700
             lda #$FF
-            sta Mem0700.0.data00,x
+            sta Mem0700.0.status,x
         @dontDeleteMem0700:
         txa
         sec
@@ -10963,7 +10963,7 @@ ExplodeEnemy:
     lda AreaExplosionAnimIndex
     jsr InitEnAnimIndex
     lda #$0A
-    sta EnExplosions.0.animDelay - EnExplosions + Ens,x
+    sta EnExplosions.0.delay - EnExplosions + Ens,x
     ; set explosion status to active
     inc EnsExtra.0.status,x
     ; set explosion anim frame to
@@ -10974,7 +10974,7 @@ ExplodeEnemy:
     bvc @endIf_B
         lda #$03
     @endIf_B:
-    sta EnExplosions.0.animFrame - EnExplosions + Ens,x
+    sta EnExplosions.0.quantity - EnExplosions + Ens,x
     ; set explosion position to enemy position
     ldy PageIndex
     lda Ens.0.y,y
@@ -10982,7 +10982,7 @@ ExplodeEnemy:
     lda Ens.0.x,y
     sta EnExplosions.0.x - EnExplosions + Ens,x
     lda EnsExtra.0.hi,y
-    sta EnsExtra.0.hi,x
+    sta EnExplosionsExtra.0.hi - EnExplosions + Ens,x
 @exit:
     ldx PageIndex
     rts
@@ -11728,13 +11728,13 @@ EnemyBGCollideOrApplySpeed:
     ; branch if not in norfair
     lda InArea
     cmp #$11
-    bne Lx368
+    bne @then_A
         ; we are in norfair
         ; branch if enemy is active, frozen or hurt
         lda EnsExtra.0.status,x
         lsr
-        bcc Lx369
-    Lx368:
+        bcc @endIf_A
+    @then_A:
         ; get tile id at enemy's position
         jsr GetEnemyRoomRAMPtr
         ldy #$00
@@ -11743,13 +11743,13 @@ EnemyBGCollideOrApplySpeed:
         cmp #$A0
         bcc LoadEnemyPositionFromTemp@RTS
         ldx PageIndex
-    Lx369:
+    @endIf_A:
     ; apply enemy speed
     lda Ens.0.speedX,x
     sta Temp05_SpeedX
     lda Ens.0.speedY,x
     sta Temp04_SpeedY
-LFA41:
+@applySpeed:
     jsr StoreEnemyPositionToTemp
     jsr ApplySpeedToPosition
     ; remove enemy if enemy left room's bounds
@@ -11826,43 +11826,51 @@ UpdateAllEnemyExplosions: ; 07:FA9D
     rts
 
 UpdateEnemyExplosion: ; 07:FAB4
-    ; decrement frame delay
-    dec EnExplosions.0.animDelay - EnExplosions + Ens,x
-    bne Lx377
-    ; if frame delay is zero, move to next frame
+    ; decrement explosion delay
+    dec EnExplosions.0.delay - EnExplosions + Ens,x
+    bne @dontRemoveExplosion
+    ; explosion delay is zero, move to next explosion
+    ; set delay to 3 video frames times 4 animation frames to fit the explosion anim loop
     lda #$0C
-    sta EnExplosions.0.animDelay - EnExplosions + Ens,x
-    dec EnExplosions.0.animFrame - EnExplosions + Ens,x
-    ; if frame number <= 0, remove explosion
-    bmi Lx376
-    bne Lx377
-Lx376:
-    jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-
-Lx377:
-    lda EnExplosions.0.animDelay - EnExplosions + Ens,x
+    sta EnExplosions.0.delay - EnExplosions + Ens,x
+    dec EnExplosions.0.quantity - EnExplosions + Ens,x
+    ; if explosion quantity <= 0, remove explosion
+    bmi @removeExplosion
+    bne @dontRemoveExplosion
+    @removeExplosion:
+        jsr RemoveEnemy
+    @dontRemoveExplosion:
+    
+    ; branch if explosion delay is not 9
+    lda EnExplosions.0.delay - EnExplosions + Ens,x
     cmp #$09
-    bne Lx378
-        lda EnExplosions.0.animFrame - EnExplosions + Ens,x
+    bne @endIf_A
+        ; explosion delay is 9
+        ; move explosion depending on how many of them are left
+        lda EnExplosions.0.quantity - EnExplosions + Ens,x
         asl
         tay
-        lda Table16,y
+        lda @explosionMovementTable,y
         sta Temp04_SpeedY
-        lda Table16+1,y
+        lda @explosionMovementTable+1,y
         sta Temp05_SpeedX
-        jsr LFA41
-    Lx378:
+        jsr EnemyBGCollideOrApplySpeed@applySpeed
+    @endIf_A:
+    
+    ; draw explosion and update animation
+    ; to note: the explosion animation loops automatically, so no need to restart it every new explosion
     lda #$80
     sta ObjectCntrl
     lda #$03
     jmp AnimDrawEnemy
 
 ; Table used by above subroutine
-Table16:
-    .byte $00, $00
-    .byte $0C, $1C
-    .byte $10, $F0
-    .byte $F0, $08
+@explosionMovementTable:
+    ;      y    x
+    .byte $00, $00  ; last explosion
+    .byte $0C, $1C  ; 2nd to last
+    .byte $10, $F0  ; 3rd to last
+    .byte $F0, $08  ; 4th to last
 
 ;-------------------------------------------------------------------------------
 UpdateAllPipeBugHoles:

@@ -47,12 +47,10 @@
 .endst
 
 .struct Struct0700 ; unused
-    data00                 db
-    data01                 db
-    data02                 db
-    data03                 db
+    status                 db
+    spare01                ds 3
     data04                 db
-    data05                 db
+    spare05                db
 .endst
 
 .struct PipeBugHole
@@ -138,7 +136,7 @@
     subPixelX              db   ; Unknown
     accelY                 db   ; Unknown
     accelX                 db   ; Unknown
-    data1C                 db   ; Unused
+    spare1C                db   ; Unused
     jumpDsplcmnt           db   ;Number of pixels vertically/horizontally displaced from jump point; skree blow up delay
     type                   db   ;Enemy type used as index into enemy data tables.
     data1F                 db   ;For EnemyFlipAfterDisplacement:
@@ -154,23 +152,21 @@
 .struct EnExplosion
     y                      db   ;Enemy y position in room.(not actual screen position).
     x                      db   ;Enemy x position in room.(not actual screen position).
-    data02                 db
-    data03                 db
-    data04                 db
-    data05                 db
-    animDelay              db   ;Number of frames to delay between animation frames.
-    animFrame              db   ;Index into enemy animation frame data.
+    unused                 ds 3
+    data05                 db   ;bit1: IsObjectVisible
+    delay                  db   ;delay until the current singular explosion ends
+    quantity               db   ;quantity of explosions to display
 .endst
 
 .struct EnExplosionExtra
     status                 db
-    data01                 db
-    data02                 db
-    data03                 db
-    data04                 db
-    data05                 db
-    data06                 db
-    data07                 db
+    radiusY                db   ;Distance in pixels from middle of enemy to top or botom.
+    radiusX                db   ;Distance in pixels from middle of enemy to left or right.
+    animFrame              db   ;Index into enemy animation frame data.
+    animDelay              db   ;Number of frames to delay between animation frames.
+    resetAnimIndex         db   ;Index to beginning of animation sequence.
+    animIndex              db   ;Index to current animation.
+    hi                     db   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
 .endst
 
 .struct Cannon
