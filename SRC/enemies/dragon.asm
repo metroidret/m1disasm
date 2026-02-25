@@ -3,31 +3,31 @@ DragonAIRoutine_{AREA}:
     ; branch if not resting
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
-    bne @L9AF5
+    bne @endIf_A
         ; enemy is resting
         ; set position to under lava
         lda #$E8
         sta Ens.0.y,x
-    @L9AF5:
+    @endIf_A:
     ; exit if not active
     cmp #enemyStatus_Active
-    bne @L9B4F
+    bne @exit_initAnim
 
     ; exit if on the first movement instruction (rising from the lava)
     lda Ens.0.movementInstrIndex,x
-    beq @L9B4F
+    beq @exit_initAnim
     ; exit if moving up or down
     lda EnsExtra.0.jumpDsplcmnt,x
-    bne @L9B4F
+    bne @exit_initAnim
     
     ; shoot every 32 frames
     lda FrameCount
     and #$1F
-    bne @L9B3C
+    bne @endIf_B
         ; branch if misfired (25% random chance)
         lda RandomNumber1
         and #$03
-        beq @L9B59
+        beq @exit_playAnim
         
         ; shoot dragon enProjectile
         ; set expected status to #$02
@@ -56,26 +56,27 @@ DragonAIRoutine_{AREA}:
         tay
         lda SpawnEnProjectile_AnimIndex,y
         jsr CommonJump_InitEnAnimIndex
-        beq @L9B59 ; branch always
-    @L9B3C:
+        beq @exit_playAnim ; branch always
+    @endIf_B:
     ; set "prepare to spit" animation 15 frames after having shot
     cmp #$0F
-    bcc @L9B59
+    bcc @exit_playAnim
     ; set animation
     lda Ens.0.data05,x
     and #$01
     tay
     lda @prepareToSpitEnAnimTable,y
     jsr CommonJump_InitEnAnimIndex
-    jmp @L9B59
+    jmp @exit_playAnim
 
-@L9B4F:
+@exit_initAnim:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq @L9B59
+    beq @endIf_C
         ; enemy is not exploding, set animation to active
-        jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
-@L9B59:
+        jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
+    @endIf_C:
+@exit_playAnim:
     ; change animation frame every frame
     lda #$01
     sta $00

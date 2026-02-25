@@ -248,8 +248,10 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - Null
     .byte $00, $00 ; 0F - Null
 
-;another animation related table
-L967B:
+; Bit 7: unused
+; Bits 0-6: how many anim frames exist before the loop point of the active status animation
+;           AnimIndex = ResetAnimIndex - (bits 0-6)
+EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 00 - Sidehopper (unused)
     .byte $00 ; 01 - Ceiling sidehopper (unused)
     .byte $00 ; 02 - Waver
@@ -268,6 +270,7 @@ L967B:
     .byte $00 ; 0F - Null
 
 ; Bit 7: for when bit 1 is set, 0=force y axis only, 1=force y and x axis
+; Bit 6: unused?
 ; Bit 5: 0=enemy bounces, 1=enemy doesn't bounce
 ; Bit 5: EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting failure -> 0=nothing. 1=set EnData05 to (~(facing dir bits) | (bits 0-4 of this)) 
 ; Bits 0-4 are used when bit 5 is set

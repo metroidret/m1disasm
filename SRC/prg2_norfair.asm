@@ -243,7 +243,7 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - undefined for polyp, because it is invisible at all times
     .byte $00, $00 ; 0F - same as 3
 
-L967B:
+EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 00 - swooper has not seen samus
     .byte $00 ; 01 - swooper targetting samus
     .byte $00 | $80 ; 02 - ripper II

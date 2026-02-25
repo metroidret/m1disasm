@@ -10966,9 +10966,9 @@ ExplodeEnemy:
     sta EnExplosions.0.delay - EnExplosions + Ens,x
     ; set explosion status to active
     inc EnsExtra.0.status,x
-    ; set explosion anim frame to
-    ; #$00 if enemy is not a miniboss
-    ; #$03 if enemy is a miniboss
+    ; set explosion quantity to
+    ; #$00 if enemy is not a miniboss (single explosion)
+    ; #$03 if enemy is a miniboss (triple explosion)
     lda #$00
     bit Temp0A_EnSpecialAttribs
     bvc @endIf_B
@@ -11004,6 +11004,7 @@ InitEnRestingAnimIndex:
     lda EnemyRestingAnimIndex,y
     cmp EnsExtra.0.resetAnimIndex,x
     beq ClearEnAnimDelay@RTS
+    
 InitEnAnimIndex:
     sta EnsExtra.0.resetAnimIndex,x
 SetEnAnimIndex:
@@ -11020,20 +11021,22 @@ InitEnActiveAnimIndex:
     lda EnemyActiveAnimIndex,y
     cmp EnsExtra.0.resetAnimIndex,x
     beq @RTS
+    
     ; set anim to the one from the table
     jsr InitEnAnimIndex
-    ; exit if L967B entry and #$7F is zero
+    ; exit if EnemyActiveAnimIndexInitOffset entry bits 0-6 is zero
     ldy EnsExtra.0.type,x
-    lda L967B,y
+    lda EnemyActiveAnimIndexInitOffset,y
     and #$7F
     beq @RTS
+    
     ; decrease EnsExtra.0.animIndex by that non-zero amount
     tay
     @loop:
         dec EnsExtra.0.animIndex,x
         dey
         bne @loop
-InitEnActiveAnimIndex@RTS:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -12020,7 +12023,7 @@ InitEnResetAnimIndex: ; referenced in areas_common.asm
         jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
 
-InitEnActiveAnimIndex_NoL967BOffset: ; 07:FBCA
+InitEnActiveAnimIndex_NoInitOffset: ; 07:FBCA
     ; y = enemy type * 2 + horizontal facing direction
     ldx PageIndex
     jsr GetEnemyTypeTimes2PlusFacingDirection

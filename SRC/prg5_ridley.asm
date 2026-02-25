@@ -250,7 +250,7 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
-L967B:
+EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 00 - swooper has not seen samus
     .byte $00 ; 01 - swooper targetting samus
     .byte $00 ; 02 - dessgeegas

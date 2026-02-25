@@ -3,7 +3,7 @@ RipperAIRoutine_{AREA}:
     cmp #enemyStatus_Explode
     beq @dontUpdateAnim
         ; enemy is not exploding, set animation to active
-        jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
+        jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
     @dontUpdateAnim:
     .if BANK == 1 || BANK == 4
         jmp CommonEnemyStub2_{AREA} ;sidehopper.asm

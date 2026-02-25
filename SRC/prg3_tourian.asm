@@ -253,7 +253,7 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - same as 3
     .byte $00, $00 ; 0F - same as 3
 
-L967B:
+EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 00 - red metroid
     .byte $00 ; 01 - green metroid
     .byte $00 ; 02 - i dunno but it takes 30 damage with varia

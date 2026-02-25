@@ -3,7 +3,7 @@ MultiviolaAIRoutine_{AREA}:
     cmp #enemyStatus_Active
     bne @dontUpdateAnim
         ; enemy is active, set animation to active
-        jsr CommonJump_InitEnActiveAnimIndex_NoL967BOffset
+        jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
     @dontUpdateAnim:
     ; change animation frame every 2 frames
     lda #$02

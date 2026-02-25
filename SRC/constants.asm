@@ -23,9 +23,6 @@
 .stringmaptable charmap "charmap.tbl"
 
 
-.include "constants_ram.asm"
-
-
 ;------------------------------------------[ Misc. defines ]-----------------------------------------
 
 ;Special item types.
@@ -170,4 +167,9 @@ music_Norfair          = %00001000 export
 music_Escape           = %00000100 export
 music_MotherBrain      = %00000010 export
 music_Brinstar         = %00000001 export
+
+
+
+.include "constants_ram.asm"
+
 
