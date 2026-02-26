@@ -71,7 +71,7 @@ PipeBugAIRoutine_{AREA}:
     jsr StoreEnemyPositionToTemp__{AREA}
     jsr CommonJump_ApplySpeedToPosition
     ; remove bug if it is out of bounds
-    bcc @delete
+    bcc @remove
     jsr LoadEnemyPositionFromTemp__{AREA}
     ; fallthrough
 
@@ -82,7 +82,7 @@ PipeBugAIRoutine_{AREA}:
     jmp CommonJump_UpdateEnemyCommon_noMove ; Common Enemy Handler
 
 ;Exit 2
-@delete:
+@remove:
     ; Set enemy status to 0
     lda #enemyStatus_NoEnemy
     sta EnsExtra.0.status,x

@@ -2,30 +2,30 @@
 RidleyAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    bcc RidleyBranch_Normal_{AREA}
-    beq RidleyBranch_Explode_{AREA}
+    bcc @normal
+    beq @explode
     cmp #enemyStatus_Pickup
-    bne RidleyBranch_Exit_{AREA}
+    bne @exit
 
-RidleyBranch_Explode_{AREA}:
-    ; delete projectiles
+@explode:
+    ; delete fireballs
     lda #enemyStatus_NoEnemy
     sta EnsExtra.1.status
     sta EnsExtra.2.status
     sta EnsExtra.3.status
     sta EnsExtra.4.status
     sta EnsExtra.5.status
-    beq RidleyBranch_Exit_{AREA}
+    beq @exit
 
-RidleyBranch_Normal_{AREA}:
+@normal:
     lda #EnAnim_RidleyHopping_R_{AREA} - EnAnimTable_{AREA}.b
     sta EnemyFlipAfterDisplacementAnimIndex
     lda #EnAnim_RidleyHopping_L_{AREA} - EnAnimTable_{AREA}.b
     sta EnemyFlipAfterDisplacementAnimIndex+1
     jsr CommonJump_EnemyFlipAfterDisplacement
-    jsr RidleyTryToLaunchProjectile_{AREA}
+    jsr RidleyTryToLaunchFireball_{AREA}
 
-RidleyBranch_Exit_{AREA}:
+@exit:
     ; change animation frame every 3 frames
     lda #$03
     sta $00
@@ -49,22 +49,22 @@ RidleyFireballAIRoutine_{AREA}:
     eor Ens.0.data05,x
     ; branch if they differ in the horizontal facing direction
     lsr
-    bcs @RemoveProjectile
-    ; exit if projectile faces left
+    bcs @RemoveFireball
+    ; exit if fireball faces left
     lda Ens.0.data05,x
     lsr
     bcs @RTS
-    ; exit if projectile is to the left of Samus
+    ; exit if fireball is to the left of Samus
     lda Ens.0.x,x
     sec
     sbc Samus.x
     bcc @RTS
-    ; exit if projectile is not #$20 or more pixels (2 blocks) to the right of Samus
+    ; exit if fireball is not #$20 or more pixels (2 blocks) to the right of Samus
     cmp #$20
     bcc @RTS
     ; fallthrough
-@RemoveProjectile:
-    ; remove projectile
+@RemoveFireball:
+    ; remove fireball
     lda #$00
     sta EnsExtra.0.status,x
 @RTS:
@@ -72,9 +72,9 @@ RidleyFireballAIRoutine_{AREA}:
 
 ;-------------------------------------------------------------------------------
 ; Ridley Subroutine
-RidleyTryToLaunchProjectile_{AREA}:
-    ; load projectile counter into y (#$60 if it is zero)
-    ldy RidleyProjectileCounter
+RidleyTryToLaunchFireball_{AREA}:
+    ; load fireball counter into y (#$60 if it is zero)
+    ldy RidleyFireballCounter
     bne @endIf_A
         ldy #$60
     @endIf_A:
@@ -82,29 +82,29 @@ RidleyTryToLaunchProjectile_{AREA}:
     lda FrameCount
     and #$02
     bne @RTS
-    ; decrement projectile counter
+    ; decrement fireball counter
     dey
-    sty RidleyProjectileCounter
-    ; a = projectile counter * 2, to compensate for exiting when bit 1 of FrameCount is set
+    sty RidleyFireballCounter
+    ; a = fireball counter * 2, to compensate for exiting when bit 1 of FrameCount is set
     tya
     asl
-    ; exit if (projectile counter * 2) is not #$0A, #$1A, #$2A, #$3A, #$4A, #$5A, #$6A or #$7A
-    ; projectile will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
+    ; exit if (fireball counter * 2) is not #$0A, #$1A, #$2A, #$3A, #$4A, #$5A, #$6A or #$7A
+    ; fireball will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
     bmi @RTS
     and #$0F
     cmp #$0A
     bne @RTS
 
-    ; loop for all projectiles
+    ; loop for all fireballs
     ldx #$50
     @loop_A:
-        ; branch if no projectile in enemy slot
+        ; branch if no fireball in enemy slot
         lda EnsExtra.0.status,x
-        beq RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}
-        ; branch if projectile is invisible
+        beq RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}
+        ; branch if fireball is invisible
         lda Ens.0.data05,x
         and #$02
-        beq RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}
+        beq RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}
         ; enemy slot is occupied, check the next slot
         txa
         sec
@@ -112,15 +112,15 @@ RidleyTryToLaunchProjectile_{AREA}:
         tax
         bne @loop_A
     
-    ; all projectiles are currently launched
-    ; undo decrement projectile counter so that it will try to launch again the next frame
+    ; all fireballs are currently launched
+    ; undo decrement fireball counter so that it will try to launch again the next frame
     ; (BUG! this is actually Kraid's lint counter, probably a remnant-->
     ; of copy-pasting the KraidTryToLaunchLint routine to make this one)
     inc KraidLintCounter
 @RTS:
     rts
 
-RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}:
+RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}:
     ; set y to x
     txa
     tay
@@ -130,34 +130,34 @@ RidleyTryToLaunchProjectile_FoundEnemySlot_{AREA}:
     ; set x to y
     tya
     tax
-    ; set projectile's Ens.0.data05 to Ridley's Ens.0.data05
+    ; set fireball's Ens.0.data05 to Ridley's Ens.0.data05
     lda Ens.0.data05
     sta Ens.0.data05,x
     ; set x offset based on horizontal facing direction
     and #$01
     tay
-    lda RidleyProjectileOffsetX_{AREA},y
+    lda RidleyFireballOffsetX_{AREA},y
     sta Temp05_SpeedX
     ; set y offset
     lda #$F8
     sta Temp04_SpeedY
-    ; apply offset to ridley's position for use as projectile's position
+    ; apply offset to ridley's position for use as fireball's position
     jsr CommonJump_ApplySpeedToPosition
-    ; exit if projectile's initial position is out of bounds
-    bcc RidleyTryToLaunchProjectile_{AREA}@RTS
+    ; exit if fireball's initial position is out of bounds
+    bcc RidleyTryToLaunchFireball_{AREA}@RTS
     ; set Ens.0.specialAttribs to #$00
     lda #$00
     sta Ens.0.specialAttribs,x
-    ; set enemy type to ridley projectile
+    ; set enemy type to ridley fireball
     lda #$0A
     sta EnsExtra.0.type,x
     ; set enemy status to resting
     lda #enemyStatus_Resting
     sta EnsExtra.0.status,x
-    ; set projectile's position to its initial position
+    ; set fireball's position to its initial position
     jsr LoadEnemyPositionFromTemp__{AREA}
     jmp CommonJump_0E
 
-RidleyProjectileOffsetX_{AREA}:
+RidleyFireballOffsetX_{AREA}:
     .byte $08, -$08
 

@@ -598,7 +598,7 @@ ItemRoomMusicStatus    db   ;$79     ;#$00=Item room music not playing.
 
     KraidLintCounter       db   ;$7E     ;Used to determine when to fire Kraid's lint. Accidentally used by Ridley too.
     KraidNailCounter       db   ;$7F     ;Used to determine when to fire Kraid's nail.
-    RidleyProjectileCounter db  ;$80     ;Used to determine when to fire Ridley's projectile.
+    RidleyFireballCounter  db   ;$80     ;Used to determine when to fire Ridley's fireball.
 
     EnemyMovementPtr       .dw  ;$81
     ; EnemyMovementPtr+1           $82

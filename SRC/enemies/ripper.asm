@@ -1,10 +1,10 @@
 RipperAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
-    beq @dontUpdateAnim
+    beq @dontInitAnim
         ; enemy is not exploding, set animation to active
         jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
-    @dontUpdateAnim:
+    @dontInitAnim:
     .if BANK == 1 || BANK == 4
         jmp CommonEnemyStub2_{AREA} ;sidehopper.asm
     .elif BANK == 2

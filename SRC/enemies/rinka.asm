@@ -75,7 +75,13 @@ RinkaAIRoutine_{AREA}:
         dey
         bne @loop_A
     @exitLoop_A:
-
+    
+    ; y here will have one of four values
+    ; the enemy-samus vector in $00-$01 will be normalized depending on y:
+    ; 3 = the x or y distance is greater or equal to #$80 pixels, divide vector by 8
+    ; 2 = the x or y distance is greater or equal to #$40 pixels, divide vector by 4
+    ; 1 = the x or y distance is greater or equal to #$20 pixels, divide vector by 2
+    ; 0 = both the x and y distances are less than #$20 pixels, do nothing
     @loop_B:
         ; branch if bits 7, 6, 5 were not set
         dey

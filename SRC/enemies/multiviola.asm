@@ -1,10 +1,10 @@
 MultiviolaAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Active
-    bne @dontUpdateAnim
+    bne @dontInitAnim
         ; enemy is active, set animation to active
         jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
-    @dontUpdateAnim:
+    @dontInitAnim:
     ; change animation frame every 2 frames
     lda #$02
     sta $00
