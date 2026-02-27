@@ -102,44 +102,44 @@ DoorSFXData:
 ;flags were found.  The final byte represents what type of channel is currently being
 ;processed: 0=Noise, 1=SQ1, 3=Tri, 4=Multiple channels.
 
-NoiseSFXInitPointers:
+SFXNoiseInitPointers:
     ;Noise init SFX         (1st).
-    .word NoiseSFXInitRoutineTbl, LoadNoiseSFXContFlags
+    .word SFXNoiseInitRoutineTbl, LoadSFXNoiseContFlags
     .byte $00
 
-NoiseSFXContPointers:
+SFXNoiseContPointers:
     ;Noise continue SFX     (2nd).
-    .word NoiseSFXContRoutineTbl, CheckSFXFlag@RTS
+    .word SFXNoiseContRoutineTbl, CheckSFXFlag@RTS
     .byte $00
 
-SQ1SFXInitPointers:
+SFXSQ1InitPointers:
     ;SQ1 init SFX           (5th).
-    .word SQ1SFXInitRoutineTbl, LoadSQ1SFXContFlags
+    .word SFXSQ1InitRoutineTbl, LoadSFXSQ1ContFlags
     .byte $01
 
-SQ1SFXContPointers:
+SFXSQ1ContPointers:
     ;SQ2 continue SFX       (6th).
-    .word SQ1SFXContRoutineTbl, CheckSFXFlag@RTS
+    .word SFXSQ1ContRoutineTbl, CheckSFXFlag@RTS
     .byte $01
 
-TriSFXInitPointers:
+SFXTriInitPointers:
     ;Triangle init SFX      (7th).
-    .word TriSFXInitRoutineTbl, LoadTriSFXContFlags
+    .word SFXTriInitRoutineTbl, LoadSFXTriContFlags
     .byte $03
 
-TriSFXContPointers:
+SFXTriContPointers:
     ;Triangle continue SFX  (8th).
-    .word TriSFXContRoutineTbl, CheckSFXFlag@RTS
+    .word SFXTriContRoutineTbl, CheckSFXFlag@RTS
     .byte $03
 
-MultiSFXInitPointers:
+SFXMultiInitPointers:
     ;Multi init SFX         (3rd).
-    .word MultiSFXInitRoutineTbl, LoadMultiSFXContFlags
+    .word SFXMultiInitRoutineTbl, LoadSFXMultiContFlags
     .byte $04
 
-MultiSFXContPointers:
+SFXMultiContPointers:
     ;Multi continue SFX     (4th).
-    .word MultiSFXContRoutineTbl, GotoLoadSQ1SFXInitFlags
+    .word SFXMultiContRoutineTbl, GotoLoadSFXSQ1InitFlags
     .byte $04
 
 MusicContPointers:
@@ -155,7 +155,7 @@ MusicInitPointers:
 ;The tables below contain addresses for SFX handling routines.
 
 ;Noise Init SFX handling routine addresses:
-NoiseSFXInitRoutineTbl:
+SFXNoiseInitRoutineTbl:
     .word CheckSFXFlag@RTS                     ;No sound.
     .word ScrewAttackSFXStart                     ;Screw attack init SFX.
     .word MissileLaunchSFXStart                     ;Missile launch init SFX.
@@ -166,7 +166,7 @@ NoiseSFXInitRoutineTbl:
     .word CheckSFXFlag@RTS                     ;No sound.
 
 ;Noise Continue SFX handling routine addresses:
-NoiseSFXContRoutineTbl:
+SFXNoiseContRoutineTbl:
     .word CheckSFXFlag@RTS                     ;No sound.
     .word ScrewAttackSFXContinue                     ;Screw attack continue SFX.
     .word MissileLaunchSFXContinue                     ;Missile launch continue SFX.
@@ -177,7 +177,7 @@ NoiseSFXContRoutineTbl:
     .word CheckSFXFlag@RTS                     ;No sound.
 
 ;SQ1 Init SFX handling routine addresses:
-SQ1SFXInitRoutineTbl:
+SFXSQ1InitRoutineTbl:
     .word MissilePickupSFXStart                     ;Missile pickup init SFX.
     .word EnergyPickupSFXStart                     ;Energy pickup init SFX.
     .word MetalSFXStart                     ;Metal init SFX.
@@ -188,7 +188,7 @@ SQ1SFXInitRoutineTbl:
     .word WaveBeamSFXStart                     ;Wave beam init SFX.
 
 ;SQ1 Continue SFX handling routine addresses:
-SQ1SFXContRoutineTbl:
+SFXSQ1ContRoutineTbl:
     .word MissilePickupSFXContinue                     ;Missile pickup continue SFX.
     .word EnergyPickupSFXContinue                     ;Energy pickup continue SFX.
     .word SQ1SFXContinue                     ;Metal continue SFX.
@@ -199,7 +199,7 @@ SQ1SFXContRoutineTbl:
     .word WaveBeamSFXContinue                     ;Wave beam continue SFX.
 
 ;Triangle init handling routine addresses:
-TriSFXInitRoutineTbl:
+SFXTriInitRoutineTbl:
     .word SamusDieSFXStart                     ;Samus die init SFX.
     .word DoorOpenCloseSFXStart                     ;Door open close init SFX.
     .word MetroidHitSFXStart                     ;Metroid hit init SFX.
@@ -210,7 +210,7 @@ TriSFXInitRoutineTbl:
     .word BombLaunchSFXStart                     ;Bomb launch init SFX.
 
 ;Triangle continue handling routine addresses:
-TriSFXContRoutineTbl:
+SFXTriContRoutineTbl:
     .word SamusDieSFXContinue                     ;Samus die continue SFX.
     .word DoorOpenCloseSFXContinue                     ;Door open close continue SFX.
     .word MetroidHitSFXContinue                     ;Metroid hit continue SFX.
@@ -220,24 +220,24 @@ TriSFXContRoutineTbl:
     .word SamusToBallSFXContinue                     ;Samus to ball continue SFX.
     .word BombLaunchSFXContinue                     ;Bomb launch continue SFX.
 
-LoadNoiseSFXInitFlags:
+LoadSFXNoiseInitFlags:
     lda SFXNoiseInitFlags                ;Load A with Noise init SFX flags, (1st SFX cycle).
-    ldx #<NoiseSFXInitPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXNoiseInitPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags ;Branch always.
 
-LoadNoiseSFXContFlags:
+LoadSFXNoiseContFlags:
     lda SFXNoiseContFlags                ;Load A with Noise continue flags, (2nd SFX cycle).
-    ldx #<NoiseSFXContPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXNoiseContPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags           ;Branch always.
 
-LoadSQ1SFXInitFlags:
+LoadSFXSQ1InitFlags:
     lda SFXSQ1InitFlags                  ;Load A with SQ1 init flags, (5th SFX cycle).
-    ldx #<SQ1SFXInitPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXSQ1InitPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags ;Branch always.
 
-LoadSQ1SFXContFlags:
+LoadSFXSQ1ContFlags:
     lda SFXSQ1ContFlags                  ;Load A with SQ1 continue flags, (6th SFX cycle).
-    ldx #<SQ1SFXContPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXSQ1ContPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags ;Branch always. useless instruction
 
 GotoSFXCheckFlags:
@@ -245,31 +245,31 @@ GotoSFXCheckFlags:
     jmp (SoundE2)                     ;if no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling routine.
 
-LoadTriSFXInitFlags:
+LoadSFXTriInitFlags:
     lda SFXTriInitFlags                  ;Load A with Triangle init flags, (7th SFX cycle).
-    ldx #<TriSFXInitPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXTriInitPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags ;Branch always.
 
-LoadTriSFXContFlags:
+LoadSFXTriContFlags:
     lda SFXTriContFlags                  ;Load A with Triangle continue flags, (8th SFX cycle).
-    ldx #<TriSFXContPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXTriContPointers.b        ;Lower address byte in ChooseNextSFXRoutineTbl.
     bne GotoSFXCheckFlags ;Branch always.
 
-LoadMultiSFXInitFlags:
+LoadSFXMultiInitFlags:
     lda SFXMultiInitFlags                ;Load A with Multi init flags, (3rd SFX cycle).
-    ldx #<MultiSFXInitPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXMultiInitPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
     jsr CheckSFXFlag                ;($B4BD)Checks to see if SFX or music flags set.
     jsr FindMusicInitIndex          ;($BC53)Find bit containing music init flag.
     jsr Add8                        ;($BC64)Add 8 to MusicInitIndex.
     jmp (SoundE2)                     ;If no flag found, Jump to next SFX cycle,-->
                                         ;else jump to specific SFX handling subroutine.
-LoadMultiSFXContFlags:
+LoadSFXMultiContFlags:
     lda SFXMultiContFlags                ;Load A with $68C flags (4th SFX cycle).
-    ldx #<MultiSFXContPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
+    ldx #<SFXMultiContPointers.b      ;Lower address byte in ChooseNextSFXRoutineTbl.
     jmp GotoSFXCheckFlags           ;($B337)Checks to see if SFX or music flags set.
 
-GotoLoadSQ1SFXInitFlags:
-    jsr LoadSQ1SFXInitFlags         ;($B329)Check for SQ1 init flags.
+GotoLoadSFXSQ1InitFlags:
+    jsr LoadSFXSQ1InitFlags         ;($B329)Check for SQ1 init flags.
     rts
 
 LoadSQ1ChannelSFX: ; $B368
@@ -379,9 +379,9 @@ SoundEngine:
     ;Clear SFXPaused when game is running.
     lda #$00
     sta SFXPaused
-    jsr LoadNoiseSFXInitFlags       ;($B31B)Check noise SFX flags.
-    jsr LoadMultiSFXInitFlags       ;($B34B)Check multichannel SFX flags.
-    jsr LoadTriSFXInitFlags         ;($B33D)Check triangle SFX flags.
+    jsr LoadSFXNoiseInitFlags       ;($B31B)Check noise SFX flags.
+    jsr LoadSFXMultiInitFlags       ;($B34B)Check multichannel SFX flags.
+    jsr LoadSFXTriInitFlags         ;($B33D)Check triangle SFX flags.
     jsr LoadMusicRepeatFlags          ;($BC36)Check music flags.
     ; fallthrough
 
@@ -460,7 +460,7 @@ ClearSounds: ; $B43E
 SelectSFXRoutine:
     ;Stores frame length of SFX in corresponding address.
     ldx ChannelType
-    sta NoiseSFXLength,x
+    sta SFXNoiseLength,x
     txa
     ;Branch if SFX uses noise channel.
     beq SelectSFXRoutine_Noise
@@ -527,7 +527,7 @@ IncrementSFXFrame:
     inc SFXNoiseFrame,x
     lda SFXNoiseFrame,x
     ;Check to see if current frame is last frame to play.
-    cmp NoiseSFXLength,x
+    cmp SFXNoiseLength,x
     bne @RTS
         ;If current frame is last frame, reset current frame to 0.
         lda #$00
@@ -541,7 +541,7 @@ CheckSFXFlag:
     sta CurrentSFXFlags
     ;Prepare pointer to SFX data
     stx SoundE4
-    ldy #>NoiseSFXInitPointers.b
+    ldy #>SFXNoiseInitPointers.b
     sty SoundE4+1
     ;Y=0 for counting loop ahead.
     ldy #$00
@@ -688,7 +688,7 @@ EndNoiseSFX:
     lda #$10                        ;
     sta NOISE_VOL                   ;disable envelope generator(sound off).
 @RTS:
-    rts                             ;Exit for multiple routines.
+    rts
 
 SamusWalkSFXStart:
     lda SFXNoiseContFlags                ;If MissileLaunch, BombExplode or SpitFire SFX are-->
@@ -700,7 +700,7 @@ SamusWalkSFXStart:
     bne GotoSelectSFXRoutine        ;Branch always.
 
 MultiSFXInit:
-    sta MultiSFXLength
+    sta SFXMultiLength
     jsr LoadSQ2ChannelSFX           ;($B374)Set SQ2 SFX data.
     jsr UpdateContFlags             ;($B493)Set continue SFX flag.
     ;Disable music from using SQ1 and SQ2 while SFX are playing.
@@ -712,23 +712,27 @@ MultiSFXInit:
     lda #$00
     sta SFXSQ1ContFlags
     sta SFXSQ1Data0
-    sta SFXSQ1SQ2Data
+    sta SFXSQ2PeriodLow
     sta SFXSQ1PeriodLow
     sta SFXMultiFrame
     sta LoadMusicSQ1SQ2PeriodsFlag
     rts
 
 EndMultiSFX:
-    lda #$10                        ;
-    sta SQ1_VOL                     ;Disable SQ1 envelope generator(sound off).
-    sta SQ2_VOL                     ;Disable SQ2 envelope generator(sound off).
-    lda #$7F                        ;
-    sta SQ1_SWEEP                   ;Disable SQ1 sweep.
-    sta SQ2_SWEEP                   ;Disable SQ2 sweep.
-    jsr ClearCurrentSFXFlags        ;($B4A2)Clear all SFX flags.
-    lda #$00                        ;
-    sta SQ1UsedBySFX                    ;
-    sta SQ2UsedBySFX                    ;Allows music player to use SQ1 and SQ2 channels.
+    ;Disable SQ1 & SQ2 envelope generators(sound off).
+    lda #$10
+    sta SQ1_VOL
+    sta SQ2_VOL
+    ;Disable SQ1 & SQ2 sweeps.
+    lda #$7F
+    sta SQ1_SWEEP
+    sta SQ2_SWEEP
+    ;($B4A2)Clear all SFX flags.
+    jsr ClearCurrentSFXFlags
+    ;Allows music player to use SQ1 and SQ2 channels.
+    lda #$00
+    sta SQ1UsedBySFX
+    sta SQ2UsedBySFX
     inc LoadMusicSQ1SQ2PeriodsFlag
     rts
 
@@ -1485,52 +1489,68 @@ GotoLoadSQ1SQ2Channels:
     jsr LoadSQ1SQ2Channels          ;($BA37)Load SQ1 and SQ2 channel data.
     rts
 
+
 LoadMusicContFlagsFrameData:
-    jsr ResetVolumeIndex            ;($B9F3)Reset index if at the beginning of a new note.
-    lda #$00                        ;
-    tax                             ;X = #$00.
-    sta ThisSoundChannel            ;(#$00, #$04, #$08 or #$0C).
-    beq LBAC2                       ;
+    ;Reset index if at the beginning of a new note.
+    jsr ResetVolumeIndex
+    ;X = #$00.
+    lda #$00
+    tax
+    ; set sound channel to first channel SQ1 (#$00, #$04, #$08 or #$0C).
+    sta ThisSoundChannel
+    beq LBAC2 ; branch always
+
+
 LBAB0:
-    txa                             ;
-    lsr                             ;
-    tax                             ;Increment to next sound channel(1,2 or 3).
+    ;Increment to next sound channel(1,2 or 3).
+    txa
+    lsr
+    tax
 
 IncrementToNextChannel:
-    inx                             ;
-    txa                             ;
-    cmp #$04                        ;If done with four sound channels, branch to load-->
-    beq GotoLoadSQ1SQ2Channels      ;sound channel SQ1 SQ2 data.
-    lda ThisSoundChannel            ;Add 4 to the least significant byte of the current-->
-    clc                             ;sound channel start address.  This moves to next-->
-    adc #$04                        ;sound channel address ranges to process.
-    sta ThisSoundChannel            ;
+    inx
+    txa
+    ;If done with four sound channels, branch to load sound channel SQ1 SQ2 data.
+    cmp #$04
+    beq GotoLoadSQ1SQ2Channels
+    ;Add 4 to the least significant byte of the current sound channel start address.
+    ;This moves to next sound channel address ranges to process.
+    lda ThisSoundChannel
+    clc
+    adc #$04
+    sta ThisSoundChannel
 LBAC2:
-    txa                             ;
-    asl                             ;*2(two bytes for sound channel info base address).
-    tax                             ;
-    lda SQ1Base,x                 ;
-    sta SoundChannelBase                         ;Load sound channel info base address into $E6-->
-    lda SQ1Base+1,x                 ;and $E7. ($E6=low byte, $E7=high byte).
-    sta SoundChannelBase+1                         ;
-    lda SQ1Base+1,x                 ;If no data for this sound channel, branch-->
-    beq LBAB0                       ;to find data for next sound channel.
-    txa                             ;
-    lsr                             ;/2. Determine current sound channel (0,1,2 or3).
-    tax                             ;
-    dec MusicSQ1FrameCount,x        ;Decrement the current sound channel frame count-->
-    bne IncrementToNextChannel      ;If not zero, branch to check next channel, else-->
-                                        ;load the next set of sound channel data.
+    ;*2(two bytes for sound channel info base address).
+    txa
+    asl
+    tax
+    ;Load sound channel info base address into $E6 and $E7. ($E6=low byte, $E7=high byte).
+    lda MusicSQ1Base,x
+    sta MusicChannelBase
+    lda MusicSQ1Base+1,x
+    sta MusicChannelBase+1
+    ;If no data for this sound channel, branch to find data for next sound channel.
+    lda MusicSQ1Base+1,x
+    beq LBAB0
+    ;/2. Determine current sound channel (0,1,2 or3).
+    txa
+    lsr
+    tax
+    ;Decrement the current sound channel frame count
+    dec MusicSQ1FrameCount,x
+    ;If not zero, branch to check next channel, else load the next set of sound channel data.
+    bne IncrementToNextChannel
+
 LoadNextChannelIndexData:
     ldy MusicSQ1IndexIndex,x        ;Load current channel index to music data index.
     inc MusicSQ1IndexIndex,x        ;Increment current channel index to music data index.
-    lda (SoundChannelBase),y                     ;
+    lda (MusicChannelBase),y
     beq GotoCheckRepeatMusic        ;Branch if music has reached the end.
     tay                             ;Transfer music data index to Y (base=$BE77) .
     cmp #$FF                        ;
     beq RepeatMusicLoop             ;At end of loop? If yes, branch.
     and #$C0                        ;
-    cmp #$C0                        ;At beginnig of new loop? if yes, branch.
+    cmp #$C0                        ;At beginning of new loop? if yes, branch.
     beq StartNewMusicLoop           ;
     jmp LoadMusicChannel            ;($BB1C)Load music data into channel.
 
@@ -1538,7 +1558,7 @@ RepeatMusicLoop:
     lda MusicSQ1RepeatCounter,x          ;If loop counter has reached zero, branch to exit.
     beq GotoLoadNextChannelIndexData                       ;
     dec MusicSQ1RepeatCounter,x          ;Decrement loop counter.
-    lda SQ1LoopIndex,x              ;Load loop index for proper channel and store it in-->
+    lda MusicSQ1LoopIndex,x              ;Load loop index for proper channel and store it in-->
     sta MusicSQ1IndexIndex,x        ;music index index address.
     bne GotoLoadNextChannelIndexData                       ;Branch unless music has reached the end.
 
@@ -1548,7 +1568,7 @@ StartNewMusicLoop:
     sta MusicSQ1RepeatCounter,x          ;in repeat counter addresses.  # of times to loop.
     dec MusicSQ1RepeatCounter,x          ;Decrement loop counter.
     lda MusicSQ1IndexIndex,x        ;Store location of loop start in loop index address.
-    sta SQ1LoopIndex,x              ;
+    sta MusicSQ1LoopIndex,x              ;
 GotoLoadNextChannelIndexData:
     jmp LoadNextChannelIndexData    ;($BADC)Load next channel index data.
 
@@ -1578,7 +1598,7 @@ LoadMusicChannel:
 LoadSoundDataIndexIndex:
     ldy MusicSQ1IndexIndex,x        ;Load current index to sound data index.
     inc MusicSQ1IndexIndex,x        ;Increment music index index address.
-    lda (SoundChannelBase),y        ;Load index to sound channel music data.
+    lda (MusicChannelBase),y        ;Load index to sound channel music data.
     tay 
 LBB40:
     txa                             ;
@@ -1606,7 +1626,7 @@ LBB40:
         beq LBB73                       ;
         lda #$10                        ;Turn off volume and disable env. generator(SQ1,SQ2).
         sta Cntrl0Data                  ;
-        bne LBB73                       ;Branch always.
+        bne LBB73 ;Branch always.
     PeriodInformationFound:
         lda MusicSQ1DutyEnvelope,x           ;Store channel duty cycle and volume info in $EA.
         sta Cntrl0Data                  ;
@@ -1655,10 +1675,10 @@ LoadTRI_LINEAR:
     bne LBBD8                       ;
     lda TriCounterCntrl             ;
     and #$F0                        ;If upper bits are set, branch to play longer note.
-    bne LBBC9                       ;
+    bne @endIf_A                       ;
         tya                             ;
         jmp AddTriLength                ;($BBCD)Calculate length to play note.
-    LBBC9:
+    @endIf_A:
     lda #$FF                        ;Disable length cntr(play until triangle data changes).
     bne LBBD8                       ;Branch always.
 
@@ -1671,9 +1691,10 @@ AddTriLength:
     asl
     ;If result is greater than #$3C, store #$3C(highest triangle linear count allowed).
     cmp #$3C
-    bcc LBBD8
+    bcc @endIf_A
         lda #$3C
-    LBBD8:
+    @endIf_A:
+LBBD8:
     sta MusicTriLinearCount
     jmp LoadSoundDataIndexIndex     ;($BB37)Load index to sound data index.
 
@@ -1713,7 +1734,7 @@ SongHeaderOffsetTable:
 ;The tables below contain addresses for SFX and music handling routines.
 ;Multi channel Init SFX and music handling routine addresses:
 
-MultiSFXInitRoutineTbl:
+SFXMultiInitRoutineTbl:
     .word GotoMusic03Init                     ;Fade in music.
     .word GotoMusic01Init                     ;Power up music.
     .word GotoMusic05Init                     ;End game music.
@@ -1725,7 +1746,7 @@ MultiSFXInitRoutineTbl:
 
 ;Multi channel continue SFX handling routine addresses:
 
-MultiSFXContRoutineTbl:
+SFXMultiContRoutineTbl:
     .word CheckSFXFlag@RTS                     ;No sound.
     .word CheckSFXFlag@RTS                     ;No sound.
     .word CheckSFXFlag@RTS                     ;No sound.

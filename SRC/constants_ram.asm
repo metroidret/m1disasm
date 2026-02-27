@@ -737,8 +737,8 @@ SoundE2                dw   ;$E2
 SoundE4                dw   ;$E4
 ; SoundE4+1                    $E5
 
-SoundChannelBase       dw   ;$E6
-; SoundChannelBase+1           $E7
+MusicChannelBase       dw   ;$E6
+; MusicChannelBase+1           $E7
 
 SpareMemE8             dw   ;$E8
 
@@ -998,8 +998,8 @@ MusicRepeatsOnEnd      db   ;$062C   ;0=Music does not repeat when it ends, Nonz
 TriCounterCntrl        db   ;$062D   ;$F0=disable length cntr, $00=long note, $0F=short note
 SQ1VolumeEnvelopeIndex db   ;$062E   ;Entry number in VolumeEnvelopePtrTable for SQ1
 SQ2VolumeEnvelopeIndex db   ;$062F   ;Entry number in VolumeEnvelopePtrTable for SQ2
-SQ1Base                dw   ;$0630   ;Low byte of base address for SQ1 music data
-; SQ1Base+1                    $0631   ;High byte of base address for SQ1 music data
+MusicSQ1Base           dw   ;$0630   ;Low byte of base address for SQ1 music data
+; MusicSQ1Base+1               $0631   ;High byte of base address for SQ1 music data
 SQ2Base                dw   ;$0632   ;Low byte of base address for SQ2 music data
 ; SQ2Base+1                    $0633   ;High byte of base address for SQ2 music data
 TriBase                dw   ;$0634   ;Low byte of base address for Triangle music data
@@ -1012,10 +1012,10 @@ MusicSQ2IndexIndex     db   ;$0639   ;Index to find SQ2 sound data index. Base=$
 MusicTriIndexIndex     db   ;$063A   ;Index to find Tri sound data index. Base=$634,$635
 MusicNoiseIndexIndex   db   ;$063B   ;Index to find Noise sound data index. Base=$636,$637
 
-SQ1LoopIndex           db   ;$063C   ;SQ1 Loop start index
-SQ2LoopIndex           db   ;$063D   ;SQ2 loop start index
-TriLoopIndex           db   ;$063E   ;Triangle loop start index
-NoiseLoopIndex         db   ;$063F   ;Noise loop start index
+MusicSQ1LoopIndex      db   ;$063C   ;SQ1 Loop start index
+MusicSQ2LoopIndex      db   ;$063D   ;SQ2 loop start index
+MusicTriLoopIndex      db   ;$063E   ;Triangle loop start index
+MusicNoiseLoopIndex    db   ;$063F   ;Noise loop start index
 
 MusicSQ1FrameCount     db   ;$0640   ;Decrements every sq1 frame. When 0, load new data
 MusicSQ2FrameCount     db   ;$0641   ;Decrements every sq2 frame. when 0, load new data
@@ -1049,11 +1049,11 @@ MusicInitIndex         db   ;$065E   ;index for loading $62B thru $637(base=$BD3
 
 SpareMem065F           db   ;$065F
 
-NoiseSFXLength         db   ;$0660   ;Stores number of frames to play Noise SFX
-SQ1SFXLength           db   ;$0661   ;Stores number of frames to play SQ1 SFX
-SQ2SFXLength           db   ;$0662   ;Stores number of frames to play SQ2 SFX
-TriSFXLength           db   ;$0663   ;Stores number of frames to play Triangle SFX
-MultiSFXLength         db   ;$0664   ;Stores number of frames to play Multi SFX
+SFXNoiseLength         db   ;$0660   ;Stores number of frames to play Noise SFX
+SFXSQ1Length           db   ;$0661   ;Stores number of frames to play SQ1 SFX
+SFXSQ2Length           db   ;$0662   ;Stores number of frames to play SQ2 SFX
+SFXTriLength           db   ;$0663   ;Stores number of frames to play Triangle SFX
+SFXMultiLength         db   ;$0664   ;Stores number of frames to play Multi SFX
 
 SFXNoiseFrame          db   ;$0665   ;Stores current frame number for noise SFX
 SFXSQ1Frame            db   ;$0666   ;Stores current frame number for sq1 SFX
