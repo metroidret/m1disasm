@@ -953,24 +953,24 @@ PauseSFXStatus         db   ;$0603   ;Plays PauseMusic SFX if less than #$12
 MusicSQ2PeriodLow      db   ;$0604   ;Loaded into SQ2_LO when playing music
 MusicSQ2PeriodHigh     db   ;$0605   ;Loaded into SQ2_HI when playing music
 
-Mem0606                db   ;$0606   ;Don't remove it, it's needed (by what?)
+SpareMem0606           db   ;$0606   ;Padding so that MusicTriPeriodLow is 4-byte aligned for ThisSoundChannel
 
-WriteMultiChannelData  db   ;$0607   ;1=data needs to be written, 0=no data to write
+LoadMusicSQ1SQ2PeriodsFlag db ;$0607 ;1=data needs to be written, 0=no data to write
 
 MusicTriPeriodLow      db   ;$0608   ;Loaded into TRI_LO when playing music
-MisicTriPeriodHigh     db   ;$0609   ;Loaded into TRI_HI when playing music
+MusicTriPeriodHigh     db   ;$0609   ;Loaded into TRI_HI when playing music
 
 SpareMem060A           ds 6 ;$060A
 
-TriPeriodLow           db   ;$0610   ;Stores triangle SFX period low for processing
-TriPeriodHigh          db   ;$0611   ;Stroes triangle SFX period high for processing
-TriChangeLow           db   ;$0612   ;Stores triangle SFX change in period low
-TriChangeHigh          db   ;$0613   ;Stores triangle SFX change in period high
+SFXTriPeriodLow        db   ;$0610   ;Stores triangle SFX period low for processing
+SFXTriPeriodHigh       db   ;$0611   ;Stroes triangle SFX period high for processing
+SFXTriChangeLow        db   ;$0612   ;Stores triangle SFX change in period low
+SFXTriChangeHigh       db   ;$0613   ;Stores triangle SFX change in period high
 
-TriPeriodDividedLow    db   ;$0614   ;Low result of DivideTriPeriods division. Used as TriChangeLow.
-TriPeriodDividedHigh   db   ;$0615   ;High result of DivideTriPeriods division. Used as TriChangeHigh.
-TriPeriodDivisor       db   ;$0616   ;Used in DivideTriPeriods as divisor for TriPeriod values.
-DivideData             db   ;$0617    ;Used in DivideTriPeriods
+SFXTriPeriodDividedLow db   ;$0614   ;Low result of DivideSFXTriPeriod division. Used as SFXTriChangeLow.
+SFXTriPeriodDividedHigh db  ;$0615   ;High result of DivideSFXTriPeriod division. Used as SFXTriChangeHigh.
+SFXTriPeriodDivisor    db   ;$0616   ;Used in DivideSFXTriPeriod as divisor for TriPeriod values.
+SFXTriPeriodRemainder  db   ;$0617   ;Used in DivideSFXTriPeriod as remainder in the steps for division.
 
 SpareMem0618           ds 7 ;$0618
 
@@ -979,19 +979,19 @@ HasBeamSFX             db   ;$061F   ;Bit 7 set=has long beam, bit 0 set=has ice
 ;The following addresses are loaded into $0640 thru $0643 when those
 ;addresses decrement to zero.  These addresses do not decrement.
 
-SQ1FrameCountInit      db   ;$0620   ;Holds number of frames to play SQ1 channel data
-SQ2FrameCountInit      db   ;$0621   ;Holds number of frames to play SQ2 channel data
-TriFrameCountInit      db   ;$0622   ;Holds number of frames to play Triangle channel data
-NoiseFrameCountInit    db   ;$0623   ;Holds number of frames to play Noise channel data
+MusicSQ1FrameCountInit db   ;$0620   ;Holds number of frames to play SQ1 channel data
+MusicSQ2FrameCountInit db   ;$0621   ;Holds number of frames to play SQ2 channel data
+MusicTriFrameCountInit db   ;$0622   ;Holds number of frames to play Triangle channel data
+MusicNoiseFrameCountInit db ;$0623   ;Holds number of frames to play Noise channel data
 
-SQ1RepeatCounter       db   ;$0624   ;Number of times to repeat SQ1 music loop
-SQ2RepeatCounter       db   ;$0625   ;Number of times to repeat SQ2 music loop
-TriRepeatCounter       db   ;$0626   ;Number of times to repeat Triangle music loop
-NoiseRepeatCounter     db   ;$0627   ;Number of times to repeat Noise music loop
+MusicSQ1RepeatCounter  db   ;$0624   ;Number of times to repeat SQ1 music loop
+MusicSQ2RepeatCounter  db   ;$0625   ;Number of times to repeat SQ2 music loop
+MusicTriRepeatCounter  db   ;$0626   ;Number of times to repeat Triangle music loop
+MusicNoiseRepeatCounter db  ;$0627   ;Number of times to repeat Noise music loop
 
-SQ1DutyEnvelope        db   ;$0628   ;Loaded into SQ1_VOL when playing music
-SQ2DutyEnvelope        db   ;$0629   ;Loaded into SQ2_VOL when playing music
-TriLinearCount         db   ;$062A   ;disable\enable counter, linear count length
+MusicSQ1DutyEnvelope   db   ;$0628   ;Loaded into SQ1_VOL when playing music
+MusicSQ2DutyEnvelope   db   ;$0629   ;Loaded into SQ2_VOL when playing music
+MusicTriLinearCount    db   ;$062A   ;disable\enable counter, linear count length
 
 NoteLengthTblOffset    db   ;$062B   ;Stores the offset to find proper note length table
 MusicRepeat            db   ;$062C   ;0=Music does not repeat, Nonzero=music repeats
@@ -1007,26 +1007,26 @@ TriBase                dw   ;$0634   ;Low byte of base address for Triangle musi
 NoiseBase              dw   ;$0636   ;Low byte of base address for Noise music data
 ; NoiseBase+1                  $0637   ;High byte of base address for Noise music data
 
-SQ1MusicIndexIndex     db   ;$0638   ;Index to find SQ1 sound data index. Base=$630,$631
-SQ2MusicIndexIndex     db   ;$0639   ;Index to find SQ2 sound data index. Base=$632,$633
-TriMusicIndexIndex     db   ;$063A   ;Index to find Tri sound data index. Base=$634,$635
-NoiseMusicIndexIndex   db   ;$063B   ;Index to find Noise sound data index. Base=$636,$637
+MusicSQ1IndexIndex     db   ;$0638   ;Index to find SQ1 sound data index. Base=$630,$631
+MusicSQ2IndexIndex     db   ;$0639   ;Index to find SQ2 sound data index. Base=$632,$633
+MusicTriIndexIndex     db   ;$063A   ;Index to find Tri sound data index. Base=$634,$635
+MusicNoiseIndexIndex   db   ;$063B   ;Index to find Noise sound data index. Base=$636,$637
 
 SQ1LoopIndex           db   ;$063C   ;SQ1 Loop start index
 SQ2LoopIndex           db   ;$063D   ;SQ2 loop start index
 TriLoopIndex           db   ;$063E   ;Triangle loop start index
 NoiseLoopIndex         db   ;$063F   ;Noise loop start index
 
-SQ1MusicFrameCount     db   ;$0640   ;Decrements every sq1 frame. When 0, load new data
-SQ2MusicFrameCount     db   ;$0641   ;Decrements every sq2 frame. when 0, load new data
-TriMusicFrameCount     db   ;$0642   ;Decrements every triangle frame. When 0, load new data
-NoiseMusicFrameCount   db   ;$0643   ;Decrements every noise frame. When 0, load new data
+MusicSQ1FrameCount     db   ;$0640   ;Decrements every sq1 frame. When 0, load new data
+MusicSQ2FrameCount     db   ;$0641   ;Decrements every sq2 frame. when 0, load new data
+MusicTriFrameCount     db   ;$0642   ;Decrements every triangle frame. When 0, load new data
+MusicNoiseFrameCount   db   ;$0643   ;Decrements every noise frame. When 0, load new data
 
 SpareMem0644           ds 4 ;$0644
 
 MusicSQ1Sweep          db   ;$0648   ;Value is loaded into SQ1_SWEEP when playing music
 MusicSQ2Sweep          db   ;$0649   ;Value is loaded into SQ2_SWEEP when playing music
-TriSweep               db   ;$064A   ;Loaded into TRI_UNUSED(not used)
+MusicTriSweep          db   ;$064A   ;Loaded into TRI_UNUSED(not used)
 
 ThisSoundChannel       db   ;$064B   ;Least sig. byte of current channel(00,04,08 or 0C)
 
@@ -1051,15 +1051,15 @@ SpareMem065F           db   ;$065F
 
 NoiseSFXLength         db   ;$0660   ;Stores number of frames to play Noise SFX
 SQ1SFXLength           db   ;$0661   ;Stores number of frames to play SQ1 SFX
-SQ2SFXLngth            db   ;$0662   ;Stores number of frames to play SQ2 SFX
+SQ2SFXLength           db   ;$0662   ;Stores number of frames to play SQ2 SFX
 TriSFXLength           db   ;$0663   ;Stores number of frames to play Triangle SFX
 MultiSFXLength         db   ;$0664   ;Stores number of frames to play Multi SFX
 
-ThisNoiseFrame         db   ;$0665   ;Stores current frame number for noise SFX
-ThisSQ1Frame           db   ;$0666   ;Stores current frame number for sq1 SFX
-ThisSQ2Frame           db   ;$0667   ;Stores current frame number for SQ2 SFX
-ThisTriFrame           db   ;$0668   ;Stores current frame number for triangle SFX
-ThisMultiFrame         db   ;$0669   ;Stores current frame number for Multi SFX
+SFXNoiseFrame          db   ;$0665   ;Stores current frame number for noise SFX
+SFXSQ1Frame            db   ;$0666   ;Stores current frame number for sq1 SFX
+SFXSQ2Frame            db   ;$0667   ;Stores current frame number for SQ2 SFX
+SFXTriFrame            db   ;$0668   ;Stores current frame number for triangle SFX
+SFXMultiFrame          db   ;$0669   ;Stores current frame number for Multi SFX
 
 SQ1VolumeIndex         db   ;$066A   ;Stores index to SQ1 volume data in a volume data tbl
 SQ2VolumeIndex         db   ;$066B   ;Stores index to SQ2 volume data in a volume data tbl
