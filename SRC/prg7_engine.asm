@@ -12806,7 +12806,11 @@ TileBlastAnim9:
     .byte $01, $02
 .endif
 
+.ends
+
 ;-----------------------------------------------[ RESET ]--------------------------------------------
+
+.section "ROM Bank $007 - Reset" bank 7 slot "ROMFixedSlot" orga $FFB0 force
 
 ROMFIXED_RESET:
 .include "reset.asm"

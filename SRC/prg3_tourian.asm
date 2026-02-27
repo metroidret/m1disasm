@@ -2355,7 +2355,11 @@ VRAMString10_{AREA}:
 
 .include "music_engine.asm"
 
-;----------------------------------------------[ RESET ]--------------------------------------------
+.ends
+
+;-----------------------------------------------[ RESET ]--------------------------------------------
+
+.section "ROM Bank $003 - Reset" bank 3 slot "ROMSwitchSlot" orga $BFB0 force
 
 ROMSWITCH_RESET:
 .include "reset.asm"

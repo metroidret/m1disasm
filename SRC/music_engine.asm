@@ -758,7 +758,7 @@ BossHitSFXContinue:
     and #$7F                        ;Randomly set bits 7, 3, 2, 1 and 0.
     sta SFXSQ1PeriodLow             ;Store in SQ1 period low.
     rol                             ;
-    sta SFXSQ2PeriodLow               ;
+    sta SFXSQ2PeriodLow
     jmp WriteSQ1SQ2PeriodLow        ;($B62C)Write period low data to SQ1 and SQ2.
 LB620:
     ;Increment SQ1 and SQ2 period low by two.
@@ -882,18 +882,22 @@ SQ1SFXContinue:
     bne MissilePickupSFXContinue@RTS
 
 EndSQ1SFX:
-    lda #$10                        ;
-    sta SQ1_VOL                     ;Disable envelope generator(sound off).
-    lda #$00                        ;
-    sta SQ1UsedBySFX                    ;Allows music to use SQ1 channel.
-    jsr ClearCurrentSFXFlags        ;($B4A2)Clear all SFX flags.
-    inc LoadMusicSQ1SQ2PeriodsFlag       ;Allows music routines to load SQ1 and SQ2 music.
+    ;Disable envelope generator(sound off).
+    lda #$10
+    sta SQ1_VOL
+    ;Allows music to use SQ1 channel.
+    lda #$00
+    sta SQ1UsedBySFX
+    ;Clear all SFX flags.
+    jsr ClearCurrentSFXFlags
+    ;Allows music routines to load SQ1 and SQ2 music.
+    inc LoadMusicSQ1SQ2PeriodsFlag
     rts
 
 SamusJumpSFXStart:
     lda MusicContFlags                ;If escape music is playing, exit without playing-->
     cmp #music_Escape               ;Samus jump SFX.
-    beq MissilePickupSFXContinue@RTS               ;
+    beq MissilePickupSFXContinue@RTS
     lda #$0C                        ;Number of frames to play sound before a change.
     ldy #<JumpSFXData.b        ;Lower byte of sound data start address(base=$B200).
     bne GotoSelectSFXRoutine2 ;Branch always.

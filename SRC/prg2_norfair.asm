@@ -840,7 +840,11 @@ VRAMString10_{AREA}:
 
 .include "music_engine.asm"
 
-;----------------------------------------------[ RESET ]--------------------------------------------
+.ends
+
+;-----------------------------------------------[ RESET ]--------------------------------------------
+
+.section "ROM Bank $002 - Reset" bank 2 slot "ROMSwitchSlot" orga $BFB0 force
 
 ROMSWITCH_RESET:
 .include "reset.asm"
@@ -849,7 +853,7 @@ ROMSWITCH_RESET:
 
 ;----------------------------------------[ Interrupt vectors ]--------------------------------------
 
-.section "ROM Bank $002 - Vectors" BANK 2 SLOT "ROMSwitchSlot" ORGA $BFFA FORCE
+.section "ROM Bank $002 - Vectors" bank 2 slot "ROMSwitchSlot" orga $BFFA force
     .word NMI                       ;($C0D9)NMI vector.
     .word ROMSWITCH_RESET           ;($BFB0)Reset vector.
     .word ROMSWITCH_RESET           ;($BFB0)IRQ vector.
