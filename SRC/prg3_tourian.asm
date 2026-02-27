@@ -1191,9 +1191,9 @@ MotherBrain_Killed: ; 03:9E52
         lda #$28
         sta MotherBrainFlashDelay
         ; silence music
-        lda NoiseSFXFlag
+        lda SFXNoiseInitFlags
         ora #sfxNoise_SilenceMusic
-        sta NoiseSFXFlag
+        sta SFXNoiseInitFlags
     @endIf_A:
     jmp L9E2E
 
@@ -1201,8 +1201,8 @@ MotherBrain_Killed: ; 03:9E52
 MotherBrain_Disappear: ; 03:9E86
     ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
-    ora NoiseSFXFlag
-    sta NoiseSFXFlag
+    ora SFXNoiseInitFlags
+    sta SFXNoiseInitFlags
     ; disintegrate mother brain's bg tiles
     jsr MotherBrain_Disappear_Disintegrate
     ; increment disintegrate instruction id
@@ -1268,9 +1268,9 @@ MotherBrain_Disappear: ; 03:9E86
 
 @endIf_D: ; 03:9ED6
     ; play escape music
-    lda MusicInitFlag
+    lda MusicInitFlags
     ora #music_Escape
-    sta MusicInitFlag
+    sta MusicInitFlags
     ; set mother brain status to gone
     lda #$05
     sta MotherBrainStatus
@@ -1456,8 +1456,8 @@ MotherBrain_SpawnDoor: ; 03:9F69
 MotherBrain_TimeBombExploded: ; 03:9FC0
     ; play BombExplode SFX every frame
     lda #sfxNoise_BombExplode
-    ora NoiseSFXFlag
-    sta NoiseSFXFlag
+    ora SFXNoiseInitFlags
+    sta SFXNoiseInitFlags
     ; branch if time bomb is still exploding
     lda Timer3
     bne @RTS
@@ -1499,9 +1499,9 @@ MotherBrain_Idle_HandleBeingHit:
     beq @RTS
     
     ; play boss hit sfx
-    lda MultiSFXFlag
+    lda SFXMultiInitFlags
     ora #sfxMulti_BossHit
-    sta MultiSFXFlag
+    sta SFXMultiInitFlags
     ; increment mother brain hits quantity
     inc MotherBrainQtyHits
     ; exit if hits quantity is less than 32
@@ -1953,9 +1953,9 @@ UpdateEndTimer:
     lda FrameCount
     and #$1F
     bne @endIf_A
-        lda SQ1SFXFlag
+        lda SFXSQ1InitFlags
         ora #sfxSQ1_OutOfHole
-        sta SQ1SFXFlag
+        sta SFXSQ1InitFlags
     @endIf_A:
     
     ; exit if timer didn't become zero
@@ -1972,9 +1972,9 @@ UpdateEndTimer:
     lda #$07
     sta MotherBrainStatus
     ; silence music
-    lda NoiseSFXFlag
+    lda SFXNoiseInitFlags
     ora #sfxNoise_SilenceMusic
-    sta NoiseSFXFlag
+    sta SFXNoiseInitFlags
     ; set timer for 120 frames (2 seconds)
     lda #$0C
     sta Timer3
@@ -1989,7 +1989,7 @@ UpdateEndTimer:
 DrawEndTimerEnemy:
     ; exit if end timer enemy is not enabled
     lda EndTimerEnemyIsEnabled
-    beq RTS_A28A
+    beq @RTS
 
     ; attempt to draw end timer enemy sprite
     lda EndTimerEnemyHi
@@ -2009,7 +2009,7 @@ DrawEndTimerEnemy:
     ; exit if past page pos is the same as current page pos (sprite failed to draw)
     pla
     cmp SpritePagePos
-    beq RTS_A28A
+    beq @RTS
     
     tax
     ; set tile of hundreds digit
@@ -2037,7 +2037,7 @@ DrawEndTimerEnemy:
     and #$0F
     ora #$A0
     sta SpriteRAM+($02<<2)+$01,x
-RTS_A28A:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -2059,7 +2059,7 @@ UpdateZebetite:
     lda Zebetites.0.status,x
     and #$0F
     cmp #$01
-    bne RTS_A28A
+    bne DrawEndTimerEnemy@RTS
     
     ; check if zebetite just got hit
     lda Zebetites.0.isHit,x

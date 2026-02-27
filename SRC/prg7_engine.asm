@@ -2127,33 +2127,36 @@ PauseMode:
         sbc #BUTTON_SELECT | BUTTON_UP
         nop
     .endif
-    bne Exit14
+    bne @RTS
 
     ;Is escape timer active?
     ;Sorry, can't quit if this is during escape scence.
     ldy EndTimer+1
     iny
-    bne Exit14
+    bne @RTS
 
     ;Clear pause game indicator.
     sta GamePaused
     ;Display password is the next routine to run.
     inc MainRoutine
-
-Exit14:
+@RTS:
     rts                             ;Exit for routines above and below.
 
 ;------------------------------------------[ GoPassword ]--------------------------------------------
 
 GoPassword:
-    lda #_id_DisplayPassword.b                        ;DisplayPassword is next routine to run.
-    sta TitleRoutine                ;
-    lda #$00+1                        ;
-    sta BankSwitchPending               ;Prepare to switch to intro memory page.
-    lda NoiseSFXFlag                ;
-    ora #sfxNoise_SilenceMusic      ;Silence music.
-    sta NoiseSFXFlag                ;
-    jmp ScreenOff                   ;($C439)Turn off screen.
+    ;DisplayPassword is next routine to run.
+    lda #_id_DisplayPassword.b
+    sta TitleRoutine
+    ;Prepare to switch to intro memory page.
+    lda #$00+1
+    sta BankSwitchPending
+    ;Silence music.
+    lda SFXNoiseInitFlags
+    ora #sfxNoise_SilenceMusic
+    sta SFXNoiseInitFlags
+    ;Turn off screen.
+    jmp ScreenOff
 
 ;-----------------------------------------[ Samus intro ]--------------------------------------------
 
@@ -2183,7 +2186,7 @@ SamusIntro:
     ;When 310 frames left of intro, display Samus.
     ;Branch if not time to start drawing Samus.
     cmp #$1F
-    bcs Exit14
+    bcs PauseMode@RTS
     ;_id_Palette13+1 is beginning of table.
     cmp SamusFadeInTimeTbl-(_id_Palette13+1),y
     ;Every time Timer3 equals one of the entries in the table-->
@@ -2197,7 +2200,7 @@ SamusIntro:
     ;Only display Samus on odd frames [the blink effect].
     lda FrameCount
     lsr
-    bcc Exit14
+    bcc PauseMode@RTS
     ;Samus front animation is animation to display.-->
     lda #ObjAnim_SamusFront - ObjectAnimIndexTbl.b
     ;($CF6B)while fading in.
@@ -2543,136 +2546,136 @@ SelectSamusPalette: ;$CB73
 
 SilenceMusic:
     lda #sfxNoise_SilenceMusic
-    bne SFX_SetNoiseSFXFlag
+    bne SetSFXNoiseInitFlag
 
 PauseMusic:
     lda #sfxNoise_PauseMusic
-    bne SFX_SetNoiseSFXFlag
+    bne SetSFXNoiseInitFlag
 
 SFX_SamusWalk:
     lda #sfxNoise_SamusWalk
-    bne SFX_SetNoiseSFXFlag
+    bne SetSFXNoiseInitFlag
 
 SFX_BombExplode:
     lda #sfxNoise_BombExplode
-    bne SFX_SetNoiseSFXFlag
+    bne SetSFXNoiseInitFlag
 
 SFX_MissileLaunch:
     lda #sfxNoise_MissileLaunch
 
-SFX_SetNoiseSFXFlag:
-    ldx #NoiseSFXFlag - NoiseSFXFlag
-    beq SFX_SetSoundFlag
+SetSFXNoiseInitFlag:
+    ldx #SFXNoiseInitFlags - SFXNoiseInitFlags
+    beq SetSoundInitFlag
 
 SFX_OutOfHole:
     lda #sfxSQ1_OutOfHole
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_BombLaunch:
     lda #sfxTri_BombLaunch
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
 SFX_SamusJump:
     lda #sfxSQ1_SamusJump
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_EnemyHit:
     lda #sfxSQ1_EnemyHit
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_BulletFire:
     lda #sfxSQ1_BulletFire
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_Metal:
     lda #sfxSQ1_Metal
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_EnergyPickup:
     lda #sfxSQ1_EnergyPickup
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_MissilePickup:
     lda #sfxSQ1_MissilePickup
 
-SFX_SetSQ1SFXFlag:
-    ldx #SQ1SFXFlag - NoiseSFXFlag
-    bne SFX_SetSoundFlag
+SetSFXSQ1InitFlag:
+    ldx #SFXSQ1InitFlags - SFXNoiseInitFlags
+    bne SetSoundInitFlag
 
 SFX_WaveFire:
     lda #sfxSQ1_WaveFire
-    bne SFX_SetSQ1SFXFlag
+    bne SetSFXSQ1InitFlag
 
 SFX_ScrewAttack:
     lda #sfxNoise_ScrewAttack
-    bne SFX_SetNoiseSFXFlag
+    bne SetSFXNoiseInitFlag
 
 SFX_BigEnemyHit:
     lda #sfxTri_BigEnemyHit
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
 SFX_MetroidHit:
     lda #sfxTri_MetroidHit
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
 SFX_BossHit:
     lda #sfxMulti_BossHit
-    bne SFX_SetMultiSFXFlag
+    bne SetSFXMultiInitFlag
 
 SFX_Door:
     lda #sfxTri_Door
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
 SFX_SamusHit:
     lda #sfxMulti_SamusHit
-    bne SFX_SetMultiSFXFlag
+    bne SetSFXMultiInitFlag
 
 SFX_SamusDie:
     lda #sfxTri_SamusDie
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
-SFX_SetSQ2SFXFlag:
-    ldx #SQ2SFXFlag - NoiseSFXFlag
+SetSFXSQ2InitFlag:
+    ldx #SFXSQ2InitFlags - SFXNoiseInitFlags
 
-SFX_SetSoundFlag:
-    ora NoiseSFXFlag,x
-    sta NoiseSFXFlag,x
+SetSoundInitFlag:
+    ora SFXNoiseInitFlags,x
+    sta SFXNoiseInitFlags,x
     rts
 
 SFX_SamusBall:
     lda #sfxTri_SamusBall
-    bne SFX_SetTriSFXFlag
+    bne SetSFXTriInitFlag
 
 SFX_Beep:
     lda #sfxTri_Beep
 
-SFX_SetTriSFXFlag:
-    ldx #TriSFXFlag - NoiseSFXFlag
-    bne SFX_SetSoundFlag
+SetSFXTriInitFlag:
+    ldx #SFXTriInitFlags - SFXNoiseInitFlags
+    bne SetSoundInitFlag
 
 ;Initiate music
 
 PowerUpMusic:
     lda #sfxMulti_PowerUp
-    bne SFX_SetMultiSFXFlag
+    bne SetSFXMultiInitFlag
 
 IntroMusic:
     lda #sfxMulti_Intro
 
-SFX_SetMultiSFXFlag:
-    ldx #MultiSFXFlag - NoiseSFXFlag
-    bne SFX_SetSoundFlag
+SetSFXMultiInitFlag:
+    ldx #SFXMultiInitFlags - SFXNoiseInitFlags
+    bne SetSoundInitFlag
 
 MotherBrainMusic:
     lda #music_MotherBrain
-    bne SFX_SetMusicInitFlag
+    bne SetMusicInitFlag
 
 TourianMusic:
     lda #music_Tourian
 
-SFX_SetMusicInitFlag:
-    ldx #MusicInitFlag - NoiseSFXFlag
-    bne SFX_SetSoundFlag
+SetMusicInitFlag:
+    ldx #MusicInitFlags - SFXNoiseInitFlags
+    bne SetSoundInitFlag
 
 ;--------------------------------------[ Update Samus ]----------------------------------------------
 
@@ -5040,8 +5043,8 @@ StartMusic:
         lda #music_ItemRoom
     Lx114:
     ;Store music flag info.
-    ora MusicInitFlag
-    sta MusicInitFlag
+    ora MusicInitFlags
+    sta MusicInitFlags
     rts
 
 ElevatorStop:
@@ -5325,9 +5328,9 @@ UpdateStatue_StartRaising:
         ; thanks to this, UpdateStatue_Raise will know that the statue is moving and will take over for the next 15 pixels
         dec KraidStatueY - (Statue - Objects),x
         ; play raise sfx
-        lda TriSFXFlag
+        lda SFXTriInitFlags
         ora #sfxTri_StatueRaise
-        sta TriSFXFlag
+        sta SFXTriInitFlags
     @exit:
     ; clear statue is hit flag
     lda #$00
@@ -8090,9 +8093,9 @@ WeaponHitDoorOrStatue:
                 eor #ObjAnim_MissileExplode - ObjectAnimIndexTbl.b
                 bne GotoSFX_Metal
             @hitByMissile:
-            lda TriSFXFlag
+            lda SFXTriInitFlags
             ora #sfxTri_SamusBall
-            sta TriSFXFlag
+            sta SFXTriInitFlags
         @blueDoor:
         ; set door is hit
         lda #$04

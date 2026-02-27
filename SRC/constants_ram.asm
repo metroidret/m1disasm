@@ -994,7 +994,7 @@ MusicSQ2DutyEnvelope   db   ;$0629   ;Loaded into SQ2_VOL when playing music
 MusicTriLinearCount    db   ;$062A   ;disable\enable counter, linear count length
 
 NoteLengthTblOffset    db   ;$062B   ;Stores the offset to find proper note length table
-MusicRepeat            db   ;$062C   ;0=Music does not repeat, Nonzero=music repeats
+MusicRepeatsOnEnd      db   ;$062C   ;0=Music does not repeat when it ends, Nonzero=music repeats
 TriCounterCntrl        db   ;$062D   ;$F0=disable length cntr, $00=long note, $0F=short note
 SQ1VolumeEnvelopeIndex db   ;$062E   ;Entry number in VolumeEnvelopePtrTable for SQ1
 SQ2VolumeEnvelopeIndex db   ;$062F   ;Entry number in VolumeEnvelopePtrTable for SQ2
@@ -1036,15 +1036,15 @@ CurrentSFXFlags        db   ;$064D   ;Stores flags of SFX currently being proces
 
 SpareMem064E           ds 4 ;$064E
 
-NoiseInUse             db   ;$0652   ;Noise in use? (Not used)
-SQ1InUse               db   ;$0653   ;1=SQ1 channel being used by SFX, 0=not in use
-SQ2InUse               db   ;$0654   ;2=SQ2 channel being used by SFX, 0=not in use
-TriInUse               db   ;$0655   ;3=Triangle channel being used by SFX, 0=not in use
+NoiseUsedBySFX         db   ;$0652   ;Noise in use? (Not used)
+SQ1UsedBySFX           db   ;$0653   ;1=SQ1 channel being used by SFX, 0=not in use
+SQ2UsedBySFX           db   ;$0654   ;2=SQ2 channel being used by SFX, 0=not in use
+TriUsedBySFX           db   ;$0655   ;3=Triangle channel being used by SFX, 0=not in use
 
 SpareMem0656           ds 6 ;$0656
 
 ChannelType            db   ;$065C   ;Stores channel type being processed(0,1,2,3 or 4)
-CurrentMusicRepeat     db   ;$065D   ;Stores flags of music to repeat
+MusicRepeatFlags       db   ;$065D   ;Stores flags of music to repeat
 MusicInitIndex         db   ;$065E   ;index for loading $62B thru $637(base=$BD31).
 
 SpareMem065F           db   ;$065F
@@ -1069,44 +1069,45 @@ SQ2VolumeData          db   ;$066D   ;Stores duty cycle and this frame volume da
 
 SpareMem066E           dw   ;$066E   ;$066E is unknowingly written to by "sta SQ1VolumeData,x", but never read
 
-NoiseSFXData           db   ;$0670   ;Stores additional info for Noise SFX
-SQ1SFXData             db   ;$0671   ;Stores additional info for SQ1 SFX
-SQ2SFXData             db   ;$0672   ;Stores additional info for SQ2 SFX
-TriSFXData             db   ;$0673   ;Stores additional info for triangle SFX
+SFXNoiseData0          db   ;$0670   ;Stores additional info for Noise SFX
+SFXSQ1Data0            db   ;$0671   ;Stores additional info for SQ1 SFX
+SFXSQ2Data0            db   ;$0672   ;Stores additional info for SQ2 SFX
+SFXTriData0            db   ;$0673   ;Stores additional info for triangle SFX
 
-NoiseSFXData1          db   ;$0674   ;Stores additional info for Noise SFX
-SQ1SFXData1            .db  ;$0675   ;Stores additional info for SQ1 SFX
-SQ1SQ2SFXData          db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
-SQ2SFXData1            db   ;$0676   ;Stores additional info for SQ2 SFX
-TriSFXData1            db   ;$0677   ;Stores additional info for triangle SFX
+SFXNoiseData1          db   ;$0674   ;Stores additional info for Noise SFX
+SFXSQ1Data1            .db  ;$0675   ;Stores additional info for SQ1 SFX
+SFXSQ2PeriodLow        .db  ;$0675   ;Period low data for processing multi SFX routines
+SFXSQ1SQ2Data          db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
+SFXSQ2Data1            db   ;$0676   ;Stores additional info for SQ2 SFX
+SFXTriData1            db   ;$0677   ;Stores additional info for triangle SFX
 
-NoiseSFXData2          db   ;$0678   ;Contains extra data for screw attack SFX
-SQ1SFXData2            .db  ;$0679   ;Stores additional info for SQ1 SFX
-SQ1SFXPeriodLow        db   ;$0679   ;Period low data for processing multi SFX routines
-SQ2SFXData2            db   ;$067A   ;Stores additional info for SQ2 SFX
-TriSFXData2            db   ;$067B   ;Stores additional info for triangle SFX
+SFXNoiseData2          db   ;$0678   ;Contains extra data for screw attack SFX
+SFXSQ1Data2            .db  ;$0679   ;Stores additional info for SQ1 SFX
+SFXSQ1PeriodLow        db   ;$0679   ;Period low data for processing multi SFX routines
+SFXSQ2Data2            db   ;$067A   ;Stores additional info for SQ2 SFX
+SFXTriData2            db   ;$067B   ;Stores additional info for triangle SFX
 
 SpareMem067C           ds 4 ;$067C
 
-NoiseSFXFlag           db   ;$0680   ;Initialization flags for noise SFX
-SQ1SFXFlag             db   ;$0681   ;Initialization flags for SQ1 SFX
-SQ2SFXFlag             db   ;$0682   ;Initialization flags for SQ2 SFX(never used)
-TriSFXFlag             db   ;$0683   ;Initialization flags for triangle SFX
-MultiSFXFlag           db   ;$0684   ;Initialization Flags for SFX and some music
+SFXNoiseInitFlags      db   ;$0680   ;Initialization flags for noise SFX
+SFXSQ1InitFlags        db   ;$0681   ;Initialization flags for SQ1 SFX
+SFXSQ2InitFlags        db   ;$0682   ;Initialization flags for SQ2 SFX(never used)
+SFXTriInitFlags        db   ;$0683   ;Initialization flags for triangle SFX
+SFXMultiInitFlags      db   ;$0684   ;Initialization Flags for SFX and some music
 
-MusicInitFlag          db   ;$0685   ;Music init flags
+MusicInitFlags         db   ;$0685   ;Music init flags
 
 ScrewAttack0686        db   ;$0686
 
 SpareMem0687           db   ;$0687
 
-NoiseContSFX           db   ;$0688   ;Continuation flags for noise SFX
-SQ1ContSFX             db   ;$0689   ;Continuation flags for SQ1 SFX
-SQ2ContSFX             db   ;$068A   ;Continuation flags for SQ2 SFX (never used)
-TriContSFX             db   ;$068B   ;Continuation flags for Triangle SFX
-MultiContSFX           db   ;$068C   ;Continuation flags for Multi SFX
+SFXNoiseContFlags      db   ;$0688   ;Continuation flags for noise SFX
+SFXSQ1ContFlags        db   ;$0689   ;Continuation flags for SQ1 SFX
+SFXSQ2ContFlags        db   ;$068A   ;Continuation flags for SQ2 SFX (never used)
+SFXTriContFlags        db   ;$068B   ;Continuation flags for Triangle SFX
+SFXMultiContFlags      db   ;$068C   ;Continuation flags for Multi SFX
 
-CurrentMusic           db   ;$068D   ;Stores the flag of the current music being played
+MusicContFlags         db   ;$068D   ;Stores the flag of the current music being played
 
 .ende
 

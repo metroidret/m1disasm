@@ -47,9 +47,9 @@ DragonAIRoutine_{AREA}:
         ; spawn projectile
         jsr CommonJump_SpawnEnProjectile
         ; play shoot sfx
-        lda NoiseSFXFlag
+        lda SFXNoiseInitFlags
         ora #sfxNoise_SpitFlame
-        sta NoiseSFXFlag
+        sta SFXNoiseInitFlags
         ; set shooting animation
         lda Ens.0.data05,x
         and #$01

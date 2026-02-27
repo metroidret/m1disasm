@@ -183,7 +183,7 @@ DrawIntroBackground: ; 00:80D0
     ;Initiates intro music.
     lda #sfxMulti_IntroMusic
     sta ABStatus ;Never accessed by game.
-    sta MultiSFXFlag
+    sta SFXMultiInitFlags
     ;Turn screen off to draw on the screen.
     jsr ScreenOff
     ;Erase name table data.
@@ -589,7 +589,7 @@ PrepIntroRestart: ; 00:82A3
     bne @else_A
         ;Restart intro music.
         lda #sfxMulti_IntroMusic
-        sta MultiSFXFlag
+        sta SFXMultiInitFlags
         ;Set restart of intro music after another two cycles of the title routines.
         lda #$02
         sta IntroMusicRestart
@@ -1723,9 +1723,9 @@ CheckPassword: ; 00:8C5E
         jmp InitializeGame              ;($92D4)Preliminary housekeeping before game starts.
     L8C69:
     ;Set IncorrectPassword SFX flag.
-    lda MultiSFXFlag
+    lda SFXMultiInitFlags
     ora #sfxMulti_IncorrectPassword
-    sta MultiSFXFlag
+    sta SFXMultiInitFlags
     ;Set Timer3 time for 120 frames (2 seconds).
     lda #$0C
     sta Timer3
@@ -2374,9 +2374,9 @@ ChooseStartContinue: ; 00:90D7
         eor #$01
         sta StartContinue
         ;Set SFX flag for select being pressed. Uses triangle channel.
-        lda TriSFXFlag
+        lda SFXTriInitFlags
         ora #sfxTri_Beep
-        sta TriSFXFlag
+        sta SFXTriInitFlags
     @endIf_C:
     ldy StartContinue
     ;Load sprite info for square selection sprite.
@@ -2474,9 +2474,9 @@ EnterPassword: ; 00:9147
     @endIf_C:
 
     ;Initiate BombLaunch SFX if a character has been written to the screen.
-    lda TriSFXFlag
+    lda SFXTriInitFlags
     ora #sfxTri_BombLaunch
-    sta TriSFXFlag
+    sta SFXTriInitFlags
 
     ;Check to see if password cursor is on character 19 thru 24.  If not, branch.
     lda PasswordCursor
@@ -2600,56 +2600,60 @@ CheckBackspace: ; 00:91FB
         lda CursorPosXTbl,x
         sta SpriteRAM.1.x
     L923F:
-    ldx InputRow                    ;Load X and Y with row and column-->
-    ldy InputColumn                 ;of current character selected.
-    lda Joy1Retrig                  ;
-    and #$0F                        ;If no directional buttons are in-->
-    beq L9297                       ;retrigger mode, branch.
-    pha                             ;Temp storage of A.
-    lda TriSFXFlag                  ;Initiate BeepSFX when the player pushes-->
-    ora #sfxTri_Beep                ;a button on the directional pad.
-    sta TriSFXFlag                  ;
+    ;Load X and Y with row and column of current character selected.
+    ldx InputRow
+    ldy InputColumn
+    ;If no directional buttons are in retrigger mode, branch.
+    lda Joy1Retrig
+    and #$0F
+    beq L9297
+    ;Temp storage of A.
+    pha
+    ;Initiate BeepSFX when the player pushes a button on the directional pad.
+    lda SFXTriInitFlags
+    ora #sfxTri_Beep
+    sta SFXTriInitFlags
     pla                             ;Restore A.
     lsr                             ;Put status of right directional button in carry bit.
     bcc L926C                       ;Branch if right button has not been pressed.
-        iny                             ;
+        iny
         cpy #$0D                        ;Increment Y(column).  If Y is greater than #$0C,-->
         bne L9269                       ;increment X(Row).  If X is greater than #$04,-->
             inx                             ;set X to #$00(start back at top row) and store-->
             cpx #$05                        ;new row in InputRow.
-            bne L9264                       ;
-                ldx #$00                        ;
+            bne L9264
+                ldx #$00
             L9264:
-            stx InputRow                    ;
+            stx InputRow
             ldy #$00                        ;Store new column in InputColumn.
         L9269:
-        sty InputColumn                 ;
+        sty InputColumn
     L926C:
     lsr                             ;Put status of left directional button in carry bit.
     bcc L927F                       ;Branch if left button has not been pressed.
-        dey                             ;
+        dey
         bpl L927C                       ;Decrement Y(column).  If Y is less than #$00,-->
             dex                             ;Decrement X(row).  If X is less than #$00,-->
             bpl L9277                       ;set X to #$04(last row) and store new row-->
                 ldx #$04                        ;in InputRow.
             L9277:
-            stx InputRow                    ;
+            stx InputRow
             ldy #$0C                        ;Store new column in InputColumn.
         L927C:
-        sty InputColumn                 ;
+        sty InputColumn
     L927F:
     lsr                             ;Put status of down directional button in carry bit.
     bcc L928C                       ;Branch if down button has not been pressed.
-        inx                             ;
+        inx
         cpx #$05                        ;Increment X(row).  if X is greater than #$04,-->
         bne L9289                       ;set X to #$00(first row) and store new-->
             ldx #$00                        ;row in InputRow.
         L9289:
-        stx InputRow                    ;
+        stx InputRow
     L928C:
     lsr                             ;Put status of up directional button in carry bit.
     bcc L9297                       ;Branch if up button has not been pressed.
-        dex                             ;
+        dex
         bpl L9294                       ;Decrement X(row).  if X is less than #$00,-->
             ldx #$04                        ;set X to #$04(last row) and store new-->
         L9294:
@@ -3745,7 +3749,7 @@ LoadEndGFX: ; 00:9AD5
     jsr NMIOn                       ;($C487)Turn on non-maskable interrupt.
     ;Initiate end game music.
     lda #sfxMulti_EndMusic
-    sta MultiSFXFlag
+    sta SFXMultiInitFlags
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Loads Timer3 with a delay of 960 frames (16 seconds).
         lda #$60
