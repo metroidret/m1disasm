@@ -2567,8 +2567,8 @@ SetSFXNoiseInitFlag:
     ldx #SFXNoiseInitFlags - SFXNoiseInitFlags
     beq SetSoundInitFlag
 
-SFX_OutOfHole:
-    lda #sfxSQ1_OutOfHole
+SFX_OutOfPipe:
+    lda #sfxSQ1_OutOfPipe
     bne SetSFXSQ1InitFlag
 
 SFX_BombLaunch:
@@ -11314,7 +11314,7 @@ UpdateEnemy_Resting_TryBecomingActive:
     cmp #$07
     bne @endIf_A
         ; enemy is a pipe bug, play pipe bug sfx
-        jsr SFX_OutOfHole
+        jsr SFX_OutOfPipe
         ldx PageIndex
     @endIf_A:
     ; increment enemy status to active

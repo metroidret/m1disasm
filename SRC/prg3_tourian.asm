@@ -1950,11 +1950,12 @@ UpdateEndTimer:
     sta EndTimer+1
     
     ; play alarm sound effect every 32 frames
+    ; when the escape music is playing, the out of pipe sfx request will play the time bomb alarm sfx
     lda FrameCount
     and #$1F
     bne @endIf_A
         lda SFXSQ1InitFlags
-        ora #sfxSQ1_OutOfHole
+        ora #sfxSQ1_OutOfPipe
         sta SFXSQ1InitFlags
     @endIf_A:
     

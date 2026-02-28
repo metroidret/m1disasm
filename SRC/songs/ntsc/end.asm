@@ -661,119 +661,119 @@ SongEndSQ2:
 SongEndNoise:
     SongRepeatSetup $A
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
     SongRepeat
     SongRepeatSetup $18
         SongNoteLength $2 ;7/32 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat02SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat02 - SFXData
     SongRepeat
     SongRepeatSetup $4
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
     SongRepeat
     SongRepeatSetup $8
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat02SFXData - SFXData
+        .byte SFXData@DrumBeat02 - SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
     SongRepeat
     SongRepeatSetup $10
         SongNoteLength $2 ;7/32 seconds
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
     SongRepeat
     SongRepeatSetup $20
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
     SongRepeat
     SongRepeatSetup $20
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat02SFXData - SFXData
+        .byte SFXData@DrumBeat02 - SFXData
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat03SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
+        .byte SFXData@DrumBeat03 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
         SongNoteLength $1 ;7/64 seconds
-        .byte DrumBeat02SFXData - SFXData
+        .byte SFXData@DrumBeat02 - SFXData
     SongRepeat
     SongRepeatSetup $8
         SongNoteLength $0 ;1/4 seconds
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat01SFXData - SFXData
-        .byte DrumBeat00SFXData - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat01 - SFXData
+        .byte SFXData@DrumBeat00 - SFXData
     SongRepeat
     SongNoteLength $4 ;7/8 seconds
-    .byte DrumBeat02SFXData - SFXData
+    .byte SFXData@DrumBeat02 - SFXData
     SongNoteLength $2 ;7/32 seconds
-    .byte DrumBeat00SFXData - SFXData
+    .byte SFXData@DrumBeat00 - SFXData
     SongNoteLength $0 ;1/4 seconds
-    .byte DrumBeat02SFXData - SFXData
-    .byte DrumBeat00SFXData - SFXData
-    .byte DrumBeat02SFXData - SFXData
-    .byte DrumBeat02SFXData - SFXData
+    .byte SFXData@DrumBeat02 - SFXData
+    .byte SFXData@DrumBeat00 - SFXData
+    .byte SFXData@DrumBeat02 - SFXData
+    .byte SFXData@DrumBeat02 - SFXData
     SongNoteLength $2 ;7/32 seconds
-    .byte DrumBeat02SFXData - SFXData
+    .byte SFXData@DrumBeat02 - SFXData
     SongEnd ;End of end music.
 

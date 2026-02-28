@@ -1,0 +1,20 @@
+SoundEngine
+    sync apu w frame count
+    if silence music requested
+        InitializeSoundAddresses
+        ClearInitFlags
+        return
+    if paused
+        for first #$12 frames of pause, play pause sfx on ch1
+        return
+    clear pause sfx
+    LoadSFXNoiseInitFlags
+    LoadSFXMultiInitFlags
+    LoadSFXTriInitFlags
+    LoadMusicRepeatFlags
+    ClearInitFlags
+
+
+LoadSFXNoiseInitFlags
+    check SFXNoiseInitFlags w SFXNoiseInitPointers
+    ...todo: complete
