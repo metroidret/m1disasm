@@ -498,7 +498,7 @@ ClearRAM_33_DF:
         sta $00,x
         inx
         ;Loop until all desired addresses are cleared.
-        cpx #SoundE0
+        cpx #SoundRoutineTablePtr
         bcc @loop
     rts
 
@@ -1834,7 +1834,7 @@ MoreInit:
     txa
 
     LC830:
-        cpx #(SoundE0-1)-SpareMem7A   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
+        cpx #(SoundRoutineTablePtr-1)-SpareMem7A   ;Check to see if more RAM to clear in $7A thru $DE. (should clear $DF, off-by-one bug?)
         bcs LC836                           ;
             sta SpareMem7A,x              ;Clear RAM $7A thru $DE.
         LC836:
@@ -1926,7 +1926,7 @@ DestroyEnemies: ;($C8BB)
     lda #$00
     tax
     @loop:
-        cpx #(SoundE0-1)-CannonIndex
+        cpx #(SoundRoutineTablePtr-1)-CannonIndex
         bcs @endIf_A
             ; clear $97-$DE (should clear $DF, off-by-one bug?)
             sta CannonIndex,x

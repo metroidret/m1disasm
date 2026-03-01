@@ -1,3 +1,10 @@
+terms:
+music/song
+sfx
+sound = sfx and/or music
+
+
+
 SoundEngine
     sync apu w frame count
     if silence music requested
@@ -16,5 +23,50 @@ SoundEngine
 
 
 LoadSFXNoiseInitFlags
-    check SFXNoiseInitFlags w SFXNoiseInitPointers
+    if theres a SFXNoiseInitFlag
+        jump to init routine for that sfx
+    else, LoadSFXNoiseContFlags
+        if theres a SFXNoiseContFlag
+            jump to cont routine for that sfx
+        else
+            return
+
+LoadSFXMultiInitFlags
+    if theres a SFXMultiInitFlag
+        jump to init routine for that sfx/music
+    else, LoadSFXMultiContFlags
+        if theres a SFXMultiContFlag
+            jump to cont routine for that sfx/music
+        else, GotoLoadSFXSQ1InitFlags
+            if theres a SFXSQ1InitFlag
+                jump to init routine for that sfx
+            else, LoadSFXSQ1ContFlags
+                if theres a SFXSQ1ContFlag
+                    jump to cont routine for that sfx
+                else
+                    return
+
+LoadSFXTriInitFlags
+    if theres a SFXTriInitFlag
+        jump to init routine for that sfx
+    else, LoadSFXTriContFlags
+        if theres a SFXTriContFlag
+            jump to cont routine for that sfx
+        else
+            return
+
+LoadMusicRepeatFlags
+    if theres a MusicRepeatFlag
+        jump to init routine for that music
+    else, LoadMusicInitFlags
+        if theres a MusicInitFlag
+            jump to init routine for that music
+        else, ContinueMusic
+            if theres a MusicContFlag
+                cont routine for all music (LoadMusicContFlagsFrameData)
+            else
+                return
+
+
+LoadMusicContFlagsFrameData
     ...todo: complete

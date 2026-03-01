@@ -728,14 +728,18 @@ SkreeProjectiles       instanceof SkreeProjectile 4 startfrom 0
     SpareMemD9             ds 7 ;$D9
 .endu
 
-SoundE0                dw   ;$E0
-; SoundE0+1                    $E1
+APURegisterPtr         .dw  ;$E0
+; APURegisterPtr+1             $E1
+SoundRoutineTablePtr   dw   ;$E0
+; SoundRoutineTablePtr+1       $E1
 
-SoundE2                dw   ;$E2
-; SoundE2+1                    $E3
+SFXDataPtr             .dw  ;$E2
+; SFXDataPtr+1                 $E3
+SoundRoutinePtr        dw   ;$E2     ;points to sfx init/cont routine or, when no sfx, to default routine
+; SoundRoutinePtr+1            $E3
 
-SoundE4                dw   ;$E4
-; SoundE4+1                    $E5
+GetSoundRoutineDataPtr dw   ;$E4
+; GetSoundRoutineDataPtr+1     $E5
 
 MusicChannelBase       dw   ;$E6
 ; MusicChannelBase+1           $E7
@@ -1032,7 +1036,7 @@ ThisSoundChannel       db   ;$064B   ;Least sig. byte of current channel(00,04,0
 
 SpareMem064C           db   ;$064C
 
-CurrentSFXFlags        db   ;$064D   ;Stores flags of SFX currently being processed.
+CurrentSoundFlags      db   ;$064D   ;Stores flags of SFX/music currently being processed.
 
 SpareMem064E           ds 4 ;$064E
 
