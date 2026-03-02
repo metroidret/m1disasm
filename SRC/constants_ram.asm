@@ -1073,23 +1073,23 @@ SQ2VolumeData          db   ;$066D   ;Stores duty cycle and this frame volume da
 
 SpareMem066E           dw   ;$066E   ;$066E is unknowingly written to by "sta SQ1VolumeData,x", but never read
 
-SFXNoiseData0          db   ;$0670   ;Stores additional info for Noise SFX
-SFXSQ1Data0            db   ;$0671   ;Stores additional info for SQ1 SFX
-SFXSQ2Data0            db   ;$0672   ;Stores additional info for SQ2 SFX
-SFXTriData0            db   ;$0673   ;Stores additional info for triangle SFX
+SFXNoiseVar0           db   ;$0670   ;Stores additional info for Noise SFX
+SFXSQ1Var0             db   ;$0671   ;Stores additional info for SQ1 SFX
+SFXSQ2Var0             db   ;$0672   ;Stores additional info for SQ2 SFX
+SFXTriVar0             db   ;$0673   ;Stores additional info for triangle SFX
 
-SFXNoiseData1          db   ;$0674   ;Stores additional info for Noise SFX
-SFXSQ1Data1            .db  ;$0675   ;Stores additional info for SQ1 SFX
+SFXNoiseVar1           db   ;$0674   ;Stores additional info for Noise SFX
+SFXSQ1Var1             .db  ;$0675   ;Stores additional info for SQ1 SFX
 SFXSQ2PeriodLow        .db  ;$0675   ;Period low data for processing multi SFX routines
-SFXSQ1SQ2Data          db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
-SFXSQ2Data1            db   ;$0676   ;Stores additional info for SQ2 SFX
-SFXTriData1            db   ;$0677   ;Stores additional info for triangle SFX
+SFXSQ1SQ2Var           db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
+SFXSQ2Var1             db   ;$0676   ;Stores additional info for SQ2 SFX
+SFXTriVar1             db   ;$0677   ;Stores additional info for triangle SFX
 
-SFXNoiseData2          db   ;$0678   ;Contains extra data for screw attack SFX
-SFXSQ1Data2            .db  ;$0679   ;Stores additional info for SQ1 SFX
+SFXNoiseVar2           db   ;$0678   ;Contains extra data for screw attack SFX
+SFXSQ1Var2             .db  ;$0679   ;Stores additional info for SQ1 SFX
 SFXSQ1PeriodLow        db   ;$0679   ;Period low data for processing multi SFX routines
-SFXSQ2Data2            db   ;$067A   ;Stores additional info for SQ2 SFX
-SFXTriData2            db   ;$067B   ;Stores additional info for triangle SFX
+SFXSQ2Var2             db   ;$067A   ;Stores additional info for SQ2 SFX
+SFXTriVar2             db   ;$067B   ;Stores additional info for triangle SFX
 
 SpareMem067C           ds 4 ;$067C
 

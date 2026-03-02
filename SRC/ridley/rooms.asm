@@ -144,8 +144,8 @@ Room07_{AREA}:
     .byte $EB, $09, $03
     .byte $FD
     .byte $02, $B1 ; Blue door
-    .byte $07, $87, $27 ; Zebbo
-    .byte $17, $87, $DD ; Zebbo
+    .byte $07, $87, $27 ; Enemy spawner: Zebbo
+    .byte $17, $87, $DD ; Enemy spawner: Zebbo
     .byte $21, $86, $B5 ; Viola
     .byte $31, $86, $7B ; Viola
     .byte $FF
@@ -169,7 +169,7 @@ Room08_{AREA}:
     .byte $51, $06, $17 ; Viola
     .byte $01, $86, $6B ; Viola
     .byte $11, $86, $DA ; Viola
-    .byte $27, $87, $96 ; Zebbo
+    .byte $27, $87, $96 ; Enemy spawner: Zebbo
     .byte $FF
 
 Room09_{AREA}:
@@ -500,9 +500,9 @@ Room17_{AREA}:
     .byte $C0, $14, $01
     .byte $C8, $14, $01
     .byte $FD
-    .byte $17, $87, $93 ; Zebbo
-    .byte $27, $07, $95 ; Zebbo
-    .byte $37, $87, $9C ; Zebbo
+    .byte $17, $87, $93 ; Enemy spawner: Zebbo
+    .byte $27, $07, $95 ; Enemy spawner: Zebbo
+    .byte $37, $87, $9C ; Enemy spawner: Zebbo
     .byte $FF
 
 Room18_{AREA}:
@@ -519,8 +519,8 @@ Room18_{AREA}:
     .byte $C8, $14, $01
     .byte $CB, $04, $03
     .byte $FD
-    .byte $47, $87, $C4 ; Zebbo
-    .byte $57, $87, $CC ; Zebbo
+    .byte $47, $87, $C4 ; Enemy spawner: Zebbo
+    .byte $57, $87, $CC ; Enemy spawner: Zebbo
     .byte $01, $80, $67 ; Holtz
     .byte $FF
 
@@ -558,7 +558,7 @@ Room1A_{AREA}:
     .byte $41, $00, $64 ; Holtz
     .byte $51, $80, $68 ; Holtz
     .byte $01, $00, $6C ; Holtz
-    .byte $17, $87, $D9 ; Zebbo
+    .byte $17, $87, $D9 ; Enemy spawner: Zebbo
     .byte $FF
 
 Room1B_{AREA}:
@@ -582,8 +582,8 @@ Room1B_{AREA}:
     .byte $C0, $14, $01
     .byte $C8, $14, $01
     .byte $FD
-    .byte $27, $87, $93 ; Zebbo
-    .byte $37, $87, $9C ; Zebbo
+    .byte $27, $87, $93 ; Enemy spawner: Zebbo
+    .byte $37, $87, $9C ; Enemy spawner: Zebbo
     .byte $FF
 
 Room1C_{AREA}:
@@ -745,10 +745,10 @@ Room24_{AREA}:
     .byte $D0, $00, $03
     .byte $D8, $00, $03
     .byte $FD
-    .byte $07, $87, $93 ; Zebbo
+    .byte $07, $87, $93 ; Enemy spawner: Zebbo
     .byte $11, $00, $1A ; Holtz
     .byte $21, $80, $1F ; Holtz
-    .byte $47, $87, $95 ; Zebbo
+    .byte $47, $87, $95 ; Enemy spawner: Zebbo
     .byte $51, $86, $8B ; Viola
     .byte $FF
 
@@ -808,7 +808,7 @@ Room27_{AREA}:
     .byte $D0, $00, $03
     .byte $D8, $00, $03
     .byte $FD
-    .byte $07, $87, $B3 ; Zebbo
+    .byte $07, $87, $B3 ; Enemy spawner: Zebbo
     .byte $11, $03, $29 ; Ceiling dessgeega
     .byte $FF
 
@@ -825,7 +825,7 @@ Room28_{AREA}:
     .byte $D1, $00, $03
     .byte $D8, $00, $03
     .byte $FD
-    .byte $27, $87, $B6 ; Zebbo
+    .byte $27, $87, $B6 ; Enemy spawner: Zebbo
     .byte $11, $82, $B7 ; Dessgeega
     .byte $11, $80, $27 ; Holtz
     .byte $FF

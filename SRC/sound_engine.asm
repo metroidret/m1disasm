@@ -105,7 +105,7 @@ SFXData: ;The top four entries are used by the noise music player for drum beats
 GetSoundRoutineData:
 @SFXNoiseInit:
     ;Noise init SFX         (1st).
-    .word SFXNoiseInitRoutineTbl, LoadSFXNoiseContFlags
+    .word SFXNoiseInitRoutineTbl, RunSFXNoiseContRoutine
     .byte $00
 @SFXNoiseCont:
     ;Noise continue SFX     (2nd).
@@ -113,7 +113,7 @@ GetSoundRoutineData:
     .byte $00
 @SFXSQ1Init:
     ;SQ1 init SFX           (5th).
-    .word SFXSQ1InitRoutineTbl, LoadSFXSQ1ContFlags
+    .word SFXSQ1InitRoutineTbl, RunSFXSQ1ContRoutine
     .byte $01
 @SFXSQ1Cont:
     ;SQ1 continue SFX       (6th).
@@ -121,7 +121,7 @@ GetSoundRoutineData:
     .byte $01
 @SFXTriInit:
     ;Triangle init SFX      (7th).
-    .word SFXTriInitRoutineTbl, LoadSFXTriContFlags
+    .word SFXTriInitRoutineTbl, RunSFXTriContRoutine
     .byte $03
 @SFXTriCont:
     ;Triangle continue SFX  (8th).
@@ -129,11 +129,11 @@ GetSoundRoutineData:
     .byte $03
 @SFXMultiInit:
     ;Multi init SFX         (3rd).
-    .word SFXMultiInitRoutineTbl, LoadSFXMultiContFlags
+    .word SFXMultiInitRoutineTbl, RunSFXMultiContRoutine
     .byte $04
 @SFXMultiCont:
     ;Multi continue SFX     (4th).
-    .word SFXMultiContRoutineTbl, GotoLoadSFXSQ1InitFlags
+    .word SFXMultiContRoutineTbl, GotoRunSFXSQ1InitRoutine
     .byte $04
 @MusicInit:
     ;Music                  (10th).
@@ -141,7 +141,7 @@ GetSoundRoutineData:
     .byte $00
 @MusicRepeat:
     ;temp flag Music        (9th).
-    .word MusicRoutineTbl, LoadMusicInitFlags
+    .word MusicRoutineTbl, RunMusicInitRoutine
     .byte $00
 
 ;The tables below contain addresses for SFX handling routines.
@@ -149,91 +149,91 @@ GetSoundRoutineData:
 ;Noise Init SFX handling routine addresses:
 SFXNoiseInitRoutineTbl:
     .word GetSoundRoutine@RTS                     ;No sound.
-    .word ScrewAttackSFXStart                     ;Screw attack init SFX.
-    .word MissileLaunchSFXStart                     ;Missile launch init SFX.
-    .word BombExplodeSFXStart                     ;Bomb explode init SFX.
-    .word SamusWalkSFXStart                     ;Samus walk init SFX.
-    .word SpitFlameSFXStart                     ;Spit flame init SFX.
+    .word ScrewAttackSFXInit                     ;Screw attack init SFX.
+    .word MissileLaunchSFXInit                     ;Missile launch init SFX.
+    .word BombExplodeSFXInit                     ;Bomb explode init SFX.
+    .word SamusWalkSFXInit                     ;Samus walk init SFX.
+    .word SpitFlameSFXInit                     ;Spit flame init SFX.
     .word GetSoundRoutine@RTS                     ;No sound.
     .word GetSoundRoutine@RTS                     ;No sound.
 
 ;Noise Continue SFX handling routine addresses:
 SFXNoiseContRoutineTbl:
     .word GetSoundRoutine@RTS                     ;No sound.
-    .word ScrewAttackSFXContinue                     ;Screw attack continue SFX.
-    .word MissileLaunchSFXContinue                     ;Missile launch continue SFX.
-    .word NoiseSFXContinue                     ;Bomb explode continue SFX.
-    .word NoiseSFXContinue                     ;Samus walk continue SFX.
-    .word SpitFlameSFXContinue                     ;Spit flame continue SFX.
+    .word ScrewAttackSFXCont                     ;Screw attack continue SFX.
+    .word MissileLaunchSFXCont                     ;Missile launch continue SFX.
+    .word NoiseSFXCont                     ;Bomb explode continue SFX.
+    .word NoiseSFXCont                     ;Samus walk continue SFX.
+    .word SpitFlameSFXCont                     ;Spit flame continue SFX.
     .word GetSoundRoutine@RTS                     ;No sound.
     .word GetSoundRoutine@RTS                     ;No sound.
 
 ;SQ1 Init SFX handling routine addresses:
 SFXSQ1InitRoutineTbl:
-    .word MissilePickupSFXStart                     ;Missile pickup init SFX.
-    .word EnergyPickupSFXStart                     ;Energy pickup init SFX.
-    .word MetalSFXStart                     ;Metal init SFX.
-    .word BulletFireSFXStart                     ;Bullet fire init SFX.
-    .word OutOfPipeSFXStart                     ;Bird out of hole init SFX.
-    .word EnemyHitSFXStart                     ;Enemy hit init SFX.
-    .word SamusJumpSFXStart                     ;Samus jump init SFX.
-    .word WaveBeamSFXStart                     ;Wave beam init SFX.
+    .word MissilePickupSFXInit                     ;Missile pickup init SFX.
+    .word EnergyPickupSFXInit                     ;Energy pickup init SFX.
+    .word MetalSFXInit                     ;Metal init SFX.
+    .word BulletFireSFXInit                     ;Bullet fire init SFX.
+    .word OutOfPipeSFXInit                     ;Bird out of hole init SFX.
+    .word EnemyHitSFXInit                     ;Enemy hit init SFX.
+    .word SamusJumpSFXInit                     ;Samus jump init SFX.
+    .word WaveBeamSFXInit                     ;Wave beam init SFX.
 
 ;SQ1 Continue SFX handling routine addresses:
 SFXSQ1ContRoutineTbl:
-    .word MissilePickupSFXContinue                     ;Missile pickup continue SFX.
-    .word EnergyPickupSFXContinue                     ;Energy pickup continue SFX.
-    .word SQ1SFXContinue                     ;Metal continue SFX.
-    .word BulletFireSFXContinue                     ;Bullet fire continue SFX.
-    .word SQ1SFXContinue                     ;Bird out of hole continue SFX.
-    .word SQ1SFXContinue                     ;Enemy hit continue SFX.
-    .word SQ1SFXContinue                     ;Samus jump continue SFX.
-    .word WaveBeamSFXContinue                     ;Wave beam continue SFX.
+    .word MissilePickupSFXCont                     ;Missile pickup continue SFX.
+    .word EnergyPickupSFXCont                     ;Energy pickup continue SFX.
+    .word SQ1SFXCont                     ;Metal continue SFX.
+    .word BulletFireSFXCont                     ;Bullet fire continue SFX.
+    .word SQ1SFXCont                     ;Bird out of hole continue SFX.
+    .word SQ1SFXCont                     ;Enemy hit continue SFX.
+    .word SQ1SFXCont                     ;Samus jump continue SFX.
+    .word WaveBeamSFXCont                     ;Wave beam continue SFX.
 
 ;Triangle init handling routine addresses:
 SFXTriInitRoutineTbl:
-    .word SamusDieSFXStart                     ;Samus die init SFX.
-    .word DoorOpenCloseSFXStart                     ;Door open close init SFX.
-    .word MetroidHitSFXStart                     ;Metroid hit init SFX.
-    .word StatueRaiseSFXStart                     ;Statue raise init SFX.
-    .word BeepSFXStart                     ;Beep init SFX.
-    .word BigEnemyHitSFXStart                     ;Big enemy hit init SFX.
-    .word SamusToBallSFXStart                     ;Samus to ball init SFX.
-    .word BombLaunchSFXStart                     ;Bomb launch init SFX.
+    .word SamusDieSFXInit                     ;Samus die init SFX.
+    .word DoorOpenCloseSFXInit                     ;Door open close init SFX.
+    .word MetroidHitSFXInit                     ;Metroid hit init SFX.
+    .word StatueRaiseSFXInit                     ;Statue raise init SFX.
+    .word BeepSFXInit                     ;Beep init SFX.
+    .word BigEnemyHitSFXInit                     ;Big enemy hit init SFX.
+    .word SamusToBallSFXInit                     ;Samus to ball init SFX.
+    .word BombLaunchSFXInit                     ;Bomb launch init SFX.
 
 ;Triangle continue handling routine addresses:
 SFXTriContRoutineTbl:
-    .word SamusDieSFXContinue                     ;Samus die continue SFX.
-    .word DoorOpenCloseSFXContinue                     ;Door open close continue SFX.
-    .word MetroidHitSFXContinue                     ;Metroid hit continue SFX.
-    .word StatueRaiseSFXContinue                     ;Statue raise continue SFX.
-    .word BeepSFXContinue                     ;Beep continue SFX.
-    .word BigEnemyHitSFXContinue                     ;Big enemy hit continue SFX.
-    .word SamusToBallSFXContinue                     ;Samus to ball continue SFX.
-    .word BombLaunchSFXContinue                     ;Bomb launch continue SFX.
+    .word SamusDieSFXCont                     ;Samus die continue SFX.
+    .word DoorOpenCloseSFXCont                     ;Door open close continue SFX.
+    .word MetroidHitSFXCont                     ;Metroid hit continue SFX.
+    .word StatueRaiseSFXCont                     ;Statue raise continue SFX.
+    .word BeepSFXCont                     ;Beep continue SFX.
+    .word BigEnemyHitSFXCont                     ;Big enemy hit continue SFX.
+    .word SamusToBallSFXCont                     ;Samus to ball continue SFX.
+    .word BombLaunchSFXCont                     ;Bomb launch continue SFX.
 
-LoadSFXNoiseInitFlags:
+RunSFXNoiseInitRoutine:
     ;Load A with Noise init SFX flags, (1st SFX cycle).
     lda SFXNoiseInitFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXNoiseInit.b
     bne RunSoundRoutine ;Branch always.
 
-LoadSFXNoiseContFlags:
+RunSFXNoiseContRoutine:
     ;Load A with Noise continue flags, (2nd SFX cycle).
     lda SFXNoiseContFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXNoiseCont.b
     bne RunSoundRoutine ;Branch always.
 
-LoadSFXSQ1InitFlags:
+RunSFXSQ1InitRoutine:
     ;Load A with SQ1 init flags, (5th SFX cycle).
     lda SFXSQ1InitFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXSQ1Init.b
     bne RunSoundRoutine ;Branch always.
 
-LoadSFXSQ1ContFlags:
+RunSFXSQ1ContRoutine:
     ;Load A with SQ1 continue flags, (6th SFX cycle).
     lda SFXSQ1ContFlags
     ;Lower address byte in GetSoundRoutineData.
@@ -247,21 +247,21 @@ RunSoundRoutine:
     ;else jump to specific SFX handling routine.
     jmp (SoundRoutinePtr)
 
-LoadSFXTriInitFlags:
+RunSFXTriInitRoutine:
     ;Load A with Triangle init flags, (7th SFX cycle).
     lda SFXTriInitFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXTriInit.b
     bne RunSoundRoutine ;Branch always.
 
-LoadSFXTriContFlags:
+RunSFXTriContRoutine:
     ;Load A with Triangle continue flags, (8th SFX cycle).
     lda SFXTriContFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXTriCont.b
     bne RunSoundRoutine ;Branch always.
 
-LoadSFXMultiInitFlags:
+RunSFXMultiInitRoutine:
     ;Load A with Multi init flags, (3rd SFX cycle).
     lda SFXMultiInitFlags
     ;Lower address byte in GetSoundRoutineData.
@@ -277,15 +277,15 @@ LoadSFXMultiInitFlags:
     ;else jump to specific SFX handling subroutine.
     jmp (SoundRoutinePtr)
 
-LoadSFXMultiContFlags:
+RunSFXMultiContRoutine:
     ;Load A with Multi cont flags (4th SFX cycle).
     lda SFXMultiContFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@SFXMultiCont.b
     jmp RunSoundRoutine
 
-GotoLoadSFXSQ1InitFlags:
-    jsr LoadSFXSQ1InitFlags         ;($B329)Check for SQ1 init flags.
+GotoRunSFXSQ1InitRoutine:
+    jsr RunSFXSQ1InitRoutine         ;($B329)Check for SQ1 init flags.
     rts
 
 LoadSFXData:
@@ -396,10 +396,10 @@ SoundEngine:
     ;Clear SFXPaused when game is running.
     lda #$00
     sta SFXPaused
-    jsr LoadSFXNoiseInitFlags       ;($B31B)Check noise SFX flags.
-    jsr LoadSFXMultiInitFlags       ;($B34B)Check multichannel SFX flags.
-    jsr LoadSFXTriInitFlags         ;($B33D)Check triangle SFX flags.
-    jsr LoadMusicRepeatFlags          ;($BC36)Check music flags.
+    jsr RunSFXNoiseInitRoutine       ;($B31B)Check noise SFX flags.
+    jsr RunSFXMultiInitRoutine       ;($B34B)Check multichannel SFX flags.
+    jsr RunSFXTriInitRoutine         ;($B33D)Check triangle SFX flags.
+    jsr RunMusicRepeatRoutine          ;($BC36)Check music flags.
     ; fallthrough
 
 ;Clear all init flags.
@@ -513,9 +513,9 @@ InitSFXData:
     ;Clears all the following addresses before going to the proper SFX handling routine.
     lda #$00
     sta SFXNoiseFrame,x
-    sta SFXNoiseData0,x
-    sta SFXNoiseData1,x
-    sta SFXNoiseData2,x
+    sta SFXNoiseVar0,x
+    sta SFXNoiseVar1,x
+    sta SFXNoiseVar2,x
     sta LoadMusicSQ1SQ2PeriodsFlag
     rts
 
@@ -612,87 +612,90 @@ GetSoundRoutine:
 
 ;-----------------------------------[ SFX Handling Routines ]---------------------------------------
 
-;The following table is used by the SpitFlamesSFXContinue routine to change the volume-->
+;The following table is used by the SpitFlamesSFXCont routine to change the volume-->
 ;on the SFX.  It starts out quiet, then becomes louder then goes quiet again.
 SpitFlamesTbl:
     .byte $12, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1B, $1A, $19, $17
     .byte $16, $15, $14, $12
 
-SpitFlameSFXStart:
+SpitFlameSFXInit:
     lda #$14                        ;Number of frames to play sound before a change.
     ldy #<SFXData@SpitFlame.b          ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-SpitFlameSFXContinue:
+SpitFlameSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @endIf_A                       ;If more frames to process, branch.
         jmp EndNoiseSFX                 ;($B58F)End SFX.
     @endIf_A:
-    ldy SFXNoiseData0                ;
+    ldy SFXNoiseVar0                ;
     lda SpitFlamesTbl,y             ;Load data from table above and store in NOISE_VOL.
     sta NOISE_VOL                   ;
-    inc SFXNoiseData0                ;Increment to next entry in data table.
+    inc SFXNoiseVar0                ;Increment to next entry in data table.
     rts
 
-ScrewAttackSFXStart:
+
+ScrewAttackSFXInit:
     lda #$05                        ;Number of frames to play sound before a change.
     ldy #<SFXData@ScrewAttack.b           ;Lower byte of sound data start address(base=$B200).
     jsr InitSFXData            ;($B452)Setup registers for SFX.
     lda SFXData@ScrewAttack+2                       ;#$00.
-    sta SFXNoiseData0                ;Clear SFXNoiseData0.
+    sta SFXNoiseVar0                ;Clear SFXNoiseVar0.
 @RTS:
     rts
 
-ScrewAttackSFXContinue:
+ScrewAttackSFXCont:
     ;Prevents period index from being incremented until after the tenth frame of the SFX.
     ;Branch if not ready to increment.
-    lda SFXNoiseData2
+    lda SFXNoiseVar2
     cmp #$02
     beq @increasePeriod
     
     jsr IncrementSFXFrame
-    bne ScrewAttackSFXStart@RTS
+    bne ScrewAttackSFXInit@RTS
     ;Increment every fifth frame.
-    inc SFXNoiseData2
+    inc SFXNoiseVar2
     rts
 
 @increasePeriod:
     ;Start increasing period index after first ten frames.
     jsr IncrementSFXFrame
     bne IncrementPeriodIndex
-    ;Decrement SFXNoiseData0 by three every fifth frame.
-    dec SFXNoiseData0
-    dec SFXNoiseData0
-    dec SFXNoiseData0
-    ; Increment SFXNoiseData1.  When it is equal to #$0F, end screw attack SFX.
-    ; SFXNoiseData1 does not appear to be linked to multi SFX channels in this routine.
-    inc SFXNoiseData1
-    lda SFXNoiseData1
+    ;Decrement SFXNoiseVar0 by three every fifth frame.
+    dec SFXNoiseVar0
+    dec SFXNoiseVar0
+    dec SFXNoiseVar0
+    ; Increment SFXNoiseVar1.  When it is equal to #$0F, end screw attack SFX.
+    ; SFXNoiseVar1 does not appear to be linked to multi SFX channels in this routine.
+    inc SFXNoiseVar1
+    lda SFXNoiseVar1
     cmp #$0F
-    bne ScrewAttackSFXStart@RTS
+    bne ScrewAttackSFXInit@RTS
     jmp EndNoiseSFX
 
 IncrementPeriodIndex:
     ;Incrementing the period index has the effect of lowering the frequency of the noise SFX.
-    inc SFXNoiseData0
-    lda SFXNoiseData0
+    inc SFXNoiseVar0
+    lda SFXNoiseVar0
     sta NOISE_LO
     rts
 
-MissileLaunchSFXStart:
+
+MissileLaunchSFXInit:
     lda #$18                        ;Number of frames to play sound before a change.
     ldy #<SFXData@MissileLaunch.b      ;Lower byte of sound data start address(base=$B200).
     jsr GotoInitSFXData        ;($B587)Prepare to setup registers for SFX.
     lda #$0A                        ;
-    sta SFXNoiseData0                ;Start increment index for noise channel at #$0A.
+    sta SFXNoiseVar0                ;Start increment index for noise channel at #$0A.
     rts
 
-MissileLaunchSFXContinue:
+MissileLaunchSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne IncrementPeriodIndex        ;
     jmp EndNoiseSFX                 ;($B58F)End SFX.
 
-BombExplodeSFXStart:
+
+BombExplodeSFXInit:
     lda #$30                        ;Number of frames to play sound before a change.
     ldy #<SFXData@BombExplode.b        ;Lower byte of sound data start address(base=$B200).
 GotoInitSFXData:
@@ -700,7 +703,7 @@ GotoInitSFXData:
 
 ;The following routine is used to continue BombExplode and SamusWalk SFX.
 
-NoiseSFXContinue:
+NoiseSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne EndNoiseSFX@RTS           ;If more frames to process, branch to exit.
 
@@ -711,7 +714,8 @@ EndNoiseSFX:
 @RTS:
     rts
 
-SamusWalkSFXStart:
+
+SamusWalkSFXInit:
     lda SFXNoiseContFlags                ;If MissileLaunch, BombExplode or SpitFire SFX are-->
                                     ;already being played, branch to exit.s
     and #sfxNoise_MissileLaunch | sfxNoise_BombExplode | sfxNoise_SpitFlame
@@ -719,6 +723,7 @@ SamusWalkSFXStart:
     lda #$03                        ;Number of frames to play sound before a change.
     ldy #<SFXData@SamusWalk.b          ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData        ;Branch always.
+
 
 MultiSFXInit:
     sta SFXMultiLength
@@ -732,7 +737,7 @@ MultiSFXInit:
     ;Clear all listed memory addresses.
     lda #$00
     sta SFXSQ1ContFlags
-    sta SFXSQ1Data0
+    sta SFXSQ1Var0
     sta SFXSQ2PeriodLow
     sta SFXSQ1PeriodLow
     sta SFXMultiFrame
@@ -757,19 +762,20 @@ EndMultiSFX:
     inc LoadMusicSQ1SQ2PeriodsFlag
     rts
 
-BossHitSFXStart:
+
+BossHitSFXInit:
     ldy #<SFXData@BossHitSQ1.b         ;Low byte of SQ1 sound data start address(base=$B200).
     jsr LoadSFXData@SQ1           ;($B368)Set SQ1 SFX data.
     ldy #<SFXData@BossHitSQ2.b         ;Low byte of SQ2 sound data start address(base=$B200).
     jmp MultiSFXInit                ;($B5A5)Initiate multi channel SFX.
 
-BossHitSFXContinue:
-    inc SFXSQ1Data0                  ;Increment index to data in table below.
-    ldy SFXSQ1Data0                  ;
+BossHitSFXCont:
+    inc SFXSQ1Var0                  ;Increment index to data in table below.
+    ldy SFXSQ1Var0                  ;
     lda BossHitSFXDataTbl,y         ;
     sta SQ1_VOL                     ;Load SQ1_VOL and SQ2_VOL from table below.
     sta SQ2_VOL                     ;
-    lda SFXSQ1Data0                  ;
+    lda SFXSQ1Var0                  ;
     cmp #$14                        ;After #$14 frames, end SFX.
     beq GotoEndMultiSFX             ;
     cmp #$06                        ;After six or more frames of SFX, branch.
@@ -803,7 +809,8 @@ BossHitSFXDataTbl:
     .byte $38, $3D, $3F, $3F, $3F, $3F, $3F, $3D, $3B, $39, $3B, $3D, $3F, $3D, $3B, $39
     .byte $3B, $3D, $3F, $39
 
-SamusHitSFXContinue:
+
+SamusHitSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @endIf_A                       ;If more SFX frames to process, branch.
         jmp EndMultiSFX                 ;($B5CD)End SFX.
@@ -822,7 +829,7 @@ SamusHitSFXContinue:
     sta SQ2_LO                      ;Randomly set bits 2 and 3 of SQ2 period low.
     rts
 
-SamusHitSFXStart:
+SamusHitSFXInit:
     ldy #<SFXData@SamusHitSQ1SQ2.b     ;Low byte of SQ1 sound data start address(base=$B200).
     jsr LoadSFXData@SQ1           ;($B368)Set SQ1 SFX data.
     lda RandomNumber1               ;
@@ -842,28 +849,30 @@ SamusHitSFXStart:
 @RTS:
     rts
 
-IncorrectPasswordSFXStart:
+
+IncorrectPasswordSFXInit:
     ldy #<SFXData@IncorrectPasswordSQ1.b ;Low byte of SQ1 sound data start address(base=$B200).
     jsr LoadSFXData@SQ1           ;($B368)Set SQ1 SFX data.
     lda #$20                        ;Number of frames to play sound before a change.
     ldy #<SFXData@IncorrectPasswordSQ2.b ;Low byte of SQ2 sound data start address(base=$B200).
     jmp MultiSFXInit                ;($B5A5)Initiate multi channel SFX.
 
-IncorrectPasswordSFXContinue:
+IncorrectPasswordSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne SamusHitSFXStart@RTS                       ;If more frames to process, branch to exit.
+    bne SamusHitSFXInit@RTS                       ;If more frames to process, branch to exit.
     jmp EndMultiSFX                 ;($B5CD)End SFX.
 
+
 ;The following table is used by the below routine to load SQ1_LO data in the-->
-;MissilePickupSFXContinue routine.
+;MissilePickupSFXCont routine.
 
 MissilePickupSFXTbl:
     .byte $BD, $8D, $7E, $5E, $46, $3E, $00
 
-MissilePickupSFXContinue:
+MissilePickupSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @RTS               ;If more frames to process, branch to exit.
-    ldy SFXSQ1Data0                  ;
+    ldy SFXSQ1Var0                  ;
     lda MissilePickupSFXTbl,y       ;Load SFX data from table above.
     bne @endIf_A
         jmp EndSQ1SFX                   ;($B6F2)SFX completed.
@@ -871,36 +880,38 @@ MissilePickupSFXContinue:
     sta SQ1_LO
     lda SFXData@MissilePickup+3      ;#$28.
     sta SQ1_HI                   ;load SQ1_HI with #$28.
-    inc SFXSQ1Data0                  ;Increment index to data table above every 5 frames.
+    inc SFXSQ1Var0                  ;Increment index to data table above every 5 frames.
 @RTS:
     rts
 
-MissilePickupSFXStart:
+MissilePickupSFXInit:
     lda #$05                        ;Number of frames to play sound before a change.
     ldy #<SFXData@MissilePickup.b      ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2                  ;Branch always.
 
-EnergyPickupSFXContinue:
+
+EnergyPickupSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne MissilePickupSFXContinue@RTS               ;If more frames to process, branch to exit.
-    inc SFXSQ1Data0                  ;
-    lda SFXSQ1Data0                  ;Every six frames, reload SFX info.  Does it-->
+    bne MissilePickupSFXCont@RTS               ;If more frames to process, branch to exit.
+    inc SFXSQ1Var0                  ;
+    lda SFXSQ1Var0                  ;Every six frames, reload SFX info.  Does it-->
     cmp #$03                        ;three times for a total of 18 frames.
     beq EndSQ1SFX                   ;
     ldy #<SFXData@EnergyPickup.b       ;
     jmp LoadSFXData@SQ1           ;($B368)Set SQ1 SFX data.
 
-EnergyPickupSFXStart:
+EnergyPickupSFXInit:
     lda #$06                        ;Number of frames to play sound before a change.
     ldy #<SFXData@EnergyPickup.b       ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2 ;Branch always.
 
+
 ;The following continue routine is used by the metal, bird out of hole,
 ;enemy hit and the Samus jump SFXs.
 
-SQ1SFXContinue:
+SQ1SFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
-    bne MissilePickupSFXContinue@RTS
+    bne MissilePickupSFXCont@RTS
 
 EndSQ1SFX:
     ;Disable envelope generator(sound off).
@@ -915,79 +926,86 @@ EndSQ1SFX:
     inc LoadMusicSQ1SQ2PeriodsFlag
     rts
 
-SamusJumpSFXStart:
+
+SamusJumpSFXInit:
     lda MusicContFlags                ;If escape music is playing, exit without playing-->
     cmp #music_Escape               ;Samus jump SFX.
-    beq MissilePickupSFXContinue@RTS
+    beq MissilePickupSFXCont@RTS
     lda #$0C                        ;Number of frames to play sound before a change.
     ldy #<SFXData@SamusJump.b        ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2 ;Branch always.
 
-EnemyHitSFXStart:
+
+EnemyHitSFXInit:
     lda #$08                        ;Number of frames to play sound before a change.
     ldy #<SFXData@EnemyHit.b    ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2 ;Branch always.
 
-BulletFireSFXStart:
+
+BulletFireSFXInit:
     lda HasBeamSFX                  ;
     lsr                             ;If Samus has ice beam, branch.
-    bcs HasIceBeamSFXStart          ;
+    bcs HasIceBeamSFXInit          ;
     lda SFXSQ1ContFlags                  ;If MissilePickup, EnergyPickup, OutOfPipe-->
                                     ;or EnemyHit SFX already playing, branch to exit.
     and #sfxSQ1_MissilePickup | sfxSQ1_EnergyPickup | sfxSQ1_OutOfPipe | sfxSQ1_EnemyHit
-    bne MissilePickupSFXContinue@RTS           ;
+    bne MissilePickupSFXCont@RTS           ;
     lda HasBeamSFX                  ;
     asl                             ;If Samus has long beam, branch.
-    bcs HasLongBeamSFXStart         ;
+    bcs HasLongBeamSFXInit         ;
     lda #$03                        ;Number of frames to play sound before a change.
     ldy #<SFXData@ShortRangeShot.b     ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2 ;Branch always (Plays ShortBeamSFX).
 
-HasLongBeamSFXStart:
+HasLongBeamSFXInit:
     lda #$07                        ;Number of frames to play sound before a change.
     ldy #<SFXData@LongRangeShot.b      ;Lower byte of sound data start address(base=$B200).
     bne GotoInitSFXData2 ;Branch always.
 
-MetalSFXStart:
+
+MetalSFXInit:
     lda #$0B                        ;Number of frames to play sound before a change.
     ldy #<SFXData@Metal.b              ;Lower byte of sound data start address(base=$B200).
 
 GotoInitSFXData2:
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-OutOfPipeSFXStart:
+
+OutOfPipeSFXInit:
     lda MusicContFlags                ;If escape music is playing, use this SFX to make-->
     cmp #music_Escape               ;the bomb ticking sound, else play regular SFX.
     beq LB749                       ;
-    lda #$16                        ;Number of frames to play sound before a change.
-    ldy #<SFXData@OutOfPipe.b       ;Lower byte of sound data start address(base=$B200).
-    bne GotoInitSFXData2 ;Branch always.
-LB749:
-    lda #$07                        ;Number of frames to play sound before a change.
-    ldy #<SFXData@TimeBombTick.b       ;Lower byte of sound data start address(base=$B200).
-    bne GotoInitSFXData2 ;Branch always.
+        lda #$16                        ;Number of frames to play sound before a change.
+        ldy #<SFXData@OutOfPipe.b       ;Lower byte of sound data start address(base=$B200).
+        bne GotoInitSFXData2 ;Branch always.
+    LB749:
+        lda #$07                        ;Number of frames to play sound before a change.
+        ldy #<SFXData@TimeBombTick.b       ;Lower byte of sound data start address(base=$B200).
+        bne GotoInitSFXData2 ;Branch always.
 
-BulletFireSFXContinue:
+
+BulletFireSFXCont:
     lda HasBeamSFX                  ;
     lsr                             ;If Samus has ice beam, branch.
-    bcs HasIceBeamSFXContinue       ;
+    bcs HasIceBeamSFXCont       ;
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne RTS_B75D                       ;If more frames to process, branch to exit.
         jmp EndSQ1SFX                   ;($B6F2)If SFX finished, jump.
     RTS_B75D:
     rts
 
-HasIceBeamSFXStart:
+
+HasIceBeamSFXInit:
     lda #$07                        ;Number of frames to play sound before a change.
     ldy #<SFXData@IceBeam.b            ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-HasIceBeamSFXContinue:
+HasIceBeamSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB76D                       ;If more frames to process, branch.
         jmp EndSQ1SFX                   ;($B6F2)If SFX finished, jump.
     LB76D:
-    lda SFXSQ1Data0                  ;
+    lda SFXSQ1Var0                  ;
     and #$01                        ;Determine index for SFXData@IceBeamTbl below.
     tay                             ;
     lda SFXData@IceBeamTbl,y         ;Loads A with value from SFXData@IceBeamTbl below.
@@ -997,22 +1015,23 @@ SFXData@IceBeamTbl:
     .byte $93                       ;Ice beam SFX period low data.
     .byte $81                       ;
 
-WaveBeamSFXStart:
+
+WaveBeamSFXInit:
     lda #$08                        ;Number of frames to play sound before a change.
     ldy #<SFXData@WaveBeam.b           ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-WaveBeamSFXContinue:
+WaveBeamSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB797                       ;If more frames to process, branch.
-        ldy SFXSQ1Data1                 ;
-        inc SFXSQ1Data1                 ;Load wave beam SFXDisable/enable envelope length-->
+        ldy SFXSQ1Var1                 ;
+        inc SFXSQ1Var1                 ;Load wave beam SFXDisable/enable envelope length-->
         lda WaveBeamSFXDisLngthTbl,y    ;data from WaveBeamSFXDisableLengthTbl.
         sta SQ1_VOL                     ;
         bne LoadSQ1PeriodLow@RTS               ;If at end of WaveBeamSFXDisableLengthTbl, end SFX.
         jmp EndSQ1SFX                   ;($B6F2)If SFX finished, jump.
     LB797:
-    lda SFXSQ1Data0
+    lda SFXSQ1Var0
     and #$01                        ;
     tay                             ;Load wave beam SFX period low data from-->
     lda WaveBeamSFXPeriodLowTbl,y   ;WaveBeamSFXPeriodLowTbl.
@@ -1020,7 +1039,7 @@ WaveBeamSFXContinue:
 LoadSQ1PeriodLow:
     ;Change the period low data for SQ1 channel.
     sta SQ1_LO
-    inc SFXSQ1Data0
+    inc SFXSQ1Var0
 @RTS:
     rts
 
@@ -1033,7 +1052,8 @@ WaveBeamSFXDisLngthTbl:
     .byte $91                       ;Wave beam SFX Disable/enable envelope length data.
     .byte $00                       ;
 
-DoorOpenCloseSFXStart:
+
+DoorOpenCloseSFXInit:
     lda SFXData@Door+2               ;#$30.
     sta SFXTriPeriodLow                ;Set triangle period low data byte.
     lda SFXData@Door+3               ;#$B2.
@@ -1050,7 +1070,7 @@ DoorOpenCloseSFXStart:
     ldy #<SFXData@Door.b
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-DoorOpenCloseSFXContinue:
+DoorOpenCloseSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @endIf_A
         jmp EndTriSFX
@@ -1058,7 +1078,8 @@ DoorOpenCloseSFXContinue:
     jsr DecreaseSFXTriPeriod     ;($B98C)Decrease periods.
     jmp WriteSFXTriPeriod        ;($B869)Save new periods.
 
-BeepSFXStart:
+
+BeepSFXInit:
     lda SFXTriContFlags                  ;If SamusDieSFX is already playing, branch-->
     and #sfxTri_SamusDie            ;without playing BeepSFX.
     bne LoadSQ1PeriodLow@RTS           ;
@@ -1066,12 +1087,13 @@ BeepSFXStart:
     ldy #<SFXData@Beep.b          ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-BeepSFXContinue:
+BeepSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LoadSQ1PeriodLow@RTS               ;If more frames to process, branch to exit.
     jmp EndTriSFX              ;($B896)End SFX.
 
-BigEnemyHitSFXStart:
+
+BigEnemyHitSFXInit:
     ;Increase triangle low period by #$0012 every frame.
     lda #$12
     sta SFXTriChangeLow
@@ -1086,7 +1108,7 @@ BigEnemyHitSFXStart:
     ldy #<SFXData@BigEnemyHit.b        ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-BigEnemyHitSFXContinue:
+BigEnemyHitSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne @dontEnd                          ;If more frames to process, branch
         jmp EndTriSFX              ;($B896)End SFX
@@ -1094,17 +1116,18 @@ BigEnemyHitSFXContinue:
     jsr IncreaseSFXTriPeriod          ;($B978)Increase periods.
     lda RandomNumber1               ;
     and #$3C                        ;
-    sta SFXTriData0                  ;
+    sta SFXTriVar0                  ;
     lda SFXTriPeriodLow                ;Randomly set or clear bits 2, 3, 4 and 5 in-->
     and #$C3                        ;triangle channel period low.
-    ora SFXTriData0                  ;
+    ora SFXTriVar0                  ;
     sta TRI_LO                      ;
     lda SFXTriPeriodHigh               ;
     ora #$40                        ;Set 4th bit in triangle channel period high.
     sta TRI_HI                      ;
     rts
 
-SamusToBallSFXStart:
+
+SamusToBallSFXInit:
     lda #$08                        ;Number of frames to play sound before a change.
     ldy #<SFXData@SamusBall.b        ;Lower byte of sound data start address(base=$B200).
     jsr InitSFXData            ;($B452)Setup registers for SFX.
@@ -1117,7 +1140,7 @@ SamusToBallSFXStart:
     sta SFXTriPeriodHigh               ;Save new triangle period high data.
     rts
 
-SamusToBallSFXContinue:
+SamusToBallSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     ;If more frames to process, branch.
     bne LB857
@@ -1143,16 +1166,17 @@ WriteSFXTriPeriod:
     sta TRI_HI
     rts
 
-BombLaunchSFXStart:
+
+BombLaunchSFXInit:
     lda #$04                        ;Number of frames to play sound before a change.
     ldy #<SFXData@BombLaunch1.b        ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-BombLaunchSFXContinue:
+BombLaunchSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne EndTriSFX@RTS           ;If more frames to process, branch to exit.
-    inc SFXTriData0                  ;
-    lda SFXTriData0                  ;After four frames, load second part of SFX.
+    inc SFXTriVar0                  ;
+    lda SFXTriVar0                  ;After four frames, load second part of SFX.
     cmp #$02                        ;
     bne LB891                       ;
     jmp EndTriSFX                   ;($B896)End SFX.
@@ -1170,17 +1194,18 @@ EndTriSFX:
 @RTS:
     rts                             ;Exit from for multiple routines.
 
-MetroidHitSFXStart:
+
+MetroidHitSFXInit:
     lda #$03                        ;Number of frames to play sound before a change.
     ldy #<SFXData@MetroidHit.b         ;Lower byte of sound data start address(base=$B200).
     jsr InitSFXData            ;($B452)Setup registers for SFX.
     jmp RndTriPeriods               ;($B8C3)MetroidHit SFX has several different sounds.
 
-MetroidHitSFXContinue:
+MetroidHitSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     beq RndTriPeriods               ;
-    inc SFXTriData0                  ;
-    lda SFXTriData0                  ;Randomize triangle periods nine times throughout-->
+    inc SFXTriVar0                  ;
+    lda SFXTriVar0                  ;Randomize triangle periods nine times throughout-->
     cmp #$09                        ;the course of the SFX.
     bne EndTriSFX@RTS           ;If SFX not done, branch.
     jmp EndTriSFX                   ;($B896)End SFX.
@@ -1196,7 +1221,8 @@ RndTriPeriods:
     sta TRI_HI
     rts
 
-SamusDieSFXStart:
+
+SamusDieSFXInit:
     jsr InitializeSoundAddresses    ;($B404)Clear all sound addresses.
     lda #$0E                        ;Number of frames to play sound before a change.
     ldy #<SFXData@SamusDie.b           ;Lower byte of sound data start address(base=$B200).
@@ -1212,7 +1238,7 @@ SamusDieSFXStart:
 @RTS:
     rts
 
-SamusDieSFXContinue:
+SamusDieSFXCont:
     jsr IncrementSFXFrame           ;($B4A9)Get next databyte to process in SFX.
     bne LB90C
         ;Decrease period by #$0020.
@@ -1222,11 +1248,11 @@ SamusDieSFXContinue:
         sta SFXTriChangeHigh
         jsr DecreaseSFXTriPeriod
         
-        inc SFXTriData0
+        inc SFXTriVar0
         ;If more frames to process, branch to exit.
-        lda SFXTriData0
+        lda SFXTriVar0
         cmp #$06
-        bne SamusDieSFXStart@RTS
+        bne SamusDieSFXInit@RTS
         jmp EndTriSFX
     LB90C:
     ;Increase triangle SFX periods by 4.8% every frame.
@@ -1239,7 +1265,8 @@ SamusDieSFXContinue:
     ;($B869)Save new periods.
     jmp WriteSFXTriPeriod
 
-StatueRaiseSFXStart:
+
+StatueRaiseSFXInit:
     lda SFXData@StatueRaise+2        ;#$11.
     sta SFXTriPeriodLow           ;Save period low data.
     lda SFXData@StatueRaise+3        ;#$09.
@@ -1254,13 +1281,13 @@ StatueRaiseSFXStart:
     ldy #<SFXData@StatueRaise.b        ;Lower byte of sound data start address(base=$B200).
     jmp InitSFXData            ;($B452)Setup registers for SFX.
 
-StatueRaiseSFXContinue:
+StatueRaiseSFXCont:
     jsr IncrementSFXFrame
     bne @endIf_A
-        ;Increment SFXTriData0 every 6 frames.
-        inc SFXTriData0
-        ;When SFXTriData0 = #$09, end SFX.
-        lda SFXTriData0
+        ;Increment SFXTriVar0 every 6 frames.
+        inc SFXTriVar0
+        ;When SFXTriVar0 = #$09, end SFX.
+        lda SFXTriVar0
         cmp #$09
         bne @endIf_B
             jmp EndTriSFX
@@ -1284,7 +1311,7 @@ StatueRaiseSFXContinue:
         ;($B869)Save new periods.
         jmp WriteSFXTriPeriod
     @endIf_A:
-    ;Decrease period by #$000B, as initialized in StatueRaiseSFXStart
+    ;Decrease period by #$000B, as initialized in StatueRaiseSFXInit
     jsr DecreaseSFXTriPeriod
     ;($B869)Save new periods.
     jmp WriteSFXTriPeriod
@@ -1765,9 +1792,9 @@ SFXMultiInitRoutineTbl:
     .word GotoMusic05Init                     ;End game music.
     .word GotoMusic01Init                     ;Intro music.
     .word GetSoundRoutine@RTS                     ;No sound.
-    .word SamusHitSFXStart                     ;Samus hit init SFX.
-    .word BossHitSFXStart                     ;Boss hit init SFX.
-    .word IncorrectPasswordSFXStart                     ;Incorrect password init SFX.
+    .word SamusHitSFXInit                     ;Samus hit init SFX.
+    .word BossHitSFXInit                     ;Boss hit init SFX.
+    .word IncorrectPasswordSFXInit                     ;Incorrect password init SFX.
 
 ;Multi channel continue SFX handling routine addresses:
 
@@ -1777,9 +1804,9 @@ SFXMultiContRoutineTbl:
     .word GetSoundRoutine@RTS                     ;No sound.
     .word GetSoundRoutine@RTS                     ;No sound.
     .word GetSoundRoutine@RTS                     ;No sound.
-    .word SamusHitSFXContinue                     ;Samus hit continue SFX.
-    .word BossHitSFXContinue                     ;Boss hit continue SFX.
-    .word IncorrectPasswordSFXContinue                     ;Incorrect password continue SFX.
+    .word SamusHitSFXCont                     ;Samus hit continue SFX.
+    .word BossHitSFXCont                     ;Boss hit continue SFX.
+    .word IncorrectPasswordSFXCont                     ;Incorrect password continue SFX.
 
 ;Music handling routine addresses:
 
@@ -1795,17 +1822,17 @@ MusicRoutineTbl:
 
 ;-----------------------------------[ Entry point for music routines ]--------------------------------
 
-LoadMusicRepeatFlags:
+RunMusicRepeatRoutine:
     ;Load A with temp music flags, (9th SFX cycle).
     lda MusicRepeatFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@MusicRepeat.b
-    bne LBC42                       ;Branch always.
+    bne RunMusicInitRoutine@Common                       ;Branch always.
 
-LoadMusicInitFlags:
+RunMusicInitRoutine:
     lda MusicInitFlags               ;Load A with Music flags, (10th SFX cycle).
     ldx #<GetSoundRoutineData@MusicInit.b         ;Lower address byte in GetSoundRoutineData.
-LBC42:
+@Common:
     jsr GetSoundRoutine                ;($B4BD)Checks to see if SFX or music flags set.
     jsr FindMusicInitIndex          ;($BC53)Find bit containing music init flag.
     jmp (SoundRoutinePtr)                     ;If no flag found, Jump to next SFX cycle,-->

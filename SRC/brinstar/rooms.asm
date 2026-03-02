@@ -422,9 +422,9 @@ Room15_{AREA}:
     .byte $D8, $10, $03
     .byte $FD
     .byte $51, $05, $89 ; Zoomer
-    .byte $37, $87, $AB ; Zeb
+    .byte $37, $87, $AB ; Enemy spawner: Zeb
     .byte $21, $06, $23 ; Rio
-    .byte $17, $07, $C5 ; Zeb
+    .byte $17, $07, $C5 ; Enemy spawner: Zeb
     .byte $FF
 
 Room16_{AREA}:
@@ -438,8 +438,8 @@ Room16_{AREA}:
     .byte $C6, $1F, $01
     .byte $D4, $00, $02
     .byte $FD
-    .byte $07, $07, $B7 ; Zeb
-    .byte $47, $87, $B9 ; Zeb
+    .byte $07, $07, $B7 ; Enemy spawner: Zeb
+    .byte $47, $87, $B9 ; Enemy spawner: Zeb
     .byte $FF
 
 Room17_{AREA}:
@@ -655,7 +655,7 @@ Room21_{AREA}:
     .byte $D4, $27, $01
     .byte $DA, $00, $02
     .byte $FD
-    .byte $07, $07, $C5 ; Zeb
+    .byte $07, $07, $C5 ; Enemy spawner: Zeb
     .byte $11, $05, $AC ; Zoomer
     .byte $21, $05, $A8 ; Zoomer
     .byte $51, $06, $7A ; Rio
@@ -697,7 +697,7 @@ Room23_{AREA}:
     .byte $01, $85, $63 ; Zoomer
     .byte $11, $05, $8B ; Zoomer
     .byte $21, $02, $6E ; Waver
-    .byte $47, $07, $DF ; Zeb
+    .byte $47, $07, $DF ; Enemy spawner: Zeb
     .byte $31, $83, $A8 ; Ripper
     .byte $FF
 
