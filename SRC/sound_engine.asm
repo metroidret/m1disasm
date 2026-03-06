@@ -139,7 +139,7 @@ GetSoundRoutineData:
     ;Music                  (10th).
     .word MusicRoutineTbl, ContinueMusic
     .byte $00
-@MusicRepeat:
+@MusicLoop:
     ;temp flag Music        (9th).
     .word MusicRoutineTbl, RunMusicInitRoutine
     .byte $00
@@ -399,7 +399,7 @@ SoundEngine:
     jsr RunSFXNoiseInitRoutine       ;($B31B)Check noise SFX flags.
     jsr RunSFXMultiInitRoutine       ;($B34B)Check multichannel SFX flags.
     jsr RunSFXTriInitRoutine         ;($B33D)Check triangle SFX flags.
-    jsr RunMusicRepeatRoutine          ;($BC36)Check music flags.
+    jsr RunMusicLoopRoutine          ;($BC36)Check music flags.
     ; fallthrough
 
 ;Clear all init flags.
@@ -417,12 +417,12 @@ SoundEngine_SilenceMusic:
     jsr InitializeSoundAddresses    ;($B404)Prepare to start playing music.
     beq ClearInitFlags ;Branch always.
 
-CheckRepeatMusic:
+EndOrLoopMusic:
     ;If music is supposed to repeat, reset music flags else branch to exit.
-    lda MusicRepeatsOnEnd
+    lda MusicLoopsOnEnd
     beq InitializeSoundAddresses
     lda MusicContFlags
-    sta MusicRepeatFlags
+    sta MusicLoopFlags
     rts
 
 CheckMusicFlags: ; $B3FC
@@ -442,10 +442,10 @@ GotoClearSpecialAddresses:
 ;Clears addresses used for repeating music, pausing music and controlling triangle length.
 ClearSpecialAddresses: ; $B40E
     lda #$00
-    sta TriCounterCntrl
+    sta MusicTriCounterCntrl
     sta SFXPaused
-    sta MusicRepeatFlags
-    sta MusicRepeatsOnEnd
+    sta MusicLoopFlags
+    sta MusicLoopsOnEnd
     rts
 
 ;Clears any SFX or music currently being played.
@@ -1404,17 +1404,17 @@ SetVolumeAndDisableSweep:
     rts
 
 ResetVolumeIndex:
-    ;If at the beginning of a new SQ1 note, set SQ1VolumeIndex = #$01.
-    lda MusicSQ1FrameCount
+    ;If at the beginning of a new SQ1 note, set MusicSQ1VolumeIndex = #$01.
+    lda MusicSQ1InstrDelay
     cmp #$01
     bne @endIf_A
-        sta SQ1VolumeIndex
+        sta MusicSQ1VolumeIndex
     @endIf_A:
-    ;If at the beginning of a new SQ2 note, set SQ2VolumeIndex = #$01.
-    lda MusicSQ2FrameCount
+    ;If at the beginning of a new SQ2 note, set MusicSQ2VolumeIndex = #$01.
+    lda MusicSQ2InstrDelay
     cmp #$01
     bne @endIf_B
-        sta SQ2VolumeIndex
+        sta MusicSQ2VolumeIndex
     @endIf_B:
     rts
 
@@ -1451,13 +1451,13 @@ LoadSQ1SQ2Channels:
 
 WriteSQCntrl0:
     ;Load SQ channel volume data. If zero, branch to exit.
-    lda SQ1VolumeEnvelopeIndex,x
+    lda MusicSQ1VolumeEnvelopeIndex,x
     beq WriteSQ2_VOL@RTS
     
     sta VolumeEnvelopeIndex
     jsr LoadMusicSQ1SQ2Periods           ;($BA08)Load SQ1 and SQ2 control information.
     ;If sound channel is not currently playing sound, branch.
-    lda SQ1VolumeData,x
+    lda MusicSQ1VolumeData,x
     cmp #$10
     beq LBA99
     
@@ -1479,7 +1479,7 @@ WriteSQCntrl0:
     lda VolumeEnvelopePtrTable+1,y
     sta VolumeEnvelopePtr+1
     ;Index to desired volume data.
-    ldy SQ1VolumeIndex,x
+    ldy MusicSQ1VolumeIndex,x
     ;Load desired volume for current channel into Cntrl0Data.
     lda (VolumeEnvelopePtr),y
     sta Cntrl0Data
@@ -1500,7 +1500,7 @@ WriteSQCntrl0:
     tay
 LBA7D:
     ;Increment Index to volume data.
-    inc SQ1VolumeIndex,x
+    inc MusicSQ1VolumeIndex,x
 LBA80:
     ;If SQ1 or SQ2(depends on loop iteration) in use, branch to exit
     lda SQ1UsedBySFX,x
@@ -1533,8 +1533,8 @@ LBA99:
     ldy #$10                        ;Disable envelope generator and set volume to 0.
     bne LBA7D                       ;Branch always.
 
-GotoCheckRepeatMusic:
-    jsr CheckRepeatMusic            ;($B3F0)Resets music flags if music repeats.
+GotoEndOrLoopMusic:
+    jsr EndOrLoopMusic            ;($B3F0)Resets music flags if music repeats.
     rts
 
 GotoLoadSQ1SQ2Channels:
@@ -1553,13 +1553,14 @@ LoadMusicContFlagsFrameData:
     beq LBAC2 ; branch always
 
 
-LBAB0:
-    ;Increment to next sound channel(1,2 or 3).
+MusicChannelBaseEmpty:
+    ; undo multiplication by 2 done to get channel base
     txa
     lsr
     tax
 
 IncrementToNextChannel:
+    ;Increment to next sound channel(1,2 or 3).
     inx
     txa
     ;If done with four sound channels, branch to load sound channel SQ1 SQ2 data.
@@ -1583,125 +1584,174 @@ LBAC2:
     sta MusicChannelBase+1
     ;If no data for this sound channel, branch to find data for next sound channel.
     lda MusicSQ1Base+1,x
-    beq LBAB0
+    beq MusicChannelBaseEmpty
     ;/2. Determine current sound channel (0,1,2 or3).
     txa
     lsr
     tax
     ;Decrement the current sound channel frame count
-    dec MusicSQ1FrameCount,x
+    dec MusicSQ1InstrDelay,x
     ;If not zero, branch to check next channel, else load the next set of sound channel data.
     bne IncrementToNextChannel
 
-LoadNextChannelIndexData:
-    ldy MusicSQ1IndexIndex,x        ;Load current channel index to music data index.
-    inc MusicSQ1IndexIndex,x        ;Increment current channel index to music data index.
+LoadNextMusicChannelInstr:
+    ;Load current channel index to music instruction.
+    ldy MusicSQ1InstrID,x
+    ;Increment current channel index to music instruction.
+    inc MusicSQ1InstrID,x
+    ; get music instruction
     lda (MusicChannelBase),y
-    beq GotoCheckRepeatMusic        ;Branch if music has reached the end.
-    tay                             ;Transfer music data index to Y (base=$BE77) .
-    cmp #$FF                        ;
-    beq RepeatMusicLoop             ;At end of loop? If yes, branch.
-    and #$C0                        ;
-    cmp #$C0                        ;At beginning of new loop? if yes, branch.
-    beq StartNewMusicLoop           ;
-    jmp LoadMusicChannel            ;($BB1C)Load music data into channel.
+    ;Branch if music has reached the end. (SongEnd)
+    beq GotoEndOrLoopMusic
+    
+    ;Transfer music instruction to Y
+    tay
+    ;At end of repeat? If yes, branch. (SongRepeat)
+    cmp #$FF
+    beq MusicChannelInstr_SongRepeat
+    
+    ;At beginning of new repeat? if yes, branch. (SongRepeatSetup)
+    and #$C0
+    cmp #$C0
+    beq MusicChannelInstr_SongRepeatSetup
+    
+    ;($BB1C)Load music data into channel.
+    jmp LoadNextMusicChannelInstr_Continued
 
-RepeatMusicLoop:
-    lda MusicSQ1RepeatCounter,x          ;If loop counter has reached zero, branch to exit.
-    beq GotoLoadNextChannelIndexData                       ;
-    dec MusicSQ1RepeatCounter,x          ;Decrement loop counter.
-    lda MusicSQ1LoopIndex,x              ;Load loop index for proper channel and store it in-->
-    sta MusicSQ1IndexIndex,x        ;music index index address.
-    bne GotoLoadNextChannelIndexData                       ;Branch unless music has reached the end.
+MusicChannelInstr_SongRepeat:
+    ;If repeat counter has reached zero, branch to exit.
+    lda MusicSQ1RepeatCounter,x
+    beq GotoLoadNextMusicChannelInstr
+    ; Decrement repeat counter.
+    dec MusicSQ1RepeatCounter,x
+    ; loop back to repeat start point
+    lda MusicSQ1RepeatID,x
+    sta MusicSQ1InstrID,x
+    bne GotoLoadNextMusicChannelInstr ;Branch always
 
-StartNewMusicLoop:
-    tya                             ;
-    and #$3F                        ;Remove last six bits of loop controller and save-->
-    sta MusicSQ1RepeatCounter,x          ;in repeat counter addresses.  # of times to loop.
-    dec MusicSQ1RepeatCounter,x          ;Decrement loop counter.
-    lda MusicSQ1IndexIndex,x        ;Store location of loop start in loop index address.
-    sta MusicSQ1LoopIndex,x              ;
-GotoLoadNextChannelIndexData:
-    jmp LoadNextChannelIndexData    ;($BADC)Load next channel index data.
+MusicChannelInstr_SongRepeatSetup:
+    ;save last six bits of music instruction as repeat counter
+    tya
+    and #$3F
+    sta MusicSQ1RepeatCounter,x
+    ;Decrement repeat counter.
+    dec MusicSQ1RepeatCounter,x
+    ;Store location of repeat start
+    lda MusicSQ1InstrID,x
+    sta MusicSQ1RepeatID,x
+GotoLoadNextMusicChannelInstr:
+    jmp LoadNextMusicChannelInstr    ;($BADC)Load next channel index data.
 
-GotoLoadNoiseChannelMusic:
-    jmp LoadNoiseChannelMusic       ;($BBDE)Load data for noise channel music.
+GotoMusicChannelInstr_SongNoteNoise:
+    jmp MusicChannelInstr_SongNoteNoise       ;($BBDE)Load data for noise channel music.
 
-GotoLoadTRI_LINEAR:
-    jmp LoadTRI_LINEAR          ;($BBB7)Load Cntrl0 byte of triangle channel.
+GotoUpdateMusicTriLinearCount:
+    jmp UpdateMusicTriLinearCount          ;($BBB7)Load Cntrl0 byte of triangle channel.
 
-LoadMusicChannel:
-    tya                             ;
-    and #$B0                        ;
-    cmp #$B0                        ;Is data byte music note length data?  If not, branch.
-    bne LBB40                       ;
-    tya                             ;
-    and #$0F                        ;Separate note length data.
-    clc                             ;
-    adc NoteLengthTblOffset         ;Find proper note lengths table for current music.
-    tay                             ;
-    lda NoteLengthsTbl,y           ;(Base is $BEF7)Load note length and store in-->
-    sta MusicSQ1FrameCountInit,x         ;frame count init address.
-    tay                             ;Y now contains note length.
-    txa                             ;
-    cmp #$02                        ;If loading Triangle channel data, branch.
-    beq GotoLoadTRI_LINEAR
-
-LoadSoundDataIndexIndex:
-    ldy MusicSQ1IndexIndex,x        ;Load current index to sound data index.
-    inc MusicSQ1IndexIndex,x        ;Increment music index index address.
-    lda (MusicChannelBase),y        ;Load index to sound channel music data.
-    tay 
-LBB40:
-    txa                             ;
-    cmp #$03                        ;If loading Noise channel data, branch.
-    beq GotoLoadNoiseChannelMusic
-    pha                             ;Push music channel number on stack(0, 1 or 2).
-    ldx ThisSoundChannel            ;
-    lda MusicNotesTbl+1,y           ;(Base=$BE78)Load A with music channel period low data.
-    beq LBB59                       ;If data is #$00, skip period high and low loading.
-        sta MusicSQ1PeriodLow,x         ;Store period low data in proper period low address.
-        lda MusicNotesTbl,y             ;(Base=$BE77)Load A with music channel period high data.
-        ora #$08                        ;Ensure minimum index length of 1.
-        sta MusicSQ1PeriodHigh,x        ;Store period high data in proper period high address.
-    LBB59:
-    tay                             ;
-    pla                             ;Pull stack and restore channel number to X.
-    tax                             ;
-    tya                             ;
-    bne PeriodInformationFound      ;If period information was present, branch.
-    NoPeriodInformation:
-        lda #$00                        ;Turn off channel volume since no period data present.
-        sta Cntrl0Data                  ;
-        txa                             ;
-        cmp #$02                        ;If loading triangle channel data, branch.
-        beq LBB73                       ;
-        lda #$10                        ;Turn off volume and disable env. generator(SQ1,SQ2).
-        sta Cntrl0Data                  ;
-        bne LBB73 ;Branch always.
-    PeriodInformationFound:
-        lda MusicSQ1DutyEnvelope,x           ;Store channel duty cycle and volume info in $EA.
-        sta Cntrl0Data                  ;
-    LBB73:
+LoadNextMusicChannelInstr_Continued:
+    ;Is data byte music note length data?  If not, branch.
+    tya
+    and #$B0
+    cmp #$B0
+    bne @noteOrRest
+    
+    ;Separate note length data.
+    tya
+    and #$0F
+    ;Find proper note lengths table for current music.
+    clc
+    adc NoteLengthTblOffset
+    tay
+    ;Load note length and store as instr length.
+    lda NoteLengthsTbl,y
+    sta MusicSQ1InstrLength,x
+    ;Y now contains note length.
+    tay
+    ;If loading Triangle channel data, branch. this acts like a call routine bc routine jumps back here.
     txa
-    dec SQ1UsedBySFX,x                  ;
-    cmp SQ1UsedBySFX,x                  ;If SQ1 or SQ2 are being used by SFX routines, branch.
-    beq SQ1SQ2UsedBySFX                 ;
-    inc SQ1UsedBySFX,x                  ;Restore not in use status of SQ1 or SQ2.
-    ldy ThisSoundChannel            ;
-    txa                             ;
-    cmp #$02                        ;If loading triangle channel data, branch.
-    beq LBB8C                       ;
-    lda SQ1VolumeEnvelopeIndex,x            ;If $062E or $062F has volume data, skip writing-->
-    bne LBB91                       ;Cntrl0Data to SQ1 or SQ2.
-LBB8C:
-    ;Write Cntrl0Data.
-    lda Cntrl0Data
-    sta SQ1_VOL,y
-LBB91:
+    cmp #$02
+    beq GotoUpdateMusicTriLinearCount
+    @ReturnFromUpdateMusicTriLinearCount:
+    ;Load current index to sound data index.
+    ldy MusicSQ1InstrID,x
+    ;Increment music index index address.
+    inc MusicSQ1InstrID,x
+    ; get music instruction (music note or rest)
+    lda (MusicChannelBase),y
+    tay 
+@noteOrRest:
+    ; music instruction here must be either SongNote or SongRest
+    ;If loading Noise channel data, branch.
+    txa
+    cmp #$03
+    beq GotoMusicChannelInstr_SongNoteNoise
+    
+    ;Push music channel number on stack(0, 1 or 2).
+    pha
+    ldx ThisSoundChannel
+    ;Load A with music channel period low data.
+    ;If data is #$00, skip period high and low loading.
+    lda MusicNotesTbl+1,y
+    beq @endIf_A
+        ;Store period low data in proper period low address.
+        sta MusicSQ1PeriodLow,x
+        ;Load A with music channel period high data.
+        lda MusicNotesTbl,y
+        ;Ensure minimum index length of 1.
+        ora #$08
+        ;Store period high data in proper period high address.
+        sta MusicSQ1PeriodHigh,x
+    @endIf_A:
+    ; here a is zero if no period (rest) and non-zero if period (note)
+    tay
+    ;Pull stack and restore channel number to X.
+    pla
+    tax
+    ; branch if instruction is a note
+    tya
+    bne @else_B
+        ; instruction is a rest
+        ;Turn off channel volume since no period data present.
+        lda #$00
+        sta Cntrl0Data
+        ;If loading triangle channel data, branch.
+        txa
+        cmp #$02
+        beq @endIf_B
+        ;Turn off volume and disable env. generator(SQ1,SQ2).
+        lda #$10
+        sta Cntrl0Data
+        bne @endIf_B ;Branch always.
+    @else_B:
+        ; instruction is a note
+        ;Store channel duty cycle and volume info in $EA.
+        lda MusicSQ1DutyEnvelope,x
+        sta Cntrl0Data
+    @endIf_B:
+    ;If SQ1, SQ2 or Triangle are being used by SFX routines, branch.
+    txa
+    dec SQ1UsedBySFX,x
+    cmp SQ1UsedBySFX,x
+    beq MusicChannelIsUsedBySFX
+    
+    ;Restore not in use status of SQ1, SQ2 or Triangle.
+    inc SQ1UsedBySFX,x
+    ldy ThisSoundChannel
+    ;If loading triangle channel data, branch.
+    txa
+    cmp #$02
+    beq @if_Cntrl0Data
+    ;If a volume envelope is specified, skip writing Cntrl0Data to SQ1 or SQ2.
+    lda MusicSQ1VolumeEnvelopeIndex,x
+    bne @endIf_Cntrl0Data
+    @if_Cntrl0Data:
+        ; no volume envelope, Write Cntrl0Data.
+        lda Cntrl0Data
+        sta SQ1_VOL,y
+    @endIf_Cntrl0Data:
     ;Store volume data index to volume data.
     lda Cntrl0Data
-    sta SQ1VolumeData,x
+    sta MusicSQ1VolumeData,x
     ;Write data to three sound channel addresses.
     lda MusicSQ1PeriodLow,y
     sta SQ1_LO,y
@@ -1709,32 +1759,41 @@ LBB91:
     sta SQ1_HI,y
     lda MusicSQ1Sweep,x
     sta SQ1_SWEEP,y
+    ; fallthrough
 
-LoadNewMusicFrameCount:
+SetMusicInstrDelay:
     ;Load new music frame count and store it in music frame count address.
-    lda MusicSQ1FrameCountInit,x
-    sta MusicSQ1FrameCount,x
+    lda MusicSQ1InstrLength,x
+    sta MusicSQ1InstrDelay,x
     ;($BAB3)Move to next sound channel.
     jmp IncrementToNextChannel
 
-SQ1SQ2UsedBySFX:
-    inc SQ1UsedBySFX,x                  ;Restore in use status of SQ1 or SQ1.
-    jmp LoadNewMusicFrameCount      ;($BBA8)Load new music frame count.
+MusicChannelIsUsedBySFX:
+    ;Restore in use status of SQ1, SQ2 or Triangle.
+    inc SQ1UsedBySFX,x
+    ;($BBA8)Load new music frame count.
+    jmp SetMusicInstrDelay
 
-LoadTRI_LINEAR:
-    lda TriCounterCntrl             ;
-    and #$0F                        ;If lower bits set, branch to play shorter note.
-    bne LBBD8                       ;
-    lda TriCounterCntrl             ;
-    and #$F0                        ;If upper bits are set, branch to play longer note.
-    bne @endIf_A                       ;
-        tya                             ;
-        jmp AddTriLength                ;($BBCD)Calculate length to play note.
+UpdateMusicTriLinearCount:
+    ;If lower bits set, branch to play shorter note.
+    lda MusicTriCounterCntrl
+    and #$0F
+    bne @exit
+    
+    ;If upper bits are set, branch to play longer note.
+    lda MusicTriCounterCntrl
+    and #$F0
+    bne @endIf_A
+        ; get note length from note length instruction
+        tya
+        jmp @setToNoteLength
     @endIf_A:
-    lda #$FF                        ;Disable length cntr(play until triangle data changes).
-    bne LBBD8                       ;Branch always.
+    ;Disable length cntr(play until triangle data changes).
+    lda #$FF
+    bne @exit ;Branch always.
 
-AddTriLength:
+@setToNoteLength:
+    ; the note length in frames is in a
     ;Add #$FF(Effectively subtracts 1 from A).
     clc
     adc #$FF
@@ -1743,14 +1802,14 @@ AddTriLength:
     asl
     ;If result is greater than #$3C, store #$3C(highest triangle linear count allowed).
     cmp #$3C
-    bcc @endIf_A
+    bcc @endIf_B
         lda #$3C
-    @endIf_A:
-LBBD8:
+    @endIf_B:
+@exit:
     sta MusicTriLinearCount
-    jmp LoadSoundDataIndexIndex     ;($BB37)Load index to sound data index.
+    jmp LoadNextMusicChannelInstr_Continued@ReturnFromUpdateMusicTriLinearCount
 
-LoadNoiseChannelMusic:
+MusicChannelInstr_SongNoteNoise:
     ;If playing any Noise SFX, branch to exit.
     lda SFXNoiseContFlags
     and #~(sfxNoise_PauseMusic | sfxNoise_SilenceMusic)
@@ -1764,7 +1823,7 @@ LoadNoiseChannelMusic:
         lda SFXData+2,y
         sta NOISE_HI
     @endIf_A:
-    jmp LoadNewMusicFrameCount      ;($BBA8)Load new music frame count.
+    jmp SetMusicInstrDelay      ;($BBA8)Load new music frame count.
 
 ;The following table is used by the InitializeMusic routine to find the index for loading
 ;addresses $062B thru $0637.  Base is $BD31.
@@ -1822,11 +1881,11 @@ MusicRoutineTbl:
 
 ;-----------------------------------[ Entry point for music routines ]--------------------------------
 
-RunMusicRepeatRoutine:
+RunMusicLoopRoutine:
     ;Load A with temp music flags, (9th SFX cycle).
-    lda MusicRepeatFlags
+    lda MusicLoopFlags
     ;Lower address byte in GetSoundRoutineData.
-    ldx #<GetSoundRoutineData@MusicRepeat.b
+    ldx #<GetSoundRoutineData@MusicLoop.b
     bne RunMusicInitRoutine@Common                       ;Branch always.
 
 RunMusicInitRoutine:
@@ -2415,18 +2474,18 @@ InitializeMusic:
     ;Resets addresses $0640 thru $0643 to #$01.-->
     ;These addresses are used for counting the number of frames music channels have been playing.
     lda #$01
-    sta MusicSQ1FrameCount
-    sta MusicSQ2FrameCount
-    sta MusicTriFrameCount
-    sta MusicNoiseFrameCount
+    sta MusicSQ1InstrDelay
+    sta MusicSQ2InstrDelay
+    sta MusicTriInstrDelay
+    sta MusicNoiseInstrDelay
     
     ;Resets addresses $0638 thru $063B to #$00.-->
-    ;These are the index to find sound channel data index.
+    ;These are the index to find sound channel data instruction.
     lda #$00
-    sta MusicSQ1IndexIndex
-    sta MusicSQ2IndexIndex
-    sta MusicTriIndexIndex
-    sta MusicNoiseIndexIndex
+    sta MusicSQ1InstrID
+    sta MusicSQ2InstrID
+    sta MusicTriInstrID
+    sta MusicNoiseInstrID
     rts
 
 ;Not used.
