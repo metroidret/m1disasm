@@ -105,5 +105,20 @@ LoadMusicContFlagsFrameData
                         apply volume envelope if is not 0
                     update sound registers to note
                 set instr delay to instr length
-
+    for sq1 and sq2
+        if there is no volume envelope
+            continue
+        if sfx just ended on either or both channels
+            restore register values for music on both channels
+        if channel is not at volume envelope end or rest
+            get current volume at channel's volume envelope
+            if current volume is $FF
+                keep previous volume
+            elif current volume is $F0
+                set volume to 0
+            else
+                use current volume
+                increment volume envelope index
+        if sfx is not playing on the channel
+            set volume register to chosen volume
 

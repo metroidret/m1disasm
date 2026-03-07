@@ -426,9 +426,13 @@ EndOrLoopMusic:
     rts
 
 CheckMusicFlags: ; $B3FC
-    lda MusicContFlags                ;Loads A with current music flags and compares it-->
-    cmp CurrentSoundFlags             ;with current SFX flags.  If both are equal,-->
-    beq GotoClearSpecialAddresses   ;just clear music counters, else clear everything.
+    ; Load A with music continue flags and compare it with music request flags.
+    lda MusicContFlags
+    cmp CurrentSoundFlags
+    ; If requested currently playing music, just clear music counters
+    beq GotoClearSpecialAddresses
+    ; else clear everything.
+    ; fallthrough
 
 InitializeSoundAddresses: ; $B404
     ;Jumps to all subroutines needed to reset all sound addresses in order to start playing music.
@@ -1419,9 +1423,11 @@ ResetVolumeIndex:
     rts
 
 LoadMusicSQ1SQ2Periods:
-    ;If a Multi channel data does not need to be loaded, branch to exit.
+    ;If a sfx on SQ1 and/or SQ2 didn't just end, branch to exit.
     lda LoadMusicSQ1SQ2PeriodsFlag
     beq @RTS
+    
+    ; a sfx on SQ1 and/or SQ2 just ended, we need to restore their sound registers to values for music
     ;Clear multi channel data write flag.
     lda #$00
     sta LoadMusicSQ1SQ2PeriodsFlag
@@ -1442,37 +1448,40 @@ LoadMusicSQ1SQ2Periods:
 @RTS:
     rts
 
-LoadSQ1SQ2Channels:
-    ldx #$00                        ;Load SQ1 channel data.
-    jsr WriteSQCntrl0               ;($BA41)Write Cntrl0 data.
-    inx                             ;Load SQ2 channel data.
-    jsr WriteSQCntrl0               ;($BA41)Write Cntrl0 data.
+UpdateAllVolumeEnvelopes:
+    ;Load SQ1 channel data.
+    ldx #$00
+    jsr UpdateVolumeEnvelope
+    ;Load SQ2 channel data.
+    inx
+    jsr UpdateVolumeEnvelope
     rts
 
-WriteSQCntrl0:
-    ;Load SQ channel volume data. If zero, branch to exit.
+UpdateVolumeEnvelope:
+    ;exit if there is no volume envelope.
     lda MusicSQ1VolumeEnvelopeIndex,x
-    beq WriteSQ2_VOL@RTS
+    beq @RTS
     
     sta VolumeEnvelopeIndex
-    jsr LoadMusicSQ1SQ2Periods           ;($BA08)Load SQ1 and SQ2 control information.
+    ;Restore SQ1 and SQ2 register values if a SFX on those channels just ended
+    jsr LoadMusicSQ1SQ2Periods
     ;If sound channel is not currently playing sound, branch.
     lda MusicSQ1VolumeData,x
     cmp #$10
-    beq LBA99
+    beq @noVolume
     
     ; Store (VolumeEnvelopeIndex-1)*2 into y
     ldy #$00
-    @loop:
+    @loop_multiply:
         ;Desired entry in VolumeEnvelopePtrTable.
         dec VolumeEnvelopeIndex
-        beq @exitLoop
+        beq @exitLoop_multiply
         ;*2(2 byte address to find volume control data).
         iny
         iny
         ;Keep decrementing until desired address is found.
-        bne @loop
-@exitLoop:
+        bne @loop_multiply
+@exitLoop_multiply:
     ;Load volume data address into VolumeEnvelopePtr
     lda VolumeEnvelopePtrTable,y
     sta VolumeEnvelopePtr
@@ -1487,10 +1496,11 @@ WriteSQCntrl0:
     ;If last entry in volume table is #$FF, restore-->
     ;volume to its original level after done reading Volume data.
     cmp #$FF
-    beq MusicBranch05
+    beq @keepPrevVolume
+    
     ;If #$F0 is last entry, turn sound off on current channel until next note.
     cmp #$F0
-    beq MusicBranch06
+    beq @killVolume
     
     ;Remove duty cycle data For current channel and-->
     ;add this frame of volume data and store results in Cntrl0Data.
@@ -1498,51 +1508,57 @@ WriteSQCntrl0:
     and #$F0
     ora Cntrl0Data
     tay
-LBA7D:
+@updateRegister_inc:
     ;Increment Index to volume data.
     inc MusicSQ1VolumeIndex,x
-LBA80:
+@updateRegister_noInc:
     ;If SQ1 or SQ2(depends on loop iteration) in use, branch to exit
     lda SQ1UsedBySFX,x
-    bne WriteSQ2_VOL@RTS
+    bne @RTS
     ;else write SQ(1 or 2)Cntrl0.
     txa
     ;If currently on SQ1, branch to write SQ1 data.
-    beq WriteSQ1_VOL
+    beq @writeSQ1_VOL
 
 ;Write SQ2_VOL data.
-WriteSQ2_VOL:
+@writeSQ2_VOL:
     sty SQ2_VOL
 @RTS:
     rts
 
 ;Write SQ1_VOL data.
-WriteSQ1_VOL:
+@writeSQ1_VOL:
     sty SQ1_VOL
     rts
 
-MusicBranch05:
-    ldy MusicSQ1DutyEnvelope,x           ;Restore original volume of sound channel.
-    bne LBA80                       ;Branch always.
+@keepPrevVolume:
+    ;Restore original volume of sound channel.
+    ldy MusicSQ1DutyEnvelope,x
+    bne @updateRegister_noInc ;Branch always.
 
-MusicBranch06:
-    ldy #$10                        ;Disable envelope generator and set volume to 0.
-    bne LBA80                       ;Branch always.
+@killVolume:
+    ;Disable envelope generator and set volume to 0.
+    ldy #$10
+    bne @updateRegister_noInc ;Branch always.
 
-LBA99:
-    ldy #$10                        ;Disable envelope generator and set volume to 0.
-    bne LBA7D                       ;Branch always.
+@noVolume:
+    ;Disable envelope generator and set volume to 0.
+    ldy #$10
+    bne @updateRegister_inc ;Branch always.
+
 
 GotoEndOrLoopMusic:
-    jsr EndOrLoopMusic            ;($B3F0)Resets music flags if music repeats.
+    ;($B3F0)Resets music flags if music repeats.
+    jsr EndOrLoopMusic
     rts
 
-GotoLoadSQ1SQ2Channels:
-    jsr LoadSQ1SQ2Channels          ;($BA37)Load SQ1 and SQ2 channel data.
+GotoUpdateAllVolumeEnvelopes:
+    ;($BA37)Load SQ1 and SQ2 channel data.
+    jsr UpdateAllVolumeEnvelopes
     rts
 
 
-LoadMusicContFlagsFrameData:
+UpdateAllMusicChannels:
     ;Reset index if at the beginning of a new note.
     jsr ResetVolumeIndex
     ;X = #$00.
@@ -1550,7 +1566,7 @@ LoadMusicContFlagsFrameData:
     tax
     ; set sound channel to first channel SQ1 (#$00, #$04, #$08 or #$0C).
     sta ThisSoundChannel
-    beq LBAC2 ; branch always
+    beq UpdateMusicChannel ; branch always
 
 
 MusicChannelBaseEmpty:
@@ -1559,20 +1575,20 @@ MusicChannelBaseEmpty:
     lsr
     tax
 
-IncrementToNextChannel:
+IncrementToNextMusicChannel:
     ;Increment to next sound channel(1,2 or 3).
     inx
     txa
     ;If done with four sound channels, branch to load sound channel SQ1 SQ2 data.
     cmp #$04
-    beq GotoLoadSQ1SQ2Channels
+    beq GotoUpdateAllVolumeEnvelopes
     ;Add 4 to the least significant byte of the current sound channel start address.
     ;This moves to next sound channel address ranges to process.
     lda ThisSoundChannel
     clc
     adc #$04
     sta ThisSoundChannel
-LBAC2:
+UpdateMusicChannel:
     ;*2(two bytes for sound channel info base address).
     txa
     asl
@@ -1592,7 +1608,7 @@ LBAC2:
     ;Decrement the current sound channel frame count
     dec MusicSQ1InstrDelay,x
     ;If not zero, branch to check next channel, else load the next set of sound channel data.
-    bne IncrementToNextChannel
+    bne IncrementToNextMusicChannel
 
 LoadNextMusicChannelInstr:
     ;Load current channel index to music instruction.
@@ -1761,18 +1777,18 @@ LoadNextMusicChannelInstr_Continued:
     sta SQ1_SWEEP,y
     ; fallthrough
 
-SetMusicInstrDelay:
+SetMusicInstrDelayToLength:
     ;Load new music frame count and store it in music frame count address.
     lda MusicSQ1InstrLength,x
     sta MusicSQ1InstrDelay,x
     ;($BAB3)Move to next sound channel.
-    jmp IncrementToNextChannel
+    jmp IncrementToNextMusicChannel
 
 MusicChannelIsUsedBySFX:
     ;Restore in use status of SQ1, SQ2 or Triangle.
     inc SQ1UsedBySFX,x
     ;($BBA8)Load new music frame count.
-    jmp SetMusicInstrDelay
+    jmp SetMusicInstrDelayToLength
 
 UpdateMusicTriLinearCount:
     ;If lower bits set, branch to play shorter note.
@@ -1823,7 +1839,7 @@ MusicChannelInstr_SongNoteNoise:
         lda SFXData+2,y
         sta NOISE_HI
     @endIf_A:
-    jmp SetMusicInstrDelay      ;($BBA8)Load new music frame count.
+    jmp SetMusicInstrDelayToLength      ;($BBA8)Load new music frame count.
 
 ;The following table is used by the InitializeMusic routine to find the index for loading
 ;addresses $062B thru $0637.  Base is $BD31.
@@ -1886,21 +1902,28 @@ RunMusicLoopRoutine:
     lda MusicLoopFlags
     ;Lower address byte in GetSoundRoutineData.
     ldx #<GetSoundRoutineData@MusicLoop.b
-    bne RunMusicInitRoutine@Common                       ;Branch always.
+    bne RunMusicInitRoutine@Common ;Branch always.
 
 RunMusicInitRoutine:
-    lda MusicInitFlags               ;Load A with Music flags, (10th SFX cycle).
-    ldx #<GetSoundRoutineData@MusicInit.b         ;Lower address byte in GetSoundRoutineData.
+    ;Load A with Music flags, (10th SFX cycle).
+    lda MusicInitFlags
+    ;Lower address byte in GetSoundRoutineData.
+    ldx #<GetSoundRoutineData@MusicInit.b
 @Common:
-    jsr GetSoundRoutine                ;($B4BD)Checks to see if SFX or music flags set.
-    jsr FindMusicInitIndex          ;($BC53)Find bit containing music init flag.
-    jmp (SoundRoutinePtr)                     ;If no flag found, Jump to next SFX cycle,-->
-                                        ;else jump to specific SFX handling subroutine.
+    ;($B4BD)Checks to see if SFX or music flags set.
+    jsr GetSoundRoutine
+    ;($BC53)Find bit containing music init flag.
+    jsr FindMusicInitIndex
+    ;If no flag found, Jump to next SFX cycle, else jump to specific SFX handling subroutine.
+    jmp (SoundRoutinePtr)
 
-ContinueMusic:                          ;11th and last SFX cycle.
+ContinueMusic:
+    ;11th and last SFX cycle.
     lda MusicContFlags
-    beq MusicInitIndexAdd8@RTS                       ;Branch to exit of no music playing.
-    jmp LoadMusicContFlagsFrameData   ;($BAA5)Load info for current frame of music data.
+    ;Branch to exit of no music playing.
+    beq MusicInitIndexAdd8@RTS
+    ;($BAA5)Load info for current frame of music data.
+    jmp UpdateAllMusicChannels
 
 ;MusicInitIndex values correspond to the following music:
 ;#$00=Ridley area music, #$01=Tourian music, #$02=Item room music, #$03=Kraid area music,
@@ -1969,7 +1992,7 @@ XYMusicInit:
 LBC8D:
     jsr SetVolumeAndDisableSweep    ;($B9E4)Set duty cycle and volume data for SQ1 and SQ2.
     jsr InitializeMusic             ;($BF19)Setup music registers.
-    jmp LoadMusicContFlagsFrameData   ;($BAA5)Load info for current frame of music data.
+    jmp UpdateAllMusicChannels   ;($BAA5)Load info for current frame of music data.
 
 Music03Init:
     lda #$34                        ;Duty cycle and volume data for SQ1 and SQ2.
@@ -2449,7 +2472,7 @@ InitializeMusic:
     ;Check to see if restarting current music.
     jsr CheckMusicFlags
     
-    ;Load current SFX flags and store MusicContFlags address.
+    ;Load music request flags and store MusicContFlags address.
     lda CurrentSoundFlags
     sta MusicContFlags
     
