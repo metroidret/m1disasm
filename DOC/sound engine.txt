@@ -1,0 +1,124 @@
+terms:
+music/song
+sfx
+sound = sfx and/or music
+
+
+
+SoundEngine
+    sync apu w frame count
+    if silence music requested
+        InitializeSoundAddresses
+        ClearInitFlags
+        return
+    if paused
+        for first #$12 frames of pause, play pause sfx on ch1
+        return
+    clear pause sfx
+    LoadSFXNoiseInitFlags
+    LoadSFXMultiInitFlags
+    LoadSFXTriInitFlags
+    LoadMusicRepeatFlags
+    ClearInitFlags
+
+
+LoadSFXNoiseInitFlags
+    if theres a SFXNoiseInitFlag
+        jump to init routine for that sfx
+    else, LoadSFXNoiseContFlags
+        if theres a SFXNoiseContFlag
+            jump to cont routine for that sfx
+        else
+            return
+
+LoadSFXMultiInitFlags
+    if theres a SFXMultiInitFlag
+        jump to init routine for that sfx/music
+    else, LoadSFXMultiContFlags
+        if theres a SFXMultiContFlag
+            jump to cont routine for that sfx/music
+        else, GotoLoadSFXSQ1InitFlags
+            if theres a SFXSQ1InitFlag
+                jump to init routine for that sfx
+            else, LoadSFXSQ1ContFlags
+                if theres a SFXSQ1ContFlag
+                    jump to cont routine for that sfx
+                else
+                    return
+
+LoadSFXTriInitFlags
+    if theres a SFXTriInitFlag
+        jump to init routine for that sfx
+    else, LoadSFXTriContFlags
+        if theres a SFXTriContFlag
+            jump to cont routine for that sfx
+        else
+            return
+
+LoadMusicLoopFlags
+    if theres a MusicLoopFlag
+        jump to init routine for that music
+    else, LoadMusicInitFlags
+        if theres a MusicInitFlag
+            jump to init routine for that music
+        else, ContinueMusic
+            if theres a MusicContFlag
+                cont routine for all music (LoadMusicContFlagsFrameData)
+            else
+                return
+
+
+LoadMusicContFlagsFrameData
+    for all 4 channels
+        if channel is not used in this music
+            continue
+        decrement channel instr delay
+        while instr delay is 0
+            get song instruction, increment instruction index
+            if song instruction is SongEnd
+                end or loop music
+                return
+            if song instruction is SongRepeat
+                if repeat counter is not 0
+                    decrement counter
+                    move back to repeat index
+                continue
+            if song instruction is SongRepeatSetup
+                init repeat counter, repeat index
+                continue
+            if song instruction is SongNoteLength
+                set note length depending on note length table
+                if channel is triangle
+                    update triangle linear count (cut note short before the next one)
+                get song instruction, increment instruction index
+            // song instruction here must be note or rest
+            if channel is noise
+                if sfx is not playing on the channel
+                    update sound registers to note
+                set instr delay to instr length
+            else
+                play note or rest depending on instr
+                if sfx is not playing on the channel
+                    if channel is triangle
+                        no volume envelope
+                    else
+                        apply volume envelope if is not 0
+                    update sound registers to note
+                set instr delay to instr length
+    for sq1 and sq2
+        if there is no volume envelope
+            continue
+        if sfx just ended on either or both channels
+            restore register values for music on both channels
+        if channel is not at volume envelope end or rest
+            get current volume at channel's volume envelope
+            if current volume is $FF
+                keep previous volume
+            elif current volume is $F0
+                set volume to 0
+            else
+                use current volume
+                increment volume envelope index
+        if sfx is not playing on the channel
+            set volume register to chosen volume
+

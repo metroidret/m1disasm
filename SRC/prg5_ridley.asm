@@ -872,14 +872,18 @@ VRAMString10_{AREA}:
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
-    .section "ROM Bank $005 - Music Engine" bank 5 slot "ROMSwitchSlot" orga $B200 force
+    .section "ROM Bank $005 - Sound Engine" bank 5 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
-    .section "ROM Bank $005 - Music Engine" bank 5 slot "ROMSwitchSlot" orga $B230 force
+    .section "ROM Bank $005 - Sound Engine" bank 5 slot "ROMSwitchSlot" orga $B230 force
 .endif
 
-.include "music_engine.asm"
+.include "sound_engine.asm"
 
-;----------------------------------------------[ RESET ]--------------------------------------------
+.ends
+
+;-----------------------------------------------[ RESET ]--------------------------------------------
+
+.section "ROM Bank $005 - Reset" bank 5 slot "ROMSwitchSlot" orga $BFB0 force
 
 ROMSWITCH_RESET:
 .include "reset.asm"

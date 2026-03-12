@@ -540,7 +540,7 @@ Room17_{AREA}:
     .byte $41, $06, $73 ; Nova
     .byte $51, $86, $7C ; Nova
     .byte $31, $00, $27 ; Geruta
-    .byte $27, $87, $B9 ; Gamet
+    .byte $27, $87, $B9 ; Enemy spawner: Gamet
     .byte $FF
 
 Room18_{AREA}:
@@ -595,8 +595,8 @@ Room1A_{AREA}:
     .byte $D0, $00, $02
     .byte $D8, $00, $02
     .byte $FD
-    .byte $27, $87, $85 ; Gamet
-    .byte $37, $87, $87 ; Gamet
+    .byte $27, $87, $85 ; Enemy spawner: Gamet
+    .byte $37, $87, $87 ; Enemy spawner: Gamet
     .byte $41, $00, $29 ; Geruta
     .byte $51, $00, $2C ; Geruta
     .byte $FF
@@ -789,7 +789,7 @@ Room23_{AREA}:
     .byte $31, $86, $88 ; Nova
     .byte $41, $06, $7C ; Nova
     .byte $51, $00, $29 ; Geruta
-    .byte $17, $87, $B3 ; Gamet
+    .byte $17, $87, $B3 ; Enemy spawner: Gamet
     .byte $FF
 
 Room24_{AREA}:
@@ -829,7 +829,7 @@ Room25_{AREA}:
     .byte $D8, $00, $02
     .byte $FD
     .byte $01, $0C, $27 ; Multiviola
-    .byte $37, $07, $9A ; Gamet
+    .byte $37, $07, $9A ; Enemy spawner: Gamet
     .byte $FF
 
 Room26_{AREA}:

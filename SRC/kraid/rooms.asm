@@ -365,8 +365,8 @@ Room0F_{AREA}:
     .byte $FD
     .byte $02, $A1 ; Blue door
     .byte $41, $84, $31 ; Skree
-    .byte $57, $87, $D5 ; Geega
-    .byte $07, $87, $D8 ; Geega
+    .byte $57, $87, $D5 ; Enemy spawner: Geega
+    .byte $07, $87, $D8 ; Enemy spawner: Geega
     .byte $FF
 
 Room10_{AREA}:
@@ -385,8 +385,8 @@ Room10_{AREA}:
     .byte $D8, $00, $02
     .byte $FD
     .byte $41, $81, $2D ; Ceiling sidehopper
-    .byte $27, $07, $D4 ; Geega
-    .byte $17, $87, $DA ; Geega
+    .byte $27, $07, $D4 ; Enemy spawner: Geega
+    .byte $17, $87, $DA ; Enemy spawner: Geega
     .byte $FF
 
 Room11_unused: ; Not used
@@ -451,7 +451,7 @@ Room13_{AREA}:
     .byte $02, $B0 ; Red door
     .byte $21, $81, $27 ; Ceiling sidehopper
     .byte $41, $85, $84 ; Zeela
-    .byte $37, $87, $DD ; Geega
+    .byte $37, $87, $DD ; Enemy spawner: Geega
     .byte $FF
 
 Room14_{AREA}:
@@ -464,9 +464,9 @@ Room14_{AREA}:
     .byte $D0, $00, $02
     .byte $D8, $00, $02
     .byte $FD
-    .byte $37, $87, $D1 ; Geega
-    .byte $47, $87, $D7 ; Geega
-    .byte $57, $87, $DC ; Geega
+    .byte $37, $87, $D1 ; Enemy spawner: Geega
+    .byte $47, $87, $D7 ; Enemy spawner: Geega
+    .byte $57, $87, $DC ; Enemy spawner: Geega
     .byte $01, $85, $95 ; Zeela
     .byte $FF
 
@@ -510,8 +510,8 @@ Room16_{AREA}:
     .byte $D6, $00, $02
     .byte $FD
     .byte $02, $A1 ; Blue door
-    .byte $07, $87, $D3 ; Geega
-    .byte $17, $07, $D8 ; Geega
+    .byte $07, $87, $D3 ; Enemy spawner: Geega
+    .byte $17, $07, $D8 ; Enemy spawner: Geega
     .byte $21, $81, $27 ; Ceiling sidehopper
     .byte $FF
 
@@ -535,7 +535,7 @@ Room17_{AREA}:
     .byte $FD
     .byte $02, $B1 ; Blue door
     .byte $41, $80, $C5 ; Sidehopper
-    .byte $57, $87, $DC ; Geega
+    .byte $57, $87, $DC ; Enemy spawner: Geega
     .byte $31, $04, $48 ; Skree
     .byte $FF
 
@@ -554,7 +554,7 @@ Room18_{AREA}:
     .byte $D5, $05, $02
     .byte $FD
     .byte $02, $A1 ; Blue door
-    .byte $37, $87, $D6 ; Geega
+    .byte $37, $87, $D6 ; Enemy spawner: Geega
     .byte $21, $84, $62 ; Skree
     .byte $11, $84, $25 ; Skree
     .byte $01, $84, $29 ; Skree
@@ -650,7 +650,7 @@ Room1B_{AREA}:
     .byte $FD
     .byte $02, $A1 ; Blue door
     .byte $02, $B0 ; Red door
-    .byte $27, $07, $D9 ; Geega
+    .byte $27, $07, $D9 ; Enemy spawner: Geega
     .byte $FF
 
 Room1C_{AREA}:
@@ -663,7 +663,7 @@ Room1C_{AREA}:
     .byte $D0, $18, $03
     .byte $D8, $18, $03
     .byte $FD
-    .byte $37, $87, $B7 ; Geega
+    .byte $37, $87, $B7 ; Enemy spawner: Geega
     .byte $01, $80, $45 ; Sidehopper
     .byte $11, $00, $3B ; Sidehopper
     .byte $21, $81, $9A ; Ceiling sidehopper
@@ -736,7 +736,7 @@ Room1F_{AREA}:
     .byte $FD
     .byte $02, $B1 ; Blue door
     .byte $01, $88, $AB ; Kraid
-    .byte $17, $07, $CD ; Geega
+    .byte $17, $07, $CD ; Enemy spawner: Geega
     .byte $FF
 
 Room20_{AREA}:
@@ -749,7 +749,7 @@ Room20_{AREA}:
     .byte $C8, $1D, $01
     .byte $CD, $05, $02
     .byte $FD
-    .byte $27, $87, $CE ; Geega
+    .byte $27, $87, $CE ; Enemy spawner: Geega
     .byte $41, $80, $BC ; Sidehopper
     .byte $FF
 

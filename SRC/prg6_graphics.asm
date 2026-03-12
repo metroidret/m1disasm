@@ -323,7 +323,7 @@ GFX_GarbageB8C0:
 .endif
 
 
-; Garbage data (Half of the music engine)
+; Garbage data (Half of the sound engine)
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $40, $60, $20, $04, $B4, $A9, $0E, $A0, $75, $20, $52, $B4, $A9, $15, $8D, $16
     .byte $06, $AD, $77, $B2, $8D, $10, $06, $A9, $00, $8D, $11, $06, $60, $20, $A9, $B4
@@ -548,7 +548,11 @@ GFX_GarbageB8C0:
     .byte $90, $04, $E5, $99, $85, $9A, $26, $97, $26, $98, $CA, $D0, $ED, $60, $01, $02
 .endif
 
-;----------------------------------------------[ RESET ]--------------------------------------------
+.ends
+
+;-----------------------------------------------[ RESET ]--------------------------------------------
+
+.section "ROM Bank $006 - Reset" bank 6 slot "ROMSwitchSlot" orga $BFB0 force
 
 ROMSWITCH_RESET:
 .include "reset.asm"
