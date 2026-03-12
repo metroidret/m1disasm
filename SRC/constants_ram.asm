@@ -1076,20 +1076,17 @@ MusicSQ2VolumeData     db   ;$066D   ;Stores duty cycle and this frame volume da
 SpareMem066E           dw   ;$066E   ;$066E is unknowingly written to by "sta MusicSQ1VolumeData,x", but never read
 
 SFXNoiseVar0           db   ;$0670   ;Stores additional info for Noise SFX
-SFXSQ1Var0             db   ;$0671   ;Stores additional info for SQ1 SFX
+SFXSQ1Var0             db   ;$0671   ;Stores additional info for SQ1 SFX or multi SFX
 SFXSQ2Var0             db   ;$0672   ;Stores additional info for SQ2 SFX
 SFXTriVar0             db   ;$0673   ;Stores additional info for triangle SFX
 
 SFXNoiseVar1           db   ;$0674   ;Stores additional info for Noise SFX
-SFXSQ1Var1             .db  ;$0675   ;Stores additional info for SQ1 SFX
-SFXSQ2PeriodLow        .db  ;$0675   ;Period low data for processing multi SFX routines
-SFXSQ1SQ2Var           db   ;$0675   ;Stores additional info for SQ1 and SQ2 SFX (for multi SFX)
+SFXSQ1Var1             db   ;$0675   ;Stores additional info for SQ1 SFX or multi SFX
 SFXSQ2Var1             db   ;$0676   ;Stores additional info for SQ2 SFX
 SFXTriVar1             db   ;$0677   ;Stores additional info for triangle SFX
 
 SFXNoiseVar2           db   ;$0678   ;Contains extra data for screw attack SFX
-SFXSQ1Var2             .db  ;$0679   ;Stores additional info for SQ1 SFX
-SFXSQ1PeriodLow        db   ;$0679   ;Period low data for processing multi SFX routines
+SFXSQ1Var2             db   ;$0679   ;Stores additional info for SQ1 SFX or multi SFX
 SFXSQ2Var2             db   ;$067A   ;Stores additional info for SQ2 SFX
 SFXTriVar2             db   ;$067B   ;Stores additional info for triangle SFX
 
