@@ -1,0 +1,14 @@
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.asm text eol=lf
+*.tbl text eol=lf
+SRC/linkfile text eol=lf
+
+*.chr binary
+*.bin binary
+
+*.py linguist-language=Python
+*.asm linguist-language=Assembly
