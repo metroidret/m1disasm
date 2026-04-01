@@ -2527,13 +2527,13 @@ LoadRowAndColumn: ; 00:91BF
     ;Temp storage of A.
     pha
     ;Store value of current character selected.
-    sta TileInfo0
+    sta VRAMStringRAMBuffer+0
     ;Replace password character tile with the one selected by the player.
     lda #$11
-    sta TileSize
+    sta VRAMStringRAMDimensions
     ldx $06
     ldy #$21
-    jsr PrepareEraseTiles           ;($9450)
+    jsr PrepareWriteVRAMStringRAM           ;($9450)
     ldx PasswordCursor
     ;Store the currently selected password character in the proper PasswordChar RAM location.
     pla
@@ -2882,41 +2882,49 @@ GameOver: ; 00:939E
 PasswordToScreen: ; 00:93C6
     jsr WaitNMIPass                 ;($C42C)Wait for NMI to end.
 
-    ldy #$05                        ;Index to find password characters(base=$699A).
-    jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    ; load password char tiles $00-$05 to ram VRAMString
+    ldy #$05
+    jsr LoadPasswordCharToVRAMStringRAM
+    ; write VRAMString to top left
     ldx #$A9                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
-    jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    jsr PrepareWriteVRAMStringRAM
 
-    ldy #$0B                        ;Index to find password characters(base=$699A).
-    jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    ; load password char tiles $06-$0B to ram VRAMString
+    ldy #$0B
+    jsr LoadPasswordCharToVRAMStringRAM
+    ; write VRAMString to top right
     ldx #$B0                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
-    jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    jsr PrepareWriteVRAMStringRAM
 
-    ldy #$11                        ;Index to find password characters(base=$699A).
-    jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    ; load password char tiles $0C-$11 to ram VRAMString
+    ldy #$11
+    jsr LoadPasswordCharToVRAMStringRAM
+    ; write VRAMString to bottom left
     ldx #$E9                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
-    jsr PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    jsr PrepareWriteVRAMStringRAM
 
-    ldy #$17                        ;Index to find password characters(base=$699A).
-    jsr LoadPasswordTiles           ;($93F9)Load tiles on screen.
+    ; load password char tiles $12-$17 to ram VRAMString
+    ldy #$17
+    jsr LoadPasswordCharToVRAMStringRAM
+    ; write VRAMString to bottom right
     ldx #$F0                        ;PPU low address byte.
     ldy #$21                        ;PPU high address byte.
-    jmp PrepareEraseTiles           ;($9450)Erase tiles on screen.
+    jmp PrepareWriteVRAMStringRAM
 
 
-LoadPasswordTiles: ; 00:93F9
+LoadPasswordCharToVRAMStringRAM: ; 00:93F9
     ;Tiles to replace are one block high and 6 blocks long.
     lda #$16
-    sta TileSize
-    ldx #$05
+    sta VRAMStringRAMDimensions
 
-    ;Transfer password characters to TileInfo addresses.
+    ;Transfer password characters to VRAMStringRAMBuffer addresses.
+    ldx #$05
     @loop:
         lda PasswordChar,y
-        sta TileInfo0,x
+        sta VRAMStringRAMBuffer,x
         dey
         dex
         bpl @loop
@@ -2970,15 +2978,15 @@ PreparePPUProcess_: ; 00:9449
     ;Write VRAM structure to PPU.
     jmp VRAMStructWrite
 
-PrepareEraseTiles: ; 00:9450
+PrepareWriteVRAMStringRAM: ; 00:9450
     ;PPU low address byte
     stx Temp00_PPURAMPtr
     ;PPU high address byte
     sty Temp00_PPURAMPtr+1
 
     ;Address of byte where tile size of tile to be erased is stored.
-    ldx #<TileSize
-    ldy #>TileSize
+    ldx #<VRAMStringRAMDimensions
+    ldy #>VRAMStringRAMDimensions
     stx Temp02_VRAMStringPtr
     sty Temp02_VRAMStringPtr+1
     jmp WriteVRAMString              ;($C328)Erase the selected tiles.

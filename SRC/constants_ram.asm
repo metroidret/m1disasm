@@ -401,7 +401,7 @@ Temp11_RoomRAMIndex    = $11
 Temp02_MetatileCenterY = $02
 Temp03_MetatileCenterX = $03
 
-; EnemyReactToSamusWeapon/ExplodeEnemy/LDCF5/LDCFC
+; EnemyReactToSamusWeaponProjectile/ExplodeEnemy/LDCF5/LDCFC
 Temp00_L968BEntry      = $00
 Temp0A_EnSpecialAttribs = $0A
 
@@ -503,7 +503,7 @@ ScrollDir              db   ;$49     ;0=Up, 1=Down, 2=Left, 3=Right.
 TempScrollDir          db   ;$4A     ;Stores ScrollDir when room is initially loaded.
 
 PageIndex              db   ;$4B     ;Index to object data.
-                                       ;#$D0, #$E0, #$F0 = weapon indices(including bombs).
+                                       ;#$D0, #$E0, #$F0 = weapon projectile indices(including bombs).
 
 ItemIndex              db   ;$4C     ;#$00 or #$08. Added to PowerUpType addresses to determine if-->
                                        ;the first or second item slot is being checked.
@@ -569,7 +569,7 @@ HealthChange           dw   ;$6E     ;Amount to add/subtract from Health.
 ; HealthChange+1               $6F
 
 SamusInvincibleDelay   db   ;$70     ;Samus's invincibility frames delay counter.
-UpdatingWeapon         db   ;$71     ;#$01=Weapon update in process. #$00=not in process.
+UpdatingWeaponProjectile db ;$71     ;#$01=Weapon projectile update in process. #$00=not in process.
 SamusKnockbackDir      db   ;$72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
                                        ; i think there may something more to this variable, but im not sure what
 SamusKnockbackIsBomb   db   ;$73     ;bit 7: 0=samus was hurt, 1=samus was bombed
@@ -809,7 +809,7 @@ SpriteRAM              instanceof OAMSprite $40 startfrom 0
 ; slot 4 is for drawing power-ups and skree projectiles
 ; slot 6 to 7 is for tourian bridge
 ; slot 8 to B is for doors
-; slot D to F is for samus weapons
+; slot D to F is for samus weapon projectiles
 
 .enum $0300 export
 
@@ -824,7 +824,7 @@ Statue               instanceof Object
 Object0370           instanceof Object
 Doors                instanceof Object 4 startfrom 0
 Object03C0           instanceof Object
-Weapons              instanceof Object 3 startfrom 0
+WeaponProjectiles    instanceof Object 3 startfrom 0
 
 .ende
 
@@ -892,8 +892,8 @@ DoorType = Objects.0.data07          ;#$00=red door, #$01=blue door, #$02=10-mis
 DoorHitPoints = Objects.0.data0F     ;used as re-close delay for blue doors
 
 
-;Samus weapons RAM
-WeaponDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
+;Samus weapon projectiles RAM
+WeaponProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 
@@ -940,9 +940,9 @@ TileBlasts             instanceof TileBlast $D startfrom 0
 
 ;Samus weapons extra RAM for wave beam
 ; 3 slots of 16 bytes each ($05D0-$05FF)
-WeaponWaveInstrID  = $0500 export  ; instruction id for movement string of wave bullet trajectory
-WeaponWaveInstrTimer = $0501 export  ; count frames up to current instruction duration, then increment instr id
-WeaponWaveDir      = $0502 export  ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
+WeaponWaveInstrID      = $0500 export  ; instruction id for movement string of wave bullet trajectory
+WeaponWaveInstrTimer   = $0501 export  ; count frames up to current instruction duration, then increment instr id
+WeaponWaveDir          = $0502 export  ; bullet direction, used to get movement string. #$00=right, #$01=left, #$02=up
 
 ;---------------------------------[ Sound engine memory addresses ]----------------------------------
 
@@ -1132,13 +1132,8 @@ PowerUps               instanceof PowerUp 2 startfrom 0
 ; 5 Zebetite slots of 8 bytes each ($0758-$077F)
 Zebetites              instanceof Zebetite 5 startfrom 0
 
-TileSize               db   ;$0780   ;4 MSBs=Y size of tile to erase. 4 LSBs=X size of tile to erase.
-TileInfo0              db   ;$0781   ;
-TileInfo1              db   ;$0782   ;
-TileInfo2              db   ;$0783   ;Tile patterns to replace blasted tiles.
-TileInfo3              db   ;$0784   ;
-TileInfo4              db   ;$0785   ;
-TileInfo5              db   ;$0786   ;
+VRAMStringRAMDimensions db  ;$0780   ;4 MSBs=height in tiles. 4 LSBs=width in tiles.
+VRAMStringRAMBuffer    ds 6 ;$0781   ;Tile id to be written to the PPU.
 
 SpareMem0787           ds $19 ;$0787
 
