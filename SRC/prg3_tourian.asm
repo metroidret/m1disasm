@@ -1698,8 +1698,8 @@ MotherBrainDeathStringOffsets:
 ;-------------------------------------------------------------------------------
 ;$04-$05 is pointer to projectile's location in the room vram buffers
 UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
-    ; exit if not updating a weapon projectile
-    lda UpdatingWeaponProjectile
+    ; exit if not updating a samus projectile
+    lda UpdatingSamusProjectile
     beq @exit
     ; exit if not a missile
     ldx PageIndex
@@ -1802,11 +1802,11 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
 UpdateBullet_CollisionWithMotherBrain:
     ; y = tile id
     tay
-    ; exit if we are not updating samus weapon projectile
-    lda UpdatingWeaponProjectile
+    ; exit if we are not updating samus projectile
+    lda UpdatingSamusProjectile
     beq @exit
     ldx PageIndex
-    ; exit if weapon projectile is not a missile
+    ; exit if samus projectile is not a missile
     lda Objects.0.status,x
     cmp #wa_Missile
     bne @exit

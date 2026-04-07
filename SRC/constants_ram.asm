@@ -401,7 +401,7 @@ Temp11_RoomRAMIndex    = $11
 Temp02_MetatileCenterY = $02
 Temp03_MetatileCenterX = $03
 
-; EnemyReactToSamusWeaponProjectile/ExplodeEnemy/LDCF5/LDCFC
+; EnemyReactToSamusProjectile/ExplodeEnemy/LDCF5/LDCFC
 Temp00_L968BEntry      = $00
 Temp0A_EnSpecialAttribs = $0A
 
@@ -569,7 +569,7 @@ HealthChange           dw   ;$6E     ;Amount to add/subtract from Health.
 ; HealthChange+1               $6F
 
 SamusInvincibleDelay   db   ;$70     ;Samus's invincibility frames delay counter.
-UpdatingWeaponProjectile db ;$71     ;#$01=Weapon projectile update in process. #$00=not in process.
+UpdatingSamusProjectile db  ;$71     ;#$01=Weapon projectile update in process. #$00=not in process.
 SamusKnockbackDir      db   ;$72     ;#$00=Push Samus left when hit, #$01=Push right, #$FF=No push.
                                        ; i think there may something more to this variable, but im not sure what
 SamusKnockbackIsBomb   db   ;$73     ;bit 7: 0=samus was hurt, 1=samus was bombed
@@ -824,7 +824,7 @@ Statue               instanceof Object
 Object0370           instanceof Object
 Doors                instanceof Object 4 startfrom 0
 Object03C0           instanceof Object
-WeaponProjectiles    instanceof Object 3 startfrom 0
+SamusProjectiles     instanceof Object 3 startfrom 0
 
 .ende
 
@@ -893,7 +893,7 @@ DoorHitPoints = Objects.0.data0F     ;used as re-close delay for blue doors
 
 
 ;Samus weapon projectiles RAM
-WeaponProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
+SamusProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;-------------------------------------[ Title routine specific ]-------------------------------------
 
