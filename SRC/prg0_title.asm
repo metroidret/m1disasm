@@ -687,7 +687,7 @@ VRAMStruct_DrawIntroBackground: ; 00:82F4
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         VRAMStructData $2227, \
             " PUSH START BUTTON   "
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         VRAMStructData $2227, \
             "    PRESS START      "
     .endif
@@ -1408,7 +1408,7 @@ FlashIntroScreen: ; 00:8AA7
     rts
 
 @ScreenFlashPalTbl: ; 00:8ABD
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
     .byte _id_Palette10+1
     .byte _id_Palette00+1
     .byte _id_Palette10+1
@@ -2335,7 +2335,7 @@ StartContinueScreen1B:
     jsr PreparePPUProcess_          ;($9449)Clears screen and writes "START CONTINUE".
     ldy #$00                        ;
     sty StartContinue               ;Set selection sprite at START.
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
         lda #_id_Palette0C+1.b
     .elif BUILDTARGET == "NES_CNSUS"
         NES_CNSUS_IllegalOpcode42
@@ -2809,7 +2809,7 @@ DisplayPassword: ; 00:9359
     sta PaletteDataPending
     ;Next routine is WaitForSTART.
     inc TitleRoutine
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
         jmp ScreenOn                    ;($C447)Turn screen on.
     .elif BUILDTARGET == "NES_CNSUS"
         NES_CNSUS_IllegalOpcode42
@@ -2821,7 +2821,7 @@ DisplayPassword: ; 00:9359
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         VRAMStructData $214B, \
             "PASS WORD"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         VRAMStructData $214B, \
             " PASSWORD"
     .endif
@@ -2839,7 +2839,7 @@ DisplayPassword: ; 00:9359
 WaitForSTART: ; 00:9394
     ;Waits for START to be ressed proceed past the GAME OVER screen.
     lda Joy1Change
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
         and #BUTTON_START
     .elif BUILDTARGET == "NES_CNSUS"
         ;START has no effect
@@ -3180,7 +3180,7 @@ Hex16ToDec: ; 00:94DA
     rts
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -3561,7 +3561,7 @@ L99E3:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         VRAMStructData $2088, \
             "PASS WORD PLEASE"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         VRAMStructData $20A8, \
             "PASSWORD PLEASE "
     .endif
@@ -3758,7 +3758,7 @@ LoadEndGFX: ; 00:9AD5
     ;Initiate end game music.
     lda #sfxMulti_EndMusic
     sta SFXMultiInitFlags
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Loads Timer3 with a delay of 960 frames (16 seconds).
         lda #$60
     .elif BUILDTARGET == "NES_PAL"
@@ -3794,7 +3794,7 @@ ShowEndSamus: ; 00:9B1C
         rts
 
     L9B26:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;After 160 frames have passed (2.6 seconds), write end message.
         cmp #$50
     .elif BUILDTARGET == "NES_PAL"
@@ -3883,7 +3883,7 @@ SamusWave: ; 00:9B93
     ;If 160 frame timer from previous routine has not expired, branch(waves for 2.6 seconds).
     lda Timer3
     bne L9BA2
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         ;Load Timer3 with 160 frame delay (2.6 seconds).
         lda #$10
     .elif BUILDTARGET == "NES_PAL"
@@ -3952,7 +3952,7 @@ EndFadeOut: ; 00:9BCD
     lda PaletteDataPending
     cmp #_id_EndGamePalette0B+1.b
     bne L9BEF
-        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
             ;After fadeout complete, load Timer3 with 160 frame delay(2.6 seconds) and increment RoomPtr.
             lda #$10
         .elif BUILDTARGET == "NES_PAL"
@@ -5174,9 +5174,9 @@ CopyMap: ; 00:A93E
     rts
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .incbin "norfair/bg_chr_2.chr" skip $11
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
         .incbin "common_chr/bg_boss_areas.chr" read $240
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/bg_boss_areas_cnsus.chr" read $240
@@ -5229,14 +5229,14 @@ CopyMap: ; 00:A93E
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/end.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/end.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
     .incbin "tourian/bg_chr.chr" skip $263 read $FD
 .elif BUILDTARGET == "NES_CNSUS"
     .incbin "tourian/bg_chr.chr" skip $263 read $D
@@ -5263,14 +5263,14 @@ CopyMap: ; 00:A93E
     .byte $17
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .include "songs/ntsc/intro.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/intro.asm"
 .endif
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
     .incbin "tourian/bg_chr.chr" skip $495 read $CB
 .elif BUILDTARGET == "NES_CNSUS"
     .incbin "tourian/bg_chr_cnsus.chr" skip $495 read $CB
@@ -5297,7 +5297,7 @@ CopyMap: ; 00:A93E
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .section "ROM Bank $000 - Sound Engine" bank 0 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $000 - Sound Engine" bank 0 slot "ROMSwitchSlot" orga $B230 force

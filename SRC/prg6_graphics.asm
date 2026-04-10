@@ -26,10 +26,10 @@
 
 ; These are loaded together.
 GFX_Samus:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G"
         .incbin "common_chr/samus.chr" ; 8000 - Samus and gear tile patterns.
         .incbin "common_chr/items.chr" ; Item Graphics (plus bomb, the N in "EN", and another dot thingy)
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $9A0, $00
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/samus_cnsus.chr" ; 8000 - Samus and gear tile patterns.
@@ -37,9 +37,9 @@ GFX_Samus:
     .endif
 
 GFX_IntroSprites:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/intro_sprites.chr" ; 89A0 - Intro and end tile patterns.
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $100, $00
     .endif
 
@@ -71,19 +71,19 @@ GFX_Garbage8AA0:
 GFX_Title:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/title.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "common_chr/title_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $500, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "common_chr/title_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/title_cnsus.chr"
     .endif
 
 ; 90E0 - Suitless Samus (in-game)
 GFX_SamusSuitless:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G"
         .incbin "common_chr/samus_suitless.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $7B0, $00
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/samus_suitless_cnsus.chr"
@@ -93,10 +93,10 @@ GFX_SamusSuitless:
 GFX_ExclamationPoint:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/exclamation_point.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_CNSUS"
-        .incbin "common_chr/exclamation_point_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $10, $00
+    .elif BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_CNSUS"
+        .incbin "common_chr/exclamation_point_mzmus.chr"
     .endif
 
 ; Garbage data (leftovers from Ridley's bank)
@@ -118,9 +118,9 @@ GFX_Garbage98A0:
 
 ;Blank tile patterns.
 GFX_Solid:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/solid.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $40, $00
     .endif
 
@@ -193,10 +193,10 @@ GFX_Garbage99C0:
 GFX_BrinBG1:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "brinstar/bg_chr_1.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "brinstar/bg_chr_1_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $150, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "brinstar/bg_chr_1_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "brinstar/bg_chr_1_cnsus.chr"
     .endif
@@ -205,10 +205,10 @@ GFX_BrinBG1:
 GFX_CREBG2:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_CRE_2.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "common_chr/bg_CRE_2_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $800, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "common_chr/bg_CRE_2_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/bg_CRE_2_cnsus.chr"
     .endif
@@ -217,10 +217,10 @@ GFX_CREBG2:
 GFX_NorfBG1:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "norfair/bg_chr_1.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "norfair/bg_chr_1_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $260, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "norfair/bg_chr_1_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "norfair/bg_chr_1_cnsus.chr"
     .endif
@@ -229,10 +229,10 @@ GFX_NorfBG1:
 GFX_NorfBG2:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "norfair/bg_chr_2.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "norfair/bg_chr_2_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $70, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "norfair/bg_chr_2_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "norfair/bg_chr_2_cnsus.chr"
     .endif
@@ -241,10 +241,10 @@ GFX_NorfBG2:
 GFX_BossBG:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_boss_areas.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "common_chr/bg_boss_areas_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $2E0, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "common_chr/bg_boss_areas_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/bg_boss_areas_cnsus.chr"
     .endif
@@ -253,19 +253,19 @@ GFX_BossBG:
 GFX_TourBG:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "tourian/bg_chr.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "tourian/bg_chr_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $600, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "tourian/bg_chr_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "tourian/bg_chr_cnsus.chr"
     .endif
 
 ; B2A0 - Zebetite BG CHR
 GFX_Zebetite:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G"
         .incbin "tourian/zebetite_chr.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $90, $00
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "tourian/zebetite_chr_cnsus.chr"
@@ -275,10 +275,10 @@ GFX_Zebetite:
 GFX_KraiBG2:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "kraid/bg_chr_2.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "kraid/bg_chr_2_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $C0, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "kraid/bg_chr_2_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "kraid/bg_chr_2_cnsus.chr"
     .endif
@@ -287,17 +287,17 @@ GFX_KraiBG2:
 GFX_RidlBG:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "ridley/bg_chr.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "ridley/bg_chr_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $C0, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "ridley/bg_chr_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "ridley/bg_chr_cnsus.chr"
     .endif
 
 ;Not used.
 GFX_GarbageB4B0:
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $65, $06, $DD, $60, $06, $D0, $05, $A9, $00, $9D, $65, $06, $60, $8D, $4D, $06
 .elif BUILDTARGET == "NES_PAL"
     .byte $06, $A9, $00, $9D, $65, $06, $9D, $70, $06, $9D, $74, $06, $9D, $78, $06, $8D
@@ -307,16 +307,16 @@ GFX_GarbageB4B0:
 GFX_Font:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/font.chr"
-    .elif BUILDTARGET == "NES_MZMUS"
-        .incbin "common_chr/font_mzmus.chr"
-    .elif BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
         .ds $400, $00
+    .elif BUILDTARGET == "NES_MZMUS_G"
+        .incbin "common_chr/font_mzmus.chr"
     .elif BUILDTARGET == "NES_CNSUS"
         .incbin "common_chr/font_cnsus.chr"
     .endif
 
 GFX_GarbageB8C0:
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
     .incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
 .elif BUILDTARGET == "NES_CNSUS"
     .incbin "common_chr/exclamation_point_mzmus.chr"
@@ -324,7 +324,7 @@ GFX_GarbageB8C0:
 
 
 ; Garbage data (Half of the sound engine)
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
     .byte $40, $60, $20, $04, $B4, $A9, $0E, $A0, $75, $20, $52, $B4, $A9, $15, $8D, $16
     .byte $06, $AD, $77, $B2, $8D, $10, $06, $A9, $00, $8D, $11, $06, $60, $20, $A9, $B4
     .byte $D0, $1A, $A9, $20, $8D, $12, $06, $A9, $00, $8D, $13, $06, $20, $8C, $B9, $EE
