@@ -12,7 +12,7 @@ SkreeAIRoutine_{AREA}:
     beq SkreeExit_Explode_{AREA}
     
     ; branch if skree has not reached the ground
-    lda EnMovementInstrIndex,x
+    lda Ens.0.movementInstrIndex,x
     cmp #$0F
     bcc SkreeExit_Active_{AREA}
     ; branch if skree was on the ground for more than 1 frame
@@ -40,9 +40,9 @@ SkreeBlowUpIntoProjectiles_{AREA}:
         lda #$0A
         sta SkreeProjectiles.0.dieDelay,y
         ; set projectile position to skree position
-        lda EnY,x
+        lda Ens.0.y,x
         sta SkreeProjectiles.0.y,y
-        lda EnX,x
+        lda Ens.0.x,x
         sta SkreeProjectiles.0.x,y
         lda EnsExtra.0.hi,x
         sta SkreeProjectiles.0.hi,y
@@ -57,15 +57,15 @@ SkreeExit_Active_{AREA}:
     ; skree is active
     ; change animation frame every 2 frames
     lda #$02
-    jmp CommonJump_00
+    jmp CommonJump_UpdateEnemyCommon
 
 SkreeExit_Resting_{AREA}:
     ; skree is resting (hanging on the ceiling)
     ; change animation frame every 8 frames
     lda #$08
-    jmp CommonJump_01
+    jmp CommonJump_UpdateEnemyCommon_noMove
 
 SkreeExit_Explode_{AREA}:
     ; skree is exploding
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 

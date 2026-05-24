@@ -12,7 +12,7 @@ CommonEnemyStub2_{AREA}:
     sta $00
     lda #$08
     sta $01
-    jmp CommonEnemyJump_00_01_02_{AREA}
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 SidehopperCeilingAIRoutine_{AREA}:
     lda #$0F

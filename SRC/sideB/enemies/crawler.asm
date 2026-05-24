@@ -17,19 +17,19 @@ CrawlerAIRoutine_{AREA}:
     
     ; check crawler orientation
     ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
-    lda EnData0A,x
+    lda Ens.0.data0A,x
     and #$03
     cmp #$01
     bne @move
     
-    ldy EnY,x
+    ldy Ens.0.y,x
     cpy #$E4
     bne @move
     
     .byte $20, $B5, $BA
     ; set orientation to moving up the wall
     lda #$03
-    sta EnData0A,x
+    sta Ens.0.data0A,x
     bne @afterLavaTurnAround ; branch always
 @move:
     .byte $20, $DA, $BA
@@ -41,7 +41,7 @@ CrawlerAIRoutine_{AREA}:
     lda #$03
     .byte $20, $0C, $6C
 CrawlerExit_Explode_{AREA}:
-    jmp CommonJump_02
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 CrawlerReorientSprite_{AREA}:
     .byte $BD, $05, $04
@@ -64,17 +64,17 @@ CrawlerInsideCornerCheck_{AREA}:
     lda $00
     bne CrawlerFlipDirection_{AREA}
         ; at inside corner, stick to wall
-        ldy EnData0A,x
+        ldy Ens.0.data0A,x
         dey
         tya
         and #$03
-        sta EnData0A,x
+        sta Ens.0.data0A,x
         jmp CrawlerReorientSprite_{AREA}
     
     CrawlerFlipDirection_{AREA}:
-        lda EnData05,x
+        lda Ens.0.data05,x
         eor #$01
-        sta EnData05,x
+        sta Ens.0.data05,x
     RTS_Crawler06_{AREA}:
         rts
 

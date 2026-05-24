@@ -1,68 +1,97 @@
 ; Pipe Bug AI Handler
 
 PipeBugAIRoutine_{AREA}:
-    .byte $BD, $60, $B4
-    .byte $C9, $02
-    .byte $D0, $38
-    
-    .byte $BD, $03, $04
-    .byte $D0, $33
-    
-    .byte $BD, $6A, $B4
-    .byte $D0, $12
-    
-    .byte $AD, $0D, $03
-    .byte $38
-    .byte $FD, $00, $04
-    .byte $C9, $40
-    .byte $B0, $23
-    
-    .byte $A9, $7F
-    .byte $9D, $6A, $B4
-    .byte $D0, $1C
+    ; branch if pipe bug is not active
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Active
+    bne @applySpeed
+
+    ; if pipe bug is going forward, apply speed
+    lda Ens.0.speedX,x
+    bne @applySpeed
+
+    ; if EnsExtra.0.accelY is in effect, we need to check if y speed became positive
+    lda EnsExtra.0.accelY,x
+    bne @checkIfGoForwards
+
+    ; branch if pipe bug is more than #$40 pixels (4 blocks) below Samus
+    ; while this is true, pipe bug will continue to rise at a fixed y speed
+    lda Samus.y
+    sec
+    sbc Ens.0.y,x
+    cmp #$40
+    bcs @applySpeed
+
+    ; set EnsExtra.0.accelY to #$7F
+    ; eventually, this gravity will make y speed positive
+    lda #$7F
+    sta EnsExtra.0.accelY,x
+    bne @applySpeed ; branch always
 
 @checkIfGoForwards:
-    .byte $BD, $02, $04
-    .byte $30, $17
-    .byte $A9, $00
-    .byte $9D, $02, $04
-    .byte $9D, $06, $04
-    .byte $9D, $6A, $B4
-    .byte $BD, $05, $04
-    .byte $29, $01
-    .byte $A8
-    .byte $B9, $98, $BB
-    .byte $9D, $03, $04
+    ; branch if y speed is negative (pipe bug is still rising)
+    lda Ens.0.speedY,x
+    bmi @applySpeed
+        ; y speed is not negative, we must stop moving vertically and go forwards
+        ; set y speed and acceleration to 0
+        lda #$00
+        sta Ens.0.speedY,x
+        sta Ens.0.speedSubPixelY,x
+        sta EnsExtra.0.accelY,x
+        ; set pipe bug x speed depending on its facing direction
+        lda Ens.0.data05,x
+        and #$01
+        tay
+        lda @speedXTable,y
+        sta Ens.0.speedX,x
 @applySpeed:
-    .byte $BD, $05, $04
-    .byte $0A
-    .byte $30, $1E
+    ; exit if bit 7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
+    asl
+    bmi @exit
     
-    .byte $BD, $60, $B4
-    .byte $C9, $02
-    .byte $D0, $17
+    ; exit if pipe bug is not active
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Active
+    bne @exit
     
-    .byte $20, $36, $6C
-    .byte $48
-    .byte $20, $39, $6C
-    .byte $85, $05
-    .byte $68
-    .byte $85, $04
-    
-    .byte $20, $A0, $BC
-    .byte $20, $27, $6C
-    .byte $90, $08
-    .byte $20, $8E, $BC
+    ; get y speed
+    jsr CommonJump_EnemyGetDeltaY_UsingAcceleration
+    ; push y speed to stack
+    pha
+    ; get x speed
+    jsr CommonJump_EnemyGetDeltaX_UsingAcceleration
+    ; set x speed
+    sta Temp05_SpeedX
+    ; set y speed
+    pla
+    sta Temp04_SpeedY
 
+    ; apply speed
+    jsr StoreEnemyPositionToTemp__{AREA}
+    jsr CommonJump_ApplySpeedToPosition
+    ; remove bug if it is out of bounds
+    bcc @remove
+    jsr LoadEnemyPositionFromTemp__{AREA}
+    ; fallthrough
+
+;Exit 1
 @exit:
-    .byte $A9, $03
-    .byte $4C, $03, $6C
+    ; change animation frame every 3 frames
+    lda #$03
+    jmp CommonJump_UpdateEnemyCommon_noMove ; Common Enemy Handler
 
-@delete:
-    .byte $A9, $00
-    .byte $9D, $60, $B4
-    .byte $60
+;Exit 2
+@remove:
+    ; Set enemy status to 0
+    lda #enemyStatus_NoEnemy
+    sta EnsExtra.0.status,x
+    rts
 
 @speedXTable:
-    .byte $04, $FC
+.if AREA == "STG1PGM" ; Brinstar
+    .byte $04, -$04
+.else ; Norfair, Kraid, Ridley
+    .byte $08, -$08
+.endif
 

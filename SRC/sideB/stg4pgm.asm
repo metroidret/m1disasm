@@ -381,7 +381,7 @@ RemoveEnemy__{AREA}:
     sta EnsExtra.0.status,x
     rts
 
-CommonEnemyJump_00_01_02_{AREA}:
+UpdateEnemyCommon_Decide_{AREA}:
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -389,53 +389,140 @@ CommonEnemyJump_00_01_02_{AREA}:
     beq @explode
         ; enemy default
         lda $00
-        jmp CommonJump_00
+        jmp CommonJump_UpdateEnemyCommon
     @resting:
         ; enemy resting
         lda $01
-        jmp CommonJump_01
+        jmp CommonJump_UpdateEnemyCommon_noMove
     @explode:
     L984D:
         ; enemy explode
-        jmp CommonJump_02
+        jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 
 
 ; enemy ai routines
-    .byte $BD, $60, $B4, $C9, $02, $D0, $38, $BD
-    .byte $03, $04, $D0, $33, $BD, $6A, $B4, $D0, $12, $AD, $0D, $03, $38, $FD, $00, $04
-    .byte $C9, $40, $B0, $23, $A9, $7F, $9D, $6A, $B4, $D0, $1C, $BD, $02, $04, $30, $17
-    .byte $A9, $00, $9D, $02, $04, $9D, $06, $04, $9D, $6A, $B4, $BD, $05, $04, $29, $01
-    .byte $A8, $B9, $B6, $B8, $9D, $03, $04, $BD, $05, $04, $0A, $30, $1E, $BD, $60, $B4
-    .byte $C9, $02, $D0, $17, $20, $36, $6C, $48, $20, $39, $6C, $85, $05, $68, $85, $04
-    .byte $20, $3A, $BA, $20, $27, $6C, $90, $08, $20, $4A, $BA, $A9, $03, $4C, $03, $6C
-    .byte $A9, $00, $9D, $60, $B4, $60, $08, $F8, $BD, $60, $B4, $C9, $03, $F0, $03, $20
-    .byte $1E, $6C, $A9, $03, $85, $00, $85, $01, $4C, $31, $B8, $A9, $03, $85, $00, $A9
-    .byte $08, $85, $01, $BD, $60, $B4, $C9, $01, $D0, $0C, $BD, $05, $04, $29, $10, $F0
-    .byte $05, $A9, $01, $20, $4C, $B9, $20, $EC, $B8, $4C, $31, $B8, $BD, $60, $B4, $C9
-    .byte $02, $D0, $0C, $A9, $25, $BC, $02, $04, $10, $02, $A9, $22, $9D, $65, $B4, $60
-    .byte $A5, $7C, $C9, $01, $F0, $10, $C9, $03, $F0, $3F, $BD, $60, $B4, $C9, $01, $D0
-    .byte $0A, $A9, $00, $20, $4C, $B9, $A9, $08, $4C, $03, $6C, $A9, $80, $9D, $6A, $B4
-    .byte $BD, $02, $04, $30, $1C, $BD, $05, $04, $29, $10, $F0, $15, $BD, $00, $04, $38
-    .byte $ED, $0D, $03, $10, $03, $20, $BE, $B5, $C9, $10, $B0, $05, $A9, $00, $9D, $6A
-    .byte $B4, $20, $EC, $B8, $A9, $03, $4C, $00, $6C, $4C, $06, $6C, $9D, $6E, $B4, $BD
-    .byte $0B, $04, $48, $20, $2A, $6C, $68, $9D, $0B, $04, $60, $20, $1B, $6C, $A9, $06
-    .byte $85, $00, $4C, $31, $B8, $20, $1B, $6C, $A9, $06, $85, $00, $4C, $31, $B8, $20
-    .byte $1B, $6C, $A9, $06, $85, $00, $A5, $7C, $C9, $02, $D0, $0F, $DD, $60, $B4, $D0
-    .byte $0A, $20, $09, $6C, $29, $03, $D0, $03, $4C, $45, $B8, $4C, $31, $B8, $20, $09
-    .byte $6C, $29, $03, $F0, $34, $A5, $7C, $C9, $01, $F0, $36, $C9, $03, $F0, $2F, $BD
-    .byte $60, $B4, $C9, $03, $F0, $23, $BD, $0A, $04, $29, $03, $C9, $01, $D0, $11, $BC
-    .byte $00, $04, $C0, $EB, $D0, $0A, $20, $02, $BA, $A9, $03, $9D, $0A, $04, $D0, $06
-    .byte $20, $27, $BA, $20, $ED, $B9, $20, $0B, $BA, $A9, $03, $20, $0C, $6C, $4C, $06
-    .byte $6C, $4C, $03, $6C, $BD, $05, $04, $4A, $BD, $0A, $04, $29, $03, $2A, $A8, $B9
-    .byte $E5, $B9, $4C, $0F, $6C, $69, $69, $72, $6C, $6F, $6F, $6C, $72, $A6, $45, $B0
-    .byte $19, $A5, $00, $D0, $0D, $BC, $0A, $04, $88, $98, $29, $03, $9D, $0A, $04, $4C
-    .byte $D4, $B9, $BD, $05, $04, $49, $01, $9D, $05, $04, $60, $20, $1F, $BA, $20, $27
-    .byte $BA, $A6, $45, $90, $09, $20, $1F, $BA, $9D, $0A, $04, $20, $D4, $B9, $60, $BC
-    .byte $0A, $04, $C8, $98, $29, $03, $60, $BC, $05, $04, $84, $00, $46, $00, $2A, $0A
-    .byte $A8, $B9, $49, $6C, $48, $B9, $48, $6C, $48, $60, $BD, $00, $04, $85, $08, $BD
-    .byte $01, $04, $85, $09, $BD, $67, $B4, $85, $0B, $60, $A5, $0B, $29, $01, $9D, $67
-    .byte $B4, $A5, $08, $9D, $00, $04, $A5, $09, $9D, $01, $04, $60, $A5, $7C, $C9, $01
+.include "sideB/enemies/pipe_bug.asm"
+
+
+
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $03
+    .byte $20, $1E, $6C
+    .byte $A9, $03
+    .byte $85, $00
+    .byte $85, $01
+    .byte $4C, $31, $B8
+
+
+
+    .byte $A9, $03, $85, $00, $A9
+    .byte $08, $85, $01
+    .byte $BD, $60, $B4, $C9, $01, $D0, $0C
+    .byte $BD, $05, $04, $29, $10, $F0
+    .byte $05
+    .byte $A9, $01, $20, $4C, $B9
+    .byte $20, $EC, $B8, $4C, $31, $B8
+    .byte $BD, $60, $B4, $C9, $02, $D0, $0C, $A9, $25, $BC, $02, $04, $10, $02, $A9, $22, $9D, $65, $B4, $60
+    
+    .byte $A5, $7C, $C9, $01, $F0, $10
+    .byte $C9, $03, $F0, $3F
+    .byte $BD, $60, $B4, $C9, $01, $D0, $0A
+    .byte $A9, $00, $20, $4C, $B9
+    .byte $A9, $08, $4C, $03, $6C
+    .byte $A9, $80, $9D, $6A, $B4
+    .byte $BD, $02, $04, $30, $1C
+    .byte $BD, $05, $04, $29, $10, $F0, $15
+    .byte $BD, $00, $04
+    .byte $38
+    .byte $ED, $0D, $03
+    .byte $10, $03, $20, $BE, $B5
+    .byte $C9, $10, $B0, $05
+    .byte $A9, $00, $9D, $6A, $B4
+    .byte $20, $EC, $B8, $A9, $03
+    .byte $4C, $00, $6C
+    .byte $4C, $06, $6C
+    .byte $9D, $6E, $B4
+    .byte $BD, $0B, $04, $48
+    .byte $20, $2A, $6C
+    .byte $68, $9D, $0B, $04, $60
+
+
+
+    .byte $20, $1B, $6C, $A9, $06
+    .byte $85, $00, $4C, $31, $B8
+    .byte $20, $1B, $6C, $A9, $06, $85, $00, $4C, $31, $B8
+    .byte $20, $1B, $6C, $A9, $06, $85, $00, $A5, $7C
+    .byte $C9, $02, $D0, $0F, $DD, $60, $B4, $D0, $0A
+    .byte $20, $09, $6C, $29, $03, $D0, $03
+    .byte $4C, $45, $B8
+    .byte $4C, $31, $B8
+
+
+
+    .byte $20, $09, $6C, $29, $03, $F0, $34
+    .byte $A5, $7C
+    .byte $C9, $01, $F0, $36, $C9, $03, $F0, $2F
+    .byte $BD, $60, $B4
+    .byte $C9, $03, $F0, $23
+    .byte $BD, $0A, $04
+    .byte $29, $03, $C9, $01, $D0, $11
+    .byte $BC, $00, $04, $C0, $EB
+    .byte $D0, $0A
+    .byte $20, $02, $BA
+    .byte $A9, $03, $9D, $0A, $04, $D0, $06
+    .byte $20, $27, $BA, $20, $ED, $B9, $20, $0B, $BA
+    .byte $A9, $03, $20, $0C, $6C
+    .byte $4C, $06, $6C, $4C, $03, $6C
+    .byte $BD, $05, $04, $4A
+    .byte $BD, $0A, $04, $29, $03
+    .byte $2A, $A8, $B9
+    .byte $E5, $B9, $4C, $0F, $6C
+    .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
+    .byte $A6, $45
+    .byte $B0, $19
+    .byte $A5, $00
+    .byte $D0, $0D
+    .byte $BC, $0A, $04, $88, $98, $29, $03
+    .byte $9D, $0A, $04, $4C, $D4, $B9
+    .byte $BD, $05, $04, $49, $01, $9D, $05, $04, $60
+    .byte $20, $1F, $BA
+    .byte $20, $27, $BA
+    .byte $A6, $45
+    .byte $90, $09
+    .byte $20, $1F, $BA
+    .byte $9D, $0A, $04, $20, $D4, $B9, $60
+    .byte $BC, $0A, $04, $C8, $98, $29, $03, $60
+    .byte $BC, $05, $04, $84, $00, $46, $00
+    .byte $2A, $0A
+    .byte $A8, $B9, $49, $6C
+    .byte $48, $B9, $48, $6C, $48, $60
+
+
+
+StoreEnemyPositionToTemp__{AREA}:
+    .byte $BD, $00, $04
+    .byte $85, $08
+    .byte $BD, $01, $04
+    .byte $85, $09
+    .byte $BD, $67, $B4
+    .byte $85, $0B
+    .byte $60
+
+LoadEnemyPositionFromTemp__{AREA}:
+    .byte $A5, $0B
+    .byte $29, $01
+    .byte $9D, $67, $B4
+    .byte $A5, $08
+    .byte $9D, $00, $04
+    .byte $A5, $09
+    .byte $9D, $01, $04
+    .byte $60
+
+
+
+    .byte $A5, $7C, $C9, $01
     .byte $D0, $1E, $BD, $60, $B4, $C9, $03, $F0, $59, $C9, $02, $D0, $13, $BC, $08, $04
     .byte $B9, $CA, $BA, $9D, $02, $04, $A9, $40, $9D, $6A, $B4, $A9, $00, $9D, $06, $04
     .byte $BD, $60, $B4, $C9, $03, $F0, $3B, $A5, $7C, $C9, $01, $F0, $35, $C9, $03, $F0

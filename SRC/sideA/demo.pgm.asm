@@ -546,22 +546,22 @@ DEMO_JumpEngine: ;($6AFA)
     iny
     ;load ptr table address from stack
     pla
-    sta CodePtr
+    sta JumpEngineRoutinePtr
     pla
-    sta CodePtr+1.b
+    sta JumpEngineRoutinePtr+1.b
     ;Low byte of routine ptr
-    lda (CodePtr),y
+    lda (JumpEngineRoutinePtr),y
     tax
     ;High byte of routine ptr.
     iny
-    lda (CodePtr),y
-    ; save routine ptr to CodePtr
-    sta CodePtr+1.b
-    stx CodePtr
+    lda (JumpEngineRoutinePtr),y
+    ; save routine ptr to JumpEngineRoutinePtr
+    sta JumpEngineRoutinePtr+1.b
+    stx JumpEngineRoutinePtr
     ;Restore X and Y.
     ldx TempX
     ldy TempY
-    jmp (CodePtr)
+    jmp (JumpEngineRoutinePtr)
 
 
 
@@ -1402,7 +1402,7 @@ L6999_PrepIntroRestart: ;($6FD1)
     
     ldy #$1F
     @loop:
-        sta ObjAction,y
+        sta Objects.0.status,y
         dey
         bpl @loop
     lda PPUCTRL_ZP

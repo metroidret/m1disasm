@@ -1,6 +1,13 @@
 
 ;-------------------------------------------[ Structs ]----------------------------------------------
 
+.struct OAMSprite
+    y                      db
+    tileID                 db
+    attrib                 db
+    x                      db
+.endst
+
 .struct SamusStat
     TankCount          db
     SamusGear          db
@@ -21,6 +28,46 @@
     y                      db
     x                      db
     hi                     db
+.endst
+
+.struct En
+    y                      db   ;Enemy y position in room.(not actual screen position).
+    x                      db   ;Enemy x position in room.(not actual screen position).
+    speedY                 db   ; unknown - y speed?
+    speedX                 db   ; unknown - x speed?
+    isHit                  db   ;bit2: touching Samus
+                                  ;bit1 set: touch Samus from the top
+                                  ;bit0 set: touch Samus from the left
+                                  ;bit5: hit by samus weapon (projectile or screw attack)
+                                  ;bit4 set: hit by samus weapon from the top
+                                  ;bit3 set: hit by samus weapon from the left
+    data05                 db   ;bit0: 0=facing right, 1=facing left
+                                  ;bit1: IsObjectVisible
+                                  ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
+                                  ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
+                                  ;bit4: is samus close enough to the enemy (EnemyDistanceToSamusThreshold). 0=no, 1=yes
+                                  ;  depending on the threshold, bit 3 may be used instead, which will allow -->
+                                  ;  the enemy to become active when samus gets close.
+                                  ;bit5: when active, this bit being set will trigger a resting period
+                                  ;bit6: toggles every frame for some enemy routines to run at 30FPS
+                                  ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
+    chunkyExplosionTimer   .db  ;Counts such things as explosion time.
+    movementInstrIndex     .db
+    speedSubPixelY         db   ;- y counter?
+    speedSubPixelX         db   ; unknown - x counter
+    movementIndex          db   ;Index into the EnemyMovement table of that enemy.
+    delay                  db   ;Delay counter between enemy actions.
+    data0A                 db   ; unknown -- For crawlers, orientation
+                                  ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
+                                  ; For enProjectiles, it's the EnProjectileMovement id
+    health                 db   ;Current health of enemy.
+    prevStatus             db   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
+    data0D                 db   ;Resting: force speed towards samus delay
+                                  ;Frozen: frozen timer (* 8)
+                                  ;Pickup: die delay (* 4)
+    weaponAction           db   ; unknown - What weapon action is currently hitting the enemy?
+    specialAttribs         db   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
+                                  ;When enemy is hurt, this is used as hitstun delay
 .endst
 
 .struct EnExtra
@@ -50,10 +97,64 @@
                                   ;#$80 or #$C0: land on ceiling/left wall
 .endst
 
+.struct EnExplosion
+    y                      db   ;Enemy y position in room.(not actual screen position).
+    x                      db   ;Enemy x position in room.(not actual screen position).
+    unused                 ds 3
+    data05                 db   ;bit1: IsObjectVisible
+    delay                  db   ;delay until the current singular explosion ends
+    quantity               db   ;quantity of explosions to display
+.endst
+
+.struct EnExplosionExtra
+    status                 db
+    radiusY                db   ;Distance in pixels from middle of enemy to top or botom.
+    radiusX                db   ;Distance in pixels from middle of enemy to left or right.
+    animFrame              db   ;Index into enemy animation frame data.
+    animDelay              db   ;Number of frames to delay between animation frames.
+    resetAnimIndex         db   ;Index to beginning of animation sequence.
+    animIndex              db   ;Index to current animation.
+    hi                     db   ;#$00=Enemy on name table 0, #$01=Enemy on name table 3.
+.endst
+
+.struct Object
+    status                 db   ;$0300   ;Status of object. 0=object slot not in use.
+    radiusY                db   ;$0301   ;Distance in pixels from object center to top or bottom.
+    radiusX                db   ;$0302   ;Distance in pixels from object center to left or right side.
+    animFrame              db   ;$0303   ;*2 = Index into FramePtrTable for current animation.
+    animDelay              db   ;$0304   ;Number of frames to delay between animation frames.
+    animResetIndex         db   ;$0305   ;Restart index-1 when AnimIndex finished with last frame.
+    animIndex              db   ;$0306   ;Current index into ObjectAnimIndexTbl.
+    data07                 db   ;
+    speedY                 db   ;$0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
+    speedX                 db   ;$0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
+    isHit                  db   ;$030A   ;Samus hit by enemy.
+                                       ;$20: hit by bomb
+                                       ;$30: hit by enemy
+                                       ; +$08: hit towards the right
+                                       ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
+                                       ; +$01: touch solid entity from the right
+                                       ; +$02: touch solid entity from the bottom
+    onScreen               db   ;$030B   ;1=Object on screen, 0=Object beyond screen boundaries.
+    hi                     db   ;$030C   ;0=Object on nametable 0, 1=Object on nametable 3.
+    y                      db   ;$030D   ;Object y position in room(not actual screen position).
+    x                      db   ;$030E   ;Object x position in room(not actual screen position).
+    data0F                 db   ;
+.endst
+
 ;-------------------------------------------[ Defines ]----------------------------------------------
 
-CodePtr                = $0C     ;Points to address to jump to when choosing-->
-; CodePtr+1              = $0D     ;a routine from a list of routine addresses.
+; LoadPositionFromTemp/StorePositionToTemp/ApplySpeedToPosition
+Temp02_ScrollDir       = $02     ; #$00=vertical room, #$02=horizontal room
+Temp04_SpeedY          = $04
+Temp05_SpeedX          = $05
+Temp08_PositionY       = $08
+Temp09_PositionX       = $09
+Temp0B_PositionHi      = $0B
+
+
+JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->
+; JumpEngineRoutinePtr+1 = $0D     ;a routine from a list of routine addresses.
 
 
 Joy1Change             = $12     ;These addresses store any button changes-->
@@ -138,7 +239,12 @@ MissileToggle          = $010E   ;0=fire bullets, 1=fire missiles.
 
 ;-----------------------------------------[ Sprite RAM ]---------------------------------------------
 
-SpriteRAM              = $0200   ;$0200 thru $02FF
+.enum $0200 export
+
+;$0200 thru $02FF
+SpriteRAM              instanceof OAMSprite $40 startfrom 0
+
+.ende
 
 ;-----------------------------------------[ Object RAM ]---------------------------------------------
 
@@ -148,155 +254,110 @@ SpriteRAM              = $0200   ;$0200 thru $02FF
 ; slot 4 is for drawing power-ups and skree projectiles
 ; slot 6 to 7 is for tourian bridge
 ; slot 8 to B is for doors
-; slot D to F is for samus projectiles
+; slot D to F is for samus weapon projectiles
 
-;Samus RAM.
-ObjAction              = $0300   ;Status of object. 0=object slot not in use.
-ObjRadY                = $0301   ;Distance in pixels from object center to top or bottom.
-ObjRadX                = $0302   ;Distance in pixels from object center to left or right side.
-ObjAnimFrame           = $0303   ;*2 = Index into FramePtrTable for current animation.
-ObjAnimDelay           = $0304   ;Number of frames to delay between animation frames.
-ObjAnimResetIndex      = $0305   ;Restart index-1 when AnimIndex finished with last frame.
-ObjAnimIndex           = $0306   ;Current index into ObjectAnimIndexTbl.
-SamusOnElevator        = $0307   ;0=Samus not on elevator, 1=Samus on elevator.
-ObjSpeedY              = $0308   ;MSB set=moving up(#$FA max), MSB clear=moving down(#$05 max).
-ObjSpeedX              = $0309   ;MSB set=moving lft(#$FE max), MSB clear=moving rt(#$01 max).
-SamusIsHit             = $030A   ;Samus hit by enemy.
-                                   ;$20: hit by bomb
-                                   ;$30: hit by enemy
-                                   ; +$08: hit towards the right
-                                   ;$44: touch frozen enemy
-                                   ; +$01: touch enemy from the right
-                                   ; +$02: touch enemy from the bottom
-ObjOnScreen            = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
-ObjHi                  = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ObjY                   = $030D   ;Object y position in room(not actual screen position).
-ObjX                   = $030E   ;Object x position in room(not actual screen position).
-SamusJumpDsplcmnt      = $030F   ;Number of pixels vertically displaced from jump point.
-SamusSubPixelY         = $0310   ;Vertical movement counter. Exponential change in speed.
-SamusSubPixelX         = $0311   ;Horizontal movement counter. Exponential change in speed.
-SamusSpeedSubPixelY    = $0312   ;Vertical movement counter. Linear change in speed.
-SamusSpeedSubPixelX    = $0313   ;Horizontal movement counter. Linear change in speed.
-SamusAccelY            = $0314   ;Value used in calculating vertical acceleration on Samus.
-SamusAccelX            = $0315   ;Value used in calculating horizontal acceleration on Samus.
-SamusHorzSpeedMax      = $0316   ;Used to calc maximum horizontal speed Samus can reach.
+.enum $0300 export
 
-;Elevator RAM.
-ElevatorStatus         = $0320   ;#$01=Elevator present, #$00=Elevator not present.
-ElevatorAnimFrame      = $0323   ;*2 = Index into FramePtrTable for current animation.
-ElevatorAnimResetIndex = $0325   ;Restart index-1 when AnimIndex finished with last frame.
-ElevatorAnimIndex      = $0326   ;Current index into ObjectAnimIndexTbl.
-ElevatorUnused0328     = $0328   ;when starting to move, #$00 is written, but this is never read
-ElevatorHi             = $032C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ElevatorY              = $032D   ;Object y position in room(not actual screen position).
-ElevatorX              = $032E   ;Object x position in room(not actual screen position).
-ElevatorType           = $032F   ;bit 7 is up(1) or down(0)
-                                   ;low nybble is which elevator it is
-                                   ;#$0=Brinstar/Brinstar
-                                   ;#$1=Brinstar/Norfair
-                                   ;#$2=Brinstar/Kraid
-                                   ;#$3=Brinstar/Tourian
-                                   ;#$4=Norfair/Ridley
-                                   ;elevator type #$8F is for the ending elevator
+Objects              .instanceof Object $10 startfrom 0
+Samus                instanceof Object
+Object0310           instanceof Object
+Elevator             instanceof Object
+Object0330           instanceof Object
+PowerUpDraw          instanceof Object
+Object0350           instanceof Object
+Statue               instanceof Object
+Object0370           instanceof Object
+Doors                instanceof Object 4 startfrom 0
+Object03C0           instanceof Object
+SamusProjectiles     instanceof Object 3 startfrom 0
 
-;Power-up item temp RAM for drawing.
-PowerUpDrawAnimFrame   = $0343   ;*2 = Index into FramePtrTable for current animation.
-PowerUpDrawHi          = $034C   ;Name table power up item is located on.
-PowerUpDrawY           = $034D   ;Room Y coord of power up item.
-PowerUpDrawX           = $034E   ;Room x coord of power up item.
+.ende
 
-;Statues and bridge RAM
-StatueStatus           = $0360
-StatueAnimFrame        = $0363
-KraidStatueRaiseState  = $0364   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
-RidleyStatueRaiseState = $0365
-KraidStatueIsHit       = $0366   ;#$00=not hit, #$01=hit
-RidleyStatueIsHit      = $0367   ;#$00=not hit, #$01=hit
-StatueHi               = $036C
-StatueY                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
-StatueX                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
-KraidStatueY           = $036F
-RidleyStatueY          = $0370
+
+;Samus RAM. ($0300-$0316)
+SamusOnElevator = Samus.data07 ;$0307   ;0=Samus not on elevator, 1=Samus on elevator.
+;Samus.isHit            db   ;$030A   ;Samus hit by enemy.
+                                       ;$20: hit by bomb
+                                       ;$30: hit by enemy
+                                       ; +$08: hit towards the right
+                                       ;$44: touch solid entity (frozen enemy or elevator, is $00 if standing on it)
+                                       ; +$01: touch solid entity from the right
+                                       ; +$02: touch solid entity from the bottom
+SamusJumpDsplcmnt = Samus.data0F ;$030F   ;Number of pixels vertically displaced from jump point.
+
+.enum $0310 export
+
+SamusSubPixelY         db   ;$0310   ;Vertical movement counter. Exponential change in speed.
+SamusSubPixelX         db   ;$0311   ;Horizontal movement counter. Exponential change in speed.
+SamusSpeedSubPixelY    db   ;$0312   ;Vertical movement counter. Linear change in speed.
+SamusSpeedSubPixelX    db   ;$0313   ;Horizontal movement counter. Linear change in speed.
+SamusAccelY            db   ;$0314   ;Value used in calculating vertical acceleration on Samus.
+SamusAccelX            db   ;$0315   ;Value used in calculating horizontal acceleration on Samus.
+SamusHorzSpeedMax      db   ;$0316   ;Used to calc maximum horizontal speed Samus can reach.
+
+.ende
+
+
+;Elevator RAM. ($0320-$032F)
+;Elevator.speedY        db   ;$0328   ;when starting to move, #$00 is written, but this is never read
+ElevatorType = Elevator.data0F       ;bit 7 is up(1) or down(0)
+                                       ;low nybble is which elevator it is
+                                       ;#$0=Brinstar/Brinstar
+                                       ;#$1=Brinstar/Norfair
+                                       ;#$2=Brinstar/Kraid
+                                       ;#$3=Brinstar/Tourian
+                                       ;#$4=Norfair/Ridley
+                                       ;elevator type #$8F is for the ending elevator
+
+
+;Temp RAM for drawing power-up item and skree projectile. ($0340-$034F)
+; just a regular object
+
+
+;Statues and bridge RAM ($0360-$0370)
+KraidStatueRaiseState = Statue.animDelay   ;#$01=Not Raised, #$02=Raising, bit7=Raised.
+RidleyStatueRaiseState = Statue.animResetIndex
+KraidStatueIsHit = Statue.animIndex   ;#$00=not hit, #$01=hit
+RidleyStatueIsHit = Statue.data07   ;#$00=not hit, #$01=hit
+;Statue.y                = $036D   ;Set to either Kraid's Y or Ridley's Y when drawing a statue.
+;Statue.x                = $036E   ;Set to either Kraid's X or Ridley's X when drawing a statue.
+KraidStatueY = Statue.data0F
+
+.enum $0370 export
+
+RidleyStatueY          db   ;$0370
+
+.ende
+
 
 ;Door RAM
-DoorStatus             = $0300
-DoorAnimResetIndex     = $0305
-DoorAnimIndex          = $0306
-DoorType               = $0307   ;#$00=red door, #$01=blue door, #$02=10-missile door
-                                   ;#$03=blue door that changes the music
-DoorIsHit              = $030A   ; bit 2 indicates if the door was hit or not
-DoorOnScreen           = $030B   ;1=Object on screen, 0=Object beyond screen boundaries.
-DoorHi                 = $030C
-DoorX                  = $030E
-DoorHitPoints          = $030F   ;used as re-close delay for blue doors
+DoorType = Objects.0.data07          ;#$00=red door, #$01=blue door, #$02=10-missile door
+                                       ;#$03=blue door that changes the music
+;Door.isHit             db   ;$030A   ; bit 2 indicates if the door was hit or not
+DoorHitPoints = Objects.0.data0F     ;used as re-close delay for blue doors
 
 
-;Samus projectile RAM
-ProjectileStatus       = $0300
-ProjectileRadY         = $0301   ;Distance in pixels from object center to top or bottom.
-ProjectileRadX         = $0302   ;Distance in pixels from object center to left or right side.
-ProjectileAnimFrame    = $0303   ;*2 = Index into FramePtrTable for current animation.
-ProjectileAnimDelay    = $0304   ;Number of frames to delay between animation frames.
-ProjectileAnimResetIndex = $0305   ;Restart index-1 when AnimIndex finished with last frame.
-ProjectileAnimIndex    = $0306   ;Current index into ObjectAnimIndexTbl.
-ProjectileIsHit        = $030A
-ProjectileHi           = $030C   ;0=Object on nametable 0, 1=Object on nametable 3.
-ProjectileDieDelay     = $030F   ;delay until short beam projectile dies
+;Samus weapon projectiles RAM
+SamusProjectileDieDelay = Objects.0.data0F   ;delay until short beam projectile dies
 
 ;------------------------------------------[ Enemy RAM ]---------------------------------------------
+
+.enum $0400 export
 
 ; 16 slots of 16 bytes each ($0400-$04FF)
 ; slot 0 to 5 is for normal enemies
 ; slot 6 to B is for enemy projectiles
-; slot C to D is for enemy explosions
+; slot C to D is for enemy explosions (4 slots of 8 bytes each ($04C0-$04DF))
 ; slot E is for mother brain
 ; slot F is for mellow handler enemy
-EnY                    = $0400   ;Enemy y position in room.(not actual screen position).
-EnX                    = $0401   ;Enemy x position in room.(not actual screen position).
-EnSpeedY               = $0402   ; unknown - y speed?
-EnSpeedX               = $0403   ; unknown - x speed?
-EnIsHit                = $0404   ;bit2: touching Samus
-                                   ;bit1 set: touch Samus from the top
-                                   ;bit0 set: touch Samus from the left
-                                   ;bit5: hit by weapon (projectile or screw attack) (except enemy projectiles)
-                                   ;bit4 set: hit by weapon from the top
-                                   ;bit3 set: hit by weapon from the left
-EnData05               = $0405   ;bit0: 0=facing right, 1=facing left
-                                   ;bit1: IsObjectVisible
-                                   ;bit2: 0=facing down, 1=facing up (can desync with sign of y speed for multiviolas)
-                                   ;bit3: does the enemy become active if it's resting and EnDelay becomes zero. 0=no, 1=yes
-                                   ;bit4: is samus close enough to the enemy (EnemyDistanceToSamusThreshold). 0=no, 1=yes
-                                   ;  depending on the threshold, bit 3 may be used instead, which will allow -->
-                                   ;  the enemy to become active when samus gets close.
-                                   ;bit5: when active, this bit being set will trigger a resting period
-                                   ;bit6: toggles every frame for some enemy routines to run at 30FPS
-                                   ;bit7: when this is set, some routines use bit2 as facing direction instead of bit0
-EnMovementInstrIndex   = $0406   ;Counts such things as explosion time.
-EnSpeedSubPixelY       = $0406   ;- y counter?
-EnSpeedSubPixelX       = $0407   ; unknown - x counter
-EnMovementIndex        = $0408   ;Index into the EnemyMovement table of that enemy.
-EnDelay                = $0409   ;Delay counter between enemy actions.
-EnData0A               = $040A   ; unknown -- For crawlers, orientation
-                                   ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
-                                   ; For enProjectiles, it's the EnProjectileMovement id
-EnHealth               = $040B   ;Current health of enemy.
-EnPrevStatus           = $040C   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
-EnData0D               = $040D   ;Resting: force speed towards samus delay
-                                   ;Frozen: frozen timer (* 8)
-                                   ;Pickup: die delay (* 4)
-EnWeaponAction         = $040E   ; unknown - What weapon action is currently hitting the enemy?
-EnSpecialAttribs       = $040F   ;Bit 7 set=tough version of enemy, bit 6 set=mini boss.
-                                   ;When enemy is hurt, this is used as hitstun delay
 
-; 4 slots of 8 bytes each ($04C0-$04DF)
-EnExplosionY           = $0400
-EnExplosionX           = $0401
-EnExplosion04C2        = $0402
-EnExplosion04C3        = $0403
-EnExplosion04C4        = $0404
-EnExplosion04C5        = $0405
-EnExplosionAnimDelay   = $0406
-EnExplosionAnimFrame   = $0407
+Ens                    instanceof En $6 startfrom 0
+EnProjectiles          instanceof En $6 startfrom 0
+EnExplosions           instanceof EnExplosion $4 startfrom 0
+EnMotherBrain          instanceof En
+EnMellowHandler        instanceof En
+
+.ende
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -354,7 +415,11 @@ CurSamusStat           instanceof SamusStat
 .enum $B460 export
 
 ; 16 slots of 16 bytes each ($B460-$B55F)
-EnsExtra               instanceof EnExtra $10 startfrom 0
+EnsExtra               instanceof EnExtra 6 startfrom 0
+EnProjectilesExtra     instanceof EnExtra 6 startfrom 0
+EnExplosionsExtra      instanceof EnExplosionExtra 4 startfrom 0
+EnMotherBrainExtra     instanceof EnExtra
+EnMellowHandlerExtra   instanceof EnExtra
 
 .ende
 

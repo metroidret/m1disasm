@@ -45,11 +45,11 @@ WorldMap: ;($6800)
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $0B, $FF, $0C, $16, $18, $17, $18, $17, $0F, $17, $17, $1A, $1A, $17, $1B, $1B, $17, $19, $09, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-CommonJump_00: ;($6C00)
+CommonJump_UpdateEnemyCommon: ;($6C00)
     jmp LA2FD
-CommonJump_01: ;($6C03)
+CommonJump_UpdateEnemyCommon_noMove: ;($6C03)
     jmp LA325
-CommonJump_02: ;($6C06)
+CommonJump_UpdateEnemyCommon_noMoveNoAnim: ;($6C06)
     jmp LA303
 CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;($6C09)
     jmp CrawlerAIRoutine_ShouldCrawlerMove
@@ -71,7 +71,7 @@ CommonJump_6C21: ;($6C21)
     jmp LA75D
 CommonJump_JumpEngine: ;($6C24)
     jmp MAIN_JumpEngine
-CommonJump_6C27: ;($6C27)
+CommonJump_ApplySpeedToPosition: ;($6C27)
     jmp LAC7C
 CommonJump_6C2A: ;($6C2A)
     jmp L8EC4
@@ -81,9 +81,9 @@ CommonJump_6C30: ;($6C30)
     jmp LAFC8
 CommonJump_6C33: ;($6C33)
     jmp LA90B
-CommonJump_6C36: ;($6C36)
+CommonJump_EnemyGetDeltaY_UsingAcceleration: ;($6C36)
     jmp LAFEF
-CommonJump_6C39: ;($6C39)
+CommonJump_EnemyGetDeltaX_UsingAcceleration: ;($6C39)
     jmp LB045
 CommonJump_6C3C: ;($6C3C)
     jmp L8107
@@ -123,7 +123,7 @@ MoreInit: ;($6C58)
         L6C6F:
         cpx #$FF
         bcs L6C76
-            sta ObjAction,x
+            sta Objects.0.status,x
         L6C76:
         inx
         bne L6C69
@@ -219,7 +219,7 @@ SamusInit: ;($6D0A)
     sta $26
     jsr L6FB1
     ldy #$14
-    sty ObjAction
+    sty Samus.status
     ldx #$00
     stx $6A
     dex
@@ -242,12 +242,12 @@ SamusInit: ;($6D0A)
     sty $8E
     sty $8F
     lda $B5D1
-    sta ObjY
+    sta Samus.y
     lda #$80
-    sta ObjX
+    sta Samus.x
     lda $FF
     and #$01
-    sta ObjHi
+    sta Samus.hi
     lda #$00
     sta Health
     lda #$03
@@ -285,7 +285,7 @@ GameEngine: ;($6D64)
         ldx #$03
         jsr SetTimer
     L6DA4:
-    lda ObjAction
+    lda Samus.status
     cmp #$08
     bne RTS_6D63
     jsr L6F4E
@@ -388,18 +388,18 @@ PrepareContinueScreen: ;($6E2E)
         sty $55
         sty PageIndex
         sty $65
-        sty ObjHi
+        sty Samus.hi
         jsr L6E00
         jsr L6F4E
         lda #$5A
-        sta ObjAnimFrame
+        sta Samus.animFrame
         ldx #$02
         L6E4B:
             lda L6E93,x
-            sta ObjY
+            sta Samus.y
             lda L6E96,x
-            sta ObjX
-            inc ObjAnimFrame
+            sta Samus.x
+            inc Samus.animFrame
             txa
             pha
             jsr ObjDrawFrame
@@ -455,12 +455,12 @@ PrepareSwitchDiskSide: ;($6E99)
 
 SamusIntro: ;($6EA3)
     jsr MAIN_EraseAllSprites
-    ldy ObjAction
+    ldy Samus.status
     lda $26
     bne L6EBE
         sta $74
         lda #$FF
-        sta ObjAction
+        sta Samus.status
         jsr L7CAA
         jsr SelectSamusPal
         lda #$03
@@ -470,7 +470,7 @@ SamusIntro: ;($6EA3)
     bcs RTS_6E92
     cmp $6ECB,y
     bne L6ECC
-        inc ObjAction
+        inc Samus.status
         sty $1C
     L6ECC:
     lda FrameCount
@@ -649,7 +649,7 @@ L6FC1:
         dec $4F
         rts
     L6FCE:
-    lda ObjAction
+    lda Samus.status
     bmi L6FEA
     jsr MAIN_JumpEngine
         .word L6FEA
@@ -683,7 +683,7 @@ L6FFF:
     L7008:
     tax
     lda L703B,x
-    sta ObjAction
+    sta Samus.status
 L700F:
     lda $13
     ora $17
@@ -694,11 +694,11 @@ L700F:
     bit $13
     bpl L7022
         lda #$02
-        sta ObjAction
+        sta Samus.status
     L7022:
     lda #$04
     jsr L7121
-    lda ObjAction
+    lda Samus.status
     cmp #$05
     bcs RTS_704B
     jsr MAIN_JumpEngine
@@ -726,7 +726,7 @@ L704C:
     lda #$09
     sta $4D
     ldx #$00
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp #$07
     beq L7063
     inx
@@ -736,7 +736,7 @@ L704C:
     jsr SetSamusNextAnim
 L7063:
     lda L7072,x
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     ldx $47
 L706B:
     lda L7074,x
@@ -756,21 +756,21 @@ L7076:
     beq L70D7
     ldy SamusJumpDsplcmnt
 L7080:
-    bit ObjSpeedY
+    bit Samus.speedY
     bmi L7090
     cpy #$18
     bcs L70B6
     lda #$0C
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     bcc L70B6
 L7090:
     cpy #$18
     bcc L70B6
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp #$20
     beq L70A0
         lda #$0E
-        sta ObjAnimResetIndex
+        sta Samus.animResetIndex
     L70A0:
     cpy #$20
     bcc L70B6
@@ -778,17 +778,17 @@ L7090:
     and #$08
     beq L70AF
         lda #$35
-        sta ObjAnimResetIndex
+        sta Samus.animResetIndex
     L70AF:
     bit $15
     bmi L70B6
         jsr L74FD
     L70B6:
     lda #$00
-    cmp ObjAnimResetIndex
+    cmp Samus.animResetIndex
     bne L70C2
         lda #$0C
-        sta ObjAnimResetIndex
+        sta Samus.animResetIndex
     L70C2:
     lda $5E
     beq L70CA
@@ -872,22 +872,22 @@ L7146:
 
 L7150:
     sec
-    ldy ObjAction
+    ldy Samus.status
     dey
     bne RTS_7172
     lda CurSamusStat.SamusGear
     and #$08
     beq RTS_7172
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp #$0E
     beq L716F
         cmp #$0C
         sec
         bne RTS_7172
-        bit ObjSpeedY
+        bit Samus.speedY
         bpl RTS_7172
     L716F:
-    cmp ObjAnimIndex
+    cmp Samus.animIndex
 RTS_7172:
     rts
 
@@ -901,7 +901,7 @@ L7173:
     lsr a
     tax
     lda $7072,x
-    cmp ObjAnimResetIndex
+    cmp Samus.animResetIndex
     beq RTS_7172
     jsr SetSamusAnim
     pla
@@ -913,12 +913,12 @@ L718B:
     and #$08
     bne L719A
     lda #$22
-    sta ObjAnimIndex
+    sta Samus.animIndex
     rts
 L719A:
-    lda ObjAnimIndex
+    lda Samus.animIndex
     sec
-    sbc ObjAnimResetIndex
+    sbc Samus.animResetIndex
     and #$03
     tax
     lda L71AA,x
@@ -931,7 +931,7 @@ L71AA:
     .byte $3F
 
 L71AE:
-    lda SamusIsHit
+    lda Samus.isHit
     and #$20
     beq L71E4
     lda #$32
@@ -944,7 +944,7 @@ L71AE:
     bpl L71C8
     jsr L6F9E
 L71C8:
-    lda SamusIsHit
+    lda Samus.isHit
     and #$08
     lsr a
     lsr a
@@ -952,7 +952,7 @@ L71C8:
     sta $6C
 L71D2:
     lda #$FD
-    sta ObjSpeedY
+    sta Samus.speedY
     lda #$38
     sta SamusAccelY
     jsr IsSamusDead
@@ -976,7 +976,7 @@ L71FE:
     bne L7204
     jsr MAIN_TwosComplement
 L7204:
-    sta ObjSpeedX
+    sta Samus.speedX
 L7207:
     lda $71
     bpl L721A
@@ -984,9 +984,9 @@ L7207:
     and #$01
     bne L721A
     tay
-    sty ObjAnimDelay
+    sty Samus.animDelay
     ldy #$F7
-    sty ObjAnimFrame
+    sty Samus.animFrame
 L721A:
     ldy Health+1
     dey
@@ -1002,14 +1002,14 @@ L7229:
     jsr L6F6C
 L7232:
     lda #$00
-    sta SamusIsHit
+    sta Samus.isHit
     rts
 
 
 
 IsSamusDead:
     ;Samus is dead. Zero flag is set.
-    lda ObjAction
+    lda Samus.status
     cmp #$07
     beq RTS_7245
     cmp #$08
@@ -1079,7 +1079,7 @@ L7273:
     sta Health
     sta Health+1
     lda #$07
-    sta ObjAction
+    sta Samus.status
     jsr L6FA2
     jmp L703F
 
@@ -1112,7 +1112,7 @@ L72DF:
 
 
 L72E2:
-    lda SamusIsHit
+    lda Samus.isHit
     lsr a
     and #$02
     beq RTS_7308
@@ -1130,7 +1130,7 @@ L72F3:
 L7300:
     ldy #$00
 L7302:
-    sty ObjSpeedX
+    sty Samus.speedX
     sty SamusSpeedSubPixelX
 RTS_7308:
     rts
@@ -1146,7 +1146,7 @@ SetSamusStand: ;($7309)
     ;Clear horizontal movement and animation delay data.
     jsr NoHorzMoveNoDelay
     ;Samus is standing.
-    sty ObjAction
+    sty Samus.status
     ;Is The up button being pressed? If so, branch.
     lda Joy2Status
     and #BUTTON_UP
@@ -1156,27 +1156,27 @@ SetSamusStand: ;($7309)
 
 SetSamusAnim: ;($731F)
     ;Set new animation reset index.
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
 
 SetSamusNextAnim: ;($7322)
     ;Set new animation data index.
-    sta ObjAnimIndex
+    sta Samus.animIndex
     ;New animation to take effect immediately.
     lda #$00
-    sta ObjAnimDelay
+    sta Samus.animDelay
     rts
 
 
 
 SetSamusPntUp: ;($732B)
     lda #$04
-    sta ObjAction
+    sta Samus.status
     lda #$27
     jsr SetSamusAnim
 
 NoHorzMoveNoDelay: ;($7335)
     jsr L736B
-    sty ObjAnimDelay
+    sty Samus.animDelay
     rts
 
 
@@ -1190,7 +1190,7 @@ SamusRun_CheckHorzMovementMidair: ;($733C)
         jsr L706B
         lda SamusAccelY
         bmi RTS_7371
-        lda ObjAnimResetIndex
+        lda Samus.animResetIndex
         cmp #$0E
         beq RTS_7371
         stx $47
@@ -1200,7 +1200,7 @@ SamusRun_CheckHorzMovementMidair: ;($733C)
     lda SamusAccelY
     bmi RTS_7371
     beq RTS_7371
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp #$0C
     bne RTS_7371
 L736B:
@@ -1217,16 +1217,16 @@ L7372:
 L7377:
     ldy #$0C
 L7379:
-    sty ObjAnimResetIndex
+    sty Samus.animResetIndex
     dey
-    sty ObjAnimIndex
+    sty Samus.animIndex
     lda #$04
-    sta ObjAnimDelay
+    sta Samus.animDelay
     lda #$00
     sta SamusJumpDsplcmnt
     lda #$FC
-    sta ObjSpeedY
-    ldx ObjAction
+    sta Samus.speedY
+    ldx Samus.status
     dex
     bne L73A6
     lda CurSamusStat.SamusGear
@@ -1252,7 +1252,7 @@ L73B4:
 
 L73B8:
     lda SamusJumpDsplcmnt
-    bit ObjSpeedY
+    bit Samus.speedY
     bpl L73CB
     cmp #$20
     bcc L73CB
@@ -1266,9 +1266,9 @@ L73CB:
     and #$08
     beq L73E1
     lda #$35
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     lda #$06
-    sta ObjAction
+    sta Samus.status
 L73E1:
     jsr L7452
     lda $5E
@@ -1280,7 +1280,7 @@ L73E1:
 L73F2:
     lda SamusAccelY
     bne L7406
-    lda ObjAction
+    lda Samus.status
     cmp #$06
     bne L7403
     jsr SetSamusPntUp
@@ -1304,26 +1304,26 @@ L740B:
 L741A:
     cpy $47
     beq L7448
-    lda ObjAction
+    lda Samus.status
     cmp #$06
     bne L7433
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp L744C+3,y
     bne L743E
     lda L744C+4,y
     jmp L743E
 L7433:
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp L744C,y
     bne L743E
     lda L744C+1,y
 L743E:
     jsr SetSamusAnim
     lda #$08
-    sta ObjAnimDelay
+    sta Samus.animDelay
     sty $47
 L7448:
-    stx ObjSpeedX
+    stx Samus.speedX
 RTS_744B:
     rts
 
@@ -1340,7 +1340,7 @@ L7452:
     ora $17
     asl a
     bpl RTS_744B
-    lda ObjAnimResetIndex
+    lda Samus.animResetIndex
     cmp #$35
     bne L7463
     jmp L761C
@@ -1359,9 +1359,9 @@ L746B:
     bne L7491
     ldx $47
     lda #$16
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     lda #$13
-    sta ObjAnimIndex
+    sta Samus.animIndex
     lda $7074,x
     sta SamusAccelX
     lda #$01
@@ -1369,7 +1369,7 @@ L746B:
     jmp L6F8A
 L7491:
     lda #$00
-    sta ObjAction
+    sta Samus.status
     rts
 
 
@@ -1384,10 +1384,10 @@ L74A1:
     lda $15
     and #$04
     bne L74D4
-    lda ObjRadY
+    lda Samus.radiusY
     clc
     adc #$08
-    sta ObjRadY
+    sta Samus.radiusY
     jsr L8B0D
     bcc L74D4
     ldx #$00
@@ -1398,7 +1398,7 @@ L74A1:
     jsr LAC7C
     jsr L79B5
     jsr SetSamusStand
-    dec ObjAnimIndex
+    dec Samus.animIndex
     jsr L74FD
     lda #$04
     jmp L74FA
@@ -1425,7 +1425,7 @@ L74FA:
     jmp L7121
 L74FD:
     ldy #$00
-    sty ObjSpeedY
+    sty Samus.speedY
     sty SamusSpeedSubPixelY
     rts
 L7506:
@@ -1436,29 +1436,29 @@ L7506:
     ora $17
     asl a
     bpl RTS_754D
-    lda ObjSpeedY
+    lda Samus.speedY
     ora SamusOnElevator
     bne RTS_754D
     ldx #$D0
-    lda ObjAction,x
+    lda Samus.status,x
     beq L7530
     ldx #$E0
-    lda ObjAction,x
+    lda Samus.status,x
     beq L7530
     ldx #$F0
-    lda ObjAction,x
+    lda Samus.status,x
     bne RTS_754D
 L7530:
-    lda ObjHi
-    sta ObjHi,x
-    lda ObjX
-    sta ObjX,x
-    lda ObjY
+    lda Samus.hi
+    sta Samus.hi,x
+    lda Samus.x
+    sta Samus.x,x
+    lda Samus.y
     clc
     adc #$04
-    sta ObjY,x
+    sta Samus.y,x
     lda #$08
-    sta ObjAction,x
+    sta Samus.status,x
     jsr L6F68
 RTS_754D:
     rts
@@ -1470,7 +1470,7 @@ SamusPntUp: ;($754E)
     and #BUTTON_UP
     bne L7559
         lda #$00
-        sta ObjAction
+        sta Samus.status
     L7559:
     lda Joy2Status
     and #BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT.b
@@ -1482,7 +1482,7 @@ SamusPntUp: ;($754E)
         L7568:
         tax
         lda Table07,x
-        sta ObjAction
+        sta Samus.status
     L756F:
     lda Joy2Change
     ora Joy2Retrig
@@ -1493,11 +1493,11 @@ SamusPntUp: ;($754E)
     bit Joy2Change
     bpl L7582
         lda #$06
-        sta ObjAction
+        sta Samus.status
     L7582:
     lda #$04
     jsr L7121
-    lda ObjAction
+    lda Samus.status
     jsr MAIN_JumpEngine
         .word SetSamusStand
         .word L704C
@@ -1524,14 +1524,14 @@ L75A4:
 L75AD:
     ldy #$D0
 L75AF:
-    lda ObjAction,y
+    lda Samus.status,y
     beq L75BB
     jsr LA0DB
     bne L75AF
     iny
     rts
 L75BB:
-    sta SamusIsHit,y
+    sta Samus.isHit,y
     lda $010E
     beq RTS_75C5
     cpy #$D0
@@ -1549,13 +1549,13 @@ L75C6:
     sta SamusJumpDsplcmnt,y
     ldx $47
     lda L7616+4,x
-    sta ObjSpeedX,y
+    sta Samus.speedX,y
     lda #$00
-    sta ObjSpeedY,y
+    sta Samus.speedY,y
     lda #$01
-    sta ObjOnScreen,y
+    sta Samus.onScreen,y
     jsr L76AD
-    lda ObjAction,y
+    lda Samus.status,y
     asl a
     ora $47
     and #$03
@@ -1565,7 +1565,7 @@ L75C6:
     lda #$FA
     sta $04
     jsr L769E
-    ldx ObjAction,y
+    ldx Samus.status,y
     dex
     bne L7610
     jsr L6F74
@@ -1594,22 +1594,22 @@ L761C:
     lda #$0C
     sta SamusJumpDsplcmnt,y
     lda #$FC
-    sta ObjSpeedY,y
+    sta Samus.speedY,y
     lda #$00
-    sta ObjSpeedX,y
+    sta Samus.speedX,y
     lda #$01
-    sta ObjOnScreen,y
+    sta Samus.onScreen,y
     jsr L76D8
     ldx $47
     lda L767F,x
     sta $05
-    lda ObjAction,y
+    lda Samus.status,y
     and #$01
     tax
     lda L7681,x
     sta $04
     jsr L769E
-    lda ObjAction,y
+    lda Samus.status,y
     cmp #$01
     bne L7664
     jsr L6F74
@@ -1620,7 +1620,7 @@ L7664:
     beq L7671
     ldy L767D,x
 L7671:
-    lda ObjAction
+    lda Samus.status
     cmp #$01
     beq RTS_769D
     jmp L7612
@@ -1641,17 +1641,17 @@ L7681:
 L7683:
     tya
     tax
-    inc ObjAction,x
+    inc Samus.status,x
     lda #$02
-    sta ObjRadY,y
-    sta ObjRadX,y
+    sta Samus.radiusY,y
+    sta Samus.radiusX,y
     lda #$1B
 L7692:
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
 L7695:
-    sta ObjAnimIndex,x
+    sta Samus.animIndex,x
     lda #$00
-    sta ObjAnimDelay,x
+    sta Samus.animDelay,x
 RTS_769D:
     rts
 
@@ -1678,7 +1678,7 @@ L76BB:
     jsr L76E5
     jsr L6F5E
     lda #$0B
-    sta ObjAction,y
+    sta Samus.status,y
     lda #$FF
     sta SamusJumpDsplcmnt,y
     dec CurSamusStat.MissileCount
@@ -1697,10 +1697,10 @@ L76D8:
     lda #$8F
     bne L76BB
 L76E5:
-    sta ObjAnimIndex,y
-    sta ObjAnimResetIndex,y
+    sta Samus.animIndex,y
+    sta Samus.animResetIndex,y
     lda #$00
-    sta ObjAnimDelay,y
+    sta Samus.animDelay,y
 RTS_76F0:
     rts
 L76F1:
@@ -1711,7 +1711,7 @@ L76F3:
     bvc RTS_76F0
     lda #$00
     sta $0501,y
-    sta ObjAnimDelay,y
+    sta Samus.animDelay,y
     tya
     jsr MAIN_Adiv32
     lda #$00
@@ -1720,7 +1720,7 @@ L76F3:
 L770D:
     sta $0500,y
     lda #$02
-    sta ObjAction,y
+    sta Samus.status,y
     lda #$7D
     jsr L76E5
     beq L772A
@@ -1731,7 +1731,7 @@ L7720:
     lda CurSamusStat.SamusGear
     bpl RTS_76F0
     lda #$03
-    sta ObjAction,y
+    sta Samus.status,y
 L772A:
     jmp L6F86
 
@@ -1774,7 +1774,7 @@ L775D:
 L776C:
     lda $52
     and #$0F
-    sta ObjAction
+    sta Samus.status
     lda #$00
     sta $52
     sta $50
@@ -1782,14 +1782,14 @@ L776C:
 L777C:
     lda $48
     beq L778E
-    ldy ObjX
+    ldy Samus.x
     bne L7788
     jsr ToggleSamusHi
 L7788:
-    dec ObjX
+    dec Samus.x
     jmp L7796
 L778E:
-    inc ObjX
+    inc Samus.x
     bne L7796
     jsr ToggleSamusHi
 L7796:
@@ -1806,7 +1806,7 @@ L779F:
 
 
 L77A4:
-    lda ElevatorStatus
+    lda Elevator.status
     cmp #$03
     beq L77AF
     cmp #$08
@@ -1814,41 +1814,41 @@ L77A4:
 L77AF:
     lda ElevatorType
     bmi L77D4
-    lda ObjY
+    lda Samus.y
     sec
     sbc $FC
     cmp #$84
     bcc L77C1
     jsr ScrollDown
 L77C1:
-    ldy ObjY
+    ldy Samus.y
     cpy #$EF
     bne L77CD
     jsr ToggleSamusHi
     ldy #$FF
 L77CD:
     iny
-    sty ObjY
+    sty Samus.y
     jmp L77FF
 L77D4:
-    lda ObjY
+    lda Samus.y
     sec
     sbc $FC
     cmp #$64
     bcs L77E1
     jsr ScrollUp
 L77E1:
-    ldy ObjY
+    ldy Samus.y
     bne @L77EB
     jsr ToggleSamusHi
     ldy #$F0
 @L77EB:
     dey
-    sty ObjY
+    sty Samus.y
     jmp L77FF
 L77F2:
     ldy #$00
-    sty ObjSpeedY
+    sty Samus.speedY
     cmp #$05
     beq L7804
     cmp #$07
@@ -1912,7 +1912,7 @@ L7840:
     ldx #$F0
 L784C:
     stx PageIndex
-    lda ObjAction,x
+    lda Samus.status,x
     jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L786C
@@ -1944,10 +1944,10 @@ L7879:
     dec SamusJumpDsplcmnt,x
     bne L7898
     lda #$00
-    sta ObjAction,x
+    sta Samus.status,x
     beq L7898
 L7890:
-    lda ObjAction,x
+    lda Samus.status,x
     beq L789D
     jsr L7965
 L7898:
@@ -1996,18 +1996,18 @@ L78D6:
     lda ($0A),y
     jsr LAF46
     ldx PageIndex
-    sta ObjSpeedY,x
+    sta Samus.speedY,x
     lda ($0A),y
     jsr LAFDF
     ldx PageIndex
-    sta ObjSpeedX,x
+    sta Samus.speedX,x
     tay
     lda $0502,x
     lsr a
     bcc L7901
     tya
     jsr MAIN_TwosComplement
-    sta ObjSpeedX,x
+    sta Samus.speedX,x
 L7901:
     jsr L7986
     bcs L7909
@@ -2063,22 +2063,22 @@ L7942:
 L7949:
     lda #$01
     sta $6B
-    lda ObjAnimFrame,x
+    lda Samus.animFrame,x
     sec
     sbc #$F7
     bne L7958
-        sta ObjAction,x
+        sta Samus.status,x
     L7958:
     jmp L7898
 
 L795B:
-    lda SamusIsHit,x
+    lda Samus.isHit,x
     beq RTS_7978
     lda #$00
-    sta SamusIsHit,x
+    sta Samus.isHit,x
 L7965:
     lda #$1D
-    ldy ObjAction,x
+    ldy Samus.status,x
     cpy #$0B
     bne L7970
     lda #$91
@@ -2086,12 +2086,12 @@ L7970:
     jsr L7692
     lda #$04
 L7975:
-    sta ObjAction,x
+    sta Samus.status,x
 RTS_7978:
     rts
 
 L7979:
-    lda ObjOnScreen,x
+    lda Samus.onScreen,x
     lsr a
     bcs RTS_7978
 L797F:
@@ -2115,26 +2115,26 @@ L7986:
     jmp L8D13
 L79A1:
     ldx PageIndex
-    lda ObjSpeedX,x
+    lda Samus.speedX,x
     sta $05
-    lda ObjSpeedY,x
+    lda Samus.speedY,x
     sta $04
     jsr L8C13
     jsr LAC7C
     bcc L797F
 L79B5:
     lda $08
-    sta ObjY,x
+    sta Samus.y,x
     lda $09
-    sta ObjX,x
+    sta Samus.x,x
     lda $0B
     and #$01
     bpl L79CA
 L79C5:
-    lda ObjHi,x
+    lda Samus.hi,x
     eor #$01
 L79CA:
-    sta ObjHi,x
+    sta Samus.hi,x
 RTS_79CD:
     rts
 L79CE:
@@ -2155,7 +2155,7 @@ L79DB:
     jsr L7692
     lda #$18
     sta SamusJumpDsplcmnt,x
-    inc ObjAction,x
+    inc Samus.status,x
 L79E8:
     lda #$03
     jmp L81C3
@@ -2169,13 +2169,13 @@ L79ED:
     dec SamusJumpDsplcmnt,x
     bne L7A0B
     lda #$37
-    ldy ObjAction,x
+    ldy Samus.status,x
     cpy #$09
     bne L7A02
     lda #$82
 L7A02:
     jsr L7692
-    inc ObjAction,x
+    inc Samus.status,x
     jsr L6F5A
 L7A0B:
     jmp L79E8
@@ -2186,11 +2186,11 @@ L7A0E:
     inc SamusJumpDsplcmnt,x
     jsr L7A24
     ldx PageIndex
-    lda ObjAnimFrame,x
+    lda Samus.animFrame,x
     sec
     sbc #$F7
     bne L7A21
-    sta ObjAction,x
+    sta Samus.status,x
 L7A21:
     jmp L79E8
 L7A24:
@@ -2340,17 +2340,17 @@ RTS_7B1B:
     rts
 L7B1C:
     ldx PageIndex
-    lda ObjY,x
+    lda Samus.y,x
     sta $02
-    lda ObjX,x
+    lda Samus.x,x
     sta $03
-    lda ObjHi,x
+    lda Samus.hi,x
     sta $0B
     jmp L8CBF
 L7B30:
     ldx #$20
     stx PageIndex
-    lda ObjAction,x
+    lda Samus.status,x
     jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L7B4E
@@ -2374,19 +2374,19 @@ L7B4E:
     and $15
     beq L7B83
     jsr L74FD
-    sty ObjAnimDelay
+    sty Samus.animDelay
     sty SamusAccelY
     tya
-    sta ObjSpeedY,x
-    inc ObjAction,x
+    sta Samus.speedY,x
+    inc Samus.status,x
     lda #$09
-    sta ObjAction
+    sta Samus.status
     lda #$04
     jsr SetSamusAnim
     lda #$80
-    sta ObjX
+    sta Samus.x
     lda #$70
-    sta ObjY
+    sta Samus.y
 L7B83:
     lda FrameCount
     lsr a
@@ -2404,12 +2404,12 @@ L7B8B:
     lda ScrollDir
     and #$01
     sta ScrollDir
-    inc ObjAction,x
+    inc Samus.status,x
     jmp L7B83
 L7BA1:
     lda #$80
-    sta ObjX
-    lda ObjX,x
+    sta Samus.x
+    lda Samus.x,x
     sec
     sbc $FD
     bmi L7BB4
@@ -2424,27 +2424,27 @@ L7BB4:
 L7BBA:
     lda SamusJumpDsplcmnt,x
     bpl L7BD1
-    ldy ObjY,x
+    ldy Samus.y,x
     bne L7BC9
     jsr L79C5
     ldy #$F0
 L7BC9:
     dey
     tya
-    sta ObjY,x
+    sta Samus.y,x
     jmp L7BE3
 L7BD1:
-    inc ObjY,x
-    lda ObjY,x
+    inc Samus.y,x
+    lda Samus.y,x
     cmp #$F0
     bne L7BE3
     jsr L79C5
     lda #$00
-    sta ObjY,x
+    sta Samus.y,x
 L7BE3:
     cmp #$83
     bne L7BEA
-    inc ObjAction,x
+    inc Samus.status,x
 L7BEA:
     jmp L7B83
 
@@ -2454,14 +2454,14 @@ L7BED:
     lda $FC
     bne L7C0F
     lda #$4E
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     lda #$41
-    sta ObjAnimIndex
+    sta Samus.animIndex
     lda #$5D
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
     lda #$50
-    sta ObjAnimIndex,x
-    inc ObjAction,x
+    sta Samus.animIndex,x
+    inc Samus.status,x
     lda #$40
     sta $24
     jmp L7B83
@@ -2485,12 +2485,12 @@ L7C20:
     L7C2A:
     pla
     bne L7C44
-    inc ObjAction,x
-    lda ObjAction,x
+    inc Samus.status,x
+    lda Samus.status,x
     cmp #$08
     bne L7C44
     lda #$23
-    sta ObjAnimFrame,x
+    sta Samus.animFrame,x
     lda #$04
     jsr SetSamusAnim
     jmp L7B83
@@ -2538,19 +2538,19 @@ L7C7C:
     ldx #$20
     stx PageIndex
     lda #$6B
-    sta ObjAnimResetIndex
+    sta Samus.animResetIndex
     lda #$5F
-    sta ObjAnimIndex
+    sta Samus.animIndex
     lda #$7A
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
     lda #$6E
-    sta ObjAnimIndex,x
-    inc ObjAction,x
+    sta Samus.animIndex,x
+    inc Samus.status,x
     lda #$40
     sta $24
     rts
 L7CAA:
-    lda ElevatorStatus
+    lda Elevator.status
     cmp #$06
     bne L7CB6
     lda ElevatorType
@@ -2575,11 +2575,11 @@ L7CCC:
     lda $FC
     bne L7CF1
     lda #$00
-    sta ObjAction
+    sta Samus.status
     jsr SetSamusStand
     ldx PageIndex
     lda #$01
-    sta ObjAction,x
+    sta Samus.status,x
     lda SamusJumpDsplcmnt,x
     eor #$80
     sta SamusJumpDsplcmnt,x
@@ -2616,7 +2616,7 @@ L7D1C:
     jsr LA0E1
     bpl L7D01
 L7D21:
-    lda ElevatorStatus
+    lda Elevator.status
     beq RTS_7D37
     ldy #$00
     ldx #$20
@@ -2636,17 +2636,17 @@ L7D38:
     cpy $04
     beq RTS_7D51
 L7D45:
-    lda SamusIsHit
+    lda Samus.isHit
     and #$38
     ora $10
     ora #$40
-    sta SamusIsHit
+    sta Samus.isHit
 RTS_7D51:
     rts
 L7D52:
     lda #$60
     sta PageIndex
-    ldy StatueStatus
+    ldy Statue.status
     beq RTS_7D51
     dey
     bne L7D6B
@@ -2654,9 +2654,9 @@ L7D52:
     ldy #$01
     jsr L7E26
     bcs L7D6B
-    inc StatueStatus
+    inc Statue.status
 L7D6B:
-    ldy StatueStatus
+    ldy Statue.status
     cpy #$02
     bne L7D8B
     lda CurSamusStat.byte4
@@ -2670,7 +2670,7 @@ L7D7C:
     jsr L7E26
 L7D86:
     bcs L7D8B
-    inc StatueStatus
+    inc Statue.status
 L7D8B:
     ldx #$60
     jsr L7D98
@@ -2684,7 +2684,7 @@ L7D98:
     and #$01
     tay
     lda $7DB9,y
-    sta StatueAnimFrame
+    sta Statue.animFrame
     lda $B3B4,x
     beq L7DB4
     bmi L7DB4
@@ -2697,23 +2697,23 @@ L7DB4:
     pla
     adc $66
 L7DBB:
-    lda ObjAnimDelay,x
+    lda Samus.animDelay,x
     bmi RTS_7DF9
     lda #$01
-    sta ObjAnimDelay,x
+    sta Samus.animDelay,x
     lda SamusJumpDsplcmnt,x
     and #$0F
     beq RTS_7DF9
-    inc ObjAnimDelay,x
+    inc Samus.animDelay,x
     dec SamusJumpDsplcmnt,x
     lda SamusJumpDsplcmnt,x
     and #$0F
     bne RTS_7DF9
-    lda ObjAnimDelay,x
+    lda Samus.animDelay,x
     ora #$80
-    sta ObjAnimDelay,x
+    sta Samus.animDelay,x
     sta $B3B4,x
-    inc ObjAnimDelay,x
+    inc Samus.animDelay,x
     txa
     pha
     and #$01
@@ -2731,29 +2731,29 @@ RTS_7DF9:
     rts
 L7DFA:
     lda SamusJumpDsplcmnt,x
-    sta StatueY
+    sta Statue.y
     txa
     and #$01
     tay
     lda $7DB7,y
-    sta StatueX
+    sta Statue.x
     lda $B3B4,x
     beq L7E20
     bmi L7E20
-    lda ObjAnimDelay,x
+    lda Samus.animDelay,x
     cmp #$01
     bne L7E20
-    lda ObjAnimIndex,x
+    lda Samus.animIndex,x
     beq L7E20
     dec SamusJumpDsplcmnt,x
 L7E20:
     lda #$00
-    sta ObjAnimIndex,x
+    sta Samus.animIndex,x
     rts
 L7E26:
     lda StatueTileBlastWRAMPtrLoTable,y
     sta $05C8
-    lda StatueHi
+    lda Statue.hi
     asl a
     asl a
     ora StatueTileBlastWRAMPtrHiTable,y
@@ -2797,7 +2797,7 @@ L7E66:
     sta $0507,x
     lda #$04
     sta $050A,x
-    lda StatueHi
+    lda Statue.hi
     asl a
     asl a
     ora #$62
@@ -2843,11 +2843,11 @@ L7EB8:
     iny
     beq RTS_7EAC
     lda $0749,x
-    sta PowerUpDrawY
+    sta PowerUpDraw.y
     lda $074A,x
-    sta PowerUpDrawX
+    sta PowerUpDraw.x
     lda $074B,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
     jsr L7B1C
     ldx $46
     ldy #$00
@@ -2857,7 +2857,7 @@ L7EB8:
     lda $0748,x
     and #$0F
     ora #$50
-    sta PowerUpDrawAnimFrame
+    sta PowerUpDraw.animFrame
     lda FrameCount
     lsr a
     and #$03
@@ -3032,26 +3032,26 @@ MAIN_TwosComplement: ;($8001)
     cpy #$40
 L800B:
     ldx PageIndex
-    ldy ObjAnimDelay,x
+    ldy Samus.animDelay,x
     beq L8017
-    dec ObjAnimDelay,x
+    dec Samus.animDelay,x
     bne RTS_802C
 L8017:
-    sta ObjAnimDelay,x
-    ldy ObjAnimIndex,x
+    sta Samus.animDelay,x
+    ldy Samus.animIndex,x
 L801D:
     lda ObjectAnimIndexTbl,y
     cmp #$FF
     beq L802D
-    sta ObjAnimFrame,x
+    sta Samus.animFrame,x
     iny
     tya
-    sta ObjAnimIndex,x
+    sta Samus.animIndex,x
 RTS_802C:
     rts
 
 L802D:
-    ldy ObjAnimResetIndex,x
+    ldy Samus.animResetIndex,x
     jmp L801D
     pha
     lda #$00
@@ -3290,7 +3290,7 @@ L81C3:
 
 ObjDrawFrame: ;($81C6)
     ldx PageIndex
-    lda ObjAnimFrame,x
+    lda Samus.animFrame,x
     cmp #$F7
     bne L81D2
     L81CF:
@@ -3302,13 +3302,13 @@ ObjDrawFrame: ;($81C6)
     and #$EF
     sta $65
 L81DC:
-    lda ObjY,x
+    lda Samus.y,x
     sta $0A
-    lda ObjX,x
+    lda Samus.x,x
     sta $0B
-    lda ObjHi,x
+    lda Samus.hi,x
     sta $06
-    lda ObjAnimFrame,x
+    lda Samus.animFrame,x
     asl a
     tax
     lda ObjFramePtrTable,x
@@ -3339,7 +3339,7 @@ L81DC:
     bne L8233
     ldx PageIndex
     lda #$08
-    sta ObjAction,x
+    sta Samus.status,x
     pla
     pla
     jmp L82A4
@@ -3347,18 +3347,18 @@ L8233:
     ldx PageIndex
     iny
     lda ($00),y
-    sta ObjRadY,x
+    sta Samus.radiusY,x
     jsr ReduceYRadius
     iny
     lda ($00),y
-    sta ObjRadX,x
+    sta Samus.radiusX,x
     sta $09
     iny
     sty $11
     jsr IsObjectVisible
     txa
     ldx PageIndex
-    sta ObjOnScreen,x
+    sta Samus.onScreen,x
     tax
     beq L825A
 L8255:
@@ -3838,7 +3838,7 @@ VerticalRoomCentered: ;($8586)
     stx $66
     stx $67
     inx
-    lda ObjX
+    lda Samus.x
     bmi L85AC
     inx
     bne L85AC
@@ -3867,9 +3867,9 @@ RTS_85B3:
 
 
 ToggleSamusHi: ;($85B4)
-    lda ObjHi
+    lda Samus.hi
     eor #$01
-    sta ObjHi
+    sta Samus.hi
     rts
 
 
@@ -3889,14 +3889,14 @@ IsSamusInLava: ;($85C8)
     cmp ScrollDir
     bcs RTS_85D3
     lda #$D8
-    cmp ObjY
+    cmp Samus.y
 RTS_85D3:
     rts
 
 
 
 LavaAndMoveCheck: ;($85D4)
-    lda ObjAction
+    lda Samus.status
     cmp #$09
     beq L85DF
         cmp #$07
@@ -3932,7 +3932,7 @@ L8611:
     iny
     sty $5E
     jsr VertAccelerate
-    lda ObjY
+    lda Samus.y
     sec
     sbc $FC
     sta $4C
@@ -3949,7 +3949,7 @@ L862F:
     jsr MoveSamusUp
     bcs L863E
     sec
-    ror ObjSpeedY
+    ror Samus.speedY
     ror SamusSpeedSubPixelY
     jmp L8685
 L863E:
@@ -3967,10 +3967,10 @@ L864C:
 L864E:
     jsr MoveSamusDown
     bcs L8681
-    lda ObjAction
+    lda Samus.status
     cmp #$03
     bne L8676
-    lsr ObjSpeedY
+    lsr Samus.speedY
     beq L8679
     ror SamusSpeedSubPixelY
     lda #$00
@@ -3978,8 +3978,8 @@ L864E:
     sbc SamusSpeedSubPixelY
     sta SamusSpeedSubPixelY
     lda #$00
-    sbc ObjSpeedY
-    sta ObjSpeedY
+    sbc Samus.speedY
+    sta Samus.speedY
     jmp L8685
 L8676:
     jsr SFX_SamusWalk
@@ -3992,7 +3992,7 @@ L8681:
     bne L864E
 L8685:
     jsr HorzAccelerate
-    lda ObjX
+    lda Samus.x
     sec
     sbc $FD
     sta $4B
@@ -4043,7 +4043,7 @@ CheckStopHorzMvmt: ;($86D0)
     sta $5F
     lda SamusAccelY
     bne RTS_86CF
-    lda ObjAction
+    lda Samus.status
     cmp #$03
     beq RTS_86CF
     jmp SetSamusStand
@@ -4055,9 +4055,9 @@ VertAccelerate: ;($86E5)
     bne @dontStartFalling
     lda #$18
     sta SamusHorzSpeedMax
-    lda ObjY
+    lda Samus.y
     clc
-    adc ObjRadY
+    adc Samus.radiusY
     and #$07
     bne @endIf_A
         jsr L8B18
@@ -4076,13 +4076,13 @@ VertAccelerate: ;($86E5)
     clc
     adc SamusAccelY
     sta SamusSpeedSubPixelY
-    lda ObjSpeedY
+    lda Samus.speedY
     adc #$00
-    sta ObjSpeedY
+    sta Samus.speedY
     bpl @else_B
         lda #$00
         cmp SamusSpeedSubPixelY
-        sbc ObjSpeedY
+        sbc Samus.speedY
         cmp #$06
         ldx #$FA
         bne @endIf_B
@@ -4091,14 +4091,14 @@ VertAccelerate: ;($86E5)
     @endIf_B:
     bcc @endIf_C
         jsr L74FD
-        stx ObjSpeedY
+        stx Samus.speedY
     @endIf_C:
     lda SamusSubPixelY
     clc
     adc SamusSpeedSubPixelY
     sta SamusSubPixelY
     lda #$00
-    adc ObjSpeedY
+    adc Samus.speedY
     sta $00
     rts
 
@@ -4123,8 +4123,8 @@ HorzAccelerate: ;($8750)
     bpl L8778
         lda #$FF
     L8778:
-    adc ObjSpeedX
-    sta ObjSpeedX
+    adc Samus.speedX
+    sta Samus.speedX
     tay
     bpl L8791
         lda #$00
@@ -4132,7 +4132,7 @@ HorzAccelerate: ;($8750)
         sbc SamusSpeedSubPixelX
         tax
         lda #$00
-        sbc ObjSpeedX
+        sbc Samus.speedX
         tay
         jsr NegateTemp00Temp01
     L8791:
@@ -4143,14 +4143,14 @@ HorzAccelerate: ;($8750)
         lda $00
         sta SamusSpeedSubPixelX
         lda $01
-        sta ObjSpeedX
+        sta Samus.speedX
     L87A2:
     lda SamusSubPixelX
     clc
     adc SamusSpeedSubPixelX
     sta SamusSubPixelX
     lda #$00
-    adc ObjSpeedX
+    adc Samus.speedX
     sta $00
     rts
 
@@ -4169,19 +4169,19 @@ NegateTemp00Temp01: ;($87B4)
 
 
 MoveSamusUp: ;($87C2)
-    lda ObjY
+    lda Samus.y
     sec
-    sbc ObjRadY
+    sbc Samus.radiusY
     and #$07
     bne L87D2
         jsr L8B0D
         bcc RTS_880D
     L87D2:
-    lda ObjAction
+    lda Samus.status
     cmp #$09
     beq L87E6
         jsr L7CF4
-        lda SamusIsHit
+        lda Samus.isHit
         and #$42
         cmp #$42
         clc
@@ -4195,7 +4195,7 @@ MoveSamusUp: ;($87C2)
     L87F1:
         dec $4C
     L87F3:
-    lda ObjY
+    lda Samus.y
     bne L8806
         lda ScrollDir
         and #$02
@@ -4203,9 +4203,9 @@ MoveSamusUp: ;($87C2)
             jsr ToggleSamusHi
         L8801:
         lda #$F0
-        sta ObjY
+        sta Samus.y
     L8806:
-    dec ObjY
+    dec Samus.y
     inc SamusJumpDsplcmnt
     sec
 RTS_880D:
@@ -4214,15 +4214,15 @@ RTS_880D:
 
 
 MoveSamusDown: ;($880E)
-    lda ObjY
+    lda Samus.y
     clc
-    adc ObjRadY
+    adc Samus.radiusY
     and #$07
     bne L881E
         jsr L8B18
         bcc RTS_885B
     L881E:
-    lda ObjAction
+    lda Samus.status
     cmp #$09
     beq L8832
         jsr L7CF4
@@ -4240,7 +4240,7 @@ MoveSamusDown: ;($880E)
     L883D:
         inc $4C
     L883F:
-    lda ObjY
+    lda Samus.y
     cmp #$EF
     bne L8854
         lda ScrollDir
@@ -4249,9 +4249,9 @@ MoveSamusDown: ;($880E)
             jsr ToggleSamusHi
         L884F:
         lda #$FF
-        sta ObjY
+        sta Samus.y
     L8854:
-    inc ObjY
+    inc Samus.y
     dec SamusJumpDsplcmnt
     sec
 RTS_885B:
@@ -4453,16 +4453,16 @@ L8981:
     stx $07A0
     jsr L9531
 L8991:
-    lda ObjX
+    lda Samus.x
     sec
-    sbc ObjRadX
+    sbc Samus.radiusX
     and #$07
     bne L89A1
     jsr L8BD5
     bcc L89CE
 L89A1:
     jsr L7CF4
-    lda SamusIsHit
+    lda Samus.isHit
     and #$41
     cmp #$41
     clc
@@ -4475,14 +4475,14 @@ L89A1:
 L89B9:
     dec $4B
 L89BB:
-    lda ObjX
+    lda Samus.x
     bne L89C9
     lda ScrollDir
     and #$02
     beq L89C9
     jsr ToggleSamusHi
 L89C9:
-    dec ObjX
+    dec Samus.x
     sec
     rts
 L89CE:
@@ -4490,16 +4490,16 @@ L89CE:
     sta $52
     rts
 L89D3:
-    lda ObjX
+    lda Samus.x
     clc
-    adc ObjRadX
+    adc Samus.radiusX
     and #$07
     bne L89E3
     jsr L8BE0
     bcc L8A0D
 L89E3:
     jsr L7CF4
-    lda SamusIsHit
+    lda Samus.isHit
     and #$41
     cmp #$40
     clc
@@ -4512,7 +4512,7 @@ L89E3:
 L89FB:
     inc $4B
 L89FD:
-    inc ObjX
+    inc Samus.x
     bne L8A0B
     lda ScrollDir
     and #$02
@@ -4687,7 +4687,7 @@ L8AFD:
     rts
 L8B0D:
     ldx PageIndex
-    lda ObjRadY,x
+    lda Samus.radiusY,x
     clc
     adc #$08
     jmp L8B20
@@ -4695,11 +4695,11 @@ L8B18:
     ldx PageIndex
     lda #$00
     sec
-    sbc ObjRadY,x
+    sbc Samus.radiusY,x
 L8B20:
     sta $02
     jsr L8C13
-    lda ObjRadX,x
+    lda Samus.radiusX,x
 L8B28:
     bne L8B2C
     sec
@@ -4776,18 +4776,18 @@ L8B8F:
     jsr MAIN_Amul8
     ora #$80
     tay
-    lda ObjAction,y
+    lda Samus.status,y
     beq L8BC1
     lda SamusOnElevator,y
     lsr a
     bcs L8BBA
     ldx PageIndex
-    lda ObjAction,x
+    lda Samus.status,x
     eor #$0B
     bne L8BD2
 L8BBA:
     lda #$04
-    sta SamusIsHit,y
+    sta Samus.isHit,y
     bne L8BD0
 L8BC1:
     dex
@@ -4805,7 +4805,7 @@ L8BD2:
     jmp L6F78
 L8BD5:
     ldx PageIndex
-    lda ObjRadX,x
+    lda Samus.radiusX,x
     clc
     adc #$08
     jmp L8BE8
@@ -4813,11 +4813,11 @@ L8BE0:
     ldx PageIndex
     lda #$00
     sec
-    sbc ObjRadX,x
+    sbc Samus.radiusX,x
 L8BE8:
     sta $03
     jsr L8C13
-    ldy ObjRadY,x
+    ldy Samus.radiusY,x
 L8BF0:
     bne L8BF4
     sec
@@ -4840,11 +4840,11 @@ L8C02:
     lda $01
     jmp L8B49
 L8C13:
-    lda ObjHi,x
+    lda Samus.hi,x
     sta $0B
-    lda ObjY,x
+    lda Samus.y,x
     sta $08
-    lda ObjX,x
+    lda Samus.x,x
     sta $09
     rts
 L8C23:
@@ -5332,17 +5332,17 @@ L8F1D:
     bcs L8F2B
 L8F26:
     lda #$01
-    sta ObjAction,x
+    sta Samus.status,x
 L8F2B:
     pla
     and #$01
     tay
     jsr GetNameTableAtScrollDir
-    sta ObjHi,x
+    sta Samus.hi,x
     lda DoorXs,y
-    sta ObjX,x
+    sta Samus.x,x
     lda #$68
-    sta ObjY,x
+    sta Samus.y,x
     lda DoorScrollBlocks,y
     tay
     jsr GetNameTableAtScrollDir
@@ -5372,20 +5372,20 @@ LoadElevator: ;($8F5A)
     jsr SpawnElevatorRoutine
     bne L8EE5
 SpawnElevatorRoutine: ;($8F5F)
-    lda ElevatorStatus
+    lda Elevator.status
     bne @exit
     iny
     lda ($00),y
     sta ElevatorType
     ldy #$83
-    sty ElevatorY
+    sty Elevator.y
     lda #$80
-    sta ElevatorX
+    sta Elevator.x
     jsr GetNameTableAtScrollDir
-    sta ElevatorHi
+    sta Elevator.hi
     lda #$23
-    sta ElevatorAnimFrame
-    inc ElevatorStatus
+    sta Elevator.animFrame
+    inc Elevator.status
 @exit:
     lda #$02
     rts
@@ -5394,7 +5394,7 @@ SpawnElevatorRoutine: ;($8F5F)
 
 LoadStatues: ;($8F85)
     jsr GetNameTableAtScrollDir
-    sta StatueHi
+    sta Statue.hi
     lda #$40
     ldx CurSamusStat.byte5
     bpl L8F94
@@ -5409,7 +5409,7 @@ LoadStatues: ;($8F85)
     sta KraidStatueY
     sty $4E
     lda #$01
-    sta StatueStatus
+    sta Statue.status
 L8FAA:
     jmp EnemyLoop
 
@@ -5525,9 +5525,9 @@ DeleteOffscreenRoomSprites: ;($8FF1)
     jsr Projectile_RemoveIfOffScreen
     tya
     sec
-    sbc ElevatorHi
+    sbc Elevator.hi
     bne L9069
-        sta ElevatorStatus
+        sta Elevator.status
     L9069:
     ldx #$1E
     L906B:
@@ -5541,10 +5541,10 @@ DeleteOffscreenRoomSprites: ;($8FF1)
         sbc #$06
         tax
         bpl L906B
-    cpy StatueHi
+    cpy Statue.hi
     bne L9086
         lda #$00
-        sta StatueStatus
+        sta Statue.status
     L9086:
     ldx #$18
     L9088:
@@ -5589,11 +5589,11 @@ EraseScrollBlockOnNameTableAtScrollDir: ;($90B1)
 Doors_RemoveIfOffScreen: ;($90BB)
     ldx #$B0
     L90BD:
-        lda ObjAction,x
+        lda Samus.status,x
         beq L90CA
-        lda ObjOnScreen,x
+        lda Samus.onScreen,x
         bne L90CA
-            sta ObjAction,x
+            sta Samus.status,x
         L90CA:
         jsr LA0E1
         bmi L90BD
@@ -5602,14 +5602,14 @@ Doors_RemoveIfOffScreen: ;($90BB)
 
 
 Projectile_RemoveIfOffScreen: ;($90D0)
-    lda ObjAction,x
+    lda Samus.status,x
     cmp #$05
     bcc RTS_90E1
     tya
-    eor ObjHi,x
+    eor Samus.hi,x
     lsr a
     bcs RTS_90E1
-    sta ObjAction,x
+    sta Samus.status,x
 RTS_90E1:
     rts
 
@@ -6231,18 +6231,18 @@ MAIN_JumpEngine: ;($9449)
     tay
     iny
     pla
-    sta CodePtr
+    sta JumpEngineRoutinePtr
     pla
-    sta CodePtr+1.b
-    lda (CodePtr),y
+    sta JumpEngineRoutinePtr+1.b
+    lda (JumpEngineRoutinePtr),y
     tax
     iny
-    lda (CodePtr),y
-    sta CodePtr+1.b
-    stx CodePtr
+    lda (JumpEngineRoutinePtr),y
+    sta JumpEngineRoutinePtr+1.b
+    stx JumpEngineRoutinePtr
     ldx $63
     ldy $64
-    jmp ($000C)
+    jmp (JumpEngineRoutinePtr)
 
 
 
@@ -6542,13 +6542,13 @@ L9B65:
     lda $FC
     beq L9BBF
     lda $FF
-    eor ObjHi
+    eor Samus.hi
     lsr a
     bcc L9BA5
     bcs L9BA4
 L9B9D:
     ldx #$02
-    lda ObjX
+    lda Samus.x
     bpl L9BA5
 L9BA4:
     dex
@@ -6560,10 +6560,10 @@ L9BA5:
     sta $53
     lda $52
     jsr MAIN_Amul16
-    ora ObjAction
+    ora Samus.status
     sta $52
     lda #$05
-    sta ObjAction
+    sta Samus.status
 RTS_9BBE:
     rts
 L9BBF:
@@ -6587,7 +6587,7 @@ L9BD3:
     rts
 L9BD9:
     stx PageIndex
-    lda ObjAction,x
+    lda Samus.status,x
     jsr MAIN_JumpEngine
         .word RTS_D07F
         .word L9BEF
@@ -6600,7 +6600,7 @@ L9BD9:
 
 
 L9BEF:
-    inc ObjAction,x
+    inc Samus.status,x
     lda #$30
     jsr L7692
     jsr L9D4D
@@ -6616,7 +6616,7 @@ L9C0C:
     ora #$A0
     sta $65
     lda #$00
-    sta SamusIsHit,x
+    sta Samus.isHit,x
     txa
     and #$10
     eor #$10
@@ -6630,7 +6630,7 @@ L9C23:
 
 
 L9C27:
-    lda SamusIsHit,x
+    lda Samus.isHit,x
     and #$04
     beq L9C03
     dec SamusJumpDsplcmnt,x
@@ -6642,11 +6642,11 @@ L9C27:
     iny
     bne L9C03
 L9C40:
-    sta ObjAction,x
+    sta Samus.status,x
     lda #$50
     sta SamusJumpDsplcmnt,x
     lda #$2C
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
     sec
     sbc #$03
     jmp L9CD0
@@ -6656,19 +6656,19 @@ L9C40:
 L9C53:
     lda $50
     beq L9C6F
-    lda ObjHi
-    eor ObjHi,x
+    lda Samus.hi
+    eor Samus.hi,x
     lsr a
     bcs L9C6F
-    lda ObjX
-    eor ObjX,x
+    lda Samus.x
+    eor Samus.x,x
     bmi L9C6F
     lda #$04
-    sta ObjAction,x
+    sta Samus.status,x
     bne L9CC5
 L9C6F:
-    lda ObjAnimIndex,x
-    cmp ObjAnimResetIndex,x
+    lda Samus.animIndex,x
+    cmp Samus.animResetIndex,x
     bcc L9CC5
     lda SamusJumpDsplcmnt,x
     cmp #$50
@@ -6681,7 +6681,7 @@ L9C6F:
     beq L9CA9
     lda #$0A
     sta $09
-    lda ObjHi,x
+    lda Samus.hi,x
     sta $08
     ldy $4A
     txa
@@ -6692,7 +6692,7 @@ L9C9E:
     tya
     jsr L7F94
     lda #$00
-    sta ObjAction,x
+    sta Samus.status,x
     beq L9CC5
 L9CA9:
     lda FrameCount
@@ -6705,7 +6705,7 @@ L9CB3:
     sta SamusJumpDsplcmnt,x
     jsr L9D4D
     lda #$02
-    sta ObjAction,x
+    sta Samus.status,x
     jsr L9CC8
 L9CC3:
     ldx PageIndex
@@ -6713,7 +6713,7 @@ L9CC5:
     jmp L9C03
 L9CC8:
     lda #$30
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
     sec
     sbc #$02
 L9CD0:
@@ -6741,7 +6741,7 @@ L9CD6:
     sta $70
     sta $1C
 L9CF9:
-    inc ObjAction,x
+    inc Samus.status,x
     lda #$00
     sta $8C
     lda SamusOnElevator,x
@@ -6767,9 +6767,9 @@ L9D18:
     eor #$10
     tax
     lda #$06
-    sta ObjAction,x
+    sta Samus.status,x
     lda #$2C
-    sta ObjAnimResetIndex,x
+    sta Samus.animResetIndex,x
     sec
     sbc #$03
     jsr L7695
@@ -6777,7 +6777,7 @@ L9D18:
     jsr SelectSamusPal
     ldx PageIndex
     lda #$02
-    sta ObjAction,x
+    sta Samus.status,x
 L9D3F:
     jmp L9C03
 
@@ -6805,7 +6805,7 @@ L9D4F:
     tay
     lda L9D8C,y
     sta $03
-    lda ObjHi,x
+    lda Samus.hi,x
     sta $0B
     jsr L8CBF
     ldy #$00
@@ -6921,11 +6921,11 @@ L9E19:
     jsr LA073
     lda #$04
     clc
-    adc ObjRadY
+    adc Samus.radiusY
     sta $04
     lda #$04
     clc
-    adc ObjRadX
+    adc Samus.radiusX
     sta $05
     jsr LA0E7
     bcs RTS_9E4E
@@ -7086,7 +7086,7 @@ L9F2A:
 L9F46:
     ldy #$D0
 L9F48:
-    lda ObjAction,y
+    lda Samus.status,y
     beq L9F63
     cmp #$04
     bcc L9F5D
@@ -7110,7 +7110,7 @@ L9F68:
     bpl L9F2A
     ldx #$B0
 L9F71:
-    lda ObjAction,x
+    lda Samus.status,x
     cmp #$02
     bne L9F85
     ldy #$00
@@ -7135,7 +7135,7 @@ L9F93:
     beq L9FC1
     ldy #$D0
 L9FA1:
-    lda ObjAction,y
+    lda Samus.status,y
     beq L9FBC
     cmp #$04
     bcc L9FB6
@@ -7190,7 +7190,7 @@ L9FFF:
     jsr LA073
     ldx #$F0
 LA012:
-    lda ObjAction,x
+    lda Samus.status,x
     cmp #$07
     beq LA01D
         cmp #$0A
@@ -7242,11 +7242,11 @@ LA04F:
 
 
 LA05F:
-    lda ObjY,x
+    lda Samus.y,x
     sta $07
-    lda ObjX,x
+    lda Samus.x,x
     sta $09
-    lda ObjHi,x
+    lda Samus.hi,x
 
 LA06C:
     eor $FF
@@ -7257,11 +7257,11 @@ LA06C:
 
 
 LA073:
-    lda ObjY,y
+    lda Samus.y,y
     sta $06
-    lda ObjX,y
+    lda Samus.x,y
     sta $08
-    lda ObjHi,y
+    lda Samus.hi,y
 
 LA080:
     eor $FF
@@ -7282,17 +7282,17 @@ LA087:
 
 
 LA094:
-    lda ObjRadY,x
+    lda Samus.radiusY,x
     jsr LA0CD
-    lda ObjRadX,x
+    lda Samus.radiusX,x
     jmp LA0C6
 
 
 
 LA0A0:
-    lda ObjRadY,x
+    lda Samus.radiusY,x
     jsr LA0D4
-    lda ObjRadX,x
+    lda Samus.radiusX,x
     jmp LA0B8
 
 
@@ -7320,7 +7320,7 @@ LA0BF:
 
 LA0C6:
     clc
-    adc ObjRadX,y
+    adc Samus.radiusX,y
     sta $05
     rts
 
@@ -7328,7 +7328,7 @@ LA0C6:
 
 LA0CD:
     clc
-    adc ObjRadY,y
+    adc Samus.radiusY,y
     sta $04
     rts
 
@@ -7436,8 +7436,8 @@ LA153:
 
 
 LA15D:
-    ora SamusIsHit,x
-    sta SamusIsHit,x
+    ora Samus.isHit,x
+    sta Samus.isHit,x
     rts
 
 
@@ -7447,8 +7447,8 @@ LA164:
 LA166:
     lda $10
 LA168:
-    ora SamusIsHit,y
-    sta SamusIsHit,y
+    ora Samus.isHit,y
+    sta Samus.isHit,y
 RTS_A16E:
     rts
 
@@ -7495,7 +7495,7 @@ RTS_A1B6:
     rts
 LA1B7:
     bcs RTS_A1CB
-    lda ObjAction,y
+    lda Samus.status,y
     sta $040E,x
     jsr LA166
 LA1C2:
@@ -8083,7 +8083,7 @@ LA5BA:
     bcs LA5ED
 LA5E2:
     lda $0401,x
-    cmp ObjX
+    cmp Samus.x
     bne LA5EC
     inc $7D
 LA5EC:
@@ -8109,7 +8109,7 @@ LA5FC:
     bcs LA61E
 LA611:
     lda $0400,x
-    cmp ObjY
+    cmp Samus.y
     bne LA61D
     inc $7D
     inc $7D
@@ -8139,7 +8139,7 @@ LA638:
 LA63F:
     lda $B467,x
     tay
-    eor ObjHi
+    eor Samus.hi
     lsr a
     rts
 LA648:
@@ -8163,16 +8163,16 @@ LA669:
     lsr a
     sta $02
     sty $06
-    lda ObjY
+    lda Samus.y
     sta $00
     ldy $0400,x
     lda $0405,x
     bmi LA683
-    ldy ObjX
+    ldy Samus.x
     sty $00
     ldy $0401,x
 LA683:
-    lda ObjHi
+    lda Samus.hi
     lsr a
     ror $00
     lda $B467,x
@@ -8805,18 +8805,18 @@ LAAD9:
     bcc LAB45
     lda $08
     sta $A1,x
-    sta PowerUpDrawY
+    sta PowerUpDraw.y
     lda $09
     sta $A2,x
-    sta PowerUpDrawX
+    sta PowerUpDraw.x
     lda $0B
     and #$01
     sta $A3,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
     lda $A3,x
-    sta PowerUpDrawHi
+    sta PowerUpDraw.hi
     lda #$5A
-    sta PowerUpDrawAnimFrame
+    sta PowerUpDraw.animFrame
     txa
 LAB1F:
     pha
@@ -8926,7 +8926,7 @@ LABAE:
     cmp #$02
     bcs LABC2
     ldy $08
-    cpy ObjY
+    cpy Samus.y
     bcc LABC2
     ora #$02
     sta $B4,x
@@ -8966,7 +8966,7 @@ LABF5:
     lda #$00
     sta $B5,x
     tay
-    lda ObjX
+    lda Samus.x
     sec
     sbc $B2,x
     bpl LAC06
@@ -10106,7 +10106,7 @@ LB385:
     sta $03FD
     lda #$C0
     sta $03FE
-    lda ObjHi
+    lda Samus.hi
     sta $03FC
     lda #$F0
     sta PageIndex

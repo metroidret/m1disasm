@@ -125,7 +125,7 @@ print('Linking .o files')
 log_filename = f"out/linkerlog_{bt}.txt"
 completed_process = subprocess.run(f"wlalink -c -S SRC/linkfile {bto.filename} 2> {log_filename}", shell=True)
 if completed_process.returncode != 0:
-    print("Linker Error. Here are the last few lines of {log_filename}")
+    print(f"Linker Error. Here are the last few lines of {log_filename}")
     with open(log_filename, "r") as f:
         log_lines = f.readlines()
     print("".join(log_lines[-10:]))
