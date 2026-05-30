@@ -6,7 +6,7 @@ WaverAIRoutine_{AREA}:
     lda EnsExtra.0.status,x
     cmp #$03
     beq @dontUpdateAnim
-        jsr CommonJump_6C1B
+        jsr CommonJump_EnemyFlipAfterDisplacement
     @dontUpdateAnim:
     jmp CommonEnemyStub2_{AREA}
 

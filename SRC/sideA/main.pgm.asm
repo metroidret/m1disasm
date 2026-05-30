@@ -63,7 +63,7 @@ CommonJump_6C15: ;($6C15)
     jmp LA747
 CommonJump_6C18: ;($6C18)
     jmp LAAA6
-CommonJump_6C1B: ;($6C1B)
+CommonJump_EnemyFlipAfterDisplacement: ;($6C1B)
     jmp LAA75
 CommonJump_InitEnActiveAnimIndex_NoInitOffset: ;($6C1E)
     jmp InitEnActiveAnimIndex_NoInitOffset

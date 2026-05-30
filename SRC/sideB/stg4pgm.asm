@@ -395,7 +395,6 @@ UpdateEnemyCommon_Decide_{AREA}:
         lda $01
         jmp CommonJump_UpdateEnemyCommon_noMove
     @explode:
-    L984D:
         ; enemy explode
         jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
@@ -410,14 +409,32 @@ UpdateEnemyCommon_Decide_{AREA}:
 
 
 
-    .byte $20, $1B, $6C, $A9, $06
-    .byte $85, $00, $4C, $31, $B8
-    .byte $20, $1B, $6C, $A9, $06, $85, $00, $4C, $31, $B8
-    .byte $20, $1B, $6C, $A9, $06, $85, $00, $A5, $7C
-    .byte $C9, $02, $D0, $0F, $DD, $60, $B4, $D0, $0A
-    .byte $20, $09, $6C, $29, $03, $D0, $03
-    .byte $4C, $45, $B8
-    .byte $4C, $31, $B8
+; is this unused?
+L9963:
+    jsr CommonJump_EnemyFlipAfterDisplacement
+    lda #$06
+    sta $00
+    jmp UpdateEnemyCommon_Decide_{AREA}
+
+    jsr CommonJump_EnemyFlipAfterDisplacement
+    lda #$06
+    sta $00
+    jmp UpdateEnemyCommon_Decide_{AREA}
+
+    jsr CommonJump_EnemyFlipAfterDisplacement
+    lda #$06
+    sta $00
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Active
+    bne L9993
+    cmp EnsExtra.0.status,x
+    bne L9993
+    jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
+    and #$03
+    bne L9993
+        jmp UpdateEnemyCommon_Decide_{AREA}@explode
+    L9993:
+    jmp UpdateEnemyCommon_Decide_{AREA}
 
 
 
@@ -462,46 +479,188 @@ UpdateEnemyCommon_Decide_{AREA}:
 
 
 StoreEnemyPositionToTemp__{AREA}:
-    .byte $BD, $00, $04
-    .byte $85, $08
-    .byte $BD, $01, $04
-    .byte $85, $09
-    .byte $BD, $67, $B4
-    .byte $85, $0B
-    .byte $60
+    lda Ens.0.y,x
+    sta Temp08_PositionY
+    lda Ens.0.x,x
+    sta Temp09_PositionX
+    lda EnsExtra.0.hi,x
+    sta Temp0B_PositionHi
+    rts
 
 LoadEnemyPositionFromTemp__{AREA}:
-    .byte $A5, $0B
+    lda Temp0B_PositionHi
+    and #$01
+    sta EnsExtra.0.hi,x
+    lda Temp08_PositionY
+    sta Ens.0.y,x
+    lda Temp09_PositionX
+    sta Ens.0.x,x
+    rts
+
+
+
+    .byte $A5, $7C
+    .byte $C9, $01
+    .byte $D0, $1E
+    
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $59
+    
+    .byte $C9, $02
+    .byte $D0, $13
+        .byte $BC, $08, $04
+        .byte $B9, $CA, $BA
+        .byte $9D, $02, $04
+        .byte $A9, $40
+        .byte $9D, $6A, $B4
+        .byte $A9, $00
+        .byte $9D, $06, $04
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $3B
+    
+    .byte $A5, $7C
+    .byte $C9, $01
+    .byte $F0, $35
+    .byte $C9, $03
+    .byte $F0, $36
+    .byte $20, $36
+    
+    .byte $6C, $A6, $45
+    .byte $A9, $00
+    .byte $85, $05
+    .byte $A9, $1D
+    .byte $A4, $00
+    .byte $84, $04
+    .byte $30, $02
+        .byte $A9, $20
+    .byte $9D, $65, $B4
+    
+    .byte $20, $3A, $BA
+    .byte $20, $27, $6C
+    
+    .byte $A9, $E8
+    .byte $90, $04
+        .byte $C5, $08
+        .byte $B0, $0A
+        
+        .byte $85, $08
+        .byte $BD, $05, $04
+        .byte $09, $20
+        .byte $9D, $05, $04
+    
+    .byte $20, $4A, $BA
+    
+    .byte $A9, $02
+    .byte $4C, $03, $6C
+    
+    .byte $4C, $06, $6C
+    
+    .byte $F6, $F8, $F6, $FA
+
+
+
+    .byte $BD, $60, $B4
+    .byte $C9, $02
+    .byte $D0, $03
+        .byte $20, $1E, $6C
+    .byte $A9, $02
+    .byte $85, $00
+    .byte $85, $01
+    .byte $4C, $31, $B8
+
+
+
+    .byte $BD, $60, $B4
+    .byte $C9, $01
+    .byte $D0, $05
+        .byte $A9, $E8
+        .byte $9D, $00, $04
+    .byte $C9, $02
+    .byte $D0, $4E
+    
+    .byte $BD, $06, $04
+    .byte $F0, $49
+    .byte $BD, $6D, $B4
+    .byte $D0, $44
+    
+    .byte $A5, $27
+    .byte $29, $1F
+    .byte $D0, $2B
+        .byte $A5, $28
+        .byte $29, $03
+        .byte $F0, $42
+        
+        .byte $A9, $02
+        .byte $85, $82
+        .byte $A9, $00
+        .byte $85, $83
+        .byte $A9, $43
+        .byte $85, $7E
+        .byte $A9, $47
+        .byte $85, $7F
+        .byte $A9, $03
+        .byte $85, $80
+        .byte $20, $21, $6C
+        
+        .byte $BD, $05, $04
+        .byte $29, $01
+        .byte $A8
+        .byte $B9, $7E, $00
+        .byte $20, $0F, $6C
+        .byte $F0, $1D
+    
+    .byte $C9, $0F
+    .byte $90, $19
+    .byte $BD, $05, $04
     .byte $29, $01
-    .byte $9D, $67, $B4
-    .byte $A5, $08
-    .byte $9D, $00, $04
-    .byte $A5, $09
-    .byte $9D, $01, $04
-    .byte $60
+    .byte $A8
+    .byte $B9, $52, $BB
+    .byte $20, $0F, $6C
+    .byte $4C, $49, $BB
+    
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $03
+        .byte $20, $1E, $6C
+    .byte $A9, $01
+    .byte $85, $00
+    .byte $85, $01
+    .byte $4C, $31, $B8
+    
+    .byte $45, $49
 
 
 
-    .byte $A5, $7C, $C9, $01
-    .byte $D0, $1E, $BD, $60, $B4, $C9, $03, $F0, $59, $C9, $02, $D0, $13, $BC, $08, $04
-    .byte $B9, $CA, $BA, $9D, $02, $04, $A9, $40, $9D, $6A, $B4, $A9, $00, $9D, $06, $04
-    .byte $BD, $60, $B4, $C9, $03, $F0, $3B, $A5, $7C, $C9, $01, $F0, $35, $C9, $03, $F0
-    .byte $36, $20, $36, $6C, $A6, $45, $A9, $00, $85, $05, $A9, $1D, $A4, $00, $84, $04
-    .byte $30, $02, $A9, $20, $9D, $65, $B4, $20, $3A, $BA, $20, $27, $6C, $A9, $E8, $90
-    .byte $04, $C5, $08, $B0, $0A, $85, $08, $BD, $05, $04, $09, $20, $9D, $05, $04, $20
-    .byte $4A, $BA, $A9, $02, $4C, $03, $6C, $4C, $06, $6C, $F6, $F8, $F6, $FA, $BD, $60
-    .byte $B4, $C9, $02, $D0, $03, $20, $1E, $6C, $A9, $02, $85, $00, $85, $01, $4C, $31
-    .byte $B8, $BD, $60, $B4, $C9, $01, $D0, $05, $A9, $E8, $9D, $00, $04, $C9, $02, $D0
-    .byte $4E, $BD, $06, $04, $F0, $49, $BD, $6D, $B4, $D0, $44, $A5, $27, $29, $1F, $D0
-    .byte $2B, $A5, $28, $29, $03, $F0, $42, $A9, $02, $85, $82, $A9, $00, $85, $83, $A9
-    .byte $43, $85, $7E, $A9, $47, $85, $7F, $A9, $03, $85, $80, $20, $21, $6C, $BD, $05
-    .byte $04, $29, $01, $A8, $B9, $7E, $00, $20, $0F, $6C, $F0, $1D, $C9, $0F, $90, $19
-    .byte $BD, $05, $04, $29, $01, $A8, $B9, $52, $BB, $20, $0F, $6C, $4C, $49, $BB, $BD
-    .byte $60, $B4, $C9, $03, $F0, $03, $20, $1E, $6C, $A9, $01, $85, $00, $85, $01, $4C
-    .byte $31, $B8, $45, $49, $A9, $00, $9D, $61, $B4, $9D, $62, $B4, $A9, $10, $9D, $05
-    .byte $04, $8A, $0A, $0A, $85, $00, $8A, $4A, $4A, $4A, $4A, $65, $27, $65, $00, $29
-    .byte $47, $D0, $1A, $5E, $05, $04, $A9, $03, $85, $82, $A5, $28, $4A, $3E, $05, $04
-    .byte $29, $03, $F0, $09, $85, $83, $A9, $02, $85, $80, $4C, $21, $6C
+    .byte $A9, $00
+    .byte $9D, $61, $B4
+    .byte $9D, $62, $B4
+    .byte $A9, $10
+    .byte $9D, $05, $04
+    .byte $8A
+    .byte $0A
+    .byte $0A
+    .byte $85, $00
+    .byte $8A
+    .byte $4A, $4A, $4A, $4A
+    .byte $65, $27
+    .byte $65, $00
+    .byte $29, $47
+    .byte $D0, $1A
+    
+    .byte $5E, $05, $04
+    .byte $A9, $03
+    .byte $85, $82
+    .byte $A5, $28
+    .byte $4A
+    .byte $3E, $05, $04
+    .byte $29, $03
+    .byte $F0, $09
+    .byte $85, $83
+    .byte $A9, $02
+    .byte $85, $80
+    .byte $4C, $21, $6C
 
 
 

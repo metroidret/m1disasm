@@ -6,7 +6,7 @@ Sidehopper_Common_{AREA}:
     lda EnsExtra.0.status,x
     cmp #$03
     beq CommonEnemyStub2_{AREA}
-        jsr CommonJump_6C1B
+        jsr CommonJump_EnemyFlipAfterDisplacement
 CommonEnemyStub2_{AREA}:
     lda #$06
     sta $00
