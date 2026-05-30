@@ -67,7 +67,7 @@ SwooperAIRoutine01_{AREA}:
     ; branch if current status is not resting
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
-    bne L9923_{AREA}
+    bne SwooperAIRoutine01_Swoop_{AREA}
         ; status changed from active to resting
         ; swoop straight down
         lda #$00
@@ -79,7 +79,7 @@ SwooperExit_Resting_{AREA}:
     jmp CommonJump_UpdateEnemyCommon_noMove
 
 
-L9923_{AREA}:
+SwooperAIRoutine01_Swoop_{AREA}:
     ; set gravity to negative #$80 (gravity pulls towards ceiling)
     lda #$80
     sta EnsExtra.0.accelY,x
