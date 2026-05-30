@@ -65,8 +65,8 @@ CommonJump_6C18: ;($6C18)
     jmp LAAA6
 CommonJump_6C1B: ;($6C1B)
     jmp LAA75
-CommonJump_InitEnActiveAnimIndex_NoL967BOffset: ;($6C1E)
-    jmp InitEnActiveAnimIndex_NoL967BOffset
+CommonJump_InitEnActiveAnimIndex_NoInitOffset: ;($6C1E)
+    jmp InitEnActiveAnimIndex_NoInitOffset
 CommonJump_6C21: ;($6C21)
     jmp LA75D
 CommonJump_JumpEngine: ;($6C24)
@@ -8763,7 +8763,7 @@ LAAAC:
     jmp LA57A
 
 
-InitEnActiveAnimIndex_NoL967BOffset:
+InitEnActiveAnimIndex_NoInitOffset:
     ldx PageIndex
     jsr LA731
     lda $B653,y

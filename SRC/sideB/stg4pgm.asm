@@ -404,49 +404,9 @@ UpdateEnemyCommon_Decide_{AREA}:
 ; enemy ai routines
 .include "sideB/enemies/pipe_bug.asm"
 
+.include "sideB/enemies/ripper.asm"
 
-
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $F0, $03
-    .byte $20, $1E, $6C
-    .byte $A9, $03
-    .byte $85, $00
-    .byte $85, $01
-    .byte $4C, $31, $B8
-
-
-
-    .byte $A9, $03, $85, $00, $A9
-    .byte $08, $85, $01
-    .byte $BD, $60, $B4, $C9, $01, $D0, $0C
-    .byte $BD, $05, $04, $29, $10, $F0
-    .byte $05
-    .byte $A9, $01, $20, $4C, $B9
-    .byte $20, $EC, $B8, $4C, $31, $B8
-    .byte $BD, $60, $B4, $C9, $02, $D0, $0C, $A9, $25, $BC, $02, $04, $10, $02, $A9, $22, $9D, $65, $B4, $60
-    
-    .byte $A5, $7C, $C9, $01, $F0, $10
-    .byte $C9, $03, $F0, $3F
-    .byte $BD, $60, $B4, $C9, $01, $D0, $0A
-    .byte $A9, $00, $20, $4C, $B9
-    .byte $A9, $08, $4C, $03, $6C
-    .byte $A9, $80, $9D, $6A, $B4
-    .byte $BD, $02, $04, $30, $1C
-    .byte $BD, $05, $04, $29, $10, $F0, $15
-    .byte $BD, $00, $04
-    .byte $38
-    .byte $ED, $0D, $03
-    .byte $10, $03, $20, $BE, $B5
-    .byte $C9, $10, $B0, $05
-    .byte $A9, $00, $9D, $6A, $B4
-    .byte $20, $EC, $B8, $A9, $03
-    .byte $4C, $00, $6C
-    .byte $4C, $06, $6C
-    .byte $9D, $6E, $B4
-    .byte $BD, $0B, $04, $48
-    .byte $20, $2A, $6C
-    .byte $68, $9D, $0B, $04, $60
+.include "sideB/enemies/swooper.asm"
 
 
 
