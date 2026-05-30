@@ -829,9 +829,9 @@ DeleteOffscreenRoomSprites_Tourian:
         bne @loop_B
     
     ; for all rinka spawners
-    ldx #$00
+    ldx #RinkaSpawners.0 - RinkaSpawners
     jsr @rinkaSpawner
-    ldx #$03
+    ldx #RinkaSpawners.1 - RinkaSpawners
     jsr @rinkaSpawner
 
     ; for mother brain
@@ -905,7 +905,7 @@ SpawnCannonRoutine:
 
 @spawnCannon:
     ; high nibble of special item type is Cannons.0.instrListID
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     jsr Adiv16_
     sta Cannons.0.instrListID,x
     
@@ -915,7 +915,7 @@ SpawnCannonRoutine:
     
     ; set Y and X
     iny
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     pha
     and #$F0
     ora #$07
@@ -952,15 +952,18 @@ SpawnMotherBrainRoutine:
     sta MotherBrainAnimEyeDelay
     rts
 
-L9D3B:  .byte $02
-L9D3C:  .byte $01
+L9D3B:
+    .byte $02 ; unused
+
+L9D3C:
+    .byte $01
 
 ;-------------------------------------------------------------------------------
 ; Spawns a new Zebetite into Zebetite slot
 ; ($00),y is a pointer to special items data
 SpawnZebetiteRoutine:
     ; get zebetite slot from special item type high nibble
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     and #$F0
     lsr
     tax
@@ -1000,7 +1003,7 @@ SpawnRinkaSpawnerRoutine:
     @endIf_A:
     lda RinkaSpawners.0.status,x
     bpl @RTS
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     jsr Adiv16_
     sta RinkaSpawners.0.status,x
     jsr GetNameTableAtScrollDir_

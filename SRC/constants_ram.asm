@@ -252,8 +252,8 @@
 Temp00_Diff            = $00
 Temp01_DiffHi          = $01
 Temp03_ScrollDir       = $03     ; #$00=vertical room, #$02=horizontal room
-Temp04_YSlotRadY       = $04
-Temp05_YSlotRadX       = $05
+Temp04_YSlotRadiusY    = $04
+Temp05_YSlotRadiusX    = $05
 Temp06_YSlotPositionY  = $06
 Temp07_XSlotPositionY  = $07
 Temp08_YSlotPositionX  = $08
@@ -423,6 +423,25 @@ Temp01_SpeedMax        = $01
 Temp02_SpeedMaxAbsSubPixel = $02
 Temp03_SpeedMaxAbs     = $03
 Temp04_SpeedAbsSubPixel = $04
+
+; EndOfObjs/ScanForItems
+Temp00_RoomPtr         = $00
+; Temp00_RoomPtr+1       = $01
+Temp00_SpecItmsTblPtr  = $00
+; Temp00_SpecItmsTblPtr+1 = $01
+
+; UpdateEnemy_Resting_TryBecomingActive
+Temp00_EnemyMovementChoicePtr = $00
+; Temp00_EnemyMovementChoicePtr+1 = $01
+
+; UpdateEnemy_EnData05DistanceToSamusThreshold
+Temp00_SamusPosition   = $00
+Temp02_Threshold       = $02
+Temp06_EnData05Mask    = $06
+
+; InitTables
+;Temp00_RoomRAMPtr      = $00
+; Temp00_RoomRAMPtr+1    = $01
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->

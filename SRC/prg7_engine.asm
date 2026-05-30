@@ -5133,7 +5133,7 @@ SamusCollisionWithSolidEntities: ;($D976)
         ; exit if they overlap by one pixel on the y axis
         ldy Temp11_DistY
         iny
-        cpy Temp04_YSlotRadY
+        cpy Temp04_YSlotRadiusY
         beq Exit8
         ; they overlap by more than a pixel on the y axis
         ; therefore, samus must be touching the sides of the enemy
@@ -8600,10 +8600,10 @@ AddToRoomPtr:
     adc RoomPtr
     sta RoomPtr
     ;Did carry occur? If not branch to exit.
-    bcc RTS_EAC9
+    bcc @RTS
         ;Increment high byte of room pointer if carry occured.
         inc RoomPtr+1
-    RTS_EAC9:
+    @RTS:
     rts
 
 ;----------------------------------------------------------------------------------------------------
@@ -8611,9 +8611,9 @@ AddToRoomPtr:
 EndOfObjs:
     ;Store room pointer in $0000.
     lda RoomPtr
-    sta $00
+    sta Temp00_RoomPtr
     lda RoomPtr+1
-    sta $01
+    sta Temp00_RoomPtr+1
     ;Prepare to increment to enemy/door data.
     lda #$01
 
@@ -8622,7 +8622,7 @@ EnemyLoop:
     jsr AddToPtr00
     ;Get first byte of enemy/door data.
     ldy #$00
-    lda ($00),y
+    lda (Temp00_RoomPtr),y
     ;End of enemy/door data? If so, branch to finish room setup.
     cmp #$FF
     beq EndOfRoom
@@ -8658,16 +8658,16 @@ LoadEnemy:
     jmp EnemyLoop                   ;($EAD4)Do next room object.
 
 GetEnemyData:
-    lda ($00),y                     ;Get 1st byte again.
+    lda (Temp00_RoomPtr),y                     ;Get 1st byte again.
     and #$F0                        ;Get object slot that enemy will occupy.
     tax                             ;
     jsr IsSlotTaken                 ;($EB7A)Check if object slot is already in use.
     bne Lx226                          ;Exit if object slot taken.
         iny                             ;
-        lda ($00),y                     ;Get enemy type.
+        lda (Temp00_RoomPtr),y                     ;Get enemy type.
         jsr GetEnemyType                ;($EB28)Load data about enemy.
         ldy #$02                        ;
-        lda ($00),y                     ;Get enemy initial position(%yyyyxxxx).
+        lda (Temp00_RoomPtr),y                     ;Get enemy initial position(%yyyyxxxx).
         jsr LEB4D
         pha
     Lx225:
@@ -8786,7 +8786,7 @@ Lx230:
 
 SpawnDoorRoutine:
     iny
-    lda ($00),y     ; door info byte
+    lda (Temp00_RoomPtr),y     ; door info byte
     pha
     jsr Amul16      ; CF = door side (0=right, 1=left)
     php
@@ -8858,10 +8858,10 @@ DoorScrollBlocks:
     .byte $02        ; right
     .byte $01        ; left
 DoorSlots:
-    .byte $80        ; right on white square
-    .byte $B0        ; left on white square
-    .byte $A0        ; right on black square
-    .byte $90        ; left on black square
+    .byte Doors.0 - Objects        ; right on white square
+    .byte Doors.3 - Objects        ; left on white square
+    .byte Doors.2 - Objects        ; right on black square
+    .byte Doors.1 - Objects        ; left on black square
 
 ; LoadElevator
 ; ============
@@ -8874,7 +8874,7 @@ SpawnElevatorRoutine:
     lda Elevator.status
     bne @exit      ; exit if elevator already present
     iny
-    lda ($00),y
+    lda (Temp00_RoomPtr),y
     sta ElevatorType
     ldy #$83
     sty Elevator.y
@@ -8940,16 +8940,16 @@ LoadPipeBugHole:
     ; slot found, spawn pipe bug hole
     ; set enemy slot
     ldy #$00
-    lda ($00),y
+    lda (Temp00_RoomPtr),y
     and #$F0
     sta PipeBugHoles.0.enemySlot,x
     ; set status (enemy type to be spawned)
     iny
-    lda ($00),y
+    lda (Temp00_RoomPtr),y
     sta PipeBugHoles.0.status,x
     ; set position
     iny
-    lda ($00),y
+    lda (Temp00_RoomPtr),y
     tay
     and #$F0
     ora #$08
@@ -9112,7 +9112,7 @@ EraseScrollBlockOnNameTableAtScrollDir:
 
 Doors_RemoveIfOffScreen:
     ; loop through all doors
-    ldx #Doors.3 - Objects
+    ldx #Doors - Objects + _sizeof_Doors - _sizeof_Doors.0
     @loop:
         ; branch if door doesn't exist
         lda Objects.0.status,x
@@ -9170,15 +9170,15 @@ Exit11:
 ScanForItems:
     ;Low byte of ptr to 1st item data.
     lda SpecItmsTblPtr
-    sta $00
+    sta Temp00_SpecItmsTblPtr
     ;High byte of ptr to 1st item data.
     lda SpecItmsTblPtr+1
     @loop_scanItemY:
-        sta $01
+        sta Temp00_SpecItmsTblPtr+1
         ;Index starts at #$00.
         ldy #$00
         ;Load map Ypos of item.
-        lda ($00),y
+        lda (Temp00_SpecItmsTblPtr),y
         ;The upcoming screen is the one Samus is moving towards.
         ;Branch if item y == upcoming screen y.
         cmp MapPosY
@@ -9190,19 +9190,19 @@ ScanForItems:
         ;we must continue to loop through items until we find an item with the right height.
         iny
         ;Low byte of ptr to next item data.
-        lda ($00),y
+        lda (Temp00_SpecItmsTblPtr),y
         tax
         iny
         ;AND with hi byte of item ptr.
-        and ($00),y
+        and (Temp00_SpecItmsTblPtr),y
         ;if result is FFh, then this was the last item(item ptr = FFFF). Branch to exit.
         cmp #$FF
         beq Exit11
 
         ;High byte of ptr to next item data.
-        lda ($00),y
+        lda (Temp00_SpecItmsTblPtr),y
         ;Write low byte for next item.
-        stx $00
+        stx Temp00_SpecItmsTblPtr
         ;Process next item.
         jmp @loop_scanItemY
 
@@ -9215,7 +9215,7 @@ ScanForItems:
     @loop_scanItemX:
         ldy #$00
         ;Load map Xpos of item.
-        lda ($00),y
+        lda (Temp00_SpecItmsTblPtr),y
         ;Branch if item x == upcoming screen x.
         cmp MapPosX
         beq @itemXFound
@@ -9237,7 +9237,7 @@ ScanForItems:
 ChooseSpawningRoutine:
     jsr AddToPtr00                  ;($EF09)Add A to pointer at $0000.
     ldy #$00                        ;
-    lda ($00),y                     ;Object type
+    lda (Temp00_SpecItmsTblPtr),y                     ;Object type
     and #$0F                        ;Object handling routine index stored in 4 LSBs.
     jsr JumpEngine               ;($C27C)Load proper handling routine from table below.
         .word ExitSub               ;($C45C)rts.
@@ -9279,7 +9279,7 @@ SpawnPowerUp:
     @endIf_A:
 
     ;load power-up item type.
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     ;($EE3D)Get unique item ID.
     jsr PrepareItemID
     ; exit if Samus already has item.
@@ -9292,7 +9292,7 @@ SpawnPowerUp:
     lda Temp09_ItemType
     sta PowerUps.0.type,x
     ; load x and y screen position of item.
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     ;Save position data for later processing.
     tay
     ;Extract Y coordinate. + 8 to find Y coordinate center.
@@ -9532,9 +9532,9 @@ DrawMetatile:
     ;for the room RAM has been reached.
     ;If so, branch to check lower byte as well.
     ;If not at end of room RAM, branch to draw metatile.
-    cmp #$63
+    cmp #>(RoomRAMA+$03C0)
     beq @checkLowByte
-    cmp #$67
+    cmp #>(RoomRAMB+$03C0)
     bcc @checkSuccess
     beq @checkLowByte
     ;Return if have gone past room RAM(should never happen).
@@ -9544,7 +9544,9 @@ DrawMetatile:
     ;Low byte of current nametable address.
     lda Temp00_RoomRAMPtr
     ;Reached attrib table? If not, branch to draw the metatile.
-    cmp #$A0
+    ; (the -$20 is a failsafe to prevent drawing a half metatile in the attributes, -->
+    ;  though this is not possible)
+    cmp #<($03C0-$20)
     bcc @checkSuccess
     ;Can't draw any more of the structure, exit.
     rts
@@ -9754,14 +9756,14 @@ InitTables:
     lda #$FF                        ;Value to fill room RAM with.
     jsr FillRoomRAM                 ;($F01C)Fill entire RAM for designated room with #$FF.
 
-    ldx $01                         ;#$5F or #$63 depening on which room RAM was initialized.
+    ldx Temp00_RoomRAMPtr+1                         ;#$5F or #$63 depening on which room RAM was initialized.
     jsr Xplus4                      ;($E193)X = X + 4.
-    stx $01                         ;Set high byte for attribute table write(#$63 or #$67).
+    stx Temp00_RoomRAMPtr+1                         ;Set high byte for attribute table write(#$63 or #$67).
     ldx RoomPalette                     ;Index into table below (Lowest 2 bits).
     lda ATDataTable,x               ;Load attribute table data from table below.
     ldy #$C0                        ;Low byte of start of all attribute tables.
     @loop:
-        sta ($00),y                     ;Fill attribute table.
+        sta (Temp00_RoomRAMPtr),y                     ;Fill attribute table.
         iny                             ;
         bne @loop                       ;Loop until entire attribute table is filled.
     rts
@@ -9780,22 +9782,22 @@ FillRoomRAM:
     ;(X = RoomRAMPtrHi+3 - RoomRAMPtrHi - clc = #$FC)
     ;Since carry bit is cleared, result is one less than expected.
     txa
-    sty $01
+    sty Temp00_RoomRAMPtr+1
     clc
-    sbc $01
+    sbc Temp00_RoomRAMPtr+1
     tax
     ;Restore value to fill room RAM with(#$FF).
     pla
     ;Lower address byte to start at.
     ldy #$00
-    sty $00
+    sty Temp00_RoomRAMPtr
     ;Loop until all the room RAM is filled with #$FF(black).
     @loop_outer:
         @loop_inner:
-            sta ($00),y
+            sta (Temp00_RoomRAMPtr),y
             dey
             bne @loop_inner
-        dec $01
+        dec Temp00_RoomRAMPtr+1
         inx
         bne @loop_outer
     rts
@@ -9816,7 +9818,7 @@ CollisionDetection:
         ; branch if no Mellow in slot
         lda Mellows.0.status,x
         beq Lx266
-        cmp #$03
+        cmp #enemyStatus_Explode
         beq Lx266
             ; check for collision with samus
             jsr GetMellowXSlotPosition
@@ -9862,7 +9864,7 @@ CollisionDetection:
         bpl Lx261
 
 ; doors <--> samus detection
-    ldx #$B0
+    ldx #Doors - Objects + _sizeof_Doors - _sizeof_Doors.0
     Lx267:
         ; check next door if this door is not closed
         lda Objects.0.status,x
@@ -9882,7 +9884,7 @@ CollisionDetection:
 ; enemy <--> bullet/missile/bomb detection and enemy <--> samus detection
 Lx269:
     ; start with enemy slot #5
-    ldx #$50
+    ldx #_sizeof_Ens - _sizeof_Ens.0
     LF09F:
         ; check next enemy if enemy slot is empty
         lda EnsExtra.0.status,x
@@ -9899,7 +9901,7 @@ Lx269:
         beq Lx274
 
         ; first samus projectile slot
-        ldy #SamusProjectiles.0 - Objects
+        ldy #SamusProjectiles - Objects
         Lx271:
             lda Objects.0.status,y  ; is it active?
             beq Lx273            ; branch if not
@@ -9938,13 +9940,13 @@ Lx269:
 ; enemy projectile <--> samus detection
 Lx275:
     ; get samus coord data
-    ldx #$00
+    ldx #Samus - Objects
     jsr GetObjectXSlotPosition
-    ldy #$60
+    ldy #EnProjectiles - Ens
     Lx276:
         lda EnsExtra.0.status,y
         beq Lx277
-        cmp #$05
+        cmp #enemyStatus_Pickup
         beq Lx277
         ; check next projectile if samus has i-frames
         lda SamusInvincibleDelay
@@ -9959,7 +9961,7 @@ Lx275:
         jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus
     Lx277:
         jsr Yplus16
-        cmp #$C0
+        cmp #EnProjectiles - Ens + _sizeof_EnProjectiles
         bne Lx276
 
 ; bomb <--> samus detection
@@ -9968,7 +9970,7 @@ Lx275:
     jsr IsSamusDead
     beq GotoSubtractHealth
     jsr GetObjectYSlotPosition
-    ldx #$F0
+    ldx #SamusProjectiles - Objects + _sizeof_SamusProjectiles - _sizeof_SamusProjectiles.0
     Lx278:
         lda Objects.0.status,x
         cmp #wa_Unknown7
@@ -9980,7 +9982,7 @@ Lx275:
         jsr SamusHurt_F311
     Lx280:
         jsr Xminus16
-        cmp #$C0
+        cmp #SamusProjectiles - Objects - _sizeof_SamusProjectiles.0
         bne Lx278
 
 GotoSubtractHealth:
@@ -10066,7 +10068,7 @@ GetRadiusSumsOfEnXSlotAndObjYSlot:
 AddEnemyYSlotRadiusX:
     clc
     adc EnsExtra.0.radiusX,y
-    sta Temp05_YSlotRadX
+    sta Temp05_YSlotRadiusX
     rts
 
 AddObjectYSlotRadiusYOf4AndRadiusXOf8:
@@ -10077,19 +10079,19 @@ AddObjectYSlotRadiusYOf4AndRadiusXOf8:
 AddObjectYSlotRadiusX:
     clc
     adc Objects.0.radiusX,y
-    sta Temp05_YSlotRadX
+    sta Temp05_YSlotRadiusX
     rts
 
 AddObjectYSlotRadiusY:
     clc
     adc Objects.0.radiusY,y
-    sta Temp04_YSlotRadY
+    sta Temp04_YSlotRadiusY
     rts
 
 AddEnemyYSlotRadiusY:
     clc
     adc EnsExtra.0.radiusY,y
-    sta Temp04_YSlotRadY
+    sta Temp04_YSlotRadiusY
     rts
 
 ; Y = Y + 16
@@ -10160,7 +10162,7 @@ CheckCollisionOfXSlotAndYSlot:
     lda Temp00_Diff
     sta Temp11_DistY
     ; return carry set if y distance is greater than both y radius combined
-    cmp Temp04_YSlotRadY
+    cmp Temp04_YSlotRadiusY
     bcs @RTS
 
     ; both things are overlapping on the y axis
@@ -10204,7 +10206,7 @@ CheckCollisionOfXSlotAndYSlot:
     sta Temp0F_DistX
     ; return carry set if y distance is greater than both y radius combined
     ; if not, return carry clear: both entities are overlapping
-    cmp Temp05_YSlotRadX
+    cmp Temp05_YSlotRadiusX
 @RTS:
     rts
 
@@ -10400,7 +10402,7 @@ LF340:
 ;-------------------------------------------------------------------------------
 UpdateAllEnemies: ; 07:F345
     ; loop through slots #$50, #$40, #$30, #$20, #$10
-    ldx #$50
+    ldx #_sizeof_Ens - _sizeof_Ens.0
     @loop:
         jsr UpdateEnemy
         ldx PageIndex
@@ -10577,37 +10579,52 @@ UpdateEnemyCommon: ; 07:F410
 ;-------------------------------------------
 
 UpdateEnemy_Frozen: ; 07:F43E
+    ; react to samus projectiles
     jsr EnemyReactToSamusProjectile
+    ; exit if samus projectile killed this enemy
     lda EnsExtra.0.status,x
-    cmp #$03
+    cmp #enemyStatus_Explode
     beq UpdateEnemyCommon
+    
+    ; enemy is still alive
+    ; if palette is not set yet (ObjectCntrl bit 7 is unset), ...
     bit ObjectCntrl
-    bmi Lx302
-        lda #$81 | OAMDATA_PRIORITY
+    bmi @endIf_A
+        ; use frozen palette
+        lda #$80 | $1 | OAMDATA_PRIORITY
         sta ObjectCntrl
-    Lx302:
+    @endIf_A:
+    ; every 8 frames, ...
     lda FrameCount
     and #$07
-    bne Lx303
+    bne @endIf_B
+        ; decrement freeze timer, and when it hits 0, ...
         dec Ens.0.data0D,x
-        bne Lx303
+        bne @endIf_B
+            ; skip unfreeze if enemy is dying (impossible at this point)
             lda EnsExtra.0.status,x
             cmp #enemyStatus_Explode
-            beq Lx303
+            beq @endIf_B
+                ; unfreeze the enemy
+                ; restore enemy status from before it was frozen
                 lda Ens.0.prevStatus,x
                 sta EnsExtra.0.status,x
+                ; reinitialize delay until enemy speed points towards samus (not necessarily used by enemy)
                 ldy EnsExtra.0.type,x
                 lda EnemyForceSpeedTowardsSamusDelayTbl,y
                 sta Ens.0.data0D,x
-    Lx303:
+    @endIf_B:
+    ; if freeze timer is low enough, ...
     lda Ens.0.data0D,x
     cmp #$0B
-    bcs Lx304
+    bcs @endIf_C
+        ; flicker the enemy
         lda FrameCount
         and #$02
-        beq Lx304
+        beq @endIf_C
+            ; this unsets bit 7, so that UpdateEnemyCommon will use the real enemy colors
             asl ObjectCntrl
-    Lx304:
+    @endIf_C:
     jmp UpdateEnemyCommon@noMoveNoAnim
 ;--------------------------------------
 UpdateEnemy_Pickup: ;($F483)
@@ -11204,7 +11221,7 @@ LoadEnHiToYAndLoadEorHiToCarry:
 UpdateEnemy_EnData05DistanceToSamusThreshold:
     ; default to masking out bit 4 and bit 3 of Ens.0.data05
     lda #~$18
-    sta $06
+    sta Temp06_EnData05Mask
     ; set bit 4 and bit 3 of Ens.0.data05
     lda #$18
     jsr OrEnData05
@@ -11233,13 +11250,13 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     Lx342:
     ; save EnemyDistanceToSamusThreshold & #$7F to $02
     lsr
-    sta $02
+    sta Temp02_Threshold
     ; save mask to $06
-    sty $06
+    sty Temp06_EnData05Mask
 
     ; check y axis
     lda Samus.y
-    sta $00
+    sta Temp00_SamusPosition
     ldy Ens.0.y,x
     ; branch if bit 7 of Ens.0.data05 is set
     lda Ens.0.data05,x
@@ -11247,14 +11264,14 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
         ; bit 7 of Ens.0.data05 is not set
         ; check x axis
         ldy Samus.x
-        sty $00
+        sty Temp00_SamusPosition
         ldy Ens.0.x,x
     Lx343:
 
     ; rotate samus hi bit into bit 7 of her position
     lda Samus.hi
     lsr
-    ror $00
+    ror Temp00_SamusPosition
     ; rotate enemy hi bit into bit 7 of its position
     lda EnsExtra.0.hi,x
     lsr
@@ -11262,7 +11279,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     ror
     ; get enemy pos relative to samus pos
     sec
-    sbc $00
+    sbc Temp00_SamusPosition
     ; branch if enemy is to the right of samus
     bpl Lx344
         ; enemy is to the left of samus
@@ -11277,14 +11294,14 @@ UpdateEnemy_EnData05DistanceToSamusThreshold:
     lsr
     ; now it's divided by 16
     ; compare with EnemyDistanceToSamusThreshold & #$7F
-    cmp $02
+    cmp Temp02_Threshold
     ; exit if the distance is smaller than the threshold
     bcc AndEnData05@RTS
     ; the distance is greater than the threshold
     ; we must unset the proper bit of Ens.0.data05
 Lx345:
     ; apply mask to Ens.0.data05
-    lda $06
+    lda Temp06_EnData05Mask
 AndEnData05:
     and Ens.0.data05,x
     sta Ens.0.data05,x
@@ -11327,10 +11344,10 @@ UpdateEnemy_Resting_TryBecomingActive:
     ; make pointer to enemy's EnemyMovementChoice in $00-$01
     clc
     adc #<EnemyMovementChoices.b
-    sta $00
+    sta Temp00_EnemyMovementChoicePtr
     lda #$00
     adc #>EnemyMovementChoices.b
-    sta $01
+    sta Temp00_EnemyMovementChoicePtr+1
     ; create randomly generated offset
     lda FrameCount
     eor RandomNumber1
@@ -11338,12 +11355,12 @@ UpdateEnemy_Resting_TryBecomingActive:
     ; for example, if there are 4 possible EnemyMovement indexes in the -->
     ; EnemyMovementChoice, the bitflag will be #$03, because 2 bits is 4 possibilities.
     ldy #$00
-    and ($00),y
+    and (Temp00_EnemyMovementChoicePtr),y
     ; add one to point to the first EnemyMovement index and save in y
     tay
     iny
     ; get movement index at that randomly generated offset
-    lda ($00),y
+    lda (Temp00_EnemyMovementChoicePtr),y
     ; save movement index
     sta Ens.0.movementIndex,x
 
@@ -11498,7 +11515,7 @@ SpawnEnProjectile:
     ; use horizontal facing dir flag to set projectile x speed
     and Ens.0.data05,x
     tax
-    lda EnSpeedX_Table15,x
+    lda SpawnEnProjectileSpeedX,x
     sta Ens.0.speedX,y
     ; y speed
     lda #$00
@@ -11534,13 +11551,13 @@ SpawnEnProjectile:
     jmp SetEnAnimIndex
 
 SpawnEnProjectile_FindSlot:
-    ldy #$60
+    ldy #EnProjectiles - Ens
     clc
     @loop:
         lda EnsExtra.0.status,y
         beq @RTS
         jsr Yplus16
-        cmp #$C0
+        cmp #EnProjectiles - Ens + _sizeof_EnProjectiles
         bne @loop
 @RTS:
     rts
@@ -11582,7 +11599,7 @@ SpawnEnProjectile_SetEnProjectilePosition:
     jmp LoadEnemyPositionFromTemp
 
 ; Table used by above subroutine
-EnSpeedX_Table15:
+SpawnEnProjectileSpeedX:
     .byte $02
     .byte $FE
 
@@ -12596,11 +12613,11 @@ UpdateTileBlast_Respawned:
     lda #$04
     clc
     adc Samus.radiusY
-    sta Temp04_YSlotRadY
+    sta Temp04_YSlotRadiusY
     lda #$04
     clc
     adc Samus.radiusX
-    sta Temp05_YSlotRadX
+    sta Temp05_YSlotRadiusX
     ; exit if metatile did not respawn over Samus
     jsr CheckCollisionOfXSlotAndYSlot
     bcs GetVRAMStringPtr@RTS
