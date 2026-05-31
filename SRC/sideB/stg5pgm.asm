@@ -373,29 +373,187 @@ AreaRoutine_Tourian:
 
 
 
-    .byte $A2, $78, $20, $3C, $BB, $A5, $97, $38, $E9, $08, $AA, $D0, $F5, $86, $97, $BC, $C1
-    .byte $C0, $D0, $01, $60, $20, $45, $BC, $98, $D0, $F9, $AC, $0B, $01, $C8, $D0, $0D
-    .byte $BD, $C5, $C0, $C9, $05, $F0, $EC, $20, $68, $BB, $4C, $23, $BC, $A5, $27, $29
-    .byte $02, $D0, $E0, $A9, $19, $4C, $29, $BC, $BC, $C5, $C0, $BD, $C7, $C0, $D0, $09
-    .byte $B9, $87, $BD, $9D, $C7, $C0, $FE, $C8, $C0, $DE, $C7, $C0, $B9, $8C, $BD, $18
-    .byte $7D, $C8, $C0, $A8, $B9, $91, $BD, $10, $1A, $C9, $FF, $D0, $0A, $BC, $C5, $C0
-    .byte $A9, $00, $9D, $C8, $C0, $F0, $E5, $FE, $C8, $C0, $20, $A7, $BB, $BC, $C5, $C0
-    .byte $4C, $7C, $BB, $9D, $C6, $C0, $60, $48, $A5, $98, $C9, $04, $B0, $10, $A0, $60
-    .byte $B9, $60, $B4, $F0, $0B, $98, $18, $69, $10, $A8, $C9, $A0, $D0, $F2, $68, $60
-    .byte $84, $45, $BD, $C2, $C0, $99, $00, $04, $BD, $C3, $C0, $99, $01, $04, $BD, $C4
-    .byte $C0, $99, $67, $B4, $A9, $02, $99, $60, $B4, $A9, $00, $99, $09, $04, $99, $64
-    .byte $B4, $99, $08, $04, $68, $20, $BE, $B5, $AA, $99, $0A, $04, $09, $02, $99, $05
-    .byte $04, $BD, $1E, $BC, $99, $65, $B4, $99, $66, $B4, $BD, $C4, $BD, $85, $05, $BD
-    .byte $C7, $BD, $85, $04, $A6, $97, $BD, $C2, $C0, $85, $08, $BD, $C3, $C0, $85, $09
-    .byte $BD, $C4, $C0, $85, $0B, $98, $AA, $20, $27, $6C, $20, $EC, $B9, $A6, $97, $60
-    .byte $0C, $0A, $0E, $BC, $C6, $C0, $B9, $BE, $BD, $8D, $43, $B5, $BD, $C2, $C0, $8D
-    .byte $E0, $04, $BD, $C3, $C0, $8D, $E1, $04, $BD, $C4, $C0, $8D, $47, $B5, $A9, $E0
-    .byte $85, $45, $4C, $3C, $6C, $A0, $00, $BD, $C3, $C0, $C5, $FD, $A5, $43, $29, $02
-    .byte $D0, $05, $BD, $C2, $C0, $C5, $FC, $BD, $C4, $C0, $45, $FF, $29, $01, $F0, $03
-    .byte $B0, $03, $38, $B0, $01, $C8, $60, $84, $02, $A0, $00, $B9, $C4, $C0, $45, $02
-    .byte $4A, $B0, $05, $A9, $00, $99, $C1, $C0, $98, $18, $69, $08, $A8, $10, $EC, $A2
-    .byte $00, $BD, $58, $07, $F0, $0B, $20, $5C, $BD, $5D, $5A, $07, $D0, $03, $9D, $58
-    .byte $07, $8A, $18, $69, $08, $AA, $C9, $28, $D0, $E7, $A2, $00, $20, $CE, $BC, $A2
+UpdateAllCannons:
+    .byte $A2, $78
+        .byte $20, $3C, $BB
+        .byte $A5, $97
+        .byte $38
+        .byte $E9, $08
+        .byte $AA
+        .byte $D0, $F5
+    
+    .byte $86, $97
+    .byte $BC, $C1, $C0
+    .byte $D0, $01
+    .byte $60
+    
+    .byte $20, $45, $BC
+    .byte $98
+    .byte $D0, $F9
+    .byte $AC, $0B, $01
+    .byte $C8
+    .byte $D0, $0D
+        .byte $BD, $C5, $C0
+        .byte $C9, $05
+        .byte $F0, $EC
+        .byte $20, $68, $BB
+        .byte $4C, $23, $BC
+        
+        .byte $A5, $27
+        .byte $29, $02
+        .byte $D0, $E0
+        .byte $A9, $19
+        .byte $4C, $29, $BC
+    ; run instruction
+    .byte $BC, $C5, $C0
+    .byte $BD, $C7, $C0
+    .byte $D0, $09
+        .byte $B9, $87, $BD
+        .byte $9D, $C7, $C0
+        .byte $FE, $C8, $C0
+    .byte $DE, $C7, $C0
+    ; get inst
+    .byte $B9, $8C, $BD
+    .byte $18
+    .byte $7D, $C8, $C0
+    .byte $A8
+    .byte $B9, $91, $BD
+    .byte $10, $1A
+        .byte $C9, $FF
+        .byte $D0, $0A
+            .byte $BC, $C5, $C0
+            .byte $A9, $00
+            .byte $9D, $C8, $C0
+            .byte $F0, $E5
+            
+            .byte $FE, $C8, $C0
+            .byte $20, $A7, $BB
+            .byte $BC, $C5, $C0
+            .byte $4C, $7C, $BB
+    .byte $9D, $C6, $C0
+    .byte $60
+    
+    ; shoot proj
+    .byte $48
+    .byte $A5, $98
+    .byte $C9, $04
+    .byte $B0, $10
+    .byte $A0, $60
+        .byte $B9, $60, $B4
+        .byte $F0, $0B
+        .byte $98
+        .byte $18
+        .byte $69, $10
+        .byte $A8
+        .byte $C9, $A0
+        .byte $D0, $F2
+        .byte $68
+    .byte $60
+    ; slot
+    .byte $84, $45
+    .byte $BD, $C2, $C0
+    .byte $99, $00, $04
+    .byte $BD, $C3, $C0
+    .byte $99, $01, $04
+    .byte $BD, $C4, $C0
+    .byte $99, $67, $B4
+    
+    .byte $A9, $02
+    .byte $99, $60, $B4
+    
+    .byte $A9, $00
+    .byte $99, $09, $04
+    .byte $99, $64, $B4
+    .byte $99, $08, $04
+    .byte $68
+    .byte $20, $BE, $B5
+    .byte $AA
+    .byte $99, $0A, $04
+    
+    .byte $09, $02
+    .byte $99, $05, $04
+    .byte $BD, $1E, $BC
+    .byte $99, $65, $B4
+    .byte $99, $66, $B4
+    .byte $BD, $C4, $BD
+    .byte $85, $05
+    .byte $BD, $C7, $BD
+    .byte $85, $04
+    .byte $A6, $97
+    .byte $BD, $C2, $C0
+    .byte $85, $08
+    .byte $BD, $C3, $C0
+    .byte $85, $09
+    .byte $BD, $C4, $C0
+    .byte $85, $0B
+    .byte $98
+    .byte $AA
+    .byte $20, $27, $6C
+    .byte $20, $EC, $B9
+    .byte $A6, $97
+    .byte $60
+
+    ; anim table
+    .byte $0C, $0A, $0E
+    
+    ; draw cannon
+    .byte $BC, $C6, $C0
+    .byte $B9, $BE, $BD
+    .byte $8D, $43, $B5
+    .byte $BD, $C2, $C0
+    .byte $8D, $E0, $04
+    .byte $BD, $C3, $C0
+    .byte $8D, $E1, $04
+    .byte $BD, $C4, $C0
+    .byte $8D, $47, $B5
+    .byte $A9, $E0
+    .byte $85, $45
+    .byte $4C, $3C, $6C
+    
+    ; check onscer
+    .byte $A0, $00
+    .byte $BD, $C3, $C0
+    .byte $C5, $FD
+    .byte $A5, $43
+    .byte $29, $02
+    .byte $D0, $05
+    .byte $BD, $C2, $C0
+    .byte $C5, $FC
+    .byte $BD, $C4, $C0
+    .byte $45, $FF
+    .byte $29, $01
+    .byte $F0, $03
+    .byte $B0, $03
+    .byte $38
+    .byte $B0, $01
+    .byte $C8
+    .byte $60
+    .byte $84, $02
+    .byte $A0, $00
+    .byte $B9, $C4, $C0
+    .byte $45, $02
+    .byte $4A
+    .byte $B0, $05
+    .byte $A9, $00
+    .byte $99, $C1, $C0
+    .byte $98
+    .byte $18
+    .byte $69, $08
+    .byte $A8
+    .byte $10, $EC
+    .byte $A2, $00
+    .byte $BD, $58, $07
+    .byte $F0, $0B
+    .byte $20, $5C, $BD
+    .byte $5D, $5A, $07
+    .byte $D0, $03
+    .byte $9D, $58, $07
+    .byte $8A
+    .byte $18
+    .byte $69, $08
+    .byte $AA
+
+    .byte $C9, $28, $D0, $E7, $A2, $00, $20, $CE, $BC, $A2
     .byte $03, $20, $CE, $BC, $A5, $98, $F0, $13, $C9, $07, $F0, $0F, $C9, $0A, $F0, $0B
     .byte $A5, $9D, $45, $02, $4A, $B0, $04, $A9, $00, $85, $98, $AD, $0D, $01, $F0, $0D
     .byte $AD, $0C, $01, $45, $02, $4A, $B0, $05, $A9, $00, $8D, $0D, $01, $60, $B5, $86
