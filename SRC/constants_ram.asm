@@ -73,8 +73,8 @@
 .struct EnExtra
     status                 db   ;Keeps track of enemy statuses. #$00=Enemy slot not in use,-->
                                   ;#$04=Enemy frozen.
-    radY                   db   ;Distance in pixels from middle of enemy to top or botom.
-    radX                   db   ;Distance in pixels from middle of enemy to left or right.
+    radiusY                db   ;Distance in pixels from middle of enemy to top or botom.
+    radiusX                db   ;Distance in pixels from middle of enemy to left or right.
     animFrame              db   ;Index into enemy animation frame data.
     animDelay              db   ;Number of frames to delay between animation frames.
     resetAnimIndex         db   ;Index to beginning of animation sequence.
@@ -206,7 +206,23 @@ IntroMusicRestart      = $63
 HealthChange           = $68     ;Amount to add/subtract from Health.
 ; HealthChange+1         = $69
 
+
+KraidLintCounter       = $79     ;Used to determine when to fire Kraid's lint. Accidentally used by Ridley too.
+KraidNailCounter       = $7A     ;Used to determine when to fire Kraid's nail.
+RidleyFireballCounter  = $7B     ;Used to determine when to fire Ridley's fireball.
+
 EnemyStatusPreAI       = $7C     ;set to enemy status before enemy ai routine is run
+
+
+SpawnEnProjectile_AnimIndex = $7E     ;right facing anim index for enemy that shoots the projectile
+; SpawnEnProjectile_AnimIndex+1 = $7F     ;left facing anim index for enemy that shoots the projectile
+SpawnEnProjectile_AnimTableIndex = $80 ;index into EnProjectileRisingAnimIndexTable
+EnemyFlipAfterDisplacementAnimIndex = $80 ;right facing anim index for enemy using EnemyFlipAfterDisplacement routine
+; EnemyFlipAfterDisplacementAnimIndex+1 = $81 ;left facing anim index for enemy using EnemyFlipAfterDisplacement routine
+SpawnEnProjectile_ExpectedStatus = $82 ;expected status for the enemy that shoots an enProjectile, won't shoot if status doesn't match
+                                                ;this functionnality is not used: the expected status is always the current status
+SpawnEnProjectile_EnData0A = $83
+
 
 MotherBrainStatus      = $98
 

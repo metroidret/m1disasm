@@ -2,253 +2,346 @@
 
 ; Kraid Routine
 KraidAIRoutine_{AREA}:
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $90, $19
-    .byte $F0, $04
-    .byte $C9, $05
-    .byte $D0, $1C
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Explode
+    bcc KraidBranch_Normal_{AREA} ; 0, 1, 2
+    beq KraidBranch_Explode_{AREA} ; 3
+    cmp #enemyStatus_Pickup
+    bne KraidBranch_Exit_{AREA} ; 4, 6
+    ; 5
     ; fallthrough
 
 KraidBranch_Explode_{AREA}:
-    .byte $A9, $00
-    .byte $8D, $70, $B4
-    .byte $8D, $80, $B4
-    .byte $8D, $90, $B4
-    .byte $8D, $A0, $B4
-    .byte $8D, $B0, $B4
-    .byte $F0, $09
+    ; delete projectiles
+    lda #enemyStatus_NoEnemy
+    sta EnsExtra.1.status
+    sta EnsExtra.2.status
+    sta EnsExtra.3.status
+    sta EnsExtra.4.status
+    sta EnsExtra.5.status
+    beq KraidBranch_Exit_{AREA} ; branch always
 
 KraidBranch_Normal_{AREA}:
-    .byte $20, $15, $BC
-    .byte $20, $C4, $BC
-    .byte $20, $FD, $BC
+    jsr KraidUpdateAllProjectiles_{AREA}
+    jsr KraidTryToLaunchLint_{AREA}
+    jsr KraidTryToLaunchNail_{AREA}
     ; fallthrough
 
 KraidBranch_Exit_{AREA}:
-    .byte $A9, $0A
-    .byte $85, $00
-    .byte $4C, $C4, $B9
+    ; change animation frame every 10 frames
+    lda #$0A
+    sta $00
+    jmp CommonEnemyStub_{AREA} ;sidehopper.asm
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile
 KraidLintAIRoutine_{AREA}:
-    .byte $BD, $05, $04
-    .byte $29, $02
-    .byte $F0, $07
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $D0, $07
+    ; branch if lint is invisible
+    lda Ens.0.data05,x
+    and #$02
+    beq KraidLintRemove_{AREA}
+    ; branch if lint is not exploding
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Explode
+    bne KraidLintMain_{AREA}
 
 KraidLintRemove_{AREA}:
-    .byte $A9, $00
-    .byte $9D, $60, $B4
-    .byte $F0, $2B
+    ; lint is dead, clear enemy slot
+    lda #enemyStatus_NoEnemy
+    sta EnsExtra.0.status,x
+    beq KraidLintDraw_{AREA} ; branch always
 
 KraidLintMain_{AREA}:
-    .byte $BD, $05, $04
-    .byte $0A
-    .byte $30, $25
-    .byte $BD, $60, $B4
-    .byte $C9, $02
-    .byte $D0, $1E
-    
-    .byte $20, $2D, $6C
-    .byte $A6, $45
-    .byte $A5, $00
-    .byte $9D, $02, $04
-    .byte $20, $30, $6C
-    .byte $A6, $45
-    .byte $A5, $00
-    .byte $9D, $03, $04
-    .byte $20, $33, $6C
-    .byte $B0, $05
-    .byte $A9, $03
-    .byte $9D, $60, $B4
+    ; exit if bit7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
+    asl
+    bmi KraidLintDraw_{AREA}
+    ; exit if lint is not active
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Active
+    bne KraidLintDraw_{AREA}
+
+    ; save deltaY into Ens.0.speedY
+    jsr CommonJump_EnemyGetDeltaY
+    ldx PageIndex
+    lda $00
+    sta Ens.0.speedY,x
+    ; save deltaX into Ens.0.speedX
+    jsr CommonJump_EnemyGetDeltaX
+    ldx PageIndex
+    lda $00
+    sta Ens.0.speedX,x
+    ; check for bg collision and try movement
+    jsr CommonJump_EnemyBGCollideOrApplySpeed
+    ; exit if movement succeeded
+    bcs KraidLintDraw_{AREA}
+    ; movement has failed either because lint hit a wall or went out of bounds
+    ; lint dies
+    lda #enemyStatus_Explode
+    sta EnsExtra.0.status,x
 
 KraidLintDraw_{AREA}:
-    .byte $A9, $01
-    .byte $20, $0C, $6C
-    .byte $4C, $06, $6C
+    ; draw lint
+    lda #$01
+    jsr CommonJump_UpdateEnemyAnim
+    jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 ;-------------------------------------------------------------------------------
 ; Kraid Projectile 2
-KraidNailAIRoutine_{AREA}:
-    .byte $4C, $CA, $BB
+KraidNailAIRoutine_{AREA}: ; L9B2C
+    jmp KraidLintAIRoutine_{AREA}
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1
-KraidUpdateAllProjectiles_{AREA}:
-    .byte $A2, $50
-    .byte $20, $22, $BC
-    .byte $8A
-    .byte $38
-    .byte $E9, $10
-    .byte $AA
-    .byte $D0, $F6
-    .byte $60
+KraidUpdateAllProjectiles_{AREA}: ; L9B2F
+    ldx #$50 ; For each of Kraid's projectiles
+    @loop:
+        jsr KraidUpdateProjectile_{AREA}
+        txa
+        sec
+        sbc #$10
+        tax
+        bne @loop
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 1.1
 KraidUpdateProjectile_{AREA}:
-    .byte $BC, $60, $B4
-    .byte $F0, $26
+    ; remove projectile if it doesn't exist (a bit odd, but ok)
+    ldy EnsExtra.0.status,x
+    beq @remove
     
-    .byte $BD, $6E, $B4
-    .byte $C9, $0A
-    .byte $F0, $04
-    .byte $C9, $09
-    .byte $D0, $6D
-    
+    ; exit if projectile is not lint or nail
+    lda EnsExtra.0.type,x
+    cmp #$0A
+    beq @branchA
+    cmp #$09
+    bne KraidUpdateProjectile_Exit_{AREA}
+
 @branchA:
-    .byte $BD, $05, $04
-    .byte $29, $02
-    .byte $F0, $14
-    .byte $88
-    .byte $F0, $1C
-    .byte $C0, $02
-    .byte $F0, $0D
-    .byte $C0, $03
-    .byte $D0, $5B
-    .byte $BD, $0C, $04
-    .byte $C9, $01
-    .byte $D0, $54
-    .byte $F0, $0B
+    ; remove projectile if it is invisible
+    lda Ens.0.data05,x
+    and #$02
+    beq @remove
+    ; branch if projectile is resting
+    dey
+    beq @resting
+    ; remove projectile if its exploding
+    cpy #enemyStatus_Explode-1
+    beq @remove
+    ; exit if projectile is not frozen
+    cpy #enemyStatus_Frozen-1
+    bne KraidUpdateProjectile_Exit_{AREA}
+    ; projectile is frozen
+    ; exit if projectile state before being frozen was not resting
+    lda Ens.0.prevStatus,x
+    cmp #$01
+    bne KraidUpdateProjectile_Exit_{AREA}
+    ; projectile state before being frozen was resting
+    beq @resting ; branch always
 
 @remove:
-    .byte $A9, $00
-    .byte $9D, $60, $B4
-    .byte $9D, $0F, $04
-    .byte $20, $2A, $6C
+    lda #enemyStatus_NoEnemy ; #$00
+    sta EnsExtra.0.status,x
+    sta Ens.0.specialAttribs,x
+    jsr CommonJump_6C2A
 
 @resting:
-    .byte $AD, $05, $04
-    .byte $9D, $05, $04
-    .byte $4A
-    .byte $08
-    .byte $8A
-    .byte $4A, $4A, $4A, $4A
-    .byte $A8
-    .byte $B9, $AF, $BC
-    .byte $85, $04
-    .byte $B9, $BE, $BC
-    .byte $9D, $6E, $B4
-    .byte $98
-    .byte $28
-    .byte $2A
-    .byte $A8
-    .byte $B9, $B3, $BC
-    .byte $85, $05
-    
-    .byte $A2, $00
-    .byte $20, $A0, $BC
-    .byte $20, $27, $6C
-    
-    .byte $A6, $45
-    .byte $90, $19
-    .byte $BD, $60, $B4
-    .byte $D0, $03
-    .byte $FE, $60, $B4
+    ; initialize projectile
+    ; copy Kraid's Ens.0.data05 to projectile's Ens.0.data05
+    lda Ens.0.data05
+    sta Ens.0.data05,x
+    ; prepare projectile offset relative to kraid's position
+    ; push kraid's facing direction carry flag to stack 
+    lsr
+    php
+    ; set y to x/16
+    txa
+    lsr
+    lsr
+    lsr
+    lsr
+    tay
+    ; get y offset from table
+    lda KraidProjectileOffsetY_{AREA}-1,y
+    sta Temp04_SpeedY
+    ; get projectile type from table
+    lda KraidProjectileType_{AREA}-1,y
+    sta EnsExtra.0.type,x
+    ; Y = (X/16)*2 + the LSB of Ens.0.data05[0] (direction Kraid is facing)
+    tya
+    plp
+    rol
+    tay
+    ; get x offset from table
+    lda KraidProjectileOffsetX_{AREA}-2,y
+    sta Temp05_SpeedX
+
+; The Brinstar Kraid code makes an incorrect assumption about X, which leads to
+;  a crash when attempting to spawn him
+    .if AREA != "STG1PGM"
+        ; push x to stack
+        txa
+        pha
+    .endif
+    ; store kraid's position in temp
+    ldx #$00
+    jsr StoreEnemyPositionToTemp__{AREA}
+    .if AREA != "STG1PGM"
+        ; pull x from stack
+        pla
+        tax
+    .endif
+    ; apply offset to kraid's position
+    jsr CommonJump_ApplySpeedToPosition
+
+    .if AREA == "STG1PGM"
+        ; load projectile's enemy slot offset into x
+        ; (BUG! this is actually kraid's enemy slot offset) 
+        ldx PageIndex
+    .endif
+    ; exit if initial position for projectile is out of bounds
+    bcc KraidUpdateProjectile_Exit_{AREA}
+    ; set projectile status to enemyStatus_Resting if it was enemyStatus_NoEnemy
+    lda EnsExtra.0.status,x
+    bne LoadEnemyPositionFromTemp__{AREA}
+    inc EnsExtra.0.status,x
+    ; save as projectile's position
     ; fallthrough
 
 LoadEnemyPositionFromTemp__{AREA}:
-    .byte $A5, $08
-    .byte $9D, $00, $04
-    .byte $A5, $09
-    .byte $9D, $01, $04
-    .byte $A5, $0B
-    .byte $29, $01
-    .byte $9D, $67, $B4
+    lda Temp08_PositionY
+    sta Ens.0.y,x
+    lda Temp09_PositionX
+    sta Ens.0.x,x
+    lda Temp0B_PositionHi
+    and #$01
+    sta EnsExtra.0.hi,x
+
 KraidUpdateProjectile_Exit_{AREA}:
-    .byte $60
+    rts
 
 StoreEnemyPositionToTemp__{AREA}:
-    .byte $BD, $00, $04, $85, $08, $BD, $01, $04, $85, $09, $BD, $67, $B4, $85, $0B, $60
+    lda Ens.0.y,x
+    sta Temp08_PositionY
+    lda Ens.0.x,x
+    sta Temp09_PositionX
+    lda EnsExtra.0.hi,x
+    sta Temp0B_PositionHi
+    rts
 
 KraidProjectileOffsetY_{AREA}:
-    .byte $F5, $FD, $05, $F6, $FE
-
-KraidProjectileOffsetX_{AREA}:
-    .byte $0A, $F6
-    .byte $0C, $F4
-    .byte $0E, $F2
-    .byte $F8, $08
-    .byte $F4, $0C
-KraidProjectileType_{AREA}:
-    .byte $09, $09, $09, $0A, $0A
+    .byte -11,  -3,   5, -10,  -2
+KraidProjectileOffsetX_{AREA}: ;9BD1
+; First column is for facing right, second for facing left
+    .byte  10, -10
+    .byte  12, -12
+    .byte  14, -14
+    .byte  -8,   8
+    .byte -12,  12
+KraidProjectileType_{AREA}: ; L9BDB
+    .byte $09, $09, $09, $0A, $0A ; Lint x 3, nail x 2
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 2
 ;  Something to do with the lint
 KraidTryToLaunchLint_{AREA}:
-    .byte $A4, $79
-    .byte $D0, $02
-    .byte $A0, $80
+    ; load lint counter into y (#$80 if it is zero)
+    ldy KraidLintCounter
+    bne @endIf_A
+        ldy #$80
+    @endIf_A:
+    ; exit if bit 1 of FrameCount is set
+    lda FrameCount
+    and #$02
+    bne @RTS
+    ; decrement lint counter
+    dey
+    sty KraidLintCounter
+    ; a = lint counter * 2, to compensate for exiting when bit 1 of FrameCount is set
+    tya
+    asl
+    ; exit if (lint counter * 2) is not #$0A, #$1A, #$2A, #$3A, #$4A, #$5A, #$6A or #$7A
+    ; lint will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
+    bmi @RTS
+    and #$0F
+    cmp #$0A
+    bne @RTS
+
+    lda #enemyStatus_Resting
+    ; branch if first lint is resting
+    ldx #$10
+    cmp EnsExtra.0.status,x
+    beq @primeForLaunch
     
-    .byte $A5, $27
-    .byte $29, $02
-    .byte $D0, $2C
+    ; branch if second lint is resting
+    ldx #$20
+    cmp EnsExtra.0.status,x
+    beq @primeForLaunch
     
-    .byte $88
-    .byte $84, $79
-    .byte $98
-    .byte $0A
-    .byte $30, $25
-    .byte $29, $0F
-    .byte $C9, $0A
-    .byte $D0, $1F
+    ; branch if third lint is resting
+    ldx #$30
+    cmp EnsExtra.0.status,x
+    beq @primeForLaunch
     
-    .byte $A9, $01
-    .byte $A2, $10
-    .byte $DD, $60, $B4
-    .byte $F0, $11
-    .byte $A2, $20
-    .byte $DD, $60, $B4
-    .byte $F0, $0A
-    .byte $A2, $30
-    .byte $DD, $60, $B4
-    .byte $F0, $03
-    .byte $E6, $79
-    .byte $60
+    ; all lints are currently launched
+    ; undo decrement lint counter so that it will try to launch again the next frame
+    inc KraidLintCounter
+    rts
 
 @primeForLaunch:
-    .byte $A9, $08
-    .byte $9D, $09, $04
+    ; lint will launch after resting for 8 frames
+    lda #$08
+    sta Ens.0.delay,x
+
 @RTS:
-    .byte $60
+    rts
 
 ;-------------------------------------------------------------------------------
 ; Kraid Subroutine 3
 ;  Something to do with the nails
 KraidTryToLaunchNail_{AREA}:
-    .byte $A4, $7A
-    .byte $D0, $02
-    .byte $A0, $60
+    ; load nail counter into y (#$60 if it is zero)
+    ldy KraidNailCounter
+    bne @endIf_A
+        ldy #$60
+    @endIf_A:
+    ; exit if bit 1 of FrameCount is set
+    lda FrameCount
+    and #$02
+    bne @RTS
+    ; decrement nail counter
+    dey
+    sty KraidNailCounter
+    ; a = nail counter * 2, to compensate for exiting when bit 1 of FrameCount is set
+    tya
+    asl
+    ; exit if (nail counter * 2)'s low nibble is not 0
+    ; nail will try firing every 16 frames 8 times, then will pause for 128 frames, in a cycle
+    bmi @RTS
+    and #$0F
+    bne @RTS
+
+    lda #enemyStatus_Resting
+    ; branch if first nail is resting
+    ldx #$40
+    cmp EnsExtra.0.status,x
+    beq @primeForLaunch
     
-    .byte $A5, $27
-    .byte $29, $02
-    .byte $D0, $23
-    .byte $88
-    .byte $84, $7A
-    .byte $98
-    .byte $0A
-    .byte $30, $1C
-    .byte $29, $0F
-    .byte $D0, $18
+    ; branch if second nail is resting
+    ldx #$50
+    cmp EnsExtra.0.status,x
+    beq @primeForLaunch
     
-    .byte $A9, $01
-    .byte $A2, $40
-    .byte $DD, $60, $B4
-    .byte $F0, $0A
-    .byte $A2, $50
-    .byte $DD, $60, $B4
-    .byte $F0, $03
-    .byte $E6, $7A
-    .byte $60
+    ; all nails are currently launched
+    ; undo decrement nail counter so that it will try to launch again the next frame
+    inc KraidNailCounter
+    rts
 
 @primeForLaunch:
-    .byte $A9, $08
-    .byte $9D, $09, $04
-@RTS:
-    .byte $60
+    ; nail will launch after resting for 8 frames
+    lda #$08
+    sta Ens.0.delay,x
 
+@RTS:
+    rts

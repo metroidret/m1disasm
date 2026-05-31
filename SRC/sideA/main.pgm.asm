@@ -53,9 +53,9 @@ CommonJump_UpdateEnemyCommon_noMoveNoAnim: ;($6C06)
     jmp LA303
 CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;($6C09)
     jmp CrawlerAIRoutine_ShouldCrawlerMove
-CommonJump_6C0C: ;($6C0C)
+CommonJump_UpdateEnemyAnim: ;($6C0C)
     jmp L840B
-CommonJump_6C0F: ;($6C0F)
+CommonJump_InitEnAnimIndex: ;($6C0F)
     jmp LA57A
 CommonJump_6C12: ;($6C12)
     jmp LA72B
@@ -67,7 +67,7 @@ CommonJump_EnemyFlipAfterDisplacement: ;($6C1B)
     jmp LAA75
 CommonJump_InitEnActiveAnimIndex_NoInitOffset: ;($6C1E)
     jmp InitEnActiveAnimIndex_NoInitOffset
-CommonJump_6C21: ;($6C21)
+CommonJump_SpawnEnProjectile: ;($6C21)
     jmp LA75D
 CommonJump_JumpEngine: ;($6C24)
     jmp MAIN_JumpEngine
@@ -75,11 +75,11 @@ CommonJump_ApplySpeedToPosition: ;($6C27)
     jmp LAC7C
 CommonJump_6C2A: ;($6C2A)
     jmp L8EC4
-CommonJump_6C2D: ;($6C2D)
+CommonJump_EnemyGetDeltaY: ;($6C2D)
     jmp LAEF4
-CommonJump_6C30: ;($6C30)
+CommonJump_EnemyGetDeltaX: ;($6C30)
     jmp LAFC8
-CommonJump_6C33: ;($6C33)
+CommonJump_EnemyBGCollideOrApplySpeed: ;($6C33)
     jmp LA90B
 CommonJump_EnemyGetDeltaY_UsingAcceleration: ;($6C36)
     jmp LAFEF

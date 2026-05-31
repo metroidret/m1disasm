@@ -438,43 +438,7 @@ L9963:
 
 
 
-    .byte $20, $09, $6C, $29, $03, $F0, $34
-    .byte $A5, $7C
-    .byte $C9, $01, $F0, $36, $C9, $03, $F0, $2F
-    .byte $BD, $60, $B4
-    .byte $C9, $03, $F0, $23
-    .byte $BD, $0A, $04
-    .byte $29, $03, $C9, $01, $D0, $11
-    .byte $BC, $00, $04, $C0, $EB
-    .byte $D0, $0A
-    .byte $20, $02, $BA
-    .byte $A9, $03, $9D, $0A, $04, $D0, $06
-    .byte $20, $27, $BA, $20, $ED, $B9, $20, $0B, $BA
-    .byte $A9, $03, $20, $0C, $6C
-    .byte $4C, $06, $6C, $4C, $03, $6C
-    .byte $BD, $05, $04, $4A
-    .byte $BD, $0A, $04, $29, $03
-    .byte $2A, $A8, $B9
-    .byte $E5, $B9, $4C, $0F, $6C
-    .byte $69, $69, $72, $6C, $6F, $6F, $6C, $72
-    .byte $A6, $45
-    .byte $B0, $19
-    .byte $A5, $00
-    .byte $D0, $0D
-    .byte $BC, $0A, $04, $88, $98, $29, $03
-    .byte $9D, $0A, $04, $4C, $D4, $B9
-    .byte $BD, $05, $04, $49, $01, $9D, $05, $04, $60
-    .byte $20, $1F, $BA
-    .byte $20, $27, $BA
-    .byte $A6, $45
-    .byte $90, $09
-    .byte $20, $1F, $BA
-    .byte $9D, $0A, $04, $20, $D4, $B9, $60
-    .byte $BC, $0A, $04, $C8, $98, $29, $03, $60
-    .byte $BC, $05, $04, $84, $00, $46, $00
-    .byte $2A, $0A
-    .byte $A8, $B9, $49, $6C
-    .byte $48, $B9, $48, $6C, $48, $60
+.include "sideB/enemies/crawler.asm"
 
 
 
@@ -499,172 +463,15 @@ LoadEnemyPositionFromTemp__{AREA}:
 
 
 
-    .byte $A5, $7C
-    .byte $C9, $01
-    .byte $D0, $1E
-    
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $F0, $59
-    
-    .byte $C9, $02
-    .byte $D0, $13
-        .byte $BC, $08, $04
-        .byte $B9, $CA, $BA
-        .byte $9D, $02, $04
-        .byte $A9, $40
-        .byte $9D, $6A, $B4
-        .byte $A9, $00
-        .byte $9D, $06, $04
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $F0, $3B
-    
-    .byte $A5, $7C
-    .byte $C9, $01
-    .byte $F0, $35
-    .byte $C9, $03
-    .byte $F0, $36
-    .byte $20, $36
-    
-    .byte $6C, $A6, $45
-    .byte $A9, $00
-    .byte $85, $05
-    .byte $A9, $1D
-    .byte $A4, $00
-    .byte $84, $04
-    .byte $30, $02
-        .byte $A9, $20
-    .byte $9D, $65, $B4
-    
-    .byte $20, $3A, $BA
-    .byte $20, $27, $6C
-    
-    .byte $A9, $E8
-    .byte $90, $04
-        .byte $C5, $08
-        .byte $B0, $0A
-        
-        .byte $85, $08
-        .byte $BD, $05, $04
-        .byte $09, $20
-        .byte $9D, $05, $04
-    
-    .byte $20, $4A, $BA
-    
-    .byte $A9, $02
-    .byte $4C, $03, $6C
-    
-    .byte $4C, $06, $6C
-    
-    .byte $F6, $F8, $F6, $FA
+.include "sideB/enemies/squeept.asm"
+
+.include "sideB/enemies/multiviola.asm"
+
+.include "sideB/enemies/dragon.asm"
+
+.include "sideB/enemies/polyp.asm"
 
 
-
-    .byte $BD, $60, $B4
-    .byte $C9, $02
-    .byte $D0, $03
-        .byte $20, $1E, $6C
-    .byte $A9, $02
-    .byte $85, $00
-    .byte $85, $01
-    .byte $4C, $31, $B8
-
-
-
-    .byte $BD, $60, $B4
-    .byte $C9, $01
-    .byte $D0, $05
-        .byte $A9, $E8
-        .byte $9D, $00, $04
-    .byte $C9, $02
-    .byte $D0, $4E
-    
-    .byte $BD, $06, $04
-    .byte $F0, $49
-    .byte $BD, $6D, $B4
-    .byte $D0, $44
-    
-    .byte $A5, $27
-    .byte $29, $1F
-    .byte $D0, $2B
-        .byte $A5, $28
-        .byte $29, $03
-        .byte $F0, $42
-        
-        .byte $A9, $02
-        .byte $85, $82
-        .byte $A9, $00
-        .byte $85, $83
-        .byte $A9, $43
-        .byte $85, $7E
-        .byte $A9, $47
-        .byte $85, $7F
-        .byte $A9, $03
-        .byte $85, $80
-        .byte $20, $21, $6C
-        
-        .byte $BD, $05, $04
-        .byte $29, $01
-        .byte $A8
-        .byte $B9, $7E, $00
-        .byte $20, $0F, $6C
-        .byte $F0, $1D
-    
-    .byte $C9, $0F
-    .byte $90, $19
-    .byte $BD, $05, $04
-    .byte $29, $01
-    .byte $A8
-    .byte $B9, $52, $BB
-    .byte $20, $0F, $6C
-    .byte $4C, $49, $BB
-    
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $F0, $03
-        .byte $20, $1E, $6C
-    .byte $A9, $01
-    .byte $85, $00
-    .byte $85, $01
-    .byte $4C, $31, $B8
-    
-    .byte $45, $49
-
-
-
-    .byte $A9, $00
-    .byte $9D, $61, $B4
-    .byte $9D, $62, $B4
-    .byte $A9, $10
-    .byte $9D, $05, $04
-    .byte $8A
-    .byte $0A
-    .byte $0A
-    .byte $85, $00
-    .byte $8A
-    .byte $4A, $4A, $4A, $4A
-    .byte $65, $27
-    .byte $65, $00
-    .byte $29, $47
-    .byte $D0, $1A
-    
-    .byte $5E, $05, $04
-    .byte $A9, $03
-    .byte $85, $82
-    .byte $A5, $28
-    .byte $4A
-    .byte $3E, $05, $04
-    .byte $29, $03
-    .byte $F0, $09
-    .byte $85, $83
-    .byte $A9, $02
-    .byte $85, $80
-    .byte $4C, $21, $6C
-
-
-
-    .byte $60
 
 VRAMString00_{AREA}:
     .byte $22

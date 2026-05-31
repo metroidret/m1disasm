@@ -4,59 +4,134 @@ CrawlerAIRoutine_{AREA}:
     jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
     beq @exit
-    
+
     lda EnemyStatusPreAI
-    cmp #enemyStatus_Resting
-    beq SkreeExit_Resting_{AREA}
-    cmp #enemyStatus_Explode
-    beq SkreeExit_Explode_{AREA}
-    
+    .if AREA == "STG1PGM" || AREA == "STG6PGM"
+        cmp #enemyStatus_Resting
+        beq SkreeExit_Resting_{AREA}
+        cmp #enemyStatus_Explode
+        beq SkreeExit_Explode_{AREA}
+    .elif AREA == "STG4PGM" || AREA == "STG7PGM"
+        cmp #enemyStatus_Resting
+        beq CrawlerExit_Resting_{AREA}
+        cmp #enemyStatus_Explode
+        beq CrawlerExit_Explode_{AREA}
+    .endif
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq @exit
-    
+
     ; check crawler orientation
     ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
     lda Ens.0.data0A,x
     and #$03
     cmp #$01
     bne @move
-    
+    ; crawler is on wall moving down
+    ; if it's near the bottom of the screen (about to walk into lava), turn around to not walk into it
+    ; (BUG! this doesn't check that its a horizontal room, so it will turn around in vertical rooms too.
+    ; for example, at the bottom of the top screen in the shaft to brinstar->kraid elevator,
+    ; the zoomer will never walk on the underside of the platform it's on)
     ldy Ens.0.y,x
-    cpy #$E4
+    .if AREA == "STG1PGM" || AREA == "STG6PGM"
+        cpy #$E4
+    .elif AREA == "STG4PGM" || AREA == "STG7PGM"
+        cpy #$EB
+    .endif
     bne @move
+    ; it is near the bottom, make it turn around vertically
     
-    .byte $20, $B5, $BA
+    ; whats noteworthy here is that changing the orientation alone is not enough
+    ; you must also horizontally flip the crawler
+    ; see this example, a crawler is walking down a wall to its right:
+    ;  |=###
+    ;  V=###
+    ; change only orientation (incorrect)
+    ; =^ ###
+    ; =| ###
+    ; change only horizontal flip (incorrect)
+    ; =| ###
+    ; =V ###
+    ; change both orientation and horizontal flip (correct)
+    ;  ^=###
+    ;  |=###
+    
+    ; horizontal flip
+    jsr CrawlerFlipDirection_{AREA}
     ; set orientation to moving up the wall
     lda #$03
     sta Ens.0.data0A,x
     bne @afterLavaTurnAround ; branch always
 @move:
-    .byte $20, $DA, $BA
-    .byte $20, $A0, $BA
+    ; move crawler in its direction
+    jsr JumpByRTSToMovementRoutine_{AREA}
+    jsr CrawlerInsideCornerCheck_{AREA}
 @afterLavaTurnAround:
-    .byte $20, $BE, $BA
+    jsr CrawlerOutsideCornerCheck_{AREA}
 @exit:
     ; change animation frame every 3 frames
     lda #$03
-    .byte $20, $0C, $6C
+    jsr CommonJump_UpdateEnemyAnim
 CrawlerExit_Explode_{AREA}:
     jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
+.if AREA == "STG4PGM" || AREA == "STG7PGM"
+    CrawlerExit_Resting_{AREA}:
+        jmp CommonJump_UpdateEnemyCommon_noMove
+.endif
+
 CrawlerReorientSprite_{AREA}:
-    .byte $BD, $05, $04
-    .byte $4A
-    .byte $BD, $0A, $04
-    .byte $29, $03
-    .byte $2A, $A8
-    .byte $B9, $98, $BA
-    .byte $4C, $0F, $6C
+    ; Y = orientation * 2 + direction
+    lda Ens.0.data05,x
+    lsr
+    lda Ens.0.data0A,x
+    and #$03
+    rol
+    tay
+    lda CrawlerAnimIndexTable_{AREA},y
+    jmp CommonJump_InitEnAnimIndex
 
 CrawlerAnimIndexTable_{AREA}:
-    .byte $35, $35, $3E, $38, $3B, $3B, $38, $3E
+.if AREA == "STG1PGM"
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZoomerOnLeftWall_{AREA} - EnAnimTable_{AREA}
+.elif AREA == "STG4PGM"
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_NovaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+.elif AREA == "STG6PGM"
+    .byte EnAnim_ZeelaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ZeelaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+.elif AREA == "STG7PGM"
+    .byte EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnCeiling_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnRightWall_{AREA} - EnAnimTable_{AREA}
+    .byte EnAnim_ViolaOnLeftWall_{AREA} - EnAnimTable_{AREA}
+.endif
 
 CrawlerInsideCornerCheck_{AREA}:
-; inside corner check, check if collided with wall
+    ; inside corner check, check if collided with wall
     ; (carry flag was updated by JumpByRTSToMovementRoutine called before this)
     ldx PageIndex
     bcs RTS_Crawler06_{AREA}
@@ -70,7 +145,7 @@ CrawlerInsideCornerCheck_{AREA}:
         and #$03
         sta Ens.0.data0A,x
         jmp CrawlerReorientSprite_{AREA}
-    
+
     CrawlerFlipDirection_{AREA}:
         lda Ens.0.data05,x
         eor #$01
@@ -79,24 +154,42 @@ CrawlerInsideCornerCheck_{AREA}:
         rts
 
 CrawlerOutsideCornerCheck_{AREA}:
-    .byte $20, $D2, $BA
-    .byte $20, $DA, $BA
-    .byte $A6, $45
-    .byte $90, $09
-    .byte $20, $D2, $BA
-    .byte $9D, $0A, $04
-    .byte $20, $87, $BA
-    .byte $60
+    ; outside corner check, check if there's no floor beneath the crawler
+    jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
+    jsr JumpByRTSToMovementRoutine_{AREA}
+    ldx PageIndex
+    bcc @RTS
+        ; at outside corner, stick to wall
+        jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
+        sta Ens.0.data0A,x
+        jsr CrawlerReorientSprite_{AREA}
+    @RTS:
+    rts
 
 CrawlerOutsideCornerGetNextOrientation_{AREA}:
-    .byte $BC, $0A, $04, $C8, $98, $29, $03, $60
+    ; returns the orientation needed to turn an outside corner, relative to current orientation
+    ldy Ens.0.data0A,x
+    iny
+    tya
+    and #$03
+    rts
 
+; a: orientation
 JumpByRTSToMovementRoutine_{AREA}:
-    .byte $BC, $05, $04
-    .byte $84, $00
-    .byte $46, $00
-    .byte $2A, $0A, $A8
-    .byte $B9, $49, $6C, $48
-    .byte $B9, $48, $6C, $48
-    .byte $60
-
+    ; Y = (orientation * 2 + direction)*2
+    ; shift direction bit into carry
+    ldy Ens.0.data05,x
+    sty $00
+    lsr $00
+    ; rotate it left into orientation in a
+    rol
+    ; *2 because pointers are 2 bytes
+    asl
+    tay
+    ; push movement routine pointer into stack
+    lda CrawlerMovementRoutinesTable+1,y
+    pha
+    lda CrawlerMovementRoutinesTable,y
+    pha
+    ; return to the pushed pointer
+    rts
