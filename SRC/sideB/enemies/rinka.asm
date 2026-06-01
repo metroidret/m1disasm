@@ -1,138 +1,222 @@
-    .byte $BC, $60, $B4
-    .byte $C0, $02
-    .byte $D0, $7D
+RinkaAIRoutine_{AREA}:
+    ; branch if enemy is not active
+    ldy EnsExtra.0.status,x
+    cpy #enemyStatus_Active
+    bne @moveRinka
+
+    ; enemy is active
+    ; branch if previous status is not resting
+    dey ; set y to #$01
+    cpy EnemyStatusPreAI
+    bne @moveRinka
+
+    ; previous status is resting
+    ; that means the rinka's speed vector needs to be initialized
+    ; clear rinka acceleration
+    ; (this is useless, because rinka isn't using the acceleration movement system)
+    lda #$00
+    jsr ClearRinkaAcceleration ; in metroid.asm
+    ; clear rinka sub-pixel position
+    sta EnsExtra.0.subPixelY,x
+    sta EnsExtra.0.subPixelX,x
+
+    ; save Samus x pos relative to enemy in $01
+    lda Samus.x
+    sec
+    sbc Ens.0.x,x
+    sta $01
+    ; push Ens.0.data05 to stack
+    lda Ens.0.data05,x
+    pha
+    ; shift horizontal facing direction into carry
+    lsr
+    ; push Ens.0.data05/2 to stack
+    pha
+    ; branch if facing right
+    bcc @endIf_A
+        ; enemy is facing left
+        ; negate $01
+        lda #$00
+        sbc $01
+        sta $01
+    @endIf_A:
+    ; $01 now contains the x distance between Samus and the enemy
+
+    ; save Samus y pos relative to enemy in $00
+    lda Samus.y
+    sec
+    sbc Ens.0.y,x
+    sta $00
+    ; pull Ens.0.data05/2 from stack
+    pla
+    ; shift vertical facing direction into carry
+    lsr
+    lsr
+    ; branch if facing down
+    bcc @endIf_B
+        ; enemy is facing up
+        ; negate $00
+        lda #$00
+        sbc $00
+        sta $00
+    @endIf_B:
+    ; $00 now contains the y distance between Samus and the enemy
+
+    ; logic or both together
+    lda $00
+    ora $01
+    ; for bits 7, 6, 5 of this
+    ldy #$03
+    @loop_A:
+        ; shift bit into carry
+        asl
+        ; branch if that bit is set
+        bcs @exitLoop_A
+        dey
+        bne @loop_A
+    @exitLoop_A:
     
-    .byte $88
-    .byte $C4, $7C
-    .byte $D0, $78
+    ; y here will have one of four values
+    ; the enemy-samus vector in $00-$01 will be normalized depending on y:
+    ; 3 = the x or y distance is greater or equal to #$80 pixels, divide vector by 8
+    ; 2 = the x or y distance is greater or equal to #$40 pixels, divide vector by 4
+    ; 1 = the x or y distance is greater or equal to #$20 pixels, divide vector by 2
+    ; 0 = both the x and y distances are less than #$20 pixels, do nothing
+    @loop_B:
+        ; branch if bits 7, 6, 5 were not set
+        dey
+        bmi @exitLoop_B
+            ; bit 7 or 6 or 5 was set
+            ; divide by 2 repeatedly until this isn't the case anymore
+            lsr $00
+            lsr $01
+            bpl @loop_B
+    @exitLoop_B:
+    ; $00 and $01 now do not have bits 7, 6, 5 set
+
+    ; set rinka speed based on $00 and $01
+    jsr SetRinkaSpeed_{AREA}
     
-    .byte $A9, $00
-    .byte $20, $C9, $B9
-    .byte $9D, $68, $B4
-    .byte $9D, $69, $B4
-    
-    .byte $AD, $0E, $03
-    .byte $38
-    .byte $FD, $01, $04
-    .byte $85, $01
-    
-    .byte $BD, $05, $04
-    .byte $48
-    .byte $4A
-    .byte $48
-    .byte $90, $06
-        .byte $A9, $00
-        .byte $E5, $01
-        .byte $85, $01
-    
-    .byte $AD, $0D, $03
-    .byte $38
-    .byte $FD, $00, $04
-    .byte $85, $00
-    .byte $68
-    .byte $4A
-    .byte $4A
-    .byte $90, $06
-        .byte $A9, $00
-        .byte $E5, $00
-        .byte $85, $00
-    
-    .byte $A5, $00
-    .byte $05, $01
-    .byte $A0, $03
-        .byte $0A
-        .byte $B0, $03
-        .byte $88
-        .byte $D0, $FA
-    
-        .byte $88
-        .byte $30, $06
-            .byte $46, $00
-            .byte $46, $01
-            .byte $10, $F7
-    
-    .byte $20, $F1, $BA
-    .byte $68
-    .byte $4A
-    .byte $48
-    .byte $90, $10
-        .byte $A9, $00
-        .byte $FD, $07, $04
-        .byte $9D, $07, $04
-        .byte $A9, $00
-        .byte $FD, $03, $04
-        .byte $9D, $03, $04
-    .byte $68
-    .byte $4A
-    .byte $4A
-    .byte $90, $10
-        .byte $A9, $00
-        .byte $FD, $06, $04
-        .byte $9D, $06, $04
-        .byte $A9, $00
-        .byte $FD, $02, $04
-        .byte $9D, $02, $04
-    
-    ; move rinka
-    .byte $BD, $05, $04
-    .byte $0A
-    .byte $30, $3E
-        .byte $BD, $06, $04
-        .byte $18
-        .byte $7D, $68, $B4
-        .byte $9D, $68, $B4
-        .byte $BD, $02, $04
-        .byte $69, $00
-        .byte $85, $04
+    ; pull Ens.0.data05 from stack
+    pla
+    ; shift horizontal facing direction into carry
+    lsr
+    ; push Ens.0.data05/2 to stack
+    pha
+    ; branch if facing right
+    bcc @endIf_C
+        ; enemy is facing left
+        ; negate rinka x speed
+        lda #$00
+        sbc Ens.0.speedSubPixelX,x
+        sta Ens.0.speedSubPixelX,x
+        lda #$00
+        sbc Ens.0.speedX,x
+        sta Ens.0.speedX,x
+    @endIf_C:
+    ; pull Ens.0.data05/2 from stack
+    pla
+    ; shift vertical facing direction into carry
+    lsr
+    lsr
+    ; branch if facing down
+    bcc @endIf_D
+        ; enemy is facing up
+        ; negate rinka y speed
+        lda #$00
+        sbc Ens.0.speedSubPixelY,x
+        sta Ens.0.speedSubPixelY,x
+        lda #$00
+        sbc Ens.0.speedY,x
+        sta Ens.0.speedY,x
+    @endIf_D:
+
+@moveRinka:
+    ; branch if bit 6 of Ens.0.data05 is set (30FPS)
+    lda Ens.0.data05,x
+    asl
+    bmi @endIf_E
+        ; move rinka
         
-        .byte $BD, $07, $04
-        .byte $18
-        .byte $7D, $69, $B4
-        .byte $9D, $69, $B4
-        .byte $BD, $03, $04
-        .byte $69, $00
-        .byte $85, $05
-        
-        .byte $BD, $00, $04
-        .byte $85, $08
-        .byte $BD, $01, $04
-        .byte $85, $09
-        .byte $BD, $67, $B4
-        .byte $85, $0B
-        .byte $20, $27, $6C
-        .byte $B0, $05
-            .byte $A9, $00
-            .byte $9D, $60, $B4
-        .byte $20, $EC, $B9
-    .byte $A9, $08
-    .byte $4C, $03, $6C
-    
-    .byte $A5, $00
-    .byte $48
-    .byte $20, $13, $BB
-    .byte $9D, $02, $04
-    .byte $68
-    .byte $20, $18, $BB
-    .byte $9D, $06, $04
-    
-    .byte $A5, $01
-    .byte $48
-    .byte $20, $13, $BB
-    .byte $9D, $03, $04
-    .byte $68
-    .byte $20, $18, $BB
-    .byte $9D, $07, $04
-    .byte $60
-    
-    .byte $4A
-    .byte $4A
-    .byte $4A
-    .byte $4A
-    .byte $4A
-    .byte $60
-    
-    .byte $0A
-    .byte $0A
-    .byte $0A
-    .byte $0A
-    .byte $60
+        ; apply y sub-pixel speed to sub-pixel position
+        lda Ens.0.speedSubPixelY,x
+        clc
+        adc EnsExtra.0.subPixelY,x
+        sta EnsExtra.0.subPixelY,x
+        ; if sub-pixel position overflowed, add 1 to temp speed
+        lda Ens.0.speedY,x
+        adc #$00
+        sta Temp04_SpeedY
+
+        ; apply x sub-pixel speed to sub-pixel position
+        lda Ens.0.speedSubPixelX,x
+        clc
+        adc EnsExtra.0.subPixelX,x
+        sta EnsExtra.0.subPixelX,x
+        ; if sub-pixel position overflowed, add 1 to temp speed
+        lda Ens.0.speedX,x
+        adc #$00
+        sta Temp05_SpeedX
+
+        ; store position to temp
+        lda Ens.0.y,x
+        sta Temp08_PositionY
+        lda Ens.0.x,x
+        sta Temp09_PositionX
+        lda EnsExtra.0.hi,x
+        sta Temp0B_PositionHi
+        ; apply speed
+        jsr CommonJump_ApplySpeedToPosition
+        ; branch if movement succeeded
+        bcs @endIf_F
+            ; movement failed, remove rinka
+            lda #$00
+            sta EnsExtra.0.status,x
+        @endIf_F:
+        jsr LoadEnemyPositionFromTemp_
+    @endIf_E:
+    ; change animation frame every 8 frames
+    lda #$08
+    jmp CommonJump_UpdateEnemyCommon_noMove
+
+
+SetRinkaSpeed_{AREA}:
+    ; load y speed
+    lda $00
+    pha
+    ; write upper nibble to enemy y speed
+    jsr Adiv16_
+    sta Ens.0.speedY,x
+    pla
+    ; write lower nibble to enemy y speed subpixels
+    jsr Amul16_
+    sta Ens.0.speedSubPixelY,x
+
+    ; load x speed
+    lda $01
+    pha
+    jsr Adiv16_
+    ; write upper nibble to enemy x speed
+    sta Ens.0.speedX,x
+    pla
+    ; write lower nibble to enemy x speed subpixels
+    jsr Amul16_
+    sta Ens.0.speedSubPixelX,x
+    rts
+
+
+    lsr ; unused instruction
+Adiv16_:
+    lsr
+    lsr
+    lsr
+    lsr
+    rts
+
+Amul16_:
+    asl
+    asl
+    asl
+    asl
+    rts
+

@@ -41,28 +41,44 @@ FDSFileID_Side01_EF    = $EF   ; save menu
 
 
 ;Special item types.
-it_Squeept             = $1
-it_PowerUp             = $2
-it_Mellow              = $3
-it_Elevator            = $4
-it_Cannon              = $5   ;High nibble is Cannons.0.instrListID
-it_MotherBrain         = $6
-it_Zebetite            = $7   ;High nibble is Zebetite slot ID
-it_RinkaSpawner        = $8
-it_Door                = $9
-it_PaletteChange       = $A
+.enumid 1 export
+.enumid it_Squeept             ;$1
+.enumid it_PowerUp             ;$2
+.enumid it_Mellow              ;$3
+.enumid it_Elevator            ;$4
+.enumid it_Cannon              ;$5   ;High nibble is Cannons.0.instrListID
+.enumid it_MotherBrain         ;$6
+.enumid it_Zebetite            ;$7   ;High nibble is Zebetite slot ID
+.enumid it_RinkaSpawner        ;$8
+.enumid it_Door                ;$9
+.enumid it_PaletteChange       ;$A
 
 ;Power up id for items
-pu_BOMBS               = $00
-pu_HIGHJUMP            = $01
-pu_LONGBEAM            = $02
-pu_SCREWATTACK         = $03
-pu_MARUMARI            = $04
-pu_VARIA               = $05
-pu_WAVEBEAM            = $06
-pu_ICEBEAM             = $07
-pu_ENERGYTANK          = $08
-pu_MISSILES            = $09
+.enumid 0 export
+.enumid pu_BOMBS               ;$00
+.enumid pu_HIGHJUMP            ;$01
+.enumid pu_LONGBEAM            ;$02
+.enumid pu_SCREWATTACK         ;$03
+.enumid pu_MARUMARI            ;$04
+.enumid pu_VARIA               ;$05
+.enumid pu_WAVEBEAM            ;$06
+.enumid pu_ICEBEAM             ;$07
+.enumid pu_ENERGYTANK          ;$08
+.enumid pu_MISSILES            ;$09
+
+;Weapon action handlers.
+.enumid 1 export
+.enumid wa_RegularBeam         ;$01
+.enumid wa_WaveBeam            ;$02
+.enumid wa_IceBeam             ;$03
+.enumid wa_BulletExplode       ;$04
+.enumid 7 export
+.enumid wa_Unknown7            ;$07
+.enumid wa_LayBomb             ;$08
+.enumid wa_BombCount           ;$09
+.enumid wa_BombExplode         ;$0A
+.enumid wa_Missile             ;$0B
+wa_ScrewAttack         = $81 export
 
 ;Enemy Status
 enemyStatus_NoEnemy    = 0

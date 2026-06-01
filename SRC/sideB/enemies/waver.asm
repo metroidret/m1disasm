@@ -10,3 +10,4 @@ WaverAIRoutine_{AREA}:
         jsr CommonJump_EnemyFlipAfterDisplacement
     @endIf_A:
     jmp CommonEnemyStub2_{AREA}
+

@@ -15,3 +15,4 @@ RipperAIRoutine_{AREA}:
         sta $01
         jmp UpdateEnemyCommon_Decide_{AREA}
     .endif
+

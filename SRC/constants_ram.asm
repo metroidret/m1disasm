@@ -203,6 +203,14 @@ UnusedAttractModeIsPlaying = $59     ;Are we playing back a movie file for attra
 
 IntroMusicRestart      = $63
 
+
+ObjectCntrl            = $65     ;Controls object properties such as mirroring and color-->
+                                       ;bits. Bit 4 controls object horizontal mirroring.
+                                       ;If bit 7 set, these attributes apply:
+                                       ;bit 5 is priority
+                                       ;bit 0 and bit 1 is for the color palette
+
+
 HealthChange           = $68     ;Amount to add/subtract from Health.
 ; HealthChange+1         = $69
 
@@ -222,6 +230,9 @@ EnemyFlipAfterDisplacementAnimIndex = $80 ;right facing anim index for enemy usi
 SpawnEnProjectile_ExpectedStatus = $82 ;expected status for the enemy that shoots an enProjectile, won't shoot if status doesn't match
                                                 ;this functionnality is not used: the expected status is always the current status
 SpawnEnProjectile_EnData0A = $83
+
+
+MetroidOnSamus         = $8D     ;#$01=Metroid on Samus, #$00=Metroid not on Samus.
 
 
 MotherBrainStatus      = $98
@@ -441,5 +452,17 @@ EnMellowHandlerExtra   instanceof EnExtra
 
 
 
+.enum $BA11 export
 
+MetroidRepelSpeed      dw   ;$BA11 for negative, $BA12 for positive
+MetroidAccel           ds 4 ;$BA13-$BA14 for red metroid, $BA15-$BA16 for green metroid
+MetroidMaxSpeed        dw   ;$BA17 for red metroid, $BA18 for green metroid
+MetroidLatch0400       db   ;$BA19   ;bits 0-3 is #$0 to #$C, frame counter from touching to fully latched on.
+MetroidLatch0410       db   ;$BA1A   ;bits 4-6 is #$0 to #$5, count how many bomb hits (5 for separation).
+MetroidLatch0420       db   ;$BA1B   ;bit 7 is sign of x speed
+MetroidLatch0430       db   ;$BA1C
+MetroidLatch0440       db   ;$BA1D
+MetroidLatch0450       db   ;$BA1E
+
+.ende
 

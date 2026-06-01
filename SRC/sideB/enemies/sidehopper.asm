@@ -29,3 +29,4 @@ SidehopperCeilingAIRoutine_{AREA}:
         lda #EnAnim_DessgeegaCeilingHopping_{AREA} - EnAnimTable_{AREA}.b
     .endif
     jmp Sidehopper_Common_{AREA}
+

@@ -10,3 +10,4 @@ MultiviolaAIRoutine_{AREA}:
     sta $00
     sta $01
     jmp UpdateEnemyCommon_Decide_{AREA}
+

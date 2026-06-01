@@ -1,251 +1,377 @@
-    .byte $AC, $0B, $01
-    .byte $C8
-    .byte $F0, $05
-        .byte $A9, $00
-        .byte $9D, $60, $B4
+MetroidAIRoutine_{AREA}:
+    ; Delete self if escape timer is active (EndTimer+1 != #$FF)
+    ldy EndTimer+1
+    iny
+    beq @endIf_A
+        lda #$00
+        sta EnsExtra.0.status,x
+    @endIf_A:
     
-    .byte $A9, $0F
-    .byte $85, $00
-    .byte $85, $01
-    .byte $BD, $05, $04
-    .byte $0A
-    .byte $30, $D2
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $F0, $CB
+    ; prepare UpdateEnemyCommon_Decide parameters
+    ; change animation frame every 15 frames
+    lda #$0F
+    sta $00
+    sta $01
+    ; branch if bit 7 of Ens.0.data05 is set
+    lda Ens.0.data05,x
+    asl
+    bmi UpdateEnemyCommon_Decide_{AREA}
+    ; branch if metroid is exploding
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Explode
+    beq UpdateEnemyCommon_Decide_{AREA}
     
-    .byte $20, $AF, $B9
-    .byte $B9, $19, $BA
-    .byte $F0, $03
-        .byte $4C, $91, $B8
+    ; branch if metroid latch for this metroid is inactive
+    jsr LoadEnemySlotIDIntoY
+    lda MetroidLatch0400,y
+    beq @endIf_B
+        ; metroid latch is active, jump
+        jmp @latchActive
+    @endIf_B:
+
+    ; load whether the metroid is red (#$00) or green (#$01) into y
+    ldy Ens.0.movementIndex,x
     
-    ; red or green
-    .byte $BC, $08, $04
+    ; push y max speed to stack
+    lda MetroidMaxSpeed,y
+    pha
     
-    .byte $B9, $17, $BA
-    .byte $48
+    ; check if y speed is positive
+    lda Ens.0.speedY,x
+    bpl @endIf_C
+        ; negate y max speed
+        pla
+        jsr TwosComplement_
+        pha
+        ; get absolute value of y speed
+        lda #$00
+        cmp Ens.0.speedSubPixelY,x
+        sbc Ens.0.speedY,x
+    @endIf_C:
+    ; compare absolute y speed with absolute max speed
+    cmp MetroidMaxSpeed,y
+    pla
+    bcc @endIf_D
+        ; limit speed to max
+        sta Ens.0.speedY,x
+        lda #$00
+        sta Ens.0.speedSubPixelY,x
+    @endIf_D:
     
-    .byte $BD, $02, $04
-    .byte $10, $0D
-        .byte $68
-        .byte $20, $BE, $B5
-        .byte $48
-        .byte $A9, $00
-        .byte $DD, $06, $04
-        .byte $FD, $02, $04
-    .byte $D9, $17, $BA
-    .byte $68
-    .byte $90, $08
-        .byte $9D, $02, $04
-        .byte $A9, $00
-        .byte $9D, $06, $04
+    ; push x max speed to stack
+    lda MetroidMaxSpeed,y
+    pha
     
-    ; max x speed push
-    .byte $B9, $17, $BA
-    .byte $48
+    ; check if x speed is positive
+    lda Ens.0.speedX,x
+    bpl @endIf_E
+        ; negate x speed
+        pla
+        jsr TwosComplement_
+        pha
+        ; get absolute value of x speed
+        lda #$00
+        cmp Ens.0.speedSubPixelX,x
+        sbc Ens.0.speedX,x
+    @endIf_E:
+    ; compare absolute x speed with absolute max speed
+    cmp MetroidMaxSpeed,y
+    pla
+    bcc @endIf_F
+        ; limit speed to max
+        sta Ens.0.speedX,x
+        lda #$00
+        sta Ens.0.speedSubPixelX,x
+    @endIf_F:
     
-    .byte $BD, $03, $04
-    .byte $10, $0D
-        .byte $68
-        .byte $20, $BE, $B5
-        .byte $48
-        .byte $A9, $00
-        .byte $DD, $07, $04
-        .byte $FD, $03, $04
-    .byte $D9, $17, $BA
-    .byte $68
-    .byte $90, $08
-        .byte $9D, $03, $04
-        .byte $A9, $00
-        .byte $9D, $07, $04
+    ; load acceleration sign bits into a (bit0: horizontal sign, bit2: vertical sign)
+    lda Ens.0.data05,x
+    pha
+    ; get horizontal acceleration
+    jsr GetMetroidAccel
+    sta EnsExtra.0.accelX,x
+    pla
+    ; get vertical acceleration
+    lsr
+    lsr
+    jsr GetMetroidAccel
+    sta EnsExtra.0.accelY,x
     
-    ; load accel
-    .byte $BD, $05, $04
-    .byte $48
-    .byte $20, $FE, $B9
-    .byte $9D, $6B, $B4
-    .byte $68
-    .byte $4A
-    .byte $4A
-    .byte $20, $FE, $B9
-    .byte $9D, $6A, $B4
-    
-    .byte $BD, $60, $B4
-    .byte $C9, $04
-    .byte $D0, $0D
-        .byte $BC, $0B, $04
-        .byte $C8
-        .byte $D0, $0C
-            .byte $A9, $05
-            .byte $9D, $0B, $04
-            .byte $D0, $05
-        .byte $A9, $FF
-        .byte $9D, $0B, $04
-    
-    ; lacth active
-    .byte $A5, $7C
-    .byte $C9, $06
-    .byte $D0, $0A
-        .byte $DD, $60, $B4
-        .byte $F0, $05
-            .byte $A9, $04
-            .byte $9D, $60, $B4
-    
-    .byte $BD, $04, $04
-    .byte $29, $20
-    .byte $F0, $5F
-        .byte $20, $AF, $B9
-        .byte $B9, $19, $BA
-        .byte $F0, $37
-            .byte $BD, $0E, $04
-            .byte $C9, $07
-            .byte $F0, $04
-                .byte $C9, $0A
-                .byte $D0, $6F
+    ; check if metroid is frozen or not
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Frozen
+    bne @else_G
+        ; metroid is frozen
+        ; check if metroid was invincible
+        ldy Ens.0.health,x
+        iny
+        bne @endIf_G
+            ; if it was invincible, make it vincible with 5 health
+            lda #$05
+            sta Ens.0.health,x
+            bne @endIf_G ; branch always
+    @else_G:
+        ; metroid is not frozen, metroid is invincible
+        lda #$FF
+        sta Ens.0.health,x
+    @endIf_G:
+    ; fallthrough
+@latchActive:
+    ; don't become frozen if previous status isn't hurt
+    lda EnemyStatusPreAI
+    cmp #enemyStatus_Hurt
+    bne @endIf_H
+        ; don't become frozen if current status is still hurt
+        cmp EnsExtra.0.status,x
+        beq @endIf_H
+            ; metroid was hurt but stopped being hurt
+            ; set status to frozen
+            lda #enemyStatus_Frozen
+            sta EnsExtra.0.status,x
+    @endIf_H:
+
+    ; branch if metroid is not hit by one of Samus's weapons
+    lda Ens.0.isHit,x
+    and #$20
+    beq @endIf_I
+        ; check if metroid is latched onto Samus
+        jsr LoadEnemySlotIDIntoY
+        lda MetroidLatch0400,y
+        beq @endIf_J
+            ; metroid is latched onto Samus
+            ; don't count bomb hit if not hit by a bomb explosion
+            lda Ens.0.weaponAction,x
+            cmp #wa_Unknown7
+            beq @endIf_K
+                cmp #wa_BombExplode
+                bne @updateLatch
+            @endIf_K:
             
-            .byte $A5, $27
-            .byte $29, $02
-            .byte $D0, $69
-            .byte $B9, $19, $BA
-            .byte $18
-            .byte $69, $10
-            .byte $99, $19, $BA
+            ; don't count bomb hit when bit 1 of FrameCount is set
+            lda FrameCount
+            and #$02
+            bne @updateLatch
             
-            .byte $29, $70
-            .byte $C9, $50
-            .byte $D0, $5A
+            ; count up one bomb hit
+            lda MetroidLatch0400,y
+            clc
+            adc #$10
+            sta MetroidLatch0400,y
             
-            .byte $A9, $02
-            .byte $1D, $0F, $04
-            .byte $9D, $0C, $04
-            .byte $A9, $06
-            .byte $9D, $60, $B4
-            .byte $A9, $20
-            .byte $9D, $0F, $04
-            .byte $A9, $01
-            .byte $9D, $0D, $04
-        .byte $A9, $00
-        .byte $9D, $04, $04
-        .byte $99, $19, $BA
-        .byte $9D, $06, $04
-        .byte $9D, $07, $04
-    
-        .byte $BD, $6A, $B4
-        .byte $20, $08, $BA
-        .byte $9D, $02, $04
-        .byte $BD, $6B, $B4
-        .byte $20, $08, $BA
-        .byte $9D, $03, $04
+            ; check if 5 bomb hits have been dealt to the metroid
+            and #$70
+            cmp #$50
+            bne @updateLatch
+            
+            ; the bomb hits have released the latch of the metroid onto Samus
+            lda #enemyStatus_Active
+            ora Ens.0.specialAttribs,x
+            sta Ens.0.prevStatus,x
+            lda #enemyStatus_Hurt
+            sta EnsExtra.0.status,x
+            lda #$20
+            sta Ens.0.specialAttribs,x
+            lda #$01
+            sta Ens.0.data0D,x
+        @endIf_J:
+        ; let go of Samus
+        lda #$00
+        sta Ens.0.isHit,x
+        sta MetroidLatch0400,y
+        sta Ens.0.speedSubPixelY,x
+        sta Ens.0.speedSubPixelX,x
+        ; set repel speed
+        lda EnsExtra.0.accelY,x
+        jsr GetMetroidRepelSpeed
+        sta Ens.0.speedY,x
+        lda EnsExtra.0.accelX,x
+        jsr GetMetroidRepelSpeed
+        sta Ens.0.speedX,x
+    @endIf_I:
     ; check if metroid is latched onto Samus (again)
-    .byte $20, $AF, $B9
-    .byte $B9, $19, $BA
-    .byte $D0, $1B
-        .byte $BD, $04, $04
-        .byte $29, $04
-        .byte $F0, $46
-        .byte $BD, $03, $04
-        .byte $29, $80
-        .byte $09, $01
-        .byte $A8
-        .byte $20, $BB, $B9
-        .byte $20, $B5, $B9
-        .byte $98
-        .byte $9D, $19, $BA
-        .byte $8A
-        .byte $A8
+    jsr LoadEnemySlotIDIntoY
+    lda MetroidLatch0400,y
+    bne @endIf_L
+        ; metroid is not latched
+        ; check if metroid is touching Samus
+        lda Ens.0.isHit,x
+        and #$04
+        ; branch if metroid doesnt touch Samus
+        beq @metroidOnSamus_clearLatch
+        
+        ; begin attempt to latch onto Samus
+        ; put sign of x speed + $01 into latch
+        lda Ens.0.speedX,x
+        and #$80
+        ora #$01
+        tay
+        jsr ClearMetroidSpeed
+        jsr LoadEnemySlotIDIntoX
+        tya
+        sta MetroidLatch0400,x
+        txa
+        tay
+    @endIf_L:
+    ; fallthrough
+@updateLatch:
+    ; metroid is latched
+    ; push metroid latch to stack
+    tya
+    tax
+    lda MetroidLatch0400,x
+    php
+    ; if metroid is not fully latched, increase latch frame counter
+    and #$0F
+    cmp #$0C
+    beq @endIf_M
+        inc MetroidLatch0400,x
+    @endIf_M:
+    ; prepare metroid offset relative to Samus's position
+    ; load y offset from table
+    tay
+    lda MetroidLatchOffsetY-1,y
+    sta Temp04_SpeedY
+    ; calculate x offset based on latch frame counter
+    ; #$0C - frame counter
+    sty Temp05_SpeedX
+    lda #$0C
+    sec
+    sbc Temp05_SpeedX
+    ldx PageIndex
+    ; negate offset if latch's sign of x speed is positive
+    plp
+    bmi @endIf_N
+        jsr TwosComplement_
+    @endIf_N:
+    sta Temp05_SpeedX
+    ; load Samus position
+    jsr StoreSamusPositionToTemp
+    ; add offset to Samus position
+    jsr CommonJump_ApplySpeedToPosition
+    ; set as metroid position
+    jsr LoadEnemyPositionFromTemp_
+    jmp @metroidOnSamus
+
+@metroidOnSamus_clearLatch:
+    ; metroid is not latched and doesn't touch Samus
+    ; clear metroid latch (it's already clear but ok)
+    jsr ClearCurrentMetroidLatch
+@metroidOnSamus:
+    ; if metroid just died, clear metroid latch
+    lda EnsExtra.0.status,x
+    cmp #enemyStatus_Explode
+    bne @endIf_O
+        jsr ClearCurrentMetroidLatch
+    @endIf_O:
     
-    .byte $98
-    .byte $AA
-    .byte $BD, $19, $BA
-    .byte $08
-    .byte $29, $0F
-    .byte $C9, $0C
-    .byte $F0, $03
-        .byte $FE, $19, $BA
-    .byte $A8
-    .byte $B9, $CF, $B9
-    .byte $85, $04
+    ; MetroidOnSamus defaults to false
+    ldy #$00
     
-    .byte $84, $05
-    .byte $A9, $0C
-    .byte $38
-    .byte $E5, $05
-    .byte $A6, $45
-    
-    .byte $28
-    .byte $30, $03
-        .byte $20, $BE, $B5
-    .byte $85, $05
-    .byte $20, $DC, $B9
-    .byte $20, $27, $6C
-    .byte $20, $EC, $B9
-    .byte $4C, $5F, $B9
-    
-    ; clear latch
-    .byte $20, $A6, $B9
-    
-    .byte $BD, $60, $B4
-    .byte $C9, $03
-    .byte $D0, $03
-        .byte $20, $A6, $B9
-    
-    .byte $A0, $00
-    
-    .byte $AD, $19, $BA
-    .byte $0D, $1A, $BA
-    .byte $0D, $1B, $BA
-    .byte $0D, $1C, $BA
-    .byte $0D, $1D, $BA
-    .byte $0D, $1E, $BA
-    .byte $29, $0C
-    .byte $C9, $0C
-    .byte $D0, $13
-        .byte $AD, $06, $01
-        .byte $0D, $07, $01
-        .byte $F0, $0B
-            .byte $84, $69
-            .byte $A0, $04
-            .byte $84, $68
-            .byte $20, $42, $6C
-            .byte $A0, $01
-    .byte $84, $8D
-    .byte $A5, $65
-    .byte $30, $07
-        .byte $BD, $6E, $B4
-        .byte $09, $A2
-        .byte $85, $65
-    .byte $4C, $DA, $B7
-    
-    .byte $20, $AF, $B9
-    .byte $A9, $00
-    .byte $99, $19, $BA
-    .byte $60
-    
-    .byte $8A
-    .byte $20, $13, $BB
-    .byte $A8
-    .byte $60
-    
-    .byte $8A
-    .byte $20, $13, $BB
-    .byte $AA
-    .byte $60
-    
-    .byte $A9, $00
-    .byte $9D, $02, $04
-    .byte $9D, $03, $04
-    .byte $9D, $07, $04
-    .byte $9D, $06, $04
-    .byte $9D, $6B, $B4
-    .byte $9D, $6A, $B4
-    .byte $60
-    
+    ; Don't suck Samus's energy if no metroids are fully attached to Samus
+    lda MetroidLatch0400
+    ora MetroidLatch0410
+    ora MetroidLatch0420
+    ora MetroidLatch0430
+    ora MetroidLatch0440
+    ora MetroidLatch0450
+    and #$0C
+    cmp #$0C
+    bne @endIf_P
+        ; Don't suck Samus's energy if she is dead
+        lda Health
+        ora Health+1
+        beq @endIf_P
+            ; Subtract 1/4 health point from Samus
+            sty HealthChange+1
+            ldy #$04
+            sty HealthChange
+            jsr CommonJump_SubtractHealth
+            ; Set MetroidOnSamus to true
+            ldy #$01
+    @endIf_P:
+    sty MetroidOnSamus
+    lda ObjectCntrl
+    bmi @endIf_Q
+        lda EnsExtra.0.type,x
+        ora #$82 | OAMDATA_PRIORITY
+        sta ObjectCntrl
+    @endIf_Q:
+    jmp UpdateEnemyCommon_Decide_{AREA}
+
+ClearCurrentMetroidLatch:
+    jsr LoadEnemySlotIDIntoY
+ClearMetroidLatch:
+    lda #$00
+    sta MetroidLatch0400,y
+    rts
+
+LoadEnemySlotIDIntoY:
+    txa
+    jsr Adiv16_
+    tay
+    rts
+
+LoadEnemySlotIDIntoX:
+    txa
+    jsr Adiv16_
+    tax
+    rts
+
+ClearMetroidSpeed:
+    lda #$00
+    sta Ens.0.speedY,x
+    sta Ens.0.speedX,x
+    sta Ens.0.speedSubPixelX,x
+    sta Ens.0.speedSubPixelY,x
+ClearRinkaAcceleration: ; referenced in rinka.asm
+    sta EnsExtra.0.accelX,x
+    sta EnsExtra.0.accelY,x
+    rts
+
+MetroidLatchOffsetY:
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
-    
-    .byte $AD, $0E, $03, $85
-    .byte $09, $AD, $0D, $03, $85, $08, $AD, $0C, $03, $85, $0B, $60, $A5, $09, $9D, $01
-    .byte $04, $A5, $08, $9D, $00, $04, $A5, $0B, $29, $01, $9D, $67, $B4, $60, $4A, $BD
-    .byte $08, $04, $2A, $A8, $B9, $13, $BA, $60, $0A, $2A, $29, $01, $A8, $B9, $11, $BA
-    .byte $60
-    
+
+StoreSamusPositionToTemp:
+    ; put Samus position as parameters to CommonJump_ApplySpeedToPosition
+    lda Samus.x
+    sta Temp09_PositionX
+    lda Samus.y
+    sta Temp08_PositionY
+    lda Samus.hi
+    sta Temp0B_PositionHi
+    rts
+
+LoadEnemyPositionFromTemp_:
+    ; save function result as enemy position
+    lda Temp09_PositionX
+    sta Ens.0.x,x
+    lda Temp08_PositionY
+    sta Ens.0.y,x
+    lda Temp0B_PositionHi
+    and #$01
+    sta EnsExtra.0.hi,x
+    rts
+
+GetMetroidAccel:
+    ; put acceleration sign bit in carry
+    lsr
+    ; load whether the metroid is red (#$00) or green (#$01) into a
+    lda Ens.0.movementIndex,x
+    ; rotate direction bit back into a
+    rol
+    ; get MetroidAccel at that index
+    tay
+    lda MetroidAccel,y
+    rts
+
+GetMetroidRepelSpeed:
+    ; use bit 6 of accel as an index for MetroidRepelSpeed table
+    asl
+    rol
+    and #$01
+    tay
+    lda MetroidRepelSpeed,y
+    rts
+
     .byte $F8, $08, $30, $D0, $60, $A0, $02, $04, $00, $00, $00, $00, $00, $00
+
