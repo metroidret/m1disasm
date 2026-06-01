@@ -527,15 +527,85 @@ UpdateEnemyCommon_Decide_{AREA}:
 
 
 ; enemy ai routines
-    .byte $A9, $09, $85, $80, $85, $81, $BD, $60, $B4, $C9, $03, $F0
-    .byte $03, $20, $1B, $6C, $A9, $06, $85, $00, $A9, $08, $85, $01, $4C, $FD, $B8, $A9
-    .byte $0F, $4C, $16, $B9, $BD, $60, $B4, $C9, $03, $F0, $03, $20, $1E, $6C, $4C, $24
-    .byte $B9, $A5, $7C, $C9, $01, $F0, $44, $C9, $03, $F0, $45, $BD, $06, $04, $C9, $0F
-    .byte $90, $34, $C9, $11, $B0, $07, $A9, $3A, $9D, $6D, $B4, $D0, $29, $DE, $6D, $B4
-    .byte $D0, $24, $A9, $00, $9D, $60, $B4, $A0, $0C, $A9, $0A, $99, $A0, $00, $BD, $00
-    .byte $04, $99, $A1, $00, $BD, $01, $04, $99, $A2, $00, $BD, $67, $B4, $99, $A3, $00
-    .byte $88, $88, $88, $88, $10, $E3, $A9, $02, $4C, $00, $6C, $A9, $08, $4C, $03, $6C
-    .byte $4C, $06, $6C, $20, $09, $6C, $29, $03, $F0, $34, $A5, $7C, $C9, $01, $F0, $EB
+    .byte $A9, $09
+    .byte $85, $80
+    .byte $85, $81
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $03
+        .byte $20, $1B, $6C
+    .byte $A9, $06
+    .byte $85, $00
+    
+    .byte $A9, $08
+    .byte $85, $01
+    .byte $4C, $FD, $B8
+    
+    .byte $A9, $0F
+    .byte $4C, $16, $B9
+
+
+
+    .byte $BD, $60, $B4
+    .byte $C9, $03
+    .byte $F0, $03
+        .byte $20, $1E, $6C
+    .byte $4C, $24, $B9
+
+
+
+SkreeAIRoutine_{AREA}:
+    .byte $A5, $7C
+    .byte $C9, $01
+    .byte $F0, $44
+    
+    .byte $C9, $03
+    .byte $F0, $45
+    
+    .byte $BD, $06, $04
+    .byte $C9, $0F
+    .byte $90, $34
+    
+    .byte $C9, $11
+    .byte $B0, $07
+    
+    .byte $A9, $3A
+    .byte $9D, $6D, $B4
+    .byte $D0, $29
+    
+SkreeBlowUpIntoProjectiles_{AREA}:
+    .byte $DE, $6D, $B4
+    .byte $D0, $24
+    
+    .byte $A9, $00
+    .byte $9D, $60, $B4
+    .byte $A0, $0C
+        .byte $A9, $0A
+        .byte $99, $A0, $00
+        .byte $BD, $00, $04
+        .byte $99, $A1, $00
+        .byte $BD, $01, $04
+        .byte $99, $A2, $00
+        .byte $BD, $67, $B4
+        .byte $99, $A3, $00
+        .byte $88
+        .byte $88
+        .byte $88
+        .byte $88
+        .byte $10, $E3
+
+
+    .byte $A9, $02
+    .byte $4C, $00, $6C
+    
+    .byte $A9, $08
+    .byte $4C, $03, $6C
+    
+    .byte $4C, $06, $6C
+
+
+
+    .byte $20, $09, $6C, $29, $03, $F0, $34, $A5, $7C, $C9, $01, $F0, $EB
     .byte $C9, $03, $F0, $EC, $BD, $60, $B4, $C9, $03, $F0, $23, $BD, $0A, $04, $29, $03
     .byte $C9, $01, $D0, $11, $BC, $00, $04, $C0, $E4, $D0, $0A, $20, $04, $BA, $A9, $03
     .byte $9D, $0A, $04, $D0, $06, $20, $29, $BA, $20, $EF, $B9, $20, $0D, $BA, $A9, $03

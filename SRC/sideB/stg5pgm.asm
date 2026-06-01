@@ -930,47 +930,365 @@ MotherBrain_DrawSprites:
     
     .ds $80, $00
     
-    .byte $A5, $6B, $F0, $74, $A6, $45, $BD, $00, $03, $C9, $0B, $D0, $6B, $C0, $98
-    .byte $D0, $2C, $A2, $00, $BD, $00, $05, $F0, $09, $20, $F1, $BE, $C9, $D0, $D0, $F4
-    .byte $F0, $57, $A9, $8C, $9D, $08, $05, $A5, $05, $9D, $09, $05, $A9, $06, $9D, $03
-    .byte $05, $A5, $45, $48, $86, $45, $20, $3F, $6C, $68, $85, $45, $D0, $3B, $A5, $04
-    .byte $4A, $90, $02, $C6, $04, $A0, $00, $B1, $04, $4A, $B0, $2D, $C9, $48, $90, $29
-    .byte $C9, $4C, $B0, $25, $B9, $58, $07, $F0, $10, $A5, $04, $29, $9E, $D9, $59, $07
-    .byte $D0, $07, $A5, $05, $D9, $5A, $07, $F0, $0B, $98, $18, $69, $08, $A8, $C9, $28
-    .byte $D0, $E2, $F0, $05, $A9, $01, $99, $5D, $07, $68, $68, $18, $60, $A8, $A5, $6B
-    .byte $F0, $15, $A6, $45, $BD, $00, $03, $C9, $0B, $D0, $0C, $C0, $5E, $90, $08, $C0
-    .byte $72, $B0, $04, $A9, $01, $85, $9E, $98, $60, $AC, $0B, $01, $C8, $D0, $76, $A0
-    .byte $03, $20, $E6, $C1, $A0, $00, $84, $45, $B9, $86, $00, $30, $EB, $B9, $87, $00
-    .byte $45, $27, $4A, $90, $E3, $A5, $98, $C9, $04, $B0, $DD, $A5, $27, $29, $06, $D0
-    .byte $D7, $A2, $20, $BD, $60, $B4, $F0, $0F, $BD, $05, $04, $29, $02, $F0, $08, $8A
-    .byte $38, $E9, $10, $AA, $10, $ED, $60, $A9, $01, $9D, $60, $B4, $A9, $04, $9D, $6E
-    .byte $B4, $A9, $00, $9D, $0F, $04, $9D, $04, $04, $20, $2A, $6C, $A9, $F7, $9D, $63
-    .byte $B4, $A4, $45, $B9, $87, $00, $9D, $67, $B4, $B9, $88, $00, $0A, $19, $86, $00
-    .byte $A8, $B9, $56, $C2, $20, $DF, $BE, $A6, $45, $F6, $88, $B5, $88, $C9, $06, $D0
-    .byte $04, $A9, $00, $95, $88, $60, $22, $2A, $2A, $BA, $B2, $2A, $C4, $2A, $C8, $BA
-    .byte $BA, $BA, $AC, $0B, $01, $C8, $F0, $4A, $AD, $0A, $01, $85, $03, $A9, $01, $38
-    .byte $20, $45, $6C, $8D, $0A, $01, $AD, $0B, $01, $85, $03, $A9, $00, $20, $45, $6C
-    .byte $8D, $0B, $01, $A5, $27, $29, $0F, $D0, $08, $AD, $84, $06, $09, $01, $8D, $84
-    .byte $06, $AD, $0A, $01, $0D, $0B, $01, $D0, $19, $CE, $0B, $01, $85, $99, $A9, $07
-    .byte $85, $98, $AD, $80, $06, $09, $01, $8D, $80, $06, $A9, $0C, $85, $26, $A9, $0B
-    .byte $85, $1C, $60, $AD, $0D, $01, $F0, $45, $AD, $0C, $01, $8D, $47, $B5, $A9, $84
-    .byte $8D, $E0, $04, $A9, $64, $8D, $E1, $04, $A9, $1A, $8D, $43, $B5, $A9, $E0, $85
-    .byte $45, $A5, $55, $48, $20, $3C, $6C, $68, $C5, $55, $F0, $21, $AA, $AD, $0B, $01
-    .byte $4A, $4A, $4A, $38, $6A, $9D, $01, $02, $AD, $0B, $01, $29, $0F, $09, $80, $9D
-    .byte $05, $02, $AD, $0A, $01, $4A, $4A, $4A, $38, $6A, $9D, $09, $02, $60, $A9, $10
-    .byte $85, $45, $A2, $20, $20, $0E, $C3, $8A, $38, $E9, $08, $AA, $D0, $F6, $BD, $58
-    .byte $07, $29, $0F, $C9, $01, $D0, $E6, $BD, $5D, $07, $F0, $49, $FE, $5B, $07, $BD
-    .byte $5B, $07, $4A, $B0, $40, $A8, $E9, $03, $D0, $03, $FE, $58, $07, $B9, $83, $C3
-    .byte $8D, $13, $05, $BD, $59, $07, $8D, $18, $05, $BD, $5A, $07, $8D, $19, $05, $AD
-    .byte $A0, $07, $D0, $09, $8A, $48, $20, $3F, $6C, $68, $AA, $90, $11, $BD, $58, $07
-    .byte $29, $80, $09, $01, $9D, $58, $07, $9D, $5D, $07, $DE, $5B, $07, $60, $A9, $40
-    .byte $9D, $5C, $07, $D0, $18, $BC, $5B, $07, $F0, $13, $DE, $5C, $07, $D0, $0E, $A9
-    .byte $40, $9D, $5C, $07, $88, $98, $9D, $5B, $07, $4A, $A8, $90, $B0, $A9, $00, $9D
-    .byte $5D, $07, $60, $0C, $0D, $0E, $0F, $07, $A0, $05, $20, $A9, $B9, $88, $10, $FA
-    .byte $85, $8D, $60, $8A, $20, $13, $BB, $A8, $20, $A9, $B9, $85, $8D
+UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass:
+    .byte $A5, $6B
+    .byte $F0, $74
+    
+    .byte $A6, $45
+    .byte $BD, $00, $03
+    .byte $C9, $0B
+    .byte $D0, $6B
+    
+    .byte $C0, $98
+    .byte $D0, $2C
+        .byte $A2, $00
+            .byte $BD, $00, $05
+            .byte $F0, $09
+            .byte $20, $F1, $BE
+            .byte $C9, $D0
+            .byte $D0, $F4
+        .byte $F0, $57
+        
+        .byte $A9, $8C
+        .byte $9D, $08, $05
+        .byte $A5, $05
+        .byte $9D, $09, $05
+        
+        .byte $A9, $06
+        .byte $9D, $03, $05
+        
+        .byte $A5, $45
+        .byte $48
+        
+        .byte $86, $45
+        
+        .byte $20, $3F, $6C
+        
+        .byte $68
+        .byte $85, $45
+        .byte $D0, $3B
+        
+        ; check zebetite
+        .byte $A5, $04
+        .byte $4A
+        .byte $90, $02
+            .byte $C6, $04
+        .byte $A0, $00
+        .byte $B1, $04
+        .byte $4A
+        .byte $B0, $2D
+        
+        .byte $C9, $48
+        .byte $90, $29
+        .byte $C9, $4C
+        .byte $B0, $25
+        
+            .byte $B9, $58, $07
+            .byte $F0, $10
+            .byte $A5, $04
+            .byte $29, $9E
+            .byte $D9, $59, $07
+            .byte $D0, $07
+            .byte $A5, $05
+            .byte $D9, $5A, $07
+            .byte $F0, $0B
+                .byte $98
+                .byte $18
+                .byte $69, $08
+                .byte $A8
+                .byte $C9, $28
+                .byte $D0, $E2
+                .byte $F0, $05
+                
+                .byte $A9, $01
+                .byte $99, $5D, $07
+    .byte $68
+    .byte $68
+    .byte $18
+    .byte $60
+    
+UpdateBullet_CollisionWithMotherBrain:
+    .byte $A8
+    .byte $A5, $6B
+    .byte $F0, $15
+    .byte $A6, $45
+    .byte $BD, $00, $03
+    .byte $C9, $0B
+    .byte $D0, $0C
+    .byte $C0, $5E
+    .byte $90, $08
+    .byte $C0, $72
+    .byte $B0, $04
+    .byte $A9, $01
+    .byte $85, $9E
+    .byte $98
+    .byte $60
 
+UpdateAllRinkaSpawners:
+    .byte $AC, $0B, $01
+    .byte $C8
+    .byte $D0, $76
+    
+    .byte $A0, $03
+    .byte $20, $E6, $C1
+    
+    .byte $A0, $00
+    .byte $84, $45
+    
+    .byte $B9, $86, $00
+    .byte $30, $EB
+    
+    .byte $B9, $87, $00
+    .byte $45, $27
+    .byte $4A
+    .byte $90, $E3
+    
+    .byte $A5, $98
+    .byte $C9, $04
+    .byte $B0, $DD
+    
+    .byte $A5, $27
+    .byte $29, $06
+    .byte $D0, $D7
+    
+    .byte $A2, $20
+        .byte $BD, $60, $B4
+        .byte $F0, $0F
+        .byte $BD, $05, $04
+        .byte $29, $02
+        .byte $F0, $08
+        
+        .byte $8A
+        .byte $38
+        .byte $E9, $10
+        .byte $AA
+        .byte $10, $ED
+    .byte $60
+    
+    .byte $A9, $01
+    .byte $9D, $60, $B4
+    
+    .byte $A9, $04
+    .byte $9D, $6E, $B4
+    
+    .byte $A9, $00
+    .byte $9D, $0F, $04
+    .byte $9D, $04, $04
+    .byte $20, $2A, $6C
+    
+    .byte $A9, $F7
+    .byte $9D, $63, $B4
+    
+    .byte $A4, $45
+    .byte $B9, $87, $00
+    .byte $9D, $67, $B4
+    .byte $B9, $88, $00
+    .byte $0A
+    .byte $19, $86, $00
+    .byte $A8
+    .byte $B9, $56, $C2
+    .byte $20, $DF, $BE
+    
+    .byte $A6, $45
+    .byte $F6, $88
+    .byte $B5, $88
+    .byte $C9, $06
+    .byte $D0, $04
+    .byte $A9, $00
+    
+    .byte $95, $88
+    .byte $60
+    
+    .byte $22, $2A
+    .byte $2A, $BA
+    .byte $B2, $2A
+    .byte $C4, $2A
+    .byte $C8, $BA
+    .byte $BA, $BA
+    
+UpdateEndTimer:
+    .byte $AC, $0B, $01
+    .byte $C8
+    .byte $F0, $4A
+    
+    .byte $AD, $0A, $01
+    .byte $85, $03
+    .byte $A9, $01
+    .byte $38
+    .byte $20, $45, $6C
+    .byte $8D, $0A, $01
+    
+    .byte $AD, $0B, $01
+    .byte $85, $03
+    .byte $A9, $00
+    .byte $20, $45, $6C
+    .byte $8D, $0B, $01
+    
+    .byte $A5, $27
+    .byte $29, $0F
+    .byte $D0, $08
+        .byte $AD, $84, $06
+        .byte $09, $01
+        .byte $8D, $84, $06
+    
+    .byte $AD, $0A, $01
+    .byte $0D, $0B, $01
+    .byte $D0, $19
+    
+    .byte $CE, $0B, $01
+    .byte $85, $99
+    
+    .byte $A9, $07
+    .byte $85, $98
+    
+    .byte $AD, $80, $06
+    .byte $09, $01
+    .byte $8D, $80, $06
+    
+    .byte $A9, $0C
+    .byte $85, $26
+    .byte $A9, $0B
+    .byte $85, $1C
+    .byte $60
+    
+DrawEndTimerEnemy:
+    .byte $AD, $0D, $01
+    .byte $F0, $45
+    
+    .byte $AD, $0C, $01
+    .byte $8D, $47, $B5
+    .byte $A9, $84
+    .byte $8D, $E0, $04
+    .byte $A9, $64
+    .byte $8D, $E1, $04
+    .byte $A9, $1A
+    .byte $8D, $43, $B5
+    .byte $A9, $E0
+    .byte $85, $45
+    
+    .byte $A5, $55
+    .byte $48
+    .byte $20, $3C, $6C
+    
+    .byte $68
+    .byte $C5, $55
+    .byte $F0, $21
+    
+    .byte $AA
+    .byte $AD, $0B, $01
+    .byte $4A
+    .byte $4A
+    .byte $4A
+    .byte $38
+    .byte $6A
+    .byte $9D, $01, $02
+    
+    .byte $AD, $0B, $01
+    .byte $29, $0F
+    .byte $09, $80
+    .byte $9D, $05, $02
+    
+    .byte $AD, $0A, $01
+    .byte $4A
+    .byte $4A
+    .byte $4A
+    .byte $38
+    .byte $6A
+    .byte $9D, $09, $02
+    .byte $60
 
+UpdateAllZebetites:
+    .byte $A9, $10
+    .byte $85, $45
+    .byte $A2, $20
+        .byte $20, $0E, $C3
+        .byte $8A
+        .byte $38
+        .byte $E9, $08
+        .byte $AA
+        .byte $D0, $F6
+    
+    .byte $BD, $58, $07
+    .byte $29, $0F
+    .byte $C9, $01
+    .byte $D0, $E6
+    
+    .byte $BD, $5D, $07
+    .byte $F0, $49
+    
+    .byte $FE, $5B, $07
+    .byte $BD, $5B, $07
+    
+    .byte $4A
+    .byte $B0, $40
+    
+    .byte $A8
+    .byte $E9, $03
+    .byte $D0, $03
+    .byte $FE, $58, $07
+    
+    .byte $B9, $83, $C3
+    .byte $8D, $13, $05
+    
+    .byte $BD, $59, $07
+    .byte $8D, $18, $05
+    .byte $BD, $5A, $07
+    .byte $8D, $19, $05
+    
+    .byte $AD, $A0, $07
+    .byte $D0, $09
+        .byte $8A
+        .byte $48
+        .byte $20, $3F, $6C
+        .byte $68
+        .byte $AA
+        .byte $90, $11
+    .byte $BD, $58, $07
+    .byte $29, $80
+    .byte $09, $01
+    .byte $9D, $58, $07
+    .byte $9D, $5D, $07
+    .byte $DE, $5B, $07
+    .byte $60
+    
+    .byte $A9, $40
+    .byte $9D, $5C, $07
+    .byte $D0, $18
+    
+    .byte $BC, $5B, $07
+    .byte $F0, $13
+    
+    .byte $DE, $5C, $07
+    .byte $D0, $0E
+    
+    .byte $A9, $40
+    .byte $9D, $5C, $07
+    .byte $88
+    .byte $98
+    .byte $9D, $5B, $07
+    .byte $4A
+    .byte $A8
+    .byte $90, $B0
+    
+    .byte $A9, $00
+    .byte $9D, $5D, $07
+    .byte $60
+    
+    .byte $0C, $0D, $0E, $0F, $07
 
+ClearAllMetroidLatches:
+    .byte $A0, $05
+        .byte $20, $A9, $B9
+        .byte $88
+        .byte $10, $FA
+    .byte $85, $8D
+    .byte $60
+    
+    .byte $8A
+    .byte $20, $13, $BB
+    .byte $A8
+    .byte $20, $A9, $B9
+    .byte $85, $8D
     .byte $60
 
 VRAMString00_{AREA}:
