@@ -575,14 +575,14 @@ UpdateAllCannons:
     ; update cannon if it exists
     ldy Cannons.0.status,x
     bne UpdateCannon
-RTS_9B4B:
+@RTS:
     rts
 
 UpdateCannon:
     ; exit if cannon is offscreen
     jsr UpdateCannon_CheckIfOnScreen
     tya
-    bne RTS_9B4B
+    bne UpdateAllCannons@RTS
     ; branch if escape timer is active
     ldy EndTimer+1
     iny
@@ -591,7 +591,7 @@ UpdateCannon:
         ; exit if cannon instr list is 5 (unused?)
         lda Cannons.0.instrListID,x
         cmp #$05
-        beq RTS_9B4B
+        beq UpdateAllCannons@RTS
         ; run instructions
         jsr UpdateCannon_RunInstructions
         jmp DrawCannon_Normal
@@ -599,7 +599,7 @@ UpdateCannon:
         ; escape timer is active, flash and do nothing
         lda FrameCount
         and #$02
-        bne RTS_9B4B
+        bne UpdateAllCannons@RTS
         lda #_id_EnFrame_CannonTimeBombSet_{AREA}.b
         jmp DrawCannon_Escape
 
@@ -943,7 +943,7 @@ SpawnMotherBrainRoutine:
     ; lock horizontal scrolling behind mother brain
     eor #$01
     tax
-    lda L9D3C
+    lda @scrollBlockLeftDoor
     ora ScrollBlockOnNameTable3,x
     sta ScrollBlockOnNameTable3,x
     ; init anim delays
@@ -952,10 +952,9 @@ SpawnMotherBrainRoutine:
     sta MotherBrainAnimEyeDelay
     rts
 
-L9D3B:
+@scrollBlockRightDoor:
     .byte $02 ; unused
-
-L9D3C:
+@scrollBlockLeftDoor:
     .byte $01
 
 ;-------------------------------------------------------------------------------
@@ -1064,7 +1063,7 @@ CannonEnProjectileYOffsetTable:
 ; This is code:
 MotherBrainStatusHandler:
     lda MotherBrainStatus
-    beq RTS_9DF1
+    beq @RTS
     jsr CommonJump_JumpEngine
         .word Exit__    ;#$00=Mother brain not in room,
         .word MotherBrain_Idle     ;#$01=Mother brain in room
@@ -1077,7 +1076,7 @@ MotherBrainStatusHandler:
         .word MotherBrain_TimeBombMessage_ScrollBackOnScreen     ;#$08=Initialize mother brain already dead (part 1)
         .word MotherBrain_SetTimeBomb_ScrollBackOnScreen     ;#$09=Initialize mother brain already dead (part 2)
         .word Exit__    ;#$0A=Mother brain already dead.
-RTS_9DF1:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1085,22 +1084,22 @@ MotherBrain_Idle_CollideWithSamus:
     ; exit if samus is not in the same nametable as mother brain
     lda Samus.hi
     eor MotherBrainHi
-    bne RTS_9DF1
+    bne MotherBrainStatusHandler@RTS
     ; exit if samus x pos is not in range #$48 to #$76 inclusive
     lda Samus.x
     sec
     sbc #$48
     cmp #$2F
-    bcs RTS_9DF1
+    bcs MotherBrainStatusHandler@RTS
     ; exit if samus y pos is not in range #$61 to #$9F inclusive
     lda Samus.y
     sec
     sbc #$80
-    bpl L9E0E
+    bpl @endIf_A
         jsr TwosComplement_
-    L9E0E:
+    @endIf_A:
     cmp #$20
-    bcs RTS_9DF1
+    bcs MotherBrainStatusHandler@RTS
     
     ; samus is touching mother brain
     ; deal 20 damage to samus
@@ -1118,7 +1117,7 @@ MotherBrain_Idle: ; 03:9E22
     jsr MotherBrain_Idle_HandleBeingHit
     jsr MotherBrain_Idle_UpdateAnimBrain
     jsr MotherBrain_Idle_UpdateAnimEye
-L9E2E:
+@draw:
     jsr MotherBrain_DrawSprites
 ClearMotherBrainIsHit:
     lda #$00
@@ -1141,12 +1140,12 @@ UpdateMotherBrainFlashDelay: ; 03:9E43
     ; decrement delay
     dec MotherBrainFlashDelay
     ; branch if delay is not zero
-    bne L9E4B
+    bne @endIf_A
         ; flash delay is zero, mother brain stops flashing
         ; change state of mother brain to idle
         lda #$01
         sta MotherBrainStatus
-    L9E4B:
+    @endIf_A:
     ; save bit 1 of delay to y
     lda MotherBrainFlashDelay
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
@@ -1198,7 +1197,7 @@ MotherBrain_Killed: ; 03:9E52
         ora #sfxNoise_SilenceMusic
         sta SFXNoiseInitFlags
     @endIf_A:
-    jmp L9E2E
+    jmp MotherBrain_Idle@draw
 
 ;-------------------------------------------------------------------------------
 MotherBrain_Disappear: ; 03:9E86
@@ -1403,8 +1402,11 @@ MotherBrain_SetTimeBomb: ; 03:9F49
 @RTS:
     rts
 
-L9F65: ; 03:9F65
-    .byte $80, $B0, $A0, $90
+DoorSlots_: ; 03:9F65
+    .byte Doors.0 - Objects        ; right on white square
+    .byte Doors.3 - Objects        ; left on white square
+    .byte Doors.2 - Objects        ; right on black square
+    .byte Doors.1 - Objects        ; left on black square
 
 MotherBrain_SpawnDoor: ; 03:9F69
     ; get obj slot
@@ -1415,7 +1417,7 @@ MotherBrain_SpawnDoor: ; 03:9F69
     rol
     and #$03
     tay
-    ldx L9F65,y
+    ldx DoorSlots_,y
     ; door closes immediately
     lda #$01
     sta DoorHitPoints,x
@@ -1655,7 +1657,7 @@ MotherBrain_Disappear_Disintegrate:
     jmp CommonJump_DrawTileBlast
 
 MotherBrainDeathString:
-MotherBrainDeathString_1:
+@1:
     .byte $6144 - $6144
     .byte $6146 - $6144
     .byte $6148 - $6144
@@ -1668,35 +1670,35 @@ MotherBrainDeathString_1:
     .byte $61CC - $6144
     .byte $620C - $6144
     .byte $FF
-MotherBrainDeathString_2:
+@2:
     .byte $6186 - $6144
     .byte $61C5 - $6144
     .byte $6205 - $6144
     .byte $616B - $6144
     .byte $FF
-MotherBrainDeathString_3:
+@3:
     .byte $61C6 - $6144
     .byte $6187 - $6144
     .byte $6169 - $6144
     .byte $618B - $6144
     .byte $FF
-MotherBrainDeathString_4:
+@4:
     .byte $6206 - $6144
     .byte $6208 - $6144
     .byte $620A - $6144
     .byte $FF
-MotherBrainDeathString_5:
+@5:
     .byte $61C8 - $6144
     .byte $6189 - $6144
     .byte $61CA - $6144
     .byte $FF
 
 MotherBrainDeathStringOffsets:
-    .byte MotherBrainDeathString_1 - MotherBrainDeathString
-    .byte MotherBrainDeathString_2 - MotherBrainDeathString
-    .byte MotherBrainDeathString_3 - MotherBrainDeathString
-    .byte MotherBrainDeathString_4 - MotherBrainDeathString
-    .byte MotherBrainDeathString_5 - MotherBrainDeathString
+    .byte MotherBrainDeathString@1 - MotherBrainDeathString
+    .byte MotherBrainDeathString@2 - MotherBrainDeathString
+    .byte MotherBrainDeathString@3 - MotherBrainDeathString
+    .byte MotherBrainDeathString@4 - MotherBrainDeathString
+    .byte MotherBrainDeathString@5 - MotherBrainDeathString
 
 ;-------------------------------------------------------------------------------
 ;$04-$05 is pointer to projectile's location in the room vram buffers
@@ -1826,7 +1828,7 @@ UpdateBullet_CollisionWithMotherBrain:
 @exit:
     ; a = tile id
     tya
-RTS_A15D:
+@RTS:
     rts
 
 ;-------------------------------------------------------------------------------
@@ -1834,7 +1836,7 @@ UpdateAllRinkaSpawners:
     ; exit if timer is active
     ldy EndTimer+1
     iny
-    bne RTS_A1DA
+    bne @RTS
     
     ; run subroutine for the second rinka spawner
     ldy #$03
@@ -1847,24 +1849,24 @@ UpdateAllRinkaSpawners:
     
     ; exit if rinka spawner is inactive
     lda RinkaSpawners.0.status,y
-    bmi RTS_A15D
+    bmi UpdateBullet_CollisionWithMotherBrain@RTS
     
     ; exit if RinkaSpawners.0.hi == bit 0 of FrameCount
     ; (maybe to alternate which rinka spawner is processed each frame?)
     lda RinkaSpawners.0.hi,y
     eor FrameCount
     lsr
-    bcc RTS_A15D
+    bcc UpdateBullet_CollisionWithMotherBrain@RTS
     
     ; exit if mother brain is dying or dead
     lda MotherBrainStatus
     cmp #$04
-    bcs RTS_A15D
+    bcs UpdateBullet_CollisionWithMotherBrain@RTS
     
     ; exit if framecount modulo 8 is not 0 or 1
     lda FrameCount
     and #$06
-    bne RTS_A15D
+    bne UpdateBullet_CollisionWithMotherBrain@RTS
     
     ; attempt to spawn a rinka
     ; search for an open enemy slot in the first three enemy slots
@@ -1915,11 +1917,10 @@ UpdateAllRinkaSpawners:
     inc RinkaSpawners.0.posIndex,x
     lda RinkaSpawners.0.posIndex,x
     cmp #$06
-    bne RTS_A1DA
+    bne @RTS
     lda #$00
-LA1D8:
     sta RinkaSpawners.0.posIndex,x
-RTS_A1DA:
+@RTS:
     rts
 
 ; X in low nibble, Y in high nibble
@@ -2058,6 +2059,8 @@ UpdateAllZebetites:
         sbc #$08
         tax
         bne @loop
+    ; fallthrough
+    
 UpdateZebetite:
     ; return if status is not #$x1
     lda Zebetites.0.status,x
@@ -2067,7 +2070,7 @@ UpdateZebetite:
     
     ; check if zebetite just got hit
     lda Zebetites.0.isHit,x
-    beq LA2F2
+    beq @dontThin
     
     ; zebetite was just hit
     ; increase hits count
@@ -2075,14 +2078,15 @@ UpdateZebetite:
     lda Zebetites.0.qtyHits,x
     ; check if hits count is even or odd
     lsr
-    bcs LA2F2
+    bcs @dontThin
     ; hit count is even
     ; update zebetite appearance
     tay
     sbc #$03
-    bne LA2BA
-    inc Zebetites.0.status,x
-LA2BA:
+    bne @endIf_A
+        inc Zebetites.0.status,x
+    @endIf_A:
+@gfxUpdate:
     ; set anim frame
     lda ZebetiteAnimFrameTable,y
     sta TileBlasts.1.animFrame
@@ -2093,7 +2097,7 @@ LA2BA:
     sta TileBlasts.1.roomRAMPtr+1
     ; if a vram struct is in the buffer, dont update gfx
     lda VRAMStructBufferIndex
-    bne LA2DA
+    bne @endIf_B
         ; vram struct buffer is empty
         ; update zebetite gfx
         txa
@@ -2102,8 +2106,8 @@ LA2BA:
         pla
         tax
         ; branch if gfx update is successful
-        bcc LA2EB
-    LA2DA:
+        bcc @gfxUpdateSuccess
+    @endIf_B:
     lda Zebetites.0.status,x
     and #$80
     ora #$01
@@ -2112,19 +2116,19 @@ LA2BA:
     dec Zebetites.0.qtyHits,x
     rts
 
-LA2EB:
+@gfxUpdateSuccess:
     ; reset healing delay to max
     lda #$40
     sta Zebetites.0.healingDelay,x
-    bne LA30A ; branch always
+    bne @exit ; branch always
 
-LA2F2:
+@dontThin:
     ; dont heal if at full health
     ldy Zebetites.0.qtyHits,x
-    beq LA30A
+    beq @exit
     ; dont heal if healing delay is not zero
     dec Zebetites.0.healingDelay,x
-    bne LA30A
+    bne @exit
     
     ; reset delay and heal one hit
     lda #$40
@@ -2135,23 +2139,27 @@ LA2F2:
     ; if hits count is odd, update zebetite appearance
     lsr
     tay
-    bcc LA2BA
-LA30A:
+    bcc @gfxUpdate
+@exit:
     lda #$00
     sta Zebetites.0.isHit,x
     rts
 
 ZebetiteAnimFrameTable:
-    .byte $0C, $0D, $0E, $0F, $07
+    .byte $0C ; 100% thickness
+    .byte $0D ;  75% thickness
+    .byte $0E ;  50% thickness
+    .byte $0F ;  25% thickness
+    .byte $07 ; dead
 
 ;-------------------------------------------------------------------------------
 ; Samus no longer has a metroid on her
 ClearAllMetroidLatches:
     ldy #$05
-    LA317:
+    @loop:
         jsr ClearMetroidLatch
         dey
-        bpl LA317
+        bpl @loop
     sta MetroidOnSamus
     rts
 

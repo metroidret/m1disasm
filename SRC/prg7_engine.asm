@@ -190,7 +190,7 @@ Startup:
     iny ;Y = 1
     sty BankSwitchPending               ;Prepare to switch page 0 into lower PRGROM.
     jsr CheckBankSwitch                 ;($C4DE)
-    bne WaitNMIEnd                  ;Branch always
+    bne MainLoop@loop_waitNMIEnd ;Branch always
 
 ;-----------------------------------------[ Main loop ]----------------------------------------------
 
@@ -209,14 +209,14 @@ MainLoop:
     ;Wait for next NMI to end.
     lda #$00
     sta NMIStatus
-WaitNMIEnd:
+    @loop_waitNMIEnd:
         ;If nonzero, NMI has ended. Else keep waiting.
         tay
         lda NMIStatus
-        bne LC0D3
-        jmp WaitNMIEnd
+        bne @exitLoop_waitNMIEnd
+        jmp @loop_waitNMIEnd
+    @exitLoop_waitNMIEnd:
 
-LC0D3:
     ;($C000)Update pseudo random numbers.
     jsr RandomNumbers
     ;($C0BC)Jump to top of subroutine.
@@ -226,7 +226,7 @@ LC0D3:
 
 ;The NMI is called 60 times a second by the VBlank signal from the PPU. When the
 ;NMI routine is called, the game should already be waiting for it in the main
-;loop routine in the WaitNMIEnd loop.  It is possible that the main loop routine
+;loop routine in the MainLoop@loop_waitNMIEnd loop.  It is possible that the main loop routine
 ;will not be waiting as it is bogged down with excess calculations. This causes
 ;the game to slow down.
 
@@ -249,13 +249,13 @@ NMI:
     sta OAMDMA
     ;Skip if the frame couldn't finish in time.
     lda NMIStatus
-    bne LC103
+    bne @endIf_A
         ;Branch if mode=Play.
         lda GameMode
-        beq LC0F4
+        beq @endIf_B
             ;($9A07)Write end message on screen(If appropriate).
             jsr NMIScreenWrite
-        LC0F4:
+        @endIf_B:
         ;($C1E0)Check if palette data pending.
         jsr CheckPaletteWrite
         ;($C2CA)check if data needs to be written to PPU.
@@ -266,7 +266,7 @@ NMI:
         jsr WriteScroll
         ;($C215)Read both joypads.
         jsr ReadJoyPads
-    LC103:
+    @endIf_A:
     ;($B3B4)Update music and SFX.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
         jsr SoundEngine
@@ -456,9 +456,9 @@ EraseAllSprites: ;($C1A3)
         bne @loop
     ;Exit subroutine if GameMode=Play(#$00)
     lda GameMode
-    beq Exit101
+    beq @RTS
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
-Exit101:
+@RTS:
     rts                             ;Return used by subroutines above and below.
 
 ;---------------------------------------[ Remove intro sprites ]-------------------------------------
@@ -483,7 +483,7 @@ RemoveIntroSprites:
         bpl @loop
     ; branch if mode = Play.
     lda GameMode
-    beq Exit101
+    beq EraseAllSprites@RTS
         jmp DecSpriteYCoord             ;($988A)Find proper y coord of sprites.
 
 ;-------------------------------------[Clear RAM $33 thru $DF]---------------------------------------
@@ -505,41 +505,52 @@ ClearRAM_33_DF:
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
 
 CheckPaletteWrite:
-    lda GameMode                    ;
-    beq LC1ED                       ;Is game being played? If so, branch to exit.
-    lda TitleRoutine                ;
-    cmp #_id_EndGame.b                        ;Is Game at ending sequence? If not, branch
-    bcc LC1ED                       ;
-    jmp EndGamePaletteWrite             ;($9F54)Write palette data for ending.
-LC1ED:
-    ldy PaletteDataPending              ;
-    bne LC1FF                       ;Is palette data pending? If so, branch.
-        lda GameMode                    ;
-        beq RTS_C1FE                       ;Is game being played? If so, branch to exit.
-        lda TitleRoutine                ;
-        cmp #_id_StartContinueScreen15.b                        ;Is intro playing? If not, branch.
-        bcs RTS_C1FE                       ;
-        jmp StarPaletteSwitch               ;($8AC7)Cycles palettes for intro stars twinkle.
-        RTS_C1FE:
-        rts                             ;Exit when no palette data pending.
+    ; branch if game at ending sequence
+    lda GameMode
+    beq @endIf_A
+    lda TitleRoutine
+    cmp #_id_EndGame.b
+    bcc @endIf_A
+        ;Write palette data for ending.
+        jmp EndGamePaletteWrite
+    @endIf_A:
+    
+    ; not at ending
+    ; branch if palette data pending
+    ldy PaletteDataPending
+    bne @paletteDataIsPending
+    
+    ; no palette data pending
+    ; exit if intro is not playing
+    lda GameMode
+    beq @RTS
+    lda TitleRoutine
+    cmp #_id_StartContinueScreen15.b
+    bcs @RTS
+        ;Cycles palettes for intro stars twinkle.
+        jmp StarPaletteSwitch
+    @RTS:
+    rts
 
 ;Prepare to write palette data to PPU.
-
-LC1FF:
-    dey                             ;Palette # = PaletteDataPending - 1.
-    tya                             ;
-    asl                             ;* 2, each pal data ptr is 2 bytes (16-bit).
-    tay                             ;
-    ldx PalettePtrTable,y                ;X = low byte of PPU data pointer.
-    lda PalettePtrTable+1,y              ;
-    tay                             ;Y = high byte of PPU data pointer.
-    lda #$00                        ;Clear A.
-    sta PaletteDataPending              ;Reset palette data pending byte.
+@paletteDataIsPending:
+    ;Palette # = PaletteDataPending - 1.
+    dey
+    tya
+    asl ;* 2, each pal data ptr is 2 bytes (16-bit).
+    tay
+    ;Set X and Y to PPU data pointer.
+    ldx PalettePtrTable,y
+    lda PalettePtrTable+1,y
+    tay
+    ;Reset palette data pending byte.
+    lda #$00
+    sta PaletteDataPending
+    ; fallthrough
 
 PreparePPUProcess:
-    ;Lower byte of pointer to VRAM structure
+    ;Set pointer to VRAM structure from X and Y
     stx Temp00_VRAMStructPtr
-    ;Upper byte of pointer to VRAM structure
     sty Temp00_VRAMStructPtr+1
     ;Write VRAM structure to PPU.
     jmp VRAMStructWrite
@@ -8485,7 +8496,7 @@ AttribTableWrite:
 RoomFinished:
     lda #$FF                        ;No more tasks to perform on current room.-->
     sta RoomNumber                  ;Set RoomNumber to #$FF.
-RTS_EA2A:
+@RTS:
     rts
 
 ;------------------------------------------[ Setup room ]--------------------------------------------
@@ -8493,7 +8504,7 @@ RTS_EA2A:
 SetupRoom:
     lda RoomNumber                  ;Room number.
     cmp #$FF                        ;
-    beq RTS_EA2A                           ;Branch to exit if room is undefined.
+    beq RoomFinished@RTS                           ;Branch to exit if room is undefined.
     cmp #$FE                        ;
     beq LEA5D                           ;Branch if empty place holder byte found in room data.
     cmp #$F0                        ;

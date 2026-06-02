@@ -579,10 +579,9 @@ ScrollBlockOnNameTable0 db  ;$6D       ;doors loaded on the name tables. The inf
                                        ;in the GetRoomNum routine to prevent the loading of a-->
                                        ;room behind a door when scrolling horizontally. This has-->
                                        ;the effect of stopping scrolling until Samus walks through-->
-                                       ;the door. #$01=Left door on name table. #$02=right door-->
-                                       ;on name table. #$03 two doors on the same name table.-->
-                                       ;#$00 is possible in $6D if 2 doors are on name table 0-->
-                                       ;while vertically scrolling.
+                                       ;the door.
+                                       ;bit 0: left door on name table
+                                       ;bit 1: right door on name table
 
 HealthChange           dw   ;$6E     ;Amount to add/subtract from Health.
 ; HealthChange+1               $6F
