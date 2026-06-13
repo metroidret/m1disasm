@@ -330,7 +330,7 @@ Temp06_Zero            = $06
 ;Temp00_RoomRAMPtr      = $00
 ; Temp00_RoomRAMPtr+1    = $01
 Temp02_AttribPtr       = $02
-; Temp03_AttribPtr+1     = $03
+; Temp02_AttribPtr+1     = $03
 Temp0E_MetatileCounter = $0E
 Temp10_StructIndex     = $10
 Temp11_MetatileIndex   = $11
@@ -368,6 +368,7 @@ Temp01_NameTablePlus1  = $01
 ; VRAMStruct
 Temp00_VRAMStructPtr   = $00
 ; Temp00_VRAMStructPtr+1 = $01
+
 ; bank switching
 Temp00_Bank            = $00
 Temp0A_BankInitPtr     = $0A
@@ -376,7 +377,7 @@ Temp0A_BankInitPtr     = $0A
 ; GFXInfo
 ;Temp00_Bank            = $00
 Temp01_GFXSource       = $01
-; Temp01_GFXSourcePtr+1  = $02
+; Temp01_GFXSource+1     = $02
 Temp03_GFXDestination  = $03
 ; Temp03_GFXDestination+1 = $04
 Temp05_GFXSize         = $05
@@ -442,6 +443,15 @@ Temp06_EnData05Mask    = $06
 ; InitTables
 ;Temp00_RoomRAMPtr      = $00
 ; Temp00_RoomRAMPtr+1    = $01
+
+; StarPaletteSwitch/PrepPPUPaletteString
+Temp00_PaletteDestination = $00
+; Temp00_PaletteDestination+1 = $01
+Temp02_PaletteSource   = $02
+; Temp02_PaletteSource+1 = $03
+Temp04_VRAMStructByte  = $04
+;Temp05_BytesCounter    = $05
+Temp06_PaletteIndex    = $06
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->

@@ -630,14 +630,14 @@ ReadOnePad:
     bne @endIf_B
         ;Decrement RetrigDelay if same buttons pressed.
         dec RetrigDelay1,x
-        bne RTS_C265
+        bne @RTS
         ;Once RetrigDelay=#$00, store buttons to retrigger.
         sta Joy1Retrig,x
         ldy #$08
     @endIf_B:
     ;Reset retrigger delay to #$20(32 frames) or #$08(8 frames) if already retriggering.
     sty RetrigDelay1,x
-RTS_C265:
+@RTS:
     rts
 
 ;-------------------------------------------[ Update timer ]-----------------------------------------
@@ -931,7 +931,7 @@ NextPPUByte: ; 07:C36E
     inx
     ;If buffer is not full, branch to get more data.
     cpx #_sizeof_VRAMStructBuffer
-    bcc RTS_C37D
+    bcc EndVRAMStruct@RTS
     ; buffer is full, writing must end immediatly
     ldx VRAMStructBufferIndex
     ; fallthrough
@@ -943,7 +943,7 @@ EndVRAMStruct: ; 07:C376
     ;Remove last return address from stack and jump out of PPU writing routines.
     pla
     pla
-RTS_C37D:
+@RTS:
     rts
 
 ;The following routine is only used by the intro routine to load the sprite
@@ -962,33 +962,36 @@ PrepPPUPaletteString:
 
 LC385:
     ;$04 now contains next data byte to be put into the VRAM structure.
-    sta $04
+    sta Temp04_VRAMStructByte
     ;High byte of starting address to write VRAM structure
-    lda $01
+    lda Temp00_RoomRAMPtr+1
     jsr WritePPUByte
     ;Low byte of starting address to write VRAM structure
-    lda $00
+    lda Temp00_RoomRAMPtr
     jsr WritePPUByte
     ;A now contains next data byte to be put into the VRAM structure.
-    lda $04
+    lda Temp04_VRAMStructByte
     jsr SeparateControlBits         ;($C3C6)Break control byte into two bytes.
 
     ;Check to see if RLE bit is set in control byte.
-    bit $04
+    bit Temp04_VRAMStructByte
     ;If not set, branch to load byte. Else increment index to find repeating data byte.
     bvc WritePaletteStringByte
     iny
 
 WritePaletteStringByte:
-    bit $04                         ;Check if RLE bit is set (again). if set, load same-->
-    bvs LC3A0                           ;byte over and over again until counter = #$00.
-        iny                             ;Non-repeating data byte. Increment for next byte.
-    LC3A0:
-    lda ($02),y                     ;
+    ;Check if RLE bit is set (again). if set, load same byte over and over again until counter = #$00.
+    bit Temp04_VRAMStructByte
+    bvs @endIf_A
+        ;Non-repeating data byte. Increment for next byte.
+        iny
+    @endIf_A:
+    
+    lda (Temp02_PaletteSource),y
     jsr WritePPUByte                ;($C36B)Put data byte into VRAMStructBuffer.
-    sty $06                         ;Temporarily store data index.
+    sty Temp06_PaletteIndex                         ;Temporarily store data index.
     ldy #$01                        ;PPU address increment = 1.
-    bit $04                         ;If MSB set in control bit, it looks like this routine might-->
+    bit Temp04_VRAMStructByte                         ;If MSB set in control bit, it looks like this routine might-->
     bpl LC3AF                           ;have been used for a software control vertical mirror, but-->
                                         ;the starting address has already been written to the PPU-->
                                         ;string so this section has no effect whether the MSB is set-->
@@ -996,8 +999,8 @@ WritePaletteStringByte:
         ldy #$20                        ;PPU address increment = 32.
     LC3AF:
     jsr AddYToPtr00                 ;($C2A8)Set next PPU write address.(Does nothing, already set).
-    ldy $06                         ;Restore data index to Y.
-    dec $05                         ;Decrement counter byte.
+    ldy Temp06_PaletteIndex                         ;Restore data index to Y.
+    dec Temp05_BytesCounter                         ;Decrement counter byte.
     bne WritePaletteStringByte      ;If more bytes to write, branch to write another byte.
     stx VRAMStructBufferIndex                 ;Store total length, in bytes, of VRAMStructBuffer.
     iny                             ;Move to next data byte(should be #$00).
@@ -1006,7 +1009,7 @@ LC3BC:
     ;X now contains current length of VRAM structure.
     ldx VRAMStructBufferIndex
     ;Is VRAM structure done loading (#$00)? If so exit, else branch to process PPU byte.
-    lda ($02),y
+    lda (Temp02_PaletteSource),y
     bne LC385
     jsr EndVRAMStruct
 
@@ -1023,10 +1026,11 @@ SeparateControlBits:
 
 ;----------------------------------------[ Math routines ]-------------------------------------------
 
+;Generate twos complement of value stored in A.
 TwosComplement:
-    eor #$FF                        ;
-    clc                             ;Generate twos complement of value stored in A.
-    adc #$01                        ;
+    eor #$FF
+    clc
+    adc #$01
     rts
 
 ;The following two routines add a Binary coded decimal (BCD) number to another BCD number.

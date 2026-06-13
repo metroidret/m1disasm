@@ -1448,10 +1448,10 @@ StarPaletteSwitch: ; 00:8AC7
 
 @checkSuccess:
     ;Prepare to write to the sprite palette starting at address $3F19.
-    lda #$19
-    sta $00
-    lda #$3F
-    sta $01
+    lda #<$3F19
+    sta Temp00_PaletteDestination
+    lda #>$3F19
+    sta Temp00_PaletteDestination+1
     ;Use only first 3 bits of byte since the pointer table only has 8 entries.
     lda IntroStarOffset
     and #$07
@@ -1460,17 +1460,17 @@ StarPaletteSwitch: ; 00:8AC7
     tay
     ;Stores starting address of palette data to write into $02 and $03 from IntroStarPalettePtrTable.
     lda IntroStarPalettePtrTable,y
-    sta $02
+    sta Temp02_PaletteSource
     lda IntroStarPalettePtrTable+1,y
-    sta $03
+    sta Temp02_PaletteSource+1
     ;Increment index for next palette change.
     inc IntroStarOffset
     jsr PrepPPUPaletteString        ;($C37E)Prepare and write new palette data.
     ;Prepare another write to the sprite palette. This time, starting at address $3F1D.
-    lda #$1D
-    sta $00
-    lda #$3F
-    sta $01
+    lda #<$3F1D
+    sta Temp00_PaletteDestination
+    lda #>$3F1D
+    sta Temp00_PaletteDestination+1
     iny
     jsr AddYToPtr02                 ;($C2B3)Find new data base of palette data.
     jmp PrepPPUPaletteString        ;($C37E)Prepare and write new palette data.
