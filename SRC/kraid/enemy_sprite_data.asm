@@ -2,143 +2,207 @@
 
 EnAnimTable_{AREA}: ;($9C86)
 EnAnim_00_{AREA}:
-    .byte _id_EnFrame00_{AREA}, _id_EnFrame01_{AREA}, $FF
+    .byte _id_EnFrame00_{AREA}
+    .byte _id_EnFrame01_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_EnProjectileKilled_{AREA}:
-    .byte _id_EnFrame_EnProjectileKilled_{AREA}, $FF
+    .byte _id_EnFrame_EnProjectileKilled_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperFloorIdle_{AREA}:
-    .byte _id_EnFrame_SidehopperFloorIdle0_{AREA}, _id_EnFrame_SidehopperFloorIdle1_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperFloorIdle0_{AREA}
+    .byte _id_EnFrame_SidehopperFloorIdle1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperFloorStartHopping_{AREA}:
     .byte _id_EnFrame_SidehopperFloorIdle1_{AREA}
 EnAnim_SidehopperFloorHopping_{AREA}:
-    .byte _id_EnFrame_SidehopperFloorHopping_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperFloorHopping_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperCeilingIdle_{AREA}:
-    .byte _id_EnFrame_SidehopperCeilingIdle0_{AREA}, _id_EnFrame_SidehopperCeilingIdle1_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperCeilingIdle0_{AREA}
+    .byte _id_EnFrame_SidehopperCeilingIdle1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperCeilingStartHopping_{AREA}:
     .byte _id_EnFrame_SidehopperCeilingIdle1_{AREA}
 EnAnim_SidehopperCeilingHopping_{AREA}:
-    .byte _id_EnFrame_SidehopperCeilingHopping_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperCeilingHopping_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_11_{AREA}:
-    .byte _id_EnFrame_Ripper_L_{AREA}, _id_EnFrame_Waver1_L_{AREA}
+    .byte _id_EnFrame_Ripper_L_{AREA}
+    .byte _id_EnFrame_Waver1_L_{AREA}
 EnAnim_Waver0_L_{AREA}:
-    .byte _id_EnFrame_Waver0_L_{AREA}, $FF
+    .byte _id_EnFrame_Waver0_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_15_{AREA}:
-    .byte _id_EnFrame_Ripper_R_{AREA}, _id_EnFrame_Waver1_R_{AREA}
+    .byte _id_EnFrame_Ripper_R_{AREA}
+    .byte _id_EnFrame_Waver1_R_{AREA}
 EnAnim_Waver0_R_{AREA}:
-    .byte _id_EnFrame_Waver0_R_{AREA}, $FF
+    .byte _id_EnFrame_Waver0_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Ripper_L_{AREA}:
-    .byte _id_EnFrame_Ripper_L_{AREA}, $FF
+    .byte _id_EnFrame_Ripper_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Ripper_R_{AREA}:
-    .byte _id_EnFrame_Ripper_R_{AREA}, $FF
+    .byte _id_EnFrame_Ripper_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Waver1_L_{AREA}:
     .byte _id_EnFrame_Waver1_L_{AREA}
 EnAnim_Waver2_L_{AREA}:
-    .byte _id_EnFrame_Waver2_L_{AREA}, $FF
+    .byte _id_EnFrame_Waver2_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Waver1_R_{AREA}:
     .byte _id_EnFrame_Waver1_R_{AREA}
 EnAnim_Waver2_R_{AREA}:
-    .byte _id_EnFrame_Waver2_R_{AREA}, $FF
+    .byte _id_EnFrame_Waver2_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Skree_{AREA}:
-    .byte _id_EnFrame_Skree0_{AREA}, _id_EnFrame_Skree1_{AREA}, _id_EnFrame_Skree2_{AREA}, $FF
+    .byte _id_EnFrame_Skree0_{AREA}
+    .byte _id_EnFrame_Skree1_{AREA}
+    .byte _id_EnFrame_Skree2_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperFloorExplode_{AREA}:
-    .byte _id_EnFrame_SidehopperFloorExplode_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperFloorExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SidehopperCeilingExplode_{AREA}:
-    .byte _id_EnFrame_SidehopperCeilingExplode_{AREA}, $FF
+    .byte _id_EnFrame_SidehopperCeilingExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_WaverExplode_L_{AREA}:
-    .byte _id_EnFrame_WaverExplode_L_{AREA}, $FF
+    .byte _id_EnFrame_WaverExplode_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_WaverExplode_R_{AREA}:
-    .byte _id_EnFrame_WaverExplode_R_{AREA}, $FF
+    .byte _id_EnFrame_WaverExplode_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RipperExplode_L_{AREA}:
-    .byte _id_EnFrame_RipperExplode_L_{AREA}, $FF
+    .byte _id_EnFrame_RipperExplode_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RipperExplode_R_{AREA}:
-    .byte _id_EnFrame_RipperExplode_R_{AREA}, $FF
+    .byte _id_EnFrame_RipperExplode_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SkreeExplode_{AREA}:
-    .byte _id_EnFrame_SkreeExplode_{AREA}, $FF
+    .byte _id_EnFrame_SkreeExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_ZeelaOnFloor_{AREA}:
-    .byte _id_EnFrame_ZeelaOnFloor0_{AREA}, _id_EnFrame_ZeelaOnFloor1_{AREA}, $FF
+    .byte _id_EnFrame_ZeelaOnFloor0_{AREA}
+    .byte _id_EnFrame_ZeelaOnFloor1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_ZeelaOnRightWall_{AREA}:
-    .byte _id_EnFrame_ZeelaOnRightWall0_{AREA}, _id_EnFrame_ZeelaOnRightWall1_{AREA}, $FF
+    .byte _id_EnFrame_ZeelaOnRightWall0_{AREA}
+    .byte _id_EnFrame_ZeelaOnRightWall1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_ZeelaOnCeiling_{AREA}:
-    .byte _id_EnFrame_ZeelaOnCeiling0_{AREA}, _id_EnFrame_ZeelaOnCeiling1_{AREA}, $FF
+    .byte _id_EnFrame_ZeelaOnCeiling0_{AREA}
+    .byte _id_EnFrame_ZeelaOnCeiling1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_ZeelaOnLeftWall_{AREA}:
-    .byte _id_EnFrame_ZeelaOnLeftWall0_{AREA}, _id_EnFrame_ZeelaOnLeftWall1_{AREA}, $FF
+    .byte _id_EnFrame_ZeelaOnLeftWall0_{AREA}
+    .byte _id_EnFrame_ZeelaOnLeftWall1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_ZeelaExplode_{AREA}:
-    .byte _id_EnFrame_ZeelaExplode_{AREA}, $FF
+    .byte _id_EnFrame_ZeelaExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Explosion_{AREA}:
-    .byte _id_EnFrame_Explosion0_{AREA}, $F7, _id_EnFrame_Explosion1_{AREA}, $F7, $FF
+    .byte _id_EnFrame_Explosion0_{AREA}
+    .byte _id_FrameNone
+    .byte _id_EnFrame_Explosion1_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_Geega_L_{AREA}:
-    .byte _id_EnFrame_Geega0_L_{AREA}, _id_EnFrame_Geega1_L_{AREA}, $FF
+    .byte _id_EnFrame_Geega0_L_{AREA}
+    .byte _id_EnFrame_Geega1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Geega_R_{AREA}:
-    .byte _id_EnFrame_Geega0_R_{AREA}, _id_EnFrame_Geega1_R_{AREA}, $FF
+    .byte _id_EnFrame_Geega0_R_{AREA}
+    .byte _id_EnFrame_Geega1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GeegaExplode_L_{AREA}:
-    .byte _id_EnFrame_GeegaExplode_L_{AREA}, $FF
+    .byte _id_EnFrame_GeegaExplode_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GeegaExplode_R_{AREA}:
-    .byte _id_EnFrame_GeegaExplode_R_{AREA}, $FF
+    .byte _id_EnFrame_GeegaExplode_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GeegaResting_L_{AREA}:
-    .byte _id_EnFrame_Geega0_L_{AREA}, $FF
+    .byte _id_EnFrame_Geega0_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GeegaResting_R_{AREA}:
-    .byte _id_EnFrame_Geega0_R_{AREA}, $FF
+    .byte _id_EnFrame_Geega0_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidLint_R_{AREA}:
-    .byte _id_EnFrame_KraidLint_R_{AREA}, $FF
+    .byte _id_EnFrame_KraidLint_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidLint_L_{AREA}:
-    .byte _id_EnFrame_KraidLint_L_{AREA}, $FF
+    .byte _id_EnFrame_KraidLint_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidNailMoving_R_{AREA}:
-    .byte _id_EnFrame_KraidNail1_R_{AREA}, _id_EnFrame_KraidNail2_R_{AREA}, _id_EnFrame_KraidNail3_R_{AREA}
+    .byte _id_EnFrame_KraidNail1_R_{AREA}
+    .byte _id_EnFrame_KraidNail2_R_{AREA}
+    .byte _id_EnFrame_KraidNail3_R_{AREA}
 EnAnim_KraidNailIdle_R_{AREA}:
-    .byte _id_EnFrame_KraidNail0_R_{AREA}, $FF
+    .byte _id_EnFrame_KraidNail0_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidNailMoving_L_{AREA}:
-    .byte _id_EnFrame_KraidNail1_L_{AREA}, _id_EnFrame_KraidNail2_L_{AREA}, _id_EnFrame_KraidNail3_L_{AREA}
+    .byte _id_EnFrame_KraidNail1_L_{AREA}
+    .byte _id_EnFrame_KraidNail2_L_{AREA}
+    .byte _id_EnFrame_KraidNail3_L_{AREA}
 EnAnim_KraidNailIdle_L_{AREA}:
-    .byte _id_EnFrame_KraidNail0_L_{AREA}, $FF
+    .byte _id_EnFrame_KraidNail0_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Memu_{AREA}:
-    .byte _id_EnFrame_Memu0_{AREA}, _id_EnFrame_Memu1_{AREA}, $FF
+    .byte _id_EnFrame_Memu0_{AREA}
+    .byte _id_EnFrame_Memu1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Kraid_R_{AREA}:
-    .byte _id_EnFrame_Kraid0_R_{AREA}, _id_EnFrame_Kraid1_R_{AREA}, $FF
+    .byte _id_EnFrame_Kraid0_R_{AREA}
+    .byte _id_EnFrame_Kraid1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Kraid_L_{AREA}:
-    .byte _id_EnFrame_Kraid0_L_{AREA}, _id_EnFrame_Kraid1_L_{AREA}, $FF
+    .byte _id_EnFrame_Kraid0_L_{AREA}
+    .byte _id_EnFrame_Kraid1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidExplode_R_{AREA}:
-    .byte _id_EnFrame_KraidExplode_R_{AREA}, $FF
+    .byte _id_EnFrame_KraidExplode_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_KraidExplode_L_{AREA}:
-    .byte _id_EnFrame_KraidExplode_L_{AREA}, $FF
+    .byte _id_EnFrame_KraidExplode_L_{AREA}
+    .byte _id_FrameEnd
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 

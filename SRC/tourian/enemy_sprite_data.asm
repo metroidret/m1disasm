@@ -2,45 +2,69 @@
 
 EnAnimTable_{AREA}: ;($A406)
 EnAnim_00_{AREA}:
-    .byte _id_EnFrame00_{AREA}, _id_EnFrame01_{AREA}, $FF
+    .byte _id_EnFrame00_{AREA}
+    .byte _id_EnFrame01_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_EnProjectileKilled_{AREA}:
-    .byte _id_EnFrame_EnProjectileKilled_{AREA}, $FF
+    .byte _id_EnFrame_EnProjectileKilled_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Metroid_{AREA}:
-    .byte _id_EnFrame_Metroid0_{AREA}, _id_EnFrame_Metroid1_{AREA}, $FF
+    .byte _id_EnFrame_Metroid0_{AREA}
+    .byte _id_EnFrame_Metroid1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_MetroidExplode_{AREA}:
-    .byte _id_EnFrame_MetroidExplode_{AREA}, $FF
+    .byte _id_EnFrame_MetroidExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_CannonBulletDownLeft_{AREA}:
-    .byte _id_EnFrame_CannonBulletDownLeft_{AREA}, $FF
+    .byte _id_EnFrame_CannonBulletDownLeft_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_CannonBulletDownRight_{AREA}:
-    .byte _id_EnFrame_CannonBulletDownRight_{AREA}, $FF
+    .byte _id_EnFrame_CannonBulletDownRight_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_CannonBulletDown_{AREA}:
-    .byte _id_EnFrame_CannonBulletDown_{AREA}, $FF
+    .byte _id_EnFrame_CannonBulletDown_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_CannonBulletExplode_{AREA}:
-    .byte _id_EnFrame_CannonBulletExplode0_{AREA}, _id_EnFrame_CannonBulletExplode0_{AREA}, _id_EnFrame_CannonBulletExplode1_{AREA}, _id_EnFrame_CannonBulletExplode1_{AREA}, $F7, $FF
+    .byte _id_EnFrame_CannonBulletExplode0_{AREA}
+    .byte _id_EnFrame_CannonBulletExplode0_{AREA}
+    .byte _id_EnFrame_CannonBulletExplode1_{AREA}
+    .byte _id_EnFrame_CannonBulletExplode1_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_16_{AREA}:
-    .byte _id_EnFrame18_{AREA}, $FF
+    .byte _id_EnFrame18_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_18_{AREA}:
-    .byte _id_EnFrame_CannonTimeBombSet_{AREA}, $F7, $FF
+    .byte _id_EnFrame_CannonTimeBombSet_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_RinkaSpawning_{AREA}:
-    .byte _id_EnFrame_RinkaSpawning0_{AREA}, _id_EnFrame_RinkaSpawning1_{AREA}
+    .byte _id_EnFrame_RinkaSpawning0_{AREA}
+    .byte _id_EnFrame_RinkaSpawning1_{AREA}
 EnAnim_Rinka_{AREA}:
-    .byte _id_EnFrame_Rinka_{AREA}, $FF
+    .byte _id_EnFrame_Rinka_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RinkaExplode_{AREA}:
-    .byte _id_EnFrame_RinkaExplode_{AREA}, $FF
+    .byte _id_EnFrame_RinkaExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Explosion_{AREA}:
-    .byte _id_EnFrame_Explosion0_{AREA}, $F7, _id_EnFrame_Explosion1_{AREA}, $F7, $FF
+    .byte _id_EnFrame_Explosion0_{AREA}
+    .byte _id_FrameNone
+    .byte _id_EnFrame_Explosion1_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_26_{AREA}:
     ;nothing

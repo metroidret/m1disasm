@@ -1408,7 +1408,7 @@ UpdateDoor_Init:
     inc Objects.0.status,x
     ; set door animation to closed
     lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
-    jsr InitObjAnimIndex           ;($D2FA)
+    jsr InitObjectXSlotAnimIndex           ;($D2FA)
     ; write solid bg tiles to make door tangible
     jsr WriteDoorBGTiles_Solid
     ; init door hit points based on door type
@@ -1567,7 +1567,7 @@ DoorSubRoutine8C76:
     sec
     sbc #ObjAnim_DoorClose_Reset - ObjAnim_DoorClose.b
 DoorSubRoutine8C7E:
-    jsr SetObjAnimIndex
+    jsr SetObjectXSlotAnimIndex
     jmp SFX_Door
 
 UpdateDoor_LetSamusIn:
@@ -1639,7 +1639,7 @@ UpdateDoor_Scroll:
     sta Objects.0.animResetIndex,x
     sec
     sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
-    jsr SetObjAnimIndex
+    jsr SetObjectXSlotAnimIndex
     ; play door sfx
     jsr SFX_Door
     ; update samus's palette (probably so that she doesn't remain blue when going in a door with a metroid on her head)

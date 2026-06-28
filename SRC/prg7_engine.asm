@@ -754,24 +754,32 @@ AddYToPtr02:
 
 ;--------------------------------[ Simple divide and multiply routines ]-----------------------------
 
+;Divide by shifting A right.
+;Divide by 32.
 Adiv32:
-    lsr                             ;Divide by 32.
+    lsr
+;Divide by 16.
 Adiv16:
-    lsr                             ;Divide by 16.
+    lsr
+;Divide by 8.
 Adiv8:
-    lsr                             ;Divide by 8.
-    lsr                             ;
-    lsr                             ;Divide by shifting A right.
+    lsr
+    lsr
+    lsr
     rts
 
+;Multiply by shifting A left.
+;Multiply by 32.
 Amul32:
-    asl                             ;Multiply by 32.
+    asl
+;Multiply by 16.
 Amul16:
-    asl                             ;Multiply by 16.
+    asl
+;Multiply by 8.
 Amul8:
-    asl                             ;Multiply by 8.
-    asl                             ;
-    asl                             ;Multiply by shifting A left.
+    asl
+    asl
+    asl
     rts
 
 ;-------------------------------------[ PPU writing routines ]---------------------------------------
@@ -1211,7 +1219,7 @@ NMIOn:
 WaitTimer:
     ;Exit if timer hasn't hit zero yet
     lda Timer3
-    bne RTS_C4A9
+    bne SetMainRoutine@RTS
 
     lda NextRoutine
     ;Set GameOver as next routine.
@@ -1227,7 +1235,7 @@ WaitTimer:
 SetMainRoutine:
     ;Set next routine to run.
     sta MainRoutine
-RTS_C4A9:
+@RTS:
     rts
 
 SetTimer:
@@ -3151,7 +3159,7 @@ Lx009:
     ; make samus invisible
     tay
     sty Samus.animDelay
-    ldy #$F7
+    ldy #_id_FrameNone
     sty Samus.animFrame
 
 CheckHealthBeep:
@@ -3949,7 +3957,7 @@ FireSamusProjectileUpwards:
     Lx045:
     lda Samus.status
     cmp #$01
-    beq SetObjAnimIndex@RTS
+    beq SetObjectXSlotAnimIndex@RTS
     jmp LD26B
 
 ; Table used by above subroutine
@@ -3973,9 +3981,9 @@ InitBullet:
     sta Objects.0.radiusX,y
     lda #ObjAnim_RegularBullet - ObjectAnimIndexTbl.b
 
-InitObjAnimIndex:
+InitObjectXSlotAnimIndex:
     sta Objects.0.animResetIndex,x
-SetObjAnimIndex:
+SetObjectXSlotAnimIndex:
     sta Objects.0.animIndex,x
     lda #$00
     sta Objects.0.animDelay,x
@@ -4306,7 +4314,7 @@ CheckBulletStat:
     @collided:
     lda Objects.0.status,x
     beq Lx069
-        jsr BulletExplode
+        jsr UpdateBullet_Explode
 DrawBullet:
         lda #$01
         jsr AnimDrawObject
@@ -4441,47 +4449,53 @@ UpdateIceBullet:
 ; bullet/missile explode
 
 UpdateBulletExplode:
+    ; set updating samus projectile flag
     lda #$01
     sta UpdatingSamusProjectile
+    
+    ; kill explode if anim frame is invisible (anim completed)
     lda Objects.0.animFrame,x
     sec
-    sbc #$F7
-    bne Lx075
-    sta Objects.0.status,x  ; kill bullet
-Lx075:
+    sbc #_id_FrameNone
+    bne @endIf_A
+        sta Objects.0.status,x
+    @endIf_A:
+    
+    ; draw explode
     jmp DrawBullet
+
 
 UpdateBullet_ExplodeIfHitSprite:
     ; exit if samus projectile didn't hit anything
     lda Objects.0.isHit,x
-    beq Exit5
+    beq SetObjectXSlotStatus@RTS
     ; clear weapon is hit flag
     lda #$00
     sta Objects.0.isHit,x
-BulletExplode:
+UpdateBullet_Explode:
     ; explode the samus projectile
     lda #ObjAnim_BulletHit - ObjectAnimIndexTbl.b
     ldy Objects.0.status,x
     cpy #wa_BulletExplode
-    beq Exit5
+    beq SetObjectXSlotStatus@RTS
     cpy #wa_Missile
-    bne Lx076
-    lda #ObjAnim_MissileExplode - ObjectAnimIndexTbl.b
-Lx076:
-    jsr InitObjAnimIndex
+    bne @endIf_A
+        lda #ObjAnim_MissileExplode - ObjectAnimIndexTbl.b
+    @endIf_A:
+    jsr InitObjectXSlotAnimIndex
     lda #wa_BulletExplode
-Lx077:
+SetObjectXSlotStatus:
     sta Objects.0.status,x
-Exit5:
+@RTS:
     rts
 
 UpdateBullet_DeleteIfOffScreen:
     lda Objects.0.onScreen,x
     lsr
-    bcs Exit5
+    bcs SetObjectXSlotStatus@RTS
 Lx078:
     lda #$00
-    beq Lx077   ; branch always
+    beq SetObjectXSlotStatus   ; branch always
 
 GotoSamusProjectileHitDoorOrStatue:
     jmp SamusProjectileHitDoorOrStatue
@@ -4501,8 +4515,9 @@ UpdateBullet_CollisionWithBG:
     ; branch if bullet hit solid blank tile
     cmp #$4E
     beq GotoSamusProjectileHitDoorOrStatue
+    ; return if tile is not blastable
     jsr CheckBlastTile
-    bcc RTS_X081
+    bcc SetObjectXSlotHi@RTS
     clc
     jmp IsBlastTile
 
@@ -4523,16 +4538,18 @@ LoadObjectPositionFromTemp:
     sta Objects.0.x,x
     lda Temp0B_PositionHi
     and #$01
-    bpl Lx080 ; branch always
-ToggleObjHi:
-        lda Objects.0.hi,x
-        eor #$01
-    Lx080:
+    bpl SetObjectXSlotHi ; branch always
+
+ToggleObjectXSlotHi:
+    lda Objects.0.hi,x
+    eor #$01
+SetObjectXSlotHi:
     sta Objects.0.hi,x
-RTS_X081:
+@RTS:
     rts
 
-; Blast tile ids are #$80-$9F in Brinstar and #$70-$9F in other areas
+; Blast tile ids are #$80-$97 in Brinstar and #$70-$97 in other non-tourian areas
+; the >= $98 check in IsBlastTile makes tile ids #$98-$9F not blastable
 CheckBlastTile:
     ldy InArea
     cpy #$10
@@ -4546,11 +4563,13 @@ CheckBlastTile:
 
 BombInit:
     lda #ObjAnim_BombTick - ObjectAnimIndexTbl.b
-    jsr InitObjAnimIndex
-    lda #$18        ; fuse length :-)
+    jsr InitObjectXSlotAnimIndex
+    ; fuse length :-)
+    lda #$18
     sta SamusProjectileDieDelay,x
-    inc Objects.0.status,x       ; bomb update handler
-    DrawBomb:
+    ; bomb update handler
+    inc Objects.0.status,x
+DrawBomb:
     lda #$03 ; move to next bomb animation frame every 3 frames
     jmp AnimDrawObject
 
@@ -4559,6 +4578,7 @@ BombCountdown:
     lda FrameCount
     lsr
     bcc Lx085
+    
     dec SamusProjectileDieDelay,x
     ; branch if there is still time left before exploding
     bne Lx085
@@ -4569,7 +4589,7 @@ BombCountdown:
         bne Lx084
             lda #ObjAnim_BombExplode - ObjectAnimIndexTbl.b
         Lx084:
-        jsr InitObjAnimIndex
+        jsr InitObjectXSlotAnimIndex
         inc Objects.0.status,x
         jsr SFX_BombExplode
     Lx085:
@@ -4578,13 +4598,16 @@ BombCountdown:
 BombExplode:
     inc SamusProjectileDieDelay,x
     jsr BombExplosion_CollisionWithBG
+    
+    ; kill explode if anim frame is invisible (anim completed)
     ldx PageIndex
     lda Objects.0.animFrame,x
     sec
-    sbc #$F7
-    bne Lx086
-    sta Objects.0.status,x     ; kill bomb
-Lx086:
+    sbc #_id_FrameNone
+    bne @endIf_A
+        sta Objects.0.status,x
+    @endIf_A:
+    
     jmp DrawBomb
 
 BombExplosion_CollisionWithBG:
@@ -4730,7 +4753,7 @@ Lx089:
     bcc Lx097
         cmp #$A0
         bcs Lx097
-        jsr IsBlastTile_SkipCheckUpdatingSamusProjectile
+        jsr IsBlastTile@SkipCheckUpdatingSamusProjectile
     Lx097:
     pla
     tax
@@ -4872,7 +4895,7 @@ ElevatorMove:
         ; if current pos is 0, set to 240 and toggle hi byte
         ldy Elevator.y - (Elevator - Objects),x
         bne @endIf_B
-            jsr ToggleObjHi
+            jsr ToggleObjectXSlotHi
             ldy #SCRN_VY
         @endIf_B:
         ; decrement and save
@@ -4888,7 +4911,7 @@ ElevatorMove:
         lda Elevator.y - (Elevator - Objects),x
         cmp #SCRN_VY
         bne @endIf_C
-            jsr ToggleObjHi
+            jsr ToggleObjectXSlotHi
             lda #$00
             sta Elevator.y - (Elevator - Objects),x
         @endIf_C:
@@ -5811,28 +5834,41 @@ ExplodeRotationTbl:
 ; Advance to object's next frame of animation
 
 UpdateObjAnim:
+    ; is it time to advance to the next anim frame?
     ldx PageIndex
     ldy Objects.0.animDelay,x
-    beq Lx130      ; is it time to advance to the next anim frame?
-        dec Objects.0.animDelay,x     ; nope
-        bne RTS_X132   ; exit if still not zero (don't update animation)
-    Lx130:
-    sta Objects.0.animDelay,x     ; set initial anim countdown value
+    beq @endIf_A
+        ; nope, decrement timer and exit if still not zero (don't update animation)
+        dec Objects.0.animDelay,x
+        bne @RTS
+    @endIf_A:
+    ; set initial anim countdown value
+    sta Objects.0.animDelay,x
+    
     ldy Objects.0.animIndex,x
-Lx131:
-    lda ObjectAnimIndexTbl,y                ;($8572)Load frame number.
-    cmp #$FF        ; has end of anim been reached?
-    beq Lx133
-    sta Objects.0.animFrame,x     ; store frame number
-    iny          ; inc anim index
+@getAnimFrame:
+    ;Load frame number.
+    lda ObjectAnimIndexTbl,y
+    ; has end of anim been reached?
+    cmp #$FF
+    beq @resetAnimIndex
+    
+    ; store frame number
+    sta Objects.0.animFrame,x
+    ; inc anim index
+    iny
     tya
-    sta Objects.0.animIndex,x     ; store anim index
-RTS_X132:
+    ; store anim index
+    sta Objects.0.animIndex,x
+@RTS:
     rts
 
-Lx133:
-    ldy Objects.0.animResetIndex,x     ; reset anim frame index
-    jmp Lx131    ; do first frame of animation
+@resetAnimIndex:
+    ; reset anim frame index
+    ldy Objects.0.animResetIndex,x
+    ; do first frame of animation
+    jmp @getAnimFrame
+
 
 ;is this unused?
     pha
@@ -5884,10 +5920,10 @@ GetSpriteCntrlData:
     sta Temp04_MetaspriteFlipFlags
     ;If MSB is set in ObjectCntrl, use its attributes.
     lda ObjectCntrl
-    bpl LDCEF
+    bpl @endIf_A
         asl ObjectCntrl
         jsr SpriteAttrsOverride     ;($E038)Use object attributes as priority over sprite attributes.
-    LDCEF:
+    @endIf_A:
     ;Discard upper nibble so only entry number into PlacePtrTbl remains.
     txa
     and #$0F
@@ -6025,7 +6061,7 @@ DrawEnemy:
     ; branch if enemy frame is not blank
     ldx PageIndex
     lda EnsExtra.0.animFrame,x
-    cmp #$F7
+    cmp #_id_FrameNone
     bne DrawEnemy_NotBlank
     ; enemy frame is blank
     jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
@@ -6192,7 +6228,7 @@ AnimDrawObject:
 ObjDrawFrame:
     ldx PageIndex                   ;Get index to proper object to work with.
     lda Objects.0.animFrame,x              ;
-    cmp #$F7                        ;Is the frame valid?-->
+    cmp #_id_FrameNone                        ;Is the frame valid?-->
     bne LDE56                          ;Branch if yes.
     GotoClearObjectCntrl:
         jmp ClearObjectCntrl            ;($DF2D)Clear object control byte.
@@ -6574,31 +6610,46 @@ ExplodePlacementBottomTbl:
 ;Advance to next frame of enemy's animation. Basically the same as UpdateObjAnim, only for enemies.
 
 UpdateEnemyAnim:
-    ldx PageIndex                   ;Load index to desired enemy.
-    ldy EnsExtra.0.status,x                  ;
-    cpy #enemyStatus_Pickup                        ;Is enemy in the process of dying?-->
-    beq RTS_E0BB                         ;If so, branch to exit.
-    ldy EnsExtra.0.animDelay,x               ;
-    beq LE0A7                           ;Check if current anumation frame is ready to be updated.
-        dec EnsExtra.0.animDelay,x               ;Not ready to update. decrement delay timer and-->
-        bne RTS_E0BB                         ;branch to exit.
-    LE0A7:
-    sta EnsExtra.0.animDelay,x               ;Save new animation delay value.
-    ldy EnsExtra.0.animIndex,x               ;Load enemy animation index.
-LE0AD:
-    lda (AreaPointers_RAM.EnAnimTable),y            ;Get animation data.
-    cmp #$FF                        ;End of animation?
-    beq LE0BC                          ;If so, branch to reset animation.
-    sta EnsExtra.0.animFrame,x               ;Store current animation frame data.
-    iny                             ;Increment to next animation data index.
-    tya                             ;
-    sta EnsExtra.0.animIndex,x               ;Save new animation index.
-RTS_E0BB:
+    ;Load index to desired enemy.
+    ldx PageIndex
+    ldy EnsExtra.0.status,x
+    ;Is enemy in the process of dying? If so, branch to exit.
+    cpy #enemyStatus_Pickup
+    beq @RTS
+    
+    ;Check if current anumation frame is ready to be updated.
+    ldy EnsExtra.0.animDelay,x
+    beq @endIf_A
+        ;Not ready to update. decrement delay timer and branch to exit.
+        dec EnsExtra.0.animDelay,x
+        bne @RTS
+    @endIf_A:
+    ;Save new animation delay value.
+    sta EnsExtra.0.animDelay,x
+    
+    ;Load enemy animation index.
+    ldy EnsExtra.0.animIndex,x
+@getAnimFrame:
+    ;Get animation data.
+    lda (AreaPointers_RAM.EnAnimTable),y
+    ;End of animation? If so, branch to reset animation.
+    cmp #_id_FrameEnd
+    beq @resetAnimIndex
+    
+    ;Store current animation frame data.
+    sta EnsExtra.0.animFrame,x
+    ;Increment to next animation data index.
+    iny
+    tya
+    ;Save new animation index.
+    sta EnsExtra.0.animIndex,x
+@RTS:
     rts
 
-LE0BC:
-    ldy EnsExtra.0.resetAnimIndex,x          ;reset animation index.
-    bcs LE0AD                         ;Branch always.
+@resetAnimIndex:
+    ;reset animation index.
+    ldy EnsExtra.0.resetAnimIndex,x
+    bcs @getAnimFrame  ;Branch always.
 
 ;---------------------------------------[ Display status bar ]---------------------------------------
 
@@ -8040,7 +8091,7 @@ LE7E6:
     bcc Exit16      ; CF = 0 if tile # < $80 (solid tile)... CRASH!!!
     cmp #$A0        ; is tile >= A0h? (walkable tile)
     bcs IsWalkableTile
-    jmp IsBlastTile  ; tile is $80-$9F (blastable tiles)
+    jmp IsBlastTile  ; tile is $80-$9F (blastable tiles, except for $98-$9F)
 
 IsWalkableTile:
     ldy IsSamus
@@ -8423,48 +8474,63 @@ ToggleNameTable:
     rts
 
 IsBlastTile:
+    ; exit if not updating samus projectile
     ldy UpdatingSamusProjectile
-    beq Exit18
-IsBlastTile_SkipCheckUpdatingSamusProjectile:
+    beq @RTS
+@SkipCheckUpdatingSamusProjectile:
     tay
+    ; if in tourian, this routine double returns
     jsr GotoUpdateBullet_CollisionWithZebetiteAndMotherBrainGlass
+    
+    ; the code that follows is for non-tourian areas only
+    ; not a blast tile if tile id >= #$98
     cpy #$98
-    bcs Lx223
-; attempt to find a vacant tile slot
+    bcs @exit
+    
+    ; attempt to find a vacant tile slot
     ldx #_sizeof_TileBlasts - _sizeof_TileBlasts.0
-    Lx219:
+    @loop:
+        ; 0 = free slot
         lda TileBlasts.0.routine,x
-        beq Lx220                           ; 0 = free slot
+        beq @foundSlot
+        ; wasn't free slot, try next one
         jsr Xminus16
-        bne Lx219
+        bne @loop
+    ; this is the last slot
+    ; fail to destroy block if it isn't free
     lda TileBlasts.0.routine,x
-    bne Lx223                        ; no more slots, can't blast tile
-Lx220:
+    bne @exit
+    
+@foundSlot:
     inc TileBlasts.0.routine,x
     lda $04
     and #$DE
     sta TileBlasts.0.roomRAMPtr,x
     lda $05
     sta TileBlasts.0.roomRAMPtr+1,x
+    
+    ; In Norfair?
     lda InArea
-    cmp #$11                        ; In Norfair?
-    bne Lx221
-    cpy #$76                        ; Special case for the four-small-bubbles breakable block
-    bne Lx221
-    lda #$04
-    bne Lx222
-Lx221:
-    tya                             ; Destroyed block ID
-    clc
-    adc #$10
-    and #$3C
-    lsr
-Lx222:
+    cmp #$11
+    bne @else_A
+        ; Special case for the four-small-bubbles breakable block
+        cpy #$76
+        bne @else_A
+            lda #$04
+            bne @endIf_A
+    @else_A:
+        ; Destroyed block ID
+        tya
+        clc
+        adc #$10
+        and #$3C
+        lsr
+    @endIf_A:
     lsr
     sta TileBlasts.0.type,x
-Lx223:
+@exit:
     clc
-Exit18:
+@RTS:
     rts
 
 ;------------------------------------------[ Select room RAM ]---------------------------------------
@@ -11819,7 +11885,7 @@ Exit20:
 
 UpdateEnProjectile_Frozen:
     lda EnsExtra.0.animFrame,x
-    cmp #$F7
+    cmp #_id_FrameNone
     beq Lx371
         dec Ens.0.delay,x
         bne Lx372

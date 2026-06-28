@@ -2,142 +2,234 @@
 
 EnAnimTable_{AREA}: ;($9BDA)
 EnAnim_00_{AREA}:
-    .byte _id_EnFrame00_{AREA}, _id_EnFrame01_{AREA}, $FF
+    .byte _id_EnFrame00_{AREA}
+    .byte _id_EnFrame01_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_EnProjectileKilled_{AREA}:
-    .byte _id_EnFrame_EnProjectileKilled_{AREA}, $FF
+    .byte _id_EnFrame_EnProjectileKilled_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyIdle_R_{AREA}:
-    .byte _id_EnFrame_RidleyIdle0_R_{AREA}, _id_EnFrame_RidleyIdle1_R_{AREA}, $FF
+    .byte _id_EnFrame_RidleyIdle0_R_{AREA}
+    .byte _id_EnFrame_RidleyIdle1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyIdle_L_{AREA}:
-    .byte _id_EnFrame_RidleyIdle0_L_{AREA}, _id_EnFrame_RidleyIdle1_L_{AREA}, $FF
+    .byte _id_EnFrame_RidleyIdle0_L_{AREA}
+    .byte _id_EnFrame_RidleyIdle1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyHopping_R_{AREA}:
-    .byte _id_EnFrame_RidleyHopping0_R_{AREA}, _id_EnFrame_RidleyHopping1_R_{AREA}, $FF
+    .byte _id_EnFrame_RidleyHopping0_R_{AREA}
+    .byte _id_EnFrame_RidleyHopping1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyHopping_L_{AREA}:
-    .byte _id_EnFrame_RidleyHopping0_L_{AREA}, _id_EnFrame_RidleyHopping1_L_{AREA}, $FF
+    .byte _id_EnFrame_RidleyHopping0_L_{AREA}
+    .byte _id_EnFrame_RidleyHopping1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyExplode_{AREA}:
-    .byte _id_EnFrame_RidleyExplode_{AREA}, $FF
+    .byte _id_EnFrame_RidleyExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyFireball_R_{AREA}:
-    .byte _id_EnFrame_RidleyFireball0_R_{AREA}, _id_EnFrame_RidleyFireball1_R_{AREA}, _id_EnFrame_RidleyFireball2_R_{AREA}, _id_EnFrame_RidleyFireball3_R_{AREA}, $FF
+    .byte _id_EnFrame_RidleyFireball0_R_{AREA}
+    .byte _id_EnFrame_RidleyFireball1_R_{AREA}
+    .byte _id_EnFrame_RidleyFireball2_R_{AREA}
+    .byte _id_EnFrame_RidleyFireball3_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RidleyFireball_L_{AREA}:
-    .byte _id_EnFrame_RidleyFireball0_L_{AREA}, _id_EnFrame_RidleyFireball1_L_{AREA}, _id_EnFrame_RidleyFireball2_L_{AREA}, _id_EnFrame_RidleyFireball3_L_{AREA}, $FF
+    .byte _id_EnFrame_RidleyFireball0_L_{AREA}
+    .byte _id_EnFrame_RidleyFireball1_L_{AREA}
+    .byte _id_EnFrame_RidleyFireball2_L_{AREA}
+    .byte _id_EnFrame_RidleyFireball3_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SqueeptJumping_{AREA}:
-    .byte _id_EnFrame_SqueeptJumping0_{AREA}, _id_EnFrame_SqueeptJumping1_{AREA}, $FF
+    .byte _id_EnFrame_SqueeptJumping0_{AREA}
+    .byte _id_EnFrame_SqueeptJumping1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SqueeptFalling_{AREA}:
-    .byte _id_EnFrame_SqueeptFalling_{AREA}, $FF
+    .byte _id_EnFrame_SqueeptFalling_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GerutaIdle_{AREA}:
-    .byte _id_EnFrame_GerutaIdle0_{AREA}, _id_EnFrame_GerutaIdle1_{AREA}, $FF
+    .byte _id_EnFrame_GerutaIdle0_{AREA}
+    .byte _id_EnFrame_GerutaIdle1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GerutaSwooping_{AREA}:
-    .byte _id_EnFrame_GerutaSwooping0_{AREA}, _id_EnFrame_GerutaSwooping1_{AREA}, $FF
+    .byte _id_EnFrame_GerutaSwooping0_{AREA}
+    .byte _id_EnFrame_GerutaSwooping1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GerutaExplode_{AREA}:
-    .byte _id_EnFrame_GerutaExplode_{AREA}, $FF
+    .byte _id_EnFrame_GerutaExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RipperII_R_{AREA}:
-    .byte _id_EnFrame_RipperII0_R_{AREA}, _id_EnFrame_RipperII1_R_{AREA}, $FF
+    .byte _id_EnFrame_RipperII0_R_{AREA}
+    .byte _id_EnFrame_RipperII1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RipperII_L_{AREA}:
-    .byte _id_EnFrame_RipperII0_L_{AREA}, _id_EnFrame_RipperII1_L_{AREA}, $FF
+    .byte _id_EnFrame_RipperII0_L_{AREA}
+    .byte _id_EnFrame_RipperII1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_RipperIIExplode_{AREA}:
-    .byte _id_EnFrame_RipperIIExplode_{AREA}, $FF
+    .byte _id_EnFrame_RipperIIExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Mella_{AREA}:
-    .byte _id_EnFrame_Mella0_{AREA}, _id_EnFrame_Mella1_{AREA}, $FF
+    .byte _id_EnFrame_Mella0_{AREA}
+    .byte _id_EnFrame_Mella1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_SqueeptExplode_{AREA}:
-    .byte _id_EnFrame_SqueeptExplode_{AREA}, $FF
+    .byte _id_EnFrame_SqueeptExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_MultiviolaSpinningCounterclockwise_{AREA}:
-    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise0_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise1_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise2_{AREA}, _id_EnFrame_MultiviolaSpinningCounterclockwise3_{AREA}, $FF
+    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise0_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise1_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise2_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningCounterclockwise3_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_MultiviolaSpinningClockwise_{AREA}:
-    .byte _id_EnFrame_MultiviolaSpinningClockwise0_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise1_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise2_{AREA}, _id_EnFrame_MultiviolaSpinningClockwise3_{AREA}, $FF
+    .byte _id_EnFrame_MultiviolaSpinningClockwise0_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningClockwise1_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningClockwise2_{AREA}
+    .byte _id_EnFrame_MultiviolaSpinningClockwise3_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_MultiviolaExplode_{AREA}:
-    .byte _id_EnFrame_MultiviolaExplode_{AREA}, $FF
+    .byte _id_EnFrame_MultiviolaExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonIdle_R_{AREA}:
-    .byte _id_EnFrame_DragonIdle_R_{AREA}, $FF
+    .byte _id_EnFrame_DragonIdle_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonPrepareToSpit_R_{AREA}:
-    .byte _id_EnFrame_DragonPrepareToSpit_R_{AREA}, $FF
+    .byte _id_EnFrame_DragonPrepareToSpit_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonIdle_L_{AREA}:
-    .byte _id_EnFrame_DragonIdle_L_{AREA}, $FF
+    .byte _id_EnFrame_DragonIdle_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonPrepareToSpit_L_{AREA}:
-    .byte _id_EnFrame_DragonPrepareToSpit_L_{AREA}, $FF
+    .byte _id_EnFrame_DragonPrepareToSpit_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonExplode_{AREA}:
-    .byte _id_EnFrame_DragonExplode_{AREA}, $FF
+    .byte _id_EnFrame_DragonExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_PolypRock_{AREA}:
-    .byte _id_EnFrame_PolypRock_{AREA}, $FF
+    .byte _id_EnFrame_PolypRock_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_PolypRockShatter_{AREA}:
-    .byte _id_EnFrame_PolypRockShatter0_{AREA}, _id_EnFrame_PolypRockShatter1_{AREA}, $F7, $FF
+    .byte _id_EnFrame_PolypRockShatter0_{AREA}
+    .byte _id_EnFrame_PolypRockShatter1_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_DragonEnProjectileUp_R_{AREA}:
-    .byte _id_EnFrame_DragonEnProjectileUp_R_{AREA}, $FF
+    .byte _id_EnFrame_DragonEnProjectileUp_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonEnProjectileDown_R_{AREA}:
-    .byte _id_EnFrame_DragonEnProjectileDown_R_{AREA}, $FF
+    .byte _id_EnFrame_DragonEnProjectileDown_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonEnProjectileUp_L_{AREA}:
-    .byte _id_EnFrame_DragonEnProjectileUp_L_{AREA}, $FF
+    .byte _id_EnFrame_DragonEnProjectileUp_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonEnProjectileDown_L_{AREA}:
-    .byte _id_EnFrame_DragonEnProjectileDown_L_{AREA}, $FF
+    .byte _id_EnFrame_DragonEnProjectileDown_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_DragonEnProjectileSplatter_{AREA}:
-    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter0_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter1_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, _id_EnFrame_DragonEnProjectileSplatter2_{AREA}, $F7, $FF
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter0_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter1_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter1_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter1_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter1_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter2_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter2_{AREA}
+    .byte _id_EnFrame_DragonEnProjectileSplatter2_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_NovaOnFloor_{AREA}:
-    .byte _id_EnFrame_NovaOnFloor0_{AREA}, _id_EnFrame_NovaOnFloor1_{AREA}, $FF
+    .byte _id_EnFrame_NovaOnFloor0_{AREA}
+    .byte _id_EnFrame_NovaOnFloor1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_NovaOnRightWall_{AREA}:
-    .byte _id_EnFrame_NovaOnRightWall0_{AREA}, _id_EnFrame_NovaOnRightWall1_{AREA}, $FF
+    .byte _id_EnFrame_NovaOnRightWall0_{AREA}
+    .byte _id_EnFrame_NovaOnRightWall1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_NovaOnCeiling_{AREA}:
-    .byte _id_EnFrame_NovaOnCeiling0_{AREA}, _id_EnFrame_NovaOnCeiling1_{AREA}, $FF
+    .byte _id_EnFrame_NovaOnCeiling0_{AREA}
+    .byte _id_EnFrame_NovaOnCeiling1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_NovaOnLeftWall_{AREA}:
-    .byte _id_EnFrame_NovaOnLeftWall0_{AREA}, _id_EnFrame_NovaOnLeftWall1_{AREA}, $FF
+    .byte _id_EnFrame_NovaOnLeftWall0_{AREA}
+    .byte _id_EnFrame_NovaOnLeftWall1_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_NovaExplode_{AREA}:
-    .byte _id_EnFrame_NovaExplode_{AREA}, $FF
+    .byte _id_EnFrame_NovaExplode_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_Explosion_{AREA}:
-    .byte _id_EnFrame_Explosion0_{AREA}, $F7, _id_EnFrame_Explosion1_{AREA}, $F7, $FF
+    .byte _id_EnFrame_Explosion0_{AREA}
+    .byte _id_FrameNone
+    .byte _id_EnFrame_Explosion1_{AREA}
+    .byte _id_FrameNone
+    .byte _id_FrameEnd
 
 EnAnim_GametActive_L_{AREA}:
-    .byte _id_EnFrame_Gamet0_L_{AREA}, _id_EnFrame_Gamet1_L_{AREA}, $FF
+    .byte _id_EnFrame_Gamet0_L_{AREA}
+    .byte _id_EnFrame_Gamet1_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GametActive_R_{AREA}:
-    .byte _id_EnFrame_Gamet0_R_{AREA}, _id_EnFrame_Gamet1_R_{AREA}, $FF
+    .byte _id_EnFrame_Gamet0_R_{AREA}
+    .byte _id_EnFrame_Gamet1_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GametExplode_L_{AREA}:
-    .byte _id_EnFrame_GametExplode_L_{AREA}, $FF
+    .byte _id_EnFrame_GametExplode_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GametExplode_R_{AREA}:
-    .byte _id_EnFrame_GametExplode_R_{AREA}, $FF
+    .byte _id_EnFrame_GametExplode_R_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GametResting_L_{AREA}:
-    .byte _id_EnFrame_Gamet0_L_{AREA}, $FF
+    .byte _id_EnFrame_Gamet0_L_{AREA}
+    .byte _id_FrameEnd
 
 EnAnim_GametResting_R_{AREA}:
-    .byte _id_EnFrame_Gamet0_R_{AREA}, $FF
+    .byte _id_EnFrame_Gamet0_R_{AREA}
+    .byte _id_FrameEnd
 
 ;----------------------------[ Enemy sprite drawing pointer tables ]---------------------------------
 

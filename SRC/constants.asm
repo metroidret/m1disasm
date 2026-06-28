@@ -111,6 +111,10 @@ sa_Begin               = 255 export
 .enumid wa_Missile             ;$0B
 wa_ScrewAttack         = $81 export
 
+;special obj/en frame id
+_id_FrameNone          = $F7 export
+_id_FrameEnd           = $FF export
+
 ;Enemy Status
 .enumid 0 export
 .enumid enemyStatus_NoEnemy    ;0
