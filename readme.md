@@ -6,17 +6,17 @@ Based on the prior work of SnowBro (Kent Hansen), Dirty McDingus, and the metcon
 
 The code has been manually reworked multiple times in a laborious journey to find the assembler fit for the job. (Ophis -> asm6f -> ca65 -> WLA-DX)
 
-Versions of WLA-DX prior to v10.7 will not work. The latest release, v10.6 back in late 2023, does not have the newest features like the `substring` function, which are used in this disassembly. Because v10.7 is not yet released, you must compile WLA-DX v10.7 from [its source code](https://github.com/vhelin/wla-dx). Instructions on how to compile can be found in WLA-DX's README.
+Versions of WLA-DX prior to v10.7 will not work. Download the v10.7 release [here](https://github.com/vhelin/wla-dx/releases/tag/v10.7). Alternatively, you can compile the latest WLA-DX from [its source code](https://github.com/vhelin/wla-dx), to get all the newest features and fixes. Instructions on how to compile can be found in WLA-DX's README.
 
 To build, run `python build.py` in the root folder of the disassembly. Each internal file will be compiled into its own object file, and then linked together.
 
-### Contributing
+## Contributing
 
 Check out the [Issues tab](https://github.com/metroidret/m1disasm/issues) of the repository. Even if you are not skilled in assembly code, there are still tasks you can accomplish.
 
 Please be sure to verify that your code produces an exact copy of the original before submitting a pull request. Run the build script to check that all build targets still have the right checksums.
 
-### File Structure
+## File Structure
 
 Subject to change.
 
@@ -27,13 +27,13 @@ Subject to change.
  * SRC/sideB/enemies - Assembly files for enemy AI routines shared between areas
  * SRC/songs - Song data for all songs in the game
 
-### Build targets
+## Build targets
 
-#### [FDS branch](https://github.com/metroidret/m1disasm/tree/fds-independant) (you are here)
+### [FDS branch](https://github.com/metroidret/m1disasm/tree/fds-independant) (you are here)
 
  * FDS - The FDS version of the game released in Japan.
 
-#### [NES branch](https://github.com/metroidret/m1disasm/tree/main)
+### [NES branch](https://github.com/metroidret/m1disasm/tree/main)
 
  * NES\_NTSC - The NTSC version of the game released in North America. This is the most popular one. Port of the FDS version.
  * NES\_PAL - The PAL version of the game released in Europe. Derived from NES\_NTSC.
