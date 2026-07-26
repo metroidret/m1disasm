@@ -10,13 +10,13 @@ Versions of WLA-DX prior to v10.7 will not work. Download the v10.7 release [her
 
 To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together.
 
-### Contributing
+## Contributing
 
 Check out the [Issues tab](https://github.com/metroidret/m1disasm/issues) of the repository. Even if you are not skilled in assembly code, there are still tasks you can accomplish.
 
 Please be sure to verify that your code produces an exact copy of the original before submitting a pull request. Run the build script to check that all build targets still have the right checksums.
 
-### File Structure
+## File Structure
 
 Subject to change.
 
@@ -27,13 +27,13 @@ Subject to change.
  * SRC/enemies - Assembly files for enemy AI routines shared between areas
  * SRC/songs - Song data for all songs in the game
 
-### Build targets
+## Build targets
 
-#### [FDS branch](https://github.com/metroidret/m1disasm/tree/fds-independant)
+### [FDS branch](https://github.com/metroidret/m1disasm/tree/fds-independant)
 
  * FDS - The FDS version of the game released in Japan.
 
-#### [NES branch](https://github.com/metroidret/m1disasm/tree/main) (you are here)
+### [NES branch](https://github.com/metroidret/m1disasm/tree/main) (you are here)
 
  * NES\_NTSC - The NTSC version of the game released in North America. This is the most popular one. Port of the FDS version.
  * NES\_PAL - The PAL version of the game released in Europe. Derived from NES\_NTSC.
