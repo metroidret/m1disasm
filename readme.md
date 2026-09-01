@@ -37,7 +37,6 @@ Subject to change.
 
  * NES\_NTSC - The NTSC version of the game released in North America. This is the most popular one. Port of the FDS version.
  * NES\_PAL - The PAL version of the game released in Europe. Derived from NES\_NTSC.
- * NES\_MZMUS - The version of the game included as part of Metroid Zero Mission's North American release. This version is used together with GBA-side hijacks and features to produce the "Original Metroid" sub-game. It has no tile data, because the tile data was compressed separately and is recombined with the game upon decompression. Derived from NES\_NTSC.
- * NES\_MZMUS\_G - This is NES\_MZMUS after it is recombined with its tile data.
- * NES\_MZMJP - The version of the game included as part of Metroid Zero Mission's European release and then its Japanese release. Removes the reset vector, because GBA-side emulation doesn't use it. There is no NES\_MZMJP\_G, because it uses a different strategy than the North American release to handle tile data. Derived from NES\_MZMUS.
- * NES\_CNSUS - The version of the game used for Classic NES Series Metroid's North American and European release. Uses illegal opcode $42 for some hijacks, like opening the save menu on the password display screen. Derived from NES\_MZMUS\_G.
+ * NES\_MZM - The version of the game included as part of Metroid Zero Mission's North American release, European release and Japanese release. This version is used together with GBA-side hijacks and features to produce the "Original Metroid" sub-game. It has no tile data, because the tile data was compressed separately and is recombined with the game upon decompression. Derived from NES\_NTSC.
+ * NES\_MZM\_G - This is NES\_MZM after it is recombined with its tile data.
+ * NES\_CNS - The version of the game used for Classic NES Series Metroid's North American and European release. Uses illegal opcode $42 for some hijacks, like opening the save menu on the password display screen. Derived from NES\_MZM\_G.
