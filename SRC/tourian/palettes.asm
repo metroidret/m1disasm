@@ -68,10 +68,10 @@ Palette08_{AREA}:
     VRAMStructEnd
 
 Palette09_{AREA}:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         VRAMStructData $3F00, \
             $20, $02, $16, $00, $20, $02, $11, $00, $20, $02, $16, $00, $20, $02, $10, $00, $20
-    .elif BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_CNS"
         VRAMStructData $3F00, \
             $00, $02, $16, $00, $00, $02, $11, $00, $00, $02, $16, $00, $00, $02, $10, $00, $00
     .endif

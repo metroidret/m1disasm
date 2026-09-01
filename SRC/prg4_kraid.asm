@@ -30,12 +30,12 @@
 
 ;Samus end tile patterns.
 GFX_EndingSprites:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "ending/sprite_tiles.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZM"
         .ds $520, $00
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "ending/sprite_tiles_cnsus.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "ending/sprite_tiles_cns.chr"
     .endif
 
 ;Unused tile patterns (needed so the Palette Pointer Table, etc. below are properly aligned)
@@ -46,12 +46,12 @@ GFX_KraiUnused:
 GFX_KraiBG3:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "kraid/bg_chr_3.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZM"
         .ds $200, $00
-    .elif BUILDTARGET == "NES_MZMUS_G"
-        .incbin "kraid/bg_chr_3_mzmus.chr"
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "kraid/bg_chr_3_cnsus.chr"
+    .elif BUILDTARGET == "NES_MZM_G"
+        .incbin "kraid/bg_chr_3_mzm.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "kraid/bg_chr_3_cns.chr"
     .endif
 
 ;----------------------------------------------------------------------------------------------------
@@ -894,7 +894,7 @@ VRAMString10_{AREA}:
     .byte $BC, $BD, $CD, $CE, $CF, $D0, $D1, $D2, $D3, $D4, $90, $91, $92, $93
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
 .elif BUILDTARGET == "NES_PAL"
     .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
@@ -902,20 +902,20 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/ridley.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/ridley.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/kraid.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/kraid.asm"
 .endif
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $2A, $2A, $2A, $B9, $2A, $2A, $2A, $B2, $2A, $2A, $2A, $2A, $2A, $B9, $2A, $12
     .byte $2A, $B2, $26, $B9, $0E, $26, $26, $B2, $26, $B9, $0E, $26, $26, $B2, $22, $B9
     .byte $0A, $22, $22, $B2, $22, $B9, $0A, $22, $22, $B2, $20, $20, $B9, $20, $20, $20
@@ -962,7 +962,7 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .section "ROM Bank $004 - Sound Engine" bank 4 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $004 - Sound Engine" bank 4 slot "ROMSwitchSlot" orga $B230 force

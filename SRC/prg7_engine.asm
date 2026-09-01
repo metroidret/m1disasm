@@ -268,7 +268,7 @@ NMI:
         jsr ReadJoyPads
     @endIf_A:
     ;($B3B4)Update music and SFX.
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         jsr SoundEngine
     .elif BUILDTARGET == "NES_PAL"
         jsr GotoSoundEngine
@@ -1972,7 +1972,7 @@ SamusInit:
     ;SamusIntro will be executed next frame.
     lda #_id_SamusIntro.b
     sta MainRoutine
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         ;440 frames to fade in Samus(7.3 seconds).
         lda #$2C
     .elif BUILDTARGET == "NES_PAL"
@@ -2043,7 +2043,7 @@ GameEngine:
         lda #$00                        ;
         sta MiniBossKillDelayFlag       ;Reset delay indicators.
         sta PowerUpDelayFlag            ;
-        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+        .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
             ;Set timer for 240 frames(4 seconds).
             lda #$18
         .elif BUILDTARGET == "NES_PAL"
@@ -2136,13 +2136,13 @@ PrepareGameOver:
 ;------------------------------------------[ Pause mode ]--------------------------------------------
 
 PauseMode:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         ;Load buttons currently being pressed on joypad 2.
         lda Joy2Status
         ; Exit if not both A & UP pressed.
         and #BUTTON_A | BUTTON_UP
         eor #BUTTON_A | BUTTON_UP
-    .elif BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_CNS"
         ;Load buttons currently being pressed on joypad 1.
         lda Joy1Status
         ; Exit if not pressing only SELECT & UP.
@@ -6775,7 +6775,7 @@ AddOneTank:
     ;Y coord-1.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         lda #$17
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         lda #$15
     .endif
     sta SpriteRAM.0.y,x
@@ -6852,7 +6852,7 @@ DataDisplayTbl:
         .byte $2B,$FF,$01,$38           ;Lower missile digit.
         .byte $2B,$5E,$00,$18           ;Left half of missile.
         .byte $2B,$5F,$00,$20           ;Right half of missile.
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         .byte $2D,$FF,$01,$28           ;Upper missile digit.
         .byte $2D,$FF,$01,$30           ;Middle missile digit.
         .byte $2D,$FF,$01,$38           ;Lower missile digit.
@@ -12898,7 +12898,7 @@ TileBlastAnim9:
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString08, $FE ; respawning tile #$90
 
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $00, $00
 .elif BUILDTARGET == "NES_PAL"
     .byte $01, $02
@@ -12919,12 +12919,7 @@ ROMFIXED_RESET:
 
 .section "ROM Bank $007 - Vectors" bank 7 slot "ROMFixedSlot" orga $FFFA force
     .word NMI                       ;($C0D9)NMI vector.
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_CNSUS"
-        .word ROMFIXED_RESET            ;($FFB0)Reset vector.
-        .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
-    .elif BUILDTARGET == "NES_MZMJP"
-        .word $FFFF
-        .word $FFFF
-    .endif
+    .word ROMFIXED_RESET            ;($FFB0)Reset vector.
+    .word ROMFIXED_RESET            ;($FFB0)IRQ vector.
 .ends
 

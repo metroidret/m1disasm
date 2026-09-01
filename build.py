@@ -36,21 +36,17 @@ build_targets = {
         md5_hash_expected_hex="442fcb92fce27cabdb7635bd35593d8a",
         filename="out/M1_NES_PAL.nes",
     ),
-    "NES_MZMUS": BuildTarget(
+    "NES_MZM": BuildTarget(
         md5_hash_expected_hex="8b95635a38bcc59b9f04714f9a4f8514",
-        filename="out/M1_NES_MZMUS.nes",
+        filename="out/M1_NES_MZM.nes",
     ),
-    "NES_MZMUS_G": BuildTarget(
+    "NES_MZM_G": BuildTarget(
         md5_hash_expected_hex="b27e46122890364407af3ee7591477ad",
-        filename="out/M1_NES_MZMUS_G.nes",
+        filename="out/M1_NES_MZM_G.nes",
     ),
-    "NES_MZMJP": BuildTarget(
-        md5_hash_expected_hex="c1148e9e2fd7b9fc1077b44454584e24",
-        filename="out/M1_NES_MZMJP.nes",
-    ),
-    "NES_CNSUS": BuildTarget(
+    "NES_CNS": BuildTarget(
         md5_hash_expected_hex="164fe605f9d1586e9c9d50e0f1e48703",
-        filename="out/M1_NES_CNSUS.nes",
+        filename="out/M1_NES_CNS.nes",
     ),
 }
 

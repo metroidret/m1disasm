@@ -283,7 +283,7 @@
 
 
 
-.macro NES_CNSUS_IllegalOpcode42
+.macro NES_CNS_IllegalOpcode42
     .byte $42
 .endm
 

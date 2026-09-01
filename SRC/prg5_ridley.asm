@@ -32,28 +32,28 @@
 GFX_CREBG1:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_CRE.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZM"
         .ds $450, $00
-    .elif BUILDTARGET == "NES_MZMUS_G"
-        .incbin "common_chr/bg_CRE_mzmus.chr"
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "common_chr/bg_CRE_cnsus.chr"
+    .elif BUILDTARGET == "NES_MZM_G"
+        .incbin "common_chr/bg_CRE_mzm.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "common_chr/bg_CRE_cns.chr"
     .endif
 
 ; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
 GFX_TourianFont:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/font_chr.chr"
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "tourian/font_chr_cnsus.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "tourian/font_chr_cns.chr"
     .endif
 
 ;Unused tile patterns.
 GFX_Bank5Garbage:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/font_chr.chr" skip $250
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "tourian/font_chr_cnsus.chr" skip $250
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "tourian/font_chr_cns.chr" skip $250
     .endif
 
 ;----------------------------------------------------------------------------------------------------
@@ -801,7 +801,7 @@ VRAMString10_{AREA}:
     .byte $11, $11, $12, $12, $11, $11, $12, $12, $FF, $C3, $C4, $C5, $C6, $30, $00, $BC
     .byte $BD, $CD, $CE, $CF, $D0, $D1, $D2, $D3, $D4, $90, $91, $92, $93
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
 .elif BUILDTARGET == "NES_PAL"
     .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
@@ -809,20 +809,20 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/ridley.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/ridley.asm"
 .endif
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/kraid.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/kraid.asm"
 .endif
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $2A, $2A, $2A, $B9, $2A, $2A, $2A, $B2, $2A, $2A, $2A, $2A, $2A, $B9, $2A, $12
     .byte $2A, $B2, $26, $B9, $0E, $26, $26, $B2, $26, $B9, $0E, $26, $26, $B2, $22, $B9
     .byte $0A, $22, $22, $B2, $22, $B9, $0A, $22, $22, $B2, $20, $20, $B9, $20, $20, $20
@@ -836,11 +836,11 @@ VRAMString10_{AREA}:
     .byte $4C, $02, $18, $1E, $FF, $B8, $02, $C8, $B0, $0A, $0C, $FF, $C8, $0E, $0C, $FF
     .byte $C8, $10, $0E, $FF, $C8, $0E, $0C, $FF, $00
     
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/bg_chr.chr" skip $500 read $60
-    .elif BUILDTARGET == "NES_CNSUS"
+    .elif BUILDTARGET == "NES_CNS"
         .incbin "tourian/bg_chr.chr" skip $500 read $10
-        .incbin "tourian/bg_chr_cnsus.chr" skip $510 read $50
+        .incbin "tourian/bg_chr_cns.chr" skip $510 read $50
     .endif
 
 .elif BUILDTARGET == "NES_PAL"
@@ -871,7 +871,7 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .section "ROM Bank $005 - Sound Engine" bank 5 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $005 - Sound Engine" bank 5 slot "ROMSwitchSlot" orga $B230 force

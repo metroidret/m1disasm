@@ -32,22 +32,22 @@
 GFX_TheEndFont:
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "ending/end_font.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZM"
         .ds $400, $00
-    .elif BUILDTARGET == "NES_MZMUS_G"
-        .incbin "ending/end_font_mzmus.chr"
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "ending/end_font_cnsus.chr"
+    .elif BUILDTARGET == "NES_MZM_G"
+        .incbin "ending/end_font_mzm.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "ending/end_font_cns.chr"
     .endif
 
 ; 9160 - Brinstar Enemies
 GFX_BrinstarSprites:
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZMUS_G"
+    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "brinstar/sprite_tiles.chr"
-    .elif BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMJP"
+    .elif BUILDTARGET == "NES_MZM"
         .ds $400, $00
-    .elif BUILDTARGET == "NES_CNSUS"
-        .incbin "brinstar/sprite_tiles_cnsus.chr"
+    .elif BUILDTARGET == "NES_CNS"
+        .incbin "brinstar/sprite_tiles_cns.chr"
     .endif
 
 ;----------------------------------------------------------------------------------------------------
@@ -988,7 +988,7 @@ VRAMString10_{AREA}:
 .include "brinstar/metatiles.asm"
 
 ;Not used.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
 .elif BUILDTARGET == "NES_PAL"
     .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
@@ -996,17 +996,17 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Area music data ]---------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/brinstar.asm"
 .elif BUILDTARGET == "NES_PAL"
     .include "songs/pal/brinstar.asm"
 .endif
 
 ; Errant Mother Brain BG tiles (unused)
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
     .incbin "tourian/bg_chr.chr" skip $495 read $CB
-.elif BUILDTARGET == "NES_CNSUS"
-    .incbin "tourian/bg_chr_cnsus.chr" skip $495 read $CB
+.elif BUILDTARGET == "NES_CNS"
+    .incbin "tourian/bg_chr_cns.chr" skip $495 read $CB
 .elif BUILDTARGET == "NES_PAL"
     .byte $85, $03, $A9, $0C, $85, $11, $B1, $75, $10, $14, $C9, $FF, $D0, $05, $85, $74
     .byte $4C, $49, $F0, $C8, $E6, $59, $29, $7F, $85, $0F, $B1, $75, $D0, $04, $85, $0F
@@ -1026,7 +1026,7 @@ VRAMString10_{AREA}:
 
 ;------------------------------------------[ Sound Engine ]------------------------------------------
 
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZMUS" || BUILDTARGET == "NES_MZMUS_G" || BUILDTARGET == "NES_MZMJP" || BUILDTARGET == "NES_CNSUS"
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .section "ROM Bank $001 - Sound Engine" bank 1 slot "ROMSwitchSlot" orga $B200 force
 .elif BUILDTARGET == "NES_PAL"
     .section "ROM Bank $001 - Sound Engine" bank 1 slot "ROMSwitchSlot" orga $B230 force
