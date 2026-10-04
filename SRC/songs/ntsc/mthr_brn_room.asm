@@ -1,4 +1,4 @@
-SongMthrBrnRoomTri:
+SongMthrBrnRoomTri: ; 03:B161
     SongRepeatSetup $20
         SongNoteLength $A ;3/64 seconds
         SongNote "A3"
@@ -43,12 +43,12 @@ SongMthrBrnRoomTri:
         SongNote "D#3"
     SongRepeat
 
-SongMthrBrnRoomSQ1:
+SongMthrBrnRoomSQ1: ; 03:B18C
     SongNoteLength $8 ;1/4 seconds
     SongRest
     ;SQ1 music data runs down into the SQ2 music data.
 
-SongMthrBrnRoomSQ2:
+SongMthrBrnRoomSQ2: ; 03:B18E
     SongRepeatSetup $8
         SongNoteLength $0 ;3/32 seconds
         SongNote "F2"

@@ -18,7 +18,7 @@
 
 ;Norfair Music Data
 
-SongNorfairSQ1:
+SongNorfairSQ1: ; 02:B000
     SongRepeatSetup $3
         SongNoteLength $6 ;1 3/16 seconds
         SongNote "G3"
@@ -58,7 +58,7 @@ SongNorfairSQ1:
     SongRepeat
     SongEnd
 
-SongNorfairSQ2:
+SongNorfairSQ2: ; 02:B026
     SongRepeatSetup $3
         SongNoteLength $6 ;1 3/16 seconds
         SongNote "D#3"
@@ -109,7 +109,7 @@ SongNorfairSQ2:
         SongRest
     SongRepeat
 
-SongNorfairTri:
+SongNorfairTri: ; 02:B057
     SongRepeatSetup $3
         SongNoteLength $1 ;3/16 seconds
         SongNote "D4"
@@ -163,7 +163,7 @@ SongNorfairTri:
         SongRest
     SongRepeat
 
-SongNorfairNoise:
+SongNorfairNoise: ; 02:B08B
     SongRepeatSetup $20
         SongNoteLength $2 ;3/8 seconds
         .byte SFXData@DrumBeat00 - SFXData

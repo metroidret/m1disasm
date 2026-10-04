@@ -18,7 +18,7 @@
 
 ;Kraid Structure Pointers
 
-StructPtrTable_{AREA}:
+StructPtrTable_{AREA}: ; 04:A21F
     .word Structure00_{AREA}
     .word Structure01_{AREA}
     .word Structure02_{AREA}

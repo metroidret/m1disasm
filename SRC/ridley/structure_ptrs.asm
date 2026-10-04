@@ -18,7 +18,7 @@
 
 ;Ridley Structure Pointers
 
-StructPtrTable_{AREA}:
+StructPtrTable_{AREA}: ; 05:A1D3
     .word Structure00_{AREA}
     .word Structure01_{AREA}
     .word Structure02_{AREA}

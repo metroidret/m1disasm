@@ -1,5 +1,5 @@
 ; Lava Jumper Routine
-SqueeptAIRoutine_{AREA}:
+SqueeptAIRoutine_{AREA}: ; 02:9A64
     ; branch if previous status is not resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
@@ -27,7 +27,7 @@ SqueeptAIRoutine_{AREA}:
         ; clear sub-pixel speed
         lda #$00
         sta Ens.0.speedSubPixelY,x
-@endIf_A:
+@endIf_A: ; 02:9A88
     ; exit if current status is explode
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
@@ -61,7 +61,7 @@ SqueeptAIRoutine_{AREA}:
         ; delta y is not negative (squeept is falling)
         ; use falling animation
         lda #EnAnim_SqueeptFalling_{AREA} - EnAnimTable_{AREA}.b
-    @endIf_B:
+    @endIf_B: ; 02:9AAC
     sta EnsExtra.0.resetAnimIndex,x
     
     ; apply speed
@@ -77,7 +77,7 @@ SqueeptAIRoutine_{AREA}:
         ; branch if position is above lava
         bcs @endIf_C
         ; fallthrough
-    @then_C:
+    @then_C: ; 02:9ABD
         ; squeept y position is below lava or out of bounds
         ; set squeept y position to lava y position
         sta Temp08_PositionY
@@ -85,19 +85,19 @@ SqueeptAIRoutine_{AREA}:
         lda Ens.0.data05,x
         ora #$20
         sta Ens.0.data05,x
-    @endIf_C:
+    @endIf_C: ; 02:9AC7
     jsr LoadEnemyPositionFromTemp__{AREA}
 
-SqueeptExit_Resting_{AREA}:
+SqueeptExit_Resting_{AREA}: ; 02:9ACA
     ; squeept is resting (jumping and falling)
     ; change animation frame every 2 frames
     lda #$02
     jmp CommonJump_UpdateEnemyCommon_noMove
 
-SqueeptExit_Explode_{AREA}:
+SqueeptExit_Explode_{AREA}: ; 02:9ACF
     ; squeept is exploding
     jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
-SqueeptSpeedYTable_{AREA}:
+SqueeptSpeedYTable_{AREA}: ; 02:9AD2
     .byte $F6, $F8, $F6, $FA
 

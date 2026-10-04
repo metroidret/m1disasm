@@ -22,7 +22,7 @@
 ;of the metatile definition. The bytes correspond to the following position in order: lower right tile,
 ;lower left tile, upper right tile, upper left tile.
 
-MetatileDefs_{AREA}:
+MetatileDefs_{AREA}: ; 02:AEEC
     .byte $F1, $F1, $F1, $F1
     .byte $FF, $FF, $F0, $F0
     .byte $64, $64, $64, $64

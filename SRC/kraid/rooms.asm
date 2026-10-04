@@ -32,7 +32,7 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00_{AREA}:
+Room00_{AREA}: ; 04:A2B7
     .byte $02
     .byte $40, $01, $03
     .byte $48, $01, $03
@@ -40,13 +40,13 @@ Room00_{AREA}:
     .byte $5F, $04, $02
     .byte $FF
 
-Room01_{AREA}:
+Room01_{AREA}: ; 04:A2C5
     .byte $02
     .byte $07, $02, $02
     .byte $87, $02, $02
     .byte $FF
 
-Room02_{AREA}:
+Room02_{AREA}: ; 04:A2CD
     .byte $00
     .byte $00, $10, $00
     .byte $04, $10, $00
@@ -69,7 +69,7 @@ Room02_{AREA}:
     .byte $EE, $06, $00
     .byte $FF
 
-Room03_{AREA}:
+Room03_{AREA}: ; 04:A308
     .byte $00
     .byte $00, $06, $00
     .byte $0A, $0D, $00
@@ -94,7 +94,7 @@ Room03_{AREA}:
     .byte $31, $85, $37 ; Zeela
     .byte $FF
 
-Room04_{AREA}:
+Room04_{AREA}: ; 04:A345
     .byte $00
     .byte $00, $06, $00
     .byte $07, $06, $00
@@ -121,7 +121,7 @@ Room04_{AREA}:
     .byte $21, $83, $C8 ; Ripper
     .byte $FF
 
-Room05_{AREA}:
+Room05_{AREA}: ; 04:A388
     .byte $00
     .byte $00, $10, $00
     .byte $0C, $10, $00
@@ -141,7 +141,7 @@ Room05_{AREA}:
     .byte $11, $03, $CA ; Ripper
     .byte $FF
 
-Room06_{AREA}:
+Room06_{AREA}: ; 04:A3B8
     .byte $00
     .byte $00, $06, $00
     .byte $0E, $06, $00
@@ -170,7 +170,7 @@ Room06_{AREA}:
     .byte $51, $85, $26 ; Zeela
     .byte $FF
 
-Room07_{AREA}:
+Room07_{AREA}: ; 04:A401
     .byte $00
     .byte $00, $10, $00
     .byte $0A, $10, $00
@@ -196,7 +196,7 @@ Room07_{AREA}:
     .byte $31, $03, $87 ; Ripper
     .byte $FF
 
-Room08_{AREA}:
+Room08_{AREA}: ; 04:A442
     .byte $00
     .byte $00, $10, $00
     .byte $03, $10, $00
@@ -220,7 +220,7 @@ Room08_{AREA}:
     .byte $41, $85, $A6 ; Zeela
     .byte $FF
 
-Room09_{AREA}:
+Room09_{AREA}: ; 04:A47E
     .byte $00
     .byte $00, $07, $00
     .byte $0D, $09, $01
@@ -240,7 +240,7 @@ Room09_{AREA}:
     .byte $31, $03, $83 ; Ripper
     .byte $FF
 
-Room0A_{AREA}:
+Room0A_{AREA}: ; 04:A4AD
     .byte $00
     .byte $00, $07, $00
     .byte $0E, $07, $00
@@ -262,7 +262,7 @@ Room0A_{AREA}:
     .byte $11, $03, $28 ; Ripper
     .byte $FF
 
-Room0B_{AREA}:
+Room0B_{AREA}: ; 04:A4E2
     .byte $00
     .byte $00, $10, $00
     .byte $04, $10, $00
@@ -282,7 +282,7 @@ Room0B_{AREA}:
     .byte $BC, $10, $00
     .byte $FF
 
-Room0C_{AREA}:
+Room0C_{AREA}: ; 04:A514
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $11, $00
@@ -309,7 +309,7 @@ Room0C_{AREA}:
     .byte $41, $05, $C4 ; Zeela
     .byte $FF
 
-Room0D_{AREA}:
+Room0D_{AREA}: ; 04:A558
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $0F, $02
@@ -332,7 +332,7 @@ Room0D_{AREA}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0E_{AREA}:
+Room0E_{AREA}: ; 04:A590
     .byte $00
     .byte $00, $07, $00
     .byte $0A, $0F, $02
@@ -351,7 +351,7 @@ Room0E_{AREA}:
     .byte $CA, $0F, $02
     .byte $FF
 
-Room0F_{AREA}:
+Room0F_{AREA}: ; 04:A5BF
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -369,7 +369,7 @@ Room0F_{AREA}:
     .byte $07, $87, $D8 ; Enemy spawner: Geega
     .byte $FF
 
-Room10_{AREA}:
+Room10_{AREA}: ; 04:A5E8
     .byte $00
     .byte $00, $12, $00
     .byte $08, $12, $00
@@ -389,7 +389,8 @@ Room10_{AREA}:
     .byte $17, $87, $DA ; Enemy spawner: Geega
     .byte $FF
 
-Room11_unused: ; Not used
+Room11_unused: ; 04:A618
+    ; Not used
     .byte $00
     .byte $00, $07, $00
     .byte $02, $08, $01
@@ -408,8 +409,8 @@ Room11_unused: ; Not used
     .byte $CC, $10, $00
     .byte $FF
 
-Room11_{AREA}:
-Room12_{AREA}:
+Room11_{AREA}: ; 04:A647
+Room12_{AREA}: ; 04:A647
     .byte $00
     .byte $00, $12, $00
     .byte $08, $12, $00
@@ -433,7 +434,7 @@ Room12_{AREA}:
     .byte $41, $85, $B6 ; Zeela
     .byte $FF
 
-Room13_{AREA}:
+Room13_{AREA}: ; 04:A683
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -454,7 +455,7 @@ Room13_{AREA}:
     .byte $37, $87, $DD ; Enemy spawner: Geega
     .byte $FF
 
-Room14_{AREA}:
+Room14_{AREA}: ; 04:A6B5
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -470,7 +471,7 @@ Room14_{AREA}:
     .byte $01, $85, $95 ; Zeela
     .byte $FF
 
-Room15_{AREA}:
+Room15_{AREA}: ; 04:A6D9
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -494,7 +495,7 @@ Room15_{AREA}:
     .byte $01, $80, $68 ; Sidehopper
     .byte $FF
 
-Room16_{AREA}:
+Room16_{AREA}: ; 04:A713
     .byte $03
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -515,7 +516,7 @@ Room16_{AREA}:
     .byte $21, $81, $27 ; Ceiling sidehopper
     .byte $FF
 
-Room17_{AREA}:
+Room17_{AREA}: ; 04:A745
     .byte $01
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -539,7 +540,7 @@ Room17_{AREA}:
     .byte $31, $04, $48 ; Skree
     .byte $FF
 
-Room18_{AREA}:
+Room18_{AREA}: ; 04:A780
     .byte $01
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -560,7 +561,7 @@ Room18_{AREA}:
     .byte $01, $84, $29 ; Skree
     .byte $FF
 
-Room19_{AREA}:
+Room19_{AREA}: ; 04:A7B2
     .byte $03
     .byte $00, $19, $03
     .byte $04, $19, $03
@@ -586,7 +587,7 @@ Room19_{AREA}:
     .byte $CC, $19, $03
     .byte $FF
 
-Room1A_{AREA}:
+Room1A_{AREA}: ; 04:A7F6
     .byte $03
     .byte $00, $13, $03
     .byte $04, $13, $03
@@ -615,7 +616,7 @@ Room1A_{AREA}:
     .byte $31, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room1B_{AREA}:
+Room1B_{AREA}: ; 04:A83F
     .byte $00
     .byte $00, $1F, $01
     .byte $04, $1D, $01
@@ -653,7 +654,7 @@ Room1B_{AREA}:
     .byte $27, $07, $D9 ; Enemy spawner: Geega
     .byte $FF
 
-Room1C_{AREA}:
+Room1C_{AREA}: ; 04:A8A3
     .byte $03
     .byte $00, $17, $03
     .byte $08, $17, $03
@@ -669,7 +670,7 @@ Room1C_{AREA}:
     .byte $21, $81, $9A ; Ceiling sidehopper
     .byte $FF
 
-Room1D_{AREA}:
+Room1D_{AREA}: ; 04:A8C7
     .byte $01
     .byte $00, $15, $03
     .byte $08, $15, $03
@@ -704,7 +705,7 @@ Room1D_{AREA}:
     .byte $01, $48, $95 ; Kraid
     .byte $FF
 
-Room1E_{AREA}:
+Room1E_{AREA}: ; 04:A923
     .byte $01
     .byte $00, $1E, $01
     .byte $02, $1D, $01
@@ -723,7 +724,7 @@ Room1E_{AREA}:
     .byte $11, $81, $35 ; Ceiling sidehopper
     .byte $FF
 
-Room1F_{AREA}:
+Room1F_{AREA}: ; 04:A94F
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -739,7 +740,7 @@ Room1F_{AREA}:
     .byte $17, $07, $CD ; Enemy spawner: Geega
     .byte $FF
 
-Room20_{AREA}:
+Room20_{AREA}: ; 04:A972
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -753,7 +754,7 @@ Room20_{AREA}:
     .byte $41, $80, $BC ; Sidehopper
     .byte $FF
 
-Room21_{AREA}:
+Room21_{AREA}: ; 04:A990
     .byte $01
     .byte $00, $1D, $01
     .byte $08, $1D, $01
@@ -773,7 +774,7 @@ Room21_{AREA}:
     .byte $21, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room22_{AREA}:
+Room22_{AREA}: ; 04:A9BE
     .byte $03
     .byte $00, $13, $03
     .byte $04, $13, $03
@@ -799,7 +800,7 @@ Room22_{AREA}:
     .byte $41, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
-Room23_{AREA}:
+Room23_{AREA}: ; 04:A9FE
     .byte $00
     .byte $00, $10, $00
     .byte $0E, $06, $00
@@ -821,7 +822,7 @@ Room23_{AREA}:
     .byte $01, $03, $38 ; Ripper
     .byte $FF
 
-Room24_{AREA}:
+Room24_{AREA}: ; 04:AA33
     .byte $00
     .byte $00, $07, $00
     .byte $0E, $07, $00

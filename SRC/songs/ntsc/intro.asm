@@ -1,4 +1,4 @@
-SongIntroSQ2:
+SongIntroSQ2: ; 00:B000
     SongRepeatSetup $2
         SongNoteLength $4 ;7/8 seconds
         SongNote "D6"
@@ -118,7 +118,7 @@ SongIntroSQ2:
     SongRepeat
     SongEnd
 
-SongIntroTri:
+SongIntroTri: ; 00:B076
     SongRepeatSetup $10
         SongNoteLength $6 ;21/32 seconds
         SongNote "A3"
@@ -187,7 +187,7 @@ SongIntroTri:
         SongRest
     SongRepeat
 
-SongIntroSQ1:
+SongIntroSQ1: ; 00:B0B9
     SongRepeatSetup $10
         SongNoteLength $6 ;21/32 seconds
         SongNote "D2"
@@ -281,7 +281,7 @@ SongIntroSQ1:
         SongRest
     SongRepeat
 
-SongIntroNoise:
+SongIntroNoise: ; 00:B115
     SongRepeatSetup $10
         SongNoteLength $4 ;7/8 Seconds
         .byte SFXData@DrumBeat01 - SFXData

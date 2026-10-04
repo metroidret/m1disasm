@@ -18,7 +18,7 @@
 
 ;Tourian Room Pointers
 
-RoomPtrTable_{AREA}:
+RoomPtrTable_{AREA}: ; 03:A7D1
     .word Room00_{AREA}
     .word Room01_{AREA}
     .word Room02_{AREA}

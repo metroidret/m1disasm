@@ -52,81 +52,81 @@
 ;#$09=Door.
 ;#$0A=Palette change room.
 
-SpecItmsTbl_{AREA}:
-@y03:
+SpecItmsTbl_{AREA}: ; 03:A83B
+@y03: ; 03:A83B
     .byte $03
     .word @y04
     ;Elevator to end.
-    @@x01:
+    @@x01: ; 03:A83E
         .byte $01, $FF
         .byte it_Elevator, $8F
         .byte $00
 
-@y04:
+@y04: ; 03:A843
     .byte $04
     .word @y07
     ;Elevator to Brinstar.
-    @@x03:
+    @@x03: ; 03:A846
         .byte $03, $FF
         .byte it_Elevator, $83
         .byte $00
 
-@y07:
+@y07: ; 03:A84B
     .byte $07
     .word @y08
     ;10 missile door.
-    @@x03:
+    @@x03: ; 03:A84E
         .byte $03, @@x04 - @@x03
         .byte it_Door, $A2
         .byte $00
     ;Rinkas
-    @@x04:
+    @@x04: ; 03:A853
         .byte $04, @@x09 - @@x04
         .byte it_RinkaSpawner
         .byte $00
     ;Rinkas
-    @@x09:
+    @@x09: ; 03:A857
         .byte $09, $FF
         .byte it_RinkaSpawner
         .byte $00
 
-@y08:
+@y08: ; 03:A85B
     .byte $08
     .word @y09
     ;Rinkas
-    @@x0A:
+    @@x0A: ; 03:A85E
         .byte $0A, $FF
         .byte it_RinkaSpawner | $10
         .byte $00
 
-@y09:
+@y09: ; 03:A862
     .byte $09
     .word @y0A
     ;Rinkas
-    @@x0A:
+    @@x0A: ; 03:A865
         .byte $0A, $FF
         .byte it_RinkaSpawner
         .byte $00
 
-@y0A:
+@y0A: ; 03:A869
     .byte $0A
     .word @y0B
     ;Rinkas
-    @@x0A:
+    @@x0A: ; 03:A86C
         .byte $0A, $FF
         .byte it_RinkaSpawner | $10
         .byte $00
 
-@y0B:
+@y0B: ; 03:A870
     .byte $0B
     .word $FFFF
     ;Door at bottom of escape shaft.
-    @@x01:
+    @@x01: ; 03:A873
         .byte $01, @@x02 - @@x01
         .byte it_Door, $A3
         .byte $00
     ;Mother brain, Zebetite, 3 cannons and Rinkas.
-    @@x02:
+    @@x02: ; 03:A878
         .byte $02, @@x03 - @@x02
         .byte it_MotherBrain
         .byte it_Zebetite | $40
@@ -136,7 +136,7 @@ SpecItmsTbl_{AREA}:
         .byte it_Cannon | $20, $3E
         .byte $00
     ;2 Zebetites, 6 cannons and Rinkas.
-    @@x03:
+    @@x03: ; 03:A884
         .byte $03, @@x04 - @@x03
         .byte it_Zebetite | $30
         .byte it_Zebetite | $20
@@ -149,7 +149,7 @@ SpecItmsTbl_{AREA}:
         .byte it_Cannon | $30, $3E
         .byte $00
     ;Right door, 2 Zebetites, 6 cannons and Rinkas.
-    @@x04:
+    @@x04: ; 03:A896
         .byte $04, @@x05 - @@x04
         .byte it_Door, $A3
         .byte it_Zebetite | $10
@@ -163,7 +163,7 @@ SpecItmsTbl_{AREA}:
         .byte it_Cannon | $30, $3E
         .byte $00
     ;Left door.
-    @@x05:
+    @@x05: ; 03:A8AA
         .byte $05, $FF
         .byte it_Door, $B3
         .byte $00

@@ -25,12 +25,12 @@
 ;and are multiplied by 4 to find the index to the desired metatile in MetatileDefs.  Any further bytes in
 ;the structure definition represent the next rows.  #$FF marks the end of the structure definition.
 
-Structure00_{AREA}:
+Structure00_{AREA}: ; 02:ACB9
     .byte $08,  $01, $01, $01, $01, $01, $01, $01, $01
     .byte $08,  $00, $00, $00, $00, $00, $00, $00, $00
     .byte $FF
 
-Structure01_{AREA}:
+Structure01_{AREA}: ; 02:ACCC
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $01,  $0A
     .byte $01,  $0A
@@ -38,7 +38,7 @@ Structure01_{AREA}:
     .byte $08,  $02, $02, $02, $02, $02, $02, $02, $02
     .byte $FF
 
-Structure02_{AREA}:
+Structure02_{AREA}: ; 02:ACE5
     .byte $02,  $04, $05
     .byte $02,  $04, $05
     .byte $02,  $04, $05
@@ -49,27 +49,27 @@ Structure02_{AREA}:
     .byte $02,  $04, $05
     .byte $FF
 
-Structure03_{AREA}:
+Structure03_{AREA}: ; 02:ACFE
     .byte $01,  $06
     .byte $01,  $06
     .byte $01,  $06
     .byte $FF
 
-Structure04_{AREA}:
+Structure04_{AREA}: ; 02:AD05
     .byte $01,  $07
     .byte $01,  $07
     .byte $01,  $07
     .byte $FF
 
-Structure05_{AREA}:
+Structure05_{AREA}: ; 02:AD0C
     .byte $02,  $08, $09
     .byte $FF
 
-Structure06_{AREA}:
+Structure06_{AREA}: ; 02:AD10
     .byte $04,  $0B, $0B, $0B, $0B
     .byte $FF
 
-Structure07_{AREA}:
+Structure07_{AREA}: ; 02:AD16
     .byte $02,  $0B, $0F
     .byte $02,  $0C, $0B
     .byte $02,  $0F, $0C
@@ -77,117 +77,117 @@ Structure07_{AREA}:
     .byte $02,  $0C, $0F
     .byte $FF
 
-Structure08_{AREA}:
+Structure08_{AREA}: ; 02:AD26
     .byte $01,  $0D
     .byte $01,  $0E
     .byte $FF
 
-Structure09_{AREA}:
+Structure09_{AREA}: ; 02:AD2B
     .byte $04,  $10, $10, $10, $10
     .byte $FF
 
-Structure0A_{AREA}:
+Structure0A_{AREA}: ; 02:AD31
     .byte $04,  $12, $13, $11, $13
     .byte $01,  $13
     .byte $FF
 
-Structure0B_{AREA}:
+Structure0B_{AREA}: ; 02:AD39
     .byte $04,  $0F, $0C, $0C, $0B
     .byte $04,  $0B, $0F, $0B, $0C
     .byte $04,  $0C, $0F, $0C, $0B
     .byte $04,  $0F, $0B, $0F, $0C
     .byte $FF
 
-Structure0C_{AREA}:
+Structure0C_{AREA}: ; 02:AD4E
     .byte $01,  $1F
     .byte $01,  $1F
     .byte $01,  $1F
     .byte $01,  $1F
     .byte $FF
 
-Structure0D_{AREA}:
+Structure0D_{AREA}: ; 02:AD57
     .byte $08,  $20, $20, $20, $20, $20, $20, $20, $20
     .byte $FF
 
-Structure0E_{AREA}:
+Structure0E_{AREA}: ; 02:AD61
     .byte $04,  $21, $21, $21, $21
     .byte $04,  $21, $21, $21, $21
     .byte $FF
 
-Structure0F_{AREA}:
+Structure0F_{AREA}: ; 02:AD6C
     .byte $02,  $15, $18
     .byte $03,  $16, $19, $1E
     .byte $03,  $17, $1A, $1B
     .byte $FF
 
-Structure10_{AREA}:
+Structure10_{AREA}: ; 02:AD78
     .byte $01,  $1E
     .byte $FF
 
-Structure11_{AREA}:
+Structure11_{AREA}: ; 02:AD7B
     .byte $08,  $22, $22, $22, $22, $22, $22, $22, $22
     .byte $FF
 
-Structure12_{AREA}:
+Structure12_{AREA}: ; 02:AD85
     .byte $01,  $23
     .byte $FF
 
-Structure13_{AREA}:
+Structure13_{AREA}: ; 02:AD88
     .byte $04,  $24, $26, $26, $26
     .byte $04,  $25, $26, $26, $26
     .byte $13,       $27, $26, $26
     .byte $04,  $28, $29, $26, $2A
     .byte $FF
 
-Structure14_{AREA}:
+Structure14_{AREA}: ; 02:AD9C
     .byte $04,  $26, $26, $26, $26
     .byte $04,  $26, $26, $26, $26
     .byte $04,  $26, $26, $26, $26
     .byte $04,  $26, $26, $26, $26
     .byte $FF
 
-Structure15_{AREA}:
+Structure15_{AREA}: ; 02:ADB1
     .byte $04,  $0F, $0F, $0F, $0F
     .byte $FF
 
-Structure16_{AREA}:
+Structure16_{AREA}: ; 02:ADB7
     .byte $04,  $2D, $3D, $2C, $3D
     .byte $FF
 
-Structure17_{AREA}:
+Structure17_{AREA}: ; 02:ADBD
     .byte $01,  $2D
     .byte $01,  $3D
     .byte $01,  $2C
     .byte $01,  $3D
     .byte $FF
 
-Structure18_{AREA}:
+Structure18_{AREA}: ; 02:ADC6
     .byte $01,  $1D
     .byte $01,  $1D
     .byte $01,  $1D
     .byte $01,  $1D
     .byte $FF
 
-Structure19_{AREA}:
+Structure19_{AREA}: ; 02:ADCF
     .byte $08,  $2E, $2E, $2E, $2E, $2E, $2E, $2E, $2E
     .byte $08,  $2F, $2F, $2F, $2F, $2F, $2F, $2F, $2F
     .byte $FF
 
-Structure1A_{AREA}:
+Structure1A_{AREA}: ; 02:ADE2
     .byte $04,  $1D, $1D, $1D, $1D
     .byte $04,  $1D, $1D, $1D, $1D
     .byte $04,  $1D, $1D, $1D, $1D
     .byte $04,  $1D, $1D, $1D, $1D
     .byte $FF
 
-Structure1B_{AREA}:
+Structure1B_{AREA}: ; 02:ADF7
     .byte $04,  $31, $30, $31, $30
     .byte $04,  $30, $30, $30, $30
     .byte $04,  $31, $30, $31, $31
     .byte $04,  $30, $31, $30, $30
     .byte $FF
 
-Structure1C_{AREA}:
+Structure1C_{AREA}: ; 02:AE0C
     .byte $01,  $30
     .byte $01,  $31
     .byte $01,  $30
@@ -198,107 +198,107 @@ Structure1C_{AREA}:
     .byte $01,  $30
     .byte $FF
 
-Structure1D_{AREA}:
+Structure1D_{AREA}: ; 02:AE1D
     .byte $04,  $30, $31, $30, $30
     .byte $FF
 
-Structure1E_{AREA}:
+Structure1E_{AREA}: ; 02:AE23
     .byte $01,  $1C
     .byte $FF
 
-Structure1F_{AREA}:
+Structure1F_{AREA}: ; 02:AE26
     .byte $01,  $21
     .byte $01,  $1F
     .byte $01,  $1F
     .byte $01,  $21
     .byte $FF
 
-Structure20_{AREA}:
+Structure20_{AREA}: ; 02:AE2F
     .byte $04,  $34, $34, $34, $34
     .byte $04,  $34, $34, $34, $34
     .byte $FF
 
-Structure21_{AREA}:
+Structure21_{AREA}: ; 02:AE3A
     .byte $04,  $35, $35, $35, $35
     .byte $FF
 
-Structure22_{AREA}:
+Structure22_{AREA}: ; 02:AE40
     .byte $04,  $37, $37, $37, $37
     .byte $04,  $37, $36, $37, $36
     .byte $04,  $36, $37, $36, $37
     .byte $04,  $37, $37, $36, $37
     .byte $FF
 
-Structure23_{AREA}:
+Structure23_{AREA}: ; 02:AE55
     .byte $02,  $32, $33
     .byte $FF
 
-Structure24_{AREA}:
+Structure24_{AREA}: ; 02:AE59
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $FF
 
-Structure25_{AREA}:
+Structure25_{AREA}: ; 02:AE64
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $FF
 
-Structure26_{AREA}:
+Structure26_{AREA}: ; 02:AE6D
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $04,  $2B, $2B, $2B, $2B
     .byte $FF
 
-Structure27_{AREA}:
+Structure27_{AREA}: ; 02:AE82
     .byte $01,  $14
     .byte $FF
 
-Structure28_{AREA}:
+Structure28_{AREA}: ; 02:AE85
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $01,  $2B
     .byte $FF
 
-Structure29_{AREA}:
+Structure29_{AREA}: ; 02:AE8E
     .byte $01,  $39
     .byte $FF
 
-Structure2A_{AREA}:
+Structure2A_{AREA}: ; 02:AE91
     .byte $01,  $38
     .byte $FF
 
-Structure2B_{AREA}:
+Structure2B_{AREA}: ; 02:AE94
     .byte $04,  $3A, $3B, $3B, $3C
     .byte $FF
 
-Structure2C_{AREA}:
+Structure2C_{AREA}: ; 02:AE9A
     .byte $02,  $34, $34
     .byte $02,  $34, $34
     .byte $02,  $34, $34
     .byte $02,  $34, $34
     .byte $FF
 
-Structure2D_{AREA}:
+Structure2D_{AREA}: ; 02:AEA7
     .byte $08,  $30, $31, $30, $31, $30, $30, $31, $30
     .byte $FF
 
-Structure2E_{AREA}:
+Structure2E_{AREA}: ; 02:AEB1
     .byte $04,  $34, $34, $34, $34
     .byte $04,  $34, $34, $34, $34
     .byte $04,  $34, $34, $34, $34
     .byte $04,  $34, $34, $34, $34
     .byte $FF
 
-Structure2F_{AREA}:
+Structure2F_{AREA}: ; 02:AEC6
     .byte $08,  $2B, $2B, $2B, $2B, $2B, $2B, $2B, $2B
     .byte $08,  $2B, $2B, $2B, $2B, $2B, $2B, $2B, $2B
     .byte $FF
 
-Structure30_{AREA}:
+Structure30_{AREA}: ; 02:AED9
     .byte $08,  $34, $34, $34, $34, $34, $34, $34, $34
     .byte $08,  $34, $34, $34, $34, $34, $34, $34, $34
     .byte $FF

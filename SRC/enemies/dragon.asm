@@ -1,5 +1,5 @@
 ; Lava Seahorse Routine
-DragonAIRoutine_{AREA}:
+DragonAIRoutine_{AREA}: ; 02:9AE9
     ; branch if not resting
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Resting
@@ -8,7 +8,7 @@ DragonAIRoutine_{AREA}:
         ; set position to under lava
         lda #$E8
         sta Ens.0.y,x
-    @endIf_A:
+    @endIf_A: ; 02:9AF5
     ; exit if not active
     cmp #enemyStatus_Active
     bne @exit_initAnim
@@ -57,7 +57,7 @@ DragonAIRoutine_{AREA}:
         lda SpawnEnProjectile_AnimIndex,y
         jsr CommonJump_InitEnAnimIndex
         beq @exit_playAnim ; branch always
-    @endIf_B:
+    @endIf_B: ; 02:9B3C
     ; set "prepare to spit" animation 15 frames after having shot
     cmp #$0F
     bcc @exit_playAnim
@@ -69,20 +69,20 @@ DragonAIRoutine_{AREA}:
     jsr CommonJump_InitEnAnimIndex
     jmp @exit_playAnim
 
-@exit_initAnim:
+@exit_initAnim: ; 02:9B4F
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     beq @endIf_C
         ; enemy is not exploding, set animation to active
         jsr CommonJump_InitEnActiveAnimIndex_NoInitOffset
-    @endIf_C:
-@exit_playAnim:
+    @endIf_C: ; 02:9B59
+@exit_playAnim: ; 02:9B59
     ; change animation frame every frame
     lda #$01
     sta $00
     sta $01
     jmp UpdateEnemyCommon_Decide_{AREA}
 
-@prepareToSpitEnAnimTable:
+@prepareToSpitEnAnimTable: ; 02:9B62
     .byte EnAnim_DragonPrepareToSpit_R_{AREA} - EnAnimTable_{AREA}, EnAnim_DragonPrepareToSpit_L_{AREA} - EnAnimTable_{AREA}
 

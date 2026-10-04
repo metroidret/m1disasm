@@ -1,4 +1,4 @@
-SongEscapeSQ2:
+SongEscapeSQ2: ; 03:B000
     SongRepeatSetup $4
         SongNoteLength $3 ;3/4 seconds
         SongNote "G4"
@@ -77,7 +77,7 @@ SongEscapeSQ2:
     SongRepeat
     SongEnd
 
-SongEscapeSQ1:
+SongEscapeSQ1: ; 03:B04D
     SongRepeatSetup $4
         SongNoteLength $3 ;3/4 seconds
         SongNote "D4"
@@ -209,7 +209,7 @@ SongEscapeSQ1:
         SongNote "D3"
     SongRepeat
 
-SongEscapeTri:
+SongEscapeTri: ; 03:B0CF
     SongRepeatSetup $10
         SongNoteLength $2 ;3/8 seconds
         SongNote "G4"
@@ -350,7 +350,7 @@ SongEscapeTri:
         SongNote "G4"
     SongRepeat
 
-SongEscapeNoise:
+SongEscapeNoise: ; 03:B15A
     SongRepeatSetup $30
         SongNoteLength $2 ;3/8 seconds
         .byte SFXData@DrumBeat00 - SFXData

@@ -1,4 +1,4 @@
-RinkaAIRoutine_{AREA}:
+RinkaAIRoutine_{AREA}: ; 03:9A2C
     ; branch if enemy is not active
     ldy EnsExtra.0.status,x
     cpy #enemyStatus_Active
@@ -39,7 +39,7 @@ RinkaAIRoutine_{AREA}:
         lda #$00
         sbc $01
         sta $01
-    @endIf_A:
+    @endIf_A: ; 03:9A5A
     ; $01 now contains the x distance between Samus and the enemy
 
     ; save Samus y pos relative to enemy in $00
@@ -59,7 +59,7 @@ RinkaAIRoutine_{AREA}:
         lda #$00
         sbc $00
         sta $00
-    @endIf_B:
+    @endIf_B: ; 03:9A6E
     ; $00 now contains the y distance between Samus and the enemy
 
     ; logic or both together
@@ -67,14 +67,14 @@ RinkaAIRoutine_{AREA}:
     ora $01
     ; for bits 7, 6, 5 of this
     ldy #$03
-    @loop_A:
+    @loop_A: ; 03:9A74
         ; shift bit into carry
         asl
         ; branch if that bit is set
         bcs @exitLoop_A
         dey
         bne @loop_A
-    @exitLoop_A:
+    @exitLoop_A: ; 03:9A7A
     
     ; y here will have one of four values
     ; the enemy-samus vector in $00-$01 will be normalized depending on y:
@@ -82,7 +82,7 @@ RinkaAIRoutine_{AREA}:
     ; 2 = the x or y distance is greater or equal to #$40 pixels, divide vector by 4
     ; 1 = the x or y distance is greater or equal to #$20 pixels, divide vector by 2
     ; 0 = both the x and y distances are less than #$20 pixels, do nothing
-    @loop_B:
+    @loop_B: ; 03:9A7A
         ; branch if bits 7, 6, 5 were not set
         dey
         bmi @exitLoop_B
@@ -91,7 +91,7 @@ RinkaAIRoutine_{AREA}:
             lsr $00
             lsr $01
             bpl @loop_B
-    @exitLoop_B:
+    @exitLoop_B: ; 03:9A83
     ; $00 and $01 now do not have bits 7, 6, 5 set
 
     ; set rinka speed based on $00 and $01
@@ -113,7 +113,7 @@ RinkaAIRoutine_{AREA}:
         lda #$00
         sbc Ens.0.speedX,x
         sta Ens.0.speedX,x
-    @endIf_C:
+    @endIf_C: ; 03:9A9B
     ; pull Ens.0.data05/2 from stack
     pla
     ; shift vertical facing direction into carry
@@ -129,9 +129,9 @@ RinkaAIRoutine_{AREA}:
         lda #$00
         sbc Ens.0.speedY,x
         sta Ens.0.speedY,x
-    @endIf_D:
+    @endIf_D: ; 03:9AB0
 
-@moveRinka:
+@moveRinka: ; 03:9AB0
     ; branch if bit 6 of Ens.0.data05 is set (30FPS)
     lda Ens.0.data05,x
     asl
@@ -172,15 +172,15 @@ RinkaAIRoutine_{AREA}:
             ; movement failed, remove rinka
             lda #$00
             sta EnsExtra.0.status,x
-        @endIf_F:
+        @endIf_F: ; 03:9AF1
         jsr LoadEnemyPositionFromTemp_
-    @endIf_E:
+    @endIf_E: ; 03:9AF4
     ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_UpdateEnemyCommon_noMove
 
 
-SetRinkaSpeed_{AREA}:
+SetRinkaSpeed_{AREA}: ; 03:9AF9
     ; load y speed
     lda $00
     pha
@@ -206,14 +206,14 @@ SetRinkaSpeed_{AREA}:
 
 
     lsr ; unused instruction
-Adiv16_:
+Adiv16_: ; 03:9B1B
     lsr
     lsr
     lsr
     lsr
     rts
 
-Amul16_:
+Amul16_: ; 03:9B20
     asl
     asl
     asl

@@ -1,5 +1,5 @@
 ; Ridley Routine
-RidleyAIRoutine_{AREA}:
+RidleyAIRoutine_{AREA}: ; 05:9A13
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bcc @normal
@@ -7,7 +7,7 @@ RidleyAIRoutine_{AREA}:
     cmp #enemyStatus_Pickup
     bne @exit
 
-@explode:
+@explode: ; 05:9A20
     ; delete fireballs
     lda #enemyStatus_NoEnemy
     sta EnsExtra.1.status
@@ -17,7 +17,7 @@ RidleyAIRoutine_{AREA}:
     sta EnsExtra.5.status
     beq @exit
 
-@normal:
+@normal: ; 05:9A33
     lda #EnAnim_RidleyHopping_R_{AREA} - EnAnimTable_{AREA}.b
     sta EnemyFlipAfterDisplacementAnimIndex
     lda #EnAnim_RidleyHopping_L_{AREA} - EnAnimTable_{AREA}.b
@@ -25,7 +25,7 @@ RidleyAIRoutine_{AREA}:
     jsr CommonJump_EnemyFlipAfterDisplacement
     jsr RidleyTryToLaunchFireball_{AREA}
 
-@exit:
+@exit: ; 05:9A41
     ; change animation frame every 3 frames
     lda #$03
     sta $00
@@ -34,7 +34,7 @@ RidleyAIRoutine_{AREA}:
 
 ;-------------------------------------------------------------------------------
 ; Ridley Fireball Routine
-RidleyFireballAIRoutine_{AREA}:
+RidleyFireballAIRoutine_{AREA}: ; 05:9A4A
     ; push Ens.0.data05 to stack
     lda Ens.0.data05,x
     pha
@@ -63,21 +63,21 @@ RidleyFireballAIRoutine_{AREA}:
     cmp #$20
     bcc @RTS
     ; fallthrough
-@RemoveFireball:
+@RemoveFireball: ; 05:9A73
     ; remove fireball
     lda #$00
     sta EnsExtra.0.status,x
-@RTS:
+@RTS: ; 05:9A78
     rts
 
 ;-------------------------------------------------------------------------------
 ; Ridley Subroutine
-RidleyTryToLaunchFireball_{AREA}:
+RidleyTryToLaunchFireball_{AREA}: ; 05:9A79
     ; load fireball counter into y (#$60 if it is zero)
     ldy RidleyFireballCounter
     bne @endIf_A
         ldy #$60
-    @endIf_A:
+    @endIf_A: ; 05:9A7F
     ; exit if bit 1 of FrameCount is set
     lda FrameCount
     and #$02
@@ -97,7 +97,7 @@ RidleyTryToLaunchFireball_{AREA}:
 
     ; loop for all fireballs
     ldx #$50
-    @loop_A:
+    @loop_A: ; 05:9A94
         ; branch if no fireball in enemy slot
         lda EnsExtra.0.status,x
         beq RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}
@@ -117,10 +117,10 @@ RidleyTryToLaunchFireball_{AREA}:
     ; (BUG! this is actually Kraid's lint counter, probably a remnant-->
     ; of copy-pasting the KraidTryToLaunchLint routine to make this one)
     inc KraidLintCounter
-@RTS:
+@RTS: ; 05:9AA9
     rts
 
-RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}:
+RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}: ; 05:9AAA
     ; set y to x
     txa
     tay
@@ -158,6 +158,6 @@ RidleyTryToLaunchFireball_FoundEnemySlot_{AREA}:
     jsr LoadEnemyPositionFromTemp__{AREA}
     jmp CommonJump_0E
 
-RidleyFireballOffsetX_{AREA}:
+RidleyFireballOffsetX_{AREA}: ; 05:9ADF
     .byte $08, -$08
 

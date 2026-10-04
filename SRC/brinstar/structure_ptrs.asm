@@ -18,7 +18,7 @@
 
 ;Brinstar Structure Pointers
 
-StructPtrTable_{AREA}:
+StructPtrTable_{AREA}: ; 01:A372
     .word Structure00_{AREA}
     .word Structure01_{AREA}
     .word Structure02_{AREA}

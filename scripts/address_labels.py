@@ -27,10 +27,13 @@ BANKS_AREA = [
 
 
 def parse_lines(lines, bank, sym_labels):
+    include_paths = []
     label_name_parts = []
     for i, line in enumerate(lines):
         l = line.split(";")[0].strip()
-        if l.endswith(":"):
+        if l.startswith(".include \""):
+            include_paths.append("SRC/" + l.removeprefix(".include \"").removesuffix("\""))
+        elif l.endswith(":"):
             l = l.removesuffix(":").split("@")
             assert len(l) - 1 <= len(label_name_parts)
             label_name_parts = label_name_parts[:len(l)-1] + l[len(l)-1:]
@@ -48,6 +51,7 @@ def parse_lines(lines, bank, sym_labels):
                 ):
                     print(line.removesuffix("\n"))"""
         lines[i] = line
+    return include_paths
 
 
 def address_labels(infile):
@@ -84,13 +88,33 @@ def address_labels(infile):
                 sym_labels[label_bank] = {}
             sym_labels[label_bank][label_name] = label_address
     
+    include_paths_per_bank = {}
     for bank, bank_name in enumerate(BANKS):
         print(f"-- {bank_name} --")
         with open(f"SRC/{bank_name}.asm", "r") as f:
             bank_text = f.readlines()
-        parse_lines(bank_text, bank, sym_labels)
+        include_paths_per_bank[bank] = parse_lines(bank_text, bank, sym_labels)
         with open(f"SRC/{bank_name}.asm", "w") as f:
             f.writelines(bank_text)
+    
+    include_banks_per_path = {}
+    for bank, bank_paths in include_paths_per_bank.items():
+        for path in bank_paths:
+            if path not in include_banks_per_path:
+                include_banks_per_path[path] = bank
+            else:
+                include_banks_per_path[path] = None
+    
+    for path, bank in include_banks_per_path.items():
+        if "songs/pal/" in path:
+            continue
+        if bank is not None:
+            print(f"-- {path} --")
+            with open(path, "r") as f:
+                path_text = f.readlines()
+            include_paths_per_bank[bank] = parse_lines(path_text, bank, sym_labels)
+            with open(path, "w") as f:
+                f.writelines(path_text)
 
 
 def main():

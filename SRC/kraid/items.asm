@@ -52,81 +52,81 @@
 ;#$09=Door.
 ;#$0A=Palette change room.
 
-SpecItmsTbl_{AREA}:
-@y12:
+SpecItmsTbl_{AREA}: ; 04:A26D
+@y12: ; 04:A26D
     .byte $12
     .word @y14
     ;Elevator from Brinstar.
-    @@x07:
+    @@x07: ; 04:A270
         .byte $07, $FF
         .byte it_Elevator, $81
         .byte $00
 
-@y14:
+@y14: ; 04:A275
     .byte $14
     .word @y15
     ;Elevator to Brinstar.
-    @@x07:
+    @@x07: ; 04:A278
         .byte $07, $FF
         .byte it_Elevator, $82
         .byte $00
 
-@y15:
+@y15: ; 04:A27D
     .byte $15
     .word @y16
     ;Missiles.
-    @@x04:
+    @@x04: ; 04:A280
         .byte $04, @@x09 - @@x04
         .byte it_PowerUp, pu_MISSILES, $47
         .byte $00
 
     ;Missiles.
-    @@x09:
+    @@x09: ; 04:A286
         .byte $09, $FF
         .byte it_PowerUp, pu_MISSILES, $47
         .byte $00
 
-@y16:
+@y16: ; 04:A28C
     .byte $16
     .word @y19
     ;Energy tank.
-    @@x0A:
+    @@x0A: ; 04:A28F
         .byte $0A, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $66
         .byte $00
 
-@y19:
+@y19: ; 04:A295
     .byte $19
     .word @y1B
     ;Missiles.
-    @@x0A:
+    @@x0A: ; 04:A298
         .byte $0A, $FF
         .byte it_PowerUp, pu_MISSILES, $47
         .byte $00
 
-@y1B:
+@y1B: ; 04:A29E
     .byte $1B
     .word @y1C
     ;Missiles.
-    @@x05:
+    @@x05: ; 04:A2A1
         .byte $05, $FF
         .byte it_PowerUp, pu_MISSILES, $47
         .byte $00
 
-@y1C:
+@y1C: ; 04:A2A7
     .byte $1C
     .word @y1D
     ;Memus.
-    @@x07:
+    @@x07: ; 04:A2AA
         .byte $07, $FF
         .byte it_Mellow
         .byte $00
 
-@y1D:
+@y1D: ; 04:A2AE
     .byte $1D
     .word $FFFF
     ;Energy tank.
-    @@x08:
+    @@x08: ; 04:A2B1
         .byte $08, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $BE
         .byte $00

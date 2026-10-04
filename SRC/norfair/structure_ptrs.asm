@@ -18,7 +18,7 @@
 
 ;Norfair Structure Pointer Table
 
-StructPtrTable_{AREA}:
+StructPtrTable_{AREA}: ; 02:A277
     .word Structure00_{AREA}
     .word Structure01_{AREA}
     .word Structure02_{AREA}

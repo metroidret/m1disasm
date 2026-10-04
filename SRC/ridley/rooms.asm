@@ -32,14 +32,14 @@
 ;with #$FE. The next portion of the room definition describes the enemies and doors in the room. The
 ;number of data bytes and their functions vary depending on what type of item is being loaded.
 
-Room00_{AREA}:
-Room01_{AREA}:
+Room00_{AREA}: ; 05:A23F
+Room01_{AREA}: ; 05:A23F
     .byte $02
     .byte $07, $03, $02
     .byte $87, $03, $02
     .byte $FF
 
-Room02_{AREA}:
+Room02_{AREA}: ; 05:A247
     .byte $03
     .byte $00, $07, $03
     .byte $01, $08, $03
@@ -57,7 +57,7 @@ Room02_{AREA}:
     .byte $EA, $08, $03
     .byte $FF
 
-Room03_{AREA}:
+Room03_{AREA}: ; 05:A273
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -76,7 +76,7 @@ Room03_{AREA}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room04_{AREA}:
+Room04_{AREA}: ; 05:A29E
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -86,7 +86,7 @@ Room04_{AREA}:
     .byte $AE, $07, $03
     .byte $FF
 
-Room05_{AREA}:
+Room05_{AREA}: ; 05:A2B2
     .byte $03
     .byte $00, $08, $03
     .byte $04, $08, $03
@@ -106,7 +106,7 @@ Room05_{AREA}:
     .byte $BC, $08, $03
     .byte $FF
 
-Room06_{AREA}:
+Room06_{AREA}: ; 05:A2E4
     .byte $03
     .byte $00, $07, $03
     .byte $05, $08, $03
@@ -125,7 +125,7 @@ Room06_{AREA}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room07_{AREA}:
+Room07_{AREA}: ; 05:A30F
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -150,7 +150,7 @@ Room07_{AREA}:
     .byte $31, $86, $7B ; Viola
     .byte $FF
 
-Room08_{AREA}:
+Room08_{AREA}: ; 05:A34D
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -172,7 +172,7 @@ Room08_{AREA}:
     .byte $27, $87, $96 ; Enemy spawner: Zebbo
     .byte $FF
 
-Room09_{AREA}:
+Room09_{AREA}: ; 05:A383
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -194,7 +194,7 @@ Room09_{AREA}:
     .byte $41, $86, $78 ; Viola
     .byte $FF
 
-Room0A_{AREA}:
+Room0A_{AREA}: ; 05:A3B8
     .byte $00
     .byte $00, $07, $03
     .byte $07, $19, $00
@@ -220,7 +220,7 @@ Room0A_{AREA}:
     .byte $51, $86, $D8 ; Viola
     .byte $FF
 
-Room0B_{AREA}:
+Room0B_{AREA}: ; 05:A3F9
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -240,7 +240,7 @@ Room0B_{AREA}:
     .byte $21, $86, $A9 ; Viola
     .byte $FF
 
-Room0C_{AREA}:
+Room0C_{AREA}: ; 05:A429
     .byte $03
     .byte $00, $07, $03
     .byte $0E, $07, $03
@@ -259,7 +259,7 @@ Room0C_{AREA}:
     .byte $41, $82, $79 ; Dessgeega
     .byte $FF
 
-Room0D_{AREA}:
+Room0D_{AREA}: ; 05:A455
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $0B, $00
@@ -282,7 +282,7 @@ Room0D_{AREA}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0E_{AREA}:
+Room0E_{AREA}: ; 05:A48C
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $0B, $00
@@ -305,7 +305,7 @@ Room0E_{AREA}:
     .byte $02, $B1 ; Blue door
     .byte $FF
 
-Room0F_{AREA}:
+Room0F_{AREA}: ; 05:A4C3
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -326,7 +326,7 @@ Room0F_{AREA}:
     .byte $11, $02, $AA ; Dessgeega
     .byte $FF
 
-Room10_{AREA}:
+Room10_{AREA}: ; 05:A4F6
     .byte $00
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -346,7 +346,7 @@ Room10_{AREA}:
     .byte $11, $80, $2B ; Holtz
     .byte $FF
 
-Room11_{AREA}:
+Room11_{AREA}: ; 05:A525
     .byte $03
     .byte $00, $08, $03
     .byte $04, $08, $03
@@ -366,7 +366,7 @@ Room11_{AREA}:
     .byte $41, $80, $2B ; Holtz
     .byte $FF
 
-Room12_{AREA}:
+Room12_{AREA}: ; 05:A555
     .byte $03
     .byte $00, $07, $03
     .byte $02, $11, $03
@@ -396,7 +396,7 @@ Room12_{AREA}:
     .byte $01, $49, $66 ; Ridley
     .byte $FF
 
-Room13_{AREA}:
+Room13_{AREA}: ; 05:A5A1
     .byte $01
     .byte $00, $07, $03
     .byte $01, $0E, $00
@@ -423,7 +423,7 @@ Room13_{AREA}:
     .byte $51, $83, $3E ; Ceiling dessgeega
     .byte $FF
 
-Room14_{AREA}:
+Room14_{AREA}: ; 05:A5E5
     .byte $01
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -444,7 +444,7 @@ Room14_{AREA}:
     .byte $41, $80, $27 ; Holtz
     .byte $FF
 
-Room15_{AREA}:
+Room15_{AREA}: ; 05:A618
     .byte $01
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -468,7 +468,7 @@ Room15_{AREA}:
     .byte $31, $80, $28 ; Holtz
     .byte $FF
 
-Room16_{AREA}:
+Room16_{AREA}: ; 05:A653
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -486,7 +486,7 @@ Room16_{AREA}:
     .byte $01, $80, $3E ; Holtz
     .byte $FF
 
-Room17_{AREA}:
+Room17_{AREA}: ; 05:A67C
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -505,7 +505,7 @@ Room17_{AREA}:
     .byte $37, $87, $9C ; Enemy spawner: Zebbo
     .byte $FF
 
-Room18_{AREA}:
+Room18_{AREA}: ; 05:A6A9
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -524,7 +524,7 @@ Room18_{AREA}:
     .byte $01, $80, $67 ; Holtz
     .byte $FF
 
-Room19_{AREA}:
+Room19_{AREA}: ; 05:A6D6
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -542,7 +542,7 @@ Room19_{AREA}:
     .byte $31, $80, $37 ; Holtz
     .byte $FF
 
-Room1A_{AREA}:
+Room1A_{AREA}: ; 05:A6FF
     .byte $00
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -561,7 +561,7 @@ Room1A_{AREA}:
     .byte $17, $87, $D9 ; Enemy spawner: Zebbo
     .byte $FF
 
-Room1B_{AREA}:
+Room1B_{AREA}: ; 05:A72C
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -586,7 +586,7 @@ Room1B_{AREA}:
     .byte $37, $87, $9C ; Enemy spawner: Zebbo
     .byte $FF
 
-Room1C_{AREA}:
+Room1C_{AREA}: ; 05:A76B
     .byte $02
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -607,7 +607,7 @@ Room1C_{AREA}:
     .byte $31, $0C, $66 ; Multiviola
     .byte $FF
 
-Room1D_{AREA}:
+Room1D_{AREA}: ; 05:A79D
     .byte $02
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -628,7 +628,7 @@ Room1D_{AREA}:
     .byte $51, $0C, $A6 ; Multiviola
     .byte $FF
 
-Room1E_{AREA}:
+Room1E_{AREA}: ; 05:A7CF
     .byte $00
     .byte $00, $18, $02
     .byte $08, $18, $02
@@ -647,7 +647,7 @@ Room1E_{AREA}:
     .byte $51, $0C, $9B ; Multiviola
     .byte $FF
 
-Room1F_{AREA}:
+Room1F_{AREA}: ; 05:A7FC
     .byte $02
     .byte $00, $17, $02
     .byte $04, $17, $02
@@ -665,7 +665,7 @@ Room1F_{AREA}:
     .byte $21, $8C, $48 ; Multiviola
     .byte $FF
 
-Room20_{AREA}:
+Room20_{AREA}: ; 05:A826
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $18, $02
@@ -681,7 +681,7 @@ Room20_{AREA}:
     .byte $41, $83, $88 ; Ceiling dessgeega
     .byte $FF
 
-Room21_{AREA}:
+Room21_{AREA}: ; 05:A849
     .byte $02
     .byte $20, $18, $02
     .byte $28, $18, $02
@@ -695,7 +695,7 @@ Room21_{AREA}:
     .byte $41, $83, $53 ; Ceiling dessgeega
     .byte $FF
 
-Room22_{AREA}:
+Room22_{AREA}: ; 05:A867
     .byte $00
     .byte $00, $0B, $00
     .byte $04, $18, $02
@@ -712,7 +712,7 @@ Room22_{AREA}:
     .byte $51, $03, $8A ; Ceiling dessgeega
     .byte $FF
 
-Room23_{AREA}:
+Room23_{AREA}: ; 05:A88D
     .byte $00
     .byte $00, $07, $03
     .byte $02, $12, $03
@@ -733,7 +733,7 @@ Room23_{AREA}:
     .byte $31, $86, $7F ; Viola
     .byte $FF
 
-Room24_{AREA}:
+Room24_{AREA}: ; 05:A8BF
     .byte $01
     .byte $00, $12, $03
     .byte $08, $12, $03
@@ -752,7 +752,7 @@ Room24_{AREA}:
     .byte $51, $86, $8B ; Viola
     .byte $FF
 
-Room25_{AREA}:
+Room25_{AREA}: ; 05:A8EC
     .byte $02
     .byte $00, $0B, $00
     .byte $04, $0E, $00
@@ -777,7 +777,7 @@ Room25_{AREA}:
     .byte $31, $83, $BA ; Ceiling dessgeega
     .byte $FF
 
-Room26_{AREA}:
+Room26_{AREA}: ; 05:A92A
     .byte $02
     .byte $00, $0E, $00
     .byte $04, $0E, $00
@@ -798,7 +798,7 @@ Room26_{AREA}:
     .byte $51, $03, $BC ; Ceiling dessgeega
     .byte $FF
 
-Room27_{AREA}:
+Room27_{AREA}: ; 05:A95D
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -812,7 +812,7 @@ Room27_{AREA}:
     .byte $11, $03, $29 ; Ceiling dessgeega
     .byte $FF
 
-Room28_{AREA}:
+Room28_{AREA}: ; 05:A97B
     .byte $01
     .byte $00, $14, $01
     .byte $08, $14, $01
@@ -830,7 +830,7 @@ Room28_{AREA}:
     .byte $11, $80, $27 ; Holtz
     .byte $FF
 
-Room29_{AREA}:
+Room29_{AREA}: ; 05:A9A5
     .byte $00
     .byte $00, $0B, $00
     .byte $0C, $0B, $00

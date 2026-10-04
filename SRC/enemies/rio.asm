@@ -1,4 +1,4 @@
-RioAIRoutine_{AREA}:
+RioAIRoutine_{AREA}: ; 01:9AF5
     ; branch if enemy is resting
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
@@ -29,7 +29,7 @@ RioAIRoutine_{AREA}:
     bpl @endIf_A
         ; negate a
         jsr TwosComplement_
-    @endIf_A:
+    @endIf_A: ; 01:9B1C
     ; a now contains the y distance between Samus and the enemy
     ; branch if Samus is not within a block's distance 
     cmp #$10
@@ -39,15 +39,15 @@ RioAIRoutine_{AREA}:
     lda #$00
     sta EnsExtra.0.accelY,x
 
-RioExit_Active_{AREA}:
+RioExit_Active_{AREA}: ; 01:9B25
     ; change animation frame every 3 frames
     lda #$03
     jmp CommonJump_UpdateEnemyCommon
 
-RioExit_Explode_{AREA}:
+RioExit_Explode_{AREA}: ; 01:9B2A
     jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
-RioExit_Resting_{AREA}:
+RioExit_Resting_{AREA}: ; 01:9B2D
     ; change animation frame every 8 frames
     lda #$08
     jmp CommonJump_UpdateEnemyCommon_noMove

@@ -18,7 +18,7 @@
 
 ;Ridley Room Pointers
 
-RoomPtrTable_{AREA}:
+RoomPtrTable_{AREA}: ; 05:A17F
     .word Room00_{AREA}
     .word Room01_{AREA}
     .word Room02_{AREA}

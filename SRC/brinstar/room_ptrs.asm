@@ -18,7 +18,7 @@
 
 ;Brinstar Room Pointers
 
-RoomPtrTable_{AREA}:
+RoomPtrTable_{AREA}: ; 01:A314
     .word Room00_{AREA}
     .word Room01_{AREA}
     .word Room02_{AREA}

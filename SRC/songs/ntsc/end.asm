@@ -1,4 +1,4 @@
-SongEndSQ1:
+SongEndSQ1: ; 00:AC00
     SongRepeatSetup $2
         SongNoteLength $4 ;7/8 seconds
         SongNote "A3"
@@ -245,7 +245,7 @@ SongEndSQ1:
     SongNote "D2"
     SongEnd ;End of end music.
 
-SongEndTri:
+SongEndTri: ; 00:ACF5
     SongRepeatSetup $A
         SongNoteLength $0 ;1/4 seconds
         SongNote "A3"
@@ -455,7 +455,7 @@ SongEndTri:
     SongNoteLength $2 ;7/32 seconds
     SongNote "D3"
 
-SongEndSQ2:
+SongEndSQ2: ; 00:ADC5
     SongRepeatSetup $2
         SongNoteLength $4 ;7/8 seconds
         SongNote "E3"
@@ -658,7 +658,7 @@ SongEndSQ2:
     SongNote "A3"
     SongEnd ;End of end music.
 
-SongEndNoise:
+SongEndNoise: ; 00:AE8E
     SongRepeatSetup $A
         SongNoteLength $0 ;1/4 seconds
         .byte SFXData@DrumBeat01 - SFXData

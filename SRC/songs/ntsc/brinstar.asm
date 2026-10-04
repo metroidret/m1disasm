@@ -18,7 +18,7 @@
 
 ;Brinstar Music
 
-SongBrinstarSQ1:
+SongBrinstarSQ1: ; 01:B000
     SongRepeatSetup $2
         SongNoteLength $4 ;1 1/2 seconds
         SongNote "B3"
@@ -107,7 +107,7 @@ SongBrinstarSQ1:
     SongNote "G3"
     SongEnd
 
-SongBrinstarSQ2:
+SongBrinstarSQ2: ; 01:B057
     SongRepeatSetup $2
         SongNoteLength $2 ;3/8 seconds
         SongNote "G2"
@@ -215,7 +215,7 @@ SongBrinstarSQ2:
     SongNote "F#5"
     SongNote "F#5"
 
-SongBrinstarTri:
+SongBrinstarTri: ; 01:B0C1
     SongRepeatSetup $4
         SongNoteLength $4 ;1 1/2 seconds
         SongRest
@@ -323,7 +323,7 @@ SongBrinstarTri:
         SongNote "A3"
     SongRepeat
 
-SongBrinstarNoise:
+SongBrinstarNoise: ; 01:B12B
     SongRepeatSetup $28
         SongNoteLength $2 ;3/8 seconds
         .byte SFXData@DrumBeat01 - SFXData

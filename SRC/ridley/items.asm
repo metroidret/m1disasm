@@ -52,53 +52,53 @@
 ;#$09=Door.
 ;#$0A=Palette change room.
 
-SpecItmsTbl_{AREA}:
-@y18:
+SpecItmsTbl_{AREA}: ; 05:A20D
+@y18: ; 05:A20D
     .byte $18
     .word @y19
     ;Missiles.
-    @@x12:
+    @@x12: ; 05:A210
         .byte $12, @@x19 - @@x12
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00
     ;Elevator to Norfair.
-    @@x19:
+    @@x19: ; 05:A216
         .byte $19, $FF
         .byte it_Elevator, $84
         .byte $00
 
-@y19:
+@y19: ; 05:A21B
     .byte $19
     .word @y1B
     ;Energy tank.
-    @@x11:
+    @@x11: ; 05:A21E
         .byte $11, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $74
         .byte $00
 
-@y1B:
+@y1B: ; 05:A224
     .byte $1B
     .word @y1D
     ;Missiles.
-    @@x18:
+    @@x18: ; 05:A227
         .byte $18, $FF
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00
 
-@y1D:
+@y1D: ; 05:A22D
     .byte $1D
     .word @y1E
     ;Energy tank.
-    @@x0F:
+    @@x0F: ; 05:A230
         .byte $0F, $FF
         .byte it_PowerUp, pu_ENERGYTANK, $66
         .byte $00
 
-@y1E:
+@y1E: ; 05:A236
     .byte $1E
     .word $FFFF
     ;Missiles.
-    @@x14:
+    @@x14: ; 05:A239
         .byte $14, $FF
         .byte it_PowerUp, pu_MISSILES, $6D
         .byte $00

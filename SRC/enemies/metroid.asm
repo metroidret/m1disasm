@@ -1,11 +1,11 @@
-MetroidAIRoutine_{AREA}:
+MetroidAIRoutine_{AREA}: ; 03:97F9
     ; Delete self if escape timer is active (EndTimer+1 != #$FF)
     ldy EndTimer+1
     iny
     beq @endIf_A
         lda #$00
         sta EnsExtra.0.status,x
-    @endIf_A:
+    @endIf_A: ; 03:9804
     
     ; prepare UpdateEnemyCommon_Decide parameters
     ; change animation frame every 15 frames
@@ -27,7 +27,7 @@ MetroidAIRoutine_{AREA}:
     beq @endIf_B
         ; metroid latch is active, jump
         jmp @latchActive
-    @endIf_B:
+    @endIf_B: ; 03:9822
 
     ; load whether the metroid is red (#$00) or green (#$01) into y
     ldy Ens.0.movementIndex,x
@@ -47,7 +47,7 @@ MetroidAIRoutine_{AREA}:
         lda #$00
         cmp Ens.0.speedSubPixelY,x
         sbc Ens.0.speedY,x
-    @endIf_C:
+    @endIf_C: ; 03:983B
     ; compare absolute y speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
@@ -56,7 +56,7 @@ MetroidAIRoutine_{AREA}:
         sta Ens.0.speedY,x
         lda #$00
         sta Ens.0.speedSubPixelY,x
-    @endIf_D:
+    @endIf_D: ; 03:9849
     
     ; push x max speed to stack
     lda MetroidMaxSpeed,y
@@ -73,7 +73,7 @@ MetroidAIRoutine_{AREA}:
         lda #$00
         cmp Ens.0.speedSubPixelX,x
         sbc Ens.0.speedX,x
-    @endIf_E:
+    @endIf_E: ; 03:985F
     ; compare absolute x speed with absolute max speed
     cmp MetroidMaxSpeed,y
     pla
@@ -82,7 +82,7 @@ MetroidAIRoutine_{AREA}:
         sta Ens.0.speedX,x
         lda #$00
         sta Ens.0.speedSubPixelX,x
-    @endIf_F:
+    @endIf_F: ; 03:986D
     
     ; load acceleration sign bits into a (bit0: horizontal sign, bit2: vertical sign)
     lda Ens.0.data05,x
@@ -110,13 +110,13 @@ MetroidAIRoutine_{AREA}:
             lda #$05
             sta Ens.0.health,x
             bne @endIf_G ; branch always
-    @else_G:
+    @else_G: ; 03:9894
         ; metroid is not frozen, metroid is invincible
         lda #$FF
         sta Ens.0.health,x
-    @endIf_G:
+    @endIf_G: ; 03:9899
     ; fallthrough
-@latchActive:
+@latchActive: ; 03:9899
     ; don't become frozen if previous status isn't hurt
     lda EnemyStatusPreAI
     cmp #enemyStatus_Hurt
@@ -128,7 +128,7 @@ MetroidAIRoutine_{AREA}:
             ; set status to frozen
             lda #enemyStatus_Frozen
             sta EnsExtra.0.status,x
-    @endIf_H:
+    @endIf_H: ; 03:98A9
 
     ; branch if metroid is not hit by one of Samus's weapons
     lda Ens.0.isHit,x
@@ -145,7 +145,7 @@ MetroidAIRoutine_{AREA}:
             beq @endIf_K
                 cmp #wa_BombExplode
                 bne @updateLatch
-            @endIf_K:
+            @endIf_K: ; 03:98C3
             
             ; don't count bomb hit when bit 1 of FrameCount is set
             lda FrameCount
@@ -173,7 +173,7 @@ MetroidAIRoutine_{AREA}:
             sta Ens.0.specialAttribs,x
             lda #$01
             sta Ens.0.data0D,x
-        @endIf_J:
+        @endIf_J: ; 03:98EF
         ; let go of Samus
         lda #$00
         sta Ens.0.isHit,x
@@ -187,7 +187,7 @@ MetroidAIRoutine_{AREA}:
         lda EnsExtra.0.accelX,x
         jsr GetMetroidRepelSpeed
         sta Ens.0.speedX,x
-    @endIf_I:
+    @endIf_I: ; 03:990F
     ; check if metroid is latched onto Samus (again)
     jsr LoadEnemySlotIDIntoY
     lda MetroidLatch0400,y
@@ -211,9 +211,9 @@ MetroidAIRoutine_{AREA}:
         sta MetroidLatch0400,x
         txa
         tay
-    @endIf_L:
+    @endIf_L: ; 03:9932
     ; fallthrough
-@updateLatch:
+@updateLatch: ; 03:9932
     ; metroid is latched
     ; push metroid latch to stack
     tya
@@ -225,7 +225,7 @@ MetroidAIRoutine_{AREA}:
     cmp #$0C
     beq @endIf_M
         inc MetroidLatch0400,x
-    @endIf_M:
+    @endIf_M: ; 03:9941
     ; prepare metroid offset relative to Samus's position
     ; load y offset from table
     tay
@@ -242,7 +242,7 @@ MetroidAIRoutine_{AREA}:
     plp
     bmi @endIf_N
         jsr TwosComplement_
-    @endIf_N:
+    @endIf_N: ; 03:9956
     sta Temp05_SpeedX
     ; load Samus position
     jsr StoreSamusPositionToTemp
@@ -252,17 +252,17 @@ MetroidAIRoutine_{AREA}:
     jsr LoadEnemyPositionFromTemp_
     jmp @metroidOnSamus
 
-@metroidOnSamus_clearLatch:
+@metroidOnSamus_clearLatch: ; 03:9964
     ; metroid is not latched and doesn't touch Samus
     ; clear metroid latch (it's already clear but ok)
     jsr ClearCurrentMetroidLatch
-@metroidOnSamus:
+@metroidOnSamus: ; 03:9967
     ; if metroid just died, clear metroid latch
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Explode
     bne @endIf_O
         jsr ClearCurrentMetroidLatch
-    @endIf_O:
+    @endIf_O: ; 03:9971
     
     ; MetroidOnSamus defaults to false
     ldy #$00
@@ -288,50 +288,51 @@ MetroidAIRoutine_{AREA}:
             jsr CommonJump_SubtractHealth
             ; Set MetroidOnSamus to true
             ldy #$01
-    @endIf_P:
+    @endIf_P: ; 03:999E
     sty MetroidOnSamus
     lda ObjectCntrl
     bmi @endIf_Q
         lda EnsExtra.0.type,x
         ora #$82 | OAMDATA_PRIORITY
         sta ObjectCntrl
-    @endIf_Q:
+    @endIf_Q: ; 03:99AB
     jmp UpdateEnemyCommon_Decide_{AREA}
 
-ClearCurrentMetroidLatch:
+ClearCurrentMetroidLatch: ; 03:99AE
     jsr LoadEnemySlotIDIntoY
-ClearMetroidLatch:
+ClearMetroidLatch: ; 03:99B1
     lda #$00
     sta MetroidLatch0400,y
     rts
 
-LoadEnemySlotIDIntoY:
+LoadEnemySlotIDIntoY: ; 03:99B7
     txa
     jsr Adiv16_
     tay
     rts
 
-LoadEnemySlotIDIntoX:
+LoadEnemySlotIDIntoX: ; 03:99BD
     txa
     jsr Adiv16_
     tax
     rts
 
-ClearMetroidSpeed:
+ClearMetroidSpeed: ; 03:99C3
     lda #$00
     sta Ens.0.speedY,x
     sta Ens.0.speedX,x
     sta Ens.0.speedSubPixelX,x
     sta Ens.0.speedSubPixelY,x
-ClearRinkaAcceleration: ; referenced in rinka.asm
+ClearRinkaAcceleration: ; 03:99D1
+    ; referenced in rinka.asm
     sta EnsExtra.0.accelX,x
     sta EnsExtra.0.accelY,x
     rts
 
-MetroidLatchOffsetY:
+MetroidLatchOffsetY: ; 03:99D8
     .byte $00, $FC, $F9, $F7, $F6, $F6, $F5, $F5, $F5, $F6, $F6, $F8
 
-StoreSamusPositionToTemp:
+StoreSamusPositionToTemp: ; 03:99E4
     ; put Samus position as parameters to CommonJump_ApplySpeedToPosition
     lda Samus.x
     sta Temp09_PositionX
@@ -341,7 +342,7 @@ StoreSamusPositionToTemp:
     sta Temp0B_PositionHi
     rts
 
-LoadEnemyPositionFromTemp_:
+LoadEnemyPositionFromTemp_: ; 03:99F4
     ; save function result as enemy position
     lda Temp09_PositionX
     sta Ens.0.x,x
@@ -352,7 +353,7 @@ LoadEnemyPositionFromTemp_:
     sta EnsExtra.0.hi,x
     rts
 
-GetMetroidAccel:
+GetMetroidAccel: ; 03:9A06
     ; put acceleration sign bit in carry
     lsr
     ; load whether the metroid is red (#$00) or green (#$01) into a
@@ -364,7 +365,7 @@ GetMetroidAccel:
     lda MetroidAccel,y
     rts
 
-GetMetroidRepelSpeed:
+GetMetroidRepelSpeed: ; 03:9A10
     ; use bit 6 of accel as an index for MetroidRepelSpeed table
     asl
     rol
