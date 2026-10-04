@@ -47,13 +47,13 @@ MainTitleRoutine: ; 00:8000
         lda #_id_StartContinueScreen1B.b
         sta TitleRoutine
         bne L8027 ;Branch always.
-    L8022:
+    L8022: ; 00:8022
         ;($C1BC)Remove sparkle and crosshair sprites from screen.
         jsr RemoveIntroSprites
         lda TitleRoutine
-L8027:
+L8027: ; 00:8027
     jsr JumpEngine
-    TitleRoutinePtrTable:
+    TitleRoutinePtrTable: ; 00:802A
         PtrTableEntry TitleRoutinePtrTable, InitializeAfterReset      ;($8071)First routine after reset.
         PtrTableEntry TitleRoutinePtrTable, DrawIntroBackground       ;($80D0)Draws ground on intro screen.
         PtrTableEntry TitleRoutinePtrTable, FadeInDelay               ;($80F9)Sets up METROID fade in delay.
@@ -96,7 +96,7 @@ ClearSpareMem: ; 00:8068
     ;Next routine is PrepIntroRestart.
 
 IncTitleRoutine0A: ; 00:806E
-IncTitleRoutine0B:
+IncTitleRoutine0B: ; 00:806E
     ;Increment to next title routine.
     inc TitleRoutine
     rts
@@ -134,7 +134,7 @@ InitializeAfterReset: ; 00:8071
     ;$6400 thru $66FF = #$00.
     ;$6700 thru $673F = #$C0.
     ;$6740 thru $67FF = #$C4.
-    @loop_A:
+    @loop_A: ; 00:809E
         ; save high byte to $01
         stx $01
         ; y = ((high byte) & $03) * 2
@@ -148,7 +148,7 @@ InitializeAfterReset: ; 00:8071
         lda RamValueTbl,y
         ; loop through 256 bytes
         ldy #$00
-        @loop_B:
+        @loop_B: ; 00:80AC
             ; write fill byte
             sta ($00),y
             ; exit if we went through 256 bytes
@@ -162,7 +162,7 @@ InitializeAfterReset: ; 00:8071
             lda RamValueTbl+1,y
             ldy #$40
             bpl @loop_B
-        @exitloop_B:
+        @exitloop_B: ; 00:80BE
         ; exit loop when next high byte is #$68
         inx
         cpx #$68
@@ -246,7 +246,7 @@ FlashEffect: ; 00:8109
     ;Sets Timer 3 for a delay of 240 frames (4 seconds).
     lda #$18
     sta Timer3
-@RTS:
+@RTS: ; 00:812B
     rts
 
 METROIDFadeIn: ; 00:812C
@@ -267,7 +267,7 @@ METROIDFadeIn: ; 00:812C
     sta Timer3
     ;Increment to next routine. LoadFlashTimer
     inc TitleRoutine
-RTS_8141:
+RTS_8141: ; 00:8141
     rts
 
 LoadFlashTimer: ; 00:8142
@@ -295,11 +295,11 @@ METROIDSparkle: ; 00:814D
         ;Increment to next routine. METROIDFadeOut
         inc TitleRoutine
         bne @RTS
-    @endIf_A:
+    @endIf_A: ; 00:815F
     ; sparkle sprites are not done moving, continue with sparkle routine.
     ;Update sparkle sprites on the screen.
     jsr UpdateSparkleSprites
-@RTS:
+@RTS: ; 00:8162
     rts
 
 METROIDFadeOut: ; 00:8163
@@ -323,10 +323,10 @@ METROIDFadeOut: ; 00:8163
         sta SecondCrosshairSprites
         ;Increment to next routine. Crosshairs
         inc TitleRoutine
-    @endIf_A:
+    @endIf_A: ; 00:817E
     ;Fades METROID off the screen.
     jsr DoFadeOut
-@RTS:
+@RTS: ; 00:8181
     rts
 
 Crosshairs: ; 00:8182
@@ -335,7 +335,7 @@ Crosshairs: ; 00:8182
     beq @endIf_A
         ;Flash screen white.
         jsr FlashIntroScreen
-    @endIf_A:
+    @endIf_A: ; 00:8189
     ;Wait 80 frames from last routine before running this one.
     lda Timer3
     bne @RTS
@@ -361,7 +361,7 @@ Crosshairs: ; 00:8182
         ;Reset index to cross sprite data.
         lda #$00
         sta CrossExplodeLengthIndex
-    @endIf_B:
+    @endIf_B: ; 00:81AB
     ;Check if second 4 sprites have completed their movements.  If not, branch.
     and IntroSprs.4.complete
     and IntroSprs.5.complete
@@ -383,13 +383,13 @@ Crosshairs: ; 00:8182
     ;Increment to next routine. MoreCrosshairs
     inc TitleRoutine
     bne @complete ;Branch always.
-@notComplete:
+@notComplete: ; 00:81CA
     ;Draw sprites that converge in center of screen.
     jsr UpdateCrossMissiles
-@complete:
+@complete: ; 00:81CD
     ;Draw cross sprites in middle of the screen.
     jsr UpdateCrossExplode
-@RTS:
+@RTS: ; 00:81D0
     rts
 
 MoreCrosshairs: ; 00:81D1
@@ -400,7 +400,7 @@ MoreCrosshairs: ; 00:81D1
         jsr UpdateCrossExplode
         ;Flash screen white.
         jmp FlashIntroScreen
-    @endIf_A:
+    @endIf_A: ; 00:81DB
     ;Increment to next routine. ChangeIntroNameTable
     inc TitleRoutine
     ;These values are written into memory, but they are not used later in the title routine.
@@ -448,7 +448,7 @@ UnusedIntroRoutine2: ; 00:8206
     sta SpareMemC9 ;Not accessed by game.
     sta SpareMemCB ;Not accessed by game.
     inc TitleRoutine
-RTS_822D:
+RTS_822D: ; 00:822D
     rts
 
 ChangeIntroNameTable: ; 00:822E
@@ -489,10 +489,10 @@ MessageFadeIn: ; 00:8243
         ;Next routine is MessageFadeOut.
         inc TitleRoutine
         bne @RTS ;Branch always.
-    @endIf_A:
+    @endIf_A: ; 00:825F
     ;Fade message onto screen.
     jsr DoFadeOut
-@RTS:
+@RTS: ; 00:8262
     rts
 
 MessageFadeOut: ; 00:8263
@@ -515,10 +515,10 @@ MessageFadeOut: ; 00:8263
         ;Next routine is DelayIntroReplay.
         inc TitleRoutine
         bne @RTS ;Branch always.
-    @endIf_A:
+    @endIf_A: ; 00:827F
     ;Fade message off of screen.
     jsr DoFadeOut
-@RTS:
+@RTS: ; 00:8282
     rts
 
 DelayIntroReplay: ; 00:8283
@@ -543,7 +543,7 @@ UnusedIntroRoutine3: ; 00:828A
     lda #$10
     sta Timer3
     inc TitleRoutine
-RTS_82A2:
+RTS_82A2: ; 00:82A2
     rts
 
 PrepIntroRestart: ; 00:82A3
@@ -556,7 +556,7 @@ PrepIntroRestart: ; 00:82A3
     sta IsSamus ;Clear IsSamus memory address.
     ;Clear RAM $0300 thru $031F.
     ldy #$1F
-    @loop:
+    @loop: ; 00:82AF
         sta Objects.0.status,y
         dey
         bpl @loop
@@ -593,10 +593,10 @@ PrepIntroRestart: ; 00:82A3
         ;Set restart of intro music after another two cycles of the title routines.
         lda #$02
         sta IntroMusicRestart
-    @RTS:
+    @RTS: ; 00:82E9
         rts
 
-    @else_A:
+    @else_A: ; 00:82EA
         ;One title routine cycle complete. Decrement intro music restart counter.
         dec IntroMusicRestart
         rts
@@ -610,7 +610,7 @@ TitleScreenOff: ; 00:82ED
     rts
 
 TitleRoutineReturn13: ; 00:82F3
-TitleRoutineReturn14:
+TitleRoutineReturn14: ; 00:82F3
     ;Last title routine function. Should not be reached.
     rts
 
@@ -788,7 +788,7 @@ PasswordNoErrorMessage: ; 00:8768
 
 LoadSparkleData: ; 00:87AB
     ldx #$0A
-    L87AD:
+    L87AD: ; 00:87AD
         lda InitSparkleDataTbl,x
         sta IntroSprs.0.y,x            ;Loads $6EA0 thru $6EAA with the table below.
         sta IntroSprs.1.y,x            ;Loads $6EB0 thru $6EBA with the table below.
@@ -825,7 +825,7 @@ SparkleUpdate: ; 00:87D9
     bne @endIf_A
         ;($881A)Update sparkle sprite screen position.
         jsr DoSparkleSpriteCoord
-    @endIf_A:
+    @endIf_A: ; 00:87E1
 
     ;If sprite is already done, skip routine.
     lda IntroSprs.0.complete,x
@@ -863,9 +863,9 @@ SparkleUpdate: ; 00:87D9
         asl ; a = #OAMDATA_HFLIP
         eor IntroSprs.0.attrib,x
         sta IntroSprs.0.attrib,x
-    @endIf_B:
+    @endIf_B: ; 00:8816
     jmp WriteIntroSprite ;($887B)Transfer sprite info into sprite RAM.
-@RTS:
+@RTS: ; 00:8819
     rts
 
 
@@ -887,12 +887,12 @@ DoSparkleSpriteCoord: ; 00:881A
     bpl @endIf_A
         lda #$01
         sta IntroSprs.0.byteType,x
-    @endIf_A:
+    @endIf_A: ; 00:8835
     ;If value is equal to zero, sparkle sprite processing is complete.
     bne @endIf_B
         lda #$01
         sta IntroSprs.0.complete,x
-    @endIf_B:
+    @endIf_B: ; 00:883C
     sta IntroSprs.0.nextDelay,x
     iny
     ;Get x/y position byte.
@@ -909,7 +909,7 @@ DoSparkleSpriteCoord: ; 00:881A
         ; second byte is used as sparkleXChange
         lda ($00),y
         bmi @endIf_C ; branch always
-    @else_C:
+    @else_C: ; 00:8850
         ;Parse sign-magnitude speeds
         ;Store value twice so X and Y coordinates can be extracted.
         pha
@@ -931,7 +931,7 @@ DoSparkleSpriteCoord: ; 00:881A
         and #$0F
         ;Check if nibble to be converted to twos complement.
         jsr @NibbleSubtract
-    @endIf_C:
+    @endIf_C: ; 00:8867
     ;Store amount to move sprite in x direction.
     sta IntroSprs.0.sparkleXChange,x
     ;Add two to find index for next instruction.
@@ -947,7 +947,7 @@ DoSparkleSpriteCoord: ; 00:881A
     ; return negation of lower three bits of nibble
     and #$07
     jsr TwosComplement
-@RTS:
+@RTS: ; 00:887A
     rts
 
 
@@ -977,7 +977,7 @@ InitCrossMissiles: ; 00:8897
     ;Prepare to loop 64 times.
     ldx #$3F
 
-    @loop:
+    @loop: ; 00:889D
         ;Load data from tables below.
         lda InitCrossMissile0and4Tbl,x
         ;BUG: supposed to be #$FF. Expected behavior:-->
@@ -989,7 +989,7 @@ InitCrossMissiles: ; 00:8897
             sta IntroSprs.0.y,x
             ;Store initial values for sprites 4 thru 7.
             sta IntroSprs.4.y,x
-        @endIf_A:
+        @endIf_A: ; 00:88AA
         ;Loop until all data is loaded.
         dex
         bpl @loop
@@ -1128,7 +1128,7 @@ L8936: ; 00:8936
         ;If not, return after moving sprite 3.
         dec CrossMsl4to7SpawnDelay
         bne UpdateCrossMissile
-    L894F:
+    L894F: ; 00:894F
     ;If so, start moving those sprites.
     jsr UpdateCrossMissile
     ;Move sprite 4.
@@ -1155,11 +1155,11 @@ UpdateCrossMissile: ; 00:8963
         ;Sprite movement complete.
         lda #$01
         sta IntroSprs.0.complete,x
-    @endIf_A:
+    @endIf_A: ; 00:8972
     ;($887B)Write sprite data to sprite RAM.
     jmp WriteIntroSprite
 
-@RTS:
+@RTS: ; 00:8975
     rts
 
 UpdateCrossExplode: ; 00:8976
@@ -1177,16 +1177,16 @@ UpdateCrossExplode: ; 00:8976
         ;If at last index, clear indicator to draw cross sprites.
         lda #$00
         sta IsUpdatingCrossExplode
-    L8986:
+    L8986: ; 00:8986
     lda CrossExplodeLengthTbl,y
     sta $00
     ldy #$00 ;Reset index into CrossExplodeDataTbl
 
-    L898D:
+    L898D: ; 00:898D
         ;Get offset into sprite RAM to load sprite.
         ldx CrossExplodeDataTbl,y
         iny
-        L8991:
+        L8991: ; 00:8991
             ;Store sprite data byte in sprite RAM.
             lda CrossExplodeDataTbl,y
             sta SpriteRAM,x
@@ -1208,7 +1208,7 @@ UpdateCrossExplode: ; 00:8976
     lsr
     bcc RTS_89A9
     inc CrossExplodeLengthIndex
-RTS_89A9:
+RTS_89A9: ; 00:89A9
     rts
 
 ;The following table tells the routine above how many data bytes to load from CrossExplodeDataTbl.
@@ -1332,7 +1332,7 @@ BottomSparkleDataTbl: ; 00:89E9
 CrossExplodeDataTbl: ; 00:8A4B
     .byte $10                       ;Load following sprite data into Sprite04RAM.
     .byte $5A, $C0, $00, $79        ;Sprite data.
-    @end_0:
+    @end_0: ; 00:8A50
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C8, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1341,7 +1341,7 @@ CrossExplodeDataTbl: ; 00:8A4B
     .byte $5A, $C2, $00, $81        ;Sprite data.
     .byte $20                       ;Load following sprite data into Sprite08RAM.
     .byte $62, $C8, $80, $79        ;Sprite data.
-    @end_1:
+    @end_1: ; 00:8A64
     .byte $14                       ;Load following sprite data into Sprite05RAM.
     .byte $52, $C9, $00, $79        ;Sprite data.
     .byte $18                       ;Load following sprite data into Sprite06RAM.
@@ -1358,7 +1358,7 @@ CrossExplodeDataTbl: ; 00:8A4B
     .byte $5A, $C2, $00, $89        ;Sprite data.
     .byte $30                       ;Load following sprite data into Sprite0CRAM.
     .byte $6A, $C8, $80, $79        ;Sprite data.
-    @end_2:
+    @end_2: ; 00:8A8C
 
 LoadPalData: ; 00:8A8C
     ;Chooses which set of palette data to load from the table below.
@@ -1369,7 +1369,7 @@ LoadPalData: ; 00:8A8C
     ;Prepare to write palette data.
     sta PaletteDataPending
     inc PaletteDataIndex
-@RTS:
+@RTS: ; 00:8A99
     rts
 
 ;The table below is used by above routine to pick the proper palette.
@@ -1399,12 +1399,12 @@ FlashIntroScreen: ; 00:8AA7
         sta ScreenFlashPaletteIndex
         sta FlashScreen
         beq @RTS ;Branch always.
-    @else_A:
+    @else_A: ; 00:8AB8
         ;Store palette change data.
         sta PaletteDataPending
         ;Increment index into table below.
         inc ScreenFlashPaletteIndex
-@RTS:
+@RTS: ; 00:8ABC
     rts
 
 @ScreenFlashPalTbl: ; 00:8ABD
@@ -1443,10 +1443,10 @@ StarPaletteSwitch: ; 00:8AC7
     ;Is any other PPU data waiting? If so, exit.
     lda VRAMStructBufferIndex
     beq @checkSuccess
-@RTS:
+@RTS: ; 00:8AD2
     rts
 
-@checkSuccess:
+@checkSuccess: ; 00:8AD3
     ;Prepare to write to the sprite palette starting at address $3F19.
     lda #<$3F19
     sta Temp00_PaletteDestination
@@ -1515,7 +1515,7 @@ DoFadeOut: ; 00:8B5F
         ;Store new palette data.
         sta PaletteDataPending
         inc FadeDataIndex
-    @RTS:
+    @RTS: ; 00:8B6C
     rts
 
 FadeOutPaletteData: ; 00:8B6D
@@ -1543,7 +1543,7 @@ ProcessUniqueItems: ; 00:8B79
     ;Set $04 to #$00.
     ldy #$00
     sty Temp04_UniqueItemIndex
-    @loop:
+    @loop: ; 00:8B82
         ;Use $04 at index into unique item list.
         ldy Temp04_UniqueItemIndex
         ;Load the two bytes representing the aquired Unique item and store them in $00 and $01.
@@ -1565,7 +1565,7 @@ ProcessUniqueItems: ; 00:8B79
 
 UniqueItemSearch: ; 00:8B9C
     ldx #$00
-    L8B9E:
+    L8B9E: ; 00:8B9E
         ; y = x*2
         txa
         asl
@@ -1579,7 +1579,7 @@ UniqueItemSearch: ; 00:8B9C
             cmp Temp00_ItemData+1
             ;If unique item found, branch to UniqueItemFound.
             beq UniqueItemFound
-        L8BAF:
+        L8BAF: ; 00:8BAF
         ;If we've gone through all items, return, else branch to find next unique item.
         ;(BUG! This checks one item too many and goes oob of the ItemData table)
         inx
@@ -1636,7 +1636,7 @@ LoadUniqueItems: ; 00:8BD4
     ldx #$01
     stx $02
     clc
-    @loop_unused:
+    @loop_unused: ; 00:8BF5
         ror
         sta $08
         ldx $02
@@ -1659,7 +1659,7 @@ LoadUniqueItems: ; 00:8BD4
         ;If Samus has this item, store item in unique item history.
         bcc @endIf_A
             jsr SamusHasItem
-        @endIf_A:
+        @endIf_A: ; 00:8C14
         ;If last bit of item byte has been checked, move to next byte.
         ldy Temp06_PasswordBitIndex
         cpy #$07
@@ -1674,7 +1674,7 @@ LoadUniqueItems: ; 00:8BD4
         ;Repeat routine for next item bit.
         jmp @processItemBit
 
-@moveToNextByte:
+@moveToNextByte: ; 00:8C27
     ; move to bit 0 of next byte
     ldy #$00
     sty Temp06_PasswordBitIndex
@@ -1687,7 +1687,7 @@ LoadUniqueItems: ; 00:8BD4
     ;Process next item byte.
     jmp @processItemByte
 
-@RTS:
+@RTS: ; 00:8C38
     rts
 
 SamusHasItem: ; 00:8C39
@@ -1721,7 +1721,7 @@ CheckPassword: ; 00:8C5E
     ;Branch if incorrect password.
     bcs L8C69
         jmp InitializeGame              ;($92D4)Preliminary housekeeping before game starts.
-    L8C69:
+    L8C69: ; 00:8C69
     ;Set IncorrectPassword SFX flag.
     lda SFXMultiInitFlags
     ora #sfxMulti_IncorrectPassword
@@ -1738,7 +1738,7 @@ CalculatePassword: ; 00:8C7A
     lda #$00
     ldy #$0F
     ;Clears the 16 first password bytes (and also the 16 first password characters, for some reason)
-    @loop_A:
+    @loop_A: ; 00:8C7E
         sta PasswordByte,y
         sta PasswordChar,y
         dey
@@ -1758,7 +1758,7 @@ CalculatePassword: ; 00:8C7A
         lda PasswordByte+$06
         and #$03
         sta PasswordByte+$06
-    @endIf_A:
+    @endIf_A: ; 00:8C9E
 
     ;Store InArea in bits 0 thru 5 in address $6990.
     lda InArea
@@ -1767,7 +1767,7 @@ CalculatePassword: ; 00:8C7A
     ldy JustInBailey
     beq @endIf_suitless
         ora #$80
-    @endIf_suitless:
+    @endIf_suitless: ; 00:8CA9
     sta PasswordByte+$08
 
     ;SamusGear stored in $6991.
@@ -1787,7 +1787,7 @@ CalculatePassword: ; 00:8C7A
         lda $00
         ora #$80
         sta $00
-    @endIf_statueBit7:
+    @endIf_statueBit7: ; 00:8CC9
     ;Set bit 6 of $00 if Kraid is defeated.
     lda KraidStatueStatus
     and #$01
@@ -1795,7 +1795,7 @@ CalculatePassword: ; 00:8C7A
         lda $00
         ora #$40
         sta $00
-    @endIf_statueBit6:
+    @endIf_statueBit6: ; 00:8CD6
     ;Set bit 5 of $00 if Ridley statue is up.
     lda RidleyStatueStatus
     and #$80
@@ -1803,7 +1803,7 @@ CalculatePassword: ; 00:8C7A
         lda $00
         ora #$20
         sta $00
-    @endIf_statueBit5:
+    @endIf_statueBit5: ; 00:8CE3
     ;Set bit 4 of $00 if Ridley is defeated.
     lda RidleyStatueStatus
     and #$02
@@ -1811,14 +1811,14 @@ CalculatePassword: ; 00:8C7A
         lda $00
         ora #$10
         sta $00
-    @endIf_statueBit4:
+    @endIf_statueBit4: ; 00:8CF0
     ;Stores statue statuses in 4 MSB at $6997.
     lda $00
     sta PasswordByte+$0F
 
     ;Store SamusAge in $6993, SamusAge+1 in $6994, SamusAge+2 in $6995 and SamusAge+3 in $6996.
     ldy #$03
-    @loop_SamusAge:
+    @loop_SamusAge: ; 00:8CF7
         lda SamusAge,y
         sta PasswordByte+$0B,y
         dey
@@ -1826,7 +1826,7 @@ CalculatePassword: ; 00:8C7A
 
     ;Store the value of $2E at $6998 when any of the 4 LSB are set.
     ;(Does not allow RandomNumber1 to be a multiple of 16).
-    @loop_random:
+    @loop_random: ; 00:8D00
         jsr RandomNumbers
         lda RandomNumber1
         and #$0F
@@ -1850,7 +1850,7 @@ LoadPasswordData: ; 00:8D12
     and #$80
     beq L8D27
         iny
-    L8D27:
+    L8D27: ; 00:8D27
     sty JustInBailey
 
     ;Extract first 5 bits from PasswordByte08 and use it to determine starting area.
@@ -1860,13 +1860,13 @@ LoadPasswordData: ; 00:8D12
 
     ;Load Samus' age.
     ldy #$03
-    L8D33:
+    L8D33: ; 00:8D33
         ;Loop to load all 4 age bytes.
         lda PasswordByte+$0B,y
         sta SamusAge,y
         dey
         bpl L8D33
-RTS_8D3C:
+RTS_8D3C: ; 00:8D3C
     rts
 
 LoadTanksAndMissiles: ; 00:8D3D
@@ -1889,7 +1889,7 @@ LoadTanksAndMissiles: ; 00:8D3D
         lda Temp00_KraidStatueStatus
         ora #$80
         sta Temp00_KraidStatueStatus
-    @endIf_kraidRaised:
+    @endIf_kraidRaised: ; 00:8D5C
     ;If bit 6 is set, Kraid is defeated.
     lda PasswordByte+$0F
     and #$40
@@ -1898,7 +1898,7 @@ LoadTanksAndMissiles: ; 00:8D3D
         lda Temp00_KraidStatueStatus
         ora #$01
         sta Temp00_KraidStatueStatus
-    @endIf_kraidKilled:
+    @endIf_kraidKilled: ; 00:8D69
     ;Store Kraid status.
     lda Temp00_KraidStatueStatus
     sta KraidStatueStatus
@@ -1910,7 +1910,7 @@ LoadTanksAndMissiles: ; 00:8D3D
         lda Temp02_RidleyStatueStatus
         ora #$80
         sta Temp02_RidleyStatueStatus
-    @endIf_ridleyRaised:
+    @endIf_ridleyRaised: ; 00:8D7B
     ;If bit 4 is set, Ridley is defeated.
     lda PasswordByte+$0F
     and #$10
@@ -1919,7 +1919,7 @@ LoadTanksAndMissiles: ; 00:8D3D
         lda Temp02_RidleyStatueStatus
         ora #$02
         sta Temp02_RidleyStatueStatus
-    @endIf_ridleyKilled:
+    @endIf_ridleyKilled: ; 00:8D88
     ;Store Ridley status.
     lda Temp02_RidleyStatueStatus
     sta RidleyStatueStatus
@@ -1929,7 +1929,7 @@ LoadTanksAndMissiles: ; 00:8D3D
     sta Temp00_EnergyTankCount
     sta Temp02_MissileTankCount
     ldy #$00
-    @loop_tanks:
+    @loop_tanks: ; 00:8D95
         ;Load second byte of item
         lda UniqueItemHistory+1,y
         ;Compare the 6 MSBs to #$20. If it matches, an energy tank has been found.
@@ -1939,7 +1939,7 @@ LoadTanksAndMissiles: ; 00:8D3D
             ;Increment number of energy tanks found.
             inc Temp00_EnergyTankCount
             jmp @IncrementToNextItem
-        @endIf_etank:
+        @endIf_etank: ; 00:8DA3
         ;Compare the 6 MSBs to #$24. If it matches, missiles have been found.
         cmp #>ui_MISSILES
         bne @IncrementToNextItem
@@ -1958,7 +1958,7 @@ LoadTanksAndMissiles: ; 00:8D3D
     cmp #$06
     bcc @endIf_A
         lda #$06
-    @endIf_A:
+    @endIf_A: ; 00:8DB7
     ;Then stores the number of energy tanks found in EnergyTankCount.
     sta EnergyTankCount
     ;init missile max count to 0
@@ -1968,26 +1968,26 @@ LoadTanksAndMissiles: ; 00:8D3D
     beq @endIf_B
         clc
         ;For every missile tank found, this loop adds 5 missiles to MaxMissiles.
-        @loop_mul5:
+        @loop_mul5: ; 00:8DC1
             adc #$05
             dey
             bne @loop_mul5
-    @endIf_B:
+    @endIf_B: ; 00:8DC6
     ;75 missiles are added to MaxMissiles if Kraid has been defeated
     ldy KraidStatueStatus
     beq @endIf_C
         adc #$4B
         bcs @capMaxMissiles
-    @endIf_C:
+    @endIf_C: ; 00:8DCF
     ;another 75 missiles are added if the ridley has been defeated.
     ldy RidleyStatueStatus
     beq @endIf_D
         adc #$4B
         bcc @endIf_D
-    @capMaxMissiles:
+    @capMaxMissiles: ; 00:8DD8
         ;If number of missiles exceeds 255, it stays at 255.
         lda #$FF
-@endIf_D:
+@endIf_D: ; 00:8DDA
     sta MaxMissiles
     rts
 
@@ -1998,7 +1998,7 @@ ValidatePassword: ; 00:8DDE
 
     ;Check if NARPASSWORD was entered at the password screen
     ldy #$0F
-    @loop_NARPASSWORD:
+    @loop_NARPASSWORD: ; 00:8DE5
         lda PasswordChar,y
         cmp NARPASSWORDTbl,y
         bne @passwordIsNotNARPASSWORD
@@ -2010,7 +2010,7 @@ ValidatePassword: ; 00:8DDE
     sta NARPASSWORD
     bne @validPassword ; branch always
 
-@passwordIsNotNARPASSWORD:
+@passwordIsNotNARPASSWORD: ; 00:8DF7
     ;NARPASSWORD was not entered, continue to process password
     jsr UnscramblePassword          ;($8E4E)Unscramble password.
     jsr PasswordChecksum            ;($8E21)Calculate password checksum.
@@ -2019,10 +2019,10 @@ ValidatePassword: ; 00:8DDE
     ;If password is invalid, sets carry flag.
     sec
     bcs @RTS ; branch always
-@validPassword:
+@validPassword: ; 00:8E05
     ;If password is valid, clears carry flag.
     clc
-@RTS:
+@RTS: ; 00:8E06
     rts
 
 ;The table below is used by the code above. It checks to see if NARPASSWORD has been entered.
@@ -2044,7 +2044,7 @@ PasswordChecksumAndScramble: ; 00:8E17
 PasswordChecksum: ; 00:8E21
     ldy #$10
     lda #$00
-    @loop:
+    @loop: ; 00:8E25
         clc
         adc PasswordByte,y
         dey
@@ -2054,13 +2054,13 @@ PasswordChecksum: ; 00:8E21
 PasswordScramble: ; 00:8E2D
     lda PasswordByte+$10
     sta Temp02_ScrambleCount
-    @loop_A:
+    @loop_A: ; 00:8E32
         ;Store contents of $6988 in $00 for further processing after rotation.
         lda PasswordByte
         sta Temp00_PasswordByte
         ldx #$00
         ldy #$0F
-        @loop_B:
+        @loop_B: ; 00:8E3B
             ;Rotate right, including carry, all values in addresses $6988 thru $6997.
             ror PasswordByte,x
             inx
@@ -2079,12 +2079,12 @@ UnscramblePassword: ; 00:8E4E
     ;Stores random number used to scramble the password.
     lda PasswordByte+$10
     sta Temp02_ScrambleCount
-    @loop_A:
+    @loop_A: ; 00:8E53
         ;Preserve MSB that may have been rolled from $6988.
         lda PasswordByte+$0F
         sta Temp00_PasswordByte
         ldx #$0F
-        @loop_B:
+        @loop_B: ; 00:8E5A
             ;The following loop rolls left the first 16 bytes of the password one time.
             rol PasswordByte,x
             dex
@@ -2235,7 +2235,7 @@ PasswordBitmaskTbl: ; 00:9021
 ;on world map. See constants.asm for values of IIIIII.
 
 ItemData: ; 00:9029
-@MaruMari:
+@MaruMari: ; 00:9029
     .word ui_MARUMARI    + ($02 << 5) + $0E  ;Maru Mari at coord 02,0E                    (Item 0)
 
     .word ui_MISSILES    + ($12 << 5) + $0B  ;Missiles at coord 12,0B                     (Item 1)
@@ -2244,7 +2244,7 @@ ItemData: ; 00:9029
     .word ui_ENERGYTANK  + ($19 << 5) + $07  ;Energy tank at coord 19,07                  (Item 4)
     .word ui_MISSILEDOOR + ($19 << 5) + $05  ;Red door to bombs at coord 1A,05            (Item 5)
 
-@Bombs:
+@Bombs: ; 00:9035
     .word ui_BOMBS       + ($19 << 5) + $05  ;Bombs at coord 19,05                        (Item 6)
 
     .word ui_MISSILEDOOR + ($13 << 5) + $09  ;Red door to ice beam at coord 13,09         (Item 7)
@@ -2252,7 +2252,7 @@ ItemData: ; 00:9029
     .word ui_ENERGYTANK  + ($1B << 5) + $03  ;Energy tank at coord 1B,03                  (Item 9)
     .word ui_MISSILEDOOR + ($0F << 5) + $02  ;Red door to varia suit at coord 0F,02       (Item 10)
 
-@Varia:
+@Varia: ; 00:903F
     .word ui_VARIA       + ($0F << 5) + $02  ;Varia suit at coord 0F,02                   (Item 11)
 
     .word ui_ENERGYTANK  + ($09 << 5) + $0E  ;Energy tank at coord 09,0E                  (Item 12)
@@ -2268,12 +2268,12 @@ ItemData: ; 00:9029
     .word ui_MISSILES    + ($13 << 5) + $0F  ;Missiles at coord 13,0F                     (Item 22)
     .word ui_MISSILEDOOR + ($1B << 5) + $11  ;Red door to high jump at coord 1C,11        (Item 23)
 
-@HighJump:
+@HighJump: ; 00:9059
     .word ui_HIGHJUMP    + ($1B << 5) + $11  ;High jump at coord 1B,11                    (Item 24)
 
     .word ui_MISSILEDOOR + ($0F << 5) + $10  ;Red door to screw attack at coord 0E,10     (Item 25)
 
-@ScrewAttack:
+@ScrewAttack: ; 00:905D
     .word ui_SCREWATTACK + ($0F << 5) + $10  ;Screw attack at coord 0D,1D                 (Item 26)
 
     .word ui_MISSILES    + ($13 << 5) + $16  ;Missiles at coord 13,16                     (Item 27)
@@ -2308,10 +2308,10 @@ ItemData: ; 00:9029
     .word ui_ZEBETITE4                       ;4th Zebetite in mother brain room           (Item 56)
     .word ui_ZEBETITE5                       ;5th Zebetite in mother brain room           (Item 57)
 
-@MotherBrain:
+@MotherBrain: ; 00:909D
     .word ui_MOTHERBRAIN                     ;Mother brain                                (Item 58)
 
-@end:
+@end: ; 00:909F
 
 ClearAll: ; 00:909F
     ;Turn off screen, clear sprites and name tables.
@@ -2328,7 +2328,7 @@ ClearAll: ; 00:909F
     jmp VBOffAndHorzWrite           ;($C47D)Set PPU for horizontal write and turn off VBlank.
 
 StartContinueScreen15: ; 00:90BA
-StartContinueScreen1B:
+StartContinueScreen1B: ; 00:90BA
     jsr ClearAll                    ;($909F)Turn off screen, erase sprites and nametables.
     ldx #<L9984.b                     ;Low address for PPU write.
     ldy #>L9984.b                     ;High address for PPU write.
@@ -2361,11 +2361,11 @@ ChooseStartContinue: ; 00:90D7
         bne @endIf_B
             ;Zero out all stats.
             jmp InitializeStats
-        @endIf_B:
+        @endIf_B: ; 00:90E7
         ;Next routine is LoadPasswordScreen.
         ldy #_id_LoadPasswordScreen.b
         sty TitleRoutine
-    @endIf_A:
+    @endIf_A: ; 00:90EB
     ;Branch if SELECT not pressed.
     cmp #BUTTON_SELECT
     bne @endIf_C
@@ -2377,7 +2377,7 @@ ChooseStartContinue: ; 00:90D7
         lda SFXTriInitFlags
         ora #sfxTri_Beep
         sta SFXTriInitFlags
-    @endIf_C:
+    @endIf_C: ; 00:90FF
     ldy StartContinue
     ;Load sprite info for square selection sprite.
     lda StartContTbl,y
@@ -2425,7 +2425,7 @@ EnterPassword: ; 00:9147
     beq @endIf_A
         ;Check if password is correct.
         jmp CheckPassword
-    @endIf_A:
+    @endIf_A: ; 00:9153
 
     ;Prepare to write the password screen data to PPU.
     ldx #$01
@@ -2450,16 +2450,16 @@ EnterPassword: ; 00:9147
         lda #>PasswordErrorMessage.b
         sta $03
         jmp @endIf_B
-    @else_B:
+    @else_B: ; 00:9178
         ;Writes the blank lines that cover the message 'ERROR TRY AGAIN'.
         lda #<PasswordNoErrorMessage.b
         sta $02
         lda #>PasswordNoErrorMessage.b
         sta $03
-    @endIf_B:
+    @endIf_B: ; 00:9180
     ; loop to write all the bytes from those strings to vram structure buffer
     ldy #$00
-    @loop:
+    @loop: ; 00:9182
         lda ($02),y
         jsr WritePPUByte
         iny
@@ -2471,7 +2471,7 @@ EnterPassword: ; 00:9147
     bmi @endIf_C
         ;Check if backspace pressed.
         jmp CheckBackspace
-    @endIf_C:
+    @endIf_C: ; 00:9193
 
     ;Initiate BombLaunch SFX if a character has been written to the screen.
     lda SFXTriInitFlags
@@ -2487,7 +2487,7 @@ EnterPassword: ; 00:9147
     adc #$3E
     jmp LoadRowAndColumn
 
-L91A8:
+L91A8: ; 00:91A8
     ;Check to see if password cursor is on character 13 thru 18.  If not, branch.
     cmp #$0C
     bcc L91B2
@@ -2496,7 +2496,7 @@ L91A8:
     adc #$3D
     jmp LoadRowAndColumn
 
-L91B2:
+L91B2: ; 00:91B2
     ;Check to see if password cursor is on character 7 thru 12.  If not, branch.
     cmp #$06
     bcc L91BC
@@ -2505,7 +2505,7 @@ L91B2:
     adc #$0A
     jmp LoadRowAndColumn
 
-L91BC:
+L91BC: ; 00:91BC
     ;Will equal #$09 thru #$0E.
     clc
     adc #$09
@@ -2547,7 +2547,7 @@ LoadRowAndColumn: ; 00:91BF
     cmp #$18
     bcc L91F8
         lda #$00
-    L91F8:
+    L91F8: ; 00:91F8
     sta PasswordCursor
 
 CheckBackspace: ; 00:91FB
@@ -2562,9 +2562,9 @@ CheckBackspace: ; 00:91FB
         ;If PasswordCursor is negative, load PasswordCursor with #$17 (last character).
         bcs L920B
             lda #$17
-        L920B:
+        L920B: ; 00:920B
         sta PasswordCursor
-    L920E:
+    L920E: ; 00:920E
     ldy PasswordStat00 ;Appears to have no function.
     ;If FrameCount bit 3 not set, branch.
     ;This flashes the cursor on and off.
@@ -2578,7 +2578,7 @@ CheckBackspace: ; 00:91FB
         cpx #$0C
         bcc L9222
             lda #$4F
-        L9222:
+        L9222: ; 00:9222
         sta SpriteRAM.1.y
         ;Set pattern for password cursor sprite.
         lda #$6E
@@ -2594,12 +2594,12 @@ CheckBackspace: ; 00:91FB
             ;Cursor is on the second row of password.
             ;Calculate how many characters the password cursor is from the left.
             sbc #$0C
-        L9238:
+        L9238: ; 00:9238
         tax
         ;Set X position of PasswordCursor based on this.
         lda CursorPosXTbl,x
         sta SpriteRAM.1.x
-    L923F:
+    L923F: ; 00:923F
     ;Load X and Y with row and column of current character selected.
     ldx InputRow
     ldy InputColumn
@@ -2623,12 +2623,12 @@ CheckBackspace: ; 00:91FB
             cpx #$05                        ;new row in InputRow.
             bne L9264
                 ldx #$00
-            L9264:
+            L9264: ; 00:9264
             stx InputRow
             ldy #$00                        ;Store new column in InputColumn.
-        L9269:
+        L9269: ; 00:9269
         sty InputColumn
-    L926C:
+    L926C: ; 00:926C
     lsr                             ;Put status of left directional button in carry bit.
     bcc L927F                       ;Branch if left button has not been pressed.
         dey
@@ -2636,29 +2636,29 @@ CheckBackspace: ; 00:91FB
             dex                             ;Decrement X(row).  If X is less than #$00,-->
             bpl L9277                       ;set X to #$04(last row) and store new row-->
                 ldx #$04                        ;in InputRow.
-            L9277:
+            L9277: ; 00:9277
             stx InputRow
             ldy #$0C                        ;Store new column in InputColumn.
-        L927C:
+        L927C: ; 00:927C
         sty InputColumn
-    L927F:
+    L927F: ; 00:927F
     lsr                             ;Put status of down directional button in carry bit.
     bcc L928C                       ;Branch if down button has not been pressed.
         inx
         cpx #$05                        ;Increment X(row).  if X is greater than #$04,-->
         bne L9289                       ;set X to #$00(first row) and store new-->
             ldx #$00                        ;row in InputRow.
-        L9289:
+        L9289: ; 00:9289
         stx InputRow
-    L928C:
+    L928C: ; 00:928C
     lsr                             ;Put status of up directional button in carry bit.
     bcc L9297                       ;Branch if up button has not been pressed.
         dex
         bpl L9294                       ;Decrement X(row).  if X is less than #$00,-->
             ldx #$04                        ;set X to #$04(last row) and store new-->
-        L9294:
+        L9294: ; 00:9294
         stx InputRow                    ;row in InputRow.
-    L9297:
+    L9297: ; 00:9297
     ;If FrameCount bit 3 not set, branch.
     lda FrameCount
     and #$08
@@ -2675,7 +2675,7 @@ CheckBackspace: ; 00:91FB
         ;Set x-Coord of character selection sprite.
         lda CharSelectXTbl,y
         sta SpriteRAM.2.x
-    RTS_92B3:
+    RTS_92B3: ; 00:92B3
     rts
 
 ;The following data does not appear to be used in the program.
@@ -2718,7 +2718,7 @@ InitializeGame: ; 00:92D4
     bne L92F9
         ;Starting in Brinstar. Get first item in each table.
         dex
-    L92F9:
+    L92F9: ; 00:92F9
 
     ;Set Samus restart position on screen.
     lda RestartYPosTbl,x
@@ -2732,7 +2732,7 @@ InitializeGame: ; 00:92D4
     inc SamusStat0B
     bne L930D
         inc SamusStat0B+1
-    L930D:
+    L930D: ; 00:930D
 
     ;Initialize starting area.
     lda #_id_MoreInit.b
@@ -2750,7 +2750,7 @@ InitializeGame: ; 00:92D4
     ;Change to proper memory page.
     lda BankTable,y
     sta BankSwitchPending
-RTS_9324:
+RTS_9324: ; 00:9324
     rts
 
 ;The following two tables are used to find Samus y and x positions on the screen after the game
@@ -2816,7 +2816,7 @@ DisplayPassword: ; 00:9359
         .word ScreenOn
     .endif
 
-@VRAMStruct:
+@VRAMStruct: ; 00:937F
     ;Information below is for above routine to display "PASS WORD" on the screen.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         VRAMStructData $214B, \
@@ -2850,7 +2850,7 @@ WaitForSTART: ; 00:9394
     beq @RTS
         ;Check if password is correct.
         jmp CheckPassword
-    @RTS:
+    @RTS: ; 00:939D
     rts
 
 GameOver: ; 00:939E
@@ -2871,7 +2871,7 @@ GameOver: ; 00:939E
     sta TitleRoutine
     jmp ScreenOn
 
-@VRAMStruct:
+@VRAMStruct: ; 00:93B9
     ;Information below is for above routine to display "GAME OVER" on the screen.
     VRAMStructData $218C, \
         "GAME OVER"
@@ -2922,7 +2922,7 @@ LoadPasswordCharToVRAMStringRAM: ; 00:93F9
 
     ;Transfer password characters to VRAMStringRAMBuffer addresses.
     ldx #$05
-    @loop:
+    @loop: ; 00:9400
         lda PasswordChar,y
         sta VRAMStringRAMBuffer,x
         dey
@@ -2936,7 +2936,7 @@ DisplayInputCharacters: ; 00:940B
     tya                             ;Initially sets $00 an $01.
     sta $00                         ;to #$00.
     sta $01                         ;Also, initially sets x and y to #$00.
-    L9415:
+    L9415: ; 00:9415
         asl                             ;
         tax                             ;
         lda PasswordRowsTbl,x           ;
@@ -2944,7 +2944,7 @@ DisplayInputCharacters: ; 00:940B
         lda PasswordRowsTbl+1,x         ;Displays the list of characters -->
         sta PPUADDR                     ;to choose from on the password-->
         ldx #$00                        ;entry screen.
-        L9425:
+        L9425: ; 00:9425
             lda PasswordRow0,y              ;Base is $99A2.
             sta PPUDATA                     ;
             lda #$FF                        ;Blank tile.
@@ -3027,7 +3027,7 @@ UnusedIntroRoutine5: ; 00:946C
     and #$0F
     ; fallthrough
 
-@subroutine:
+@subroutine: ; 00:947B
     ; store nybble to current location in VRAMStructBuffer buffer
     sta VRAMStructBuffer,x
     ; move to next byte in buffer
@@ -3040,13 +3040,13 @@ UnusedIntroRoutine5: ; 00:946C
     ; oh no. we are out of bounds
     ; cancel writing the current vram structure data to the buffer
     ldx VRAMStructBufferIndex
-    @loop_infinite:
+    @loop_infinite: ; 00:9487
         ; cancel repeatedly forever
         ; pretty sure this is a bug
         lda #$00
         sta VRAMStructBuffer,x
         beq @loop_infinite
-@RTS:
+@RTS: ; 00:948E
     rts
 
 ;Another unused intro routine.
@@ -3123,7 +3123,7 @@ Hex16ToDec: ; 00:94DA
     sta $02
     sta $03
     sec
-    @loop_A:
+    @loop_A: ; 00:94E3
         ; subtract 1000 from $0A-$0B
         lda $0A
         sbc #$E8
@@ -3143,9 +3143,9 @@ Hex16ToDec: ; 00:94DA
     sta $0B
     ; hundreds
     lda $0A
-    @loop_B:
+    @loop_B: ; 00:9501
         sec
-        @loop_C:
+        @loop_C: ; 00:9502
             sbc #$64
             inc $02
             bcs @loop_C
@@ -3155,7 +3155,7 @@ Hex16ToDec: ; 00:94DA
     adc #$64
     ; tens
     sec
-    @loop_D:
+    @loop_D: ; 00:950F
         sbc #$0A
         inc $01
         bcs @loop_D
@@ -3331,7 +3331,7 @@ Palette12_{AREA}: ; 00:97F2
         $0F, $30, $30, $0F, $0F, $2A, $2A, $21, $0F, $31, $31, $0F, $0F, $2A, $2A, $21
     VRAMStructEnd
 
-EndGamePalette0B:
+EndGamePalette0B: ; 00:9806
     VRAMStructData $3F00, \
         $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C, $0F, $2C, $2C, $2C
     VRAMStructDataRepeat $3F10, $10, \
@@ -3352,7 +3352,7 @@ UpdateCrossMissileCoords: ; 00:981E
         eor #$FF
         clc
         adc #$01
-    @endIf_A:
+    @endIf_A: ; 00:982E
     ;Add displacement to sprite x coord.
     clc
     adc IntroSprs.0.x,x
@@ -3380,7 +3380,7 @@ UpdateCrossMissileCoords: ; 00:981E
             eor #$FF
             clc
             adc #$01
-        @endIf_C:
+        @endIf_C: ; 00:9851
         ;Add displacement to sprite y coord.
         clc
         adc IntroSprs.0.y,x
@@ -3396,14 +3396,14 @@ UpdateCrossMissileCoords: ; 00:981E
         lsr
         ;Branch if sprite has not reached the end of y movement.
         bcs @RTS
-    @endIf_B:
+    @endIf_B: ; 00:9864
     ;After sprite has reached its final position, this code explicitly writes final x and y coords
     ;to the sprite position addresses to make sure the sprites don't overshoot their mark.
     lda IntroSprs.0.crossMissileYChange,x
     sta IntroSprs.0.y,x
     lda IntroSprs.0.crossMissileXChange,x
     sta IntroSprs.0.x,x
-@RTS:
+@RTS: ; 00:9870
     rts
 
 @CalcDisplacement: ; 00:9871
@@ -3414,7 +3414,7 @@ UpdateCrossMissileCoords: ; 00:981E
     ;the real divisor will be the closest power of two above this number (#$10).
     lda #$08
     sta Temp00_FrameCountMask
-    @loop:
+    @loop: ; 00:9877
         ;Calculate the change in the sprite position by dividing speed
         lsr Temp04_Displacement
         bcc @endIf_D
@@ -3424,7 +3424,7 @@ UpdateCrossMissileCoords: ; 00:981E
         and Temp00_FrameCountMask
         bne @endIf_D
         inc Temp04_Displacement
-    @endIf_D:
+    @endIf_D: ; 00:9883
         lsr Temp00_FrameCountMask
         bne @loop
     ;Return displacement (speed/16).
@@ -3447,7 +3447,7 @@ DecSpriteYCoord: ; 00:988A
     bcs @RTS
     ;Decrement y coord of the intro star sprites.
     ldx #$9F
-    @loop:
+    @loop: ; 00:989B
         ;Decrement y coord of 40 sprites.
         dec IntroStarSprite,x
         dec SpriteRAM.24,x
@@ -3462,14 +3462,14 @@ DecSpriteYCoord: ; 00:988A
     ;Sprite RAM load complete.
     lda #$00
     sta SpriteLoadPending
-@RTS:
+@RTS: ; 00:98AD
     rts
 
 
 LoadStarSprites: ; 00:98AE
     ;Store RAM contents of $6E00 thru $6E9F in sprite RAM at locations $0260 thru $02FF.
     ldy #$9F
-    @loop:
+    @loop: ; 00:98B0
         lda IntroStarSprite,y
         sta SpriteRAM.24,y
         dey
@@ -3557,7 +3557,7 @@ PasswordRow3: .stringmap charmap, "defghijklmnop"
 PasswordRow4: .stringmap charmap, "qrstuvwxyz?- "
 
 ;Writes 'PASSWORD PLEASE' on name table 0 in row $2080 (5th row from top).
-L99E3:
+L99E3: ; 00:99E3
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         VRAMStructData $2088, \
             "PASS WORD PLEASE"
@@ -3607,7 +3607,7 @@ NMIScreenWrite: ; 00:9A07
         lda EndMessageWritePtrTable-1,y
         tay
         jsr PreparePPUProcess           ;($C20E)Prepare to write to PPU.
-    L9A24:
+    L9A24: ; 00:9A24
     ;If not time to erase end message, branch
     lda HideShowEndMsg
     beq Exit100
@@ -3621,7 +3621,7 @@ NMIScreenWrite: ; 00:9A07
         lda EndMessageErasePtrTable-1,y
         tay
         jmp PreparePPUProcess           ;($C20E)Prepare to write to PPU.
-Exit100:
+Exit100: ; 00:9A38
     rts                             ;Exit from above and below routines.
 
 Restart: ; 00:9A39
@@ -3633,14 +3633,14 @@ Restart: ; 00:9A39
     ;Erase PasswordByte00 thru PasswordByte11.
     ldy #$11
     lda #$00
-    @loop_erasePassword:
+    @loop_erasePassword: ; 00:9A43
         sta PasswordByte,y
         dey
         bpl @loop_erasePassword
 
     ;Erase Unique item history.
     iny ;Y = #$00.
-    @loop_eraseUniqueItemHistory:
+    @loop_eraseUniqueItemHistory: ; 00:9A4A
         sta UniqueItemHistory,y
         iny
         bne @loop_eraseUniqueItemHistory
@@ -3652,7 +3652,7 @@ Restart: ; 00:9A39
         ;Else load Maru Mari data into PasswordByte00.
         lda #1<<(((ItemData@MaruMari-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@MaruMari-ItemData)/2)/8)
-    @endIf_MaruMari:
+    @endIf_MaruMari: ; 00:9A5C
 
     ;If Samus does not have bombs, branch.
     lda SamusGear
@@ -3662,7 +3662,7 @@ Restart: ; 00:9A39
         lda PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
         ora #1<<(((ItemData@Bombs-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Bombs-ItemData)/2)/8)
-    @endIf_Bombs:
+    @endIf_Bombs: ; 00:9A6B
 
     ;If Samus does not have varia suit, branch.
     lda SamusGear
@@ -3671,7 +3671,7 @@ Restart: ; 00:9A39
         ;Else load varia suit data into PasswordByte01.
         lda #1<<(((ItemData@Varia-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@Varia-ItemData)/2)/8)
-    @endIf_Varia:
+    @endIf_Varia: ; 00:9A77
 
     ;If Samus does not have high jump, branch.
     lda SamusGear
@@ -3680,7 +3680,7 @@ Restart: ; 00:9A39
         ;Else load high jump data into PasswordByte03.
         lda #1<<(((ItemData@HighJump-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@HighJump-ItemData)/2)/8)
-    @endIf_HighJump:
+    @endIf_HighJump: ; 00:9A83
 
     ;If Samus does not have Maru Mari, branch.
     lda SamusGear
@@ -3693,7 +3693,7 @@ Restart: ; 00:9A39
         lda PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
         ora #1<<(((ItemData@ScrewAttack-ItemData)/2)&7).b
         sta PasswordByte+(((ItemData@ScrewAttack-ItemData)/2)/8)
-    @endIf_ScrewAttack:
+    @endIf_ScrewAttack: ; 00:9A92
 
     ;Store Samus gear data in PasswordByte09.
     lda SamusGear
@@ -3704,7 +3704,7 @@ Restart: ; 00:9A39
     ldy JustInBailey
     beq @endIf_JustInBailey
         lda #$80
-    @endIf_JustInBailey:
+    @endIf_JustInBailey: ; 00:9AA1
     sta PasswordByte+$08
 
     jmp InitializeGame              ;($92D4)Clear RAM to restart game at beginning.
@@ -3726,7 +3726,7 @@ EndGame: ; 00:9AA7
     bne @jumpEngine
     lda #_id_EndGamePalette00+1.b
     sta PaletteDataPending
-@jumpEngine:
+@jumpEngine: ; 00:9AC0
     ;RoomPtr used in end of game to determine which subroutine to run below.
     lda RoomPtr
     jsr JumpEngine
@@ -3746,7 +3746,7 @@ LoadEndGFX: ; 00:9AD5
     ldy JustInBailey                ;Checks if game was played as suitless-->
     bne L9AE4                       ;Samus.  If so, branch.
         lda #$00                        ;Loads SpritePointerIndex with #$00(suit on).
-    L9AE4:
+    L9AE4: ; 00:9AE4
     sta EndingType                  ;
     asl                             ;Loads SpritePointerIndex with #$08(suitless).
     sta SpritePointerIndex          ;
@@ -3793,7 +3793,7 @@ ShowEndSamus: ; 00:9B1C
         inc RoomPtr
         rts
 
-    L9B26:
+    L9B26: ; 00:9B26
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         ;After 160 frames have passed (2.6 seconds), write end message.
         cmp #$50
@@ -3804,12 +3804,12 @@ ShowEndSamus: ; 00:9B1C
         inc EndMsgWrite
         rts
 
-    L9B2D:
+    L9B2D: ; 00:9B2D
     ;After 950 frames have passed (15.8 seconds), erase end message.
     cmp #$01
     bne L9B33
         inc HideShowEndMsg
-    L9B33:
+    L9B33: ; 00:9B33
     rts
 
 EndSamusFlash: ; 00:9B34
@@ -3836,7 +3836,7 @@ EndSamusFlash: ; 00:9B34
             sta SpritePointerIndex
             lda #$36
             sta SpriteByteCounter
-        L9B52:
+        L9B52: ; 00:9B52
         cmp #$10
         bne L9B69
             ;Once flashing Samus is complete, set Timer3 for a 160 frame(2.6 seconds) delay.
@@ -3847,13 +3847,13 @@ EndSamusFlash: ; 00:9B34
             cmp #$04
             bcc L9B62
                 iny 
-            L9B62:
+            L9B62: ; 00:9B62
             sty SpriteAttribByte
             ; increment RoomPtr
             inc RoomPtr
             ;($C1A3)Clear all sprites off the screen.
             jmp EraseAllSprites
-    L9B69:
+    L9B69: ; 00:9B69
     ;Decrement ClrChangeCounter.
     dec ClrChangeCounter
     bne L9B80
@@ -3868,7 +3868,7 @@ EndSamusFlash: ; 00:9B34
             ;If sprite color=#$03, set sprite color to #$00.
             lda #$00
             sta SpriteAttribByte
-    L9B80:
+    L9B80: ; 00:9B80
     ;($9C9A)Load end image of Samus.
     jmp LoadEndSamusSprites
 
@@ -3897,13 +3897,13 @@ SamusWave: ; 00:9B93
     inc RoomPtr
     rts
 
-L9BA2:
+L9BA2: ; 00:9BA2
     ;If suitless Samus ending, branch.
     lda EndingType
     cmp #$04
     bcs L9BAC
         jmp LoadEndSamusSprites
-    L9BAC:
+    L9BAC: ; 00:9BAC
     ;If jumpsuit Samus ending, WaveSpritePointer=#$00
     ;if bikini Samus ending, WaveSpritePointer=#$04.
     sbc #$04
@@ -3917,12 +3917,12 @@ L9BA2:
         ldy #$10                        ;Load WaveSpriteCounter with #$10(16 bytes of-->
         sty WaveSpriteCounter           ;sprite data to be loaded).
         bne L9BC6                       ;Branch always.
-    L9BBE:
+    L9BBE: ; 00:9BBE
         inc WaveSpritePointer           ;
         inc WaveSpritePointer           ;When bit 3 of FrameCount is not set,-->
         ldy #$10                        ;Samus' waving hand is down.
         sty WaveSpriteCounter           ;
-    L9BC6:
+    L9BC6: ; 00:9BC6
     lda #$2D                        ;Load SpriteByteCounter in preparation for-->
     sta SpriteByteCounter           ;refreshing Samus sprite bytes.
     jmp LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
@@ -3941,7 +3941,7 @@ EndFadeOut: ; 00:9BCD
         ;*Increment IsCredits.
         inc IsCredits
 
-    L9BDB:
+    L9BDB: ; 00:9BDB
     ;Every eight frame, increment the palette info.
     lda FrameCount
     and #$07
@@ -3960,13 +3960,13 @@ EndFadeOut: ; 00:9BCD
         .endif
         sta Timer3
         inc RoomPtr
-    L9BEF:
+    L9BEF: ; 00:9BEF
     ;If suitless Samus ending, load hand wave sprites, else just load regular Samus sprites
     lda EndingType
     cmp #$04
     bcs L9BF9
         jmp LoadEndSamusSprites         ;($9C9A)Load end image of Samus.
-    L9BF9:
+    L9BF9: ; 00:9BF9
         jmp LoadWaveSprites             ;($9C7F)Load sprites for waving Samus.
 
 RollCredits: ; 00:9BFC
@@ -3986,13 +3986,13 @@ RollCredits: ; 00:9BFC
         ;Turn screen on. Wait for NMI to end.
         jsr ScreenOn
         jmp WaitNMIPass_
-    @endIf_A:
+    @endIf_A: ; 00:9C17
     
     ;If first page of credits has not started to roll, start it now, else branch.
     lda CreditPageNumber
     bne @endIf_B
         inc CreditPageNumber
-    @endIf_B:
+    @endIf_B: ; 00:9C1D
     
     ;If not at last page of credits, branch.
     cmp #$06
@@ -4004,7 +4004,7 @@ RollCredits: ; 00:9BFC
             ; Else increment to next routine.
             inc RoomPtr
             rts
-    @endIf_C:
+    @endIf_C: ; 00:9C2A
     
     ;credits scroll up one position every 4 frames
     ;exit if not ready to scroll
@@ -4026,7 +4026,7 @@ RollCredits: ; 00:9BFC
     lda PPUCTRL_ZP
     eor #$02
     sta PPUCTRL_ZP
-@RTS:
+@RTS: ; 00:9C44
     rts
 
 ;The following routine is checked every frame and is accessed via the NMIScreenWrite routine.
@@ -4053,7 +4053,7 @@ LoadCredits: ; 00:9C45
         inx
         sec
         sbc #$80
-    @endIf_A:
+    @endIf_A: ; 00:9C57
     ;If (ScrollY & #$7F) is greater or equal to #$04, branch to exit.
     cmp #$04
     bcs @RTS
@@ -4078,7 +4078,7 @@ LoadCredits: ; 00:9C45
         asl
         adc #$04
         bne @endIf_B ;Branch always.
-    @else_B:
+    @else_B: ; 00:9C6C
         ;Start with ((CreditPageNumber - 1) * 8 + $01) * 2.
         ;Equivalent to CreditPageNumber * 16 - 14
         ;This formula is used when ScrollY = 128, 129, 130 and 131.
@@ -4087,7 +4087,7 @@ LoadCredits: ; 00:9C45
         asl
         asl
         asl
-    @endIf_B:
+    @endIf_B: ; 00:9C70
     adc $01
     asl
     tay
@@ -4097,7 +4097,7 @@ LoadCredits: ; 00:9C45
     tay
     ;Prepare to write to PPU.
     jmp PreparePPUProcess
-@RTS:
+@RTS: ; 00:9C7E
     rts
 
 LoadWaveSprites: ; 00:9C7F
@@ -4110,7 +4110,7 @@ LoadWaveSprites: ; 00:9C7F
     ;Offset for sprite RAM load.
     ldx #<SpriteRAM.8
     ldy #$00
-    @loop:
+    @loop: ; 00:9C8F
         ;Load wave sprites into sprite RAM starting at location $0220 (SpriteRAM.8).
         lda ($00),y
         sta SpriteRAM,x
@@ -4131,7 +4131,7 @@ LoadEndSamusSprites: ; 00:9C9A
     sta $01
     ;Load sprite data starting at Sprite0CRAM.
     ldy #$00
-    @loop_A:
+    @loop_A: ; 00:9CAA
         ;Load sprite Y-coord.
         lda ($00),y
         sta SpriteRAM,x
@@ -4148,12 +4148,12 @@ LoadEndSamusSprites: ; 00:9C9A
             lda SpriteAttribByte
             eor #OAMDATA_HFLIP
             bne @endIf_A ; branch always
-        @else_A:
+        @else_A: ; 00:9CC0
             ;Writes sprite pattern byte to sprite RAM.
             sta SpriteRAM,x
             ; msb is cleared, so don't h-flip sprite
             lda SpriteAttribByte
-        @endIf_A:
+        @endIf_A: ; 00:9CC5
         ;Writes sprite attribute byte to sprite RAM.
         inx
         sta SpriteRAM,x
@@ -4186,7 +4186,7 @@ LoadEndSamusSprites: ; 00:9C9A
     
     ldy #$00
     ldx #$00
-    @loop_B:
+    @loop_B: ; 00:9CED
         ;The following code loads the sprite graphics when the helmet off ending is playing.
         ;The sprites below keep Samus head from flashing while the rest of her body does.
         lda SamusHeadSpriteTable,y
@@ -4195,7 +4195,7 @@ LoadEndSamusSprites: ; 00:9C9A
         inx
         cpy #$18
         bne @loop_B
-@RTS:
+@RTS: ; 00:9CF9
     rts
 
 ;The following table is used by the routine above to keep Samus'
@@ -4384,7 +4384,7 @@ BikiniSamus: ; 00:9E74
 LoadEndStarSprites: ; 00:9EAA
     ;Load the table below into sprite RAM starting at address $0270.
     ldy #$00
-    @loop:
+    @loop: ; 00:9EAC
         lda EndStarDataTable,y
         sta SpriteRAM.28,y
         iny
@@ -4447,7 +4447,7 @@ EndGamePaletteWrite: ; 00:9F54
     bne @endIf_A
         ldy #$00
         sty PaletteDataPending
-    @endIf_A:
+    @endIf_A: ; 00:9F64
     ;* 2, pointer is two bytes.
     asl
     tay
@@ -4463,7 +4463,7 @@ EndGamePaletteWrite: ; 00:9F54
     ;Set PPU address to $0000.
     sta PPUADDR
     sta PPUADDR
-@RTS:
+@RTS: ; 00:9F80
     rts
 
 ;The following pointer table is used by the routine above to
@@ -4484,62 +4484,62 @@ EndGamePalettePtrTable: ; 00:9F81
     PtrTableEntry EndGamePalettePtrTable, EndGamePalette0A              ;($A049)
     PtrTableEntry EndGamePalettePtrTable, EndGamePalette0B              ;($9806)
 
-EndGamePalette00:
+EndGamePalette00: ; 00:9F9B
     VRAMStructData $3F00, \
         $0F, $21, $11, $02, $0F, $29, $1B, $1A, $0F, $27, $28, $29, $0F, $28, $18, $08, \
         $0F, $16, $19, $27, $0F, $36, $15, $17, $0F, $12, $21, $20, $0F, $35, $12, $16
     VRAMStructEnd
 
-EndGamePalette01:
+EndGamePalette01: ; 00:9FBF
     VRAMStructData $3F18, \
         $0F, $10, $20, $30, $0F, $0F, $0F, $0F
     VRAMStructEnd
 
-EndGamePalette02:
+EndGamePalette02: ; 00:9FCB
     VRAMStructData $3F18, \
         $0F, $12, $22, $32, $0F, $0B, $1B, $2B
     VRAMStructEnd
 
-EndGamePalette03:
+EndGamePalette03: ; 00:9FD7
     VRAMStructData $3F18, \
         $0F, $14, $24, $34, $0F, $09, $19, $29
     VRAMStructEnd
 
-EndGamePalette04:
+EndGamePalette04: ; 00:9FE3
     VRAMStructData $3F18, \
         $0F, $16, $26, $36, $0F, $07, $17, $27
     VRAMStructEnd
 
-EndGamePalette05:
+EndGamePalette05: ; 00:9FEF
     VRAMStructData $3F18, \
         $0F, $18, $28, $38, $0F, $05, $15, $25
     VRAMStructEnd
 
-EndGamePalette06:
+EndGamePalette06: ; 00:9FFB
     VRAMStructData $3F18, \
         $0F, $1A, $2A, $3A, $0F, $03, $13, $13
     VRAMStructEnd
 
-EndGamePalette07:
+EndGamePalette07: ; 00:A007
     VRAMStructData $3F18, \
         $0F, $1C, $2C, $3C, $0F, $01, $11, $21
     VRAMStructEnd
 
-EndGamePalette08:
+EndGamePalette08: ; 00:A013
     VRAMStructData $3F0C, \
         $0F, $18, $08, $07
     VRAMStructData $3F10, \
         $0F, $26, $05, $07, $0F, $26, $05, $07, $0F, $01, $01, $05, $0F, $13, $1C, $0C
     VRAMStructEnd
 
-EndGamePalette09:
+EndGamePalette09: ; 00:A02E
     VRAMStructData $3F0C, \
         $0F, $08, $07, $0F
     VRAMStructData $3F10, \
         $0F, $06, $08, $0F, $0F, $06, $08, $0F, $0F, $00, $10, $0F, $0F, $01, $0C, $0F
     VRAMStructEnd
 
-EndGamePalette0A:
+EndGamePalette0A: ; 00:A049
     VRAMStructDataRepeat $3F0C, $04, \
         $0F
     VRAMStructDataRepeat $3F10, $10, \
@@ -4549,7 +4549,7 @@ EndGamePalette0A:
 ;The following data writes the end game background graphics.
 
 ;Writes ground graphics on name table 0 in row $2300 (25th row from top).
-VRAMStruct_EndBackground: ;($A052)
+VRAMStruct_EndBackground: ; 00:A052
     VRAMStructData $2300, \
         $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31, $30, $31
 
@@ -4622,13 +4622,13 @@ VRAMStruct_EndBackground: ;($A052)
 
 ;The following pointer table is accessed by the NMIScreenWrite routine.
 ;It is used to locate the start of the VRAM structures below.
-EndMessageWritePtrTable:
+EndMessageWritePtrTable: ; 00:A1BA
     .word VRAMStruct_EndMessageWrite0
     .word VRAMStruct_EndMessageWrite1
     .word VRAMStruct_EndMessageWrite2
     .word VRAMStruct_EndMessageWrite3
 
-VRAMStruct_EndMessageWrite0:
+VRAMStruct_EndMessageWrite0: ; 00:A1C2
     ;Writes end message on name table 0 in row $2060 (4th row from top).
     VRAMStructData $206D, \
         "GREAT !!"
@@ -4639,7 +4639,7 @@ VRAMStruct_EndMessageWrite0:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageWrite1:
+VRAMStruct_EndMessageWrite1: ; 00:A1EB
     ;Writes end message on name table 0 in row $2100 (9th row from top).
     VRAMStructData $2103, \
         "IT WILL REVIVE PEACE IN"
@@ -4650,7 +4650,7 @@ VRAMStruct_EndMessageWrite1:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageWrite2:
+VRAMStruct_EndMessageWrite2: ; 00:A20F
     ;Writes end message on name table 0 in row $2180 (13th row from top).
     VRAMStructData $2183, \
         "BUT,IT MAY BE INVADED BY"
@@ -4661,7 +4661,7 @@ VRAMStruct_EndMessageWrite2:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageWrite3:
+VRAMStruct_EndMessageWrite3: ; 00:A240
     ;Writes end message on name table 0 in row $2200 (18th row from top).
     VRAMStructData $2203, \
         "PRAY FOR A TRUE PEACE IN"
@@ -4681,7 +4681,7 @@ EndMessageErasePtrTable: ; 00:A265
     .word VRAMStruct_EndMessageErase2
     .word VRAMStruct_EndMessageErase3
 
-VRAMStruct_EndMessageErase0:
+VRAMStruct_EndMessageErase0: ; 00:A26D
     ;Erases end message on name table 0 in row $2060 (4th row from top).
     VRAMStructDataRepeat $206D, $08, \
         " "
@@ -4692,7 +4692,7 @@ VRAMStruct_EndMessageErase0:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageErase1:
+VRAMStruct_EndMessageErase1: ; 00:A276
     ;Erases end message on name table 0 in row $2100 (9th row from top).
     VRAMStructDataRepeat $2103, $17, \
         " "
@@ -4703,7 +4703,7 @@ VRAMStruct_EndMessageErase1:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageErase2:
+VRAMStruct_EndMessageErase2: ; 00:A27F
     ;Erases end message on name table 0 in row $2180 (13th row from top).
     VRAMStructDataRepeat $2183, $18, \
         " "
@@ -4714,7 +4714,7 @@ VRAMStruct_EndMessageErase2:
 
     VRAMStructEnd
 
-VRAMStruct_EndMessageErase3:
+VRAMStruct_EndMessageErase3: ; 00:A288
     ;Erases end message on name table 0 in row $2200 (18th row from top).
     VRAMStructDataRepeat $2203, $18, \
         " "
@@ -4773,7 +4773,7 @@ CreditsPtrTable: ; 00:A291
     .word VRAMStruct_Credits28
     .word VRAMStruct_Credits29
 
-VRAMStruct_Credits00:
+VRAMStruct_Credits00: ; 00:A2E9
     ;Writes credits on name table 0 in row $2020 (2nd row from top).
     VRAMStructData $202C, \
         "HAI YUKAMI"
@@ -4784,7 +4784,7 @@ VRAMStruct_Credits00:
 
     VRAMStructEnd
 
-VRAMStruct_Credits01:
+VRAMStruct_Credits01: ; 00:A2FB
     ;Writes credits on name table 0 in row $2060 (4th row from top)
     VRAMStructData $206A, \
         "ZARU SOBAJIMA"
@@ -4795,10 +4795,10 @@ VRAMStruct_Credits01:
 
     VRAMStructEnd
 
-VRAMStruct_Credits02:
+VRAMStruct_Credits02: ; 00:A31A
     VRAMStructEnd
 
-VRAMStruct_Credits03:
+VRAMStruct_Credits03: ; 00:A31B
     ;Writes credits on name table 0 in row $2160 (12th row from top).
     VRAMStructData $216A, \
         "N.SHIOTANI"
@@ -4810,20 +4810,20 @@ VRAMStruct_Credits03:
     VRAMStructEnd
 
 ;Writes credits on name table 0 in row $21E0 (16th row from top).
-VRAMStruct_Credits04:
+VRAMStruct_Credits04: ; 00:A32D
     VRAMStructData $21EB, \
         "M.HOUDAI"
 
     VRAMStructEnd
 
-VRAMStruct_Credits05:
+VRAMStruct_Credits05: ; 00:A339
     ;Writes credits on name table 0 in row $22A0 (22nd row from top).
     VRAMStructData $22A7, \
         "SPECIAL THANKS  TO"
 
     VRAMStructEnd
 
-VRAMStruct_Credits06:
+VRAMStruct_Credits06: ; 00:A34F
     ;Writes credits on name table 0 in row $22E0 (24nd row from top).
     VRAMStructData $22EC, \
         "KEN ZURI"
@@ -4834,7 +4834,7 @@ VRAMStruct_Credits06:
 
     VRAMStructEnd
 
-VRAMStruct_Credits07:
+VRAMStruct_Credits07: ; 00:A362
     ;Writes credits on name table 0 in row $2360 (28nd row from top).
     VRAMStructData $236C, \
         "INUSAWA"
@@ -4845,7 +4845,7 @@ VRAMStruct_Credits07:
 
     VRAMStructEnd
 
-VRAMStruct_Credits08:
+VRAMStruct_Credits08: ; 00:A375
     ;Writes credits on name table 2 in row $2820 (2nd row from top).
     VRAMStructDataRepeat $2828, $0E, \
         " "
@@ -4856,7 +4856,7 @@ VRAMStruct_Credits08:
 
     VRAMStructEnd
 
-VRAMStruct_Credits09:
+VRAMStruct_Credits09: ; 00:A384
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
     VRAMStructData $28A8, \
         "     GOYAKE        "
@@ -4867,14 +4867,14 @@ VRAMStruct_Credits09:
 
     VRAMStructEnd
 
-VRAMStruct_Credits0A:
+VRAMStruct_Credits0A: ; 00:A39F
     ;Writes credits on name table 2 in row $2920 (10th row from top).
     VRAMStructData $292C, \
         "HARADA "
 
     VRAMStructEnd
 
-VRAMStruct_Credits0B:
+VRAMStruct_Credits0B: ; 00:A3AA
     ;Writes credits on name table 2 in row $2960 (12th row from top).
     VRAMStructData $2966, \
         "       PENPEN         "
@@ -4885,14 +4885,14 @@ VRAMStruct_Credits0B:
 
     VRAMStructEnd
 
-VRAMStruct_Credits0C:
+VRAMStruct_Credits0C: ; 00:A3C8
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
     VRAMStructData $29EA, \
         "CONVERTED BY"
 
     VRAMStructEnd
 
-VRAMStruct_Credits0D:
+VRAMStruct_Credits0D: ; 00:A3D8
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
     VRAMStructData $2A26, \
         "     T.NARIHIRO  "
@@ -4903,7 +4903,7 @@ VRAMStruct_Credits0D:
 
     VRAMStructEnd
 
-VRAMStruct_Credits0E:
+VRAMStruct_Credits0E: ; 00:A3F1
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
     VRAMStructData $2AEB, \
         "ASSISTED BY"
@@ -4914,21 +4914,21 @@ VRAMStruct_Credits0E:
 
     VRAMStructEnd
 
-VRAMStruct_Credits0F:
+VRAMStruct_Credits0F: ; 00:A412
     ;Writes credits on name table 2 in row $2BA0 (bottom row).
     VRAMStructDataRepeat $2BA6, $13, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits10:
+VRAMStruct_Credits10: ; 00:A417
     ;Writes credits on name table 0 in row $2020 (2nd row from the top).
     VRAMStructData $202B, \
         "DIRECTED BY"
 
     VRAMStructEnd
 
-VRAMStruct_Credits11:
+VRAMStruct_Credits11: ; 00:A426
     ;Writes credits on name table 0 in row $2060 (4th row from the top).
     VRAMStructData $2067, \
         "     YAMAMOTO       "
@@ -4939,7 +4939,7 @@ VRAMStruct_Credits11:
 
     VRAMStructEnd
 
-VRAMStruct_Credits12:
+VRAMStruct_Credits12: ; 00:A442
     ;Writes credits on name table 0 in row $2120 (10th row from the top).
     VRAMStructData $2127, \
         "  CHIEF DIRECTOR "
@@ -4950,14 +4950,14 @@ VRAMStruct_Credits12:
 
     VRAMStructEnd
 
-VRAMStruct_Credits13:
+VRAMStruct_Credits13: ; 00:A46B
     ;Writes credits on name table 0 in row $21E0 (16th row from the top).
     VRAMStructDataRepeat $21E6, $18, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits14:
+VRAMStruct_Credits14: ; 00:A470
     ;Writes credits on name table 0 in row $2220 (18th row from the top).
     VRAMStructData $222B, \
         "PRODUCED BY     "
@@ -4968,7 +4968,7 @@ VRAMStruct_Credits14:
 
     VRAMStructEnd
 
-VRAMStruct_Credits15:
+VRAMStruct_Credits15: ; 00:A493
     ;Writes credits on name table 0 in row $22A0 (22nd row from the top).
     VRAMStructDataRepeat $22A6, $13, \
         " "
@@ -4979,7 +4979,7 @@ VRAMStruct_Credits15:
 
     VRAMStructEnd
 
-VRAMStruct_Credits16:
+VRAMStruct_Credits16: ; 00:A49C
     ;Writes credits on name table 0 in row $2320 (26th row from the top).
     VRAMStructDataRepeat $2329, $0D, \
         " "
@@ -4990,7 +4990,7 @@ VRAMStruct_Credits16:
 
     VRAMStructEnd
 
-VRAMStruct_Credits17:
+VRAMStruct_Credits17: ; 00:A4AD
     ;Writes credits on name table 0 in row $2360 (28th row from the top).
     VRAMStructDataRepeat $236B, $0A, \
         " "
@@ -5005,7 +5005,7 @@ VRAMStruct_Credits17:
 
     VRAMStructEnd
 
-VRAMStruct_Credits18:
+VRAMStruct_Credits18: ; 00:A4BD
     ;Writes credits on name table 2 in row $2800 (top row)
     VRAMStructData $280C, \
         "NINTENDO"
@@ -5016,65 +5016,65 @@ VRAMStruct_Credits18:
 
     VRAMStructEnd
 
-VRAMStruct_Credits19:
+VRAMStruct_Credits19: ; 00:A4CD
     ;Writes credits on name table 2 in row $28A0 (6th row from top).
     VRAMStructDataRepeat $28AA, $0C, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1A:
+VRAMStruct_Credits1A: ; 00:A4D2
     ;Writes credits on name table 2 in row $2920 (10th row from top).
     VRAMStructDataRepeat $2926, $1B, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1B:
+VRAMStruct_Credits1B: ; 00:A4D7
     ;Writes credits on name table 2 in row $2960 (12th row from top).
     VRAMStructDataRepeat $2967, $12, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1C:
+VRAMStruct_Credits1C: ; 00:A4DC
     ;Writes credits on name table 2 in row $29E0 (16th row from top).
     VRAMStructDataRepeat $29E6, $14, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1D:
+VRAMStruct_Credits1D: ; 00:A4E1
     ;Writes credits on name table 2 in row $2A20 (18th row from top).
     VRAMStructDataRepeat $2A28, $15, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1E:
+VRAMStruct_Credits1E: ; 00:A4E6
     ;Writes credits on name table 2 in row $2AE0 (24th row from top).
     VRAMStructDataRepeat $2AE6, $10, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits1F:
+VRAMStruct_Credits1F: ; 00:A4EB
     ;Writes credits on name table 2 in row $2B20 (26th row from top).
     VRAMStructDataRepeat $2B29, $0E, \
         " "
 
-VRAMStruct_Credits20:
+VRAMStruct_Credits20: ; 00:A4EF
     VRAMStructEnd
 
 ;Writes the top half of 'The End' on name table 0 in row $2020 (2nd row from top).
-VRAMStruct_Credits21:
+VRAMStruct_Credits21: ; 00:A4F0
     VRAMStructData $2026, \
         "     ", $24, $25, $26, $27, "  ", $2C, $2D, $2E, $2F, "     "
 
     VRAMStructEnd
 
 ;Writes the bottom half of 'The End' on name table 0 in row $2040 (3rd row from top).
-VRAMStruct_Credits22:
+VRAMStruct_Credits22: ; 00:A508
     VRAMStructData $204B, \
         $28, $29, $2A, $2B, "  ", $02, $03, $04, $05
 
@@ -5084,33 +5084,33 @@ VRAMStruct_Credits22:
 
     VRAMStructEnd
 
-VRAMStruct_Credits23:
+VRAMStruct_Credits23: ; 00:A51A
     ;Writes credits on name table 0 in row $2120 (10th row from top).
     VRAMStructDataRepeat $2126, $13, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits24:
+VRAMStruct_Credits24: ; 00:A51F
     ;Writes credits on name table 0 in row $2160 (12th row from top).
     VRAMStructDataRepeat $216A, $0C, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits25:
+VRAMStruct_Credits25: ; 00:A524
     ;Writes credits on name table 0 in row $2180 (13th row from top).
     VRAMStructData $2188, \
         "                 "
 
-VRAMStruct_Credits28:
+VRAMStruct_Credits28: ; 00:A538
     ;Writes credits on name table 0 in row $2220 (18th row from top).
     VRAMStructDataRepeat $2226, $0B, \
         " "
 
     VRAMStructEnd
 
-VRAMStruct_Credits29:
+VRAMStruct_Credits29: ; 00:A53D
     VRAMStructEnd
 
 ;-------------------------------------------[ World map ]--------------------------------------------
@@ -5160,9 +5160,9 @@ CopyMap: ; 00:A93E
     lda #>WorldMapRAM
     sta Temp02_WorldMapRAMPtr+1
     ldx #$04
-    @loop:
+    @loop: ; 00:A950
         ldy #$00
-        @endIf_A:
+        @endIf_A: ; 00:A952
             lda (Temp00_WorldMapPtr),y
             sta (Temp02_WorldMapRAMPtr),y
             iny
@@ -5311,7 +5311,7 @@ CopyMap: ; 00:A93E
 
 .section "ROM Bank $000 - Reset" bank 0 slot "ROMSwitchSlot" orga $BFB0 force
 
-ROMSWITCH_RESET:
+ROMSWITCH_RESET: ; 00:BFB0
 .include "reset.asm"
 
 .ends

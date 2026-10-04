@@ -29,7 +29,7 @@
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
 ; 8D60 - Common Room Elements (loaded everywhere except Tourian)
-GFX_CREBG1:
+GFX_CREBG1: ; 05:8D60
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_CRE.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -41,7 +41,7 @@ GFX_CREBG1:
     .endif
 
 ; 91B0 - Game over, Japanese font tiles (only loaded in Tourian?)
-GFX_TourianFont:
+GFX_TourianFont: ; 05:91B0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/font_chr.chr"
     .elif BUILDTARGET == "NES_CNS"
@@ -49,7 +49,7 @@ GFX_TourianFont:
     .endif
 
 ;Unused tile patterns.
-GFX_Bank5Garbage:
+GFX_Bank5Garbage: ; 05:94B0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/font_chr.chr" skip $250
     .elif BUILDTARGET == "NES_CNS"
@@ -58,7 +58,7 @@ GFX_Bank5Garbage:
 
 ;----------------------------------------------------------------------------------------------------
 
-PalettePtrTable:
+PalettePtrTable: ; 05:9560
     PtrTableEntryArea PalettePtrTable, Palette00                 ;($A0EB)Default room palette.
     PtrTableEntryArea PalettePtrTable, Palette01                 ;($A10F)Samus power suit palette.
     PtrTableEntryArea PalettePtrTable, Palette02                 ;($A11B)Samus varia suit palette.
@@ -88,7 +88,7 @@ PalettePtrTable:
     PtrTableEntryArea PalettePtrTable, Palette1A                 ;($A16F)Suitless Samus power suit with missiles selected palette.
     PtrTableEntryArea PalettePtrTable, Palette1B                 ;($A177)Suitless Samus varia suit with missiles selected palette.
 
-SpecItmsTblPtr:
+SpecItmsTblPtr: ; 05:9598
     .word SpecItmsTbl_{AREA}               ;($A20D)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
@@ -113,52 +113,52 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
 
-AreaRoutine:
+AreaRoutine: ; 05:95C3
     jmp RTS_Polyp_{AREA}                       ;Area specific routine.
 
 ;The following routine returns the two's complement of the value stored in A.
-TwosComplement_:
+TwosComplement_: ; 05:95C6
     eor #$FF
     clc
     adc #$01
     rts
 
-L95CC:
+L95CC: ; 05:95CC
     .byte $12                       ;Ridley's room.
-AreaMusicFlag:
+AreaMusicFlag: ; 05:95CD
     .byte music_RidleyArea          ;Ridley hideout music init flag.
-AreaEnemyDamage:
+AreaEnemyDamage: ; 05:95CE
     .word $0240                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
-AreaItemRoomNumbers:
+AreaItemRoomNumbers: ; 05:95D0
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaMapPosX:
+AreaMapPosX: ; 05:95D7
     .byte $19   ;Samus start x coord on world map.
-AreaMapPosY:
+AreaMapPosY: ; 05:95D8
     .byte $18   ;Samus start y coord on world map.
-AreaSamusY:
+AreaSamusY: ; 05:95D9
     .byte $6E   ;Samus start vertical screen position.
 
-AreaPaletteToggle:
+AreaPaletteToggle: ; 05:95DA
     .byte _id_Palette05+1
 
     .byte $00
-AreaEnProjectileKilledAnimIndex:
+AreaEnProjectileKilledAnimIndex: ; 05:95DC
     .byte EnAnim_EnProjectileKilled_{AREA} - EnAnimTable_{AREA}
-AreaExplosionAnimIndex:
+AreaExplosionAnimIndex: ; 05:95DD
     .byte EnAnim_Explosion_{AREA} - EnAnimTable_{AREA}
 
     .byte EnAnim_DessgeegaIdleCeiling_{AREA} - EnAnimTable_{AREA}, EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
-AreaEnProjectileFallingAnimIndex:
+AreaEnProjectileFallingAnimIndex: ; 05:95E0
     .byte EnAnim_DessgeegaCeilingHopping_{AREA} - EnAnimTable_{AREA}, EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}
-AreaEnProjectileSplatterAnimIndex:
+AreaEnProjectileSplatterAnimIndex: ; 05:95E2
     .byte EnAnim_ViolaOnFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_36_{AREA} - EnAnimTable_{AREA}
-AreaMellowAnimIndex:
+AreaMellowAnimIndex: ; 05:95E4
     .byte EnAnim_Mella_{AREA} - EnAnimTable_{AREA}
 
-ChooseEnemyAIRoutine:
+ChooseEnemyAIRoutine: ; 05:95E5
     lda EnsExtra.0.type,x
     jsr CommonJump_JumpEngine
         .word SwooperAIRoutine00_{AREA} ; 00 - swooper has not seen samus
@@ -178,7 +178,7 @@ ChooseEnemyAIRoutine:
         .word PolypAIRoutine_{AREA} ; 0E - polyp (unused)
         .word RemoveEnemy__{AREA} ; 0F - same as 4
 
-EnemyDeathAnimIndex:
+EnemyDeathAnimIndex: ; 05:960B
     .byte EnAnim_HoltzExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzExplode_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
     .byte EnAnim_HoltzExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzExplode_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
     .byte EnAnim_DessgeegaExplodeFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_DessgeegaExplodeFloor_{AREA} - EnAnimTable_{AREA} ; 02 - dessgeegas
@@ -196,7 +196,7 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
-EnemyHealthTbl:
+EnemyHealthTbl: ; 05:962B
     .byte $08 ; 00 - swooper has not seen samus
     .byte $08 ; 01 - swooper targetting samus
     .byte $08 ; 02 - dessgeegas
@@ -214,7 +214,7 @@ EnemyHealthTbl:
     .byte $FF ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-EnemyRestingAnimIndex:
+EnemyRestingAnimIndex: ; 05:963B
     .byte EnAnim_HoltzIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzIdle_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
     .byte EnAnim_HoltzIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzIdle_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
     .byte EnAnim_DessgeegaIdleFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_DessgeegaIdleFloor_{AREA} - EnAnimTable_{AREA} ; 02 - dessgeegas
@@ -232,7 +232,7 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
-EnemyActiveAnimIndex:
+EnemyActiveAnimIndex: ; 05:965B
     .byte EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA} ; 00 - swooper has not seen samus
     .byte EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA}, EnAnim_HoltzSwooping_{AREA} - EnAnimTable_{AREA} ; 01 - swooper targetting samus
     .byte EnAnim_DessgeegaIdleFloor_{AREA} - EnAnimTable_{AREA}, EnAnim_DessgeegaIdleFloor_{AREA} - EnAnimTable_{AREA} ; 02 - dessgeegas
@@ -250,7 +250,7 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - polyp (unused)
     .byte $00, $00 ; 0F - same as 4
 
-EnemyActiveAnimIndexInitOffset:
+EnemyActiveAnimIndexInitOffset: ; 05:967B
     .byte $00 ; 00 - swooper has not seen samus
     .byte $00 ; 01 - swooper targetting samus
     .byte $00 ; 02 - dessgeegas
@@ -268,7 +268,7 @@ EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-L968B:
+L968B: ; 05:968B
     .byte %10001001 ; 00 - swooper has not seen samus
     .byte %10001001 ; 01 - swooper targetting samus
     .byte %10001001 ; 02 - dessgeegas
@@ -286,7 +286,7 @@ L968B:
     .byte %00000000 ; 0E - polyp (unused)
     .byte %00000000 ; 0F - same as 4
 
-EnemyForceSpeedTowardsSamusDelayTbl:
+EnemyForceSpeedTowardsSamusDelayTbl: ; 05:969B
     .byte $01 ; 00 - swooper has not seen samus
     .byte $01 ; 01 - swooper targetting samus
     .byte $01 ; 02 - dessgeegas
@@ -304,7 +304,7 @@ EnemyForceSpeedTowardsSamusDelayTbl:
     .byte $00 ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-EnemyDistanceToSamusThreshold:
+EnemyDistanceToSamusThreshold: ; 05:96AB
     .byte $5 | (0 << 7) ; 00 - swooper has not seen samus
     .byte $5 | (0 << 7) ; 01 - swooper targetting samus
     .byte $00 ; 02 - dessgeegas
@@ -322,7 +322,7 @@ EnemyDistanceToSamusThreshold:
     .byte $00 ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-EnemyInitDelayTbl:
+EnemyInitDelayTbl: ; 05:96BB
     .byte $10 ; 00 - swooper has not seen samus
     .byte $01 ; 01 - swooper targetting samus
     .byte $03 ; 02 - dessgeegas
@@ -340,7 +340,7 @@ EnemyInitDelayTbl:
     .byte $00 ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-EnemyMovementChoiceOffset:
+EnemyMovementChoiceOffset: ; 05:96CB
     .byte EnemyMovementChoice_HoltzIdle_{AREA} - EnemyMovementChoices ; 00 - swooper has not seen samus
     .byte EnemyMovementChoice_HoltzAttacking_{AREA} - EnemyMovementChoices ; 01 - swooper targetting samus
     .byte EnemyMovementChoice_DessgeegaFloor_{AREA} - EnemyMovementChoices ; 02 - dessgeegas
@@ -358,7 +358,7 @@ EnemyMovementChoiceOffset:
     .byte EnemyMovementChoice_HoltzIdle_{AREA} - EnemyMovementChoices ; 0E - polyp (unused)
     .byte $00 ; 0F - same as 4
 
-EnemyMovementPtrs:
+EnemyMovementPtrs: ; 05:96DB
     .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}
     .word EnemyMovement01_R_{AREA}, EnemyMovement01_L_{AREA}
     .word EnemyMovement02_R_{AREA}, EnemyMovement02_L_{AREA}
@@ -380,16 +380,16 @@ EnemyMovementPtrs:
     .word $0000, $0000
     .word $0000, $0000
 
-EnAccelYTable:
+EnAccelYTable: ; 05:972B
     .byte $80, $80, $00, $00, $7F, $7F, $81, $81, $00, $00, $E0, $16, $15, $7F, $7F, $7F, $00, $00, $00, $00
-EnAccelXTable:
+EnAccelXTable: ; 05:973F
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $C8, $00, $00, $00, $00, $00, $08, $20, $00, $00, $00, $00
-EnSpeedYTable:
+EnSpeedYTable: ; 05:9753
     .byte $0C, $0C, $02, $01, $F6, $FC, $0A, $04, $01, $FC, $06, $FE, $FE, $FA, $F9, $F9, $FD, $00, $00, $00
-EnSpeedXTable:
+EnSpeedXTable: ; 05:9767
     .byte $00, $02, $01, $01, $02, $02, $02, $02, $06, $00, $01, $01, $01, $00, $00, $00, $03, $00, $00, $00
 
-L977B:
+L977B: ; 05:977B
     .byte %01001100 ; 00 - swooper has not seen samus
     .byte %01001100 ; 01 - swooper targetting samus
     .byte %01100100 ; 02 - dessgeegas
@@ -407,7 +407,7 @@ L977B:
     .byte %00000000 ; 0E - polyp (unused)
     .byte %00000000 ; 0F - same as 4
 
-EnProjectileRisingAnimIndexTable:
+EnProjectileRisingAnimIndexTable: ; 05:978B
     .byte $00, $00
     .byte $00, $00
     .byte EnAnim_34_{AREA} - EnAnimTable_{AREA}, EnAnim_34_{AREA} - EnAnimTable_{AREA}
@@ -416,24 +416,24 @@ EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnProjectilePosOffsetX:
+EnProjectilePosOffsetX: ; 05:979B
     .byte $08, $F8
     .byte $00, $00
     .byte $00, $00
     .byte $08, $F8
-EnProjectilePosOffsetY:
+EnProjectilePosOffsetY: ; 05:97A3
     .byte $00
     .byte $00
     .byte $00
     .byte $F8
 
-EnProjectileMovementPtrTable:
+EnProjectileMovementPtrTable: ; 05:97A7
     .word EnProjectileMovement0_{AREA}
     .word EnProjectileMovement1_{AREA}
     .word EnProjectileMovement2_{AREA}
     .word EnProjectileMovement3_{AREA}
 
-VRAMStringPtrTable:
+VRAMStringPtrTable: ; 05:97AF
     PtrTableEntryArea VRAMStringPtrTable, VRAMString00
     PtrTableEntryArea VRAMStringPtrTable, VRAMString01
     PtrTableEntryArea VRAMStringPtrTable, VRAMString02
@@ -452,78 +452,93 @@ VRAMStringPtrTable:
     PtrTableEntryArea VRAMStringPtrTable, VRAMString0F
     PtrTableEntryArea VRAMStringPtrTable, VRAMString10
 
-EnemyMovementChoices:
-EnemyMovementChoice_DessgeegaFloor_{AREA}:
+EnemyMovementChoices: ; 05:97D1
+EnemyMovementChoice_DessgeegaFloor_{AREA}: ; 05:97D1
     EnemyMovementChoiceEntry $04, $05
-EnemyMovementChoice_DessgeegaCeiling_{AREA}:
+
+EnemyMovementChoice_DessgeegaCeiling_{AREA}: ; 05:97D4
     EnemyMovementChoiceEntry $06, $07
-EnemyMovementChoice02_{AREA}: ; not assigned to any enemy
+
+EnemyMovementChoice02_{AREA}: ; 05:97D7
+    ; not assigned to any enemy
     EnemyMovementChoiceEntry $02
-EnemyMovementChoice_Zebbo_{AREA}: ; enemy moves manually
+
+EnemyMovementChoice_Zebbo_{AREA}: ; 05:97D9
+    ; enemy moves manually
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice_Ridley_{AREA}:
+
+EnemyMovementChoice_Ridley_{AREA}: ; 05:97DB
     EnemyMovementChoiceEntry $0D
-EnemyMovementChoice_RidleyFireball_{AREA}:
+
+EnemyMovementChoice_RidleyFireball_{AREA}: ; 05:97DD
     EnemyMovementChoiceEntry $0E, $0F
-EnemyMovementChoice06_{AREA}: ; unused enemy
+
+EnemyMovementChoice06_{AREA}: ; 05:97E0
+    ; unused enemy
     EnemyMovementChoiceEntry $00, $01, $02, $03
-EnemyMovementChoice_Multiviola_{AREA}:
+
+EnemyMovementChoice_Multiviola_{AREA}: ; 05:97E5
     EnemyMovementChoiceEntry $10
-EnemyMovementChoice08_{AREA}: ; unused enemy
+
+EnemyMovementChoice08_{AREA}: ; 05:97E7
+    ; unused enemy
     EnemyMovementChoiceEntry $11
-EnemyMovementChoice_HoltzIdle_{AREA}:
+
+EnemyMovementChoice_HoltzIdle_{AREA}: ; 05:97E9
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice_HoltzAttacking_{AREA}:
+
+EnemyMovementChoice_HoltzAttacking_{AREA}: ; 05:97EB
     EnemyMovementChoiceEntry $01
 
-EnemyMovement00_R_{AREA}:
-EnemyMovement00_L_{AREA}:
-EnemyMovement01_R_{AREA}:
-EnemyMovement01_L_{AREA}:
+
+EnemyMovement00_R_{AREA}: ; 05:97ED
+EnemyMovement00_L_{AREA}: ; 05:97ED
+EnemyMovement01_R_{AREA}: ; 05:97ED
+EnemyMovement01_L_{AREA}: ; 05:97ED
     ; nothing
 
 ; unused (ripper)
-EnemyMovement02_R_{AREA}:
+EnemyMovement02_R_{AREA}: ; 05:97ED
     SignMagSpeed $01,  3,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement02_L_{AREA}:
+EnemyMovement02_L_{AREA}: ; 05:97F0
     SignMagSpeed $01, -3,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement03_R_{AREA}:
-EnemyMovement03_L_{AREA}:
-EnemyMovement04_R_{AREA}:
-EnemyMovement04_L_{AREA}:
-EnemyMovement05_R_{AREA}:
-EnemyMovement05_L_{AREA}:
-EnemyMovement06_R_{AREA}:
-EnemyMovement06_L_{AREA}:
-EnemyMovement07_R_{AREA}:
-EnemyMovement07_L_{AREA}:
-EnemyMovement08_R_{AREA}:
-EnemyMovement08_L_{AREA}:
-EnemyMovement09_R_{AREA}:
-EnemyMovement09_L_{AREA}:
-EnemyMovement0A_R_{AREA}:
-EnemyMovement0A_L_{AREA}:
-EnemyMovement0B_R_{AREA}:
-EnemyMovement0B_L_{AREA}:
-EnemyMovement0C_R_{AREA}:
-EnemyMovement0C_L_{AREA}:
-EnemyMovement0D_R_{AREA}:
-EnemyMovement0D_L_{AREA}:
-EnemyMovement0E_R_{AREA}:
-EnemyMovement0E_L_{AREA}:
-EnemyMovement0F_R_{AREA}:
-EnemyMovement0F_L_{AREA}:
-EnemyMovement10_R_{AREA}:
-EnemyMovement10_L_{AREA}:
+EnemyMovement03_R_{AREA}: ; 05:97F3
+EnemyMovement03_L_{AREA}: ; 05:97F3
+EnemyMovement04_R_{AREA}: ; 05:97F3
+EnemyMovement04_L_{AREA}: ; 05:97F3
+EnemyMovement05_R_{AREA}: ; 05:97F3
+EnemyMovement05_L_{AREA}: ; 05:97F3
+EnemyMovement06_R_{AREA}: ; 05:97F3
+EnemyMovement06_L_{AREA}: ; 05:97F3
+EnemyMovement07_R_{AREA}: ; 05:97F3
+EnemyMovement07_L_{AREA}: ; 05:97F3
+EnemyMovement08_R_{AREA}: ; 05:97F3
+EnemyMovement08_L_{AREA}: ; 05:97F3
+EnemyMovement09_R_{AREA}: ; 05:97F3
+EnemyMovement09_L_{AREA}: ; 05:97F3
+EnemyMovement0A_R_{AREA}: ; 05:97F3
+EnemyMovement0A_L_{AREA}: ; 05:97F3
+EnemyMovement0B_R_{AREA}: ; 05:97F3
+EnemyMovement0B_L_{AREA}: ; 05:97F3
+EnemyMovement0C_R_{AREA}: ; 05:97F3
+EnemyMovement0C_L_{AREA}: ; 05:97F3
+EnemyMovement0D_R_{AREA}: ; 05:97F3
+EnemyMovement0D_L_{AREA}: ; 05:97F3
+EnemyMovement0E_R_{AREA}: ; 05:97F3
+EnemyMovement0E_L_{AREA}: ; 05:97F3
+EnemyMovement0F_R_{AREA}: ; 05:97F3
+EnemyMovement0F_L_{AREA}: ; 05:97F3
+EnemyMovement10_R_{AREA}: ; 05:97F3
+EnemyMovement10_L_{AREA}: ; 05:97F3
     ; nothing
 
 ; unused (dragon)
-EnemyMovement11_R_{AREA}:
-EnemyMovement11_L_{AREA}:
+EnemyMovement11_R_{AREA}: ; 05:97F3
+EnemyMovement11_L_{AREA}: ; 05:97F3
     SignMagSpeed $14,  0, -1
     SignMagSpeed $0A,  0,  0
     EnemyMovementInstr_ClearEnJumpDsplcmnt
@@ -531,8 +546,8 @@ EnemyMovement11_L_{AREA}:
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_TriggerResting
 
-EnProjectileMovement0_{AREA}:
-EnProjectileMovement1_{AREA}:
+EnProjectileMovement0_{AREA}: ; 05:97FD
+EnProjectileMovement1_{AREA}: ; 05:97FD
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -542,7 +557,7 @@ EnProjectileMovement1_{AREA}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement2_{AREA}:
+EnProjectileMovement2_{AREA}: ; 05:980C
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -552,7 +567,7 @@ EnProjectileMovement2_{AREA}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement3_{AREA}:
+EnProjectileMovement3_{AREA}: ; 05:981B
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1
@@ -563,12 +578,12 @@ EnProjectileMovement3_{AREA}:
     .byte $FF
 
 ;-------------------------------------------------------------------------------
-RemoveEnemy__{AREA}:
+RemoveEnemy__{AREA}: ; 05:982A
     lda #$00
     sta EnsExtra.0.status,x
     rts
 
-UpdateEnemyCommon_Decide_{AREA}:
+UpdateEnemyCommon_Decide_{AREA}: ; 05:9830
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -577,11 +592,11 @@ UpdateEnemyCommon_Decide_{AREA}:
         ; enemy default
         lda $00
         jmp CommonJump_UpdateEnemyCommon
-    @resting:
+    @resting: ; 05:983F
         ; enemy resting
         lda $01
         jmp CommonJump_UpdateEnemyCommon_noMove
-    @explode:
+    @explode: ; 05:9844
         ; enemy explode
         jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
@@ -606,7 +621,7 @@ UpdateEnemyCommon_Decide_{AREA}:
 
 .include "enemies/ridley.asm"
 
-StoreEnemyPositionToTemp__{AREA}:
+StoreEnemyPositionToTemp__{AREA}: ; 05:9AE1
     lda Ens.0.y,x
     sta Temp08_PositionY
     lda Ens.0.x,x
@@ -615,7 +630,7 @@ StoreEnemyPositionToTemp__{AREA}:
     sta Temp0B_PositionHi
     rts
 
-LoadEnemyPositionFromTemp__{AREA}:
+LoadEnemyPositionFromTemp__{AREA}: ; 05:9AF1
     lda Temp0B_PositionHi
     and #$01
     sta EnsExtra.0.hi,x
@@ -635,71 +650,71 @@ LoadEnemyPositionFromTemp__{AREA}:
 
 ;-------------------------------------------------------------------------------
 
-VRAMString00_{AREA}:
+VRAMString00_{AREA}: ; 05:9B49
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-VRAMString01_{AREA}:
+VRAMString01_{AREA}: ; 05:9B4E
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-VRAMString02_{AREA}:
+VRAMString02_{AREA}: ; 05:9B53
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-VRAMString03_{AREA}:
+VRAMString03_{AREA}: ; 05:9B58
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-VRAMString04_{AREA}:
+VRAMString04_{AREA}: ; 05:9B5D
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-VRAMString05_{AREA}:
+VRAMString05_{AREA}: ; 05:9B62
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-VRAMString06_{AREA}:
+VRAMString06_{AREA}: ; 05:9B67
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-VRAMString07_{AREA}:
+VRAMString07_{AREA}: ; 05:9B6C
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-VRAMString08_{AREA}:
+VRAMString08_{AREA}: ; 05:9B71
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-VRAMString09_{AREA}:
+VRAMString09_{AREA}: ; 05:9B76
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
-VRAMString0A_{AREA}:
+VRAMString0A_{AREA}: ; 05:9B7B
     .byte $22
     .byte $74, $75
     .byte $76, $77
 
-VRAMString0B_{AREA}:
+VRAMString0B_{AREA}: ; 05:9B80
     .byte $22
     .byte $78, $79
     .byte $7A, $7B
 
-VRAMString0C_{AREA}:
-VRAMString0D_{AREA}:
-VRAMString0E_{AREA}:
-VRAMString0F_{AREA}:
-VRAMString10_{AREA}:
+VRAMString0C_{AREA}: ; 05:9B85
+VRAMString0D_{AREA}: ; 05:9B85
+VRAMString0E_{AREA}: ; 05:9B85
+VRAMString0F_{AREA}: ; 05:9B85
+VRAMString10_{AREA}: ; 05:9B85
     ;nothing
 
 .include "ridley/enemy_sprite_data.asm"
@@ -885,7 +900,7 @@ VRAMString10_{AREA}:
 
 .section "ROM Bank $005 - Reset" bank 5 slot "ROMSwitchSlot" orga $BFB0 force
 
-ROMSWITCH_RESET:
+ROMSWITCH_RESET: ; 05:BFB0
 .include "reset.asm"
 
 .ends

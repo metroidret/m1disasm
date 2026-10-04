@@ -11,7 +11,7 @@ def run_or_exit(args, err):
 
 
 
-banks = [
+BANKS = [
     "prg0_title",
     "prg1_brinstar",
     "prg2_norfair",
@@ -27,7 +27,7 @@ class BuildTarget:
         self.md5_hash_expected_hex = md5_hash_expected_hex
         self.filename = filename
 
-build_targets = {
+BUILD_TARGETS = {
     "NES_NTSC": BuildTarget(
         md5_hash_expected_hex="d7da4a907be0012abca6625471ef2c9c",
         filename="out/M1_NES_NTSC.nes",
@@ -56,10 +56,10 @@ def main():
     if not os.path.exists('out/'):
         os.mkdir('out/')
 
-    for bt, bto in build_targets.items():
+    for bt, bto in BUILD_TARGETS.items():
         print('-- Building target ' + bt + ' --')
         print('Assembling .asm files')
-        for bank in banks:
+        for bank in BANKS:
             run_or_exit("wla-6502 -h -w -D BUILDTARGET=\"" + bt + "\" -o out/" + bank + ".o -I SRC SRC/" + bank + ".asm", "Assembler Error.")
         print('Success\n')
 

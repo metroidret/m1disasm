@@ -29,7 +29,7 @@
 ;------------------------------------------[ Graphics data ]-----------------------------------------
 
 ;Samus end tile patterns.
-GFX_EndingSprites:
+GFX_EndingSprites: ; 04:8D60
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "ending/sprite_tiles.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -39,11 +39,11 @@ GFX_EndingSprites:
     .endif
 
 ;Unused tile patterns (needed so the Palette Pointer Table, etc. below are properly aligned)
-GFX_KraiUnused:
+GFX_KraiUnused: ; 04:9280
     .incbin "ridley/sprite_tiles.chr" skip $120 read $E0
 
 ; 9360 - Misc Kraid BG CHR
-GFX_KraiBG3:
+GFX_KraiBG3: ; 04:9360
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "kraid/bg_chr_3.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -56,7 +56,7 @@ GFX_KraiBG3:
 
 ;----------------------------------------------------------------------------------------------------
 
-PalettePtrTable:
+PalettePtrTable: ; 04:9560
     PtrTableEntryArea PalettePtrTable, Palette00                 ;($A155)Room palette.
     PtrTableEntryArea PalettePtrTable, Palette01                 ;($A179)Samus power suit palette.
     PtrTableEntryArea PalettePtrTable, Palette02                 ;($A185)Samus varia suit palette.
@@ -86,7 +86,7 @@ PalettePtrTable:
     PtrTableEntryArea PalettePtrTable, Palette1A                 ;($A1C5)Suitless Samus power suit with missiles selected palette.
     PtrTableEntryArea PalettePtrTable, Palette1B                 ;($A1CD)Suitless Samus varia suit with missiles selected palette.
 
-SpecItmsTblPtr:
+SpecItmsTblPtr: ; 04:9598
     .word SpecItmsTbl_{AREA}               ;($A26D)Beginning of special items table.
 
 .DSTRUCT AreaPointers_ROM INSTANCEOF AreaPointersStruct VALUES
@@ -111,53 +111,53 @@ SpecItmsTblPtr:
     .byte $60, $EA, $EA
     .byte $60, $EA, $EA
 
-AreaRoutine:
+AreaRoutine: ; 04:95C3
     jmp AreaRoutineStub_{AREA} ; Just an RTS
 
 ;The following routine returns the two's complement of the value stored in A.
-TwosComplement_:
+TwosComplement_: ; 04:95C6
     eor #$FF
     clc
     adc #$01
-RTS_95CB:
+RTS_95CB: ; 04:95CB
     rts
 
-L95CC:
+L95CC: ; 04:95CC
     .byte $1D                       ;Kraid's room.
-AreaMusicFlag:
+AreaMusicFlag: ; 04:95CD
     .byte music_KraidArea           ;Kraid's hideout music init flag.
-AreaEnemyDamage:
+AreaEnemyDamage: ; 04:95CE
     .word $0200                     ;Base damage caused by area enemies.
 
 ;Special room numbers(used to start item room music).
-AreaItemRoomNumbers:
+AreaItemRoomNumbers: ; 04:95D0
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
-AreaSamusMapPosX:
+AreaSamusMapPosX: ; 04:95D7
     .byte $07   ;Samus start x coord on world map.
-AreaSamusMapPosY:
+AreaSamusMapPosY: ; 04:95D8
     .byte $14   ;Samus start y coord on world map.
-AreaSamusY:
+AreaSamusY: ; 04:95D9
     .byte $6E   ;Samus start vertical screen position.
 
-AreaPaletteToggle:
+AreaPaletteToggle: ; 04:95DA
     .byte _id_Palette05+1
 
     .byte $00
-AreaEnProjectileKilledAnimIndex:
+AreaEnProjectileKilledAnimIndex: ; 04:95DC
     .byte EnAnim_EnProjectileKilled_{AREA} - EnAnimTable_{AREA}
-AreaExplosionAnimIndex:
+AreaExplosionAnimIndex: ; 04:95DD
     .byte EnAnim_Explosion_{AREA} - EnAnimTable_{AREA}
 
     .byte $00, $00
-AreaEnProjectileFallingAnimIndex:
+AreaEnProjectileFallingAnimIndex: ; 04:95E0
     .byte $00, $00
-AreaEnProjectileSplatterAnimIndex:
+AreaEnProjectileSplatterAnimIndex: ; 04:95E2
     .byte $00, $00
-AreaMellowAnimIndex:
+AreaMellowAnimIndex: ; 04:95E4
     .byte EnAnim_Memu_{AREA} - EnAnimTable_{AREA}
 
-ChooseEnemyAIRoutine:
+ChooseEnemyAIRoutine: ; 04:95E5
     lda EnsExtra.0.type,x
     jsr CommonJump_JumpEngine
         .word SidehopperFloorAIRoutine_{AREA} ; 00 - sidehopper
@@ -177,7 +177,7 @@ ChooseEnemyAIRoutine:
         .word RTS_95CB ; 0E - same as 2
         .word RTS_95CB ; 0F - same as 2
 
-EnemyDeathAnimIndex:
+EnemyDeathAnimIndex: ; 04:960B
     .byte EnAnim_SidehopperFloorExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorExplode_{AREA} - EnAnimTable_{AREA} ; 00 - sidehopper
     .byte EnAnim_SidehopperCeilingExplode_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingExplode_{AREA} - EnAnimTable_{AREA} ; 01 - ceiling sidehopper
     .byte EnAnim_WaverExplode_R_{AREA} - EnAnimTable_{AREA}, EnAnim_WaverExplode_L_{AREA} - EnAnimTable_{AREA} ; 02 - unused enemy type that doesn't properly clear itself
@@ -195,7 +195,7 @@ EnemyDeathAnimIndex:
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
 
-EnemyHealthTbl:
+EnemyHealthTbl: ; 04:962B
     .byte $08 ; 00 - sidehopper
     .byte $08 ; 01 - ceiling sidehopper
     .byte $00 ; 02 - unused enemy type that doesn't properly clear itself
@@ -213,7 +213,7 @@ EnemyHealthTbl:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-EnemyRestingAnimIndex:
+EnemyRestingAnimIndex: ; 04:963B
     .byte EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA} ; 00 - sidehopper
     .byte EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA} ; 01 - ceiling sidehopper
     .byte EnAnim_Waver0_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Waver0_L_{AREA} - EnAnimTable_{AREA} ; 02 - unused enemy type that doesn't properly clear itself
@@ -231,7 +231,7 @@ EnemyRestingAnimIndex:
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
 
-EnemyActiveAnimIndex:
+EnemyActiveAnimIndex: ; 04:965B
     .byte EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperFloorIdle_{AREA} - EnAnimTable_{AREA} ; 00 - sidehopper
     .byte EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA}, EnAnim_SidehopperCeilingIdle_{AREA} - EnAnimTable_{AREA} ; 01 - ceiling sidehopper
     .byte EnAnim_Waver0_R_{AREA} - EnAnimTable_{AREA}, EnAnim_Waver0_L_{AREA} - EnAnimTable_{AREA} ; 02 - unused enemy type that doesn't properly clear itself
@@ -249,7 +249,7 @@ EnemyActiveAnimIndex:
     .byte $00, $00 ; 0E - same as 2
     .byte $00, $00 ; 0F - same as 2
 
-EnemyActiveAnimIndexInitOffset:
+EnemyActiveAnimIndexInitOffset: ; 04:967B
     .byte $00 ; 00 - sidehopper
     .byte $00 ; 01 - ceiling sidehopper
     .byte $00 ; 02 - unused enemy type that doesn't properly clear itself
@@ -267,7 +267,7 @@ EnemyActiveAnimIndexInitOffset:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-L968B:
+L968B: ; 04:968B
     .byte %10001001 ; 00 - sidehopper
     .byte %10001001 ; 01 - ceiling sidehopper
     .byte %00001001 ; 02 - unused enemy type that doesn't properly clear itself
@@ -285,7 +285,7 @@ L968B:
     .byte %00000000 ; 0E - same as 2
     .byte %00000000 ; 0F - same as 2
 
-EnemyData0DTbl:
+EnemyData0DTbl: ; 04:969B
     .byte $01 ; 00 - sidehopper
     .byte $01 ; 01 - ceiling sidehopper
     .byte $01 ; 02 - unused enemy type that doesn't properly clear itself
@@ -303,7 +303,7 @@ EnemyData0DTbl:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-EnemyDistanceToSamusThreshold:
+EnemyDistanceToSamusThreshold: ; 04:96AB
     .byte $00 ; 00 - sidehopper
     .byte $00 ; 01 - ceiling sidehopper
     .byte $6 | (0 << 7) ; 02 - unused enemy type that doesn't properly clear itself
@@ -321,7 +321,7 @@ EnemyDistanceToSamusThreshold:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-EnemyInitDelayTbl:
+EnemyInitDelayTbl: ; 04:96BB
     .byte $08 ; 00 - sidehopper
     .byte $08 ; 01 - ceiling sidehopper
     .byte $01 ; 02 - unused enemy type that doesn't properly clear itself
@@ -339,7 +339,7 @@ EnemyInitDelayTbl:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-EnemyMovementChoiceOffset:
+EnemyMovementChoiceOffset: ; 04:96CB
     .byte EnemyMovementChoice_SidehopperFloor_{AREA} - EnemyMovementChoices ; 00 - sidehopper
     .byte EnemyMovementChoice_SidehopperCeiling_{AREA} - EnemyMovementChoices ; 01 - ceiling sidehopper
     .byte $00 ; 02 - unused enemy type that doesn't properly clear itself
@@ -357,7 +357,7 @@ EnemyMovementChoiceOffset:
     .byte $00 ; 0E - same as 2
     .byte $00 ; 0F - same as 2
 
-EnemyMovementPtrs:
+EnemyMovementPtrs: ; 04:96DB
     .word EnemyMovement00_R_{AREA}, EnemyMovement00_L_{AREA}
     .word EnemyMovement01_R_{AREA}, EnemyMovement01_L_{AREA}
     .word EnemyMovement02_R_{AREA}, EnemyMovement02_L_{AREA}
@@ -379,16 +379,16 @@ EnemyMovementPtrs:
     .word $0000, $0000
     .word $0000, $0000
 
-EnAccelYTable:
+EnAccelYTable: ; 04:972B
     .byte $7F, $70, $70, $90, $90, $00, $00, $7F, $80, $00, $54, $70, $00, $00, $00, $00, $00, $00, $00, $00
-EnAccelXTable:
+EnAccelXTable: ; 04:973F
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-EnSpeedYTable:
+EnSpeedYTable: ; 04:9753
     .byte $F6, $F6, $FC, $0A, $04, $00, $00, $00, $0C, $FC, $FC, $00, $00, $00, $00, $00, $00, $00, $00, $00
-EnSpeedXTable:
+EnSpeedXTable: ; 04:9767
     .byte $00, $02, $02, $02, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00
 
-L977B:
+L977B: ; 04:977B
     .byte %01100100 ; 00 - sidehopper
     .byte %01101100 ; 01 - ceiling sidehopper
     .byte %00100001 ; 02 - unused enemy type that doesn't properly clear itself
@@ -406,7 +406,7 @@ L977B:
     .byte %00000000 ; 0E - same as 2
     .byte %00000000 ; 0F - same as 2
 
-EnProjectileRisingAnimIndexTable:
+EnProjectileRisingAnimIndexTable: ; 04:978B
     .byte $00, $00
     .byte EnAnim_KraidNailMoving_L_{AREA} - EnAnimTable_{AREA}, EnAnim_KraidNailIdle_L_{AREA} - EnAnimTable_{AREA}
     .byte EnAnim_Memu_{AREA} - EnAnimTable_{AREA}, EnAnim_Memu_{AREA} - EnAnimTable_{AREA}
@@ -415,24 +415,24 @@ EnProjectileRisingAnimIndexTable:
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnProjectilePosOffsetX:
+EnProjectilePosOffsetX: ; 04:979B
     .byte $0C, $F4
     .byte $00, $00
     .byte $00, $00
     .byte $00, $00
-EnProjectilePosOffsetY:
+EnProjectilePosOffsetY: ; 04:97A3
     .byte $F4
     .byte $00
     .byte $00
     .byte $00
 
-EnProjectileMovementPtrTable:
+EnProjectileMovementPtrTable: ; 04:97A7
     .word EnProjectileMovement0_{AREA}
     .word EnProjectileMovement1_{AREA}
     .word EnProjectileMovement2_{AREA}
     .word EnProjectileMovement3_{AREA}
 
-VRAMStringPtrTable:
+VRAMStringPtrTable: ; 04:97AF
     PtrTableEntryArea VRAMStringPtrTable, VRAMString00
     PtrTableEntryArea VRAMStringPtrTable, VRAMString01
     PtrTableEntryArea VRAMStringPtrTable, VRAMString02
@@ -451,58 +451,68 @@ VRAMStringPtrTable:
     PtrTableEntryArea VRAMStringPtrTable, VRAMString0F
     PtrTableEntryArea VRAMStringPtrTable, VRAMString10
 
-EnemyMovementChoices:
-EnemyMovementChoice_SidehopperFloor_{AREA}:
+EnemyMovementChoices: ; 04:97D1
+EnemyMovementChoice_SidehopperFloor_{AREA}: ; 04:97D1
     EnemyMovementChoiceEntry $01, $02
-EnemyMovementChoice_SidehopperCeiling_{AREA}:
+
+EnemyMovementChoice_SidehopperCeiling_{AREA}: ; 04:97D4
     EnemyMovementChoiceEntry $03, $04
-EnemyMovementChoice_Ripper_{AREA}:
+
+EnemyMovementChoice_Ripper_{AREA}: ; 04:97D7
     EnemyMovementChoiceEntry $06
-EnemyMovementChoice_Skree_{AREA}:
+
+EnemyMovementChoice_Skree_{AREA}: ; 04:97D9
     EnemyMovementChoiceEntry $07
-EnemyMovementChoice_Geega_{AREA}:
+
+EnemyMovementChoice_Geega_{AREA}: ; 04:97DB
     EnemyMovementChoiceEntry $09
-EnemyMovementChoice_Zeela_{AREA}: ; enemy moves manually
+
+EnemyMovementChoice_Zeela_{AREA}: ; 04:97DD
+    ; enemy moves manually
     EnemyMovementChoiceEntry $00
-EnemyMovementChoice_Kraid_{AREA}:
+
+EnemyMovementChoice_Kraid_{AREA}: ; 04:97DF
     EnemyMovementChoiceEntry $0C, $0D
-EnemyMovementChoice_KraidLint_{AREA}:
+
+EnemyMovementChoice_KraidLint_{AREA}: ; 04:97E2
     EnemyMovementChoiceEntry $0E
-EnemyMovementChoice_KraidNail_{AREA}:
+
+EnemyMovementChoice_KraidNail_{AREA}: ; 04:97E4
     EnemyMovementChoiceEntry $0F, $10, $11, $0F
 
+
 ; unused (???)
-EnemyMovement00_R_{AREA}:
+EnemyMovement00_R_{AREA}: ; 04:97E9
     SignMagSpeed $20,  2,  2
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
-EnemyMovement00_L_{AREA}:
+EnemyMovement00_L_{AREA}: ; 04:97EC
     SignMagSpeed $20, -2,  2
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
-EnemyMovement01_R_{AREA}:
-EnemyMovement01_L_{AREA}:
-EnemyMovement02_R_{AREA}:
-EnemyMovement02_L_{AREA}:
-EnemyMovement03_R_{AREA}:
-EnemyMovement03_L_{AREA}:
-EnemyMovement04_R_{AREA}:
-EnemyMovement04_L_{AREA}:
-EnemyMovement05_R_{AREA}:
-EnemyMovement05_L_{AREA}:
+EnemyMovement01_R_{AREA}: ; 04:97EF
+EnemyMovement01_L_{AREA}: ; 04:97EF
+EnemyMovement02_R_{AREA}: ; 04:97EF
+EnemyMovement02_L_{AREA}: ; 04:97EF
+EnemyMovement03_R_{AREA}: ; 04:97EF
+EnemyMovement03_L_{AREA}: ; 04:97EF
+EnemyMovement04_R_{AREA}: ; 04:97EF
+EnemyMovement04_L_{AREA}: ; 04:97EF
+EnemyMovement05_R_{AREA}: ; 04:97EF
+EnemyMovement05_L_{AREA}: ; 04:97EF
     ; nothing
 
 ; ripper
-EnemyMovement06_R_{AREA}:
+EnemyMovement06_R_{AREA}: ; 04:97EF
     SignMagSpeed $01,  1,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement06_L_{AREA}:
+EnemyMovement06_L_{AREA}: ; 04:97F2
     SignMagSpeed $01, -1,  0
     EnemyMovementInstr_Restart
 
 ; skree
-EnemyMovement07_R_{AREA}:
+EnemyMovement07_R_{AREA}: ; 04:97F5
     SignMagSpeed $04,  2,  2
     SignMagSpeed $01,  2,  4
     SignMagSpeed $01,  2,  2
@@ -515,7 +525,7 @@ EnemyMovement07_R_{AREA}:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
-EnemyMovement07_L_{AREA}:
+EnemyMovement07_L_{AREA}: ; 04:9809
     SignMagSpeed $04, -2,  2
     SignMagSpeed $01, -2,  4
     SignMagSpeed $01, -2,  2
@@ -528,52 +538,52 @@ EnemyMovement07_L_{AREA}:
     SignMagSpeed $64,  0,  0
     EnemyMovementInstr_StopMovement
 
-EnemyMovement08_R_{AREA}:
-EnemyMovement08_L_{AREA}:
-EnemyMovement09_R_{AREA}:
-EnemyMovement09_L_{AREA}:
-EnemyMovement0A_R_{AREA}:
-EnemyMovement0A_L_{AREA}:
-EnemyMovement0B_R_{AREA}:
-EnemyMovement0B_L_{AREA}:
+EnemyMovement08_R_{AREA}: ; 04:981D
+EnemyMovement08_L_{AREA}: ; 04:981D
+EnemyMovement09_R_{AREA}: ; 04:981D
+EnemyMovement09_L_{AREA}: ; 04:981D
+EnemyMovement0A_R_{AREA}: ; 04:981D
+EnemyMovement0A_L_{AREA}: ; 04:981D
+EnemyMovement0B_R_{AREA}: ; 04:981D
+EnemyMovement0B_L_{AREA}: ; 04:981D
     ; nothing
 
 ; kraid
-EnemyMovement0C_R_{AREA}:
+EnemyMovement0C_R_{AREA}: ; 04:981D
     SignMagSpeed $14,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14, -1,  1
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
-EnemyMovement0C_L_{AREA}:
+EnemyMovement0C_L_{AREA}: ; 04:9824
     SignMagSpeed $14, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $14,  1,  1
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
-EnemyMovement0D_R_{AREA}:
+EnemyMovement0D_R_{AREA}: ; 04:982B
     SignMagSpeed $32,  1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32, -1,  1
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
-EnemyMovement0D_L_{AREA}:
+EnemyMovement0D_L_{AREA}: ; 04:9832
     SignMagSpeed $32, -1,  1
     SignMagSpeed $0A,  0,  0
     SignMagSpeed $32,  1,  1
     EnemyMovementInstr_RepeatPreviousUntilNoDeltaYThenTriggerResting
 
 ; kraid lint
-EnemyMovement0E_R_{AREA}:
+EnemyMovement0E_R_{AREA}: ; 04:9839
     SignMagSpeed $50,  4,  0
     EnemyMovementInstr_Restart
 
-EnemyMovement0E_L_{AREA}:
+EnemyMovement0E_L_{AREA}: ; 04:983C
     SignMagSpeed $50, -4,  0
     EnemyMovementInstr_Restart
 
 ; kraid nail
-EnemyMovement0F_R_{AREA}:
+EnemyMovement0F_R_{AREA}: ; 04:983F
     SignMagSpeed $02,  3, -7
     SignMagSpeed $04,  3, -6
     SignMagSpeed $04,  3, -5
@@ -587,7 +597,7 @@ EnemyMovement0F_R_{AREA}:
     SignMagSpeed $50,  3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement0F_L_{AREA}:
+EnemyMovement0F_L_{AREA}: ; 04:9856
     SignMagSpeed $02, -3, -7
     SignMagSpeed $04, -3, -6
     SignMagSpeed $04, -3, -5
@@ -601,7 +611,7 @@ EnemyMovement0F_L_{AREA}:
     SignMagSpeed $50, -3,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_R_{AREA}:
+EnemyMovement10_R_{AREA}: ; 04:986D
     SignMagSpeed $02,  4, -7
     SignMagSpeed $04,  4, -6
     SignMagSpeed $04,  4, -5
@@ -615,7 +625,7 @@ EnemyMovement10_R_{AREA}:
     SignMagSpeed $50,  4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement10_L_{AREA}:
+EnemyMovement10_L_{AREA}: ; 04:9884
     SignMagSpeed $02, -4, -7
     SignMagSpeed $04, -4, -6
     SignMagSpeed $04, -4, -5
@@ -629,7 +639,7 @@ EnemyMovement10_L_{AREA}:
     SignMagSpeed $50, -4,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_R_{AREA}:
+EnemyMovement11_R_{AREA}: ; 04:989B
     SignMagSpeed $02,  2, -7
     SignMagSpeed $04,  2, -6
     SignMagSpeed $04,  2, -5
@@ -643,7 +653,7 @@ EnemyMovement11_R_{AREA}:
     SignMagSpeed $50,  2,  7
     EnemyMovementInstr_Restart
 
-EnemyMovement11_L_{AREA}:
+EnemyMovement11_L_{AREA}: ; 04:98B2
     SignMagSpeed $02, -2, -7
     SignMagSpeed $04, -2, -6
     SignMagSpeed $04, -2, -5
@@ -657,7 +667,7 @@ EnemyMovement11_L_{AREA}:
     SignMagSpeed $50, -2,  7
     EnemyMovementInstr_Restart
 
-EnProjectileMovement0_{AREA}:
+EnProjectileMovement0_{AREA}: ; 04:98C9
     SignMagSpeed $04,  3, -3
     SignMagSpeed $05,  3, -2
     SignMagSpeed $06,  3, -1
@@ -667,7 +677,7 @@ EnProjectileMovement0_{AREA}:
     SignMagSpeed $50,  3,  3
     .byte $FF
 
-EnProjectileMovement1_{AREA}:
+EnProjectileMovement1_{AREA}: ; 04:98D8
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
     SignMagSpeed $07,  2, -1
@@ -677,7 +687,7 @@ EnProjectileMovement1_{AREA}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement2_{AREA}:
+EnProjectileMovement2_{AREA}: ; 04:98E7
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
     SignMagSpeed $05,  2, -1
@@ -687,7 +697,7 @@ EnProjectileMovement2_{AREA}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-EnProjectileMovement3_{AREA}:
+EnProjectileMovement3_{AREA}: ; 04:98F6
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
     SignMagSpeed $03,  2, -1
@@ -697,7 +707,7 @@ EnProjectileMovement3_{AREA}:
     SignMagSpeed $50,  2,  7
     .byte $FF
 
-UpdateEnemyCommon_Decide_{AREA}:
+UpdateEnemyCommon_Decide_{AREA}: ; 04:9905
     lda EnemyStatusPreAI
     cmp #enemyStatus_Resting
     beq @resting
@@ -706,11 +716,11 @@ UpdateEnemyCommon_Decide_{AREA}:
         ; enemy default
         lda $00
         jmp CommonJump_UpdateEnemyCommon
-    @resting:
+    @resting: ; 04:9914
         ; enemy resting
         lda $01
         jmp CommonJump_UpdateEnemyCommon_noMove
-    @explode:
+    @explode: ; 04:9919
         ; enemy explode
         jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
@@ -742,75 +752,75 @@ UpdateEnemyCommon_Decide_{AREA}:
 ;  are in are in kraid.asm. Extract those functions from that file if you plan
 ;  on removing it.
 
-AreaRoutineStub_{AREA}:
+AreaRoutineStub_{AREA}: ; 04:9C49
     rts
 
 ; What's this table?
-VRAMString00_{AREA}:
+VRAMString00_{AREA}: ; 04:9C4A
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
-VRAMString01_{AREA}:
+VRAMString01_{AREA}: ; 04:9C4F
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
-VRAMString02_{AREA}:
+VRAMString02_{AREA}: ; 04:9C54
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
-VRAMString03_{AREA}:
+VRAMString03_{AREA}: ; 04:9C59
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
-VRAMString04_{AREA}:
+VRAMString04_{AREA}: ; 04:9C5E
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
-VRAMString05_{AREA}:
+VRAMString05_{AREA}: ; 04:9C63
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
-VRAMString06_{AREA}:
+VRAMString06_{AREA}: ; 04:9C68
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
-VRAMString07_{AREA}:
+VRAMString07_{AREA}: ; 04:9C6D
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
-VRAMString08_{AREA}:
+VRAMString08_{AREA}: ; 04:9C72
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
-VRAMString09_{AREA}:
+VRAMString09_{AREA}: ; 04:9C77
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
-VRAMString0A_{AREA}:
+VRAMString0A_{AREA}: ; 04:9C7C
     .byte $22
     .byte $74, $75
     .byte $76, $77
 
-VRAMString0B_{AREA}:
+VRAMString0B_{AREA}: ; 04:9C81
     .byte $22
     .byte $78, $79
     .byte $7A, $7B
 
-VRAMString0C_{AREA}:
-VRAMString0D_{AREA}:
-VRAMString0E_{AREA}:
-VRAMString0F_{AREA}:
-VRAMString10_{AREA}:
+VRAMString0C_{AREA}: ; 04:9C86
+VRAMString0D_{AREA}: ; 04:9C86
+VRAMString0E_{AREA}: ; 04:9C86
+VRAMString0F_{AREA}: ; 04:9C86
+VRAMString10_{AREA}: ; 04:9C86
     ;nothing
 
 .include "kraid/enemy_sprite_data.asm"
@@ -976,7 +986,7 @@ VRAMString10_{AREA}:
 
 .section "ROM Bank $004 - Reset" bank 4 slot "ROMSwitchSlot" orga $BFB0 force
 
-ROMSWITCH_RESET:
+ROMSWITCH_RESET: ; 04:BFB0
 .include "reset.asm"
 
 .ends

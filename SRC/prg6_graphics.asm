@@ -25,7 +25,7 @@
 ;------------------------------------------[ Start of code ]-----------------------------------------
 
 ; These are loaded together.
-GFX_Samus:
+GFX_Samus: ; 06:8000
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "common_chr/samus.chr" ; 8000 - Samus and gear tile patterns.
         .incbin "common_chr/items.chr" ; Item Graphics (plus bomb, the N in "EN", and another dot thingy)
@@ -36,7 +36,7 @@ GFX_Samus:
         .incbin "common_chr/items_cns.chr" ; Item Graphics (plus bomb, the N in "EN", and another dot thingy)
     .endif
 
-GFX_IntroSprites:
+GFX_IntroSprites: ; 06:89A0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         .incbin "common_chr/intro_sprites.chr" ; 89A0 - Intro and end tile patterns.
     .elif BUILDTARGET == "NES_MZM"
@@ -45,7 +45,7 @@ GFX_IntroSprites:
 
 ; Garbage data
 ; (part of areas_common.asm from L6_8AA0 to L6_8BDF (sprite data, Samus door routines))
-GFX_Garbage8AA0:
+GFX_Garbage8AA0: ; 06:8AA0
     .byte $FF, $04, $00, $00, $5A, $FF, $13, $00, $00, $B0, $B1, $B2, $B3, $FF, $13, $00
     .byte $00, $B4, $B5, $B6, $B7, $B8, $B6, $B9, $B3, $FF, $13, $00, $00, $B3, $BA, $BA
     .byte $FE, $80, $80, $FF, $1E, $00, $08, $FA, $FB, $FA, $FB, $FC, $00, $04, $C5, $C6
@@ -68,7 +68,7 @@ GFX_Garbage8AA0:
     .byte $DE, $05, $01, $0A, $01, $BD, $0A, $03, $29, $04, $F0, $D5, $DE, $0F, $03, $D0
 
 ; 8BE0 - METROID title screen CHR
-GFX_Title:
+GFX_Title: ; 06:8BE0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/title.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -80,7 +80,7 @@ GFX_Title:
     .endif
 
 ; 90E0 - Suitless Samus (in-game)
-GFX_SamusSuitless:
+GFX_SamusSuitless: ; 06:90E0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "common_chr/samus_suitless.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -90,7 +90,7 @@ GFX_SamusSuitless:
     .endif
 
 ; 9890 - Exclamation point
-GFX_ExclamationPoint:
+GFX_ExclamationPoint: ; 06:9890
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/exclamation_point.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -100,7 +100,7 @@ GFX_ExclamationPoint:
     .endif
 
 ; Garbage data (leftovers from Ridley's bank)
-GFX_Garbage98A0:
+GFX_Garbage98A0: ; 06:98A0
     .byte $B9, $D5, $98, $9D, $03, $04, $BD, $05, $04, $0A, $30, $1E, $BD, $F4, $6A, $C9
     .byte $02, $D0, $17, $20, $36, $80, $48, $20, $39, $80, $85, $05, $68, $85, $04, $20
     .byte $E1, $9A, $20, $27, $80, $90, $08, $20, $F1, $9A, $A9, $03, $4C, $03, $80, $A9
@@ -117,7 +117,7 @@ GFX_Garbage98A0:
     .byte $C9, $01, $F0, $36, $C9, $03, $F0, $2F, $BD, $F4, $6A, $C9, $03, $F0, $23, $BD
 
 ;Blank tile patterns.
-GFX_Solid:
+GFX_Solid: ; 06:9980
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
         .incbin "common_chr/solid.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -125,7 +125,7 @@ GFX_Solid:
     .endif
 
 ; Garbage data (leftovers from Ridley's bank)
-GFX_Garbage99C0:
+GFX_Garbage99C0: ; 06:99C0
     .byte $53, $4D, $50, $50, $4D, $53, $A6, $4B, $B0, $19, $A5, $00, $D0, $0D, $BC, $0A
     .byte $04, $88, $98, $29, $03, $9D, $0A, $04, $4C, $AD, $99, $BD, $05, $04, $49, $01
     .byte $9D, $05, $04, $60, $20, $F8, $99, $20, $00, $9A, $A6, $4B, $90, $09, $20, $F8
@@ -190,7 +190,7 @@ GFX_Garbage99C0:
     .byte $00, $00, $F0, $00, $F0, $08, $F8, $08, $F0, $F0, $F0, $F8, $F8, $F0, $00, $F0
 
 ; 9DA0 - Brinstar BG CHR data
-GFX_BrinBG1:
+GFX_BrinBG1: ; 06:9DA0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "brinstar/bg_chr_1.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -202,7 +202,7 @@ GFX_BrinBG1:
     .endif
 
 ; 9EF0 - Common Room Elements (loaded in all areas)
-GFX_CREBG2:
+GFX_CREBG2: ; 06:9EF0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_CRE_2.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -214,7 +214,7 @@ GFX_CREBG2:
     .endif
 
 ; A6F0 - Norfair BG CHR data
-GFX_NorfBG1:
+GFX_NorfBG1: ; 06:A6F0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "norfair/bg_chr_1.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -226,7 +226,7 @@ GFX_NorfBG1:
     .endif
 
 ; A950 - Norfair BG CHR data
-GFX_NorfBG2:
+GFX_NorfBG2: ; 06:A950
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "norfair/bg_chr_2.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -238,7 +238,7 @@ GFX_NorfBG2:
     .endif
 
 ; A9C0 - Kraid, Ridley, Tourian BG CHR
-GFX_BossBG:
+GFX_BossBG: ; 06:A9C0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/bg_boss_areas.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -250,7 +250,7 @@ GFX_BossBG:
     .endif
 
 ; ACA0 - Tourian BG CHR
-GFX_TourBG:
+GFX_TourBG: ; 06:ACA0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "tourian/bg_chr.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -262,7 +262,7 @@ GFX_TourBG:
     .endif
 
 ; B2A0 - Zebetite BG CHR
-GFX_Zebetite:
+GFX_Zebetite: ; 06:B2A0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM_G"
         .incbin "tourian/zebetite_chr.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -272,7 +272,7 @@ GFX_Zebetite:
     .endif
 
 ; B330 - More Kraid BG CHR
-GFX_KraiBG2:
+GFX_KraiBG2: ; 06:B330
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "kraid/bg_chr_2.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -284,7 +284,7 @@ GFX_KraiBG2:
     .endif
 
 ; B3F0 - More Ridley BG CHR
-GFX_RidlBG:
+GFX_RidlBG: ; 06:B3F0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "ridley/bg_chr.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -296,7 +296,7 @@ GFX_RidlBG:
     .endif
 
 ;Not used.
-GFX_GarbageB4B0:
+GFX_GarbageB4B0: ; 06:B4B0
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .byte $65, $06, $DD, $60, $06, $D0, $05, $A9, $00, $9D, $65, $06, $60, $8D, $4D, $06
 .elif BUILDTARGET == "NES_PAL"
@@ -304,7 +304,7 @@ GFX_GarbageB4B0:
 .endif
 
 ; B4C0 - Font (upper and lowercase)
-GFX_Font:
+GFX_Font: ; 06:B4C0
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         .incbin "common_chr/font.chr"
     .elif BUILDTARGET == "NES_MZM"
@@ -315,7 +315,7 @@ GFX_Font:
         .incbin "common_chr/font_cns.chr"
     .endif
 
-GFX_GarbageB8C0:
+GFX_GarbageB8C0: ; 06:B8C0
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
     .incbin "common_chr/exclamation_point.chr" ; B8C0 - Exclamation point (unused)
 .elif BUILDTARGET == "NES_CNS"
@@ -554,7 +554,7 @@ GFX_GarbageB8C0:
 
 .section "ROM Bank $006 - Reset" bank 6 slot "ROMSwitchSlot" orga $BFB0 force
 
-ROMSWITCH_RESET:
+ROMSWITCH_RESET: ; 06:BFB0
 .include "reset.asm"
 
 .ends
