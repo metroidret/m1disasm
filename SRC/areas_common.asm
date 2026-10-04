@@ -18,57 +18,84 @@
 ;-----------------------------------------[ Start of code ]------------------------------------------
 
 ; These first three all jump to different points within the same procedure
-CommonJump_UpdateEnemyCommon: ;$8000
+CommonJump_UpdateEnemyCommon: ; $8000
     jmp UpdateEnemyCommon
-CommonJump_UpdateEnemyCommon_noMove: ;$8003
+
+CommonJump_UpdateEnemyCommon_noMove: ; $8003
     jmp UpdateEnemyCommon@noMove
-CommonJump_UpdateEnemyCommon_noMoveNoAnim: ;$8006
+
+CommonJump_UpdateEnemyCommon_noMoveNoAnim: ; $8006
     jmp UpdateEnemyCommon@noMoveNoAnim
-CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ;$8009
+
+CommonJump_CrawlerAIRoutine_ShouldCrawlerMove: ; $8009
     jmp CrawlerAIRoutine_ShouldCrawlerMove
-CommonJump_UpdateEnemyAnim: ;$800C
+
+CommonJump_UpdateEnemyAnim: ; $800C
     jmp UpdateEnemyAnim             ;($E094)
-CommonJump_InitEnAnimIndex: ;$800F
+
+CommonJump_InitEnAnimIndex: ; $800F
     jmp InitEnAnimIndex
-CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ;$8012 (unused?)
+
+CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ; $8012
+    ; (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
-CommonJump_InitEnemyForceSpeedTowardsSamusDelayAndHealth: ;$8015 (unused?)
+
+CommonJump_InitEnemyForceSpeedTowardsSamusDelayAndHealth: ; $8015
+    ; (unused?)
     jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
-CommonJump_InitEnResetAnimIndex: ;$8018 (unused?)
+
+CommonJump_InitEnResetAnimIndex: ; $8018
+    ; (unused?)
     jmp InitEnResetAnimIndex
-CommonJump_EnemyFlipAfterDisplacement: ;$801B
+
+CommonJump_EnemyFlipAfterDisplacement: ; $801B
     jmp EnemyFlipAfterDisplacement
-CommonJump_InitEnActiveAnimIndex_NoInitOffset: ;$801E
+
+CommonJump_InitEnActiveAnimIndex_NoInitOffset: ; $801E
     jmp InitEnActiveAnimIndex_NoInitOffset
-CommonJump_SpawnEnProjectile: ;$8021
+
+CommonJump_SpawnEnProjectile: ; $8021
     jmp SpawnEnProjectile
-CommonJump_JumpEngine: ;$8024
+
+CommonJump_JumpEngine: ; $8024
     jmp JumpEngine               ;($C27C)
-CommonJump_ApplySpeedToPosition: ;$8027
+
+CommonJump_ApplySpeedToPosition: ; $8027
     jmp ApplySpeedToPosition
-CommonJump_0E: ;$802A
+
+CommonJump_0E: ; $802A
     jmp LEB6E
-CommonJump_EnemyGetDeltaY: ;$802D
+
+CommonJump_EnemyGetDeltaY: ; $802D
     jmp EnemyGetDeltaY
-CommonJump_EnemyGetDeltaX: ;$8030
+
+CommonJump_EnemyGetDeltaX: ; $8030
     jmp EnemyGetDeltaX
-CommonJump_EnemyBGCollideOrApplySpeed: ;$8033
+
+CommonJump_EnemyBGCollideOrApplySpeed: ; $8033
     jmp EnemyBGCollideOrApplySpeed
-CommonJump_EnemyGetDeltaY_UsingAcceleration: ;$8036
+
+CommonJump_EnemyGetDeltaY_UsingAcceleration: ; $8036
     jmp EnemyGetDeltaY_UsingAcceleration
-CommonJump_EnemyGetDeltaX_UsingAcceleration: ;$8039
+
+CommonJump_EnemyGetDeltaX_UsingAcceleration: ; $8039
     jmp EnemyGetDeltaX_UsingAcceleration
-CommonJump_DrawEnemy: ;$803C
+
+CommonJump_DrawEnemy: ; $803C
     jmp DrawEnemy
-CommonJump_DrawTileBlast: ;$803F
+
+CommonJump_DrawTileBlast: ; $803F
     jmp DrawTileBlast
-CommonJump_SubtractHealth: ;$8042
+
+CommonJump_SubtractHealth: ; $8042
     jmp SubtractHealth              ;($CE92)
-CommonJump_Base10Subtract: ;$8045
+
+CommonJump_Base10Subtract: ; $8045
     jmp Base10Subtract              ;($C3FB)
 
+
 ; Crawler jump table
-CrawlerMovementRoutinesTable:
+CrawlerMovementRoutinesTable: ; $8048
     .word EnemyMoveOnePixelRight-1
     .word EnemyMoveOnePixelLeft-1
     .word EnemyMoveOnePixelDown-1
@@ -81,7 +108,7 @@ CrawlerMovementRoutinesTable:
 ;-------------------------------------------------------------------------------
 ; A common enemy AI/movement routine
 ; called by F410 in the engine, via CommonJump_UpdateEnemyCommon
-EnemyMove:
+EnemyMove: ; $8058
     ; Set x to point to enemy
     ldx PageIndex
 
@@ -104,23 +131,23 @@ EnemyMove:
         sta EnemyMovePixelQty
 
         ; move one pixel upwards EnemyMovePixelQty times
-        @loop_Up:
+        @loop_Up: ; $8073
             jsr EnemyMoveOnePixelUp ; attempt to move one pixel
             jsr EnemyIfMoveFailedUp ; end loop if attempt failed
             dec EnemyMovePixelQty
             bne @loop_Up
-    @endIf_Up:
+    @endIf_Up: ; $807D
     beq @endIf_Down
         ; save absolute delta y into EnemyMovePixelQty
         sta EnemyMovePixelQty
 
         ; move one pixel downwards EnemyMovePixelQty times
-        @loop_Down:
+        @loop_Down: ; $8081
             jsr EnemyMoveOnePixelDown ; attempt to move one pixel
             jsr EnemyIfMoveFailedDown ; end loop if attempt failed
             dec EnemyMovePixelQty
             bne @loop_Down
-    @endIf_Down:
+    @endIf_Down: ; $808B
 
     ; load delta x into a
     jsr EnemyGetDeltaX
@@ -131,30 +158,30 @@ EnemyMove:
         sta EnemyMovePixelQty
 
         ; move one pixel to the left EnemyMovePixelQty times
-        @loop_Left:
+        @loop_Left: ; $8097
             jsr EnemyMoveOnePixelLeft ; attempt to move one pixel
             jsr EnemyIfMoveFailedLeft ; end loop if attempt failed
             dec EnemyMovePixelQty
             bne @loop_Left
-    @endIf_Left:
+    @endIf_Left: ; $80A1
     beq @endIf_Right
         ; save absolute delta x into EnemyMovePixelQty
         sta EnemyMovePixelQty
 
         ; move one pixel to the right EnemyMovePixelQty times
-        @loop_Right:
+        @loop_Right: ; $80A5
             jsr EnemyMoveOnePixelRight ; attempt to move one pixel
             jsr EnemyIfMoveFailedRight ; end loop if attempt failed
             dec EnemyMovePixelQty
             bne @loop_Right
-    @endIf_Right:
+    @endIf_Right: ; $80AF
 
-@RTS:
+@RTS: ; $80AF
     rts
 
 ;-------------------------------------------------------------------------------
 ; A = TableAtL977B[EnemyType]*2
-LoadTableAt977B: ; L80B0
+LoadTableAt977B: ; $80B0
     ldy EnsExtra.0.type,x
     lda L977B,y
     ;*2
@@ -163,7 +190,7 @@ LoadTableAt977B: ; L80B0
 
 ;-------------------------------------------------------------------------------
 ; Up movement related ?
-EnemyIfMoveFailedUp:
+EnemyIfMoveFailedUp: ; $80B8
     ; If EnemyMoveOnePixelUp returned the carry flag, movement was successful
     ; we dont do anything in that case
     ldx PageIndex
@@ -174,12 +201,12 @@ EnemyIfMoveFailedUp:
     lda Ens.0.data05,x
     bpl @facingHorizontal
 
-@bounce:
+@bounce: ; $80C1
     ; enemy faces in a vertical direction or data1F == 0
     jsr EnemyIfMoveFailedVertical_Bounce
     jmp @abortLoop
 
-@facingHorizontal:
+@facingHorizontal: ; $80C7
     ; enemy faces in a horizontal direction
     ; branch if enemy uses movement strings
     jsr LoadTableAt977B
@@ -195,7 +222,7 @@ EnemyIfMoveFailedUp:
     jsr EnemyTriggerResting_AndClearEnAccelY
     beq @landOnCeilingPt2 ; branch always
 
-@brushOnCeiling:
+@brushOnCeiling: ; $80D8
     ; data1F == #$40
     ; half Y speed and make it upwards
     sec
@@ -203,13 +230,13 @@ EnemyIfMoveFailedUp:
     ror Ens.0.speedSubPixelY,x
     jmp @abortLoop
 
-@landOnCeilingPt2:
+@landOnCeilingPt2: ; $80E2
     ; zero Y speed
     sta Ens.0.speedY,x
     sta Ens.0.speedSubPixelY,x
     beq @abortLoop ; branch always
 
-@movementStrings:
+@movementStrings: ; $80EA
     ; enemy uses movement strings
     ; branch if bit 1 of L977B is clear
     lda L977B,y
@@ -220,16 +247,16 @@ EnemyIfMoveFailedUp:
     lda #$04
     jsr XorEnData05
 
-@abortLoop:
+@abortLoop: ; $80F6
     ; abort loop
     lda #$01
     sta EnemyMovePixelQty
-@RTS:
+@RTS: ; $80FA
     rts
 
 ;-------------------------------------------------------------------------------
 ; Down movement related?
-EnemyIfMoveFailedDown: ;($80FA)
+EnemyIfMoveFailedDown: ; $80FB
     ; If EnemyMoveOnePixelDown returned the carry flag, movement was successful
     ; we dont do anything in that case
     ldx PageIndex
@@ -240,12 +267,12 @@ EnemyIfMoveFailedDown: ;($80FA)
     lda Ens.0.data05,x
     bpl @facingHorizontal
 
-@bounce:
+@bounce: ; $8104
     ; enemy faces in a vertical direction or data1F == 0
     jsr EnemyIfMoveFailedVertical_Bounce
     jmp @abortLoop
 
-@facingHorizontal:
+@facingHorizontal: ; $810A
     ; enemy faces in a horizontal direction
     ; branch if enemy uses movement strings
     jsr LoadTableAt977B
@@ -263,14 +290,14 @@ EnemyIfMoveFailedDown: ;($80FA)
     ror Ens.0.speedSubPixelY,x
     jmp @abortLoop
 
-@landOnFloor:
+@landOnFloor: ; $8120
     ; data1F == #$40
     ; trigger resting period
     jsr EnemyTriggerResting_AndClearEnAccelY
     ; fallthrough
     ; (what? shouldn't it be symmetrical to the EnemyIfMoveFailedUp code?)
 
-@movementStrings:
+@movementStrings: ; $8123
     ; enemy uses movement strings
     ; branch if bit 1 of L977B is clear
     lda L977B,y
@@ -281,16 +308,16 @@ EnemyIfMoveFailedDown: ;($80FA)
     lda #$04
     jsr XorEnData05
 
-@abortLoop:
+@abortLoop: ; $812F
     ; abort loop
     lda #$01
     sta EnemyMovePixelQty
-@RTS:
+@RTS: ; $8133
     rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related ?
-EnemyIfMoveFailedRight: ;($8134)
+EnemyIfMoveFailedRight: ; $8134
     ; If EnemyMoveOnePixelRight returned the carry flag, movement was successful
     ; we dont do anything in that case
     ldx PageIndex
@@ -306,12 +333,12 @@ EnemyIfMoveFailedRight: ;($8134)
     lda Ens.0.data05,x
     bmi @facingVertical
 
-@bounce:
+@bounce: ; $8142
     ; enemy faces in a horizontal direction or data1F == 0
     jsr EnemyIfMoveFailedHorizontal_Bounce
     jmp @abortLoop
 
-@facingVertical:
+@facingVertical: ; $8148
     ; enemy faces in a vertical direction
     ; check data1F
     lda EnsExtra.0.data1F,x
@@ -325,13 +352,13 @@ EnemyIfMoveFailedRight: ;($8134)
     ror Ens.0.speedSubPixelX,x
     jmp @abortLoop
 
-@landOnRightWall:
+@landOnRightWall: ; $8159
     ; data1F == #$40
     ; trigger resting period
     jsr EnemyTriggerResting_AndClearEnAccelX
     beq @abortLoop ; branch always
 
-@movementStrings:
+@movementStrings: ; $815E
     ; enemy uses movement strings
     ; branch if bit 0 of L977B is clear
     lda L977B,y
@@ -341,16 +368,16 @@ EnemyIfMoveFailedRight: ;($8134)
     lda #$01
     jsr XorEnData05
 
-@abortLoop:
+@abortLoop: ; $8169
     ; abort loop
     lda #$01
     sta EnemyMovePixelQty
-@RTS:
+@RTS: ; $816D
     rts
 
 ;-------------------------------------------------------------------------------
 ; Left Movement related?
-EnemyIfMoveFailedLeft:
+EnemyIfMoveFailedLeft: ; $816E
     ; If EnemyMoveOnePixelLeft returned the carry flag, movement was successful
     ; we dont do anything in that case
     ldx PageIndex
@@ -366,12 +393,12 @@ EnemyIfMoveFailedLeft:
     lda Ens.0.data05,x
     bmi @facingVertical
 
-@bounce:
+@bounce: ; $817C
     ; enemy faces in a horizontal direction or data1F == 0
     jsr EnemyIfMoveFailedHorizontal_Bounce
     jmp @abortLoop
 
-@facingVertical:
+@facingVertical: ; $8182
     ; enemy faces in a vertical direction
     ; check data1F
     lda EnsExtra.0.data1F,x
@@ -383,7 +410,7 @@ EnemyIfMoveFailedLeft:
     jsr EnemyTriggerResting_AndClearEnAccelX
     beq @landOnLeftWallPt2 ; branch always
 
-@brushOnLeftWall:
+@brushOnLeftWall: ; $818E
     ; data1F == #$40
     ; half X speed and make it leftwards
     sec
@@ -391,13 +418,13 @@ EnemyIfMoveFailedLeft:
     ror Ens.0.speedSubPixelX,x
     jmp @abortLoop
 
-@landOnLeftWallPt2:
+@landOnLeftWallPt2: ; $8198
     ; zero X speed
     sta Ens.0.speedX,x
     sta Ens.0.speedSubPixelX,x
     beq @abortLoop ; branch always
 
-@movementStrings:
+@movementStrings: ; $81A0
     ; enemy uses movement strings
     ; branch if bit 1 of L977B is clear
     ; 2 lsr's to compensate for the asl in LoadTableAt977B
@@ -409,35 +436,35 @@ EnemyIfMoveFailedLeft:
     lda #$01
     jsr XorEnData05
 
-@abortLoop:
+@abortLoop: ; $81AC
     ; abort loop
     lda #$01
     sta EnemyMovePixelQty
-@RTS:
+@RTS: ; $81B0
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerResting_AndClearEnAccelY:
+EnemyTriggerResting_AndClearEnAccelY: ; $81B1
     jsr EnemyTriggerResting
     sta EnsExtra.0.accelY,x
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerResting:
+EnemyTriggerResting: ; $81B8
     lda #$20
     jsr OrEnData05
     lda #$00
     rts
 
 ;-------------------------------------------------------------------------------
-EnemyTriggerResting_AndClearEnAccelX:
+EnemyTriggerResting_AndClearEnAccelX: ; $81C0
     jsr EnemyTriggerResting
     sta EnsExtra.0.accelX,x
     rts
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related
-EnemyIfMoveFailedHorizontal_Bounce:
+EnemyIfMoveFailedHorizontal_Bounce: ; $81C7
     ; exit if bit 5 of L968B is set
     jsr LoadBit5ofTableAt968B
     bne @RTS
@@ -446,13 +473,15 @@ EnemyIfMoveFailedHorizontal_Bounce:
     lda #$01
     jsr XorEnData05
 
-@flipSpeedAndAccel: ;referenced in bank 7
+@flipSpeedAndAccel: ; $81D1
+    ; referenced in bank 7
     ; negate acceleration
     lda EnsExtra.0.accelX,x
     jsr TwosComplement
     sta EnsExtra.0.accelX,x
 
-@flipSpeed: ;referenced in bank 7
+@flipSpeed: ; $81DA
+    ; referenced in bank 7
     ; exit if bit 5 of L968B is set
     jsr LoadBit5ofTableAt968B
     bne @RTS
@@ -466,23 +495,23 @@ EnemyIfMoveFailedHorizontal_Bounce:
         lda #$00
         sbc Ens.0.speedSubPixelX,x
         sta Ens.0.speedSubPixelX,x
-    @endIf_speedSubPixel:
+    @endIf_speedSubPixel: ; $81ED
     ; Negate speed
     lda #$00
     sbc Ens.0.speedX,x
     sta Ens.0.speedX,x
-@RTS:
+@RTS: ; $81F5
     rts
 
 ;-------------------------------------------------------------------------------
-LoadBit5ofTableAt968B:
+LoadBit5ofTableAt968B: ; $81F6
     jsr ReadTableAt968B
     and #$20
     rts
 
 ;-------------------------------------------------------------------------------
 ; Vertical Movement Related
-EnemyIfMoveFailedVertical_Bounce:
+EnemyIfMoveFailedVertical_Bounce: ; $81FC
      ; Exit if bit 5 is set
     jsr LoadBit5ofTableAt968B
     bne EnemyIfMoveFailedHorizontal_Bounce@RTS
@@ -491,13 +520,15 @@ EnemyIfMoveFailedVertical_Bounce:
     lda #$04
     jsr XorEnData05
 
-@flipSpeedAndAccel: ;referenced in bank 7
+@flipSpeedAndAccel: ; $8206
+    ; referenced in bank 7
     ; negate acceleration
     lda EnsExtra.0.accelY,x
     jsr TwosComplement
     sta EnsExtra.0.accelY,x
 
-@flipSpeed: ;referenced in bank 7
+@flipSpeed: ; $820F
+    ; referenced in bank 7
     ; Exit if bit 5 is set
     jsr LoadBit5ofTableAt968B
     bne @RTS
@@ -511,24 +542,24 @@ EnemyIfMoveFailedVertical_Bounce:
         lda #$00
         sbc Ens.0.speedSubPixelY,x
         sta Ens.0.speedSubPixelY,x
-    @endIf_speedSubPixel:
+    @endIf_speedSubPixel: ; $8222
     ; Negate speed
     lda #$00
     sbc Ens.0.speedY,x
     sta Ens.0.speedY,x
-@RTS:
+@RTS: ; $822A
     rts
 
 ;-------------------------------------------------------------------------------
 ; Loads a pointer from this table to $81 and $82
-LoadEnemyMovementPtr:
+LoadEnemyMovementPtr: ; $822B
     ; use horizontal facing direction if bit 7 of Ens.0.data05 is not set
     lda Ens.0.data05,x
     bpl @endIf_A
         ; use vertical facing direction if bit 7 of Ens.0.data05 is set
         lsr
         lsr
-    @endIf_A:
+    @endIf_A: ; $8232
     ; put facing direction bit into carry
     lsr
     ; y = ((Ens.0.movementIndex) * 2 + (facing direction)) * 2
@@ -545,12 +576,12 @@ LoadEnemyMovementPtr:
 
 ;-------------------------------------------------------------------------------
 ; Determines and returns delta y for a given frame in $00
-EnemyGetDeltaY:
+EnemyGetDeltaY: ; $8244
     ; jump if enemy uses acceleration to move itself
     jsr LoadTableAt977B
     bpl @endIf_A
         jmp EnemyGetDeltaY_UsingAcceleration
-    @endIf_A:
+    @endIf_A: ; $824C
 
     ; enemy uses movement strings to move itself
     ; exit if enemy is triggering a resting period
@@ -562,10 +593,10 @@ EnemyGetDeltaY:
     ; enemy is not triggering a resting period
     ; load movement string pointer into EnemyMovementPtr
     jsr LoadEnemyMovementPtr
-@ReadByteAtIndex:
+@ReadByteAtIndex: ; $8258
     ; read instruction at current index into string
     ldy Ens.0.movementInstrIndex,x
-@ReadByte:
+@ReadByte: ; $825B
     lda (EnemyMovementPtr),y
 
 ;CommonCase
@@ -600,11 +631,11 @@ EnemyGetDeltaY:
     beq EnemyGetDeltaY@ReadByteAtIndex ; branch always
 
 ;---------------------------------------
-GotoEnemyGetDeltaY_TriggerResting: ; L827C
+GotoEnemyGetDeltaY_TriggerResting: ; $827C
     jmp EnemyGetDeltaY_TriggerResting
 
 ;---------------------------------------
-EnemyGetDeltaY_SignMagSpeed:
+EnemyGetDeltaY_SignMagSpeed: ; $827F
     ; Take the value from memory
     ; Branch ahead if velocityString[Ens.0.movementInstrIndex] - Ens.0.delay != 0
     sec
@@ -621,14 +652,15 @@ EnemyGetDeltaY_SignMagSpeed:
         ; Handle another byte
         bne EnemyGetDeltaY@ReadByte ; branch always
 
-    @endIf_A:
+    @endIf_A: ; $8290
     ; Increment Ens.0.delay
     inc Ens.0.delay,x
     ; Read the sign-magnitude speed vector from the next byte
     iny
     lda (EnemyMovementPtr),y
 
-@fromByte: ;referenced in bank 7
+@fromByte: ; $8296
+    ; referenced in bank 7
     ; Save the sign bit of y speed to the carry flag
     asl
     php
@@ -639,15 +671,15 @@ EnemyGetDeltaY_SignMagSpeed:
     bcc @endIf_B
         eor #$FF
         adc #$00 ; Since carry is set in this branch, this increments A
-    @endIf_B:
-EnemyGetDeltaY_Store:
+    @endIf_B: ; $82A2
+EnemyGetDeltaY_Store: ; $82A2
     ; Store this frame's delta y in temp
     sta Temp00_Delta
     rts
 
 ;---------------------------------------
 ; Clear EnsExtra.0.jumpDsplcmnt, move on to next byte in the stream
-EnemyGetDeltaY_ClearEnJumpDsplcmnt:
+EnemyGetDeltaY_ClearEnJumpDsplcmnt: ; $82A5
     inc Ens.0.movementInstrIndex,x
     iny
     lda #$00
@@ -657,7 +689,7 @@ EnemyGetDeltaY_ClearEnJumpDsplcmnt:
 ;---------------------------------------
 ; Don't move, and don't advance the movement counter
 ; HALT, perhaps?
-EnemyGetDeltaY_StopMovement:
+EnemyGetDeltaY_StopMovement: ; $82B0
 ; Double RTS !?
     pla
     pla
@@ -666,7 +698,7 @@ EnemyGetDeltaY_StopMovement:
 
 ;---------------------------------------
 ; Repeat Previous Movement Until Vertical Movement Fails, then move to next instruction
-EnemyGetDeltaY_RepeatPreviousUntilFailure:
+EnemyGetDeltaY_RepeatPreviousUntilFailure: ; $82B3
     ; bits 6 and 7 of data1F are used as flags to determine which vertical surface to check
     ; branch if bit 7 of data1F is unset
     lda EnsExtra.0.data1F,x
@@ -675,13 +707,13 @@ EnemyGetDeltaY_RepeatPreviousUntilFailure:
         ; check land on ceiling
         jsr EnemyCheckMoveUp
         jmp @endIf_A
-    @else_A:
+    @else_A: ; $82BE
         ; succeed instantly if data1F is zero
         beq @success
         ; bit 6 of data1F is set
         ; check land on floor
         jsr EnemyCheckMoveDown
-    @endIf_A:
+    @endIf_A: ; $82C3
     ; branch if movement check succeeded
     ldx PageIndex
     bcs @success
@@ -693,7 +725,7 @@ EnemyGetDeltaY_RepeatPreviousUntilFailure:
     sta EnsExtra.0.data1F,x
     beq @common ; Branch always
 
-@success:
+@success: ; $82D2
     ; movement check succeeded
     ; repeat the previous two bytes
     ldy Ens.0.movementInstrIndex,x
@@ -701,7 +733,7 @@ EnemyGetDeltaY_RepeatPreviousUntilFailure:
     dey
 
 ; Save Ens.0.movementInstrIndex
-@common:
+@common: ; $82D7
     tya
     sta Ens.0.movementInstrIndex,x
 ; Read the next bytes
@@ -723,13 +755,13 @@ EnemyGetDeltaY_RepeatPreviousUntilNoDeltaYThenTriggerResting: ; $82DE
         ; check land on ceiling
         jsr EnemyCheckMoveUp
         jmp @endIf_A
-    @else_A:
+    @else_A: ; $82EF
         ; fail instantly if data1F is zero (this is different than EnemyGetDeltaY_RepeatPreviousUntilFailure)
         beq @fail
         ; bit 6 of data1F is set
         ; check land on floor
         jsr EnemyCheckMoveDown
-    @endIf_A:
+    @endIf_A: ; $82F4
     ; branch if movement check failed
     ldx PageIndex
     bcc @fail
@@ -738,7 +770,7 @@ EnemyGetDeltaY_RepeatPreviousUntilNoDeltaYThenTriggerResting: ; $82DE
     ; run previous movement instruction
     jmp EnemyGetDeltaY@ReadByteAtIndex
 
-@fail:
+@fail: ; $82FB
     ; movement check failed
     ; branch if bit 5 of L968B entry is unset
     ldy EnsExtra.0.type,x
@@ -755,11 +787,11 @@ EnemyGetDeltaY_RepeatPreviousUntilNoDeltaYThenTriggerResting: ; $82DE
         ; (this clears bits 6 and 7, -->
         ;  bit 5 is set by the routine call that follows)
         sta Ens.0.data05,x
-    @endIf_B:
+    @endIf_B: ; $8312
     ; fallthrough
 ;---------------------------------------
 ; Used only at the end of dragon's movement string
-EnemyGetDeltaY_TriggerResting:
+EnemyGetDeltaY_TriggerResting: ; $8312
     ; the resting status will stop execution of a movement string and reset it back to the beginning
     ; when the enemy will become active again, movement string execution will start over
     jsr EnemyTriggerResting_AndClearEnAccelY
@@ -768,16 +800,16 @@ EnemyGetDeltaY_TriggerResting:
 
 ;-------------------------------------------------------------------------------
 ; Horizontal Movement Related?
-EnemyGetDeltaX:
+EnemyGetDeltaX: ; $8318
     ; jump if enemy uses acceleration to move itself
     jsr LoadTableAt977B
     bpl @endIf_A
         jmp EnemyGetDeltaX_UsingAcceleration
-    @endIf_A:
+    @endIf_A: ; $8320
     ; enemy uses movement strings to move itself
     ; fallthrough
 
-EnemyGetDeltaX_SignMagSpeed:
+EnemyGetDeltaX_SignMagSpeed: ; $8320
     ; If bit 5 of Ens.0.data05 is clear, don't move horizontally
     lda Ens.0.data05,x
     and #$20
@@ -789,7 +821,7 @@ EnemyGetDeltaX_SignMagSpeed:
     ldy Ens.0.movementInstrIndex,x
     iny
     lda (EnemyMovementPtr),y
-@fromByte:
+@fromByte: ; $832F
     tax
     ; Save the sign bit to the processor flags
     and #$08
@@ -801,15 +833,15 @@ EnemyGetDeltaX_SignMagSpeed:
     ; Negate, according to the sign bit
     beq @endIf_A
         jsr TwosComplement
-    @endIf_A:
-EnemyGetDeltaX_Store:
+    @endIf_A: ; $833C
+EnemyGetDeltaX_Store: ; $833C
     ; Store this frame's delta x in temp
     sta Temp00_Delta
     rts
 
 ;-------------------------------------------------------------------------------
 ; apply acceleration to speed and return delta y for enemy
-EnemyGetDeltaY_UsingAcceleration:
+EnemyGetDeltaY_UsingAcceleration: ; $833F
     ; default max speed at 14 px/f
     ldy #$0E
     ; branch if enemy is accelerating to the left
@@ -827,7 +859,7 @@ EnemyGetDeltaY_UsingAcceleration:
         bpl @endIf_B
 
         ; common to both branches of if/else_A
-        @if_B:
+        @if_B: ; $8357
             ; enemy speed is negative
             ; negate speed in a to get absolute speed
             jsr TwosComplement
@@ -835,7 +867,7 @@ EnemyGetDeltaY_UsingAcceleration:
             ldy #$F2
             bne @endIf_B ; branch always
 
-    @else_A:
+    @else_A: ; $835E
         ; enemy is accelerating to the left
         ; subtract absolute acceleration from speed
         jsr TwosComplement
@@ -850,8 +882,8 @@ EnemyGetDeltaY_UsingAcceleration:
         ; branch if speed is negative
         bmi @if_B
 
-    @endIf_B:
-@endIf_A:
+    @endIf_B: ; $8376
+@endIf_A: ; $8376
     ; branch if absolute speed is below absolute max
     cmp #$0E
     bcc @endIf_C
@@ -861,7 +893,7 @@ EnemyGetDeltaY_UsingAcceleration:
         sta Ens.0.speedSubPixelY,x
         tya
         sta Ens.0.speedY,x
-    @endIf_C:
+    @endIf_C: ; $8383
 
     ; apply sub-pixel speed to sub-pixel position
     lda EnsExtra.0.subPixelY,x
@@ -877,7 +909,7 @@ EnemyGetDeltaY_UsingAcceleration:
 ;-------------------------------------------------------------------------------
 ; apply acceleration to speed and return delta x for enemy
 ; copy-pasted from HorzAccelerate for samus
-EnemyGetDeltaX_UsingAcceleration:
+EnemyGetDeltaX_UsingAcceleration: ; $8395
     ; max speed for enemies is 14.0 px/frame
     ; store max speed sub-pixels to temp
     lda #$00
@@ -900,7 +932,7 @@ EnemyGetDeltaX_UsingAcceleration:
     ldy EnsExtra.0.accelX,x
     bpl @endIf_A
         lda #$FF
-    @endIf_A:
+    @endIf_A: ; $83B6
     adc Ens.0.speedX,x
     sta Ens.0.speedX,x
     tay
@@ -918,7 +950,7 @@ EnemyGetDeltaX_UsingAcceleration:
         tay
         ; negate max speed in temp $00-$01
         jsr NegateTemp00Temp01
-    @endIf_B:
+    @endIf_B: ; $83D0
     ;temp $04 and y now contain absolute x speed
     ;temp $00-$01 now contain signed max x speed
     ;temp $02-$03 now contain absolute max x speed
@@ -935,7 +967,7 @@ EnemyGetDeltaX_UsingAcceleration:
         sta Ens.0.speedSubPixelX,x
         lda Temp01_SpeedMax
         sta Ens.0.speedX,x
-    @endIf_C:
+    @endIf_C: ; $83E3
 
     ; apply capped sub-pixel speed to sub-pixel position
     lda EnsExtra.0.subPixelX,x
@@ -954,7 +986,7 @@ EnemyGetDeltaX_UsingAcceleration:
 ; Those checks below prevent the enemy from going to unloaded rooms.
 ; return carry set on movement success
 ; return carry clear on movement fail
-EnemyMoveOnePixelUp:
+EnemyMoveOnePixelUp: ; $83F5
     ldx PageIndex
     ; check for collision if top boundary is at a block boundary
     lda Ens.0.y,x
@@ -966,7 +998,7 @@ EnemyMoveOnePixelUp:
     bne @endIf_A
         ; this is a block boundary
         jsr EnemyCheckMoveUp
-    @endIf_A:
+    @endIf_A: ; $8406
     ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
@@ -995,7 +1027,7 @@ EnemyMoveOnePixelUp:
             beq @RTS
             ; switch nametable
             jsr SwitchEnemyNameTable
-    @endIf_B:
+    @endIf_B: ; $8429
     ; decrement Ens.0.y
     dey
     tya
@@ -1011,27 +1043,27 @@ EnemyMoveOnePixelUp:
         ; otherwise success
         jsr GetOtherNameTableIndex
         bne @success
-    @endIf_C:
+    @endIf_C: ; $843C
     inc Ens.0.y,x
     clc
     rts
 
-@success:
+@success: ; $8441
     ; movement successful
     ; increment jumpDsplcmnt if facing in a horizontal direction
     lda Ens.0.data05,x
     bmi @endIf_D
         inc EnsExtra.0.jumpDsplcmnt,x
-    @endIf_D:
+    @endIf_D: ; $8449
     sec
-@RTS:
+@RTS: ; $844A
     rts
 
 ;-------------------------------------------------------------------------------
 ; Down movement related ?
 ; return carry set on movement success
 ; return carry clear on movement fail
-EnemyMoveOnePixelDown:
+EnemyMoveOnePixelDown: ; $844B
     ldx PageIndex
     ; check for collision if bottom boundary is at a block boundary
     lda Ens.0.y,x
@@ -1041,7 +1073,7 @@ EnemyMoveOnePixelDown:
     sec
     bne @endIf_A
         jsr EnemyCheckMoveDown
-    @endIf_A:
+    @endIf_A: ; $845C
     ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
@@ -1071,7 +1103,7 @@ EnemyMoveOnePixelDown:
             bne @RTS
             ; switch nametable
             jsr SwitchEnemyNameTable
-    @endIf_B:
+    @endIf_B: ; $8481
     ; increment Ens.0.y
     iny
     tya
@@ -1089,25 +1121,25 @@ EnemyMoveOnePixelDown:
         ; otherwise success
         jsr GetOtherNameTableIndex
         beq @success
-    @endIf_C:
+    @endIf_C: ; $8497
     dec Ens.0.y,x
     clc
     bcc @RTS ; branch always
 
-@success:
+@success: ; $849D
     ; movement successful
     ; decrement jumpDsplcmnt if facing in a horizontal direction
     lda Ens.0.data05,x
     bmi @endIf_D
         dec EnsExtra.0.jumpDsplcmnt,x
-    @endIf_D:
+    @endIf_D: ; $84A5
     sec
-@RTS:
+@RTS: ; $84A6
     rts
 
 ;-------------------------------------------------------------------------------
 ; Left movement related
-EnemyMoveOnePixelLeft:
+EnemyMoveOnePixelLeft: ; $84A7
     ldx PageIndex
     ; check for collision if left boundary is at a block boundary
     lda Ens.0.x,x
@@ -1117,7 +1149,7 @@ EnemyMoveOnePixelLeft:
     sec
     bne @endIf_A
         jsr EnemyCheckMoveLeft
-    @endIf_A:
+    @endIf_A: ; $84B8
     ; Temp00 is cleared (why?)
     ldy #$00
     sty $00
@@ -1141,12 +1173,12 @@ EnemyMoveOnePixelLeft:
                 ; return movement failed if enemy nametable == nametable at left edge of screen
                 ; (tried to switch nametable while offscreen)
                 jsr GetOtherNameTableIndex
-            @endIf_C:
+            @endIf_C: ; $84D4
             clc
             beq @RTS
             ; switch nametable
             jsr SwitchEnemyNameTable
-    @endIf_B:
+    @endIf_B: ; $84DA
     ; decrement Ens.0.x
     dec Ens.0.x,x
     ; movement successful if left boundary != 0
@@ -1161,25 +1193,25 @@ EnemyMoveOnePixelLeft:
         ; otherwise success
         jsr GetOtherNameTableIndex
         bne @success
-    @endIf_D:
+    @endIf_D: ; $84EE
     inc Ens.0.x,x
     clc
     bcc @RTS
 
-@success:
+@success: ; $84F4
     ; movement successful
     ; increment jumpDsplcmnt if facing in a vertical direction
     lda Ens.0.data05,x
     bpl @endIf_E
         inc EnsExtra.0.jumpDsplcmnt,x
-    @endIf_E:
+    @endIf_E: ; $84FC
     sec
-@RTS:
+@RTS: ; $84FD
     rts
 
 ;-------------------------------------------------------------------------------
 ; Right movement related
-EnemyMoveOnePixelRight:
+EnemyMoveOnePixelRight: ; $84FE
     ldx PageIndex
     ; check for collision if right boundary is at a block boundary
     lda Ens.0.x,x
@@ -1189,7 +1221,7 @@ EnemyMoveOnePixelRight:
     sec
     bne @endIf_A
         jsr EnemyCheckMoveRight
-    @endIf_A:
+    @endIf_A: ; $850F
     ldy #$00
     sty $00
     ldx PageIndex
@@ -1213,14 +1245,14 @@ EnemyMoveOnePixelRight:
                 ; (tried to switch nametable while offscreen), otherwise branch
                 jsr GetOtherNameTableIndex
                 beq @endIf_C
-            @then_C:
+            @then_C: ; $852D
                 dec Ens.0.x,x
                 clc
                 bcc @RTS
-            @endIf_C:
+            @endIf_C: ; $8533
             ; switch nametable
             jsr SwitchEnemyNameTable
-    @endIf_B:
+    @endIf_B: ; $8536
     ; branch if left boundary != #$FF
     lda Ens.0.x,x
     clc
@@ -1234,24 +1266,24 @@ EnemyMoveOnePixelRight:
         ; otherwise success
         jsr GetOtherNameTableIndex
         beq @success
-    @endIf_D:
+    @endIf_D: ; $854A
     dec Ens.0.x,x
     clc
     bcc @RTS
 
-@success:
+@success: ; $8550
     ; movement successful
     ; decrement jumpDsplcmnt if facing in a vertical direction
     lda Ens.0.data05,x
     bpl @endIf_E
         dec EnsExtra.0.jumpDsplcmnt,x
-    @endIf_E:
+    @endIf_E: ; $8558
     sec
-@RTS:
+@RTS: ; $8559
     rts
 
 ;-------------------------------------------------------------------------------
-SwitchEnemyNameTable: ; L855A
+SwitchEnemyNameTable: ; $855A
     lda EnsExtra.0.hi,x
     eor #$01
     sta EnsExtra.0.hi,x
@@ -1259,7 +1291,7 @@ SwitchEnemyNameTable: ; L855A
 
 ;-------------------------------------------------------------------------------
 ; Returns the index to the other nametable in A
-GetOtherNameTableIndex: ; L8562
+GetOtherNameTableIndex: ; $8563
     lda EnsExtra.0.hi,x
     eor PPUCTRL_ZP
     and #$01
@@ -1267,7 +1299,7 @@ GetOtherNameTableIndex: ; L8562
 
 ;-------------------------------------------------------------------------------
 ; XORs the contents of Ens.0.data05 with the bitmask in A
-XorEnData05: ; L856B
+XorEnData05: ; $856B
     eor Ens.0.data05,x
     sta Ens.0.data05,x
     rts
@@ -1282,7 +1314,7 @@ XorEnData05: ; L856B
 
 ;This function is called once when Samus first enters a door.
 
-SamusEnterDoor:
+SamusEnterDoor: ; $8B13
     ;The code determines if Samus has entered a door if the-->
     ;door status is 0, but door data information has been-->
     ;written. If both conditions are met, Samus has just-->
@@ -1329,15 +1361,15 @@ SamusEnterDoor:
         ;They don't match, so we need to scroll downwards to center the door, decrement x.
         bcs @endIf_A_dex
 
-    @else_A:
+    @else_A: ; $8B4B
         ;Samus is currently scrolling horizontally.
         ldx #$02
         ;Is Samus entering a left hand door? If so, branch.
         lda Samus.x
         bpl @endIf_A_noDex
-    @endIf_A_dex:
+    @endIf_A_dex: ; $8B52
     dex
-    @endIf_A_noDex:
+    @endIf_A_noDex: ; $8B53
     ; at this point, x is set depending on the door's position
     ; x = 1 : horizontal room centered door to the right
     ; x = 2 : horizontal room centered door to the left
@@ -1362,10 +1394,10 @@ SetDoorEntryInfo: ; $8B53
     ;Indicate Samus is in a door.
     lda #sa_Door
     sta Samus.status
-@RTS:
+@RTS: ; $8B6C
     rts
 
-L8B6D:
+L8B6D: ; $8B6D
     ;($8B53)Save Samus action and set door entry timer.
     jsr SetDoorEntryInfo
     ;($E21B)Room is centered. Toggle scroll.
@@ -1373,7 +1405,7 @@ L8B6D:
     ;X=#$01 or #$02(depending on which door Samus is in).
     txa
 
-SamusInDoor:
+SamusInDoor: ; $8B74
     ;Set MSB of DoorEntryStatus to indicate Samus has just entered a door.
     ora #$80
     sta DoorEntryStatus
@@ -1382,7 +1414,7 @@ SamusInDoor:
 ;----------------------------------------------------------------------------------------------------
 UpdateAllDoors: ; $8B79
     ldx #Doors.3 - Objects
-    @loop:
+    @loop: ; $8B7B
         jsr UpdateDoor
         lda PageIndex
         sec
@@ -1391,7 +1423,7 @@ UpdateAllDoors: ; $8B79
         bmi @loop
     rts
 
-UpdateDoor:
+UpdateDoor: ; $8B87
     stx PageIndex
     lda Objects.0.status,x
     jsr JumpEngine
@@ -1403,7 +1435,7 @@ UpdateDoor:
         .word UpdateDoor_Scroll         ; scrolling
         .word UpdateDoor_LetSamusOut    ; letting samus out
 
-UpdateDoor_Init:
+UpdateDoor_Init: ; $8B9D
     ; increment door status to "closed"
     inc Objects.0.status,x
     ; set door animation to closed
@@ -1415,14 +1447,14 @@ UpdateDoor_Init:
     ldy DoorType,x
     lda DoorHitPointTable,y
     sta DoorHitPoints,x
-DrawDoor:
+DrawDoor: ; $8BB1
     ; load door type into A
     lda DoorType,x
     ; blue door that changes the music should be drawn the same as a regular blue door
     cmp #$03
     bne @endIf_A
         lda #$01
-    @endIf_A:
+    @endIf_A: ; $8BBA
     ; use door type to write to ObjectCntrl
     ora #$80 | OAMDATA_PRIORITY
     sta ObjectCntrl
@@ -1439,13 +1471,13 @@ DrawDoor:
     lda #$06 ; move to next door animation frame every 6 frames
     jmp AnimDrawObject
 
-DoorHitPointTable:
+DoorHitPointTable: ; $8BD1
     .byte $05 ; red door
     .byte $01 ; blue door
     .byte $0A ; 10-missile door
     .byte $01 ; blue door that changes the music
 
-UpdateDoor_Closed:
+UpdateDoor_Closed: ; $8BD5
     ; branch if door was not hit
     lda Objects.0.isHit,x
     and #$04
@@ -1466,7 +1498,7 @@ UpdateDoor_Closed:
         ldy EndTimer+1
         iny
         bne DrawDoor
-    L8BEE:
+    L8BEE: ; $8BEE
     ; increment door status to "open"
     ; a is #$03 here
     sta Objects.0.status,x
@@ -1482,7 +1514,7 @@ UpdateDoor_Closed:
     sbc #ObjAnim_DoorOpen_Reset - ObjAnim_DoorOpen.b
     jmp DoorSubRoutine8C7E
 
-UpdateDoor_Open:
+UpdateDoor_Open: ; $8C01
     ; branch if samus is not entering a door
     lda DoorEntryStatus
     beq L8C1D
@@ -1499,7 +1531,7 @@ UpdateDoor_Open:
     lda #$04
     sta Objects.0.status,x
     bne GotoDrawDoor
-L8C1D:
+L8C1D: ; $8C1D
     ; branch if animation of opening the door has not completed
     lda Objects.0.animIndex,x
     cmp Objects.0.animResetIndex,x
@@ -1528,14 +1560,14 @@ L8C1D:
     jsr Amul16
     bcc L8C4C
         dey
-    L8C4C:
+    L8C4C: ; $8C4C
     tya
     jsr MapScrollRoutine
     ; remove door completely (cannot close again)
     lda #$00
     sta Objects.0.status,x
     beq GotoDrawDoor
-L8C57:
+L8C57: ; $8C57
     ; door is a blue door
     ; decrement re-close delay every 2 frames
     lda FrameCount
@@ -1544,7 +1576,7 @@ L8C57:
     dec DoorHitPoints,x
     ; branch if delay is not zero
     bne GotoDrawDoor
-DoorSubRoutine8C61:
+DoorSubRoutine8C61: ; $8C61
     ; re-close delay is zero, time to close the door
     ; set door hit points to 1
     lda #$01
@@ -1556,21 +1588,21 @@ DoorSubRoutine8C61:
     sta Objects.0.status,x
     ; set door animation to closing the door
     jsr DoorSubRoutine8C76
-DoorSubRoutine8C71:
+DoorSubRoutine8C71: ; $8C71
     ldx PageIndex
-GotoDrawDoor:
+GotoDrawDoor: ; $8C73
     jmp DrawDoor
 
-DoorSubRoutine8C76:
+DoorSubRoutine8C76: ; $8C76
     lda #ObjAnim_DoorClose_Reset - ObjectAnimIndexTbl.b
     sta Objects.0.animResetIndex,x
     sec
     sbc #ObjAnim_DoorClose_Reset - ObjAnim_DoorClose.b
-DoorSubRoutine8C7E:
+DoorSubRoutine8C7E: ; $8C7E
     jsr SetObjectXSlotAnimIndex
     jmp SFX_Door
 
-UpdateDoor_LetSamusIn:
+UpdateDoor_LetSamusIn: ; $8C84
     ; branch if scrolling has not started
     lda DoorEntryStatus
     cmp #$05
@@ -1595,7 +1627,7 @@ UpdateDoor_LetSamusIn:
     eor #(_id_Palette00+1)~(_id_Palette05+1).b
     sta PaletteToggle
     sta PaletteDataPending
-L8CA7:
+L8CA7: ; $8CA7
     ; increment door status to "scroll"
     inc Objects.0.status,x
     ; clear DoorPaletteChangeDir
@@ -1613,15 +1645,15 @@ L8CA7:
         ; play tourian music
         jsr TourianMusic
         bne L8CC3 ; branch always
-    L8CC0:
+    L8CC0: ; $8CC0
         ; the door leads to a room to the left
         ; play mother brain music
         jsr MotherBrainMusic
-L8CC3:
+L8CC3: ; $8CC3
     ; draw door
     jmp DoorSubRoutine8C71
 
-UpdateDoor_Scroll:
+UpdateDoor_Scroll: ; $8CC6
     ; branch if scrolling has not ended
     lda DoorEntryStatus
     cmp #$05
@@ -1648,10 +1680,10 @@ UpdateDoor_Scroll:
     ldx PageIndex
     lda #$02
     sta Objects.0.status,x
-Goto2DrawDoor:
+Goto2DrawDoor: ; $8CED
     jmp DrawDoor
 
-UpdateDoor_LetSamusOut:
+UpdateDoor_LetSamusOut: ; $8CF0
     ; branch if samus didnt finish exiting the door
     lda DoorEntryStatus
     bne Goto2DrawDoor
@@ -1659,12 +1691,12 @@ UpdateDoor_LetSamusOut:
     ; close the door
     jmp DoorSubRoutine8C61
 
-WriteDoorBGTiles_Air:
+WriteDoorBGTiles_Air: ; $8CF7
     lda #$FF ; air blank tile
     bne WriteDoorBGTiles_Common ; branch always
-WriteDoorBGTiles_Solid:
+WriteDoorBGTiles_Solid: ; $8CFB
     lda #$4E ; door tile
-WriteDoorBGTiles_Common:
+WriteDoorBGTiles_Common: ; $8CFD
     ; get cart ram pointer of door
     pha
     ; door y coordinate
@@ -1686,7 +1718,7 @@ WriteDoorBGTiles_Common:
     pla
     ; cart ram pointer of door is now in $04-$05
     ; write 6 air or door tiles in a vertical line to cart ram
-    @loop:
+    @loop: ; $8D19
         sta (Temp04_RoomRAMPtr),y
         tax
         tya
@@ -1708,7 +1740,7 @@ WriteDoorBGTiles_Common:
     rts
 
 ; x coordinate of door's background tiles in pixels
-DoorXTable:
+DoorXTable: ; $8D3A
     .byte $E8, $10
 
 .byte $60, $AD, $91, $69, $8D, $78, $68, $AD, $92, $69, $8D, $79, $68, $A9

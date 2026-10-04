@@ -18,7 +18,7 @@
 
 ;Ridley Music Data
 
-SongRidleyTri:
+SongRidleyTri: ; $B000
     SongNoteLength $6 ;1 3/16 seconds
     SongNote "E3"
     SongNoteLength $2 ;3/8 seconds
@@ -54,7 +54,7 @@ SongRidleyTri:
     SongNote "A3"
     SongEnd
 
-SongRidleySQ1:
+SongRidleySQ1: ; $B022
     SongNoteLength $A ;3/64 seconds
     SongRest
     SongRepeatSetup $10
@@ -71,7 +71,7 @@ SongRidleySQ1:
         SongNote "B4"
     SongRepeat
 
-SongRidleySQ2:
+SongRidleySQ2: ; $B031
     SongRepeatSetup $10
         SongNoteLength $1 ;3/16 seconds
         SongNote "Bb4"

@@ -18,12 +18,12 @@
 
 ;Kraid Music Data
 
-SongKraidSQ1:
+SongKraidSQ1: ; $B03F
     SongNoteLength $8 ;11/64 seconds
     SongRest
     ;SQ1 music data runs down into the SQ2 music data.
 
-SongKraidSQ2:
+SongKraidSQ2: ; $B041
     SongRepeatSetup $4
         SongNoteLength $3 ;1/2 seconds
         SongNote "E4"
@@ -130,7 +130,7 @@ SongKraidSQ2:
     SongRepeat
     SongEnd
 
-SongKraidTri:
+SongKraidTri: ; $B0AA
     SongRepeatSetup $10
         SongNoteLength $2 ;1/4 seconds
         SongNote "E3"
