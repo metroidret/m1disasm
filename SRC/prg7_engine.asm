@@ -1738,7 +1738,7 @@ GFXInfo: ; 07:C6E0
     .word GFX_Font, $1D00, $02A0
     ;[SPR]Suitless Samus.           Entry 27. (1B)
     GFXInfoEntry GFX_SamusSuitless, $0000
-    ;[BGR]Exclaimation point.       Entry 28. (1C)
+    ;[BGR]Exclamation point.       Entry 28. (1C)
     GFXInfoEntry GFX_ExclamationPoint, $1F40
 
 ;--------------------------------[ Pattern table loading routines ]---------------------------------

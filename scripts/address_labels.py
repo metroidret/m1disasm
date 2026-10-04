@@ -114,6 +114,8 @@ def address_labels(infile):
             else:
                 include_banks_per_path[path] = None
     
+    include_banks_per_path["SRC/common_sprite_data.asm"] = None
+    
     for path, bank in include_banks_per_path.items():
         if any(p in path for p in ["songs/pal/", "macros", "constant", "reset"]):
             continue
