@@ -30,7 +30,7 @@
 ;password scrambling and determinig what items, if any, an enemy leaves
 ;behind after it is killed.
 
-RandomNumbers: ;$C000
+RandomNumbers: ; 07:C000
     ;RandomNumber1 is increased by #$19 every frame
     ;RandomNumber2 is increased by #$5F every frame.
     txa
@@ -56,7 +56,7 @@ RandomNumbers: ;$C000
 
 ;------------------------------------------[ Startup ]----------------------------------------------
 
-Startup:
+Startup: ; 07:C01A
     lda #$00
     sta MMC1CHR0                    ;Clear bit 0. MMC1 is serial controlled
     sta MMC1CHR0                    ;Clear bit 1
@@ -196,7 +196,7 @@ Startup:
 
 ;The main loop runs all the routines that take place outside of the NMI.
 
-MainLoop:
+MainLoop: ; 07:C0BC
     ;($C4DE)Check to see if memory page needs to be switched.
     jsr CheckBankSwitch
     ;($C266)Update Timers 1, 2 and 3.
@@ -230,7 +230,7 @@ MainLoop:
 ;will not be waiting as it is bogged down with excess calculations. This causes
 ;the game to slow down.
 
-NMI:
+NMI: ; 07:C0D9
     ;Save processor status flags.
     php
     ;Save A.
@@ -298,7 +298,7 @@ NMI:
 ;is used as an index into a code pointer table, and this routine
 ;is executed.
 
-GoMainRoutine:
+GoMainRoutine: ; 07:C114
     ;0 if game is running, 1 if at intro screen.
     ;Branch if mode=Play.
     lda GameMode
@@ -356,14 +356,14 @@ GoMainRoutine:
         PtrTableEntry MainRoutinePtrTable, SamusIntro                ;($C9D7)Intro.
         PtrTableEntry MainRoutinePtrTable, WaitTimer                 ;($C494)Delay.
 
-IncrementRoutine:
+IncrementRoutine: ; 07:C155
     ;Increment to next routine in above table.
     inc MainRoutine
     rts
 
 ;-------------------------------------[ Clear name tables ]------------------------------------------
 
-ClearNameTables: ;($C158)
+ClearNameTables: ; 07:C158
     ;Always clear name table 0 first.
     jsr @nameTable0
     ;Branch if mode = Play.
@@ -395,7 +395,7 @@ ClearNameTables: ;($C158)
     sta Temp00_FillValue
     ; fallthrough
 
-ClearNameTable:
+ClearNameTable: ; 07:C175
     ;Reset PPU address latch.
     ldx PPUSTATUS
     ;PPU increment = 1.
@@ -432,7 +432,7 @@ ClearNameTable:
 
 ;The following table is used by the above routine for finding
 ;the high byte of the proper name table to clear.
-HiPPUTable:
+HiPPUTable: ; 07:C19F
     .byte >$2000                       ;Name table 0.
     .byte >$2400                       ;Name table 1.
     .byte >$2800                       ;Name table 2.
@@ -440,7 +440,7 @@ HiPPUTable:
 
 ;-------------------------------------[ Erase all sprites ]------------------------------------------
 
-EraseAllSprites: ;($C1A3)
+EraseAllSprites: ; 07:C1A3
     ; load SpriteRAM address into $00-01
     ldy #>SpriteRAM
     sty $01
@@ -467,7 +467,7 @@ EraseAllSprites: ;($C1A3)
 ;sprites every frame.  It does this by loading the sprite values with #$F4 which moves the
 ;sprite to the bottom right of the screen and uses a blank graphic for the sprite.
 
-RemoveIntroSprites:
+RemoveIntroSprites: ; 07:LC1BC
     ;Start at address $200. ($00) = $0200 (sprite page)
     ldy #>SpriteRAM
     sty $01
@@ -490,7 +490,7 @@ RemoveIntroSprites:
 
 ;The routine below clears RAM associated with rooms and enemies.
 
-ClearRAM_33_DF:
+ClearRAM_33_DF: ; 07:LC1D4
     ldx #RoomPtr
     lda #$00
     @loop:
@@ -504,7 +504,7 @@ ClearRAM_33_DF:
 
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
 
-CheckPaletteWrite:
+CheckPaletteWrite: ; 07:LC1E0
     ; branch if game at ending sequence
     lda GameMode
     beq @endIf_A
@@ -548,7 +548,7 @@ CheckPaletteWrite:
     sta PaletteDataPending
     ; fallthrough
 
-PreparePPUProcess:
+PreparePPUProcess: ; 07:LC20E
     ;Set pointer to VRAM structure from X and Y
     stx Temp00_VRAMStructPtr
     sty Temp00_VRAMStructPtr+1
@@ -559,7 +559,7 @@ PreparePPUProcess:
 
 ;The following routine reads the status of both joypads
 
-ReadJoyPads:
+ReadJoyPads: ; 07:LC215
     ;Load x with #$00. Used to read status of joypad 1.
     ldx #$00
     stx $01
@@ -569,7 +569,7 @@ ReadJoyPads:
     inc $01
     ; fallthrough
 
-ReadOnePad:
+ReadOnePad: ; 07:LC21F
     ;These lines strobe the joystick to enable the program to read the buttons pressed.
     ldy #$01
     sty JOY1
@@ -651,7 +651,7 @@ ReadOnePad:
 ;OVER is displayed, to mention a few examples.
 ;Derived from FDS BIOS's CounterLogic routine.
 
-UpdateTimer:
+UpdateTimer: ; 07:LC266
     ; Default to only decrementing Timer2 and Timer1.
     ldx #$01
     ; branch if timer delay is not zero
@@ -666,7 +666,7 @@ UpdateTimer:
     @endIf_A:
 
     ; decrement the chosen timers
-    @loop_decTimer:
+    @loop_decTimer: ; 07:LC272
         ;Don't decrease if timer is already zero.
         lda Timer1,x
         beq @endIf_B
@@ -684,7 +684,7 @@ UpdateTimer:
 ;meaning that its address can be popped from the stack.
 ;Derived from FDS BIOS's JumpEngine routine.
 
-JumpEngine:
+JumpEngine: ; 07:LC27C  (also called "ChooseRoutine")
     ;* 2, each ptr is 2 bytes (16-bit).
     asl
     ;Temp storage. (not pushed to stack, because stack needs to be accessed)
@@ -756,13 +756,13 @@ AddYToPtr02:
 
 ;Divide by shifting A right.
 ;Divide by 32.
-Adiv32:
+Adiv32: ; 07:LC2BE
     lsr
 ;Divide by 16.
-Adiv16:
+Adiv16: ; 07:LC2BF
     lsr
 ;Divide by 8.
-Adiv8:
+Adiv8: ; 07:LC2C0
     lsr
     lsr
     lsr
@@ -770,13 +770,13 @@ Adiv8:
 
 ;Multiply by shifting A left.
 ;Multiply by 32.
-Amul32:
+Amul32: ; 07:LC2C4
     asl
 ;Multiply by 16.
-Amul16:
+Amul16: ; 07:LC2C5
     asl
 ;Multiply by 8.
-Amul8:
+Amul8: ; 07:LC2C6
     asl
     asl
     asl
@@ -787,7 +787,7 @@ Amul8:
 ;Checks if any data is waiting to be written to the PPU.
 ;RLE data is one tile that repeats several times in a row.  RLE-Repeat Last Entry
 
-CheckVRAMStructBufferWrite:
+CheckVRAMStructBufferWrite: ; 07:LC2CA
     ;Exit if no PPU data to write.
     lda PPUDataPending
     beq @RTS
@@ -810,7 +810,7 @@ CheckVRAMStructBufferWrite:
     rts
 
 
-VRAMStructWriteData:
+VRAMStructWriteData: ; 07:LC2E4
     ;Set high PPU address.
     sta PPUADDR
     ;Set low PPU address.
@@ -883,7 +883,7 @@ SetPPUInc: ; 07:C318
 
 
 ;Write blasted tile to nametable.  Each screen is 16 tiles across and 15 tiles down.
-WriteVRAMString:
+WriteVRAMString: ; 07:LC328
     ;data pending = YES.
     ldy #$01
     sty PPUDataPending
@@ -930,7 +930,7 @@ WriteVRAMString:
     ;Finish writing VRAM structure and exit.
     jsr EndVRAMStruct ; equivalent to jump, bc stack is popped by routine
 
-WritePPUByte:
+WritePPUByte: ; 07:LC36B
     ;Store data byte at end of VRAMStructBuffer.
     sta VRAMStructBuffer,x
 
@@ -960,7 +960,7 @@ EndVRAMStruct: ; 07:C376
 ;$04 Temp storage for PPU data byte, $05 PPU data string counter byte,
 ;$06 Temp storage for index byte.
 
-PrepPPUPaletteString:
+PrepPPUPaletteString: ; 07:LC37E
     ;Indicate that data is waiting to be written to PPU.
     ldy #$01
     sty PPUDataPending
@@ -987,7 +987,7 @@ LC385:
     bvc WritePaletteStringByte
     iny
 
-WritePaletteStringByte:
+WritePaletteStringByte: ; 07:LC39B
     ;Check if RLE bit is set (again). if set, load same byte over and over again until counter = #$00.
     bit Temp04_VRAMStructByte
     bvs @endIf_A
@@ -1021,7 +1021,7 @@ LC3BC:
     bne LC385
     jsr EndVRAMStruct
 
-SeparateControlBits:
+SeparateControlBits: ; 07:LC3C6
     ;Store current byte
     sta Temp04_ControlBits
     ;Remove RLE bit and save control bit in VRAMStructBuffer.
@@ -1035,7 +1035,7 @@ SeparateControlBits:
 ;----------------------------------------[ Math routines ]-------------------------------------------
 
 ;Generate twos complement of value stored in A.
-TwosComplement:
+TwosComplement: ; 07:LC3D4
     eor #$FF
     clc
     adc #$01
@@ -1046,7 +1046,7 @@ TwosComplement:
 ;contain the lower and upper digits of the value in A respectively.  If an overflow happens after
 ;the addition/subtraction, the carry bit is set before the routine returns.
 
-Base10Add:
+Base10Add: ; 07:LC3DA
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
     adc $01                         ;Add lower nibble to number.
     cmp #$0A                        ;
@@ -1069,7 +1069,7 @@ LC3F6:
     bcs LC3F2                       ;Branch to add #$60 to create valid result.
     rts
 
-Base10Subtract: ;($C3FB)
+Base10Subtract: ; 07:C3FB
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
     sbc $01                         ;Subtract lower nibble from number.
     sta $01                         ;
@@ -1091,7 +1091,7 @@ Base10Subtract: ;($C3FB)
     ora $01                         ;Combine A and $01 to create final value.
     rts
 
-ExtractNibbles:
+ExtractNibbles: ; 07:LC41D
     pha                             ;
     and #$0F                        ;Lower 4 bits of value to change Health/Health+1 by.
     sta $01                         ;
@@ -1105,7 +1105,7 @@ ExtractNibbles:
 ;---------------------------[ NMI and PPU control routines ]--------------------------------
 
 ; Wait for the NMI to end.
-WaitNMIPass:
+WaitNMIPass: ; 07:LC42C
     ;Indicate currently in NMI.
     jsr ClearNMIStat
     @loop:
@@ -1114,23 +1114,23 @@ WaitNMIPass:
         beq @loop
     rts
 
-ClearNMIStat: ;($C434)
+ClearNMIStat: ; 07:C434
     ;Clear NMI byte to indicate the game is currently running NMI routines.
     lda #$00
     sta NMIStatus
     rts
 
-ScreenOff:
+ScreenOff: ; 07:LC439
     ; BG & SPR visibility = off
     lda PPUMASK_ZP
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
     ; fallthrough
 
-WriteAndWait: ;($C43D)
+WriteAndWait: ; 07:C43D
     ;Update value to be loaded into PPU control register.
     sta PPUMASK_ZP
 
-WaitNMIPass_:
+WaitNMIPass_: ; 07:C43F
     ;Indicate currently in NMI.
     jsr ClearNMIStat
     @loop:
@@ -1139,7 +1139,7 @@ WaitNMIPass_:
         beq @loop
     rts
 
-ScreenOn:
+ScreenOn: ; 07:C447
     ;BG & SPR visibility = on
     lda PPUMASK_ZP
     ora #PPUMASK_SHOW8BG | PPUMASK_SHOW8OBJ | PPUMASK_BG_ON | PPUMASK_OBJ_ON
@@ -1147,7 +1147,7 @@ ScreenOn:
 
 ;Update the actual PPU control registers.
 
-WritePPUCtrl:
+WritePPUCtrl: ; 07:C44D
     ;Update PPU control registers.
     lda PPUCTRL_ZP
     sta PPUCTRL
@@ -1162,7 +1162,7 @@ ExitSub:
 
 ;Turn off both screen and NMI.
 
-ScreenNmiOff:
+ScreenNmiOff: ; 07:C45D
     ;BG & SPR visibility = off
     lda PPUMASK_ZP
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
@@ -1189,7 +1189,7 @@ ScreenNmiOff:
     ora #PPUMASK_OBJ_ON | PPUMASK_BG_ON | PPUMASK_SHOW8OBJ | PPUMASK_SHOW8BG
     bne WriteAndWait ;Branch always.
 
-VBOffAndHorzWrite:
+VBOffAndHorzWrite: ; 07:C47D
     lda PPUCTRL_ZP
     and #~(PPUCTRL_INCR_DOWN | PPUCTRL_VBLKNMI_ON)
     ;Horizontal write, disable VBlank.
@@ -1199,7 +1199,7 @@ LC481:
     sta PPUCTRL_ZP
     rts
 
-NMIOn:
+NMIOn: ; 07:C487
     @loop:
         ;Wait for end of VBlank.
         lda PPUSTATUS
@@ -1216,7 +1216,7 @@ NMIOn:
 ;before the GAME OVER message is dispayed.  The timer is also set while the item pickup music
 ;is playing.
 
-WaitTimer:
+WaitTimer: ; 07:C494
     ;Exit if timer hasn't hit zero yet
     lda Timer3
     bne SetMainRoutine@RTS
@@ -1232,13 +1232,13 @@ WaitTimer:
     jsr StartMusic
     lda NextRoutine
 
-SetMainRoutine:
+SetMainRoutine: ; 07:C4A7
     ;Set next routine to run.
     sta MainRoutine
 @RTS:
     rts
 
-SetTimer:
+SetTimer: ; 07:C4AA     ; [MARKER] [MINDFLOWER] continue adding addresses from here. 2026-10-05
     ;Set Timer3. Frames to wait is value stored in A*10.
     sta Timer3
     ;Save routine to jump to after Timer3 expires.
