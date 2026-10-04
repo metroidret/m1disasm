@@ -467,7 +467,7 @@ EraseAllSprites: ; 07:C1A3
 ;sprites every frame.  It does this by loading the sprite values with #$F4 which moves the
 ;sprite to the bottom right of the screen and uses a blank graphic for the sprite.
 
-RemoveIntroSprites: ; 07:LC1BC
+RemoveIntroSprites: ; 07:C1BC
     ;Start at address $200. ($00) = $0200 (sprite page)
     ldy #>SpriteRAM
     sty $01
@@ -490,7 +490,7 @@ RemoveIntroSprites: ; 07:LC1BC
 
 ;The routine below clears RAM associated with rooms and enemies.
 
-ClearRAM_33_DF: ; 07:LC1D4
+ClearRAM_33_DF: ; 07:C1D4
     ldx #RoomPtr
     lda #$00
     @loop:
@@ -504,7 +504,7 @@ ClearRAM_33_DF: ; 07:LC1D4
 
 ;--------------------------------[ Check and prepare palette write ]---------------------------------
 
-CheckPaletteWrite: ; 07:LC1E0
+CheckPaletteWrite: ; 07:C1E0
     ; branch if game at ending sequence
     lda GameMode
     beq @endIf_A
@@ -548,7 +548,7 @@ CheckPaletteWrite: ; 07:LC1E0
     sta PaletteDataPending
     ; fallthrough
 
-PreparePPUProcess: ; 07:LC20E
+PreparePPUProcess: ; 07:C20E
     ;Set pointer to VRAM structure from X and Y
     stx Temp00_VRAMStructPtr
     sty Temp00_VRAMStructPtr+1
@@ -559,7 +559,7 @@ PreparePPUProcess: ; 07:LC20E
 
 ;The following routine reads the status of both joypads
 
-ReadJoyPads: ; 07:LC215
+ReadJoyPads: ; 07:C215
     ;Load x with #$00. Used to read status of joypad 1.
     ldx #$00
     stx $01
@@ -569,7 +569,7 @@ ReadJoyPads: ; 07:LC215
     inc $01
     ; fallthrough
 
-ReadOnePad: ; 07:LC21F
+ReadOnePad: ; 07:C21F
     ;These lines strobe the joystick to enable the program to read the buttons pressed.
     ldy #$01
     sty JOY1
@@ -651,7 +651,7 @@ ReadOnePad: ; 07:LC21F
 ;OVER is displayed, to mention a few examples.
 ;Derived from FDS BIOS's CounterLogic routine.
 
-UpdateTimer: ; 07:LC266
+UpdateTimer: ; 07:C266
     ; Default to only decrementing Timer2 and Timer1.
     ldx #$01
     ; branch if timer delay is not zero
@@ -666,7 +666,7 @@ UpdateTimer: ; 07:LC266
     @endIf_A:
 
     ; decrement the chosen timers
-    @loop_decTimer: ; 07:LC272
+    @loop_decTimer: ; 07:C272
         ;Don't decrease if timer is already zero.
         lda Timer1,x
         beq @endIf_B
@@ -684,7 +684,7 @@ UpdateTimer: ; 07:LC266
 ;meaning that its address can be popped from the stack.
 ;Derived from FDS BIOS's JumpEngine routine.
 
-JumpEngine: ; 07:LC27C  (also called "ChooseRoutine")
+JumpEngine: ; 07:C27C  (also called "ChooseRoutine")
     ;* 2, each ptr is 2 bytes (16-bit).
     asl
     ;Temp storage. (not pushed to stack, because stack needs to be accessed)
@@ -756,13 +756,13 @@ AddYToPtr02:
 
 ;Divide by shifting A right.
 ;Divide by 32.
-Adiv32: ; 07:LC2BE
+Adiv32: ; 07:C2BE
     lsr
 ;Divide by 16.
-Adiv16: ; 07:LC2BF
+Adiv16: ; 07:C2BF
     lsr
 ;Divide by 8.
-Adiv8: ; 07:LC2C0
+Adiv8: ; 07:C2C0
     lsr
     lsr
     lsr
@@ -770,13 +770,13 @@ Adiv8: ; 07:LC2C0
 
 ;Multiply by shifting A left.
 ;Multiply by 32.
-Amul32: ; 07:LC2C4
+Amul32: ; 07:C2C4
     asl
 ;Multiply by 16.
-Amul16: ; 07:LC2C5
+Amul16: ; 07:C2C5
     asl
 ;Multiply by 8.
-Amul8: ; 07:LC2C6
+Amul8: ; 07:C2C6
     asl
     asl
     asl
@@ -787,7 +787,7 @@ Amul8: ; 07:LC2C6
 ;Checks if any data is waiting to be written to the PPU.
 ;RLE data is one tile that repeats several times in a row.  RLE-Repeat Last Entry
 
-CheckVRAMStructBufferWrite: ; 07:LC2CA
+CheckVRAMStructBufferWrite: ; 07:C2CA
     ;Exit if no PPU data to write.
     lda PPUDataPending
     beq @RTS
@@ -810,7 +810,7 @@ CheckVRAMStructBufferWrite: ; 07:LC2CA
     rts
 
 
-VRAMStructWriteData: ; 07:LC2E4
+VRAMStructWriteData: ; 07:C2E4
     ;Set high PPU address.
     sta PPUADDR
     ;Set low PPU address.
@@ -883,7 +883,7 @@ SetPPUInc: ; 07:C318
 
 
 ;Write blasted tile to nametable.  Each screen is 16 tiles across and 15 tiles down.
-WriteVRAMString: ; 07:LC328
+WriteVRAMString: ; 07:C328
     ;data pending = YES.
     ldy #$01
     sty PPUDataPending
@@ -930,7 +930,7 @@ WriteVRAMString: ; 07:LC328
     ;Finish writing VRAM structure and exit.
     jsr EndVRAMStruct ; equivalent to jump, bc stack is popped by routine
 
-WritePPUByte: ; 07:LC36B
+WritePPUByte: ; 07:C36B
     ;Store data byte at end of VRAMStructBuffer.
     sta VRAMStructBuffer,x
 
@@ -960,7 +960,7 @@ EndVRAMStruct: ; 07:C376
 ;$04 Temp storage for PPU data byte, $05 PPU data string counter byte,
 ;$06 Temp storage for index byte.
 
-PrepPPUPaletteString: ; 07:LC37E
+PrepPPUPaletteString: ; 07:C37E
     ;Indicate that data is waiting to be written to PPU.
     ldy #$01
     sty PPUDataPending
@@ -987,7 +987,7 @@ LC385:
     bvc WritePaletteStringByte
     iny
 
-WritePaletteStringByte: ; 07:LC39B
+WritePaletteStringByte: ; 07:C39B
     ;Check if RLE bit is set (again). if set, load same byte over and over again until counter = #$00.
     bit Temp04_VRAMStructByte
     bvs @endIf_A
@@ -1021,7 +1021,7 @@ LC3BC:
     bne LC385
     jsr EndVRAMStruct
 
-SeparateControlBits: ; 07:LC3C6
+SeparateControlBits: ; 07:C3C6
     ;Store current byte
     sta Temp04_ControlBits
     ;Remove RLE bit and save control bit in VRAMStructBuffer.
@@ -1035,7 +1035,7 @@ SeparateControlBits: ; 07:LC3C6
 ;----------------------------------------[ Math routines ]-------------------------------------------
 
 ;Generate twos complement of value stored in A.
-TwosComplement: ; 07:LC3D4
+TwosComplement: ; 07:C3D4
     eor #$FF
     clc
     adc #$01
@@ -1046,7 +1046,7 @@ TwosComplement: ; 07:LC3D4
 ;contain the lower and upper digits of the value in A respectively.  If an overflow happens after
 ;the addition/subtraction, the carry bit is set before the routine returns.
 
-Base10Add: ; 07:LC3DA
+Base10Add: ; 07:C3DA
     jsr ExtractNibbles              ;($C41D)Separate upper 4 bits and lower 4 bits.
     adc $01                         ;Add lower nibble to number.
     cmp #$0A                        ;
@@ -1091,7 +1091,7 @@ Base10Subtract: ; 07:C3FB
     ora $01                         ;Combine A and $01 to create final value.
     rts
 
-ExtractNibbles: ; 07:LC41D
+ExtractNibbles: ; 07:C41D
     pha                             ;
     and #$0F                        ;Lower 4 bits of value to change Health/Health+1 by.
     sta $01                         ;
@@ -1105,7 +1105,7 @@ ExtractNibbles: ; 07:LC41D
 ;---------------------------[ NMI and PPU control routines ]--------------------------------
 
 ; Wait for the NMI to end.
-WaitNMIPass: ; 07:LC42C
+WaitNMIPass: ; 07:C42C
     ;Indicate currently in NMI.
     jsr ClearNMIStat
     @loop:
@@ -1120,7 +1120,7 @@ ClearNMIStat: ; 07:C434
     sta NMIStatus
     rts
 
-ScreenOff: ; 07:LC439
+ScreenOff: ; 07:C439
     ; BG & SPR visibility = off
     lda PPUMASK_ZP
     and #~(PPUMASK_BG_ON | PPUMASK_OBJ_ON)
