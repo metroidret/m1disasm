@@ -1166,18 +1166,18 @@ VRAMStringRAMBuffer    ds 6 ;$0781   ;Tile id to be written to the PPU.
 SpareMem0787           ds $19 ;$0787
 
 VRAMStructBufferIndex  db   ;$07A0   ;# of bytes of data in VRAMStructBuffer. #$4F bytes max.
+                                        ; used only to write to buffer, read checks #$00 termination.
 
-;$07A1-$07EF contain a byte string of data to be written the the PPU.
-;The first two bytes in the string are the address of the starting point in the PPU to write -->
-;the data (high byte, low byte).
+;$07A1-$07EF contains a VRAMStruct (made from any number of VRAMStructData) to be written the the PPU.
+;In a VRAMStructData, the first two bytes in the string are the address of the starting point in the -->
+;PPU to write the data (high byte, low byte).
 ;The third byte is a configuration byte.
 ; If the MSB of this byte is set, the PPU is incremented by 32 after each byte write (vertical write).
 ; If the MSB is cleared, the PPU is incremented by 1 after each write (horizontal write).
+; The quantity of bytes to write to PPU is bits 0-5 of the configuration byte.
 ; If bit 6 is set, the next data byte is repeated multiple times during successive PPU writes.
-; The number of times the next byte is repeated is based on bits 0-5 of the configuration byte.
-; Those bytes are a repetition counter.
-;Any following bytes are the actual data bytes to be written to the PPU.
-;#$00 separates the data chunks.
+; If bit 6 is not set, it will write the specified quantity of the following bytes to PPU.
+;#$00 ends the buffer.
 
 VRAMStructBuffer       ds $4F ;$07A1-$07EF ;String of data bytes to be written to PPU.
 
