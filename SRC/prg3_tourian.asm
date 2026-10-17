@@ -774,10 +774,10 @@ UpdateCannon_CheckIfOnScreen: ; 03:9C4D
     lda Cannons.0.hi,x
     eor PPUCTRL_ZP
     and #$01
-    beq @endIf_B
+    beq @gfxUpdateFailure
         bcs @return_y1
         sec
-    @endIf_B: ; 03:9C6B
+    @gfxUpdateFailure: ; 03:9C6B
     bcs @return_y0
 @return_y1: ; 03:9C6D
     iny
@@ -815,15 +815,15 @@ DeleteOffscreenRoomSprites_Tourian: ; 03:9C6F
     @loop_B: ; 03:9C89
         ; branch if zebetite doesn't exist
         lda Zebetites.0.status,x
-        beq @endIf_B
+        beq @gfxUpdateFailure
         ; branch if zebetite is in the current nametable
         jsr GetRoomRAMPtrHi
         eor Zebetites.0.roomRAMPtr+1,x
-        bne @endIf_B
+        bne @gfxUpdateFailure
             ; zebetite is in the opposite nametable
             ; clear status
             sta Zebetites.0.status,x
-        @endIf_B: ; 03:9C99
+        @gfxUpdateFailure: ; 03:9C99
         ; move to next zebetite
         txa
         clc
@@ -879,12 +879,12 @@ DeleteOffscreenRoomSprites_Tourian: ; 03:9C6F
     ; exit if rinka spawner doesn't exist
     lda RinkaSpawners.0.status,x
     bmi @RTS
-    ; exit if rinka is in the current nametable
+    ; exit if rinka spawner is in the current nametable
     lda RinkaSpawners.0.hi,x
     eor $02
     lsr
     bcs @RTS
-        ; rinka is in the opposite nametable
+        ; rinka spawner is in the opposite nametable
         ; clear status
         lda #$FF
         sta RinkaSpawners.0.status,x
@@ -978,10 +978,10 @@ SpawnZebetiteRoutine: ; 03:9D3D
     sta Zebetites.0.roomRAMPtr,x
     jsr GetRoomRAMPtrHi
     sta Zebetites.0.roomRAMPtr+1,x
-    
+    ; set status to alive
     lda #$01
     sta Zebetites.0.status,x
-    
+    ; init zebetite health to max
     lda #$00
     sta Zebetites.0.qtyHits,x
     sta Zebetites.0.healingDelay,x
@@ -999,18 +999,26 @@ GetRoomRAMPtrHi: ; 03:9D64
 ;-------------------------------------------------------------------------------
 ; Rinka Handler
 SpawnRinkaSpawnerRoutine: ; 03:9D6C
-    ldx #$03
+    ; for both rinka spawners
+    ldx #RinkaSpawners.1 - RinkaSpawners
     jsr @endIf_A
         bmi @RTS
-        ldx #$00
+        ldx #RinkaSpawners.0 - RinkaSpawners
     @endIf_A: ; 03:9D75
+    
+    ; exit if rinka spawner exists
     lda RinkaSpawners.0.status,x
     bpl @RTS
+    
+    ; set rinka spawner status to either #$00 or #$01
+    ; this determines which list of rinka spawn positions it will use
     lda (Temp00_SpecItmsTblPtr),y
     jsr Adiv16_
     sta RinkaSpawners.0.status,x
+    ; set rinka spawner position
     jsr GetNameTableAtScrollDir_
     sta RinkaSpawners.0.hi,x
+    
     lda #$FF
 @RTS: ; 03:9D87
     rts
@@ -1235,12 +1243,12 @@ MotherBrain_Disappear: ; 03:9E86
         bne @loop
     ; branch if VRAMStructBufferIndex is not zero
     lda VRAMStructBufferIndex
-    bne @endIf_B
+    bne @gfxUpdateFailure
         ; VRAMStructBufferIndex is zero
         ; flash palette
         lda MotherBrain_Disappear_PaletteTable,y
         sta PaletteDataPending
-    @endIf_B: ; 03:9EB5
+    @gfxUpdateFailure: ; 03:9EB5
     ; exit if status is not idle (delay is not yet zero)
     ldy MotherBrainStatus
     dey
@@ -1382,14 +1390,14 @@ MotherBrain_TimeBombMessage_ScrollBackOnScreen: ; 03:9F02
     .byte $620A - $6142
 
 @animFrameTable: ; 03:9F41
-    .byte $08 ; TIME B
-    .byte $02 ; GET OU
-    .byte $09 ; OMB SET
-    .byte $03 ; T FAST!
-    .byte $0A
-    .byte $04 ; TIME
-    .byte $0B
-    .byte $05
+    .byte _id_VRAMString08 ; TIME B
+    .byte _id_VRAMString02 ; GET OU
+    .byte _id_VRAMString09 ; OMB SET
+    .byte _id_VRAMString03 ; T FAST!
+    .byte _id_VRAMString0A
+    .byte _id_VRAMString04 ; TIME
+    .byte _id_VRAMString0B
+    .byte _id_VRAMString05
 
 MotherBrain_SetTimeBomb: ; 03:9F49
     ; try to spawn door until it succeeds
@@ -1444,16 +1452,16 @@ MotherBrain_SpawnDoor: ; 03:9F69
     lda #$68
     sta Objects.0.y,x
     ; init door animation (because of the 1/2 chance that it plays only for 1 frame,
-    ; the first frame has to be $F7)
+    ; the first frame has to be _id_FrameNone)
     lda #ObjAnim_55 - ObjectAnimIndexTbl.b
     sta Objects.0.animResetIndex,x
     sta Objects.0.animIndex,x
     lda #$00
     sta Objects.0.animDelay,x
-    lda #$F7
+    lda #_id_FrameNone
     sta Objects.0.animFrame,x
     ; create door tiles
-    lda #$10
+    lda #_id_VRAMString10
     sta TileBlasts.0.animFrame
     lda #$40
     sta TileBlasts.0.roomRAMPtr
@@ -1660,7 +1668,7 @@ MotherBrain_Disappear_Disintegrate: ; 03:A072
     adc #$00
     sta TileBlasts.0.roomRAMPtr+1
     ; clear 2x2 tile region at that location
-    lda #$00
+    lda #_id_VRAMString00
     sta TileBlasts.0.animFrame
     sta PageIndex
     jmp CommonJump_DrawTileBlast
@@ -1743,7 +1751,7 @@ UpdateBullet_CollisionWithZebetiteAndMotherBrainGlass: ; 03:A0C6
         lda Temp04_RoomRAMPtr+1
         sta TileBlasts.0.roomRAMPtr+1,x
         ; set to clear 2x3 tile region
-        lda #$01
+        lda #_id_VRAMString01
         sta TileBlasts.0.animFrame,x
         ; push current samus projectile slot
         lda PageIndex
@@ -1909,9 +1917,9 @@ UpdateAllRinkaSpawners: ; 03:A15E
     sta Ens.0.isHit,x
     jsr CommonJump_0E
     ; set rinka frame to nothing (it will fade into view)
-    lda #$F7
+    lda #_id_FrameNone
     sta EnsExtra.0.animFrame,x
-    ; init rinka position
+    ; init rinka position according to table and rinka spawner position id
     ldy PageIndex
     lda RinkaSpawners.0.hi,y
     sta EnsExtra.0.hi,x
@@ -2072,6 +2080,7 @@ UpdateAllZebetites: ; 03:A28B
     
 UpdateZebetite: ; 03:A29B
     ; return if status is not #$x1
+    ; for example if status bit 1 is set from zebetite dying
     lda Zebetites.0.status,x
     and #$0F
     cmp #$01
@@ -2091,8 +2100,11 @@ UpdateZebetite: ; 03:A29B
     ; hit count is even
     ; update zebetite appearance
     tay
+    ; check if 8 hits were dealt ((3 + carry) * 2 == 8)
     sbc #$03
     bne @endIf_A
+        ; if 8 hits are dealt, zebetite is dead
+        ; set status bit 1 to disable zebetite update
         inc Zebetites.0.status,x
     @endIf_A: ; 03:A2BA
 @gfxUpdate: ; 03:A2BA
@@ -2106,21 +2118,26 @@ UpdateZebetite: ; 03:A29B
     sta TileBlasts.1.roomRAMPtr+1
     ; if a vram struct is in the buffer, dont update gfx
     lda VRAMStructBufferIndex
-    bne @endIf_B
-        ; vram struct buffer is empty
-        ; update zebetite gfx
-        txa
-        pha
-        jsr CommonJump_DrawTileBlast
-        pla
-        tax
-        ; branch if gfx update is successful
-        bcc @gfxUpdateSuccess
-    @endIf_B: ; 03:A2DA
+    bne @gfxUpdateFailure
+    
+    ; vram struct buffer is empty
+    ; update zebetite gfx
+    txa
+    pha
+    jsr CommonJump_DrawTileBlast
+    pla
+    tax
+    ; branch if gfx update is successful
+    bcc @gfxUpdateSuccess
+    ; fallthrough
+    
+@gfxUpdateFailure: ; 03:A2DA
+    ; undo disable zebetite update, if applicable
     lda Zebetites.0.status,x
     and #$80
     ora #$01
     sta Zebetites.0.status,x
+    ; undo current hit processing, to be attempted again the next time zebetite updates
     sta Zebetites.0.isHit,x
     dec Zebetites.0.qtyHits,x
     rts
@@ -2155,11 +2172,11 @@ UpdateZebetite: ; 03:A29B
     rts
 
 ZebetiteAnimFrameTable: ; 03:A310
-    .byte $0C ; 100% thickness
-    .byte $0D ;  75% thickness
-    .byte $0E ;  50% thickness
-    .byte $0F ;  25% thickness
-    .byte $07 ; dead
+    .byte _id_VRAMString0C ; 100% thickness
+    .byte _id_VRAMString0D ;  75% thickness
+    .byte _id_VRAMString0E ;  50% thickness
+    .byte _id_VRAMString0F ;  25% thickness
+    .byte _id_VRAMString07 ; dead
 
 ;-------------------------------------------------------------------------------
 ; Samus no longer has a metroid on her
@@ -2182,37 +2199,44 @@ ClearCurrentMetroidLatchAndMetroidOnSamus: ; 03:A320
 
 ;-------------------------------------------------------------------------------
 
+; mother brain disintegration
 VRAMString00_{AREA}: ; 03:A32B
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
+; mother brain broken glass
 VRAMString01_{AREA}: ; 03:A330
     .byte $32
     .byte $FF, $FF
     .byte $FF, $FF
     .byte $FF, $FF
 
+; escape message 2nd row pt1: GET OU
 VRAMString02_{AREA}: ; 03:A337
-    .byte $28 ; GET OU
+    .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $E0, $DE, $ED, $FF, $E8, $EE
 
+; escape message 2nd row pt2: T FAST!
 VRAMString03_{AREA}: ; 03:A348
-    .byte $28 ; T FAST!
+    .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $ED, $FF, $DF, $DA, $EC, $ED, $F4, $FF
 
+; escape message 4th row pt1: TIME
 VRAMString04_{AREA}: ; 03:A359
-    .byte $28 ; TIME
+    .byte $28
     .byte $FF, $FF, $FF, $FF, $ED, $E2, $E6, $DE
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
+; escape message 4th row pt2
 VRAMString05_{AREA}: ; 03:A36A
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
+; unused?
 VRAMString06_{AREA}: ; 03:A37B
     .byte $62
     .byte $FF, $FF
@@ -2222,6 +2246,7 @@ VRAMString06_{AREA}: ; 03:A37B
     .byte $FF, $FF
     .byte $FF, $FF
 
+; zebetite dead
 VRAMString07_{AREA}: ; 03:A388
     .byte $42
     .byte $FF, $FF
@@ -2229,26 +2254,31 @@ VRAMString07_{AREA}: ; 03:A388
     .byte $FF, $FF
     .byte $FF, $FF
 
+; escape message 1st row pt1: TIME B
 VRAMString08_{AREA}: ; 03:A391
-    .byte $28 ; TIME B
+    .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $ED, $E2, $E6, $DE, $FF, $DB
 
+; escape message 1st row pt2: OMB SET
 VRAMString09_{AREA}: ; 03:A3A2
-    .byte $28 ; OMB SET
+    .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $E8, $E6, $DB, $FF, $EC, $DE, $ED, $FF
 
+; escape message 3rd row pt1
 VRAMString0A_{AREA}: ; 03:A3B3
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
+; escape message 3rd row pt2
 VRAMString0B_{AREA}: ; 03:A3C4
     .byte $28
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
     .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 
+; zebetite 100% thickness
 VRAMString0C_{AREA}: ; 03:A3D5
     .byte $42
     .byte $90, $91
@@ -2256,6 +2286,7 @@ VRAMString0C_{AREA}: ; 03:A3D5
     .byte $90, $91
     .byte $90, $91
 
+; zebetite 75% thickness
 VRAMString0D_{AREA}: ; 03:A3DE
     .byte $42
     .byte $92, $93
@@ -2263,6 +2294,7 @@ VRAMString0D_{AREA}: ; 03:A3DE
     .byte $92, $93
     .byte $92, $93
 
+; zebetite 50% thickness
 VRAMString0E_{AREA}: ; 03:A3E7
     .byte $42
     .byte $94, $95
@@ -2270,6 +2302,7 @@ VRAMString0E_{AREA}: ; 03:A3E7
     .byte $94, $95
     .byte $94, $95
 
+; zebetite 25% thickness
 VRAMString0F_{AREA}: ; 03:A3F0
     .byte $42
     .byte $96, $97
@@ -2277,6 +2310,7 @@ VRAMString0F_{AREA}: ; 03:A3F0
     .byte $96, $97
     .byte $96, $97
 
+; mother brain escape doorway
 VRAMString10_{AREA}: ; 03:A3F9
     .byte $62
     .byte $A0, $A0

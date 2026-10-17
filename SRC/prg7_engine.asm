@@ -12616,7 +12616,7 @@ UpdateTileBlast: ; 07:FE27
 UpdateTileBlast_Init: ; 07:FE3D
     inc TileBlasts.0.routine,x
     ; set anim to blasting
-    lda #TileBlastAnim0 - TileBlastAnim.b
+    lda #TileBlastAnim@0 - TileBlastAnim.b
     jsr SetTileAnim
     ; tile respawns after 320 frames
     lda #$50
@@ -12659,16 +12659,16 @@ SetTileAnim: ; 07:FE6D
 ; Table used for indexing the respawining animations in TileBlastAnim (see below)
 ; Why aren't these in area banks?
 TileBlastRespawnAnimIndexTable: ; 07:FE79
-    .byte TileBlastAnim6 - TileBlastAnim ; tile #$70
-    .byte TileBlastAnim7 - TileBlastAnim ; tile #$74
-    .byte TileBlastAnim8 - TileBlastAnim ; tile #$78 (also tile #$76 in Norfair)
-    .byte TileBlastAnim0 - TileBlastAnim ; tile #$7C
-    .byte TileBlastAnim1 - TileBlastAnim ; tile #$80
-    .byte TileBlastAnim2 - TileBlastAnim ; tile #$84
-    .byte TileBlastAnim3 - TileBlastAnim ; tile #$88
-    .byte TileBlastAnim4 - TileBlastAnim ; tile #$8C
-    .byte TileBlastAnim9 - TileBlastAnim ; tile #$90
-    .byte TileBlastAnim5 - TileBlastAnim ; tile #$94
+    .byte TileBlastAnim@6 - TileBlastAnim ; tile #$70
+    .byte TileBlastAnim@7 - TileBlastAnim ; tile #$74
+    .byte TileBlastAnim@8 - TileBlastAnim ; tile #$78 (also tile #$76 in Norfair)
+    .byte TileBlastAnim@0 - TileBlastAnim ; tile #$7C
+    .byte TileBlastAnim@1 - TileBlastAnim ; tile #$80
+    .byte TileBlastAnim@2 - TileBlastAnim ; tile #$84
+    .byte TileBlastAnim@3 - TileBlastAnim ; tile #$88
+    .byte TileBlastAnim@4 - TileBlastAnim ; tile #$8C
+    .byte TileBlastAnim@9 - TileBlastAnim ; tile #$90
+    .byte TileBlastAnim@5 - TileBlastAnim ; tile #$94
 
 UpdateTileBlast_Respawned: ; 07:FE83
     ; delete tile blast
@@ -12881,25 +12881,25 @@ UpdateTileBlastAnim: ; 07:FF54
 ; Frame data for tile blasts (why aren't these in area banks?)
 
 TileBlastAnim: ; 07:FF86
-TileBlastAnim0: ; 07:FF86
+@0: ; 07:FF86
     .byte _id_VRAMString06, _id_VRAMString07, _id_VRAMString00, $FE ; blasting tile or respawning tile #$7C
-TileBlastAnim1: ; 07:FF8A
+@1: ; 07:FF8A
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString01, $FE ; respawning tile #$80
-TileBlastAnim2: ; 07:FF8E
+@2: ; 07:FF8E
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString02, $FE ; respawning tile #$84
-TileBlastAnim3: ; 07:FF92
+@3: ; 07:FF92
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString03, $FE ; respawning tile #$88
-TileBlastAnim4: ; 07:FF96
+@4: ; 07:FF96
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString04, $FE ; respawning tile #$8C
-TileBlastAnim5: ; 07:FF9A
+@5: ; 07:FF9A
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString05, $FE ; respawning tile #$94
-TileBlastAnim6: ; 07:FF9E
+@6: ; 07:FF9E
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString09, $FE ; respawning tile #$70
-TileBlastAnim7: ; 07:FFA2
+@7: ; 07:FFA2
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString0A, $FE ; respawning tile #$74
-TileBlastAnim8: ; 07:FFA6
+@8: ; 07:FFA6
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString0B, $FE ; respawning tile #$78
-TileBlastAnim9: ; 07:FFAA
+@9: ; 07:FFAA
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString08, $FE ; respawning tile #$90
 
 

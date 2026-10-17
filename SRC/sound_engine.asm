@@ -2543,7 +2543,7 @@ MusicNotesTbl: ; $BE77
 ;The following tables are used to load the music frame count addresses ($0640 thru $0643). The
 ;larger the number, the longer the music will play a solid note.  The number represents how
 ;many frames the note will play.  There is a small discrepancy in time length because the
-;Nintendo runs at 60 frames pers second and I am using 64 frames per second to make the
+;Nintendo runs at 60 frames per second and I am using 64 frames per second to make the
 ;numbers below divide more evenly.
 
 NoteLengthsTbl: ; $BEF7
@@ -2606,7 +2606,7 @@ NoteLengthsTbl: ; $BEF7
         .byte $02
         .byte $01
     
-    @4: ; $BEF7
+    @4:
         .byte $04
         .byte $08
         .byte $10
@@ -2634,7 +2634,7 @@ NoteLengthsTbl: ; $BEF7
         .byte $03
         .byte $02
     
-    @6: ; $BF02
+    @6:
         .byte $06
         .byte $0C
         .byte $18
@@ -2648,7 +2648,7 @@ NoteLengthsTbl: ; $BEF7
         .byte $03
         .byte $10
     
-    @7: ; $BF0E
+    @7:
         .byte $07
         .byte $0E
         .byte $1C

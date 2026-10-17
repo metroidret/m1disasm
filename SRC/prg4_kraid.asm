@@ -755,62 +755,75 @@ UpdateEnemyCommon_Decide_{AREA}: ; 04:9905
 AreaRoutineStub_{AREA}: ; 04:9C49
     rts
 
-; What's this table?
+;-------------------------------------------------------------------------------
+
+; block 100% destroyed
 VRAMString00_{AREA}: ; 04:9C4A
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
+; shot block (common)
 VRAMString01_{AREA}: ; 04:9C4F
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
+; shot block (kraid terrain)
 VRAMString02_{AREA}: ; 04:9C54
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
+; shot block (chozo orb)
 VRAMString03_{AREA}: ; 04:9C59
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
+; shot block (brinstar normal terrain)
 VRAMString04_{AREA}: ; 04:9C5E
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
+; shot block (brinstar lava terrain)
 VRAMString05_{AREA}: ; 04:9C63
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
+; block 33% destroyed
 VRAMString06_{AREA}: ; 04:9C68
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
+; block 66% destroyed
 VRAMString07_{AREA}: ; 04:9C6D
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
+; shot block (kraid terrain duplicate)
 VRAMString08_{AREA}: ; 04:9C72
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
+; shot block (kraid/ridley donut cube)
 VRAMString09_{AREA}: ; 04:9C77
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
+; shot block (kraid brick)
 VRAMString0A_{AREA}: ; 04:9C7C
     .byte $22
     .byte $74, $75
     .byte $76, $77
 
+; shot block (kraid/ridley donutless cube)
 VRAMString0B_{AREA}: ; 04:9C81
     .byte $22
     .byte $78, $79

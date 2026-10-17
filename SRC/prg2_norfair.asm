@@ -681,61 +681,73 @@ LoadEnemyPositionFromTemp__{AREA}: ; 02:9A52
 
 ;-------------------------------------------------------------------------------
 
+; block 100% destroyed
 VRAMString00_{AREA}: ; 02:9B9E
     .byte $22
     .byte $FF, $FF
     .byte $FF, $FF
 
+; shot block (common)
 VRAMString01_{AREA}: ; 02:9BA3
     .byte $22
     .byte $80, $81
     .byte $82, $83
 
+; shot block (kraid terrain)
 VRAMString02_{AREA}: ; 02:9BA8
     .byte $22
     .byte $84, $85
     .byte $86, $87
 
+; shot block (chozo orb)
 VRAMString03_{AREA}: ; 02:9BAD
     .byte $22
     .byte $88, $89
     .byte $8A, $8B
 
+; shot block (brinstar normal terrain)
 VRAMString04_{AREA}: ; 02:9BB2
     .byte $22
     .byte $8C, $8D
     .byte $8E, $8F
 
+; shot block (brinstar lava terrain)
 VRAMString05_{AREA}: ; 02:9BB7
     .byte $22
     .byte $94, $95
     .byte $96, $97
 
+; block 33% destroyed
 VRAMString06_{AREA}: ; 02:9BBC
     .byte $22
     .byte $9C, $9D
     .byte $9D, $9C
 
+; block 66% destroyed
 VRAMString07_{AREA}: ; 02:9BC1
     .byte $22
     .byte $9E, $9F
     .byte $9F, $9E
 
+; shot block (kraid terrain duplicate)
 VRAMString08_{AREA}: ; 02:9BC6
     .byte $22
     .byte $90, $91
     .byte $92, $93
 
+; shot block (norfair strawberry)
 VRAMString09_{AREA}: ; 02:9BCB
     .byte $22
     .byte $70, $71
     .byte $72, $73
 
+; shot block (tourian platform brick)
 VRAMString0A_{AREA}: ; 02:9BD0
     .byte $22
     .byte $74, $75
     .byte $75, $74
 
+; shot block (norfair four bubbles)
 VRAMString0B_{AREA}: ; 02:9BD5
     .byte $22
     .byte $76, $76
