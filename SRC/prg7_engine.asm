@@ -6608,7 +6608,7 @@ ExplodePlacementBottomTbl: ; 07:E07C
 ;--------------------------------------[ Update enemy animation ]-----------------------------------
 
 ;Advance to next frame of enemy's animation. Basically the same as UpdateObjAnim, only for enemies.
-
+; a is new anim delay when cur anim delay will elapse
 UpdateEnemyAnim: ; 07:E094
     ;Load index to desired enemy.
     ldx PageIndex
@@ -6617,14 +6617,17 @@ UpdateEnemyAnim: ; 07:E094
     cpy #enemyStatus_Pickup
     beq @RTS
     
-    ;Check if current anumation frame is ready to be updated.
+    ; check if current animation frame is zero
     ldy EnsExtra.0.animDelay,x
     beq @endIf_A
-        ;Not ready to update. decrement delay timer and branch to exit.
+        ; its not zero
+        ; decrement delay timer and branch to exit if still not zero
         dec EnsExtra.0.animDelay,x
         bne @RTS
+        ; fallthrough
     @endIf_A: ; 07:E0A7
-    ;Save new animation delay value.
+    ; current animation frame is zero
+    ; save new animation delay value
     sta EnsExtra.0.animDelay,x
     
     ;Load enemy animation index.
@@ -11730,22 +11733,25 @@ UpdateEnProjectile_Resting: ; 07:F96A
     jsr EnemyBecomePickupIfHit
     jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
-    bcs LF97C
+    bcs AnimDrawEnemyWithAnimDelay1
         lda EnsExtra.0.status,x
         beq UpdateEnProjectile@RTS
         jsr EnemyBecomePickup
-LF97C: ; 07:F97C
+AnimDrawEnemyWithAnimDelay1: ; 07:F97C
+    ; new anim delay when cur anim delay will elapse is #$01
     lda #$01
 AnimDrawEnemy: ; 07:F97E
     jsr UpdateEnemyAnim
     jmp DrawEnemy
-Lx361: ; 07:F984
+
+
+UpdateEnProjectile_Active_NextInstruction: ; 07:F984
     inc Ens.0.movementIndex,x
-LF987: ; 07:F987
+@restart: ; 07:F987
     inc Ens.0.movementIndex,x
     lda #$00
     sta Ens.0.delay,x
-    beq Lx362
+    beq UpdateEnProjectile_Active@processMovementInstruction
 
 UpdateEnProjectile_Active: ; 07:F991
     jsr EnemyBecomePickupIfHit
@@ -11753,31 +11759,34 @@ UpdateEnProjectile_Active: ; 07:F991
     and #$FE
     tay
     lda EnProjectileMovementPtrTable,y
-    sta $0A
+    sta Temp0A_EnProjectileMovementPtr
     lda EnProjectileMovementPtrTable+1,y
-    sta $0B
-Lx362: ; 07:F9A4
+    sta Temp0A_EnProjectileMovementPtr+1
+@processMovementInstruction: ; 07:F9A4
     ldy Ens.0.movementIndex,x
-    lda ($0A),y
+    lda (Temp0A_EnProjectileMovementPtr),y
     ; If #$FF, restart movement string
     cmp #$FF
-    bne Lx363
+    bne @endIf_A
         sta Ens.0.movementIndex,x
-        jmp LF987
-    Lx363: ; 07:F9B3
-    cmp Ens.0.delay,x ; Move onto the next instruction if Ens.0.delay == array value
-    beq Lx361
+        jmp UpdateEnProjectile_Active_NextInstruction@restart
+    @endIf_A: ; 07:F9B3
+    ; Move onto the next instruction if Ens.0.delay == array value
+    cmp Ens.0.delay,x
+    beq UpdateEnProjectile_Active_NextInstruction
 
     inc Ens.0.delay,x
     iny
 
-    lda ($0A),y
-    jsr EnemyGetDeltaY_SignMagSpeed@fromByte ; Get the y velocity from this byte
+    ; Get the y velocity from this byte
+    lda (Temp0A_EnProjectileMovementPtr),y
+    jsr EnemyGetDeltaY_SignMagSpeed@fromByte
     ldx PageIndex
     sta Ens.0.speedY,x
-
-    lda ($0A),y
-    jsr EnemyGetDeltaX_SignMagSpeed@fromByte ; Get the x velocity from this byte
+    
+    ; Get the x velocity from this byte
+    lda (Temp0A_EnProjectileMovementPtr),y
+    jsr EnemyGetDeltaX_SignMagSpeed@fromByte
     ldx PageIndex
     sta Ens.0.speedX,x
 
@@ -11786,48 +11795,59 @@ Lx362: ; 07:F9A4
     lda Ens.0.data0A,x
     lsr
     php
-    bcc Lx364
+    bcc @endIf_B
         tya
         jsr TwosComplement              ;($C3D4)
         sta Ens.0.speedX,x
-    Lx364: ; 07:F9DF
+    @endIf_B: ; 07:F9DF
 
-    ; branch if this is not the first movement instruction
+    ; branch if this is not the first movement string
     plp
-    bne Lx365
-    ; branch if y speed is not strictly positive
-    lda Ens.0.speedY,x
-    beq Lx365
-    bmi Lx365
+    bne @endIf_C
+        ; this is the first movement string (dragon fireball)
+        ; branch if y speed is not strictly positive
+        lda Ens.0.speedY,x
+        beq @endIf_C
+        bmi @endIf_C
+            ; y speed is positive, projectile is falling
+            ; use the falling animation
+            ldy Ens.0.data0A,x
+            lda AreaEnProjectileFallingAnimIndex,y
+            sta EnsExtra.0.resetAnimIndex,x
+    @endIf_C: ; 07:F9F2
 
-    ldy Ens.0.data0A,x
-    lda AreaEnProjectileFallingAnimIndex,y
-    sta EnsExtra.0.resetAnimIndex,x
-Lx365: ; 07:F9F2
+    ; apply movement and check if it failed
     jsr EnemyBGCollideOrApplySpeed
     ldx PageIndex
-    bcs Lx367
-    lda EnsExtra.0.status,x
-    beq Exit20
-    ldy #$00
-    lda Ens.0.data0A,x
-    lsr
-    beq Lx366
-        iny
-    Lx366: ; 07:FA07
-    lda AreaEnProjectileSplatterAnimIndex,y
-    jsr InitEnAnimIndex
-    jsr LF518
-    lda #$0A
-    sta Ens.0.delay,x
-Lx367: ; 07:FA15
-    jmp LF97C
+    bcs @endIf_D
+        ; movement failed
+        ; exit if projectile is resting
+        lda EnsExtra.0.status,x
+        beq EnemyBecomePickup@RTS
+
+        ; get horizontal direction in y
+        ldy #$00
+        lda Ens.0.data0A,x
+        lsr
+        beq @endIf_E
+            iny
+        @endIf_E: ; 07:FA07
+        ; play splatter animation for that direction
+        lda AreaEnProjectileSplatterAnimIndex,y
+        jsr InitEnAnimIndex
+        jsr LF518
+        lda #$0A
+        sta Ens.0.delay,x
+    @endIf_D: ; 07:FA15
+    jmp AnimDrawEnemyWithAnimDelay1
+
 
 RemoveEnemy: ; 07:FA18
     ;Store #$00 as enemy status(enemy slot is open).
     lda #enemyStatus_NoEnemy
     sta EnsExtra.0.status,x
     rts
+
 
 ; enemy<-->background crash detection
 ; return carry clear if enemy collided or was removed
@@ -11878,13 +11898,13 @@ LoadEnemyPositionFromTemp: ; 07:FA49
 EnemyBecomePickupIfHit: ; 07:FA5B
     ; exit if not hit
     lda Ens.0.isHit,x
-    beq Exit20
+    beq EnemyBecomePickup@RTS
 EnemyBecomePickup: ; 07:FA60
     lda #$00
     sta Ens.0.isHit,x
     lda #enemyStatus_Pickup
     sta EnsExtra.0.status,x
-Exit20: ; 07:FA6A
+@RTS: ; 07:FA6A
     rts
 
 UpdateEnProjectile_Frozen: ; 07:FA6B
@@ -11896,7 +11916,7 @@ UpdateEnProjectile_Frozen: ; 07:FA6B
     Lx371: ; 07:FA77
         jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     Lx372: ; 07:FA7A
-    jmp LF97C
+    jmp AnimDrawEnemyWithAnimDelay1
 
 GetEnemyRoomRAMPtr: ; 07:FA7D
     ldx PageIndex
@@ -11912,7 +11932,7 @@ UpdateEnProjectile_Pickup: ; 07:FA91
     jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
     lda AreaEnProjectileKilledAnimIndex
     jsr InitEnAnimIndex
-    jmp LF97C
+    jmp AnimDrawEnemyWithAnimDelay1
 
 ;-------------------------------------------------------------------------------
 UpdateAllEnemyExplosions: ; 07:FA9D
@@ -12003,7 +12023,7 @@ UpdatePipeBugHole: ; 07:FAFF
     beq @endIf_A
         lda Ens.0.data05,x
         and #$02
-        bne Exit13
+        bne InitEnemyFacingDirectionAxisAndDelay@RTS
     @endIf_A: ; 07:FB16
     ; enemy slot is available, spawn pipe bug
     ; a is #$00 here
@@ -12015,7 +12035,7 @@ UpdatePipeBugHole: ; 07:FAFF
     bne @clearEnemySlot
     ; exit if delay is not zero
     dec Ens.0.delay,x
-    bne Exit13
+    bne InitEnemyFacingDirectionAxisAndDelay@RTS
     ; set pipe bug type
     lda PipeBugHoles.0.status,y
     jsr GetEnemyType
@@ -12038,7 +12058,7 @@ UpdatePipeBugHole: ; 07:FAFF
     jsr GetEnemyXSlotPosition
     jsr GetRadiusSumsOfEnXSlotAndObjYSlot
     jsr CheckCollisionOfXSlotAndYSlot
-    bcc Exit13
+    bcc InitEnemyFacingDirectionAxisAndDelay@RTS
     ; set status to resting
     lda #enemyStatus_Resting ; #$01
     sta Ens.0.delay,x
@@ -12067,8 +12087,7 @@ InitEnemyFacingDirectionAxisAndDelay: ; 07:FB7B
     ; load initial delay for enemy movement.
     lda EnemyInitDelayTbl,y
     sta Ens.0.delay,x
-
-Exit13: ; 07:FB87
+@RTS: ; 07:FB87
     rts                             ;Exit from multiple routines.
 
 ;-------------------------------------------------------------------------------
@@ -12083,26 +12102,26 @@ EnemyFlipAfterDisplacement: ; 07:FB88
     ; branch if EnData1F is not zero
     inc EnsExtra.0.data1F,x
     dec EnsExtra.0.data1F,x
-    bne Lx382
+    bne @endIf_A
         ; EnData1F is zero
         ; set negative flag for EnJumpDsplcmnt
         pha
         pla
-    Lx382: ; 07:FB9A
+    @endIf_A: ; 07:FB9A
     ; branch if EnData1F is zero and if EnJumpDsplcmnt is positive,
     ; or if EnData1F == #$40
-    bpl Lx383
+    bpl @endIf_B
         ; EnData1F is zero and EnJumpDsplcmnt is negative
         ; or EnData1F == #$80 or #$C0
         ; negate EnJumpDsplcmnt to get the absolute distance
         jsr TwosComplement              ;($C3D4)
-    Lx383: ; 07:FB9F
+    @endIf_B: ; 07:FB9F
     ; branch if displacement is less than 8 pixels
     cmp #$08
     bcc Lx384
         ; exit if displacement is greater or equal to 16 pixels
         cmp #$10
-        bcs Exit13
+        bcs InitEnemyFacingDirectionAxisAndDelay@RTS
         ; displacement is between 8 and 15 pixels inclusive
         ; set y to horizontal facing direction
         tya
@@ -12111,7 +12130,7 @@ EnemyFlipAfterDisplacement: ; 07:FB88
         ; exit if current enemy animation is the same as the new animation
         lda EnemyFlipAfterDisplacementAnimIndex,y
         cmp EnsExtra.0.resetAnimIndex,x
-        beq Exit13
+        beq InitEnemyFacingDirectionAxisAndDelay@RTS
         ; current enemy anim is different, init anim index
         sta EnsExtra.0.animIndex,x
         dec EnsExtra.0.animIndex,x
@@ -12124,7 +12143,7 @@ InitEnResetAnimIndex: ; 07:FBB9
         ; exit if enemy is doing its resting animation
         lda EnemyRestingAnimIndex,y
         cmp EnsExtra.0.resetAnimIndex,x
-        beq Exit13
+        beq InitEnemyFacingDirectionAxisAndDelay@RTS
         ; set enemy animation to resting animation
         jmp InitEnAnimIndex
 ;-------------------------------------------------------------------------------
@@ -12136,7 +12155,7 @@ InitEnActiveAnimIndex_NoInitOffset: ; 07:FBCA
     ; exit if enemy is in its active animation
     lda EnemyActiveAnimIndex,y
     cmp EnsExtra.0.resetAnimIndex,x
-    beq Exit13
+    beq InitEnemyFacingDirectionAxisAndDelay@RTS
     ; enemy is not in its active animation
     ; set animation to active animation
     sta EnsExtra.0.resetAnimIndex,x

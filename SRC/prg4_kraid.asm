@@ -667,6 +667,9 @@ EnemyMovement11_L_{AREA}: ; 04:98B2
     SignMagSpeed $50, -2,  7
     EnemyMovementInstr_Restart
 
+;-------------------------------------------------------------------------------
+
+; unused (dragon fireball)
 EnProjectileMovement0_{AREA}: ; 04:98C9
     SignMagSpeed $04,  3, -3
     SignMagSpeed $05,  3, -2
@@ -677,6 +680,7 @@ EnProjectileMovement0_{AREA}: ; 04:98C9
     SignMagSpeed $50,  3,  3
     .byte $FF
 
+; unused (polyp projectile long)
 EnProjectileMovement1_{AREA}: ; 04:98D8
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
@@ -687,6 +691,7 @@ EnProjectileMovement1_{AREA}: ; 04:98D8
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; unused (polyp projectile medium)
 EnProjectileMovement2_{AREA}: ; 04:98E7
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
@@ -697,6 +702,7 @@ EnProjectileMovement2_{AREA}: ; 04:98E7
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; unused (polyp projectile short)
 EnProjectileMovement3_{AREA}: ; 04:98F6
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
@@ -706,6 +712,8 @@ EnProjectileMovement3_{AREA}: ; 04:98F6
     SignMagSpeed $05,  2,  4
     SignMagSpeed $50,  2,  7
     .byte $FF
+
+;-------------------------------------------------------------------------------
 
 UpdateEnemyCommon_Decide_{AREA}: ; 04:9905
     lda EnemyStatusPreAI

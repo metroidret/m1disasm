@@ -505,17 +505,27 @@ EnemyMovement11_R_{AREA}: ; 03:97D5
 EnemyMovement11_L_{AREA}: ; 03:97D5
     ; nothing
 
+;-------------------------------------------------------------------------------
+
+; unused
 EnProjectileMovement0_{AREA}: ; 03:97D5
+    ; nothing
+
+; cannon bullet diagonal
 EnProjectileMovement1_{AREA}: ; 03:97D5
     SignMagSpeed $50,  2,  2
     .byte $FF
 
+; cannon bullet vertical
 EnProjectileMovement2_{AREA}: ; 03:97D8
     SignMagSpeed $50,  0,  3
     .byte $FF
 
+; unused
 EnProjectileMovement3_{AREA}: ; 03:97DB
     .byte $FF
+
+;-------------------------------------------------------------------------------
 
 RemoveEnemy__{AREA}: ; 03:97DC
     lda #$00
@@ -661,7 +671,7 @@ Cannon_ShootEnProjectile: ; 03:9BAF
     cmp #$04
     bcs @exit
     ; loop through all enemy projectiles
-    ldy #$60
+    ldy #EnProjectiles.0 - Ens
     @loop: ; 03:9BB8
         ; branch if slot is empty
         lda EnsExtra.0.status,y
@@ -669,9 +679,9 @@ Cannon_ShootEnProjectile: ; 03:9BAF
         ; slot is not empty, check next slot
         tya
         clc
-        adc #$10
+        adc #_sizeof_En
         tay
-        cmp #$A0
+        cmp #EnProjectiles.4 - Ens
         bne @loop
     ; no projectile slots found, exit
 @exit: ; 03:9BC6

@@ -546,7 +546,13 @@ EnemyMovement11_L_{AREA}: ; 05:97F3
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_TriggerResting
 
+;-------------------------------------------------------------------------------
+
+; unused
 EnProjectileMovement0_{AREA}: ; 05:97FD
+    ; nothing
+
+; unused (polyp projectile long)
 EnProjectileMovement1_{AREA}: ; 05:97FD
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
@@ -557,6 +563,7 @@ EnProjectileMovement1_{AREA}: ; 05:97FD
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; unused (polyp projectile medium)
 EnProjectileMovement2_{AREA}: ; 05:980C
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
@@ -567,6 +574,7 @@ EnProjectileMovement2_{AREA}: ; 05:980C
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; unused (polyp projectile short)
 EnProjectileMovement3_{AREA}: ; 05:981B
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
@@ -578,6 +586,7 @@ EnProjectileMovement3_{AREA}: ; 05:981B
     .byte $FF
 
 ;-------------------------------------------------------------------------------
+
 RemoveEnemy__{AREA}: ; 05:982A
     lda #$00
     sta EnsExtra.0.status,x

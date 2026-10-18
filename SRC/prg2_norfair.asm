@@ -534,6 +534,9 @@ EnemyMovement11_L_{AREA}: ; 02:97ED
     SignMagSpeed $14,  0,  1
     EnemyMovementInstr_TriggerResting
 
+;-------------------------------------------------------------------------------
+
+; dragon fireball
 EnProjectileMovement0_{AREA}: ; 02:97F7
     SignMagSpeed $0A,  3, -5
     SignMagSpeed $07,  3, -3
@@ -544,6 +547,7 @@ EnProjectileMovement0_{AREA}: ; 02:97F7
     SignMagSpeed $50,  3,  3
     .byte $FF
 
+; polyp projectile long
 EnProjectileMovement1_{AREA}: ; 02:9806
     SignMagSpeed $09,  2, -4
     SignMagSpeed $08,  2, -2
@@ -554,6 +558,7 @@ EnProjectileMovement1_{AREA}: ; 02:9806
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; polyp projectile medium
 EnProjectileMovement2_{AREA}: ; 02:9815
     SignMagSpeed $07,  2, -4
     SignMagSpeed $06,  2, -2
@@ -564,6 +569,7 @@ EnProjectileMovement2_{AREA}: ; 02:9815
     SignMagSpeed $50,  2,  7
     .byte $FF
 
+; polyp projectile short
 EnProjectileMovement3_{AREA}: ; 02:9824
     SignMagSpeed $05,  2, -4
     SignMagSpeed $04,  2, -2
@@ -575,6 +581,7 @@ EnProjectileMovement3_{AREA}: ; 02:9824
     .byte $FF
 
 ;-------------------------------------------------------------------------------
+
 RemoveEnemy__{AREA}: ; 02:9833
     lda #$00
     sta EnsExtra.0.status,x

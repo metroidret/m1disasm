@@ -111,7 +111,7 @@
     delay                  db   ;Delay counter between enemy actions.
     data0A                 db   ; unknown -- For crawlers, orientation
                                   ; (#$00 = forwards on floor, #$01 = moving down a wall, #$02 = backwards on ceiling, #$03 = moving up an opposite wall)
-                                  ; For enProjectiles, it's the EnProjectileMovement id
+                                  ; For enProjectiles, it's the EnProjectileMovement id (which string it is) * 2 + horizontal direction
     health                 db   ;Current health of enemy.
     prevStatus             db   ;Enemy status before being hurt. bit 7 and bit 6 is EnSpecialAttribs.
     data0D                 db   ;Resting: force speed towards samus delay
@@ -452,6 +452,10 @@ Temp02_PaletteSource   = $02
 Temp04_VRAMStructByte  = $04
 ;Temp05_BytesCounter    = $05
 Temp06_PaletteIndex    = $06
+
+; UpdateEnProjectile_Active
+Temp0A_EnProjectileMovementPtr = $0A
+; Temp0A_EnProjectileMovementPtr+1 = $0B
 
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->
