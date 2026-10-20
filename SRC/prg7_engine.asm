@@ -5153,7 +5153,7 @@ SamusCollisionWithSolidEntities: ; 07:D976
     ; exit if samus is not touching the elevator
     ldy #Samus - Objects
     ldx #Elevator - Objects
-    jsr LDC82
+    jsr AreObjectsTouching@reuseYSlotPosition
     bcs @RTS
     ; exit if samus is not on top of the elevator
     jsr @isSamusOnTop
@@ -5816,7 +5816,7 @@ CreateItemID: ; 07:DC67
 ; carry clear = touching
 AreObjectsTouching: ; 07:DC7F
     jsr GetObjectYSlotPosition
-LDC82: ; 07:DC82
+@reuseYSlotPosition: ; 07:DC82
     jsr GetObjectXSlotPosition
     jsr GetRadiusSumsOfObjXSlotAndObjYSlot
     jmp CheckCollisionOfXSlotAndYSlot
@@ -9902,178 +9902,179 @@ CollisionDetection: ; 07:F034
 
 ; mellow <--> bullet/missile/bomb detection
     ldx #_sizeof_Mellows - _sizeof_Mellows.0
-    Lx261: ; 07:F03D
+    @loop_Mellow: ; 07:F03D
         ; branch if no Mellow in slot
         lda Mellows.0.status,x
-        beq Lx266
+        beq @continueLoop_Mellow
         cmp #enemyStatus_Explode
-        beq Lx266
+        beq @continueLoop_Mellow
             ; check for collision with samus
             jsr GetMellowXSlotPosition
             ; skip check if samus is dead
             jsr IsSamusDead
-            beq Lx262
-            ; skip check if samus is invincible
-            lda SamusInvincibleDelay
-            bne Lx262
-                ldy #$00
-                jsr CollisionDetectionMellow_CheckWithObjectYSlot
-                jsr CollisionDetectionMellow_ReactToCollisionWithSamus
-            Lx262: ; 07:F059
+            beq @endIf_MellowSamus
+                ; skip check if samus is invincible
+                lda SamusInvincibleDelay
+                bne @endIf_MellowSamus
+                    ldy #$00
+                    jsr CollisionDetectionMellow_CheckWithObjectYSlot
+                    jsr CollisionDetectionMellow_ReactToCollisionWithSamus
+            @endIf_MellowSamus: ; 07:F059
             ; check for collision with samus projectiles
             ldy #SamusProjectiles.0 - Objects
-            Lx263: ; 07:F05B
+            @loop_MellowProjectile: ; 07:F05B
                 ; try next samus projectile if this one is not active
                 lda Objects.0.status,y
-                beq Lx265
+                beq @continueLoop_MellowProjectile
                 ; try next samus projectile if it is not a bullet, unknown7, bomb or missile
                 cmp #wa_BulletExplode
-                bcc Lx264
+                bcc @checkColl_MellowProjectile
                 cmp #wa_Unknown7
-                beq Lx264
+                beq @checkColl_MellowProjectile
                 cmp #wa_BombExplode
-                beq Lx264
+                beq @checkColl_MellowProjectile
                 cmp #wa_Missile
-                bne Lx265
-                Lx264: ; 07:F070
+                bne @continueLoop_MellowProjectile
+                @checkColl_MellowProjectile: ; 07:F070
                     ; samus projectile is of the right type
                     ; hit mellow if they collided
                     jsr CollisionDetectionMellow_CheckWithObjectYSlot
                     jsr CollisionDetectionMellow_ReactToCollisionWithSamusProjectile
-                Lx265: ; 07:F076
+                @continueLoop_MellowProjectile: ; 07:F076
                 jsr Yplus16
-                bne Lx263
-        Lx266: ; 07:F07B
+                bne @loop_MellowProjectile
+        @continueLoop_Mellow: ; 07:F07B
         ; each Mellow occupies 8 bytes
         txa
         sec
         sbc #_sizeof_Mellows.0
         tax
-        bpl Lx261
+        bpl @loop_Mellow
 
 ; doors <--> samus detection
     ldx #Doors - Objects + _sizeof_Doors - _sizeof_Doors.0
-    Lx267: ; 07:F084
+    @loop_Door: ; 07:F084
         ; check next door if this door is not closed
         lda Objects.0.status,x
         cmp #$02
-        bne Lx268
-        ; dont check doors if samus is dead
-        ldy #$00
-        jsr IsSamusDead
-        beq Lx269
+        bne @continueLoop_Door
+            ; dont check doors if samus is dead
+            ldy #$00
+            jsr IsSamusDead
+            beq @exitLoop_Door
 
-        jsr AreObjectsTouching          ;($DC7F)
-        jsr CollisionDetectionDoor_F277
-    Lx268: ; 07:F098
+            jsr AreObjectsTouching          ;($DC7F)
+            jsr CollisionDetectionDoor_F277
+        @continueLoop_Door: ; 07:F098
         jsr Xminus16
-        bmi Lx267
+        bmi @loop_Door
 
 ; enemy <--> bullet/missile/bomb detection and enemy <--> samus detection
-Lx269: ; 07:F09D
+@exitLoop_Door: ; 07:F09D
     ; start with enemy slot #5
     ldx #_sizeof_Ens - _sizeof_Ens.0
-    LF09F: ; 07:F09F
+    @loop_Enemy: ; 07:F09F
         ; check next enemy if enemy slot is empty
         lda EnsExtra.0.status,x
-        beq Lx270
+        beq @endIf_EnemyStatus
             ; check next enemy if enemy is currently exploding
             cmp #enemyStatus_Explode
-        Lx270: ; 07:F0A6
-        beq NextEnemy      ; next slot
+        @endIf_EnemyStatus: ; 07:F0A6
+        beq @continueLoop_Enemy      ; next slot
 
         ; skip samus projectile collision if enemy is a pickup
         jsr GetEnemyXSlotPosition
         lda EnsExtra.0.status,x
         cmp #enemyStatus_Pickup
-        beq Lx274
-
-        ; first samus projectile slot
-        ldy #SamusProjectiles - Objects
-        Lx271: ; 07:F0B4
-            lda Objects.0.status,y  ; is it active?
-            beq Lx273            ; branch if not
-            cmp #wa_BulletExplode
-            bcc Lx272
-            cmp #wa_Unknown7
-            beq Lx272
-            cmp #wa_BombExplode
-            beq Lx272
-            cmp #wa_Missile
-            bne Lx273
-            ; check if enemy is actually hit
-            Lx272: ; 07:F0C9
-                jsr CollisionDetectionEnemy_CheckWithObjectYSlot
-                jsr CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile
-            Lx273: ; 07:F0CF
-            ; next samus projectile slot
-            jsr Yplus16
-            bne Lx271
-    Lx274: ; 07:F0D4
+        beq @endIf_EnemyProjectile
+            ; first samus projectile slot
+            ldy #SamusProjectiles - Objects
+            @loop_EnemyProjectile: ; 07:F0B4
+                lda Objects.0.status,y  ; is it active?
+                beq @continueLoop_EnemyProjectile            ; branch if not
+                cmp #wa_BulletExplode
+                bcc @checkColl_EnemyProjectile
+                cmp #wa_Unknown7
+                beq @checkColl_EnemyProjectile
+                cmp #wa_BombExplode
+                beq @checkColl_EnemyProjectile
+                cmp #wa_Missile
+                bne @continueLoop_EnemyProjectile
+                ; check if enemy is actually hit
+                @checkColl_EnemyProjectile: ; 07:F0C9
+                    jsr CollisionDetectionEnemy_CheckWithObjectYSlot
+                    jsr CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile
+                @continueLoop_EnemyProjectile: ; 07:F0CF
+                ; next samus projectile slot
+                jsr Yplus16
+                bne @loop_EnemyProjectile
+        @endIf_EnemyProjectile: ; 07:F0D4
         ; check next enemy if samus has i-frames
         ldy #$00
         lda SamusInvincibleDelay
-        bne NextEnemy
-        ; check next enemy if samus is dead
-        jsr IsSamusDead
-        beq NextEnemy
-        ; enemy collide with samus
-        jsr CollisionDetectionEnemy_CheckWithObjectYSlot
-        jsr CollisionDetectionEnemy_ReactToCollisionWithSamus
-        NextEnemy: ; 07:F0E5
+        bne @endIf_EnemySamus
+            ; check next enemy if samus is dead
+            jsr IsSamusDead
+            beq @endIf_EnemySamus
+                ; enemy collide with samus
+                jsr CollisionDetectionEnemy_CheckWithObjectYSlot
+                jsr CollisionDetectionEnemy_ReactToCollisionWithSamus
+        @endIf_EnemySamus: ; 07:F0E5
+        @continueLoop_Enemy: ; 07:F0E5
         jsr Xminus16
-        bmi Lx275
-            jmp LF09F
+        bmi @exitLoop_Enemy
+            jmp @loop_Enemy
 
 ; enemy projectile <--> samus detection
-Lx275: ; 07:F0ED
+@exitLoop_Enemy: ; 07:F0ED
     ; get samus coord data
     ldx #Samus - Objects
     jsr GetObjectXSlotPosition
     ldy #EnProjectiles - Ens
-    Lx276: ; 07:F0F4
+    @loop_Projectile: ; 07:F0F4
         lda EnsExtra.0.status,y
-        beq Lx277
+        beq @continueLoop_Projectile
         cmp #enemyStatus_Pickup
-        beq Lx277
+        beq @continueLoop_Projectile
         ; check next projectile if samus has i-frames
         lda SamusInvincibleDelay
-        bne Lx277
+        bne @continueLoop_Projectile
         ; check next projectile if samus is dead
         jsr IsSamusDead
-        beq Lx277
-
-        jsr GetRadiusSumsOfObjXSlotAndEnYSlot
-        jsr GetEnemyYSlotPosition
-        jsr CheckCollisionOfXSlotAndYSlot
-        jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus
-    Lx277: ; 07:F112
+        beq @continueLoop_Projectile
+            jsr GetRadiusSumsOfObjXSlotAndEnYSlot
+            jsr GetEnemyYSlotPosition
+            jsr CheckCollisionOfXSlotAndYSlot
+            jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus
+        @continueLoop_Projectile: ; 07:F112
         jsr Yplus16
         cmp #EnProjectiles - Ens + _sizeof_EnProjectiles
-        bne Lx276
+        bne @loop_Projectile
 
 ; bomb <--> samus detection
     ; skip this if samus is dead
     ldy #$00
     jsr IsSamusDead
-    beq GotoSubtractHealth
+    beq @exitLoop_Bomb
     jsr GetObjectYSlotPosition
     ldx #SamusProjectiles - Objects + _sizeof_SamusProjectiles - _sizeof_SamusProjectiles.0
-    Lx278: ; 07:F125
+    @loop_Bomb: ; 07:F125
+        ; continue if bomb is not exploding (and not unknown7?)
         lda Objects.0.status,x
         cmp #wa_Unknown7
-        beq Lx279
-        cmp #wa_BombExplode
-        bne Lx280
-    Lx279: ; 07:F130
-        jsr LDC82
-        jsr SamusHurt_F311
-    Lx280: ; 07:F136
+        beq @endIf_Bomb
+            cmp #wa_BombExplode
+            bne @continueLoop_Bomb
+        @endIf_Bomb: ; 07:F130
+            ; bomb is exploding
+            ; knock samus back if she is touching the explosion
+            jsr AreObjectsTouching@reuseYSlotPosition
+            jsr KnockSamusBackIfCollided
+        @continueLoop_Bomb: ; 07:F136
         jsr Xminus16
         cmp #SamusProjectiles - Objects - _sizeof_SamusProjectiles.0
-        bne Lx278
-
-GotoSubtractHealth: ; 07:F13D
+        bne @loop_Bomb
+@exitLoop_Bomb: ; 07:F13D
     jmp SubtractHealth
 
 
@@ -10305,35 +10306,35 @@ CheckCollisionOfXSlotAndYSlot: ; 07:F1FA
 @positionHi_equal: ; 07:F266
     sta Temp01_DiffHi
     ; return if difference is not negative
-    bpl RTS_X286
-    ; difference is negative
-    ; negate it to get the absolute distance
-    jsr NegateTemp00Temp01
-    ; set dist hi bit
-    inc Temp10_DistHi
-RTS_X286: ; 07:F26F
+    bpl @endIf_distPositive
+        ; difference is negative
+        ; negate it to get the absolute distance
+        jsr NegateTemp00Temp01
+        ; set dist hi bit
+        inc Temp10_DistHi
+    @endIf_distPositive: ; 07:F26F
     rts
 
-LF270: ; 07:F270
+SetSamusIsHitFlagsX: ; 07:F270
     ora Samus.isHit,x
     sta Samus.isHit,x
     rts
 
 CollisionDetectionDoor_F277: ; 07:F277
     ; exit if collision didn't happen
-    bcs Exit17
+    bcs SetSamusIsHitFlagsY@RTS
 
 SetSamusProjectileIsHit: ; 07:F279
     lda Temp10_DistHi
-SetSamusIsHitFlags: ; 07:F27B
+SetSamusIsHitFlagsY: ; 07:F27B
     ora Samus.isHit,y
     sta Samus.isHit,y
-Exit17: ; 07:F281
+@RTS: ; 07:F281
     rts
 
 CollisionDetectionEnemy_ReactToCollisionWithSamus: ; 07:F282
     ; exit if collision didn't happen
-    bcs Exit17
+    bcs SetSamusIsHitFlagsY@RTS
 
     jsr SetEnemyTouchingSamusFlags
     ;branch if screw attack is active.
@@ -10345,7 +10346,7 @@ CollisionDetectionEnemy_ReactToCollisionWithSamus: ; 07:F282
     ; exit if enemy is frozen, pickup or hurt
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
-    bcs Exit17
+    bcs SetSamusIsHitFlagsY@RTS
 
     ; enemy is not frozen
     ; set SamusHurt010F to enemy type
@@ -10360,7 +10361,7 @@ Lx287: ; 07:F298
         ; exit if bit 4 of L968B is set
         lda L968B,y
         and #$10
-        bne Exit17
+        bne SetSamusIsHitFlagsY@RTS
     Lx288: ; 07:F2A5
 
     ldy #$00
@@ -10374,7 +10375,7 @@ Lx289: ; 07:F2AD
 
 CollisionDetectionMellow_ReactToCollisionWithSamus: ; 07:F2B4
     ; exit if collision didn't happen
-    bcs RTS_X290
+    bcs CollisionDetectionMellow_Hit@RTS
     ; branch if screw attack is not active (samus got hit)
     jsr IsScrewAttackActive
     ldy #$00
@@ -10388,7 +10389,7 @@ CollisionDetectionMellow_Hit: ; 07:F2BF
     ora Temp10_DistHi
     eor #$03
     sta Mellows.0.isHit,x
-RTS_X290: ; 07:F2C9
+@RTS: ; 07:F2C9
     rts
 
 CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile: ; 07:F2CA
@@ -10432,7 +10433,7 @@ CollisionDetectionEnProjectile_ReactToCollisionWithSamus: ; 07:F2ED
     lda #$80
     sta SamusHurt010F
     jsr GetEnemyIsHitFlags
-    jsr LF270
+    jsr SetSamusIsHitFlagsX
 LF306: ; 07:F306
     ; apply enemy base damage
     lda AreaEnemyDamage
@@ -10442,7 +10443,7 @@ LF306: ; 07:F306
 RTS_X294: ; 07:F310
     rts
 
-SamusHurt_F311: ; 07:F311
+KnockSamusBackIfCollided: ; 07:F311
     ; exit if collision didn't happen
     bcs ClearHealthChange@RTS
     ; set SamusHurt010F to #$E0
@@ -10480,7 +10481,7 @@ SetSamusIsHitByEnemy: ; 07:F338
     asl
     asl
     asl
-    jmp SetSamusIsHitFlags
+    jmp SetSamusIsHitFlagsY
 
 LF340: ; 07:F340
     lda Temp10_DistHi
@@ -10798,7 +10799,9 @@ UpdateEnemy_Pickup: ; 07:F483
     ora #$80 | OAMDATA_PRIORITY
     sta ObjectCntrl
     jmp UpdateEnemyCommon@noMoveNoAnim
+
 ;--------------------------------------------
+
 UpdateEnemy_Hurt: ; 07:F4EE
     ; decrement hitstun delay
     dec Ens.0.specialAttribs,x
@@ -10822,7 +10825,7 @@ UpdateEnemy_Hurt: ; 07:F4EE
             ; it must have just been hit by a missile while frozen
             ; keep being frozen
             pla
-            jsr LF515
+            jsr FreezeEnemyAndRememberPrevStatus
             pha
         @endIf_A: ; 07:F50F
         pla
@@ -10831,9 +10834,10 @@ UpdateEnemy_Hurt: ; 07:F4EE
     lda #$80 | $0 | OAMDATA_PRIORITY
     jmp UpdateEnemyCommon@setHurtPalette
 
-LF515: ; 07:F515
+
+FreezeEnemyAndRememberPrevStatus: ; 07:F515
     sta Ens.0.prevStatus,x
-LF518: ; 07:F518
+FreezeEnemy: ; 07:F518
     lda #enemyStatus_Frozen
     sta EnsExtra.0.status,x
     rts
@@ -10854,7 +10858,7 @@ RemoveEnemyIfItIsInLava: ; 07:F51E
     jmp RemoveEnemy                  ;($FA18)Free enemy data slot.
 
 ;-------------------------------------------------------------------------------
-Lx314: ; 07:F530
+EnemyReactToSamusProjectile_MetroidIneffective: ; 07:F530
     ; Samus attacked a non-frozen metroid with something else than the ice beam
     ; just play a sfx and ignore the attack
     jsr SFX_MetroidHit
@@ -10873,18 +10877,18 @@ EnemyReactToSamusProjectile: ; 07:F536
     ; branch if enemy was not attacked by ice beam
     lda Ens.0.weaponAction,x
     cmp #wa_IceBeam
-    bne Lx317
+    bne @notFreezingProjectile
     ; branch if enemy is a miniboss (miniboss cannot be frozen)
     bit Temp0A_EnSpecialAttribs
-    bvs Lx317
+    bvs @notFreezingProjectile
     ; branch if enemy is already in the frozen state
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
-    beq Lx317
+    beq @notFreezingProjectile
 
     ; freeze enemy
     ; set state to frozen
-    jsr LF515
+    jsr FreezeEnemyAndRememberPrevStatus
     ; set freeze timer to 512 frames
     lda #$40
     sta Ens.0.data0D,x
@@ -10900,90 +10904,90 @@ EnemyReactToSamusProjectile: ; 07:F536
 @RTS: ; 07:F56B
     rts
 
-Lx316: ; 07:F56C
+@ineffective: ; 07:F56C
     ; Samus's attack was ineffective against the enemy
     ; branch if enemy is a metroid
     jsr LoadTableAt977B
     and #$20
-    bne Lx314
+    bne EnemyReactToSamusProjectile_MetroidIneffective
     ; play sfx and clear variables defining Samus's attack on this enemy
     jsr SFX_Metal
     jmp UpdateEnemyCommon@clearIsHitFlags
 
-Lx317: ; 07:F579
+@notFreezingProjectile: ; 07:F579
     ; branch if enemy is completely invulnerable to Samus's attacks
     lda Ens.0.health,x
     cmp #$FF
-    beq Lx316
+    beq @ineffective
 
     ; play enemy hurt sound effect
     ; check if enemy is a miniboss
     bit Temp0A_EnSpecialAttribs
-    bvc Lx318
+    bvc @endIf_A
         ; enemy is a miniboss, so play miniboss hurt sound effect
         jsr SFX_BossHit
-        bne Lx319 ; branch always
-    Lx318: ; 07:F589
+        bne @sfx_common ; branch always
+    @endIf_A: ; 07:F589
     ; play different enemy hurt sound effects depending on which enemy it is
     jsr ReadTableAt968B
     and #$0C
-    beq PlaySnd1
+    beq @sfx_1
     cmp #$04
-    beq PlaySnd2
+    beq @sfx_2
     cmp #$08
-    beq PlaySnd3
+    beq @sfx_3
     jsr SFX_MetroidHit
-    bne Lx319       ; branch always
-PlaySnd1: ; 07:F59D
+    bne @sfx_common       ; branch always
+@sfx_1: ; 07:F59D
     jsr SFX_EnemyHit
-    bne Lx319       ; branch always
-PlaySnd2: ; 07:F5A2
+    bne @sfx_common       ; branch always
+@sfx_2: ; 07:F5A2
     jsr SFX_EnemyHit
-    bne Lx319       ; branch always
-PlaySnd3: ; 07:F5A7
+    bne @sfx_common       ; branch always
+@sfx_3: ; 07:F5A7
     jsr SFX_BigEnemyHit             ;($CBCE)
     ; fallthrough
 
-Lx319: ; 07:F5AA
+@sfx_common: ; 07:F5AA
     ; check if enemy is a metroid
     ldx PageIndex
     jsr LoadTableAt977B
     and #$20
-    beq Lx320
+    beq @endIf_B
         ; enemy is a metroid
         ; since it is not completely invulnerable to Samus's attacks, we assume that the metroid is currently frozen
         ; ignore all of Samus's attacks except for missiles
         lda Ens.0.weaponAction,x
         cmp #wa_Missile
-        bne Lx316
-    Lx320: ; 07:F5BA
+        bne @ineffective
+    @endIf_B: ; 07:F5BA
 
     ; update Ens.0.prevStatus
     lda EnsExtra.0.status,x
     cmp #enemyStatus_Frozen
-    bne Lx321
+    bne @endIf_C
         lda Ens.0.prevStatus,x
-    Lx321: ; 07:F5C4
+    @endIf_C: ; 07:F5C4
     ora Temp0A_EnSpecialAttribs
     sta Ens.0.prevStatus,x
 
     ; branch if enemy is a miniboss
     asl
-    bmi Lx322
-    ; branch if enemy is a metroid
-    jsr LoadTableAt977B
-    and #$20
-    bne Lx322
-        ; enemy is not a miniboss and is not a metroid
-        ; check attack type
-        ldy Ens.0.weaponAction,x
-        ; instantly kill enemy if it was attacked by Samus's missile
-        cpy #wa_Missile
-        beq ExplodeEnemy
-        ; instantly kill enemy if it was attacked by Samus's screw attack
-        cpy #wa_ScrewAttack
-        beq ExplodeEnemy
-    Lx322: ; 07:F5DE
+    bmi @endIf_D
+        ; branch if enemy is a metroid
+        jsr LoadTableAt977B
+        and #$20
+        bne @endIf_D
+            ; enemy is not a miniboss and is not a metroid
+            ; check attack type
+            ldy Ens.0.weaponAction,x
+            ; instantly kill enemy if it was attacked by Samus's missile
+            cpy #wa_Missile
+            beq ExplodeEnemy
+            ; instantly kill enemy if it was attacked by Samus's screw attack
+            cpy #wa_ScrewAttack
+            beq ExplodeEnemy
+    @endIf_D: ; 07:F5DE
 
     ; set enemy state to hurt
     lda #enemyStatus_Hurt
@@ -10994,32 +10998,32 @@ Lx319: ; 07:F5AA
     ; #$03 if enemy is a miniboss
     lda #$0A
     bit Temp0A_EnSpecialAttribs
-    bvc Lx323
+    bvc @endIf_E
         lda #$03
-    Lx323: ; 07:F5EB
+    @endIf_E: ; 07:F5EB
     sta Ens.0.specialAttribs,x
 
     ; check attack type
     ; if enemy is attacked by wave beam, decrement health by 2
     cpy #wa_WaveBeam
-    beq Lx324
+    beq @damage_2
         ; if enemy is not a miniboss, decrement health by 1
         bit Temp0A_EnSpecialAttribs
-        bvc Lx325
+        bvc @damage_1
         ; enemy is a miniboss
         ; if miniboss was not attacked by a missile, decrement health by 1
         ldy Ens.0.weaponAction,x
         cpy #wa_Missile
-        bne Lx325
+        bne @damage_1
         ; miniboss was attacked by a missile, decrement health by 4
         dec Ens.0.health,x
         beq ExplodeEnemy
         dec Ens.0.health,x
         beq ExplodeEnemy
-    Lx324: ; 07:F607
+@damage_2: ; 07:F607
     dec Ens.0.health,x
     beq ExplodeEnemy
-Lx325: ; 07:F60C
+@damage_1: ; 07:F60C
     dec Ens.0.health,x
     bne ExplodeEnemy@exit
     ; fallthrough
@@ -11323,7 +11327,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold: ; 07:F75B
     ; unset bit 4 and bit 3 of Ens.0.data05 and exit if enemy is invisible
     lda Ens.0.data05,x
     and #$02
-    beq Lx345
+    beq @applyMask
 
     ; pop from y
     tya
@@ -11331,11 +11335,11 @@ UpdateEnemy_EnData05DistanceToSamusThreshold: ; 07:F75B
     ldy #~$08
     ; branch if bit 7 of EnemyDistanceToSamusThreshold is set
     asl
-    bcs Lx342
+    bcs @endIf_A
         ; bit 7 of EnemyDistanceToSamusThreshold is not set
         ; mask out bit 4 from Ens.0.data05
         ldy #~$10
-    Lx342: ; 07:F77C
+    @endIf_A: ; 07:F77C
     ; save EnemyDistanceToSamusThreshold & #$7F to $02
     lsr
     sta Temp02_Threshold
@@ -11348,13 +11352,13 @@ UpdateEnemy_EnData05DistanceToSamusThreshold: ; 07:F75B
     ldy Ens.0.y,x
     ; branch if bit 7 of Ens.0.data05 is set
     lda Ens.0.data05,x
-    bmi Lx343
+    bmi @endIf_B
         ; bit 7 of Ens.0.data05 is not set
         ; check x axis
         ldy Samus.x
         sty Temp00_SamusPosition
         ldy Ens.0.x,x
-    Lx343: ; 07:F796
+    @endIf_B: ; 07:F796
 
     ; rotate samus hi bit into bit 7 of her position
     lda Samus.hi
@@ -11369,11 +11373,11 @@ UpdateEnemy_EnData05DistanceToSamusThreshold: ; 07:F75B
     sec
     sbc Temp00_SamusPosition
     ; branch if enemy is to the right of samus
-    bpl Lx344
+    bpl @endIf_C
         ; enemy is to the left of samus
         ; negate pos
         jsr TwosComplement              ;($C3D4)
-    Lx344: ; 07:F7AA
+    @endIf_C: ; 07:F7AA
     ; now a contains absolute distance between enemy and samus on a specific axis, divided by 2
 
     ; divide further by 8
@@ -11387,7 +11391,7 @@ UpdateEnemy_EnData05DistanceToSamusThreshold: ; 07:F75B
     bcc AndEnData05@RTS
     ; the distance is greater than the threshold
     ; we must unset the proper bit of Ens.0.data05
-Lx345: ; 07:F7B1
+@applyMask: ; 07:F7B1
     ; apply mask to Ens.0.data05
     lda Temp06_EnData05Mask
 AndEnData05: ; 07:F7B3
@@ -11547,7 +11551,7 @@ InitEnemyForceSpeedTowardsSamusDelayAndHealth: ; 07:F85A
         asl
     @endIf_A: ; 07:F86C
     sta Ens.0.health,x
-InitEnemyForceSpeedTowardsSamusDelayAndHealth@RTS: ; 07:F86F
+@RTS: ; 07:F86F
     rts
 
 
@@ -11655,6 +11659,7 @@ SpawnEnProjectile_F8F8: ; 07:F8F8
     lda SpawnEnProjectile_AnimTableIndex
     cmp #$02
     bcc @RTS
+
     ; shift horizontal facing dir flag into carry
     ldx PageIndex ; redundant instruction
     lda Ens.0.data05,x
@@ -11835,7 +11840,7 @@ UpdateEnProjectile_Active: ; 07:F991
         ; play splatter animation for that direction
         lda AreaEnProjectileSplatterAnimIndex,y
         jsr InitEnAnimIndex
-        jsr LF518
+        jsr FreezeEnemy
         lda #$0A
         sta Ens.0.delay,x
     @endIf_D: ; 07:FA15
@@ -11910,12 +11915,12 @@ EnemyBecomePickup: ; 07:FA60
 UpdateEnProjectile_Frozen: ; 07:FA6B
     lda EnsExtra.0.animFrame,x
     cmp #_id_FrameNone
-    beq Lx371
+    beq @then_A
         dec Ens.0.delay,x
-        bne Lx372
-    Lx371: ; 07:FA77
+        bne @endIf_A
+    @then_A: ; 07:FA77
         jsr RemoveEnemy                  ;($FA18)Free enemy data slot.
-    Lx372: ; 07:FA7A
+    @endIf_A: ; 07:FA7A
     jmp AnimDrawEnemyWithAnimDelay1
 
 GetEnemyRoomRAMPtr: ; 07:FA7D
@@ -12243,8 +12248,9 @@ UpdateSkreeProjectile: ; 07:FBEC
     ldy #$00
     bcc @endIf_A
         ; samus is being hit by the projectile
+        ; knock samus back
         clc
-        jsr SamusHurt_F311
+        jsr KnockSamusBackIfCollided
         ; deal 5 damage to Samus
         lda #$50
         sta HealthChange
@@ -12728,7 +12734,8 @@ UpdateTileBlast_Respawned: ; 07:FE83
     bcs GetVRAMStringPtr@RTS
 
     ; metatile respawned over Samus
-    jsr SamusHurt_F311
+    ; knock samus back
+    jsr KnockSamusBackIfCollided
     ; deal 5 damage to samus
     lda #$50
     sta HealthChange
