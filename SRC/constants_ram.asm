@@ -457,6 +457,24 @@ Temp06_PaletteIndex    = $06
 Temp0A_EnProjectileMovementPtr = $0A
 ; Temp0A_EnProjectileMovementPtr+1 = $0B
 
+; DrawRoomObject
+Temp0E_RoomObjectPosition = $0E
+
+; BitScan
+Temp0E_TempX           = $0E
+
+; HexToDec
+Temp00_DecOnes         = $00
+Temp01_DecTens         = $01
+Temp02_DecHundreds     = $02
+Temp0A_Divisor         = $0A
+
+; DisplayHUD
+Temp00_PositionX       = $00
+Temp01_FullEnergyTanks = $01
+Temp03_EnergyTankCount = $03
+
+
 
 JumpEngineRoutinePtr   = $0C     ;Points to address to jump to when choosing-->
 ; JumpEngineRoutinePtr+1 = $0D     ;a routine from a list of routine addresses.

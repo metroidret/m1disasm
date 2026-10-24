@@ -2510,7 +2510,7 @@ UpdateWorld: ; 07:CB29
     jsr UpdateAllDoors              ; display of doors
     jsr UpdateAllTileBlasts         ; tile de/regeneration
     jsr CollisionDetection          ; collision detection between entities.
-    jsr DisplayBar                  ;($E0C1)Display of status bar.
+    jsr DisplayHUD                  ;($E0C1)Display of status bar.
     jsr UpdateAllPipeBugHoles
     jsr CheckMissileToggle
     jsr UpdateAllPowerUps           ;($DB37)Display of power-up items.
@@ -5594,9 +5594,9 @@ UpdateOnePowerUp: ; 07:DB42
     ;Temporarily store power up type.
     pha
     ;Index to object 0(Samus).
-    ldx #$00
+    ldx #Samus - Objects
     ;Index to object 1(power up).
-    ldy #$40
+    ldy #PowerUpDraw - Objects
     ;Determine if Samus is touching power up.
     jsr AreObjectsTouching
     ;Carry clear=Samus touching power up. Carry set=not touching.
@@ -6486,72 +6486,120 @@ ExplodeXDisplace: ; 07:DFB8
 
 ;---------------------------------[ Check if object is on screen ]----------------------------------
 
-;The following set of functions determine if an object is visible on the screen.  If the object
-;is visible, X=1 when the function returns, X=0 if the object is not within the boundaries of the
-;current screen.  The function needs to know what nametable is currently in the PPU, what nametable
+;The following set of functions determine if an object is visible on the screen.
+;The function needs to know what nametable is currently in the PPU, what nametable
 ;the object is on and what the scroll offsets are.
 
-;why is $09 (radius x) used, but not $08 (radius y)?
+; returns X=1 if object is visible, X=0 if object is not visible
+
 IsObjectVisible: ; 07:DFDF
-    ldx #$01                        ;Assume object is visible on screen.
-    lda Temp0A_PositionY            ;Object Y position in room.
-    tay                             ;
-    sec                             ;Subtract y scroll to find sprite's y position on screen.
-    sbc ScrollY                     ;
-    sta Temp10_ScreenY              ;Store result in $10.
-    lda Temp0B_PositionX            ;Object X position in room.
-    sec                             ;
-    sbc ScrollX                     ;Subtract x scroll to find sprite's x position on screen.
-    sta Temp0E_ScreenX              ;Store result in $0E.
-    lda ScrollDir                   ;
-    and #$02                        ;Is Samus scrolling left or right?-->
-    bne HorzScrollCheck             ;($E01C)If so, branch.
+    ; default to object is visible on screen
+    ldx #$01
+
+    ; subtract y scroll from object y position to find sprite's y position on screen
+    lda Temp0A_PositionY
+    ; save Temp0A_PositionY to Y for VertScrollCheck
+    tay
+    sec
+    sbc ScrollY
+    ; store result in $10
+    sta Temp10_ScreenY
+
+    ; subtract x scroll from object x position to find sprite's x position on screen
+    lda Temp0B_PositionX
+    sec
+    ; carry is set to (Temp0B_PositionX >= ScrollX)
+    sbc ScrollX
+    ; store result in $0E
+    sta Temp0E_ScreenX
+
+    ; branch if room scrolls horizontally
+    lda ScrollDir
+    and #$02                        
+    bne HorzScrollCheck
 
 VertScrollCheck: ; 07:DFF6
-    cpy ScrollY                     ;If object room pos is >= scrollY, set carry.
-    lda Temp06_PositionHi           ;Check if object is on different name table as current-->
-    eor PPUCTRL_ZP                  ;name table active in PPU.-->
-    and #$01                        ;If not, branch.
-    beq LE012                       ;
-    bcs LE01A                       ;If carry is still set, sprite is not in screen boundaries.
-    lda Temp10_ScreenY              ;
-    sbc #$0F                        ;Move sprite y position up 15 pixels.
-    sta Temp10_ScreenY              ;
-    lda Temp09_RadiusX              ;
-    clc                             ;If a portion of the object is outside the sceen-->
-    adc Temp10_ScreenY              ;boundaries, treat object as if the whole thing is-->
-    cmp #$F0                        ;not visible.
-    bcc RTS_E01B                    ;
-    clc                             ;Causes next statement to branch always.
-LE012: ; 07:E012
-    bcc LE01A                       ;
-    lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
-    cmp Temp10_ScreenY              ;the PPU, check if part of object is out of screen-->
-    bcc RTS_E01B                    ;boundaries.  If so, branch.
-LE01A: ; 07:E01A
-    dex                             ;Sprite is not within screen boundaries. Decrement X.
-RTS_E01B: ; 07:E01B
+    ; room scrolls vertically
+    ; carry is set to (Temp0A_PositionY >= ScrollY)
+    cpy ScrollY
+    ; branch if object is on same name table as current name table active in PPU
+    lda Temp06_PositionHi           
+    eor PPUCTRL_ZP
+    and #$01
+    beq @sameNameTable
+        ; object is on different name table
+        ; for the object pos to be on screen, Temp0A_PositionY must be < ScrollY 
+        bcs @notVisible
+        ; visible if the whole object is within screen boundaries
+        ; move sprite y position up 16 pixels (15 + absence of carry) to compensate
+        lda Temp10_ScreenY
+        sbc #$0F
+        sta Temp10_ScreenY
+        ; now sprite y (object y relative to top of screen) is correct
+        ; check bottom side of object is on screen
+        ; (BUG! no check for top side of object)
+        ; (BUG! should use Temp08_RadiusY)
+        lda Temp09_RadiusX
+        clc
+        adc Temp10_ScreenY
+        ;(BUG! should add a bcc @visible here.
+        ; affects objects of radius >16 where sum above can overflow)
+        cmp #$F0
+        bcc @visible
+        ;Causes next statement to branch always (not visible).
+        clc
+    @sameNameTable: ; 07:E012
+        ; object is on same name table
+        ; for the object pos to be on screen, Temp0A_PositionY must be >= ScrollY 
+        bcc @notVisible
+        ; visible if the whole object is within screen boundaries
+        ; check top side of object is on screen
+        ; (BUG! no check for bottom side of object)
+        ; (BUG! should use Temp08_RadiusY)
+        lda Temp09_RadiusX
+        cmp Temp10_ScreenY
+        bcc @visible
+        ; fallthrough to not visible
+@notVisible: ; 07:E01A
+    ;Sprite is not within screen boundaries. Decrement X.
+    dex
+@visible: ; 07:E01B
     rts
 
 HorzScrollCheck: ; 07:E01C
-    lda Temp06_PositionHi           ;
-    eor PPUCTRL_ZP                  ;Check if object is on different name table as current-->
-    and #$01                        ;name table active in PPU.-->
-    beq LE02E                       ;If not, branch.
-        bcs LE036                   ;If carry is still set, sprite is not in screen boundaries.
-        lda Temp09_RadiusX          ;
-        clc                         ;If a portion of the object is outside the sceen-->
-        adc Temp0E_ScreenX          ;boundaries, treat object as if the whole thing is-->
-        bcc RTS_E037                ;not visible.
-        clc                         ;Causes next statement to branch always.
-    LE02E: ; 07:E02E
-    bcc LE036                       ;
-    lda Temp09_RadiusX              ;If object is on same name table as the current one in-->
-    cmp Temp0E_ScreenX              ;the PPU, check if part of object is out of screen-->
-    bcc RTS_E037                    ;boundaries.  If so, branch.
-LE036: ; 07:E036
-    dex                             ;Sprite is not within screen boundaries. Decrement X.
-RTS_E037: ; 07:E037
+    ; room scrolls horizontally
+    ; branch if object is on same name table as current name table active in PPU
+    lda Temp06_PositionHi
+    eor PPUCTRL_ZP
+    and #$01
+    beq @sameNameTable
+        ; object is on different name table
+        ; for the object pos to be on screen, Temp0B_PositionX must be < ScrollX
+        bcs @notVisible
+        ; visible if the whole object is within screen boundaries
+        ; check right side of object is on screen
+        ; (BUG! no check for left side of object)
+        lda Temp09_RadiusX
+        clc
+        adc Temp0E_ScreenX
+        bcc @visible
+        ;Causes next statement to branch always (not visible).
+        clc
+    @sameNameTable: ; 07:E02E
+        ; object is on same name table
+        ; for the object pos to be on screen, Temp0B_PositionX must be >= ScrollX
+        bcc @notVisible
+        ; visible if the whole object is within screen boundaries
+        ; check left side of object is on screen
+        ; (BUG! no check for right side of object)
+        lda Temp09_RadiusX
+        cmp Temp0E_ScreenX
+        bcc @visible
+        ; fallthrough to not visible
+@notVisible: ; 07:E036
+    ;Sprite is not within screen boundaries. Decrement X.
+    dex
+@visible: ; 07:E037
     rts
 
 ;------------------------[ Override sprite flip bits with object flip bits ]-------------------------
@@ -6581,9 +6629,9 @@ SpriteAttrsOverride: ; 07:E038
 ;for an exploding object.
 
 ExplodeIndexTbl: ; 07:E049
-    .byte ExplodePlacementTopTbl-ExplodePlacementTbl
-    .byte ExplodePlacementMiddleTbl-ExplodePlacementTbl
-    .byte ExplodePlacementBottomTbl-ExplodePlacementTbl
+    .byte ExplodePlacementTopTbl - ExplodePlacementTbl
+    .byte ExplodePlacementMiddleTbl - ExplodePlacementTbl
+    .byte ExplodePlacementBottomTbl - ExplodePlacementTbl
 
 ;The following table is used to produce the arcing motion of exploding objects.  It is displacement
 ;data for the y directions only.  The x displacement is constant.
@@ -6658,106 +6706,154 @@ UpdateEnemyAnim: ; 07:E094
 
 ;Displays Samus' status bar components.
 
-DisplayBar: ; 07:E0C1
-    ldy #$00                        ;Reset data index.
-    lda SpritePagePos               ;Load current sprite index.
-    pha                             ;save sprite page pos.
+DisplayHUD: ; 07:E0C1
+    ldy #$00
+    ;Load current sprite index.
+    lda SpritePagePos
+    ; push index for when we will edit the hud template later
+    pha
     tax
     @loop: ; 07:E0C7
-        ;Store contents of DataDisplayTbl in sprite RAM.
-        lda DataDisplayTbl,y
+        ;Store contents of HUDTemplateDataTbl in sprite RAM.
+        lda HUDTemplateDataTbl,y
         sta SpriteRAM,x
         inx
         iny
-        ;At end of DataDisplayTbl? If not, loop to load next byte from table.
+        ;At end of HUDTemplateDataTbl? If not, loop to load next byte from table.
         cpy #10*4
         bne @loop
 
+    ;Save new location in sprite RAM.
+    stx SpritePagePos
+    ;Restore initial sprite page pos.
+    pla
+    tax
+
 ;Display 2-digit health count.
-    stx SpritePagePos               ;Save new location in sprite RAM.
-    pla                             ;Restore initial sprite page pos.
-    tax                             ;
-    lda Health+1                    ;
-    and #$0F                        ;Extract upper health digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda Health                    ;
-    jsr Adiv16                      ;($C2BF)Move lower health digit to 4 LSBs.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    ldy EndTimer+1                  ;
-    iny                             ;Is Samus in escape sequence?-->
-    bne LE11C                          ;If so, branch.
-    ldy MaxMissiles                 ;
-    beq LE10A                           ;Don't show missile count if Samus has no missile containers.
+    ; draw upper health digit.
+    lda Health+1
+    and #$0F
+    jsr @SPRWriteDigit
+    ; draw lower health digit.
+    lda Health
+    jsr Adiv16
+    jsr @SPRWriteDigit
+
+    ; branch if Samus in escape sequence
+    ldy EndTimer+1
+    iny
+    bne @escape
+
+    ; don't show missile count if Samus has no missile containers
+    ldy MaxMissiles
+    beq @noMissiles                           
 
 ;Display 3-digit missile count.
-    lda MissileCount                ;
-    jsr HexToDec                    ;($E198)Convert missile hex count to decimal cout.
-    lda $02                         ;Upper digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda $01                         ;Middle digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda $00                         ;Lower digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    bne LE14A                         ;Branch always.
+    ; convert missile hex count to decimal
+    lda MissileCount
+    jsr HexToDec
+
+    ; draw hundreds digit
+    lda Temp02_DecHundreds
+    jsr @SPRWriteDigit
+    ; draw tens digit
+    lda Temp01_DecTens
+    jsr @SPRWriteDigit
+    ; draw ones digit
+    lda Temp00_DecOnes
+    jsr @SPRWriteDigit
+
+    bne @energyTanks ;Branch always.
 
 ;Samus has no missiles, erase missile sprite.
-LE10A: ; 07:E10A
-    lda #$FF                        ;"Blank" tile.
-    cpx #$F4                        ;If at last 3 sprites, branch to skip.
-    bcs LE14A                          ;
-    sta SpriteRAM.3.tileID,x             ;Erase left half of missile.
-    cpx #$F0                        ;If at last 4 sprites, branch to skip.
-    bcs LE14A                          ;
-    sta SpriteRAM.4.tileID,x             ;Erase right half of missile.
-    bne LE14A                          ;Branch always.
+@noMissiles: ; 07:E10A
+    ; "Blank" tile.
+    lda #$FF
+    ; current sprite ram index is at missile digits, which are just before missile sprite
+    ; skip if left half of missile wasnt drawn bc too many other sprites
+    cpx #-3*4
+    bcs @energyTanks
+    ; erase left half of missile.
+    sta SpriteRAM.3.tileID,x
+    ; skip if right half of missile wasnt drawn bc too many other sprites
+    cpx #-4*4
+    bcs @energyTanks
+    ; erase right half of missile.
+    sta SpriteRAM.4.tileID,x        
+
+    bne @energyTanks ;Branch always.
 
 ;Display 3-digit end sequence timer.
-LE11C: ; 07:E11C
-    lda EndTimer+1                  ;
-    jsr Adiv16                      ;($C2BF)Upper timer digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda EndTimer+1                  ;
-    and #$0F                        ;Middle timer digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda EndTimer                  ;
-    jsr Adiv16                      ;($C2BF)Lower timer digit.
-    jsr SPRWriteDigit               ;($E173)Display digit on screen.
-    lda #$58                        ;"TI" sprite(left half of "TIME").
-    sta SpriteRAM.0.tileID,x             ;
-    inc SpriteRAM.0.attrib,x             ;Change color of sprite.
-    cpx #$FC                        ;If at last sprite, branch to skip.
-    bcs LE14A                           ;
-    lda #$59                        ;"ME" sprite(right half of "TIME").
-    sta SpriteRAM.1.tileID,x             ;
-    inc SpriteRAM.1.attrib,x             ;Change color of sprite.
+@escape: ; 07:E11C
+    ; draw hundreds digit
+    lda EndTimer+1
+    jsr Adiv16                      
+    jsr @SPRWriteDigit
+    ; draw tens digit
+    lda EndTimer+1
+    and #$0F
+    jsr @SPRWriteDigit
+    ; draw ones digit
+    lda EndTimer
+    jsr Adiv16
+    jsr @SPRWriteDigit
 
-LE14A: ; 07:E14A
-    ldx SpritePagePos               ;Restore initial sprite page pos.
-    lda EnergyTankCount                   ;
-    beq RTS_E172                          ;Branch to exit if Samus has no energy tanks.
+    ; draw "TI" sprite (left half of "TIME")
+    lda #$58
+    sta SpriteRAM.0.tileID,x
+    ; change color of sprite
+    inc SpriteRAM.0.attrib,x
+    ; skip if right half of missile wasnt drawn bc too many other sprites
+    cpx #-1*4
+    bcs @energyTanks
+    ; draw "ME" sprite (right half of "TIME")
+    lda #$59
+    sta SpriteRAM.1.tileID,x
+    ; change color of sprite
+    inc SpriteRAM.1.attrib,x
+
+@energyTanks: ; 07:E14A
+    ;Restore initial sprite page pos.
+    ldx SpritePagePos
+    ;Branch to exit if Samus has no energy tanks.
+    lda EnergyTankCount
+    beq @RTS
 
 ;Display full/empty energy tanks.
-    sta $03                         ;Temp store tank count.
-    lda #$40                        ;X coord of right-most energy tank.
-    sta $00                         ;Energy tanks are drawn from right to left.
-    ldy #$6F                        ;"Full energy tank" tile.
-    lda Health+1                    ;
-    jsr Adiv16                      ;($C2BF)/16. A contains # of full energy tanks.
-    sta $01                         ;Storage of full tanks.
-    bne AddTanks                    ;Branch if at least 1 tank is full.
-    dey                             ;Else switch to "empty energy tank" tile.
+    ;Temp store tank count.
+    sta Temp03_EnergyTankCount
+    ;X coord of right-most energy tank.
+    lda #$40
+    sta Temp00_PositionX
+    ;Energy tanks are drawn from right to left.
+    ;"Full energy tank" tile.
+    ldy #$6F
+    ; store number of full energy tanks to $01
+    lda Health+1
+    jsr Adiv16                      
+    sta Temp01_FullEnergyTanks
+    ;Branch if at least 1 tank is full.
+    bne @endIf_emptyEnergyTanks
+        ;Else switch to "empty energy tank" tile.
+        dey
+    @endIf_emptyEnergyTanks:
 
-AddTanks: ; 07:E164
-    jsr AddOneTank                  ;($E17B)Add energy tank to display.
-    dec $01                         ;Any more full energy tanks left?-->
-    bne LE16C                           ;If so, then branch.-->
-        dey                             ;Otherwise, switch to "empty energy tank" tile.
-    LE16C: ; 07:E16C
-    dec $03                         ;done all tanks?-->
-    bne AddTanks                    ;if not, loop to do another.
+    @loop_drawEnergyTanks: ; 07:E164
+        ;($E17B)Add energy tank to display.
+        jsr @AddOneTank
+        ;Any more full energy tanks left? If so, then branch.
+        dec Temp01_FullEnergyTanks
+        bne @endIf_drawEmptyEnergyTanks
+            ;Otherwise, switch to "empty energy tank" tile.
+            dey
+        @endIf_drawEmptyEnergyTanks: ; 07:E16C
+        ;done all tanks? if not, loop to do another.
+        dec Temp03_EnergyTankCount
+        bne @loop_drawEnergyTanks
 
-    stx SpritePagePos               ;Store new sprite page position.
-RTS_E172: ; 07:E172
+    ;Store new sprite page position.
+    stx SpritePagePos
+@RTS: ; 07:E172
     rts
 
 ;----------------------------------------[Sprite write digit ]---------------------------------------
@@ -6765,16 +6861,19 @@ RTS_E172: ; 07:E172
 ;A=value in range 0..9. #$A0 is added to A(the number sprites begin at $A0), and the result is stored
 ;as the tile # for the sprite indexed by X.
 
-SPRWriteDigit: ; 07:E173
-    ora #$A0                        ;#$A0 is index into pattern table for numbers.
-    sta SpriteRAM.0.tileID,x             ;Store proper nametable pattern in sprite RAM.
-    jmp Xplus4                      ;Find next sprite pattern table byte.
+@SPRWriteDigit: ; 07:E173
+    ;#$A0 is index into pattern table for numbers.
+    ora #$A0
+    ;Store proper nametable pattern in sprite RAM.
+    sta SpriteRAM.0.tileID,x
+    ;Find next sprite pattern table byte.
+    jmp Xplus4
 
 ;----------------------------------[ Add energy tank to display ]------------------------------------
 
 ;Add energy tank to Samus' data display.
 
-AddOneTank: ; 07:E17B
+@AddOneTank: ; 07:E17B
     ;Y coord-1.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
         lda #$17
@@ -6789,12 +6888,12 @@ AddOneTank: ; 07:E17B
     lda #$01
     sta SpriteRAM.0.attrib,x
     ;X coord.
-    lda $00
+    lda Temp00_PositionX
     sta SpriteRAM.0.x,x
     ;Find x coord of next energy tank.
     sec
     sbc #$0A
-    sta $00
+    sta Temp00_PositionX
     ; fallthrough
 
 ;-----------------------------------------[ Add 4 to x ]---------------------------------------------
@@ -6812,17 +6911,22 @@ Xplus4: ; 07:E193
 ;Convert 8-bit value in A to 3 decimal digits.
 ;Upper digit put in $02, middle in $01 and lower in $00.
 HexToDec: ; 07:E198
-    ldy #100                        ;Find upper digit.
-    sty $0A                         ;
-    jsr DivideByRepeatedSubtraction ;Extract hundreds digit.
-    sty $02                         ;Store upper digit in $02.
+    ; get upper digit by dividing A by 100
+    ldy #100
+    sty Temp0A_Divisor
+    jsr DivideByRepeatedSubtraction
+    ; save upper digit to $02
+    sty Temp02_DecHundreds
 
-    ldy #10                         ;Find middle digit.
-    sty $0A                         ;
-    jsr DivideByRepeatedSubtraction ;Extract tens digit.
-    sty $01                         ;Store middle digit in $01.
+    ; get middle digit by dividing remainder by 10
+    ldy #10
+    sty Temp0A_Divisor
+    jsr DivideByRepeatedSubtraction
+    ; save middle digit to $01
+    sty Temp01_DecTens
 
-    sta $00                         ;Store lower digit in $00
+    ; save lower digit (remainder) to $00
+    sta Temp00_DecOnes
     rts
 
 ; A is the dividend
@@ -6831,22 +6935,22 @@ HexToDec: ; 07:E198
 DivideByRepeatedSubtraction: ; 07:E1AD
     ldy #$00
     sec
-    ;Loop and subtract value in $0A from A until carry flag is not set.
+    ; loop and subtract value in $0A from A until carry flag is not set
     @loop: ; 07:E1B0
         iny
-        sbc $0A
+        sbc Temp0A_Divisor
         bcs @loop
-    ;the last subtraction made A negative
-    ;undo last subtraction
+    ; the last subtraction made A negative
+    ; undo last subtraction
     dey
-    adc $0A
+    adc Temp0A_Divisor
     rts
 
 ;-------------------------------------[ Status bar sprite data ]-------------------------------------
 
 ;Sprite data for Samus' data display
-
-DataDisplayTbl: ; 07:E1B9
+; in nes oam format: y, tile id, attrib, x
+HUDTemplateDataTbl: ; 07:E1B9
     .byte $21,$A0,$01,$30           ;Upper health digit.
     .byte $21,$A0,$01,$38           ;Lower health digit.
     .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_PAL"
@@ -6873,18 +6977,25 @@ DataDisplayTbl: ; 07:E1B9
 ;The returned value is stored in A.
 
 BitScan: ; 07:E1E1
-    stx $0E                         ;Save X.
-    ldx #$00                        ;First bit is bit 0.
+    ;Save X.
+    stx Temp0E_TempX
+    ;First bit is bit 0.
+    ldx #$00
     @loop: ; 07:E1E5
-        lsr                             ;Transfer bit to carry flag.
-        bcs @exitLoop                   ;If the shifted bit was 1, Branch out of loop.
-        inx                             ;Increment X to keep of # of bits checked.
-        cpx #$08                        ;Have all 8 bit been tested?-->
-        bne @loop                       ;If not, branch to check the next bit.
+        ;Transfer bit to carry flag. If the shifted bit was 1, Branch out of loop.
+        lsr
+        bcs @exitLoop
+        ;Increment X to keep of # of bits checked.
+        inx
+        ;Have all 8 bit been tested? If not, branch to check the next bit.
+        cpx #$08
+        bne @loop
     @exitLoop: ; 07:E1ED
-    txa                             ;Return which bit number was set.
-    ldx $0E                         ;Restore X.
-RTS_E1F0: ; 07:E1F0
+    ;Return which bit number was set.
+    txa
+    ;Restore X.
+    ldx Temp0E_TempX
+@RTS: ; 07:E1F0
     rts
 
 ;------------------------------------------[ Scroll door ]-------------------------------------------
@@ -6893,7 +7004,7 @@ RTS_E1F0: ; 07:E1F0
 
 ScrollDoor: ; 07:E1F1
     ldx DoorEntryStatus                  ;
-    beq RTS_E1F0                    ;Exit if Samus isn't in a door.
+    beq BitScan@RTS                    ;Exit if Samus isn't in a door.
     dex                             ;
     bne LE1FE                           ;Not in right door. branch to check left door.
         jsr ScrollRight                 ;($E6D2)DoorEntryStatus=1, scroll 1 pixel right.
@@ -8609,76 +8720,109 @@ LEA5D: ; 07:EA5D
 
 ;---------------------------------------[ Draw room object ]-----------------------------------------
 
-DrawObject: ; 07:EA60
-    sta $0E                         ;Store object position byte(%yyyyxxxx).
-    lda RoomRAMPtr                  ;
-    sta RoomRAMWorkPtr              ;Set the working pointer equal to the room pointer-->
-    lda RoomRAMPtr+1                ;(start at beginning of the room).
-    sta RoomRAMWorkPtr+1            ;
-    lda $0E                         ;Reload object position byte.
-    jsr Adiv16                      ;($C2BF)/16. Lower nibble contains object y position.-->
-    tax                             ;Transfer it to X, prepare for loop.
-    beq LEA80                         ;Skip y position calculation loop as y position=0 and-->
-                                        ;does not need to be calculated.
-    LEA72: ; 07:EA72
-        lda RoomRAMWorkPtr              ;Low byte of pointer working in room RAM.
-        clc                             ;
-        adc #$40                        ;Advance two rows in room RAM(one y unit).
-        sta RoomRAMWorkPtr              ;
-        bcc LEA7D                           ;If carry occurred, increment high byte of pointer-->
-            inc RoomRAMWorkPtr+1            ;in room RAM.
-        LEA7D: ; 07:EA7D
-        dex                             ;
-        bne LEA72                          ;Repeat until at desired y position(X=0).
+DrawRoomObject: ; 07:EA60
+    ;Store object position byte(%yyyyxxxx).
+    sta Temp0E_RoomObjectPosition
+    ;Set the working pointer equal to the room pointer (start at beginning of the room).
+    lda RoomRAMPtr
+    sta RoomRAMWorkPtr
+    lda RoomRAMPtr+1
+    sta RoomRAMWorkPtr+1
 
-LEA80: ; 07:EA80
-    lda $0E                         ;Reload object position byte.
-    and #$0F                        ;Remove y position upper nibble.
-    asl                             ;Each x unit is 2 tiles.
-    adc RoomRAMWorkPtr              ;
-    sta RoomRAMWorkPtr              ;Add x position to room RAM work pointer.
-    bcc LEA8D                           ;If carry occurred, increment high byte of room RAM work-->
-    inc RoomRAMWorkPtr+1            ;pointer, else branch to draw object.
+    ;Reload object position byte.
+    lda Temp0E_RoomObjectPosition
+    ;($C2BF)/16. Lower nibble contains object y position.
+    jsr Adiv16
+    ;Transfer it to X, prepare for loop.
+    tax
+    ;Skip y position calculation loop if y position=0 and does not need to be calculated.
+    beq @endIf_posY
+    @loop_posY: ; 07:EA72
+        ;Low byte of pointer working in room RAM.
+        ;Advance two rows in room RAM(one y unit).
+        lda RoomRAMWorkPtr
+        clc
+        adc #$40
+        sta RoomRAMWorkPtr
+        ;If carry occurred, increment high byte of pointer in room RAM.
+        bcc @endIf_posYHigh
+            inc RoomRAMWorkPtr+1
+        @endIf_posYHigh: ; 07:EA7D
+        dex
+        ;Repeat until at desired y position(X=0).
+        bne @loop_posY
+    @endIf_posY: ; 07:EA80
 
-;RoomRAMWorkPtr now points to the object's starting location (upper left corner)
-;on the room RAM which will eventually be loaded into a name table.
+    ;Reload object position byte.
+    lda Temp0E_RoomObjectPosition
+    ;Remove y position upper nibble.
+    and #$0F
+    ;Each x unit is 2 tiles.
+    asl
+    ;Add x position to room RAM work pointer.
+    adc RoomRAMWorkPtr
+    sta RoomRAMWorkPtr
+    ;If carry occurred, increment high byte of room RAM work pointer, else branch to draw object.
+    bcc @endIf_posXHigh
+        inc RoomRAMWorkPtr+1
+    @endIf_posXHigh: ; 07:EA8D
+    ;RoomRAMWorkPtr now points to the object's starting location (upper left corner)
+    ;on the room RAM which will eventually be loaded into a name table.
 
-LEA8D: ; 07:EA8D
-    iny                             ;Move to the next byte of room data which is-->
-    lda (RoomPtr),y                 ;the index into the structure pointer table.
-    tax                             ;Transfer structure pointer index into X.
-    iny                             ;Move to the next byte of room data which is-->
-    lda (RoomPtr),y                 ;the attrib table info for the structure.
-    sta ObjectPalette                   ;Save attribute table info.
-    txa                             ;Restore structure pointer to A.
-    asl                             ;*2. Structure pointers are two bytes in size.
-    tay                             ;
-    lda (AreaPointers_RAM.StructPtrTable),y          ;Low byte of 16-bit structure ptr.
-    sta StructPtr                   ;
-    iny                             ;
-    lda (AreaPointers_RAM.StructPtrTable),y          ;High byte of 16-bit structure ptr.
-    sta StructPtr+1                 ;
-    jsr DrawStruct                  ;($EF8C)Draw one structure.
-    lda #$03                        ;Move to next set of structure data.
-    jsr AddToRoomPtr                ;($EAC0)Add A to room data pointer.
+    ;Move to the next byte of room data which is the index into the structure pointer table.
+    iny
+    lda (RoomPtr),y
+    ;Transfer structure pointer index into X.
+    tax
+    ;Move to the next byte of room data which is the attrib table info for the structure.
+    iny
+    lda (RoomPtr),y
+    ;Save attribute table info.
+    sta ObjectPalette
+
+    ;Restore structure pointer to A.
+    txa
+    ;*2. Structure pointers are two bytes in size.
+    asl
+    tay
+    ;Low byte of 16-bit structure ptr.
+    lda (AreaPointers_RAM.StructPtrTable),y
+    sta StructPtr
+    iny
+    ;High byte of 16-bit structure ptr.
+    lda (AreaPointers_RAM.StructPtrTable),y
+    sta StructPtr+1
+    ;($EF8C)Draw one structure.
+    jsr DrawStruct
+    ;Move to next set of structure data.
+    lda #$03
+    ;($EAC0)Add A to room data pointer.
+    jsr AddToRoomPtr
+    ; fallthrough
 
 ;-------------------------------------------[ Draw room ]--------------------------------------------
 
 ;The following function draws a room in the room RAM which is eventually loaded into a name table.
 
 DrawRoom: ; 07:EAAA
-    ldy #$00                        ;Zero index.
-    lda (RoomPtr),y                 ;Load byte of room data.-->
-    cmp #$FF                        ;Is it #$FF(end-of-room)?-->
-    beq EndOfRoom                   ;If so, branch to exit.
-    cmp #$FE                        ;Place holder for empty room objects(not used).
-    beq LEABC                           ;
-        cmp #$FD                        ;is A=#$FD(end-of-objects)?-->
-        bne DrawObject                  ;If not, branch to draw room object.-->
-        beq EndOfObjs                   ;Else branch to set up enemies/doors.
-    LEABC: ; 07:EABC
-    sta RoomNumber                  ;Store #$FE if room object is empty.
-    lda #$01                        ;Prepare to increment RoomPtr.
+    ;Load byte of room data.
+    ldy #$00
+    lda (RoomPtr),y
+    ;Is it #$FF(end-of-room)? If so, branch to exit.
+    cmp #$FF
+    beq EndOfRoom
+    ;Place holder for empty room objects(not used).
+    cmp #$FE                        
+    beq @else_emptyRoomObject
+        ;is A=#$FD(end-of-objects)? If not, branch to draw room object.
+        cmp #$FD                        
+        bne DrawRoomObject
+        ;Else branch to set up enemies/doors.
+        beq EndOfRoomObjects
+    @else_emptyRoomObject: ; 07:EABC
+        sta RoomNumber                  ;Store #$FE if room object is empty.
+        lda #$01                        ;Prepare to increment RoomPtr.
+        ;fallthrough
 
 ;-------------------------------------[ Add A to room pointer ]--------------------------------------
 
@@ -8696,7 +8840,7 @@ AddToRoomPtr: ; 07:EAC0
 
 ;----------------------------------------------------------------------------------------------------
 
-EndOfObjs: ; 07:EACA
+EndOfRoomObjects: ; 07:EACA
     ;Store room pointer in $0000.
     lda RoomPtr
     sta Temp00_RoomPtr
@@ -9173,9 +9317,9 @@ DeleteOffscreenRoomSprites: ; 07:EC9B
         tax
         bpl @loop_pipeBugHoles
     ; power-ups
-    ldx #$00
+    ldx #PowerUps.0 - PowerUps
     jsr PowerUp_RemoveIfOffScreen
-    ldx #_sizeof_PowerUps.0
+    ldx #PowerUps.1 - PowerUps
     jsr PowerUp_RemoveIfOffScreen
     ; tourian stuff
     jmp GotoDeleteOffscreenRoomSprites_Tourian
@@ -9242,12 +9386,12 @@ PowerUp_RemoveIfOffScreen: ; 07:ED8C
     ; exit if power-up is in the current nametable
     tya
     cmp PowerUps.0.hi,x
-    bne Exit11
+    bne @RTS
 
     ; remove power-up
     lda #$FF
     sta PowerUps.0.type,x
-Exit11: ; 07:ED97
+@RTS: ; 07:ED97
     rts
 
 ;---------------------------------------[ Setup special items ]--------------------------------------
@@ -9272,7 +9416,7 @@ ScanForItems: ; 07:ED98
         cmp MapPosY
         beq @itemYFound
         ;Exit if item y > upcoming screen y.
-        bcs Exit11
+        bcs PowerUp_RemoveIfOffScreen@RTS
         
         ;item y < upcoming screen y.
         ;we must continue to loop through items until we find an item with the right height.
@@ -9285,7 +9429,7 @@ ScanForItems: ; 07:ED98
         and (Temp00_SpecItmsTblPtr),y
         ;if result is FFh, then this was the last item(item ptr = FFFF). Branch to exit.
         cmp #$FF
-        beq Exit11
+        beq PowerUp_RemoveIfOffScreen@RTS
 
         ;High byte of ptr to next item data.
         lda (Temp00_SpecItmsTblPtr),y
@@ -9308,7 +9452,7 @@ ScanForItems: ; 07:ED98
         cmp MapPosX
         beq @itemXFound
         ;Exit if item x > upcoming screen x.
-        bcs Exit11
+        bcs PowerUp_RemoveIfOffScreen@RTS
 
         iny
         ;Check for another item on same Y pos.
@@ -9804,7 +9948,7 @@ UpdateAttrib: ; 07:EF9E
     ora Temp02_AttribPtr+1
     sta Temp02_AttribPtr+1
     ;Choose appropriate attribute table bit mask from table below.
-    lda AttribMaskTable,x
+    lda @attributeMaskTable,x
     ;clear the old attribute table bits.
     ldy #$00
     and (Temp02_AttribPtr),y
@@ -9826,7 +9970,7 @@ UpdateAttrib: ; 07:EF9E
 @RTS: ; 07:EFF3
     rts
 
-AttribMaskTable: ; 07:EFF4
+@attributeMaskTable: ; 07:EFF4
     .byte %11111100                 ;Upper left metatile.
     .byte %11110011                 ;Upper right metatile.
     .byte %11001111                 ;Lower left metatile.
@@ -9848,7 +9992,7 @@ InitTables: ; 07:EFF8
     jsr Xplus4                      ;($E193)X = X + 4.
     stx Temp00_RoomRAMPtr+1                         ;Set high byte for attribute table write(#$63 or #$67).
     ldx RoomPalette                     ;Index into table below (Lowest 2 bits).
-    lda ATDataTable,x               ;Load attribute table data from table below.
+    lda @attributeDataTable,x               ;Load attribute table data from table below.
     ldy #$C0                        ;Low byte of start of all attribute tables.
     @loop: ; 07:F012
         sta (Temp00_RoomRAMPtr),y                     ;Fill attribute table.
@@ -9857,7 +10001,7 @@ InitTables: ; 07:EFF8
     rts
 
 ;Data to fill attribute tables with.
-ATDataTable: ; 07:F018
+@attributeDataTable: ; 07:F018
     .byte %00000000
     .byte %01010101
     .byte %10101010
@@ -9916,7 +10060,7 @@ CollisionDetection: ; 07:F034
                 ; skip check if samus is invincible
                 lda SamusInvincibleDelay
                 bne @endIf_MellowSamus
-                    ldy #$00
+                    ldy #Samus - Objects
                     jsr CollisionDetectionMellow_CheckWithObjectYSlot
                     jsr CollisionDetectionMellow_ReactToCollisionWithSamus
             @endIf_MellowSamus: ; 07:F059
@@ -9959,7 +10103,7 @@ CollisionDetection: ; 07:F034
         cmp #$02
         bne @continueLoop_Door
             ; dont check doors if samus is dead
-            ldy #$00
+            ldy #Samus - Objects
             jsr IsSamusDead
             beq @exitLoop_Door
 
@@ -10010,7 +10154,7 @@ CollisionDetection: ; 07:F034
                 bne @loop_EnemyProjectile
         @endIf_EnemyProjectile: ; 07:F0D4
         ; check next enemy if samus has i-frames
-        ldy #$00
+        ldy #Samus - Objects
         lda SamusInvincibleDelay
         bne @endIf_EnemySamus
             ; check next enemy if samus is dead
@@ -10053,7 +10197,7 @@ CollisionDetection: ; 07:F034
 
 ; bomb <--> samus detection
     ; skip this if samus is dead
-    ldy #$00
+    ldy #Samus - Objects
     jsr IsSamusDead
     beq @exitLoop_Bomb
     jsr GetObjectYSlotPosition
@@ -10364,7 +10508,7 @@ Lx287: ; 07:F298
         bne SetSamusIsHitFlagsY@RTS
     Lx288: ; 07:F2A5
 
-    ldy #$00
+    ldy #Samus - Objects
     jsr SetSamusIsHitByEnemy
     jmp LF306
 
@@ -10419,6 +10563,8 @@ CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF: ; 07:F2DF
 SetEnemyTouchingSamusFlags: ; 07:F2E8
     jsr LF340
     bne Lx292 ; branch always
+
+
 CollisionDetectionEnProjectile_ReactToCollisionWithSamus: ; 07:F2ED
     ; exit if collision didn't happen
     bcs RTS_X294
@@ -10454,9 +10600,9 @@ KnockSamusBackIfCollided: ; 07:F311
     ; set SamusKnockbackIsBomb to #$01 (vertical knockback) if samus and what hit her have the same x position
     ; else, set SamusKnockbackIsBomb to #$00 (diagonal knockback)
     lda Temp0F_DistX
-    beq Lx295
+    beq @endIf_A
         lda #$01
-    Lx295: ; 07:F321
+    @endIf_A: ; 07:F321
     sta SamusKnockbackIsBomb
     ; fallthrough
 
@@ -12239,13 +12385,13 @@ UpdateSkreeProjectile: ; 07:FBEC
     lda SamusInvincibleDelay
     bne @endIf_A
     ; exit if samus is not touching the skree projectile
-    ldy #$00
-    ldx #$40
+    ldy #Samus - Objects
+    ldx #PowerUpDraw - Objects
     jsr AreObjectsTouching          ;($DC7F)
     bcs @endIf_A
     ; exit if samus is doing the screw attack
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
-    ldy #$00
+    ldy #Samus - Objects
     bcc @endIf_A
         ; samus is being hit by the projectile
         ; knock samus back
@@ -12718,7 +12864,7 @@ UpdateTileBlast_Respawned: ; 07:FE83
     and #$01
     sta Temp0B_XSlotPositionHi
     ; get Samus's position
-    ldy #$00
+    ldy #Samus - Objects
     jsr GetObjectYSlotPosition
     ; 8x8 hitbox
     lda #$04
