@@ -1,5 +1,5 @@
 ; Zoomer Routine (Crawler)
-CrawlerAIRoutine_{AREA}:
+CrawlerAIRoutine_{AREA}: ; 01:9A4C, 02:9996, 04:999B, 05:9967
     ; move only 6 frames out of 8 (0.75px per frame)
     jsr CommonJump_CrawlerAIRoutine_ShouldCrawlerMove
     and #$03
@@ -72,15 +72,15 @@ CrawlerAIRoutine_{AREA}:
     ; change animation frame every 3 frames
     lda #$03
     jsr CommonJump_UpdateEnemyAnim
-CrawlerExit_Explode_{AREA}:
+CrawlerExit_Explode_{AREA}: ; 01:9A9D, 02:99D6, 04:99DB, 05:99A7
     jmp CommonJump_UpdateEnemyCommon_noMoveNoAnim
 
 .if BANK == 2 || BANK == 5
-    CrawlerExit_Resting_{AREA}:
+    CrawlerExit_Resting_{AREA}: ; 02:99D9, 05:99AA
         jmp CommonJump_UpdateEnemyCommon_noMove
 .endif
 
-CrawlerReorientSprite_{AREA}:
+CrawlerReorientSprite_{AREA}: ; 01:9AA0, 02:99DC, 04:99DE, 05:99AD
     ; Y = orientation * 2 + direction
     lda Ens.0.data05,x
     lsr
@@ -91,7 +91,7 @@ CrawlerReorientSprite_{AREA}:
     lda CrawlerAnimIndexTable_{AREA},y
     jmp CommonJump_InitEnAnimIndex
 
-CrawlerAnimIndexTable_{AREA}:
+CrawlerAnimIndexTable_{AREA}: ; 01:9AA0, 02:99ED, 04:99EF, 05:99BE
 .if BANK == 1
     .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
     .byte EnAnim_ZoomerOnFloor_{AREA} - EnAnimTable_{AREA}
@@ -130,12 +130,13 @@ CrawlerAnimIndexTable_{AREA}:
     .byte EnAnim_ViolaOnLeftWall_{AREA} - EnAnimTable_{AREA}
 .endif
 
-CrawlerInsideCornerCheck_{AREA}:
+CrawlerInsideCornerCheck_{AREA}: ; 01:9AA8, 02:99F5, 04:99F7, 05:99C6
     ; inside corner check, check if collided with wall
     ; (carry flag was updated by JumpByRTSToMovementRoutine called before this)
     ldx PageIndex
     bcs RTS_Crawler06_{AREA}
     ; flip direction if tried to move offscreen
+    ; this prevents if from crawling on nametables that are not loaded yet
     lda $00
     bne CrawlerFlipDirection_{AREA}
         ; at inside corner, stick to wall
@@ -153,7 +154,7 @@ CrawlerInsideCornerCheck_{AREA}:
     RTS_Crawler06_{AREA}:
         rts
 
-CrawlerOutsideCornerCheck_{AREA}:
+CrawlerOutsideCornerCheck_{AREA}: ; 01:9AC6, 02:9A13, 04:9A15, 05:99E4
     ; outside corner check, check if there's no floor beneath the crawler
     jsr CrawlerOutsideCornerGetNextOrientation_{AREA}
     jsr JumpByRTSToMovementRoutine_{AREA}
@@ -166,7 +167,7 @@ CrawlerOutsideCornerCheck_{AREA}:
     @RTS:
     rts
 
-CrawlerOutsideCornerGetNextOrientation_{AREA}:
+CrawlerOutsideCornerGetNextOrientation_{AREA}: ; 01:9ADA, 02:9A27, 04:9A29, 05:99F8
     ; returns the orientation needed to turn an outside corner, relative to current orientation
     ldy Ens.0.data0A,x
     iny
@@ -175,7 +176,7 @@ CrawlerOutsideCornerGetNextOrientation_{AREA}:
     rts
 
 ; a: orientation
-JumpByRTSToMovementRoutine_{AREA}:
+JumpByRTSToMovementRoutine_{AREA}: ; 01:9AE2, 02:9A2F, 04:9A31, 05:9A00
     ; Y = (orientation * 2 + direction)*2
     ; shift direction bit into carry
     ldy Ens.0.data05,x
