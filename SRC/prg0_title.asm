@@ -5226,8 +5226,11 @@ CopyMap: ; 00:A93E
     .byte $B9, $D8, $03, $95, $69, $49, $FF, $25, $02, $9D, $5B, $04, $A9, $20, $4C
 .endif
 
+.ends
 
 ;------------------------------------------[ Area music data ]---------------------------------------
+
+.section "ROM Bank $000 - End Song Data" bank 0 slot "ROMSwitchSlot" orga $AC00 force
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/end.asm"
@@ -5262,6 +5265,10 @@ CopyMap: ; 00:A93E
     .byte $A5, $45, $F0, $09, $A9, $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0
     .byte $17
 .endif
+
+.ends
+
+.section "ROM Bank $000 - Intro Song Data" bank 0 slot "ROMSwitchSlot" orga $B000 force
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/intro.asm"

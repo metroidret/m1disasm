@@ -8880,9 +8880,9 @@ EndOfRoom: ; 07:EAF4
     sta TempScrollDir
     ;Check if scrolling left or right.
     and #$02
-    bne Lx224
+    bne @horizontal
         jmp EndOfRoomVertical
-    Lx224: ; 07:EB03
+    @horizontal: ; 07:EB03
         jmp EndOfRoomHorizontal
 
 LoadEnemy: ; 07:EB06
@@ -9013,7 +9013,7 @@ GetNameTableAtScrollDir: ; 07:EB85
 
 LoadDoor: ; 07:EB8C
     jsr SpawnDoorRoutine
-Lx230: ; 07:EB8F
+GotoEnemyLoop: ; 07:EB8F
     jmp EnemyLoop    ; do next room object
 
 SpawnDoorRoutine: ; 07:EB92
@@ -9100,7 +9100,7 @@ DoorSlots: ; 07:EC00
 
 LoadElevator: ; 07:EC04
     jsr SpawnElevatorRoutine
-    bne Lx230           ; branch always
+    bne GotoEnemyLoop           ; branch always
 
 SpawnElevatorRoutine: ; 07:EC09
     lda Elevator.status

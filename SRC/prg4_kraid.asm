@@ -931,7 +931,11 @@ VRAMString10_{AREA}: ; 04:9C86
     .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
 .endif
 
+.ends
+
 ;------------------------------------------[ Area music data ]---------------------------------------
+
+.section "ROM Bank $004 - Area Song Data" bank 4 slot "ROMSwitchSlot" orga $B000 force
 
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .include "songs/ntsc/ridley.asm"
