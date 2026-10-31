@@ -12465,85 +12465,117 @@ UpdateMellow: ; 07:FC98
         .word UpdateMellow_Explode
 
 UpdateMellow_Resting: ; 07:FCA5
-    jsr UpdateMellow_FD84
-    jsr UpdateMellow_FD08
-    jsr UpdateMellow_FD25
+    jsr UpdateMellow_ExplodeIfTouchedBySamus
+    jsr UpdateMellow_CheckIfSamusInRange
+    jsr UpdateMellow_FlapAround
     jmp DrawEnemy
 
 UpdateMellow_Active: ; 07:FCB1
-    jsr UpdateMellow_FD84
-    jsr UpdateMellow_RunAI
+    jsr UpdateMellow_ExplodeIfTouchedBySamus
+    jsr UpdateMellow_AttackSamus
     jmp DrawEnemy
 
 UpdateMellow_Explode: ; 07:FCBA
+    ; delete mellow and play sound
     lda #$00
     sta Mellows.0.status,x
     jmp SFX_EnemyHit
 
-UpdateMellow_RunAI: ; 07:FCC1
+UpdateMellow_AttackSamus: ; 07:FCC1
     jsr UpdateMellow_StorePositionToTemp
+
+    ; check if attack state is smaller than 2 (moving down)
     lda Mellows.0.attackState,x
     cmp #$02
-    bcs Lx392
-    ldy Temp08_PositionY
-    cpy Samus.y
-    bcc Lx392
-    ora #$02
-    sta Mellows.0.attackState,x
-Lx392: ; 07:FCD5
+    bcs @endIf_A
+        ; mellow is moving down
+        ; check if mellow is below samus
+        ldy Temp08_PositionY
+        cpy Samus.y
+        bcc @endIf_A
+            ; mellow is below samus, stop attacking and go upwards
+            ora #$02
+            sta Mellows.0.attackState,x
+    @endIf_A: ; 07:FCD5
+    
+    ; set x speed according to attack state bit 0
+    ; 0 = right, 1 = left
     ldy #$01
     lda Mellows.0.attackState,x
     lsr
-    bcc Lx393
+    bcc @endIf_SpeedX
         ldy #$FF
-    Lx393: ; 07:FCDE
+    @endIf_SpeedX: ; 07:FCDE
     sty Temp05_SpeedX
+    
+    ; set y speed according to attack state bit 1
+    ; 0 = down, 1 = up
     ldy #$04
     lsr
     lda Mellows.0.attackTimer,x
-    bcc Lx394
+    bcc @endIf_SpeedY
         ldy #$FD
-    Lx394: ; 07:FCE9
+    @endIf_SpeedY: ; 07:FCE9
     sty Temp04_SpeedY
+    
+    ; apply speed and check for collision
     inc Mellows.0.attackTimer,x
     jsr ApplySpeedToPosition
-    bcs Lx395
+    bcs @else_B
+        ; carry unset: collided with bg and failed to move
+        ; that was probably a floor, go upwards
         lda Mellows.0.attackState,x
         ora #$02
         sta Mellows.0.attackState,x
-    Lx395: ; 07:FCF8
-    bcc Lx396
+    ; (@else_B should come after the bcc, which belongs to the if block)
+    @else_B: ; 07:FCF8
+    bcc @endIf_B
+        ; carry set: moved successfully
+        ; commit position to mellow
         jsr UpdateMellow_LoadPositionFromTemp
-    Lx396: ; 07:FCFD
+    @endIf_B: ; 07:FCFD
+    
+    ; if attack lasted for 80 frames, mellow will rest
     lda Mellows.0.attackTimer,x
     cmp #$50
-    bcc RTS_X397
-    lda #$01
-    sta Mellows.0.status,x
-RTS_X397: ; 07:FD07
+    bcc @endIf_C
+        lda #enemyStatus_Resting
+        sta Mellows.0.status,x
+    @endIf_C: ; 07:FD07
     rts
 
-UpdateMellow_FD08: ; 07:FD08
+UpdateMellow_CheckIfSamusInRange: ; 07:FD08
+    ; reset attack timer
     lda #$00
     sta Mellows.0.attackTimer,x
+    ; set y to moving down-right
     tay
+    ; get absolute horizontal distance from mellow to samus (ignoring hi byte)
     lda Samus.x
     sec
     sbc Mellows.0.x,x
-    bpl Lx398
+    bpl @endIf_A
+        ; set y to moving down-left
         iny
-        jsr TwosComplement              ;($C3D4)
-    Lx398: ; 07:FD19
+        ; negate negative distance to get absolute distance
+        jsr TwosComplement
+    @endIf_A: ; 07:FD19
+    ; now y has the direction for the mellow to move towards samus
+    ; exit if horizontal distance is greater than a block
     cmp #$10
-    bcs RTS_X399
+    bcs @RTS
+    
+    ; horizontal distance is a block or less
+    ; mellow will start a downwards attack in samus's direction
     tya
     sta Mellows.0.attackState,x
     lda #$02
     sta Mellows.0.status,x
-RTS_X399: ; 07:FD24
+@RTS: ; 07:FD24
     rts
 
-UpdateMellow_FD25: ; 07:FD25
+UpdateMellow_FlapAround: ; 07:FD25
+    ; update random number
     txa
     lsr
     lsr
@@ -12551,31 +12583,38 @@ UpdateMellow_FD25: ; 07:FD25
     adc MellowRandomNumber
     sta MellowRandomNumber
     lsr MellowRandomNumber
+    ; use two least significant bits as index to speed table
     and #$03
     tay
-    lda MellowSpeedTable,y
+    lda @MellowSpeedTable,y
     sta Temp04_SpeedY
-    lda MellowSpeedTable+1,y
+    lda @MellowSpeedTable+1,y
     sta Temp05_SpeedX
+    ; store pos to temp
     jsr UpdateMellow_StorePositionToTemp
+    ; get y pos relative to screen
     lda Temp08_PositionY
     sec
     sbc ScrollY
+    ; save to y
     tay
+    ; if mellow is less than 2 blocks from the top of the screen, set y speed to 2 px down
     lda #$02
     cpy #$20
-    bcc Lx400
+    bcc @forceSpeedY
+    ; if mellow is less than 7 blocks from the bottom of the screen, set y speed to 2 px up
     jsr TwosComplement              ;($C3D4)
     cpy #$80
-    bcc Lx401
-Lx400: ; 07:FD52
+    bcc @dontForceSpeedY
+@forceSpeedY: ; 07:FD52
     sta Temp04_SpeedY
-Lx401: ; 07:FD54
+@dontForceSpeedY: ; 07:FD54
+    ; apply speed to mellow
     jsr ApplySpeedToPosition
     jmp UpdateMellow_LoadPositionFromTemp
 
 ; Table used by above subroutine
-MellowSpeedTable: ; 07:FD5A
+@MellowSpeedTable: ; 07:FD5A
     .byte  $02
     .byte -$02
     .byte  $01
@@ -12604,11 +12643,14 @@ UpdateMellow_LoadPositionFromTemp: ; 07:FD6C
     sta EnMellowHandlerExtra.hi
     rts
 
-UpdateMellow_FD84: ; 07:FD84
+UpdateMellow_ExplodeIfTouchedBySamus: ; 07:FD84
+    ; check if samus touched mellow (bit 2 of isHit)
     lda Mellows.0.isHit,x
     and #$04
     beq @RTS
-        lda #$03
+        ; samus touched mellow
+        ; mellow explodes
+        lda #enemyStatus_Explode
         sta Mellows.0.status,x
     @RTS: ; 07:FD8E
     rts
@@ -12708,7 +12750,7 @@ ApplySpeedToPosition: ; 07:FD8F
 @exit_failure: ; 07:FDE1
     ; movement has failed, clear carry
     clc
-RTS_X410: ; 07:FDE2
+@RTS: ; 07:FDE2
     rts
 
 ;-------------------------------------------------------------------------------
@@ -12747,7 +12789,7 @@ CheckZebetite: ; 07:FE05
     lda Zebetites.0.status,x
     sec
     sbc #$02
-    bne RTS_X410
+    bne ApplySpeedToPosition@RTS
 
     ; a is #$00, low byte of ui_ZEBETITE1
     sta Temp06_ItemID

@@ -27,8 +27,8 @@
     y                      db
     x                      db
     hi                     db
-    attackState            db
-    attackTimer            db
+    attackState            db   ;bit0: speed x (0 = right, 1 = left), bit1: speed y (0 = down, 1 = up)
+    attackTimer            db   ;counts up to #$50 after which mellow will stop attacking
     isHit                  db
     unused                 db
 .endst
