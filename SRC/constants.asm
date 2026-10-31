@@ -38,6 +38,20 @@
 .enumid it_Door                ;$9
 .enumid it_PaletteChange       ;$A
 
+;room entity type
+re_Enemy               = 1 export
+re_Door                = 2 export
+re_Elevator            = 4 export
+re_Statue              = 6 export
+re_PipeBugHole         = 7 export
+
+;door type
+.enumid 0 export
+.enumid doorType_Red           ;0
+.enumid doorType_Blue          ;1
+.enumid doorType_TenMissile    ;2
+.enumid doorType_BlueMusicChange ;3
+
 ;Power up id for items
 .enumid 0 export
 .enumid pu_BOMBS               ;$00
@@ -50,6 +64,7 @@
 .enumid pu_ICEBEAM             ;$07
 .enumid pu_ENERGYTANK          ;$08
 .enumid pu_MISSILES            ;$09
+.enumid pu_MISSILEDOOR         ;$0A
 
 ;Bitmask defs used for SamusGear.
 gr_BOMBS               = %00000001 export

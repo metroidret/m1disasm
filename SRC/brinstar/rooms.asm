@@ -39,8 +39,8 @@ Room00_{AREA}: ; 01:A441
     .byte $50, $03, $02
     .byte $5F, $03, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room01_{AREA}: ; 01:A454
@@ -104,7 +104,7 @@ Room04_{AREA}: ; 01:A4BB
     .byte $B6, $0A, $03
     .byte $C0, $0B, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $03, $45 ; Ripper
     .byte $51, $03, $BB ; Ripper
     .byte $31, $05, $39 ; Zoomer
@@ -126,8 +126,8 @@ Room05_{AREA}: ; 01:A4ED
     .byte $C6, $09, $03
     .byte $CE, $0B, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $83, $43 ; Ripper
     .byte $31, $85, $48 ; Zoomer
     .byte $51, $05, $B7 ; Zoomer
@@ -230,7 +230,7 @@ Room0A_{AREA}: ; 01:A5DD
     .byte $B3, $15, $00
     .byte $BC, $15, $00
     .byte $FD
-    .byte $02, $A0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte $FF
 
 Room0B_{AREA}: ; 01:A615
@@ -262,7 +262,7 @@ Room0C_{AREA}: ; 01:A635
     .byte $D1, $00, $02
     .byte $D9, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $51, $02, $5A ; Waver
     .byte $31, $02, $AA ; Waver
     .byte $FF
@@ -281,7 +281,7 @@ Room0D_{AREA}: ; 01:A661
     .byte $D0, $00, $02
     .byte $D7, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $31, $05, $B3 ; Zoomer
     .byte $51, $02, $44 ; Waver
     .byte $FF
@@ -338,8 +338,8 @@ Room10_{AREA}: ; 01:A6DB
     .byte $D2, $12, $02
     .byte $D8, $12, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $02, $5C ; Waver
     .byte $11, $02, $A7 ; Waver
     .byte $FF
@@ -372,7 +372,7 @@ Room12_{AREA}: ; 01:A73C
     .byte $D0, $10, $03
     .byte $D8, $10, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $05, $C7 ; Zoomer
     .byte $11, $05, $CB ; Zoomer
     .byte $51, $04, $3A ; Skree
@@ -391,7 +391,7 @@ Room13_{AREA}: ; 01:A768
     .byte $D0, $10, $03
     .byte $D8, $10, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $05, $7B ; Zoomer
     .byte $11, $05, $C8 ; Zoomer
     .byte $FF
@@ -479,8 +479,8 @@ Room18_{AREA}: ; 01:A81B
     .byte $BE, $0B, $03
     .byte $E6, $20, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $31, $05, $56 ; Zoomer
     .byte $01, $85, $5A ; Zoomer
     .byte $21, $05, $D9 ; Zoomer
@@ -518,7 +518,7 @@ Room1A_{AREA}: ; 01:A88B
     .byte $D0, $2D, $02
     .byte $D8, $2D, $02
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $01, $05, $C7 ; Zoomer
     .byte $11, $85, $CA ; Zoomer
     .byte $FF
@@ -560,7 +560,7 @@ Room1C_{AREA}: ; 01:A8E7
     .byte $87, $02, $02
     .byte $89, $14, $00
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room1D_{AREA}: ; 01:A910
@@ -596,8 +596,8 @@ Room1E_{AREA}: ; 01:A92B
     .byte $CC, $24, $01
     .byte $D4, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $11, $02, $52 ; Waver
     .byte $01, $03, $C8 ; Ripper
     .byte $FF
@@ -614,7 +614,7 @@ Room1F_{AREA}: ; 01:A96B
     .byte $CA, $26, $01
     .byte $D8, $0E, $01
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $02, $2B ; Waver
     .byte $11, $02, $BB ; Waver
     .byte $21, $82, $5B ; Waver
@@ -634,7 +634,7 @@ Room20_{AREA}: ; 01:A997
     .byte $C8, $0E, $01
     .byte $D0, $0E, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $51, $02, $85 ; Waver
     .byte $41, $02, $C5 ; Waver
     .byte $31, $05, $BA ; Zoomer
@@ -793,7 +793,7 @@ Room27_{AREA}: ; 01:AB19
     .byte $D0, $10, $03
     .byte $D8, $10, $03
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $11, $04, $38 ; Skree
     .byte $31, $06, $27 ; Rio
     .byte $FF
@@ -811,7 +811,7 @@ Room28_{AREA}: ; 01:AB48
     .byte $D0, $2D, $02
     .byte $D8, $2D, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $06, $23 ; Rio
     .byte $31, $05, $7D ; Zoomer
     .byte $FF
@@ -884,8 +884,8 @@ Room2B_{AREA}: ; 01:ABBF
     .byte $D7, $00, $02
     .byte $DF, $30, $00
     .byte $FD
-    .byte $02, $A0 ; Red door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $06 ; Statues
     .byte $FF
 
@@ -904,7 +904,7 @@ Room2C_{AREA}: ; 01:AC24
     .byte $A0, $15, $00
     .byte $AF, $15, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $FF
 
 Room2D_{AREA}: ; 01:AC4D
@@ -918,7 +918,7 @@ Room2D_{AREA}: ; 01:AC4D
     .byte $D0, $10, $03
     .byte $D8, $10, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $FF
 
 Room2E_{AREA}: ; 01:AC6A
@@ -931,5 +931,5 @@ Room2E_{AREA}: ; 01:AC6A
     .byte $AE, $0B, $03
     .byte $D0, $0B, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF

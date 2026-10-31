@@ -39,8 +39,8 @@ Room00_{AREA}: ; 02:A3AB
     .byte $50, $04, $02
     .byte $5F, $04, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room01_{AREA}: ; 02:A3BE
@@ -88,8 +88,8 @@ Room03_{AREA}: ; 02:A3F8
     .byte $CC, $0B, $03
     .byte $CD, $17, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room04_{AREA}: ; 02:A42F
@@ -116,7 +116,7 @@ Room04_{AREA}: ; 02:A42F
     .byte $D1, $00, $02
     .byte $D7, $00, $02
     .byte $FD
-    .byte $02, $A0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte $FF
 
 Room05_{AREA}: ; 02:A473
@@ -139,7 +139,7 @@ Room05_{AREA}: ; 02:A473
     .byte $87, $02, $02
     .byte $89, $0D, $00
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room06_{AREA}: ; 02:A4AB
@@ -207,7 +207,7 @@ Room08_{AREA}: ; 02:A527
     .byte $BE, $0B, $03
     .byte $CD, $18, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $41, $02, $8B ; Ripper II
     .byte $51, $06, $76 ; Nova
     .byte $21, $82, $A3 ; Ripper II
@@ -257,7 +257,7 @@ Room0A_{AREA}: ; 02:A598
     .byte $D4, $17, $03
     .byte $E5, $0B, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $31, $02, $36 ; Ripper II
     .byte $41, $86, $48 ; Nova
     .byte $FF
@@ -282,7 +282,7 @@ Room0B_{AREA}: ; 02:A5D9
     .byte $C4, $0B, $03
     .byte $EC, $17, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $06, $2B ; Nova
     .byte $51, $02, $1A ; Ripper II
     .byte $FF
@@ -323,8 +323,8 @@ Room0D_{AREA}: ; 02:A63E
     .byte $CC, $0B, $03
     .byte $D4, $19, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $21, $0D, $E5 ; Dragon
     .byte $FF
 
@@ -343,7 +343,7 @@ Room0E_{AREA}: ; 02:A678
     .byte $B0, $07, $03
     .byte $B5, $06, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $11, $86, $A6 ; Nova
     .byte $31, $02, $EA ; Ripper II
     .byte $21, $02, $39 ; Ripper II
@@ -365,7 +365,7 @@ Room0F_{AREA}: ; 02:A6AA
     .byte $D3, $00, $02
     .byte $DB, $00, $02
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $01, $0D, $E7 ; Dragon
     .byte $11, $8D, $ED ; Dragon
     .byte $31, $06, $AA ; Nova
@@ -385,7 +385,7 @@ Room10_{AREA}: ; 02:A6DF
     .byte $D5, $00, $02
     .byte $DD, $0E, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $21, $0D, $E2 ; Dragon
     .byte $41, $0D, $EA ; Dragon
     .byte $31, $06, $85 ; Nova
@@ -412,7 +412,7 @@ Room11_{AREA}: ; 02:A70E
     .byte $D4, $0B, $03
     .byte $D8, $0B, $03
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room12_{AREA}: ; 02:A749
@@ -431,7 +431,7 @@ Room12_{AREA}: ; 02:A749
     .byte $D4, $00, $02
     .byte $D9, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $00, $1C ; Geruta
     .byte $41, $00, $18 ; Geruta
     .byte $21, $0D, $EC ; Dragon
@@ -452,7 +452,7 @@ Room13_{AREA}: ; 02:A77E
     .byte $D0, $00, $02
     .byte $D6, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $51, $80, $24 ; Geruta
     .byte $41, $0D, $E2 ; Dragon
     .byte $31, $86, $94 ; Nova
@@ -619,7 +619,7 @@ Room1B_{AREA}: ; 02:A909
     .byte $D2, $00, $02
     .byte $DA, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $0C, $98 ; Multiviola
     .byte $31, $8C, $3A ; Multiviola
     .byte $11, $0C, $38 ; Multiviola
@@ -642,7 +642,7 @@ Room1C_{AREA}: ; 02:A947
     .byte $D0, $00, $02
     .byte $D8, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $41, $0E, $B1 ; Polyp
     .byte $31, $00, $49 ; Geruta
     .byte $FF
@@ -663,7 +663,7 @@ Room1D_{AREA}: ; 02:A979
     .byte $D0, $00, $02
     .byte $D8, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $0E, $BD ; Polyp
     .byte $21, $00, $49 ; Geruta
     .byte $FF
@@ -722,7 +722,7 @@ Room20_{AREA}: ; 02:A9FF
     .byte $D0, $00, $02
     .byte $D6, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $41, $0E, $B3 ; Polyp
     .byte $11, $86, $A9 ; Nova
     .byte $21, $0C, $43 ; Multiviola
@@ -743,7 +743,7 @@ Room21_{AREA}: ; 02:AA3D
     .byte $D0, $00, $02
     .byte $D8, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $31, $06, $BE ; Nova
     .byte $51, $86, $9A ; Nova
     .byte $41, $0C, $77 ; Multiviola
@@ -766,7 +766,7 @@ Room22_{AREA}: ; 02:AA6F
     .byte $D0, $00, $02
     .byte $D6, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $86, $B4 ; Nova
     .byte $11, $86, $B8 ; Nova
     .byte $21, $0C, $59 ; Multiviola
@@ -874,7 +874,7 @@ Room27_{AREA}: ; 02:AB70
     .byte $D2, $00, $02
     .byte $DA, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $51, $0D, $E9 ; Dragon
     .byte $FF
 
@@ -894,7 +894,7 @@ Room28_{AREA}: ; 02:ABA5
     .byte $DA, $00, $02
     .byte $E0, $2C, $01
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $06, $77 ; Nova
     .byte $11, $86, $7C ; Nova
     .byte $21, $00, $2A ; Geruta
@@ -936,7 +936,7 @@ Room2A_{AREA}: ; 02:AC0D
     .byte $D6, $00, $02
     .byte $EE, $2C, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $21, $86, $88 ; Nova
     .byte $31, $86, $B3 ; Nova
     .byte $41, $0B, $E0 ; Squeept

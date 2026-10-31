@@ -77,7 +77,7 @@ SpecItmsTbl_{AREA}: ; 03:A83B
     ;10 missile door.
     @@x03: ; 03:A84E
         .byte $03, @@x04 - @@x03
-        .byte it_Door, $A2
+        .byte it_Door, $A0 | (0 << 4) | doorType_TenMissile
         .byte $00
     ;Rinkas
     @@x04: ; 03:A853
@@ -123,7 +123,7 @@ SpecItmsTbl_{AREA}: ; 03:A83B
     ;Door at bottom of escape shaft.
     @@x01: ; 03:A873
         .byte $01, @@x02 - @@x01
-        .byte it_Door, $A3
+        .byte it_Door, $A0 | (0 << 4) | doorType_BlueMusicChange
         .byte $00
     ;Mother brain, Zebetite, 3 cannons and Rinkas.
     @@x02: ; 03:A878
@@ -151,7 +151,7 @@ SpecItmsTbl_{AREA}: ; 03:A83B
     ;Right door, 2 Zebetites, 6 cannons and Rinkas.
     @@x04: ; 03:A896
         .byte $04, @@x05 - @@x04
-        .byte it_Door, $A3
+        .byte it_Door, $A0 | (0 << 4) | doorType_BlueMusicChange
         .byte it_Zebetite | $10
         .byte it_Zebetite | $00
         .byte it_RinkaSpawner
@@ -165,5 +165,5 @@ SpecItmsTbl_{AREA}: ; 03:A83B
     ;Left door.
     @@x05: ; 03:A8AA
         .byte $05, $FF
-        .byte it_Door, $B3
+        .byte it_Door, $A0 | (1 << 4) | doorType_BlueMusicChange
         .byte $00

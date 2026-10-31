@@ -89,8 +89,8 @@ Room03_{AREA}: ; 04:A308
     .byte $DB, $09, $01
     .byte $E1, $10, $00
     .byte $FD
-    .byte $02, $A0 ; Red door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $31, $85, $37 ; Zeela
     .byte $FF
 
@@ -115,8 +115,8 @@ Room04_{AREA}: ; 04:A345
     .byte $CD, $09, $01
     .byte $D0, $06, $00
     .byte $FD
-    .byte $02, $A0 ; Red door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $85, $25 ; Zeela
     .byte $21, $83, $C8 ; Ripper
     .byte $FF
@@ -164,8 +164,8 @@ Room06_{AREA}: ; 04:A3B8
     .byte $C8, $10, $00
     .byte $CC, $10, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $85, $2A ; Zeela
     .byte $51, $85, $26 ; Zeela
     .byte $FF
@@ -190,7 +190,7 @@ Room07_{AREA}: ; 04:A401
     .byte $CE, $07, $00
     .byte $D6, $08, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $85, $17 ; Zeela
     .byte $21, $85, $A8 ; Zeela
     .byte $31, $03, $87 ; Ripper
@@ -235,7 +235,7 @@ Room09_{AREA}: ; 04:A47E
     .byte $A6, $0E, $00
     .byte $DE, $07, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $21, $85, $97 ; Zeela
     .byte $31, $03, $83 ; Ripper
     .byte $FF
@@ -257,7 +257,7 @@ Room0A_{AREA}: ; 04:A4AD
     .byte $D4, $00, $02
     .byte $E0, $10, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $85, $78 ; Zeela
     .byte $11, $03, $28 ; Ripper
     .byte $FF
@@ -304,7 +304,7 @@ Room0C_{AREA}: ; 04:A514
     .byte $D0, $07, $00
     .byte $D4, $11, $00
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $51, $85, $39 ; Zeela
     .byte $41, $05, $C4 ; Zeela
     .byte $FF
@@ -329,7 +329,7 @@ Room0D_{AREA}: ; 04:A558
     .byte $CA, $0F, $02
     .byte $D0, $07, $00
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room0E_{AREA}: ; 04:A590
@@ -363,7 +363,7 @@ Room0F_{AREA}: ; 04:A5BF
     .byte $D0, $1F, $01
     .byte $D4, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $41, $84, $31 ; Skree
     .byte $57, $87, $D5 ; Enemy spawner: Geega
     .byte $07, $87, $D8 ; Enemy spawner: Geega
@@ -449,7 +449,7 @@ Room13_{AREA}: ; 04:A683
     .byte $D2, $00, $02
     .byte $DA, $00, $02
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $21, $81, $27 ; Ceiling sidehopper
     .byte $41, $85, $84 ; Zeela
     .byte $37, $87, $DD ; Enemy spawner: Geega
@@ -490,8 +490,8 @@ Room15_{AREA}: ; 04:A6D9
     .byte $C7, $21, $01
     .byte $C8, $1D, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $80, $68 ; Sidehopper
     .byte $FF
 
@@ -510,7 +510,7 @@ Room16_{AREA}: ; 04:A713
     .byte $D0, $00, $02
     .byte $D6, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $07, $87, $D3 ; Enemy spawner: Geega
     .byte $17, $07, $D8 ; Enemy spawner: Geega
     .byte $21, $81, $27 ; Ceiling sidehopper
@@ -534,7 +534,7 @@ Room17_{AREA}: ; 04:A745
     .byte $DB, $05, $02
     .byte $DF, $00, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $80, $C5 ; Sidehopper
     .byte $57, $87, $DC ; Enemy spawner: Geega
     .byte $31, $04, $48 ; Skree
@@ -554,7 +554,7 @@ Room18_{AREA}: ; 04:A780
     .byte $D4, $18, $03
     .byte $D5, $05, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $37, $87, $D6 ; Enemy spawner: Geega
     .byte $21, $84, $62 ; Skree
     .byte $11, $84, $25 ; Skree
@@ -611,8 +611,8 @@ Room1A_{AREA}: ; 04:A7F6
     .byte $C8, $13, $03
     .byte $CC, $13, $03
     .byte $FD
-    .byte $02, $A0 ; Red door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $31, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
@@ -649,8 +649,8 @@ Room1B_{AREA}: ; 04:A83F
     .byte $D4, $00, $02
     .byte $DC, $12, $00
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $27, $07, $D9 ; Enemy spawner: Geega
     .byte $FF
 
@@ -701,7 +701,7 @@ Room1D_{AREA}: ; 04:A8C7
     .byte $E0, $25, $03
     .byte $E3, $15, $03
     .byte $FD
-    .byte $02, $A0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte $01, $48, $95 ; Kraid
     .byte $FF
 
@@ -720,7 +720,7 @@ Room1E_{AREA}: ; 04:A923
     .byte $C0, $1D, $01
     .byte $C8, $1D, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $11, $81, $35 ; Ceiling sidehopper
     .byte $FF
 
@@ -735,7 +735,7 @@ Room1F_{AREA}: ; 04:A94F
     .byte $C8, $1D, $01
     .byte $CC, $05, $02
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $88, $AB ; Kraid
     .byte $17, $07, $CD ; Enemy spawner: Geega
     .byte $FF
@@ -769,8 +769,8 @@ Room21_{AREA}: ; 04:A990
     .byte $C0, $1D, $01
     .byte $C8, $1D, $01
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $21, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
@@ -795,8 +795,8 @@ Room22_{AREA}: ; 04:A9BE
     .byte $C8, $13, $03
     .byte $CC, $13, $03
     .byte $FD
-    .byte $02, $A1 ; Blue door
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $81, $68 ; Ceiling sidehopper
     .byte $FF
 
@@ -818,7 +818,7 @@ Room23_{AREA}: ; 04:A9FE
     .byte $CC, $10, $00
     .byte $D4, $00, $02
     .byte $FD
-    .byte $02, $A1 ; Blue door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $03, $38 ; Ripper
     .byte $FF
 
@@ -839,7 +839,7 @@ Room24_{AREA}: ; 04:AA33
     .byte $C0, $10, $00
     .byte $CC, $10, $00
     .byte $FD
-    .byte $02, $B1 ; Blue door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $80, $75 ; Sidehopper
     .byte $51, $00, $7A ; Sidehopper
     .byte $01, $83, $45 ; Ripper

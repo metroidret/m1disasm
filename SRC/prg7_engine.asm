@@ -9017,58 +9017,76 @@ GotoEnemyLoop: ; 07:EB8F
     jmp EnemyLoop    ; do next room object
 
 SpawnDoorRoutine: ; 07:EB92
+    ; get DoorSlots index
+    ; door info byte
     iny
-    lda (Temp00_RoomPtr),y     ; door info byte
+    lda (Temp00_RoomPtr),y
+    ; push door info byte for later
     pha
-    jsr Amul16      ; CF = door side (0=right, 1=left)
+    ; carry = door side (0=right, 1=left)
+    jsr Amul16
     php
     ; get color on checkerboard (white square = MapPosX + MapPosY even, black square = vice versa)
     lda MapPosX
     clc
     adc MapPosY
+    ; rotate carry (door side) into it
     plp
     rol
     and #$03
     tay
+    ; now DoorSlots index is in y
+    ; get door object slot index into x
     ldx DoorSlots,y
-    pla          ; retrieve door info
+    
+    ; set door type
+    pla
     and #$03
-    sta DoorType,x     ; door type
+    sta DoorType,x
+    ; push DoorSlots index for later
     tya
     pha
+    ; skip if blue door
     lda DoorType,x
-    cmp #$01
-    beq @if_B
-    cmp #$03
-    beq @if_B
-    ; missile door, check item ID
-    lda #$0A
-    sta $09
-    ldy MapPosX
-    txa
-    jsr Amul16       ; * 16
-    bcc @endIf_A
-        ; left door, Y = MapPosX - 1 so adjacent doors stay open
-        dey
-    @endIf_A: ; 07:EBC7
-    tya
-    jsr LEE41
-    jsr CheckForItem
-    ; branch if door opened
-    bcs @endIf_B
-    @if_B: ; 07:EBD0
+    cmp #doorType_Blue
+    beq @then_B
+    cmp #doorType_BlueMusicChange
+    beq @then_B
+        ; missile door, check item ID
+        lda #pu_MISSILEDOOR
+        sta Temp09_ItemType
+        ; check door at pos x
+        ldy MapPosX
+        txa
+        jsr Amul16       ; * 16
+        bcc @endIf_A
+            ; left door, Y = MapPosX - 1 so adjacent doors stay open
+            dey
+        @endIf_A: ; 07:EBC7
+        tya
+        jsr PrepareItemID@sameItemType
+        jsr CheckForItem
+        ; branch if door opened
+        bcs @endIf_B
+    @then_B: ; 07:EBD0
         ; blue door or unopened missile door, set door action to init
         lda #$01
         sta Objects.0.status,x
     @endIf_B: ; 07:EBD5
+    
+    ; get DoorSlots index
     pla
-    and #$01        ; A = door side (0=right, 1=left)
+    ; Y = door side (0=right, 1=left)
+    and #$01
     tay
+    ; init door hi
     jsr GetNameTableAtScrollDir
     sta Objects.0.hi,x
-    lda DoorXs,y    ; get door's X coordinate
+    ; init door's X coordinate based on door side
+    lda DoorXs,y
     sta Objects.0.x,x
-    lda #$68        ; door Y coord is always #$68
+    ; door Y coord is always #$68
+    lda #$68
     sta Objects.0.y,x
     ; block scroll at nametable the door is in
     lda DoorScrollBlocks,y
@@ -9553,7 +9571,7 @@ PrepareItemID: ; 07:EE3D
     sta Temp09_ItemType
 
     lda MapPosX
-LEE41: ; 07:EE41
+@sameItemType: ; 07:EE41
     ;Store item X coordinate.
     sta Temp07_ItemX
 

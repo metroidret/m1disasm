@@ -173,7 +173,7 @@ Room09_{AREA}: ; 03:A9CF
     .byte $D0, $00, $02
     .byte $D2, $17, $03
     .byte $FD
-    .byte $02, $A0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte $FF
 
 Room0A_{AREA}: ; 03:A9F2
@@ -196,7 +196,7 @@ Room0A_{AREA}: ; 03:A9F2
     .byte $B1, $18, $03
     .byte $B8, $18, $03
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $31, $01, $A5 ; Green metroid
     .byte $41, $00, $48 ; Red metroid
     .byte $51, $01, $6A ; Green metroid
@@ -270,7 +270,7 @@ Room0D_{AREA}: ; 03:AAAE
     .byte $BE, $1C, $03
     .byte $D1, $1A, $03
     .byte $FD
-    .byte $02, $B0 ; Red door
+    .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $FF
 
 Room0E_{AREA}: ; 03:AAE3
@@ -349,7 +349,7 @@ Room11_{AREA}: ; 03:AB7C
     .byte $D1, $1F, $01
     .byte $D9, $1F, $01
     .byte $FD
-    .byte $02, $B2 ; 10-missile door
+    .byte re_Door, $A0 | (1 << 4) | doorType_TenMissile
     .byte $FF
 
 Room12_{AREA}: ; 03:ABA5
@@ -367,7 +367,7 @@ Room12_{AREA}: ; 03:ABA5
     .byte $D0, $1F, $01
     .byte $D7, $1F, $01
     .byte $FD
-    .byte $02, $A0 ; Red door
+    .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte $FF
 
 Room13_{AREA}: ; 03:ABCE
