@@ -19,54 +19,53 @@
 ;Brinstar Structure Pointers
 
 StructPtrTable_{AREA}: ; 01:A372
-    .word Structure00_{AREA}
-    .word Structure01_{AREA}
-    .word Structure02_{AREA}
-    .word Structure03_{AREA}
-    .word Structure04_{AREA}
-    .word Structure05_{AREA}
-    .word Structure06_{AREA}
-    .word Structure07_{AREA}
-    .word Structure08_{AREA}
-    .word Structure09_{AREA}
-    .word Structure0A_{AREA}
-    .word Structure0B_{AREA}
-    .word Structure0C_{AREA}
-    .word Structure0D_{AREA}
-    .word Structure0E_{AREA}
-    .word Structure0F_{AREA}
-    .word Structure10_{AREA}
-    .word Structure11_{AREA}
-    .word Structure12_{AREA}
-    .word Structure13_{AREA}
-    .word Structure14_{AREA}
-    .word Structure15_{AREA}
-    .word Structure16_{AREA}
-    .word Structure17_{AREA}
-    .word Structure18_{AREA}
-    .word Structure19_{AREA}
-    .word Structure1A_{AREA}
-    .word Structure1B_{AREA}
-    .word Structure1C_{AREA}
-    .word Structure1D_{AREA}
-    .word Structure1E_{AREA}
-    .word Structure1F_{AREA}
-    .word Structure20_{AREA}
-    .word Structure21_{AREA}
-    .word Structure22_{AREA}
-    .word Structure23_{AREA}
-    .word Structure24_{AREA}
-    .word Structure25_{AREA}
-    .word Structure26_{AREA}
-    .word Structure27_{AREA}
-    .word Structure28_{AREA}
-    .word Structure29_{AREA}
-    .word Structure2A_{AREA}
-    .word Structure2B_{AREA}
-    .word Structure2C_{AREA}
-    .word Structure2D_{AREA}
-    .word Structure2E_{AREA}
-    .word Structure2F_{AREA}
-    .word Structure30_{AREA}
-    .word Structure31_{AREA}
-
+    PtrTableEntry StructPtrTable_{AREA}, Structure00_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure01_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure02_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure03_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure04_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure05_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure06_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure07_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure08_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure09_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0A_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0B_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0C_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0D_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0E_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure0F_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure10_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure11_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure12_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure13_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure14_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure15_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure16_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure17_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure18_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure19_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1A_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1B_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1C_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1D_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1E_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure1F_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure20_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure21_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure22_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure23_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure24_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure25_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure26_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure27_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure28_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure29_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2A_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2B_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2C_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2D_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2E_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure2F_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure30_{AREA}
+    PtrTableEntry StructPtrTable_{AREA}, Structure31_{AREA}

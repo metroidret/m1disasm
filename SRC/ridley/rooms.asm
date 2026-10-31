@@ -34,114 +34,114 @@
 
 Room00_{AREA}: ; 05:A23F
 Room01_{AREA}: ; 05:A23F
-    .byte $02
-    .byte $07, $03, $02
-    .byte $87, $03, $02
+    .byte $2
+    .byte ($0 << 4) + $7, _id_Structure03_{AREA}, $2
+    .byte ($8 << 4) + $7, _id_Structure03_{AREA}, $2
     .byte $FF
 
 Room02_{AREA}: ; 05:A247
-    .byte $03
-    .byte $00, $07, $03
-    .byte $01, $08, $03
-    .byte $06, $09, $03
-    .byte $0B, $08, $03
-    .byte $0E, $07, $03
-    .byte $50, $07, $03
-    .byte $5E, $07, $03
-    .byte $93, $0A, $00
-    .byte $96, $09, $03
-    .byte $9C, $0A, $00
-    .byte $A0, $07, $03
-    .byte $AE, $07, $03
-    .byte $E2, $08, $03
-    .byte $EA, $08, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $1, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $6, _id_Structure09_{AREA}, $3
+    .byte ($0 << 4) + $B, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($9 << 4) + $3, _id_Structure0A_{AREA}, $0
+    .byte ($9 << 4) + $6, _id_Structure09_{AREA}, $3
+    .byte ($9 << 4) + $C, _id_Structure0A_{AREA}, $0
+    .byte ($A << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($E << 4) + $2, _id_Structure08_{AREA}, $3
+    .byte ($E << 4) + $A, _id_Structure08_{AREA}, $3
     .byte $FF
 
 Room03_{AREA}: ; 05:A273
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $46, $08, $03
-    .byte $50, $01, $02
-    .byte $5F, $01, $02
-    .byte $80, $08, $03
-    .byte $84, $09, $03
-    .byte $88, $09, $03
-    .byte $8C, $08, $03
-    .byte $B0, $08, $03
-    .byte $BC, $08, $03
-    .byte $D4, $00, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($4 << 4) + $6, _id_Structure08_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $4, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $8, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($D << 4) + $4, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room04_{AREA}: ; 05:A29E
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $50, $07, $03
-    .byte $5E, $07, $03
-    .byte $A0, $07, $03
-    .byte $AE, $07, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
     .byte $FF
 
 Room05_{AREA}: ; 05:A2B2
-    .byte $03
-    .byte $00, $08, $03
-    .byte $04, $08, $03
-    .byte $08, $08, $03
-    .byte $0C, $08, $03
-    .byte $40, $08, $03
-    .byte $44, $08, $03
-    .byte $48, $08, $03
-    .byte $4C, $08, $03
-    .byte $70, $08, $03
-    .byte $74, $08, $03
-    .byte $78, $08, $03
-    .byte $7C, $08, $03
-    .byte $B0, $08, $03
-    .byte $B4, $08, $03
-    .byte $B8, $08, $03
-    .byte $BC, $08, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($4 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($4 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($4 << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($4 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($7 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($7 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($7 << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($7 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $C, _id_Structure08_{AREA}, $3
     .byte $FF
 
 Room06_{AREA}: ; 05:A2E4
-    .byte $03
-    .byte $00, $07, $03
-    .byte $05, $08, $03
-    .byte $0E, $07, $03
-    .byte $50, $01, $02
-    .byte $5F, $01, $02
-    .byte $68, $08, $03
-    .byte $80, $07, $03
-    .byte $82, $09, $03
-    .byte $8C, $09, $03
-    .byte $8E, $07, $03
-    .byte $AE, $07, $03
-    .byte $B0, $07, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $5, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($6 << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $2, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $C, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($B << 4) + $0, _id_Structure07_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room07_{AREA}: ; 05:A30F
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $26, $04, $03
-    .byte $35, $09, $03
-    .byte $50, $01, $02
-    .byte $5E, $07, $03
-    .byte $80, $07, $03
-    .byte $82, $09, $03
-    .byte $89, $09, $03
-    .byte $AE, $07, $03
-    .byte $B2, $05, $01
-    .byte $C4, $09, $03
-    .byte $D0, $07, $03
-    .byte $DC, $04, $03
-    .byte $EB, $09, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($2 << 4) + $6, _id_Structure04_{AREA}, $3
+    .byte ($3 << 4) + $5, _id_Structure09_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $2, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $9, _id_Structure09_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($B << 4) + $2, _id_Structure05_{AREA}, $1
+    .byte ($C << 4) + $4, _id_Structure09_{AREA}, $3
+    .byte ($D << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($D << 4) + $C, _id_Structure04_{AREA}, $3
+    .byte ($E << 4) + $B, _id_Structure09_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $07, $87, $27 ; Enemy spawner: Zebbo
@@ -151,20 +151,20 @@ Room07_{AREA}: ; 05:A30F
     .byte $FF
 
 Room08_{AREA}: ; 05:A34D
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $22, $05, $01
-    .byte $26, $09, $03
-    .byte $50, $07, $03
-    .byte $5E, $07, $03
-    .byte $62, $09, $03
-    .byte $79, $09, $03
-    .byte $95, $04, $03
-    .byte $A0, $07, $03
-    .byte $A4, $09, $03
-    .byte $AE, $07, $03
-    .byte $E8, $09, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($2 << 4) + $2, _id_Structure05_{AREA}, $1
+    .byte ($2 << 4) + $6, _id_Structure09_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($6 << 4) + $2, _id_Structure09_{AREA}, $3
+    .byte ($7 << 4) + $9, _id_Structure09_{AREA}, $3
+    .byte ($9 << 4) + $5, _id_Structure04_{AREA}, $3
+    .byte ($A << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $4, _id_Structure09_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($E << 4) + $8, _id_Structure09_{AREA}, $3
     .byte $FD
     .byte $51, $06, $17 ; Viola
     .byte $01, $86, $6B ; Viola
@@ -173,21 +173,21 @@ Room08_{AREA}: ; 05:A34D
     .byte $FF
 
 Room09_{AREA}: ; 05:A383
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $26, $09, $03
-    .byte $2D, $06, $01
-    .byte $50, $01, $02
-    .byte $5C, $09, $03
-    .byte $5E, $07, $03
-    .byte $80, $08, $03
-    .byte $84, $08, $03
-    .byte $88, $08, $03
-    .byte $8C, $08, $03
-    .byte $C0, $08, $03
-    .byte $CC, $08, $03
-    .byte $D4, $00, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($2 << 4) + $6, _id_Structure09_{AREA}, $3
+    .byte ($2 << 4) + $D, _id_Structure06_{AREA}, $1
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $C, _id_Structure09_{AREA}, $3
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $8, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($C << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($C << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($D << 4) + $4, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $31, $86, $18 ; Viola
@@ -195,22 +195,22 @@ Room09_{AREA}: ; 05:A383
     .byte $FF
 
 Room0A_{AREA}: ; 05:A3B8
-    .byte $00
-    .byte $00, $07, $03
-    .byte $07, $19, $00
-    .byte $0E, $07, $03
-    .byte $45, $19, $00
-    .byte $4C, $19, $00
-    .byte $50, $07, $03
-    .byte $5F, $01, $02
-    .byte $72, $19, $00
-    .byte $8C, $09, $03
-    .byte $8E, $07, $03
-    .byte $A0, $07, $03
-    .byte $AB, $19, $00
-    .byte $B4, $19, $00
-    .byte $BE, $07, $03
-    .byte $E8, $19, $00
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $7, _id_Structure19_{AREA}, $0
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($4 << 4) + $5, _id_Structure19_{AREA}, $0
+    .byte ($4 << 4) + $C, _id_Structure19_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($7 << 4) + $2, _id_Structure19_{AREA}, $0
+    .byte ($8 << 4) + $C, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $B, _id_Structure19_{AREA}, $0
+    .byte ($B << 4) + $4, _id_Structure19_{AREA}, $0
+    .byte ($B << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($E << 4) + $8, _id_Structure19_{AREA}, $0
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $06, $34 ; Viola
@@ -221,18 +221,18 @@ Room0A_{AREA}: ; 05:A3B8
     .byte $FF
 
 Room0B_{AREA}: ; 05:A3F9
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $16, $19, $00
-    .byte $50, $07, $03
-    .byte $53, $19, $00
-    .byte $5E, $07, $03
-    .byte $86, $19, $00
-    .byte $A0, $07, $03
-    .byte $AE, $07, $03
-    .byte $B9, $19, $00
-    .byte $BD, $06, $01
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($1 << 4) + $6, _id_Structure19_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $3, _id_Structure19_{AREA}, $0
+    .byte ($5 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $6, _id_Structure19_{AREA}, $0
+    .byte ($A << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($B << 4) + $9, _id_Structure19_{AREA}, $0
+    .byte ($B << 4) + $D, _id_Structure06_{AREA}, $1
     .byte $FD
     .byte $41, $86, $06 ; Viola
     .byte $01, $06, $43 ; Viola
@@ -241,18 +241,18 @@ Room0B_{AREA}: ; 05:A3F9
     .byte $FF
 
 Room0C_{AREA}: ; 05:A429
-    .byte $03
-    .byte $00, $07, $03
-    .byte $0E, $07, $03
-    .byte $50, $07, $03
-    .byte $5F, $01, $02
-    .byte $80, $08, $03
-    .byte $84, $08, $03
-    .byte $88, $09, $03
-    .byte $8C, $08, $03
-    .byte $C0, $08, $03
-    .byte $CC, $08, $03
-    .byte $D4, $00, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($8 << 4) + $8, _id_Structure09_{AREA}, $3
+    .byte ($8 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($C << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($C << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($D << 4) + $4, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $31, $82, $74 ; Dessgeega
@@ -260,66 +260,66 @@ Room0C_{AREA}: ; 05:A429
     .byte $FF
 
 Room0D_{AREA}: ; 05:A455
-    .byte $00
-    .byte $00, $0B, $00
-    .byte $04, $0B, $00
-    .byte $08, $0B, $00
-    .byte $0C, $0B, $00
-    .byte $50, $01, $02
-    .byte $5F, $01, $02
-    .byte $80, $0B, $00
-    .byte $82, $0B, $00
-    .byte $86, $0C, $00
-    .byte $88, $0B, $00
-    .byte $8C, $0B, $00
-    .byte $C0, $0B, $00
-    .byte $C2, $0B, $00
-    .byte $C6, $0C, $00
-    .byte $D8, $0B, $00
-    .byte $DC, $0B, $00
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $6, _id_Structure0C_{AREA}, $0
+    .byte ($8 << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $6, _id_Structure0C_{AREA}, $0
+    .byte ($D << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($D << 4) + $C, _id_Structure0B_{AREA}, $0
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Red
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room0E_{AREA}: ; 05:A48C
-    .byte $00
-    .byte $00, $0B, $00
-    .byte $04, $0B, $00
-    .byte $08, $0B, $00
-    .byte $0C, $0B, $00
-    .byte $0E, $0D, $00
-    .byte $1E, $0D, $00
-    .byte $50, $01, $02
-    .byte $5F, $01, $02
-    .byte $80, $0B, $00
-    .byte $84, $0B, $00
-    .byte $88, $0B, $00
-    .byte $8C, $0B, $00
-    .byte $C0, $0B, $00
-    .byte $C4, $0B, $00
-    .byte $C8, $0B, $00
-    .byte $CC, $0B, $00
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $E, _id_Structure0D_{AREA}, $0
+    .byte ($1 << 4) + $E, _id_Structure0D_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $4, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $4, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $8, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $C, _id_Structure0B_{AREA}, $0
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
 
 Room0F_{AREA}: ; 05:A4C3
-    .byte $00
-    .byte $00, $0E, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0C, $0E, $00
-    .byte $7D, $0A, $00
-    .byte $B0, $0B, $00
-    .byte $B4, $0B, $00
-    .byte $B8, $0C, $00
-    .byte $B9, $0B, $00
-    .byte $BE, $0B, $00
-    .byte $BF, $0C, $00
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0E_{AREA}, $0
+    .byte ($7 << 4) + $D, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $4, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $8, _id_Structure0C_{AREA}, $0
+    .byte ($B << 4) + $9, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $E, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $F, _id_Structure0C_{AREA}, $0
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $51, $80, $27 ; Holtz
     .byte $01, $02, $A4 ; Dessgeega
@@ -327,18 +327,18 @@ Room0F_{AREA}: ; 05:A4C3
     .byte $FF
 
 Room10_{AREA}: ; 05:A4F6
-    .byte $00
-    .byte $00, $0E, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0B, $0E, $00
-    .byte $0F, $0A, $00
-    .byte $5F, $02, $02
-    .byte $8C, $08, $03
-    .byte $CC, $08, $03
-    .byte $D0, $0F, $03
-    .byte $D4, $00, $03
-    .byte $D8, $0F, $03
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $B, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $F, _id_Structure0A_{AREA}, $0
+    .byte ($5 << 4) + $F, _id_Structure02_{AREA}, $2
+    .byte ($8 << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($C << 4) + $C, _id_Structure08_{AREA}, $3
+    .byte ($D << 4) + $0, _id_Structure0F_{AREA}, $3
+    .byte ($D << 4) + $4, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure0F_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_TenMissile
     .byte $51, $80, $27 ; Holtz
@@ -347,49 +347,49 @@ Room10_{AREA}: ; 05:A4F6
     .byte $FF
 
 Room11_{AREA}: ; 05:A525
-    .byte $03
-    .byte $00, $08, $03
-    .byte $04, $08, $03
-    .byte $08, $0E, $00
-    .byte $0C, $0E, $00
-    .byte $40, $08, $03
-    .byte $42, $0B, $00
-    .byte $70, $08, $03
-    .byte $72, $0B, $00
-    .byte $76, $0A, $00
-    .byte $B0, $08, $03
-    .byte $B4, $08, $03
-    .byte $D8, $0F, $03
-    .byte $DC, $0F, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0E_{AREA}, $0
+    .byte ($4 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($4 << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($7 << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($7 << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($7 << 4) + $6, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $0, _id_Structure08_{AREA}, $3
+    .byte ($B << 4) + $4, _id_Structure08_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure0F_{AREA}, $3
+    .byte ($D << 4) + $C, _id_Structure0F_{AREA}, $3
     .byte $FD
     .byte $31, $80, $2E ; Holtz
     .byte $41, $80, $2B ; Holtz
     .byte $FF
 
 Room12_{AREA}: ; 05:A555
-    .byte $03
-    .byte $00, $07, $03
-    .byte $02, $11, $03
-    .byte $06, $11, $03
-    .byte $0A, $11, $03
-    .byte $0E, $07, $03
-    .byte $13, $10, $03
-    .byte $14, $12, $03
-    .byte $1C, $10, $03
-    .byte $22, $0A, $00
-    .byte $50, $02, $02
-    .byte $5F, $02, $02
-    .byte $80, $07, $03
-    .byte $84, $11, $03
-    .byte $8F, $07, $03
-    .byte $92, $19, $00
-    .byte $95, $11, $03
-    .byte $99, $11, $03
-    .byte $AE, $19, $00
-    .byte $C0, $07, $03
-    .byte $D2, $00, $03
-    .byte $D7, $00, $03
-    .byte $DF, $07, $03
+    .byte $3
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $2, _id_Structure11_{AREA}, $3
+    .byte ($0 << 4) + $6, _id_Structure11_{AREA}, $3
+    .byte ($0 << 4) + $A, _id_Structure11_{AREA}, $3
+    .byte ($0 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($1 << 4) + $3, _id_Structure10_{AREA}, $3
+    .byte ($1 << 4) + $4, _id_Structure12_{AREA}, $3
+    .byte ($1 << 4) + $C, _id_Structure10_{AREA}, $3
+    .byte ($2 << 4) + $2, _id_Structure0A_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure02_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure02_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $4, _id_Structure11_{AREA}, $3
+    .byte ($8 << 4) + $F, _id_Structure07_{AREA}, $3
+    .byte ($9 << 4) + $2, _id_Structure19_{AREA}, $0
+    .byte ($9 << 4) + $5, _id_Structure11_{AREA}, $3
+    .byte ($9 << 4) + $9, _id_Structure11_{AREA}, $3
+    .byte ($A << 4) + $E, _id_Structure19_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($D << 4) + $2, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $7, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $F, _id_Structure07_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte re_Door, $A0 | (1 << 4) | doorType_TenMissile
@@ -397,23 +397,23 @@ Room12_{AREA}: ; 05:A555
     .byte $FF
 
 Room13_{AREA}: ; 05:A5A1
-    .byte $01
-    .byte $00, $07, $03
-    .byte $01, $0E, $00
-    .byte $05, $0E, $00
-    .byte $09, $0E, $00
-    .byte $0D, $0E, $00
-    .byte $22, $11, $03
-    .byte $26, $11, $03
-    .byte $50, $02, $02
-    .byte $80, $07, $03
-    .byte $81, $11, $03
-    .byte $8B, $0A, $00
-    .byte $A7, $0A, $00
-    .byte $B0, $07, $03
-    .byte $BF, $0A, $00
-    .byte $D2, $00, $03
-    .byte $DA, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $1, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $5, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $9, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $D, _id_Structure0E_{AREA}, $0
+    .byte ($2 << 4) + $2, _id_Structure11_{AREA}, $3
+    .byte ($2 << 4) + $6, _id_Structure11_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure02_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $1, _id_Structure11_{AREA}, $3
+    .byte ($8 << 4) + $B, _id_Structure0A_{AREA}, $0
+    .byte ($A << 4) + $7, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($B << 4) + $F, _id_Structure0A_{AREA}, $0
+    .byte ($D << 4) + $2, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $A, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $11, $86, $97 ; Viola
@@ -424,18 +424,18 @@ Room13_{AREA}: ; 05:A5A1
     .byte $FF
 
 Room14_{AREA}: ; 05:A5E5
-    .byte $01
-    .byte $00, $0E, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0C, $0E, $00
-    .byte $86, $0A, $00
-    .byte $8A, $0A, $00
-    .byte $A2, $0A, $00
-    .byte $A3, $0A, $00
-    .byte $BE, $0A, $00
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0E_{AREA}, $0
+    .byte ($8 << 4) + $6, _id_Structure0A_{AREA}, $0
+    .byte ($8 << 4) + $A, _id_Structure0A_{AREA}, $0
+    .byte ($A << 4) + $2, _id_Structure0A_{AREA}, $0
+    .byte ($A << 4) + $3, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $E, _id_Structure0A_{AREA}, $0
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $01, $86, $92 ; Viola
     .byte $11, $86, $76 ; Viola
@@ -445,21 +445,21 @@ Room14_{AREA}: ; 05:A5E5
     .byte $FF
 
 Room15_{AREA}: ; 05:A618
-    .byte $01
-    .byte $00, $0E, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0C, $0B, $00
-    .byte $5F, $01, $02
-    .byte $85, $0A, $00
-    .byte $86, $0A, $00
-    .byte $8C, $11, $03
-    .byte $9E, $07, $03
-    .byte $A2, $0A, $00
-    .byte $B9, $0A, $00
-    .byte $CE, $07, $03
-    .byte $D0, $00, $03
-    .byte $D6, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $5, _id_Structure0A_{AREA}, $0
+    .byte ($8 << 4) + $6, _id_Structure0A_{AREA}, $0
+    .byte ($8 << 4) + $C, _id_Structure11_{AREA}, $3
+    .byte ($9 << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($A << 4) + $2, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $9, _id_Structure0A_{AREA}, $0
+    .byte ($C << 4) + $E, _id_Structure07_{AREA}, $3
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $6, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $51, $86, $92 ; Viola
@@ -469,16 +469,16 @@ Room15_{AREA}: ; 05:A618
     .byte $FF
 
 Room16_{AREA}: ; 05:A653
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $10, $13, $01
-    .byte $50, $01, $02
-    .byte $80, $13, $01
-    .byte $94, $05, $01
-    .byte $C0, $14, $01
-    .byte $CA, $14, $01
-    .byte $D8, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($1 << 4) + $0, _id_Structure13_{AREA}, $1
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure13_{AREA}, $1
+    .byte ($9 << 4) + $4, _id_Structure05_{AREA}, $1
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $A, _id_Structure14_{AREA}, $1
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $41, $80, $37 ; Holtz
@@ -487,18 +487,18 @@ Room16_{AREA}: ; 05:A653
     .byte $FF
 
 Room17_{AREA}: ; 05:A67C
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $30, $14, $01
-    .byte $38, $14, $01
-    .byte $90, $14, $01
-    .byte $92, $04, $03
-    .byte $94, $04, $03
-    .byte $98, $14, $01
-    .byte $9B, $04, $03
-    .byte $C0, $14, $01
-    .byte $C8, $14, $01
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($9 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($9 << 4) + $2, _id_Structure04_{AREA}, $3
+    .byte ($9 << 4) + $4, _id_Structure04_{AREA}, $3
+    .byte ($9 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($9 << 4) + $B, _id_Structure04_{AREA}, $3
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $8, _id_Structure14_{AREA}, $1
     .byte $FD
     .byte $17, $87, $93 ; Enemy spawner: Zebbo
     .byte $27, $07, $95 ; Enemy spawner: Zebbo
@@ -506,18 +506,18 @@ Room17_{AREA}: ; 05:A67C
     .byte $FF
 
 Room18_{AREA}: ; 05:A6A9
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $30, $14, $01
-    .byte $38, $14, $01
-    .byte $52, $13, $01
-    .byte $5A, $13, $01
-    .byte $61, $06, $01
-    .byte $C0, $14, $01
-    .byte $C3, $04, $03
-    .byte $C8, $14, $01
-    .byte $CB, $04, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($5 << 4) + $2, _id_Structure13_{AREA}, $1
+    .byte ($5 << 4) + $A, _id_Structure13_{AREA}, $1
+    .byte ($6 << 4) + $1, _id_Structure06_{AREA}, $1
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $3, _id_Structure04_{AREA}, $3
+    .byte ($C << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $B, _id_Structure04_{AREA}, $3
     .byte $FD
     .byte $47, $87, $C4 ; Enemy spawner: Zebbo
     .byte $57, $87, $CC ; Enemy spawner: Zebbo
@@ -525,16 +525,16 @@ Room18_{AREA}: ; 05:A6A9
     .byte $FF
 
 Room19_{AREA}: ; 05:A6D6
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $1C, $13, $01
-    .byte $5F, $01, $02
-    .byte $8C, $13, $01
-    .byte $C0, $14, $01
-    .byte $CA, $14, $01
-    .byte $D0, $00, $03
-    .byte $D5, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($1 << 4) + $C, _id_Structure13_{AREA}, $1
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $C, _id_Structure13_{AREA}, $1
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $A, _id_Structure14_{AREA}, $1
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $5, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $11, $80, $33 ; Holtz
@@ -543,17 +543,17 @@ Room19_{AREA}: ; 05:A6D6
     .byte $FF
 
 Room1A_{AREA}: ; 05:A6FF
-    .byte $00
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $30, $14, $01
-    .byte $38, $14, $01
-    .byte $D0, $00, $03
-    .byte $D2, $13, $01
-    .byte $D7, $13, $01
-    .byte $D8, $04, $03
-    .byte $DB, $00, $03
-    .byte $DC, $13, $01
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $2, _id_Structure13_{AREA}, $1
+    .byte ($D << 4) + $7, _id_Structure13_{AREA}, $1
+    .byte ($D << 4) + $8, _id_Structure04_{AREA}, $3
+    .byte ($D << 4) + $B, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $C, _id_Structure13_{AREA}, $1
     .byte $FD
     .byte $41, $00, $64 ; Holtz
     .byte $51, $80, $68 ; Holtz
@@ -562,43 +562,43 @@ Room1A_{AREA}: ; 05:A6FF
     .byte $FF
 
 Room1B_{AREA}: ; 05:A72C
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $30, $13, $01
-    .byte $34, $13, $01
-    .byte $38, $13, $01
-    .byte $3C, $13, $01
-    .byte $40, $16, $01
-    .byte $41, $15, $01
-    .byte $44, $15, $01
-    .byte $48, $15, $01
-    .byte $4C, $15, $01
-    .byte $4F, $16, $01
-    .byte $90, $14, $01
-    .byte $92, $04, $03
-    .byte $98, $14, $01
-    .byte $9B, $04, $03
-    .byte $C0, $14, $01
-    .byte $C8, $14, $01
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($3 << 4) + $0, _id_Structure13_{AREA}, $1
+    .byte ($3 << 4) + $4, _id_Structure13_{AREA}, $1
+    .byte ($3 << 4) + $8, _id_Structure13_{AREA}, $1
+    .byte ($3 << 4) + $C, _id_Structure13_{AREA}, $1
+    .byte ($4 << 4) + $0, _id_Structure16_{AREA}, $1
+    .byte ($4 << 4) + $1, _id_Structure15_{AREA}, $1
+    .byte ($4 << 4) + $4, _id_Structure15_{AREA}, $1
+    .byte ($4 << 4) + $8, _id_Structure15_{AREA}, $1
+    .byte ($4 << 4) + $C, _id_Structure15_{AREA}, $1
+    .byte ($4 << 4) + $F, _id_Structure16_{AREA}, $1
+    .byte ($9 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($9 << 4) + $2, _id_Structure04_{AREA}, $3
+    .byte ($9 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($9 << 4) + $B, _id_Structure04_{AREA}, $3
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $8, _id_Structure14_{AREA}, $1
     .byte $FD
     .byte $27, $87, $93 ; Enemy spawner: Zebbo
     .byte $37, $87, $9C ; Enemy spawner: Zebbo
     .byte $FF
 
 Room1C_{AREA}: ; 05:A76B
-    .byte $02
-    .byte $00, $18, $02
-    .byte $08, $18, $02
-    .byte $20, $18, $02
-    .byte $28, $0A, $00
-    .byte $50, $01, $02
-    .byte $5F, $19, $00
-    .byte $80, $17, $02
-    .byte $8C, $19, $00
-    .byte $C0, $18, $02
-    .byte $CA, $18, $02
-    .byte $D8, $00, $03
+    .byte $2
+    .byte ($0 << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($0 << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($2 << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($2 << 4) + $8, _id_Structure0A_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure19_{AREA}, $0
+    .byte ($8 << 4) + $0, _id_Structure17_{AREA}, $2
+    .byte ($8 << 4) + $C, _id_Structure19_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $A, _id_Structure18_{AREA}, $2
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $8C, $39 ; Multiviola
@@ -608,18 +608,18 @@ Room1C_{AREA}: ; 05:A76B
     .byte $FF
 
 Room1D_{AREA}: ; 05:A79D
-    .byte $02
-    .byte $00, $18, $02
-    .byte $08, $18, $02
-    .byte $28, $18, $02
-    .byte $5F, $01, $02
-    .byte $70, $19, $00
-    .byte $8C, $17, $02
-    .byte $94, $19, $00
-    .byte $B8, $17, $02
-    .byte $BC, $17, $02
-    .byte $C0, $18, $02
-    .byte $D0, $00, $03
+    .byte $2
+    .byte ($0 << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($0 << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($2 << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($7 << 4) + $0, _id_Structure19_{AREA}, $0
+    .byte ($8 << 4) + $C, _id_Structure17_{AREA}, $2
+    .byte ($9 << 4) + $4, _id_Structure19_{AREA}, $0
+    .byte ($B << 4) + $8, _id_Structure17_{AREA}, $2
+    .byte ($B << 4) + $C, _id_Structure17_{AREA}, $2
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $01, $8C, $33 ; Multiviola
@@ -629,17 +629,17 @@ Room1D_{AREA}: ; 05:A79D
     .byte $FF
 
 Room1E_{AREA}: ; 05:A7CF
-    .byte $00
-    .byte $00, $18, $02
-    .byte $08, $18, $02
-    .byte $30, $0A, $00
-    .byte $49, $19, $00
-    .byte $55, $0A, $00
-    .byte $5D, $0A, $00
-    .byte $A0, $18, $02
-    .byte $A8, $18, $02
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($0 << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($3 << 4) + $0, _id_Structure0A_{AREA}, $0
+    .byte ($4 << 4) + $9, _id_Structure19_{AREA}, $0
+    .byte ($5 << 4) + $5, _id_Structure0A_{AREA}, $0
+    .byte ($5 << 4) + $D, _id_Structure0A_{AREA}, $0
+    .byte ($A << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($A << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $21, $8C, $38 ; Multiviola
     .byte $31, $0C, $97 ; Multiviola
@@ -648,17 +648,17 @@ Room1E_{AREA}: ; 05:A7CF
     .byte $FF
 
 Room1F_{AREA}: ; 05:A7FC
-    .byte $02
-    .byte $00, $17, $02
-    .byte $04, $17, $02
-    .byte $08, $17, $02
-    .byte $0C, $17, $02
-    .byte $70, $17, $02
-    .byte $74, $17, $02
-    .byte $78, $17, $02
-    .byte $7C, $17, $02
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $2
+    .byte ($0 << 4) + $0, _id_Structure17_{AREA}, $2
+    .byte ($0 << 4) + $4, _id_Structure17_{AREA}, $2
+    .byte ($0 << 4) + $8, _id_Structure17_{AREA}, $2
+    .byte ($0 << 4) + $C, _id_Structure17_{AREA}, $2
+    .byte ($7 << 4) + $0, _id_Structure17_{AREA}, $2
+    .byte ($7 << 4) + $4, _id_Structure17_{AREA}, $2
+    .byte ($7 << 4) + $8, _id_Structure17_{AREA}, $2
+    .byte ($7 << 4) + $C, _id_Structure17_{AREA}, $2
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $01, $8C, $42 ; Multiviola
     .byte $11, $0C, $45 ; Multiviola
@@ -666,14 +666,14 @@ Room1F_{AREA}: ; 05:A7FC
     .byte $FF
 
 Room20_{AREA}: ; 05:A826
-    .byte $00
-    .byte $00, $0B, $00
-    .byte $04, $18, $02
-    .byte $0C, $0B, $00
-    .byte $50, $01, $02
-    .byte $80, $0B, $00
-    .byte $C0, $18, $02
-    .byte $C8, $18, $02
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure18_{AREA}, $2
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $8, _id_Structure18_{AREA}, $2
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $21, $82, $5B ; Dessgeega
@@ -682,13 +682,13 @@ Room20_{AREA}: ; 05:A826
     .byte $FF
 
 Room21_{AREA}: ; 05:A849
-    .byte $02
-    .byte $20, $18, $02
-    .byte $28, $18, $02
-    .byte $A0, $18, $02
-    .byte $A8, $18, $02
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $2
+    .byte ($2 << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($2 << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($A << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($A << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $01, $82, $98 ; Dessgeega
     .byte $11, $02, $9E ; Dessgeega
@@ -696,14 +696,14 @@ Room21_{AREA}: ; 05:A849
     .byte $FF
 
 Room22_{AREA}: ; 05:A867
-    .byte $00
-    .byte $00, $0B, $00
-    .byte $04, $18, $02
-    .byte $0C, $0B, $00
-    .byte $5F, $01, $02
-    .byte $8C, $0B, $00
-    .byte $C0, $18, $02
-    .byte $C8, $18, $02
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure18_{AREA}, $2
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($5 << 4) + $F, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $8, _id_Structure18_{AREA}, $2
     .byte $FD
     .byte re_Door, $A0 | (0 << 4) | doorType_Blue
     .byte $11, $02, $57 ; Dessgeega
@@ -713,18 +713,18 @@ Room22_{AREA}: ; 05:A867
     .byte $FF
 
 Room23_{AREA}: ; 05:A88D
-    .byte $00
-    .byte $00, $07, $03
-    .byte $02, $12, $03
-    .byte $0A, $12, $03
-    .byte $50, $01, $02
-    .byte $80, $07, $03
-    .byte $82, $0B, $00
-    .byte $8F, $0B, $00
-    .byte $B0, $07, $03
-    .byte $B9, $0B, $00
-    .byte $D2, $00, $03
-    .byte $DA, $00, $03
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($0 << 4) + $2, _id_Structure12_{AREA}, $3
+    .byte ($0 << 4) + $A, _id_Structure12_{AREA}, $3
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($8 << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($8 << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $F, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $0, _id_Structure07_{AREA}, $3
+    .byte ($B << 4) + $9, _id_Structure0B_{AREA}, $0
+    .byte ($D << 4) + $2, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $A, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $01, $80, $18 ; Holtz
@@ -734,16 +734,16 @@ Room23_{AREA}: ; 05:A88D
     .byte $FF
 
 Room24_{AREA}: ; 05:A8BF
-    .byte $01
-    .byte $00, $12, $03
-    .byte $08, $12, $03
-    .byte $92, $04, $03
-    .byte $94, $04, $03
-    .byte $99, $0B, $00
-    .byte $A2, $0B, $00
-    .byte $BF, $0B, $00
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure12_{AREA}, $3
+    .byte ($0 << 4) + $8, _id_Structure12_{AREA}, $3
+    .byte ($9 << 4) + $2, _id_Structure04_{AREA}, $3
+    .byte ($9 << 4) + $4, _id_Structure04_{AREA}, $3
+    .byte ($9 << 4) + $9, _id_Structure0B_{AREA}, $0
+    .byte ($A << 4) + $2, _id_Structure0B_{AREA}, $0
+    .byte ($B << 4) + $F, _id_Structure0B_{AREA}, $0
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $07, $87, $93 ; Enemy spawner: Zebbo
     .byte $11, $00, $1A ; Holtz
@@ -753,22 +753,22 @@ Room24_{AREA}: ; 05:A8BF
     .byte $FF
 
 Room25_{AREA}: ; 05:A8EC
-    .byte $02
-    .byte $00, $0B, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0C, $0E, $00
-    .byte $37, $0A, $00
-    .byte $50, $01, $02
-    .byte $77, $0A, $00
-    .byte $80, $17, $02
-    .byte $8D, $1A, $01
-    .byte $C0, $18, $02
-    .byte $C4, $1B, $02
-    .byte $C8, $18, $02
-    .byte $D4, $1C, $02
-    .byte $D8, $1C, $02
-    .byte $DC, $1C, $02
+    .byte $2
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0E_{AREA}, $0
+    .byte ($3 << 4) + $7, _id_Structure0A_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($7 << 4) + $7, _id_Structure0A_{AREA}, $0
+    .byte ($8 << 4) + $0, _id_Structure17_{AREA}, $2
+    .byte ($8 << 4) + $D, _id_Structure1A_{AREA}, $1
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $4, _id_Structure1B_{AREA}, $2
+    .byte ($C << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($D << 4) + $4, _id_Structure1C_{AREA}, $2
+    .byte ($D << 4) + $8, _id_Structure1C_{AREA}, $2
+    .byte ($D << 4) + $C, _id_Structure1C_{AREA}, $2
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Red
     .byte $01, $82, $27 ; Dessgeega
@@ -778,19 +778,19 @@ Room25_{AREA}: ; 05:A8EC
     .byte $FF
 
 Room26_{AREA}: ; 05:A92A
-    .byte $02
-    .byte $00, $0E, $00
-    .byte $04, $0E, $00
-    .byte $08, $0E, $00
-    .byte $0C, $0E, $00
-    .byte $87, $1A, $01
-    .byte $C0, $18, $02
-    .byte $C8, $18, $02
-    .byte $CF, $1B, $02
-    .byte $D0, $1C, $02
-    .byte $D4, $1C, $02
-    .byte $D8, $1C, $02
-    .byte $DC, $1C, $02
+    .byte $2
+    .byte ($0 << 4) + $0, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $4, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $8, _id_Structure0E_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0E_{AREA}, $0
+    .byte ($8 << 4) + $7, _id_Structure1A_{AREA}, $1
+    .byte ($C << 4) + $0, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $8, _id_Structure18_{AREA}, $2
+    .byte ($C << 4) + $F, _id_Structure1B_{AREA}, $2
+    .byte ($D << 4) + $0, _id_Structure1C_{AREA}, $2
+    .byte ($D << 4) + $4, _id_Structure1C_{AREA}, $2
+    .byte ($D << 4) + $8, _id_Structure1C_{AREA}, $2
+    .byte ($D << 4) + $C, _id_Structure1C_{AREA}, $2
     .byte $FD
     .byte $21, $82, $26 ; Dessgeega
     .byte $31, $02, $2B ; Dessgeega
@@ -799,31 +799,31 @@ Room26_{AREA}: ; 05:A92A
     .byte $FF
 
 Room27_{AREA}: ; 05:A95D
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $B2, $04, $03
-    .byte $C0, $14, $01
-    .byte $C9, $14, $01
-    .byte $D0, $00, $03
-    .byte $D8, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($B << 4) + $2, _id_Structure04_{AREA}, $3
+    .byte ($C << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $9, _id_Structure14_{AREA}, $1
+    .byte ($D << 4) + $0, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $07, $87, $B3 ; Enemy spawner: Zebbo
     .byte $11, $03, $29 ; Ceiling dessgeega
     .byte $FF
 
 Room28_{AREA}: ; 05:A97B
-    .byte $01
-    .byte $00, $14, $01
-    .byte $08, $14, $01
-    .byte $10, $0A, $00
-    .byte $60, $0A, $00
-    .byte $B0, $0A, $00
-    .byte $B5, $04, $03
-    .byte $C1, $14, $01
-    .byte $CA, $14, $01
-    .byte $D1, $00, $03
-    .byte $D8, $00, $03
+    .byte $1
+    .byte ($0 << 4) + $0, _id_Structure14_{AREA}, $1
+    .byte ($0 << 4) + $8, _id_Structure14_{AREA}, $1
+    .byte ($1 << 4) + $0, _id_Structure0A_{AREA}, $0
+    .byte ($6 << 4) + $0, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $0, _id_Structure0A_{AREA}, $0
+    .byte ($B << 4) + $5, _id_Structure04_{AREA}, $3
+    .byte ($C << 4) + $1, _id_Structure14_{AREA}, $1
+    .byte ($C << 4) + $A, _id_Structure14_{AREA}, $1
+    .byte ($D << 4) + $1, _id_Structure00_{AREA}, $3
+    .byte ($D << 4) + $8, _id_Structure00_{AREA}, $3
     .byte $FD
     .byte $27, $87, $B6 ; Enemy spawner: Zebbo
     .byte $11, $82, $B7 ; Dessgeega
@@ -831,14 +831,14 @@ Room28_{AREA}: ; 05:A97B
     .byte $FF
 
 Room29_{AREA}: ; 05:A9A5
-    .byte $00
-    .byte $00, $0B, $00
-    .byte $0C, $0B, $00
-    .byte $50, $01, $02
-    .byte $5C, $0B, $00
-    .byte $80, $0B, $00
-    .byte $AF, $0B, $00
-    .byte $D0, $0B, $00
+    .byte $0
+    .byte ($0 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($0 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($5 << 4) + $0, _id_Structure01_{AREA}, $2
+    .byte ($5 << 4) + $C, _id_Structure0B_{AREA}, $0
+    .byte ($8 << 4) + $0, _id_Structure0B_{AREA}, $0
+    .byte ($A << 4) + $F, _id_Structure0B_{AREA}, $0
+    .byte ($D << 4) + $0, _id_Structure0B_{AREA}, $0
     .byte $FD
     .byte re_Door, $A0 | (1 << 4) | doorType_Blue
     .byte $FF
