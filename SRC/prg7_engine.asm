@@ -2741,7 +2741,7 @@ SamusStand: ; 07:CC36
     beq LCC41
         ;($CF5D)Set no horiontal movement and single frame animation.
         ;BUG: fire animation only plays for a single frame.
-        ;To fix, use StopHorzMovement instead.
+        ;To fix, use ClearSamusMovementX instead.
         jsr SetSamusStand_NoFootstep
         lda Joy1Status
     LCC41: ; 07:CC41
@@ -3084,7 +3084,7 @@ CheckHealthStatus: ; 07:CDFA
     lda Samus.isHit
     and #$20
     ;If not, branch to check if still blinking from recent hit.
-    beq Lx006
+    beq @endIf_A
         ;Samus has been hit. Set blink for 50 frames.
         lda #$32
         sta SamusInvincibleDelay
@@ -3093,11 +3093,11 @@ CheckHealthStatus: ; 07:CDFA
         sta SamusKnockbackDir
         lda SamusKnockbackIsBomb
         sta SamusKnockbackIsBomb77
-        beq Lx005
+        beq @endIf_B
             ; play hurt sfx if samus was hurt
-            bpl Lx004
+            bpl @endIf_C
                 jsr SFX_SamusHit
-            Lx004: ; 07:CE14
+            @endIf_C: ; 07:CE14
             ; write bit 3 of SamusIsHit (direction samus got hit) in SamusKnockbackDir
             lda Samus.isHit
             and #$08
@@ -3105,7 +3105,7 @@ CheckHealthStatus: ; 07:CDFA
             lsr
             lsr
             sta SamusKnockbackDir
-        Lx005: ; 07:CE1E
+        @endIf_B: ; 07:CE1E
         ; set samus hit y speed
         lda #$FD
         sta Samus.speedY
@@ -3114,10 +3114,10 @@ CheckHealthStatus: ; 07:CDFA
         sta SamusAccelY
         ; branch if samus is not dead
         jsr IsSamusDead
-        bne Lx006
+        bne @endIf_A
             ; samus is dead, exit
             jmp CheckHealthBeep
-    Lx006: ; 07:CE30
+    @endIf_A: ; 07:CE30
     ; exit if samus has no i-frames
     lda SamusInvincibleDelay
     beq CheckHealthBeep
@@ -3137,7 +3137,7 @@ CheckHealthStatus: ; 07:CDFA
         ; reset X subspeed if no X accel
         ldy SamusAccelX
         bne Lx009
-        jsr LCF4E
+        jsr ClearSamusSpeedX@YIsZeroHere
     Lx007: ; 07:CE4A
     ; if left, negate X speed
     dex
@@ -3166,22 +3166,22 @@ CheckHealthBeep: ; 07:CE66
     ; beep if health < 17
     ldy Health+1
     dey
-    bmi Lx010
-    bne Lx011
-    lda Health
-    cmp #$70
-    bcs Lx011
-Lx010: ; 07:CE75
+    bmi @endIf_A
+        bne @exit
+        lda Health
+        cmp #$70
+        bcs @exit
+    @endIf_A: ; 07:CE75
     ;Only beep every 16th frame.
     lda FrameCount
     and #$0F
-    bne Lx011
+    bne @endIf_B
         jsr SFX_Beep
-    Lx011: ; 07:CE7E
+    @endIf_B: ; 07:CE7E
+@exit: ; 07:CE7E
     ; clear SamusIsHit
     lda #$00
     sta Samus.isHit
-RTS_CE83: ; 07:CE83
     rts
 
 ;----------------------------------------[ Is Samus dead ]-------------------------------------------
@@ -3190,12 +3190,12 @@ IsSamusDead: ; 07:CE84
     ;Samus is dead. Zero flag is set.
     lda Samus.status
     cmp #sa_Dead
-    beq Exit3
+    beq @RTS
     cmp #sa_Dead2
-    beq Exit3
+    beq @RTS
     ;Samus not dead. Clear zero flag.
     cmp #sa_Begin
-Exit3: ; 07:CE91
+@RTS: ; 07:CE91
     rts                             ;Exit for routines above and below.
 
 ;----------------------------------------[ Subtract health ]-----------------------------------------
@@ -3204,37 +3204,37 @@ SubtractHealth: ; 07:CE92
     ;Check to see if health needs to be changed. If not, branch to exit.
     lda HealthChange
     ora HealthChange+1
-    beq Exit3
+    beq IsSamusDead@RTS
     ;Samus cannot be hurt while she is dead
     jsr IsSamusDead
-    beq GotoClearHealthChange
+    beq @GotoClearHealthChange
     ;If end escape timer is running, Samus cannot be hurt.
     ldy EndTimer+1
     iny
-    beq LCEA6 ;Branch if end escape timer not active.
-    GotoClearHealthChange: ; 07:CEA3
+    beq @endIf_A
+    @GotoClearHealthChange: ; 07:CEA3
         jmp ClearHealthChange           ;($F323)Clear health change values.
-    LCEA6: ; 07:CEA6
+    @endIf_A: ; 07:CEA6
     ;If mother brain is in the process of dying, receive no damage.
     lda MotherBrainStatus
     cmp #$03
-    bcs GotoClearHealthChange
+    bcs @GotoClearHealthChange
 
     ;Branch if Samus doesn't have Varia.
     lda SamusGear
     and #gr_VARIA
-    beq LCEBF
-    ;Samus has Varia, divide damage by 2.
-    lsr HealthChange
-    lsr HealthChange+1
-    ;If Health+1 moved a bit into the carry flag while-->
-    ;dividing, add #$4F to Health for proper division results.
-    bcc LCEBF
-    lda #$4F
-    adc HealthChange
-    sta HealthChange
-
-LCEBF: ; 07:CEBF
+    beq @endIf_B
+        ;Samus has Varia, divide damage by 2.
+        lsr HealthChange
+        lsr HealthChange+1
+        ;If Health+1 moved a bit into the carry flag while-->
+        ;dividing, add #$4F to Health for proper division results.
+        bcc @endIf_C
+            lda #$4F
+            adc HealthChange
+            sta HealthChange
+        @endIf_C: ; 07:CEBF
+    @endIf_B: ; 07:CEBF
     ;Prepare to subtract from Health.
     lda Health
     sta $03
@@ -3260,10 +3260,10 @@ LCEBF: ; 07:CEBF
     lda Health
     and #$F0
     ora Health+1
-    beq LCEE6
+    beq @endIf_D
         ;Samus not dead. Branch to exit.
-        bcs GotoClearHealthChange_
-    LCEE6: ; 07:CEE6
+        bcs AddHealth@GotoClearHealthChange
+    @endIf_D: ; 07:CEE6
     ;Samus is dead.
     ;Set health to #$00.
     lda #$00
@@ -3316,7 +3316,7 @@ AddHealth: ; 07:CEF9
         lda #$99
         sta Health
     @endIf_A: ; 07:CF2B
-GotoClearHealthChange_: ; 07:CF2B
+@GotoClearHealthChange: ; 07:CF2B
     jmp ClearHealthChange           ;($F323)
 
 ;----------------------------------------------------------------------------------------------------
@@ -3326,33 +3326,34 @@ LCF2E: ; 07:CF2E
     lda Samus.isHit
     lsr
     and #$02
-    beq RTS_X014
+    beq ClearSamusSpeedX@RTS
     ; branch if bit 0 of SamusIsHit is set (touch solid entity from the right)
     bcs @else_A
         ; touch from the left
         ; exit if samus accelerates left
         lda SamusAccelX
-        bmi RTS_X014
+        bmi ClearSamusSpeedX@RTS
         bpl @endIf_A
     @else_A: ; 07:CF3F
         ; touch from the right
         ; exit if samus accelerates right
         lda SamusAccelX
         bmi @endIf_A
-        bne RTS_X014
+        bne ClearSamusSpeedX@RTS
     @endIf_A: ; 07:CF46
     ; samus is accelerating towards the solid entity
     ; flip acceleration so that she accelerates away from it
     jsr TwosComplement              ;($C3D4)
     sta SamusAccelX
+    ; clear samus speed
 
-ClearHorzMvmntData: ; 07:CF4C
+ClearSamusSpeedX: ; 07:CF4C
     ;Set Samus Horizontal speed to #$00.
     ldy #$00
-LCF4E: ; 07:CF4E
+@YIsZeroHere: ; 07:CF4E
     sty Samus.speedX
     sty SamusSpeedSubPixelX
-RTS_X014: ; 07:CF54
+@RTS: ; 07:CF54
     rts
 
 SetSamusStand: ; 07:CF55
@@ -3384,7 +3385,7 @@ SetSamusPntUp: ; 07:CF77
     jsr SetSamusAnim                ;($CF6B)Set new animation values.
 
 NoHorzMoveNoDelay: ; 07:CF81
-    jsr StopHorzMovement               ;($CFB7)Clear all horizontal movement data.
+    jsr ClearSamusMovementX               ;($CFB7)Clear all horizontal movement data.
     sty Samus.animDelay                ;Clear animation delay data.
     rts
 
@@ -3399,11 +3400,11 @@ SamusRun_CheckHorzMovementMidair: ; 07:CF88
         jsr SetSamusRunAccel
         ; return if going up
         lda SamusAccelY
-        bmi StopHorzMovement@RTS
+        bmi ClearSamusMovementX@RTS
         ; return if somersaulting
         lda Samus.animResetIndex
         cmp #ObjAnim_SamusSalto - ObjectAnimIndexTbl.b
-        beq StopHorzMovement@RTS
+        beq ClearSamusMovementX@RTS
         ; turn around
         stx SamusDir
         lda Table06+1,x
@@ -3413,17 +3414,17 @@ SamusRun_CheckHorzMovementMidair: ; 07:CF88
     ; not pressing right nor left
     ; return if going up
     lda SamusAccelY
-    bmi StopHorzMovement@RTS
+    bmi ClearSamusMovementX@RTS
     ; return if on ground
-    beq StopHorzMovement@RTS
+    beq ClearSamusMovementX@RTS
     ; return if not neutral jump
     lda Samus.animResetIndex
     cmp #ObjAnim_SamusJump - ObjectAnimIndexTbl.b
-    bne StopHorzMovement@RTS
+    bne ClearSamusMovementX@RTS
     ; fallthrough
 
-StopHorzMovement: ; 07:CFB7
-    jsr ClearHorzMvmntData          ;($CF4C)Clear horizontal speed and linear counter.
+ClearSamusMovementX: ; 07:CFB7
+    jsr ClearSamusSpeedX          ;($CF4C)Clear horizontal speed and linear counter.
     sty SamusAccelX              ;Clear horizontal acceleration data.
 @RTS: ; 07:CFBD
     rts
@@ -3664,7 +3665,7 @@ SamusRoll: ; 07:D0E1
         and #BUTTON_RIGHT | BUTTON_LEFT
         bne Lx034
             ; not pressing right or left, stop
-            jsr StopHorzMovement
+            jsr ClearSamusMovementX
         Lx034: ; 07:D142
         ; animate every 2 frames
         lda #$02
@@ -9121,20 +9122,27 @@ LoadElevator: ; 07:EC04
     bne GotoEnemyLoop           ; branch always
 
 SpawnElevatorRoutine: ; 07:EC09
+    ; exit if elevator already present
     lda Elevator.status
-    bne @exit      ; exit if elevator already present
+    bne @exit
+    
+    ; init elevator type
     iny
     lda (Temp00_RoomPtr),y
     sta ElevatorType
+    ; init elevator position in screen
     ldy #$83
     sty Elevator.y
     lda #$80
     sta Elevator.x
+    ; init elevator position hi bit
     jsr GetNameTableAtScrollDir
-    sta Elevator.hi       ; high Y coord
+    sta Elevator.hi
+    ; init elevator animation
     lda #_id_ObjFrame_Elevator.b
     sta Elevator.animFrame
-    inc Elevator.status              ;1
+    ; set status to active
+    inc Elevator.status
 @exit: ; 07:EC2C
     lda #$02
     rts
@@ -9169,7 +9177,7 @@ LoadStatues: ; 07:EC2F
     ; set status to #$01 (first bg tile update batch)
     lda #$01
     sta Statue.status
-Lx237: ; 07:EC54
+@GotoEnemyLoop: ; 07:EC54
     jmp EnemyLoop   ; do next room object
 
 
@@ -9212,7 +9220,7 @@ LoadPipeBugHole: ; 07:EC57
     sta PipeBugHoles.0.hi,x
 @exit: ; 07:EC8F
     lda #$03
-    bne Lx237
+    bne LoadStatues@GotoEnemyLoop ; branch always
 
 OnNameTable0: ; 07:EC93
     ;If currently on name table 0, return #$01. Else return #$00.
@@ -9349,7 +9357,7 @@ UpdateDoorData: ; 07:ED51
     ;Moves door info from one name table to the next-->
     ;when the room is transferred across name tables.
     and ScrollBlockOnNameTable3,y
-LED57: ; 07:ED57
+@storeScrollBlockOnNameTable3Y: ; 07:ED57
     sta ScrollBlockOnNameTable3,y
     rts
 
@@ -9358,7 +9366,7 @@ EraseScrollBlockOnNameTableAtScrollDir: ; 07:ED5B
     eor #$01
     tay
     lda #$00
-    beq LED57 ; branch always
+    beq UpdateDoorData@storeScrollBlockOnNameTable3Y ; branch always
 
 Doors_RemoveIfOffScreen: ; 07:ED65
     ; loop through all doors
@@ -9516,13 +9524,13 @@ SpawnPowerUp: ; 07:EDFE
     iny
     ; find power up slot
     ;Is first power-up item slot available? if yes, use the slot to load item.
-    ldx #$00
+    ldx #PowerUps.0 - PowerUps
     lda #$FF
     cmp PowerUps.0.type
     beq @endIf_A
         ;Prepare to check second power-up item slot.
         ;Is second power-up item slot available? If not, the power-up fails to spawn, branch to exit.
-        ldx #_sizeof_PowerUps.0
+        ldx #PowerUps.1 - PowerUps
         cmp PowerUps.1.type
         bne @exit
         ; second slot is available. use the slot to load item.
@@ -9545,21 +9553,18 @@ SpawnPowerUp: ; 07:EDFE
     lda (Temp00_SpecItmsTblPtr),y
     ;Save position data for later processing.
     tay
-    ;Extract Y coordinate. + 8 to find Y coordinate center.
+    ; init Y position. + 8 to center on metatile.
     and #$F0
     ora #$08
-    ;Store center Y coord
     sta PowerUps.0.y,x
     ;Reload position data.
     tya
-    ;Move lower 4 bits to upper 4 bits. + 8 to find X coordinate center.
+    ; init X position. + 8 to center on metatile.
     jsr Amul16
     ora #$08
-    ;Store center X coord
     sta PowerUps.0.x,x
-    ;Get name table to place item on.
+    ; init position hi bit
     jsr GetNameTableAtScrollDir
-    ;Store name table Item is located on.
     sta PowerUps.0.hi,x
 @exit: ; 07:EE39
     ;Get next data byte(Always #$00).
@@ -9729,7 +9734,7 @@ SpawnPalette: ; 07:EEFA
 
 ScanForItems_AnotherItem: ; 07:EF00
     ;Is there another item with same Y pos? If so, A is amount to add to ptr. to find X pos.
-    lda ($00),y
+    lda (Temp00_SpecItmsTblPtr),y
     cmp #$FF
     bne AddToPtr00
     ;No more items to check. Pull last subroutine off stack and exit.
@@ -9755,16 +9760,17 @@ AddToPtr00: ; 07:EF09
 DrawStructRow: ; 07:EF13
     ;Row length(in metatiles). Range #$00 thru #$0F.
     and #$0F
-    bne LEF19
+    bne @endIf_A
         ;#$00 in row length=16.
         lda #$10
-    LEF19: ; 07:EF19
+    @endIf_A: ; 07:EF19
     ;Store horizontal metatile count.
     sta Temp0E_MetatileCounter
+
     ;Get length byte again. Upper nibble contains x coord offset(if any).
+    ;*2, because a metatile is 2 tiles wide.
     lda (StructPtr),y
     jsr Adiv16
-    ;*2, because a metatile is 2 tiles wide.
     asl
     ;Add x coord offset to RoomRAMWorkPtr and save in $00.
     adc RoomRAMWorkPtr
@@ -9775,7 +9781,7 @@ DrawStructRow: ; 07:EF13
     sta Temp00_RoomRAMPtr+1
     ;$0000 = work pointer.
 
-DrawMetatile: ; 07:EF2B
+@DrawMetatile: ; 07:EF2B
     ;High byte of current location in room RAM.
     lda Temp00_RoomRAMPtr+1
     ;Check high byte of room RAM address for both room RAMs to see if the attribute table data-->
@@ -9806,18 +9812,16 @@ DrawMetatile: ; 07:EF2B
     inc Temp10_StructIndex
     ;Load struct data index into Y.
     ldy Temp10_StructIndex
-    ;Get metatile number. A=metatile number * 4. Each metatile is 4 bytes long.
+    ;Get index of metatile first tile
     lda (StructPtr),y
     asl
     asl
-    ;Store metatile index.
     sta Temp11_MetatileIndex
     ;Prepare to copy four tile numbers.
-    ldx #$03
+    ldx #4-1
     @loop: ; 07:EF4B
-        ;Metatile index loaded into Y.
-        ldy Temp11_MetatileIndex
         ;Get tile number.
+        ldy Temp11_MetatileIndex
         lda (AreaPointers_RAM.MetatileDefs),y
         inc Temp11_MetatileIndex
         ;Write tile number to room RAM.
@@ -9828,53 +9832,49 @@ DrawMetatile: ; 07:EF2B
         bpl @loop
     ;Update attribute table if necessary
     jsr UpdateAttrib
-    ;Add metatile width(in tiles) to pointer to move to next metatile.
+    ;move to next metatile (2 tiles width).
     ldy #$02
     jsr AddYToPtr00
-    ;Low byte of current room RAM work pointer.
-    lda Temp00_RoomRAMPtr
+
     ;Still room left in current row? If yes, branch to do another metatile.
+    lda Temp00_RoomRAMPtr
     and #$1F
-    bne LEF72
+    bne @else_roomLeft
+        ;End structure row early to prevent it from wrapping on to the next row.
+        ;Add number of metatiles remaining in current row.
+        lda Temp10_StructIndex
+        clc
+        adc Temp0E_MetatileCounter
+        ;-1 from metatiles remaining in current row.
+        sec
+        sbc #$01
+        ;($EF78)Move to next row of structure.
+        jmp @endIf_roomLeft
+    @else_roomLeft: ; 07:EF72
+        ;Have all metatiles been drawn on this row? If not, branch to draw another metatile.
+        dec Temp0E_MetatileCounter
+        bne @DrawMetatile
+        ;Load struct index.
+        lda Temp10_StructIndex
+    @endIf_roomLeft: ; 07:EF78
 
-;End structure row early to prevent it from wrapping on to the next row..
-    ;Struct index.
-    lda Temp10_StructIndex
-    ;Add number of metatiles remaining in current row.
-    clc
-    adc Temp0E_MetatileCounter
-    ;-1 from metatiles remaining in current row.
-    sec
-    sbc #$01
-    ;($EF78)Move to next row of structure.
-    jmp AdvanceRow
-
-LEF72: ; 07:EF72
-    ;Have all metatiles been drawn on this row? If not, branch to draw another metatile.
-    dec Temp0E_MetatileCounter
-    bne DrawMetatile
-    ;Load struct index.
-    lda Temp10_StructIndex
-
-AdvanceRow: ; 07:EF78
     ;Since carry bit is set, addition will be one more than expected.
     ;Update the struct pointer.
     sec
     adc StructPtr
     sta StructPtr
-    ;Update high byte of struct pointer if carry occured.
-    bcc @endIf_A
+    bcc @endIf_B
         inc StructPtr+1
-    @endIf_A: ; 07:EF81
+    @endIf_B: ; 07:EF81
     ;Advance to next metatile row in room RAM(two tile rows).
     lda #$40
     clc
     adc RoomRAMWorkPtr
     sta RoomRAMWorkPtr
     ;Increment high byte of pointer if necessary.
-    bcc @endIf_B
+    bcc @endIf_C
         inc RoomRAMWorkPtr+1
-    @endIf_B: ; 07:EF8C
+    @endIf_C: ; 07:EF8C
     ;Begin drawing next structure row.
 
 DrawStruct: ; 07:EF8C
@@ -10126,7 +10126,7 @@ CollisionDetection: ; 07:F034
             beq @exitLoop_Door
 
             jsr AreObjectsTouching          ;($DC7F)
-            jsr CollisionDetectionDoor_F277
+            jsr CollisionDetectionDoor_KnockSamusBackIfCollided
         @continueLoop_Door: ; 07:F098
         jsr Xminus16
         bmi @loop_Door
@@ -10482,9 +10482,13 @@ SetSamusIsHitFlagsX: ; 07:F270
     sta Samus.isHit,x
     rts
 
-CollisionDetectionDoor_F277: ; 07:F277
+CollisionDetectionDoor_KnockSamusBackIfCollided: ; 07:F277
     ; exit if collision didn't happen
     bcs SetSamusIsHitFlagsY@RTS
+    ; knock samus away from door
+    ; (BUG! should be SetSamusIsHitByEnemy, like KnockSamusBackIfCollided.
+    ;  bit 5 is not set, so Samus.isHit is ignored by CheckHealthStatus)
+    ; fallthrough
 
 SetSamusProjectileIsHit: ; 07:F279
     lda Temp10_DistHi
@@ -10502,7 +10506,7 @@ CollisionDetectionEnemy_ReactToCollisionWithSamus: ; 07:F282
     ;branch if screw attack is active.
     jsr IsScrewAttackActive
     ldy #$00
-    bcc Lx289
+    bcc @screwAttack
 
     ; screw attack is not active
     ; exit if enemy is frozen, pickup or hurt
@@ -10513,27 +10517,27 @@ CollisionDetectionEnemy_ReactToCollisionWithSamus: ; 07:F282
     ; enemy is not frozen
     ; set SamusHurt010F to enemy type
     lda EnsExtra.0.type,x
-Lx287: ; 07:F298
+@hurtSamus: ; 07:F298
     sta SamusHurt010F
 
     ; branch if enemy type bit 7 is set (when does this happen?)
     tay
-    bmi Lx288
+    bmi @endIf_A
         ; enemy type bit 7 is not set
         ; exit if bit 4 of L968B is set
         lda L968B,y
         and #$10
         bne SetSamusIsHitFlagsY@RTS
-    Lx288: ; 07:F2A5
+    @endIf_A: ; 07:F2A5
 
     ldy #Samus - Objects
     jsr SetSamusIsHitByEnemy
-    jmp LF306
+    jmp SetHealthChangeToAreaEnemyDamage
 
-Lx289: ; 07:F2AD
+@screwAttack: ; 07:F2AD
     lda #wa_ScrewAttack
     sta Ens.0.weaponAction,x
-    bne Lx291 ; branch always
+    bne CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile@updateEnIsHit ; branch always
 
 CollisionDetectionMellow_ReactToCollisionWithSamus: ; 07:F2B4
     ; exit if collision didn't happen
@@ -10542,7 +10546,7 @@ CollisionDetectionMellow_ReactToCollisionWithSamus: ; 07:F2B4
     jsr IsScrewAttackActive
     ldy #$00
     lda #$C0
-    bcs Lx287
+    bcs CollisionDetectionEnemy_ReactToCollisionWithSamus@hurtSamus
     ; screw attack was active
 CollisionDetectionMellow_Hit: ; 07:F2BF
     ; set mellow is hit flag
@@ -10556,55 +10560,57 @@ CollisionDetectionMellow_Hit: ; 07:F2BF
 
 CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile: ; 07:F2CA
     ; exit if collision didn't happen
-    bcs Lx293
+    bcs @RTS
 
     ; save samus projectile action to enemy
     lda Objects.0.status,y
     sta Ens.0.weaponAction,x
     ; set samus projectile is hit flag
     jsr SetSamusProjectileIsHit
-Lx291: ; 07:F2D5
+@updateEnIsHit: ; 07:F2D5
     ; set enemy is hit flag
     jsr GetEnemyIsHitFlags
-Lx292: ; 07:F2D8
+@OrEnIsHit: ; 07:F2D8
     ora Ens.0.isHit,x
     sta Ens.0.isHit,x
-Lx293: ; 07:F2DE
+@RTS: ; 07:F2DE
     rts
 
-CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF: ; 07:F2DF
+CollisionDetectionEnProjectile_ReactToCollisionWithSamus_SetEnIsHit: ; 07:F2DF
     lda Temp10_DistHi
     ora Ens.0.isHit,y
     sta Ens.0.isHit,y
     rts
 
 SetEnemyTouchingSamusFlags: ; 07:F2E8
-    jsr LF340
-    bne Lx292 ; branch always
+    jsr GetEnemyDistHi
+    bne CollisionDetectionEnemy_ReactToCollisionWithSamusProjectile@OrEnIsHit ; branch always
 
 
 CollisionDetectionEnProjectile_ReactToCollisionWithSamus: ; 07:F2ED
     ; exit if collision didn't happen
-    bcs RTS_X294
+    bcs SetHealthChangeToAreaEnemyDamage@RTS
 
-    jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus_F2DF
+    jsr CollisionDetectionEnProjectile_ReactToCollisionWithSamus_SetEnIsHit
     tya
     pha
     jsr IsScrewAttackActive         ;($CD9C)Check if screw attack active.
     pla
     tay
-    bcc RTS_X294
+    bcc SetHealthChangeToAreaEnemyDamage@RTS
     lda #$80
     sta SamusHurt010F
     jsr GetEnemyIsHitFlags
     jsr SetSamusIsHitFlagsX
-LF306: ; 07:F306
+    ; fallthrough
+
+SetHealthChangeToAreaEnemyDamage: ; 07:F306
     ; apply enemy base damage
     lda AreaEnemyDamage
     sta HealthChange
     lda AreaEnemyDamage+1
     sta HealthChange+1
-RTS_X294: ; 07:F310
+@RTS: ; 07:F310
     rts
 
 KnockSamusBackIfCollided: ; 07:F311
@@ -10637,7 +10643,7 @@ CollisionDetectionMellow_ReactToCollisionWithSamusProjectile: ; 07:F32A
     jmp CollisionDetectionMellow_Hit
 
 GetEnemyIsHitFlags: ; 07:F332
-    jsr LF340
+    jsr GetEnemyDistHi
     jmp Amul8       ; * 8
 
 SetSamusIsHitByEnemy: ; 07:F338
@@ -10647,7 +10653,7 @@ SetSamusIsHitByEnemy: ; 07:F338
     asl
     jmp SetSamusIsHitFlagsY
 
-LF340: ; 07:F340
+GetEnemyDistHi: ; 07:F340
     lda Temp10_DistHi
     eor #$03
     rts
