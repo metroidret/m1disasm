@@ -27,54 +27,82 @@ MetatileDefs_{AREA}: ; 03:AE49
     .byte $FF, $FF, $A6, $A6
     .byte $A2, $A2, $FF, $FF
     .byte $FF, $FF, $A3, $A3
+    
     .byte $A4, $FF, $A4, $FF
     .byte $FF, $A5, $FF, $A5
     .byte $FF, $79, $FF, $7E
-    .byte $4F, $4F, $4F, $4F
+    .byte $4F, $4F, $4F, $4F        ;Not used.
+    
     .byte $A0, $A0, $A0, $A0
     .byte $A1, $A1, $A1, $A1
     .byte $04, $05, $06, $07
     .byte $10, $11, $12, $13
+    
     .byte $00, $01, $02, $03
     .byte $08, $08, $08, $08
     .byte $18, $19, $1A, $1B
-    .byte $1C, $1D, $1E, $1F
+    .byte $1C, $1D, $1E, $1F        ;Not used.
+    
+    
     .byte $0C, $0D, $0E, $0F
     .byte $09, $09, $09, $09
     .byte $7A, $7B, $7F, $5A
     .byte $2A, $2C, $FF, $FF
+    
     .byte $14, $15, $16, $17
     .byte $20, $21, $22, $23
     .byte $24, $25, $20, $21
     .byte $28, $28, $29, $29
+    
     .byte $26, $27, $26, $27
     .byte $2A, $2B, $FF, $FF
     .byte $2B, $2C, $FF, $FF
     .byte $2B, $2B, $FF, $FF
+    
     .byte $FF, $FF, $FF, $FF
     .byte $31, $32, $33, $34
     .byte $35, $36, $37, $38
     .byte $3D, $3E, $3F, $40
+    
+    
     .byte $41, $42, $43, $44
     .byte $39, $3A, $39, $3A
     .byte $3B, $3B, $3C, $3C
     .byte $0B, $0B, $2D, $2E
-    .byte $2F, $30, $0B, $0B
+    
+    .byte $2F, $30, $0B, $0B        ;Not used.
     .byte $50, $51, $52, $53
     .byte $54, $55, $54, $55
     .byte $56, $57, $58, $59
+    
     .byte $FF, $FF, $FF, $5E
     .byte $5B, $5C, $5F, $60
     .byte $FF, $FF, $61, $FF
     .byte $5D, $62, $67, $68
+    
     .byte $63, $64, $69, $6A
     .byte $65, $66, $6B, $6C
     .byte $6D, $6E, $73, $74
     .byte $6F, $70, $75, $76
+    
+    
     .byte $71, $72, $77, $78
     .byte $45, $46, $47, $48
     .byte $FF, $98, $FF, $98
     .byte $49, $4A, $4B, $4C
+    
     .byte $90, $91, $90, $91
     .byte $7C, $7D, $4D, $FF
+    .byte $1C, $1D, $1E, $17        ;Not used.
+    .byte $18, $19, $1A, $1F        ;Not used.
+    
+    .byte $20, $21, $22, $60        ;Not used.
+    .byte $61, $62, $63, $0E        ;Not used.
+    .byte $0F, $FF, $FF, $0C        ;Not used.
+    .byte $0D, $0D, $0D, $10        ;Not used.
+    
+    .byte $0D, $FF, $10, $10        ;Not used.
+    .byte $FF, $FF, $FF, $FF        ;Not used.
+    .byte $FF, $FF, $30, $FF        ;Not used.
+    .byte $33, $FF, $36, $FF        ;Not used.
 

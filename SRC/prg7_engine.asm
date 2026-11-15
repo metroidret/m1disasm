@@ -1296,7 +1296,7 @@ PrepPPUMirror: ; 07:C4D9
 CheckBankSwitch: ; 07:C4DE
     ;Exit if zero(no bank switch issued). else Y contains bank#+1.
     ldy BankSwitchPending
-    beq RTS_C50F
+    beq MMCWritePrgBank@RTS
     ;($C4E8)Perform bank switch.
     jsr CheckBankSwitch_OK
     ;($C510)Initialize bank switch data.
@@ -1343,7 +1343,7 @@ MMCWritePrgBank: ; 07:C4FA
     sta MMC1PRG
     ;Restore A with current bank number before exiting.
     lda $00
-RTS_C50F: ; 07:C50F
+@RTS: ; 07:C50F
     rts
 
 ;Calls the proper routine according to the bank number in A.
@@ -2248,11 +2248,11 @@ IsEngineRunning: ; 07:CA18
     ;If Samus is fading in or the wait timer is active, return from routine.
     ldy MainRoutine
     cpy #_id_IncrementRoutine.b
-    beq RTS_CA22
+    beq @RTS
     ;Is game engine running? If yes, branch to SwitchBank.
     cpy #_id_GameEngine.b
     beq SwitchBank
-RTS_CA22: ; 07:CA22
+@RTS: ; 07:CA22
     ;Exit if can't switch bank.
     rts
 
@@ -13141,10 +13141,11 @@ TileBlastAnim: ; 07:FF86
     .byte _id_VRAMString07, _id_VRAMString06, _id_VRAMString08, $FE ; respawning tile #$90
 
 
+Garbage_07_FFAE: ; 07:FFAE
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .byte $00, $00
+    .incbin "garbage/07_FFAE.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $01, $02
+    .incbin "garbage/07_FFAE_pal.bin"
 .endif
 
 .ends

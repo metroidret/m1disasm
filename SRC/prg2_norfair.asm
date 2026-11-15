@@ -796,13 +796,16 @@ VRAMString10_{AREA}: ; 02:9BDA
 .include "norfair/metatiles.asm"
 
 ;Not used.
-    .byte $30, $00, $BC, $BD, $CD, $CE, $CF, $D0, $D1, $D2, $D3, $D4, $90, $91, $92, $93
+Garbage_Metatile_{AREA}: ; 02:AFEC
+    .incbin "garbage/metatile_bank2.bin"
+
 
 ;Not used.
+Garbage_01_02_03_04_05_AFF0: ; 02:AFF0
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .byte $20, $20, $20, $20, $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
+    .incbin "garbage/01_02_03_04_05_AFF0.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0, $17
+    .incbin "garbage/01_02_03_04_05_AFF0_pal.bin"
 .endif
 
 .ends
@@ -817,51 +820,14 @@ VRAMString10_{AREA}: ; 02:9BDA
     .include "songs/pal/norfair.asm"
 .endif
 
-;Unused. (B099)
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .byte $B9, $30, $3A, $3E, $B6, $42, $B9, $42, $3E, $42, $B3, $44, $B2, $3A, $B9, $3A
-    .byte $44, $48, $B4, $4C, $B3, $48, $46, $B6, $48, $B9, $4E, $4C, $48, $B3, $4C, $B2
-    .byte $44, $B9, $44, $4C, $52, $B4, $54, $54, $C4, $B4, $02, $FF, $C3, $B2, $26, $B9
-    .byte $26, $3E, $34, $B2, $26, $B9, $26, $34, $26, $B2, $2C, $B9, $2C, $3A, $2C, $B2
-    .byte $2C, $B9, $2C, $3A, $2C, $FF, $C4, $B2, $26, $B9, $34, $26, $26, $FF, $D0, $B9
-    .byte $18, $26, $18, $B2, $18, $FF, $C2, $B2, $1E, $B9, $1E, $18, $1E, $B2, $1E, $B9
-    .byte $1E, $18, $1E, $B2, $1C, $B9, $1C, $14, $1C, $B2, $1C, $B9, $1C, $14, $1C, $FF
-    .byte $B2, $26, $12, $16, $18, $1C, $20, $24, $26, $B2, $28, $B9, $28, $1E, $18, $B2
-    .byte $10, $B9, $30, $2C, $28, $B2, $1E, $1C, $18, $14, $2A, $2A, $2A, $2A, $CC, $B9
-    .byte $2A, $FF, $E8, $B2, $04, $04, $04, $B9, $04, $04, $04, $FF
-    
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
-        .incbin "tourian/bg_chr.chr" skip $495 read $CB
-    .elif BUILDTARGET == "NES_CNS"
-        .incbin "tourian/bg_chr_cns.chr" skip $495 read $CB
-    .endif
+;Unused.
+Garbage_Song_{AREA}: ; 02:B099
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
+    .incbin "garbage/song_bank2.bin"
+.elif BUILDTARGET == "NES_CNS"
+    .incbin "garbage/song_bank2_cns.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $44, $B0, $42, $44, $42, $3A, $FF, $B4, $3E, $26, $B6, $42, $B9, $42, $3E, $42
-    .byte $BB, $02, $B3, $44, $B2, $3A, $B9, $30, $3A, $3E, $BB, $02, $B6, $42, $B9, $42
-    .byte $3E, $42, $BB, $02, $B3, $44, $B2, $3A, $B9, $3A, $44, $48, $BB, $02, $B4, $4C
-    .byte $B3, $48, $46, $B6, $48, $B9, $4E, $4C, $48, $BB, $02, $B3, $4C, $B2, $44, $B9
-    .byte $44, $4C, $52, $BB, $02, $B4, $54, $54, $C4, $B4, $02, $FF, $C3, $B2, $26, $B9
-    .byte $26, $3E, $34, $BB, $02, $B2, $26, $B9, $26, $34, $26, $BB, $02, $B2, $2C, $B9
-    .byte $2C, $3A, $2C, $BB, $02, $B2, $2C, $B9, $2C, $3A, $2C, $BB, $02, $FF, $C4, $B2
-    .byte $26, $B9, $34, $26, $26, $BB, $02, $FF, $D0, $B9, $18, $26, $18, $BB, $02, $B2
-    .byte $18, $FF, $C2, $B2, $1E, $B9, $1E, $18, $1E, $BB, $02, $B2, $1E, $B9, $1E, $18
-    .byte $1E, $BB, $02, $B2, $1C, $B9, $1C, $14, $1C, $BB, $02, $B2, $1C, $B9, $1C, $14
-    .byte $1C, $BB, $02, $FF, $B2, $26, $12, $16, $18, $1C, $20, $24, $26, $B2, $28, $B9
-    .byte $28, $1E, $18, $BB, $02, $B2, $10, $B9, $30, $2C, $28, $BB, $02, $B2, $1E, $1C
-    .byte $18, $14, $2A, $2A, $2A, $2A, $C3, $B9, $2A, $FF, $BB, $02, $C3, $B9, $2A, $FF
-    .byte $BB, $02, $C3, $B9, $2A, $FF, $BB, $02, $C3, $B9, $2A, $FF, $BB, $02, $E8, $B2
-    .byte $04, $04, $04, $B9, $04, $04, $04, $BB, $01, $FF, $85, $03, $A9, $0C, $85, $11
-    .byte $B1, $75, $10, $14, $C9, $FF, $D0, $05, $85, $74, $4C, $49, $F0, $C8, $E6, $59
-    .byte $29, $7F, $85, $0F, $B1, $75, $D0, $04, $85, $0F, $A9, $01, $85, $10, $C8, $E6
-    .byte $59, $A9, $00, $85, $08, $A5, $0F, $48, $0A, $AA, $A5, $38, $4A, $A5, $6D, $D0
-    .byte $16, $90, $0A, $BD, $77, $F3, $48, $BD, $76, $F3, $4C, $FB, $F1, $BD, $F3, $F2
-    .byte $48, $BD, $F2, $F2, $4C, $FB, $F1, $30, $16, $90, $0A, $BD, $B3, $96, $48, $BD
-    .byte $B2, $96, $4C, $FB, $F1, $BD, $CD, $95, $48, $BD, $CC, $95, $4C, $FB, $F1, $90
-    .byte $0A, $BD, $C9, $F4, $48, $BD, $C8, $F4, $4C, $FB, $F1, $BD, $4D, $F4, $48, $BD
-    .byte $4C, $F4, $A6, $02, $95, $E0, $E8, $68, $95, $E0, $E8, $86, $02, $68, $85, $05
-    .byte $48, $4A, $4A, $AA, $A5, $6D, $D0, $06, $BD, $E1, $F2, $4C, $22, $F2, $30, $06
-    .byte $BD, $AF, $95, $4C, $22, $F2, $BD, $3C, $F4, $85, $04, $68, $29, $03, $AA, $E8
-    .byte $A5, $04, $CA, $F0, $05, $4A, $4A
+    .incbin "garbage/song_bank2_pal.bin"
 .endif
 
 .ends

@@ -36,16 +36,16 @@ CommonJump_UpdateEnemyAnim: ; $800C
 CommonJump_InitEnAnimIndex: ; $800F
     jmp InitEnAnimIndex
 
+; (unused?)
 CommonJump_GetEnemyTypeTimes2PlusFacingDirectionBit0: ; $8012
-    ; (unused?)
     jmp GetEnemyTypeTimes2PlusFacingDirectionBit0
 
+; (unused?)
 CommonJump_InitEnemyForceSpeedTowardsSamusDelayAndHealth: ; $8015
-    ; (unused?)
     jmp InitEnemyForceSpeedTowardsSamusDelayAndHealth
 
+; (unused?)
 CommonJump_InitEnResetAnimIndex: ; $8018
-    ; (unused?)
     jmp InitEnResetAnimIndex
 
 CommonJump_EnemyFlipAfterDisplacement: ; $801B
@@ -694,7 +694,7 @@ EnemyGetDeltaY_StopMovement: ; $82B0
     pla
     pla
     rts
-; Retruns back to F416 in the engine bank
+; Returns back to F416 in the engine bank
 
 ;---------------------------------------
 ; Repeat Previous Movement Until Vertical Movement Fails, then move to next instruction
@@ -1743,8 +1743,7 @@ WriteDoorBGTiles_Common: ; $8CFD
 DoorXTable: ; $8D3A
     .byte $E8, $10
 
-.byte $60, $AD, $91, $69, $8D, $78, $68, $AD, $92, $69, $8D, $79, $68, $A9
-.byte $00, $85, $00, $85, $02, $AD, $97, $69, $29, $80, $F0, $06, $A5, $00, $09, $80
-.byte $85, $00, $AD, $97, $69, $29
+Garbage_AreasCommon: ; $8D3C
+    .incbin "garbage/areas_common.bin"
 
 ; EoF

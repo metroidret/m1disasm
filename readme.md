@@ -8,6 +8,12 @@ The code has been manually reworked multiple times in a laborious journey to fin
 
 Versions of WLA-DX prior to v10.7 will not work. Download the v10.7 release [here](https://github.com/vhelin/wla-dx/releases/tag/v10.7). Alternatively, you can compile the latest WLA-DX from [its source code](https://github.com/vhelin/wla-dx), to get all the newest features and fixes. Instructions on how to compile can be found in WLA-DX's README.
 
+## Extracting Assets and Building
+
+First, place your Metroid 1 ROMs in the baserom folder. They must be named M1_<BUILD_TARGET>.nes, where <BUILD_TARGET> is replaced by one of the supported build targets below. For Metroid Zero Mission, use the [mzm decomp](https://github.com/metroidret/mzm) to extract the Metroid 1 ROM, then copy both the rom and gfx folder from nes_metroid/data to the baserom folder.
+
+Then run `python extract.py` in the root folder of the disassembly. This will extract the data from your Metroid 1 ROMs and put it in the disassembly.
+
 To build, run `python build.py` in the root folder of the disassembly. Each bank will be compiled into its own object file, and then linked together.
 
 ## Contributing
@@ -20,6 +26,8 @@ Please be sure to verify that your code produces an exact copy of the original b
 
 Subject to change.
 
+ * baserom - Folder to place your Metroid 1 ROMs for data extraction.
+ * extract.py - Run this to extract data from your Metroid 1 ROMs.
  * build.py - Run this to build. Requires WLA-DX binaries to be in your path.
  * SRC/prg*.asm - Main assembly files for each bank
  * SRC/brinstar, SRC/norfair, etc. - Data pertaining to each bank
@@ -27,7 +35,7 @@ Subject to change.
  * SRC/enemies - Assembly files for enemy AI routines shared between areas
  * SRC/songs - Song data for all songs in the game
 
-## Build targets
+## Build Targets
 
 ### [FDS branch](https://github.com/metroidret/m1disasm/tree/fds-independant)
 

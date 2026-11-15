@@ -2707,15 +2707,10 @@ InitializeMusic: ; $BF19
     rts
 
 ;Not used.
+Garbage_SoundEngine: ; $BF56
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .byte $10, $07, $0E, $1C, $38, $70, $2A, $54, $15, $12, $02, $03, $20, $2C, $B4, $AD
-    .byte $4D, $06, $8D, $8D, $06, $AD, $5E, $06, $A8, $B9, $2A, $BC, $A8, $A2, $00, $B9
-    .byte $61, $BD, $9D, $2B, $06, $C8, $E8, $8A, $C9, $0D, $D0, $F3, $A9, $01, $8D, $40
-    .byte $06, $8D, $41, $06, $8D, $42, $06, $8D, $43, $06, $A9, $00, $8D, $38, $06, $8D
-    .byte $39, $06, $8D, $3A, $06, $8D, $3B, $06, $60, $FF, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    .incbin "garbage/sound_engine.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $99, $90, $04, $E5, $99, $85, $9A, $26, $97, $26, $98, $CA, $D0, $ED, $60, $01
-    .byte $02
+    .incbin "garbage/sound_engine_pal.bin"
 .endif
 

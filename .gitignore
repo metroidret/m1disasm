@@ -1,2 +1,7 @@
 out/*
+*.nes
+*.sym
+*.chr
+*.bin
+*.lz
 __pycache__

@@ -49,28 +49,25 @@
 ;Not used.
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
     .if BANK == 7
-        .byte $FF, $FF, $FF, $4C, $E4, $B3, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-        .byte $FF, $FF, $FF, $FF, $4D, $45, $54, $52, $4F, $49, $44, $E4, $8D, $00, $00, $38
-        .byte $04, $01, $06, $01, $BC
+        Garbage_ResetFixed:
+            .incbin "garbage/reset_fixed.bin"
     .else
-        .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
-        .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-        .byte $00, $00, $00, $00, $00
+        Garbage_ResetSwitch:
+            .incbin "garbage/reset_switch.bin"
     .endif
 .elif BUILDTARGET == "NES_PAL"
     .if BANK == 7
-        .byte $00, $FF, $00
+        Garbage_ResetFixedPt1:
+            .incbin "garbage/reset_fixed_pt1_pal.bin"
         
         GotoSoundEngine:
             jmp SoundEngine
          
-        .byte $00, $FF, $00, $FF, $00, $FF, $FF, $FF, $FF, $FF
-        .byte $FF, $FF, $FF, $FF, $4D, $45, $54, $52, $4F, $49, $44, $00, $00, $00, $00, $38
-        .byte $04, $01, $06, $01, $BC
+        Garbage_ResetFixedPt2:
+            .incbin "garbage/reset_fixed_pt2_pal.bin"
     .else
-        .byte $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF
-        .byte $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF
-        .byte $00, $FF, $00, $FF, $00
+        Garbage_ResetSwitch:
+            .incbin "garbage/reset_switch_pal.bin"
     .endif
 .endif
 

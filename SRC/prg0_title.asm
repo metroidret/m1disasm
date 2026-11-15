@@ -766,10 +766,8 @@ VRAMStruct_DrawIntroBackground: ; 00:82F4
     VRAMStructEnd
 
 ;The following data does not appear to be used.
-    .byte $46, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $20, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+Garbage_00_871E: ; 00:871E
+    .incbin "garbage/00_871E.bin"
 
 ;The following error message is diplayed if the player enters an incorrect password.
 PasswordErrorMessage: ; 00:8759
@@ -781,10 +779,8 @@ PasswordNoErrorMessage: ; 00:8768
     .stringmap charmap, "               "
 
 ;Not used.
-    .byte $79, $87, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
-    .byte $00, $03, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $02, $00
-    .byte $00, $03, $A1, $87, $A2, $87, $A5, $87, $A8, $87, $00, $18, $CC, $00, $18, $CD
-    .byte $00, $18, $CE, $00
+Garbage_00_8777: ; 00:8777
+    .incbin "garbage/00_8777.bin"
 
 LoadSparkleData: ; 00:87AB
     ldx #$0A
@@ -1480,28 +1476,36 @@ StarPaletteSwitch: ; 00:8AC7
 ;The palette data is changed every 16 frames by the above routine.
 
 IntroStarPalettePtrTable: ; 00:8AFF
-    .word IntroStarPalette0
-    .word IntroStarPalette1
-    .word IntroStarPalette2
-    .word IntroStarPalette3
-    .word IntroStarPalette4
-    .word IntroStarPalette5
-    .word IntroStarPalette6
-    .word IntroStarPalette7
+    .word IntroStarPalette@0
+    .word IntroStarPalette@1
+    .word IntroStarPalette@2
+    .word IntroStarPalette@3
+    .word IntroStarPalette@4
+    .word IntroStarPalette@5
+    .word IntroStarPalette@6
+    .word IntroStarPalette@7
 
 ;The following table contains the palette data that is changed in the intro
 ;scene to give the stars a twinkling effect. All entries in the table are
 ;non-repeating.
 
-; 00:8B0F
-IntroStarPalette0:  .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
-IntroStarPalette1:  .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
-IntroStarPalette2:  .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
-IntroStarPalette3:  .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
-IntroStarPalette4:  .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
-IntroStarPalette5:  .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
-IntroStarPalette6:  .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
-IntroStarPalette7:  .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
+IntroStarPalette: ; 00:8B0F
+@0: ; 00:8B0F
+    .byte $03, $0F, $02, $13, $00, $03, $00, $34, $0F, $00
+@1: ; 00:8B19
+    .byte $03, $06, $01, $23, $00, $03, $0F, $34, $09, $00
+@2: ; 00:8B23
+    .byte $03, $16, $0F, $23, $00, $03, $0F, $24, $1A, $00
+@3: ; 00:8B2D
+    .byte $03, $17, $0F, $13, $00, $03, $00, $04, $28, $00
+@4: ; 00:8B37
+    .byte $03, $17, $01, $14, $00, $03, $10, $0F, $28, $00
+@5: ; 00:8B41
+    .byte $03, $16, $02, $0F, $00, $03, $30, $0F, $1A, $00
+@6: ; 00:8B4B
+    .byte $03, $06, $12, $0F, $00, $03, $30, $04, $09, $00
+@7: ; 00:8B55
+    .byte $03, $0F, $12, $14, $00, $03, $10, $24, $0F, $00
 
 ;----------------------------------------------------------------------------------------------------
 
@@ -2679,7 +2683,8 @@ CheckBackspace: ; 00:91FB
     rts
 
 ;The following data does not appear to be used in the program.
-    .byte $21, $20
+Garbage_00_92B4: ; 00:92B4
+    .incbin "garbage/00_92B4.bin"
 
 ;The following table is used to determine the proper Y position of the character
 ;selection sprite on password entry screen.
@@ -3180,16 +3185,11 @@ Hex16ToDec: ; 00:94DA
     rts
 
 ;Not used.
+Garbage_00_952C: ; 00:952C
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .byte $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF
-    .byte $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
-    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    .byte $00, $00, $00, $00
+    .incbin "garbage/00_952C.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $63, $D6, $88, $D0, $3A, $A9, $00, $9D, $D0, $05, $A5, $03, $18, $69, $09, $48
-    .byte $A5, $04, $29, $02, $F0, $05, $68, $18, $69, $05, $48, $68, $9D, $C0, $05, $A5
-    .byte $02, $18, $69, $08, $9D, $B0, $05, $A9, $22, $9D, $E0, $05, $A9, $08, $85, $4A
-    .byte $C6, $50, $20, $6E
+    .incbin "garbage/00_952C_pal.bin"
 .endif
 
 
@@ -5174,56 +5174,13 @@ CopyMap: ; 00:A93E
     rts
 
 ;Unused tile patterns.
-.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G" || BUILDTARGET == "NES_CNS"
-    .incbin "norfair/bg_chr_2.chr" skip $11
-    .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
-        .incbin "common_chr/bg_boss_areas.chr" read $240
-    .elif BUILDTARGET == "NES_CNS"
-        .incbin "common_chr/bg_boss_areas_cns.chr" read $240
-    .endif
+Garbage_00_A961: ; 00:A961
+.if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
+    .incbin "garbage/00_A961.bin"
+.elif BUILDTARGET == "NES_CNS"
+    .incbin "garbage/00_A961_cns.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $A9, $01, $85, $10, $A5, $05, $29, $01, $85, $05, $A0, $17, $B9, $00, $03, $30
-    .byte $4F, $F0, $66, $C9, $03, $90, $62, $A5, $10, $D0, $49, $B9, $00, $03, $C9, $0F
-    .byte $F0, $57, $BD, $A8, $05, $C9, $03, $D0, $3B, $BD, $B8, $05, $19, $90, $03, $D0
-    .byte $48, $BD, $B0, $05, $18, $69, $10, $B0, $40, $38, $F9, $78, $03, $90, $3A, $C9
-    .byte $28, $B0, $36, $BD, $C0, $05, $18, $69, $10, $38, $F9, $A8, $03, $90, $2A, $C9
-    .byte $28, $B0, $26, $B9, $18, $03, $85, $04, $B9, $30, $03, $85, $05, $4C, $DD, $E9
-    .byte $A5, $10, $F0, $15, $B9, $90, $03, $C9, $01, $F0, $0E, $B9, $18, $03, $C5, $04
-    .byte $D0, $07, $B9, $30, $03, $C5, $05, $F0, $03, $4C, $F3, $EA, $8A, $48, $A5, $10
-    .byte $F0, $25, $10, $14, $B9, $00, $03, $C9, $0F, $D0, $19, $B9, $F0, $03, $D0, $05
-    .byte $A9, $01, $99, $F0, $03, $4C, $F1, $EA, $B9, $00, $03, $10, $07, $B9, $F0, $03
-    .byte $D0, $02, $F0, $1B, $4C, $F1, $EA, $38, $BD, $A8, $05, $AA, $B9, $F0, $03, $CA
-    .byte $D0, $05, $E5, $4D, $4C, $1B, $EA, $FD, $49, $DF, $99, $F0, $03, $B0, $E5, $A5
-    .byte $05, $18, $69, $06, $85, $05, $20, $1F, $EB, $E8, $D0, $03, $4C, $EE, $EA, $A5
-    .byte $10, $F0, $73, $10, $03, $4C, $9F, $EA, $B9, $00, $03, $29, $0F, $C9, $04, $D0
-    .byte $31, $A5, $34, $18, $69, $08, $C9, $81, $90, $02, $A9, $79, $85, $34, $D0, $45
-    .byte $A5, $B6, $4A, $B0, $14, $A9, $04, $20, $ED, $E1, $A5, $B6, $C9, $02, $D0, $01
-    .byte $2C, $A9, $00, $8D, $64, $04, $4C, $96, $EA, $E6, $55, $D0, $02, $C6, $55, $4C
-    .byte $96, $EA, $C9, $0D, $F0, $DA, $38, $E9, $05, $AA, $B5, $4D, $18, $7D, $09, $EC
-    .byte $90, $02, $A9, $FF, $95, $4D, $E8, $CA, $D0, $08, $C9, $1F, $90, $04, $A9, $1E
-    .byte $85, $4D, $20, $14, $E2, $98, $48, $A9, $0B, $20, $71, $87, $68, $A8, $A9, $00
-    .byte $99, $00, $03, $AA, $F0, $45, $B9, $00, $03, $48, $09, $80, $99, $00, $03, $A9
-    .byte $0B, $99, $F0, $03, $68, $A2, $00, $C9, $03, $F0, $07, $C9, $0E, $D0, $1A, $A9
-    .byte $00, $2C, $A9, $05, $20, $A2, $E2, $98, $48, $A9, $09, $20, $71, $87, $68, $A8
-    .byte $A9, $FF, $99, $30, $03, $A9, $00, $F0, $12, $A9, $05, $20, $A2, $E2, $98, $48
-    .byte $A9, $09, $20, $71, $87, $68, $A8, $A1, $04, $29, $F0, $81, $04, $68, $AA, $60
-    .byte $68, $AA, $88, $30, $03, $4C, $6D, $E9, $60, $A2, $01, $A9, $C0, $95, $6B, $A9
-    .byte $FF, $95, $69, $A9, $20, $95, $AA, $95, $AE, $A9, $00, $95, $A8, $95, $AC, $9D
-    .byte $5B, $04, $95, $A0, $95, $A2, $95, $A4, $95, $A6, $CA, $10, $DE, $60, $A2, $01
-    .byte $B5, $AA, $C9, $20, $F0, $03, $4C, $02, $EC, $B9, $60, $03, $95, $AA, $48, $B9
-    .byte $48, $03, $95, $A8, $18, $69, $20, $95, $AC, $68, $69, $00, $95, $AE, $98, $48
-    .byte $B9, $00, $03, $A8, $B9, $48, $00, $85, $0F, $98, $0A, $0A, $A8, $C0, $3C, $F0
-    .byte $04, $A5, $10, $F0, $04, $A0, $04, $D0, $04, $C0, $0C, $D0, $60, $AD, $63, $04
-    .byte $0A, $A8, $90, $20, $B9, $4C, $F4, $95, $A0, $B9, $C8, $F4, $95, $A2, $B9, $4D
-    .byte $F4, $95, $A4, $B9, $C9, $F4, $95, $A6, $AD, $63, $04, $4A, $4A, $A8, $B9, $3C
-    .byte $F4, $4C, $A2, $EB, $B9, $CC, $95, $95, $A0, $B9, $B2, $96, $95, $A2, $B9, $CD
-    .byte $95, $95, $A4, $B9, $B3, $96, $95, $A6, $AD, $63, $04, $4A, $4A, $A8, $B9, $AF
-    .byte $95, $85, $02, $AD, $63, $04, $29, $03, $F0, $08, $A8, $46, $02, $46, $02, $88
-    .byte $D0, $F9, $A5, $02, $29, $03, $A8, $B9, $11, $EC, $4C, $E8, $EB, $A5, $0F, $D0
-    .byte $10, $A9, $38, $95, $A0, $A9, $48, $95, $A2, $A9, $39, $95, $A4, $A9, $49, $D0
-    .byte $12, $B9, $AC, $E4, $95, $A0, $B9, $AD, $E4, $95, $A2, $B9, $AE, $E4, $95, $A4
-    .byte $B9, $AF, $E4, $95, $A6, $A9, $00, $85, $02, $68, $A8, $B9, $C0, $03, $95, $6B
-    .byte $B9, $D8, $03, $95, $69, $49, $FF, $25, $02, $9D, $5B, $04, $A9, $20, $4C
+    .incbin "garbage/00_A961_pal.bin"
 .endif
 
 .ends
@@ -5239,31 +5196,13 @@ CopyMap: ; 00:A93E
 .endif
 
 ;Unused tile patterns.
+Garbage_SongEnd: ; 00:AF03
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
-    .incbin "tourian/bg_chr.chr" skip $263 read $FD
+    .incbin "garbage/song_end.bin"
 .elif BUILDTARGET == "NES_CNS"
-    .incbin "tourian/bg_chr.chr" skip $263 read $D
-    .incbin "tourian/bg_chr_cns.chr" skip $270 read $F0
+    .incbin "garbage/song_end_cns.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $02, $A8, $B9, $D9, $93, $85, $7A, $B9, $DA, $93, $85, $7B, $BD, $4A, $F6, $8D
-    .byte $61, $04, $A9, $00, $85, $7D, $8D, $12, $04, $60, $85, $7D, $0A, $A8, $B1, $7A
-    .byte $C8, $85, $3B, $B1, $7A, $85, $3C, $A9, $00, $85, $16, $85, $17, $85, $18, $85
-    .byte $19, $85, $1A, $85, $46, $85, $3D, $85, $59, $85, $1D, $A9, $90, $85, $1E, $A9
-    .byte $07, $85, $73, $A9, $08, $85, $72, $A9, $24, $85, $37, $A9, $DF, $85, $36, $A9
-    .byte $9F, $85, $38, $A9, $27, $85, $3A, $A9, $00, $A2, $07, $95, $F8, $CA, $10, $FB
-    .byte $A9, $FF, $85, $74, $20, $47, $EF, $60, $A2, $00, $A9, $00, $9D, $00, $06, $E8
-    .byte $D0, $FA, $9D, $00, $07, $E8, $D0, $FA, $60, $A5, $1E, $8D, $00, $20, $A5, $17
-    .byte $4A, $A5, $16, $6A, $8D, $05, $20, $A9, $00, $8D, $05, $20, $60, $A6, $1D, $A9
-    .byte $60, $CA, $F0, $02, $A9, $90, $85, $02, $A5, $2E, $4A, $A5, $2D, $6A, $C5, $02
-    .byte $D0, $08, $A5, $33, $29, $01, $C5, $1D, $F0, $07, $A9, $00, $85, $45, $4C, $FC
-    .byte $EF, $C9, $01, $D0, $00, $AD, $5A, $04, $F0, $05, $A9, $00, $85, $45, $60, $A5
-    .byte $31, $4A, $4A, $4A, $18, $65, $46, $85, $46, $A5, $49, $4A, $90, $0C, $A5, $46
-    .byte $4A, $4A, $85, $45, $A5, $46, $29, $03, $85, $46, $A5, $16, $18, $65, $45, $85
-    .byte $16, $90, $14, $A5, $17, $69, $00, $85, $17, $C9, $02, $D0, $0A, $29, $01, $85
-    .byte $17, $A5, $1E, $49, $01, $85, $1E, $A5, $45, $18, $65, $1A, $85, $1A, $38, $E9
-    .byte $10, $90, $0D, $85, $1A, $E6, $3D, $A5, $3D, $29, $3F, $85, $3D, $20, $18, $F0
-    .byte $A5, $45, $F0, $09, $A9, $08, $85, $72, $A9, $07, $85, $73, $60, $C6, $72, $D0
-    .byte $17
+    .incbin "garbage/song_end_pal.bin"
 .endif
 
 .ends
@@ -5277,27 +5216,13 @@ CopyMap: ; 00:A93E
 .endif
 
 ;Unused tile patterns.
+Garbage_SongIntro: ; 00:B135
 .if BUILDTARGET == "NES_NTSC" || BUILDTARGET == "NES_MZM" || BUILDTARGET == "NES_MZM_G"
-    .incbin "tourian/bg_chr.chr" skip $495 read $CB
+    .incbin "garbage/song_intro.bin"
 .elif BUILDTARGET == "NES_CNS"
-    .incbin "tourian/bg_chr_cns.chr" skip $495 read $CB
+    .incbin "garbage/song_intro_cns.bin"
 .elif BUILDTARGET == "NES_PAL"
-    .byte $3B, $C8, $48, $B1, $3B, $85, $3C, $68, $85, $3B, $A0, $00, $4C, $54, $F0, $E6
-    .byte $3B, $D0, $02, $E6, $3C, $85, $74, $0A, $AA, $90, $15, $BD, $0B, $99, $85, $75
-    .byte $BD, $0C, $99, $85, $76, $BD, $3C, $95, $85, $56, $BD, $3D, $95, $4C, $77, $F1
-    .byte $BD, $0B, $98, $85, $75, $BD, $0C, $98, $85, $76, $BD, $3C, $94, $85, $56, $BD
-    .byte $3D, $94, $85, $57, $A9, $00, $85, $58, $84, $02, $84, $59, $A9, $01, $85, $03
-    .byte $A9, $0C, $85, $11, $B1, $75, $10, $14, $C9, $FF, $D0, $05, $85, $74, $4C, $49
-    .byte $F0, $C8, $E6, $59, $29, $7F, $85, $0F, $B1, $75, $D0, $04, $85, $0F, $A9, $01
-    .byte $85, $10, $C8, $E6, $59, $A9, $00, $85, $08, $A5, $0F, $48, $0A, $AA, $A5, $38
-    .byte $4A, $A5, $6D, $D0, $16, $90, $0A, $BD, $77, $F3, $48, $BD, $76, $F3, $4C, $FB
-    .byte $F1, $BD, $F3, $F2, $48, $BD, $F2, $F2, $4C, $FB, $F1, $30, $16, $90, $0A, $BD
-    .byte $B3, $96, $48, $BD, $B2, $96, $4C, $FB, $F1, $BD, $CD, $95, $48, $BD, $CC, $95
-    .byte $4C, $FB, $F1, $90, $0A, $BD, $C9, $F4, $48, $BD, $C8, $F4, $4C, $FB, $F1, $BD
-    .byte $4D, $F4, $48, $BD, $4C, $F4, $A6, $02, $95, $E0, $E8, $68, $95, $E0, $E8, $86
-    .byte $02, $68, $85, $05, $48, $4A, $4A, $AA, $A5, $6D, $D0, $06, $BD, $E1, $F2, $4C
-    .byte $22, $F2, $30, $06, $BD, $AF, $95, $4C, $22, $F2, $BD, $3C, $F4, $85, $04, $68
-    .byte $29, $03, $AA, $E8, $A5, $04, $CA, $F0, $05, $4A, $4A
+    .incbin "garbage/song_intro_pal.bin"
 .endif
 
 .ends
